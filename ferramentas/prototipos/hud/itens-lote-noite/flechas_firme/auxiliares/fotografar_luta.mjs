@@ -24,7 +24,8 @@ const AMB = { CLASSE: "arqueiro", LUTA: "lobo", NIVEL_LUTA: "2", QUANTOS: "2", V
 mkdirSync(saida, { recursive: true });
 const b = await chromium.launch();
 const registro = {};
-for (const modo of ["atual", "proposta", "rodada2"]) {
+// MODOS=atual: só os arquivos do jogo (a conferência da integração, 1.155.0)
+for (const modo of (process.env.MODOS || "atual,proposta,rodada2").split(",")) {
   const proc = spawn(PY, ["-m", "tests.navegador.cenarios", "covil"], { cwd: raiz, env: { ...process.env, PYTHONPATH: raiz, PYTHONIOENCODING: "utf-8", VELOCIDADE: "rapido", ...AMB } });
   let url = null; proc.stdout.on("data", (d) => { const m = String(d).match(/http:\S+/); if (m) url = m[0]; });
   for (let k = 0; k < 300 && !url; k++) await espera(100);

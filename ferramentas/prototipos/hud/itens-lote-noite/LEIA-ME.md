@@ -3546,3 +3546,28 @@ com os mesmos dados do atual e da rodada 1. Sem erro no console.
 **A folha:** `flechas_firme/rodada2.png` (F1 × F2 e R1 × R2 em tamanho real sobre o carvão, a flecha ao lado do número e
 o Firme na fileira dos estados, a 2× e a 12×; a carta do Arqueiro na luta a 1920×945, atual × rodada 1 × rodada 2, em
 tamanho real e a 2×). Nada integrado.
+
+### A flecha F2 e o Firme R2 no jogo (1.155.0)
+
+**Decisão de Jean (20/10/2026):** a F2 e a R2 do `bc849647` aprovadas e integradas sem retoques, cada uma só no seu
+papel: a flecha ao lado da quantidade de flechas na carta do Arqueiro; o ícone do estado Firme.
+
+**Os arquivos:** as fontes do `bc849647` copiadas sem mudança para `ferramentas/arte/aseprite/contador-flechas/
+contador-flechas-16.aseprite` e `estado-firme/estado-firme-16.aseprite`; o `exportar_aseprite.py` grava
+`rpg/web/static/hud/icones/contador-flechas-16.png` e `estado-firme-16.png` com os @2x, idênticos, byte a byte, aos de
+`flechas_firme/proposta/` (`flecha_contador_f2-16`, `firme_r2-16`). A F1 e a R1 continuam no protótipo como histórico.
+
+**Os papéis** (`icones.js`): `TAMANHOS` com os dois de 16; o papel novo `ESTADO` (`firme` → `estado-firme`), pedido por
+`Icones.estado(id, 16)` no chip da carta (`efeitosHtml`) e no selo do estado que chega (`.faixa-acao.selos`), em
+`batalha.js`; e `Icones.contadorFlechas(16)` na `.carta-flechas`. Os dois com a classe `pixel` (pixel a pixel, como os
+sprites dos outros estados na mesma fileira: a regra dos desenhos da família, `image-rendering: auto`, os borrava a ~18
+px pelo zoom da HUD). Sem desenho, a tela volta ao sprite do jogo, como antes. Não mudam: o sprite `flecha` (o custo das
+habilidades, a orientação, o elemento "à distância", os projéteis), a aljava, o sprite `cadeado` (o talento
+Armadilheiro, o bloqueio de vida, os motivos do mercado, o Salvar), os outros estados, as regras, as durações, as
+quantidades, os textos e as medidas (o mesmo `--s: 16`).
+
+**Conferido no jogo** com os arquivos de produção, a 1920×945 (`flechas_firme/auxiliares/fotografar_luta.mjs` com
+`MODOS=atual`, as capturas em `flechas_firme/capturas/integracao/`): a flecha ao lado do "20" e o Firme ativo na carta,
+com os mesmos dados das propostas; a linha das flechas e o ícone do Firme são idênticos aos da rodada 2 aprovada (a
+única diferença, de no máximo 12 níveis em 20 pixels, é o brilho animado da borda do chip). Sem erro no console. A folha:
+`flechas_firme/f2-r2-integracao-1.155.0.png` (antes × depois, a 2×).

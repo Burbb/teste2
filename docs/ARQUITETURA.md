@@ -77,6 +77,11 @@ pacote: `from rpg.combate import Combate`.
   perda de turno, imunidade, resistência, camadas e como o Grimório o descreve. `aplicar()` e
   `processar_efeitos()` são genéricos: só leem o catálogo. A tela recebe ícones e dicas pelo estado (`"estados"`)
   e, em cada carta, a frase do agora com o número (`agora`: "+60% de dano por 2 turnos", não "causa mais dano").
+  O ícone de um estado é o sprite que o catálogo dá; um estado com desenho próprio na família (`Icones.estado`, papel
+  `ESTADO` em `icones.js`) usa o arquivo no chip da carta e no selo do estado que chega: desde a 1.155.0, o Firme (a
+  corrente rompida, `estado-firme-16.png`), enquanto o sprite `cadeado` fica nos outros papéis. A flecha ao lado da
+  quantidade de flechas na carta do Arqueiro também tem papel próprio (`Icones.contadorFlechas`, 1.155.0); o sprite
+  `flecha` fica no custo das habilidades, na orientação, no elemento "à distância" e nos projéteis.
 - Acúmulo de bônus, como nos jogos do gênero: **a mesma fonte renova** (aplicar o mesmo estado de novo fica com o
   maior valor e o maior prazo) e **fontes diferentes somam lado a lado**, cada uma com o seu estado (`fortalecido`
   do Grito de Guerra, `furia` da Fúria Cega, `frenesi` do talento): cada uma multiplica o dano na sua vez. Bônus novo

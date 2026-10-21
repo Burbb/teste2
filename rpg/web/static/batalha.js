@@ -106,7 +106,7 @@ const Batalha = (() => {
       const texto = f.texto || (ESTADOS[f.id] && ESTADOS[f.id].dica);
       const extra = texto ? ` · ${texto}` : "";
       const camadas = f.camadas ? `<i class="camadas">×${f.camadas}</i>` : "";
-      return `<span class="ef fam-${fam}${f.camadas ? " acumulado" : ""}" data-ef="${esc(f.id)}" title="${esc(f.nome)} (${Texto.plural(f.turnos, "turno")})${dano}${extra}">${S(ic, 1)}<b>${f.turnos > 9 ? "∞" : f.turnos}</b>${camadas}</span>`;
+      return `<span class="ef fam-${fam}${f.camadas ? " acumulado" : ""}" data-ef="${esc(f.id)}" title="${esc(f.nome)} (${Texto.plural(f.turnos, "turno")})${dano}${extra}">${Icones.estado(f.id, 16) || S(ic, 1)}<b>${f.turnos > 9 ? "∞" : f.turnos}</b>${camadas}</span>`;
     }).join("");
   }
 
@@ -175,7 +175,7 @@ const Batalha = (() => {
         fl.hidden = !tem;
         if (tem) {
           const txt = `${Math.max(0, heroi.flechas)}`;  // zerada fica vermelha; a explicação vai na dica
-          if (fl.dataset.v !== txt) { fl.dataset.v = txt; fl.innerHTML = `${S("flecha", 1)}<b>${txt}</b>`; }
+          if (fl.dataset.v !== txt) { fl.dataset.v = txt; fl.innerHTML = `${Icones.contadorFlechas(16) || S("flecha", 1)}<b>${txt}</b>`; }
           fl.classList.toggle("poucas", heroi.flechas <= 8);
           fl.classList.toggle("zerada", heroi.flechas <= 0);
           fl.title = `Flechas: ${heroi.flechas} (a aljava leva ${heroi.max_flechas || 30}). Sem flechas, o ataque vira um golpe de adaga fraco e as habilidades de tiro ficam bloqueadas.`;
@@ -486,7 +486,7 @@ const Batalha = (() => {
     if (velho) velho.remove();
     const f = document.createElement("div");
     f.className = "faixa-acao selos" + (desce ? " ruim" : "");
-    f.innerHTML = ids.map((id) => `<span>${S(efeito(id)[0], 1)}<b>${desce ? "▼" : "▲"}</b></span>`).join("");
+    f.innerHTML = ids.map((id) => `<span>${Icones.estado(id, 16) || S(efeito(id)[0], 1)}<b>${desce ? "▼" : "▲"}</b></span>`).join("");
     avisar(el, f);
     Sensacao.depois(1500, () => f.remove());
   }

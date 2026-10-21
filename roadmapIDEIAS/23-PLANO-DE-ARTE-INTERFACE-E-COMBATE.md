@@ -50,7 +50,7 @@ os usos dos sprites estejam migrados. Conferir `Icones` e os catálogos antes de
 | 1B | Corrigir a sequência visual do consumo de recurso e mostrar o bloqueio de vida máxima por ferimentos | Feito: 1.114.1 (o custo) e 1.115.0 (a vida bloqueada) |
 | 1C | Prototipar dado mais visível, iniciativa e indicação dos turnos; facilitar consulta aos testes de atributos | Feito: 1.116.0/1.116.1 (iniciativa e turnos), 1.117.0 (a rolagem no centro), 1.118.0 (os testes na ficha) |
 | 1D | Fechar equipamentos e objetos da bolsa; concluir ícones gerais já trabalhados | **Agora.** Atributos, nove atalhos da doca e principais recursos/consumíveis integrados. Espada e maça integradas (1.145.0), a cota (1.146.0), a manopla (1.147.0), o elmo e as perneiras (1.148.0), o 40/48 do martelo (1.149.0) e as botas de ferro (1.150.0): os 31 equipamentos-base concluídos. Conferir usos residuais antes de fechar o lote |
-| 1E | Desvio visual após os itens: flechas, buffs/estados, inimigos, pets, caminhos e minimapa | **Próximo bloco, aprovado como sequência em 19/10.** Começar pela contagem de flechas do Arqueiro e por Firme; critérios no item 1.12. Talentos e habilidades ficam para a etapa 8 |
+| 1E | Desvio visual após os itens: flechas, buffs/estados, inimigos, pets, caminhos e minimapa | **Próximo bloco, aprovado como sequência em 19/10.** Começar pela contagem de flechas do Arqueiro e por Firme; critérios no item 1.12. **A flecha da carta (F2) e o Firme (R2) no jogo desde a 1.155.0.** Talentos e habilidades ficam para a etapa 8 |
 | 2–9 | Telas, serviços, cenários, habilidades e campanha | Sequência detalhada abaixo |
 
 A etapa 1 não precisa terminar todo o catálogo antes de tratar um defeito de compreensão no combate.
@@ -837,7 +837,7 @@ em tamanho real e no conjunto dos estados, sem mudar nome, duração, imunidades
 **Primeiro par proposto (20/10/2026, em avaliação, nada integrado):** a flecha da carta do Arqueiro (F1) e o Firme (R1),
 em 16 px, em `ferramentas/prototipos/hud/itens-lote-noite/flechas_firme/` (o levantamento, as referências e as fotos no
 `LEIA-ME.md` do lote). A troca futura atinge só esses dois papéis: um desenho próprio para `.carta-flechas` e um ícone
-próprio para o estado `firme`; a aljava, os outros usos de `flecha` e os outros cadeados ficam. Segunda rodada (20/10/2026): a F2 (as penas na traseira, menores, sem madeira atrás) e a R2 (sem as faíscas, o furo dos elos mais legível), em avaliação.
+próprio para o estado `firme`; a aljava, os outros usos de `flecha` e os outros cadeados ficam. Segunda rodada (20/10/2026): a F2 (as penas na traseira, menores, sem madeira atrás) e a R2 (sem as faíscas, o furo dos elos mais legível), **aprovadas e integradas na 1.155.0** por papéis próprios (`Icones.contadorFlechas` e `Icones.estado`), com o sprite `flecha` e o `cadeado` intactos nos outros papéis. Os outros estados e o resto do bloco 1E continuam com os sprites do jogo.
 
 O atalho **Mapa** da doca já foi concluído; esta frente trata dos símbolos internos de caminhos e mapas.
 Não afirmar que só restam talentos e habilidades após este bloco sem conferir os consumíveis, variantes e

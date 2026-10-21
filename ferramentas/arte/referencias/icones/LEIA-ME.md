@@ -15,3 +15,5 @@ haste fina na diagonal, a ponta pequena em cima à direita, as penas curtas nos 
 com as pontas de trás viradas para fora, e nenhuma madeira sobrando atrás delas. As outras flechas da prancha só ajudam
 a comparar a posição das penas; as cores, os efeitos e os ornamentos delas não vêm. Para guardar a prancha aqui, o
 Jean pode deixar o arquivo nesta pasta.
+
+**No jogo desde a 1.155.0:** a F2 (a flecha da carta) e a R2 (o Firme).

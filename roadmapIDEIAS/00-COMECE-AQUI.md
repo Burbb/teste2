@@ -5175,3 +5175,12 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Feito:** a R2 e a F2 em `ferramentas/prototipos/hud/itens-lote-noite/flechas_firme/` (fontes em camadas, @2x), com a
   F1 e a R1 preservadas; a folha `rodada2.png` com a carta na luta a 1920×945, atual × rodada 1 × rodada 2.
 - **Continua:** nada integrado da flecha nem do Firme; a versão continua 1.154.0.
+
+### 20/10/2026 (data do computador local) — A flecha da carta (F2) e o Firme (R2) no jogo (1.155.0)
+
+- **Decisão de Jean:** integrar a F2 e a R2 do `bc849647`, sem retoques, cada uma só no seu papel.
+- **Feito:** as fontes em `ferramentas/arte/aseprite/contador-flechas/` e `estado-firme/`; os PNGs de 16 e @2x idênticos
+  aos aprovados; em `icones.js`, o papel `ESTADO` (`Icones.estado`) e o `Icones.contadorFlechas`, chamados por
+  `batalha.js` no chip e no selo dos estados e na `.carta-flechas`, com volta ao sprite do jogo sem desenho. O `flecha`
+  e o `cadeado` ficam nos outros papéis. Conferido no jogo a 1920×945.
+- **Continua:** os outros estados e o resto do bloco 1E (inimigos, pets, caminhos) não começados.

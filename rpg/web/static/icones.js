@@ -28,6 +28,7 @@ const Icones = (() => {
     "atalho-mapa": [32, 36], "atalho-sair": [32, 36], "atalho-salvar": [32, 36], "atalho-talentos": [32, 36],
     "attr-agilidade": [24, 32, 64], "attr-ataque": [24, 32, 64], "attr-defesa": [24, 32, 64], "attr-poder": [24, 32, 64],
     "bandagem": [16, 24, 32], "bau": [32, 48, 64], "bomba": [32], "botas-ferro": [32, 40, 48, 64],
+    "contador-flechas": [16], "estado-firme": [16],
     "cota": [32, 40, 48, 64], "elmo": [32, 40, 48, 64], "escudo": [32, 40, 48, 64], "espada": [32, 40, 48, 64], "lugar-caverna": [32, 40],
     "lugar-cidadela": [32, 40], "lugar-floresta": [32, 40], "lugar-montanha": [32, 40], "lugar-pantano": [32, 40],
     "lugar-planicie": [32, 40], "lugar-ruinas": [32, 40], "lugar-vila": [32, 40], "maca": [32, 40, 48, 64],
@@ -153,6 +154,11 @@ const Icones = (() => {
   // a roda da luta: o ataque da classe (a espada do Guerreiro, 1.145.0), Habilidades (o grimório), Itens (a poção) e Fugir (a
   // bota com os riscos de movimento, a mesma da Agilidade: correr, não a porta do Sair)
   const ACAO = { espada: "espada", grimorio: "atalho-grimorio", pocao: "pocao", fuga: "attr-agilidade" };
+  // os ícones dos estados da luta (16, o chip da carta e o selo do estado que chega), pelo id do estado no motor
+  // (rpg/estados.py): o Firme (1.155.0, a corrente rompida: dois elos com o vão da ruptura). Só o estado: o "cadeado"
+  // do jogo fica nos outros papéis (o talento Armadilheiro, o bloqueio de vida, os motivos do mercado, o Salvar); os
+  // estados sem desenho aqui ficam com o sprite que o catálogo do motor dá a eles
+  const ESTADO = { firme: "estado-firme" };
 
   /** O arquivo de `peca` para mostrar em `lado` px: o tamanho igual ou o mais perto; maior que o maior, o dobro dele. */
   function arquivos(peca, lado) {
@@ -227,6 +233,14 @@ const Icones = (() => {
     atalho: (nome, lado = 36) => img(ATALHO[nome], lado),
     lugar: (sprite, lado = 32) => img(LUGAR[sprite], lado),
     acao: (sprite, lado = 32) => img(ACAO[sprite], lado),
+    /** O ícone de um estado da luta pelo id do motor (ESTADO), ou "" para o sprite do catálogo. Pixel a pixel ("pixel"),
+     *  como os sprites dos outros estados na mesma fileira (o zoom da HUD o leva a ~18 px, e o "auto" dos desenhos o
+     *  borrava ao lado deles). */
+    estado: (id, lado = 16) => img(ESTADO[id], lado, "pixel"),
+    /** A flecha ao lado da quantidade de flechas na carta do Arqueiro (1.155.0, 16 px: a ponta de aço, a haste e as
+     *  penas na traseira). Só esse papel: o sprite "flecha" do jogo fica no custo das habilidades, na orientação, no
+     *  elemento "à distância" e nos projéteis, e a aljava é o recurso do topo. Pixel a pixel, como o estado. */
+    contadorFlechas: (lado = 16) => img("contador-flechas", lado, "pixel"),
     /** A cabeça de alguém com retrato (retratos.js: o herói pela classe, o companheiro pelo id): em 48 px (o topo, os
      *  cartões da Comitiva e da reação, a faixa de quem chega) a cabeça; em 32 px (a carta da luta, o painel, o aviso) a
      *  versão da carta; em 16 px (o chip de aprovação no texto) a figura de 16×16. Pixel a pixel, sem suavizar. */
