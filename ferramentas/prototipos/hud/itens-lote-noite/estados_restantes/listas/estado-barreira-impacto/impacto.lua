@@ -1,0 +1,1 @@
+return "1,4,d4f4ff;0,5,d4f4ff;1,5,d4f4ff;2,5,d4f4ff;4,5,1a1c20;1,6,d4f4ff;2,6,d4f4ff;3,6,d4f4ff;5,6,1a1c20;6,6,1a1c20;0,7,d4f4ff;1,7,d4f4ff;2,7,d4f4ff;3,7,d4f4ff;4,7,d4f4ff;6,7,1a1c20;1,8,d4f4ff;2,8,d4f4ff;3,8,d4f4ff;5,8,1a1c20;6,8,1a1c20;0,9,d4f4ff;1,9,d4f4ff;2,9,d4f4ff;4,9,1a1c20;1,10,d4f4ff"

@@ -1,0 +1,170 @@
+{
+ "barreira-heroi/atual": {
+  "estados": [
+   "j:barreira"
+  ],
+  "imagens": [
+   "barreira 16px → 17.9px (sprite ou troca da página)"
+  ],
+  "cartas": [
+   "j"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "barreira-heroi/proposta": {
+  "estados": [
+   "j:barreira"
+  ],
+  "imagens": [
+   "barreira 16px → 17.9px (sprite ou troca da página)"
+  ],
+  "cartas": [
+   "j"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "barreira-heroi/proposta-r2": {
+  "estados": [
+   "j:barreira"
+  ],
+  "imagens": [
+   "barreira 16px → 17.9px (sprite ou troca da página)"
+  ],
+  "cartas": [
+   "j"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "barreira-heroi/proposta-cupula": {
+  "estados": [
+   "j:barreira"
+  ],
+  "imagens": [
+   "barreira 16px → 17.9px (sprite ou troca da página)"
+  ],
+  "cartas": [
+   "j"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "barreira-heroi/proposta-parede": {
+  "estados": [
+   "j:barreira"
+  ],
+  "imagens": [
+   "barreira 16px → 17.9px (sprite ou troca da página)"
+  ],
+  "cartas": [
+   "j"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "barreira-heroi/proposta-impacto": {
+  "estados": [
+   "j:barreira"
+  ],
+  "imagens": [
+   "barreira 16px → 17.9px (sprite ou troca da página)"
+  ],
+  "cartas": [
+   "j"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "barreira-heroi-guarda/atual": {
+  "estados": [
+   "j:barreira",
+   "j:guarda"
+  ],
+  "imagens": [
+   "barreira 16px → 17.9px (sprite ou troca da página)",
+   "guarda 16px → 17.9px /static/hud/icones/estado-guarda-16.png"
+  ],
+  "cartas": [
+   "j"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "barreira-heroi-guarda/proposta": {
+  "estados": [
+   "j:barreira",
+   "j:guarda"
+  ],
+  "imagens": [
+   "barreira 16px → 17.9px (sprite ou troca da página)",
+   "guarda 16px → 17.9px /static/hud/icones/estado-guarda-16.png"
+  ],
+  "cartas": [
+   "j"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "barreira-heroi-guarda/proposta-r2": {
+  "estados": [
+   "j:barreira",
+   "j:guarda"
+  ],
+  "imagens": [
+   "barreira 16px → 17.9px (sprite ou troca da página)",
+   "guarda 16px → 17.9px /static/hud/icones/estado-guarda-16.png"
+  ],
+  "cartas": [
+   "j"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "barreira-heroi-guarda/proposta-cupula": {
+  "estados": [
+   "j:barreira",
+   "j:guarda"
+  ],
+  "imagens": [
+   "barreira 16px → 17.9px (sprite ou troca da página)",
+   "guarda 16px → 17.9px /static/hud/icones/estado-guarda-16.png"
+  ],
+  "cartas": [
+   "j"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "barreira-heroi-guarda/proposta-parede": {
+  "estados": [
+   "j:barreira",
+   "j:guarda"
+  ],
+  "imagens": [
+   "barreira 16px → 17.9px (sprite ou troca da página)",
+   "guarda 16px → 17.9px /static/hud/icones/estado-guarda-16.png"
+  ],
+  "cartas": [
+   "j"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "barreira-heroi-guarda/proposta-impacto": {
+  "estados": [
+   "j:barreira",
+   "j:guarda"
+  ],
+  "imagens": [
+   "barreira 16px → 17.9px (sprite ou troca da página)",
+   "guarda 16px → 17.9px /static/hud/icones/estado-guarda-16.png"
+  ],
+  "cartas": [
+   "j"
+  ],
+  "erros": [],
+  "avisos": []
+ }
+}

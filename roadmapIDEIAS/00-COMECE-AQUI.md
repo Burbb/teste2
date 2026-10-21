@@ -5331,3 +5331,14 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   chegada no jogo. O MCP do Aseprite continuou conectado depois das exportações em lote. Folha:
   `estados_restantes/integracao-1.159.0.png`.
 - **Continua:** Veneno, Iniciativa, Atordoado e Barreira em novas alternativas; Provocando pendente, sem mudança.
+
+### 21/10/2026 (data do computador local) — A terceira rodada: Veneno, Iniciativa, Atordoado e Barreira (proposta)
+
+- **Feito:** a gota do Veneno sem a poça (a serpente preservada e recomendada); três exclamações para a Iniciativa (a
+  barra larga, o estouro, a inclinada com rastro); três conceitos estáticos para o Atordoado (as estrelinhas, a
+  ampulheta parada, o elmo rachado); três Barreiras sem pessoa (a cúpula, a parede que para a flecha, o golpe na
+  película). Fontes montadas **no editor pelo MCP**, exportação conferida, o conector de pé depois das exportações em
+  lote. Folhas `rodada3-<estado>.png` e a prancha `geral.png` com integrados, alternativas não escolhidas e propostas
+  em avaliação; a avaliação no `LEIA-ME.md` de `estados_restantes/`.
+- **Continua:** nada destes aprovado; Provocando pendente, sem mudança; a versão continua 1.159.0. Inimigos, pets e
+  outras etapas não começados.

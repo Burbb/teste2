@@ -310,3 +310,64 @@ estado, para `ferramentas/arte/aseprite/estado-<id>/`; o exportador grava os PNG
 jogo:** o Grito de Guerra usa a animação do grito, que dispensa o selo, e o uivo, o grito dos inimigos e o talento
 Frenesi aplicam o estado direto. O Atordoado continua com o sprite. Sem erro nem aviso no console. Folha:
 `integracao-1.159.0.png`.
+
+## A terceira rodada: Veneno, Iniciativa, Atordoado e Barreira (21/10/2026)
+
+**Pedido de Jean:** a gota verde do Veneno sem a poça; três exclamações para a Iniciativa (a espada em movimento não foi
+escolhida); três conceitos estáticos novos para o Atordoado (a espiral não foi aprovada); três Barreiras sem pessoa
+dentro. Provocando preservado, sem mudança. Nada destes autorizado para integração.
+
+**Processo:** as grades em `icones16.py` (a seção "a terceira rodada"); as fontes montadas **no editor pelo MCP**
+(`auxiliares/montar_mcp.py` gera o roteiro: o documento com as camadas, o `pintar.lua` com a releitura de cada pixel,
+salvar o `.aseprite` e fechar), todas com "0 diferentes na releitura"; a exportação e a conferência pela linha de
+comando (`montar.py --so-exportar`: o 1× igual à grade, @2x exato, alfa 0/255). O conector continuou de pé depois das
+exportações em lote (`get_version` respondeu logo depois de cada leva). As folhas por estado (`rodada3-<estado>.png`,
+`prancha.py rodada3 <estado>`): cada opção identificada, em chips junto dos 12 estados do jogo, a 12×, e a carta na
+luta a 1920×945 com os mesmos dados em cada opção.
+
+- **Veneno — a gota sem a poça** (`estado-veneno-gota2`): a gota da rodada 2 sem a poça e os respingos, centrada no
+  quadro; a borda de baixo já fechava redonda (5 px na última linha) e não precisou de acabamento. Sozinha no chip, lê
+  como gota verde, mas fica muito perto do sprite que já está no jogo (a mesma silhueta de gota com um reflexo): perdeu
+  justamente o que a separava do Sangramento além da cor. A serpente continua preservada e **continua a minha
+  recomendação**.
+- **Iniciativa — três exclamações** (a exclamação com raios preservada):
+  A, `estado-iniciativa-cunha`: a barra larga dourada de 4 px, com bisel claro à esquerda, a ponta curta e o ponto
+  quadrado separado; a mais limpa e com mais peso.
+  B, `estado-iniciativa-estouro`: a exclamação escura sobre um estouro creme e laranja, de bordas em ponta (o alerta
+  dos quadrinhos); a de mais presença no chip.
+  C, `estado-iniciativa-italico`: a exclamação inclinada para a frente com dois riscos de velocidade atrás; no 1× vira
+  um "=/" e é a mais fraca.
+  Nenhuma encosta no número com algo que pareça pontuação. Na bancada, a primeira cunha (larga em cima, fina embaixo)
+  voltou a lembrar uma taça e foi refeita.
+- **Atordoado — três conceitos novos** (a espiral preservada, não aprovada):
+  A, `estado-atordoado-estrelas`: três estrelinhas douradas em arco, a mesma linguagem das estrelas que o jogo já anima
+  sobre o retrato de quem está atordoado; lê bem, mas também pode ler como "avaliação de três estrelas".
+  B, `estado-atordoado-ampulheta`: a ampulheta de madeira com a areia parada ("perde o turno"); clara e distinta de
+  todos os outros estados, e diz a regra, não a sensação.
+  C, `estado-atordoado-elmo`: o elmo de ferro com a viseira, uma rachadura clara e a faísca do golpe; no 1× lembra uma
+  bomba cinza com pavio, é a mais fraca.
+  Recusado na bancada: a corrente fechada (o par do Firme), que lia como óculos (a grade `ATORDOADO_CORRENTE` fica em
+  `icones16.py`, sem fonte).
+- **Barreira — três construções sem pessoa** (a figura na bolha preservada):
+  A, `estado-barreira-cupula`: a cúpula oca de energia sobre o chão, a borda clara à esquerda e escura à direita, com
+  um reflexo por dentro; lê como cúpula, às vezes como tampa.
+  B, `estado-barreira-parede`: a parede de luz vertical parando uma flecha que chega da esquerda (a absorção); a mais
+  clara sobre o que o estado faz, e bem distinta do escudo do Em guarda.
+  C, `estado-barreira-impacto`: a película circular com o golpe estourando na borda esquerda e a rachadura entrando
+  (absorve até romper); a primeira versão, com o impacto no alto à direita, lia como uma bomba com pavio e foi mudada;
+  ainda é a mais frágil.
+  Tentativa guardada: `estado-barreira-campo` (o cilindro de energia com as colunas de luz), que lia como uma gaiola
+  ("preso", o Atordoado). Recusada na bancada antes da fonte: a colmeia de hexágonos (lia como cristais).
+- **Fotos:** o herói contra ratos e os lobos envenenados (Veneno), o Arqueiro com a Iniciativa, os lobos atordoados e
+  enfraquecidos (Atordoado) e o Mago com a Barreira, sozinha e ao lado do Em guarda; o atual, as opções preservadas e as
+  novas, com os mesmos dados. Sem erro nem aviso no console.
+
+**A prancha geral** (`geral.png`, atualizada): os 12 integrados; as alternativas não escolhidas dos estados já
+integrados (as Chamas e o Fortalecido/Enfraquecido do `b17ab3dd`, as setinhas, a espada partida, as divisas do
+Frenesi, a mira do Marcado); as propostas em avaliação (Veneno, Iniciativa, Atordoado, Barreira e Provocando, cada um
+com o sprite atual, as opções preservadas e as novas); e a fileira dos 12 integrados com cada nova opção no fim.
+
+**Minha avaliação desta rodada:** Iniciativa A ou B (a barra larga é a mais limpa; o estouro, a de mais presença);
+Atordoado B (a ampulheta) é o conceito mais claro e mais distinto, com o A (as estrelas) logo atrás; Barreira B (a
+parede parando a flecha) é a que melhor diz "absorve dano". Veneno: a serpente, não a gota. Frágeis: Iniciativa C,
+Atordoado C e Barreira C.
