@@ -3,8 +3,13 @@ tamanho real e a 2×; o Bestiário (a 3×, o tamanho real do cartão) com a vizi
 luta inteira com o animal do herói (o "fera", que não troca); a fileira na caixa da carta ao lado do Morel, da Odette e do
 herói, em tamanho real e a 3×; e a 12× sem suavização, só para achar o pixel.
     python prancha.py
+As folhas da segunda rodada (lobo-r2.png, bandido-r2.png): o Lobo A original × só a base nova × ajustado (a base e o
+olhar), com a silhueta numa cor só e os pixels mudados marcados; os três Bandidos novos ao lado do atual e dos A e B da
+primeira rodada (o histórico); a carta e o Bestiário a 1920×945, a fileira e a 12×.
+    python prancha.py r2
 """
 import pathlib
+import sys
 
 from PIL import Image, ImageChops, ImageDraw, ImageFont
 
@@ -110,6 +115,149 @@ def folha(nome):
     print(f"{nome}.png", out.size)
 
 
-if __name__ == "__main__":
+def silhueta(im16):
+    """A figura numa cor só (a forma, sem a luz), a 6×."""
+    sil = Image.new("RGBA", (16, 16))
+    for y in range(16):
+        for x in range(16):
+            if im16.getpixel((x, y))[3]:
+                sil.putpixel((x, y), (190, 186, 176, 255))
+    return amplia(sil, 6)
+
+
+def caixa(im16):
+    """A caixa escura da carta (38 px) com a cabeça a 2×."""
+    cx = Image.new("RGBA", (38, 38), (42, 36, 32, 255))
+    cx.paste((13, 11, 10, 255), (2, 2, 36, 36))
+    cx.alpha_composite(amplia(im16, 2), (3, 3))
+    return cx
+
+
+def fileira_modos(out, d, y, f2, modos, recorte, arquivo):
+    """Uma fileira de recortes das fotos, um por modo, com o rótulo em cima; devolve o y de baixo."""
+    alto = 0
+    for j, (modo, rot) in enumerate(modos):
+        im = abre(arquivo.format(modo=modo)).crop(recorte)
+        x = 20 + j * (im.width + 20)
+        d.text((x, y), rot, fill=TEXTO2, font=f2)
+        out.alpha_composite(im, (x, y + 16))
+        alto = im.height
+    return y + 16 + alto + 16
+
+
+def cartas_2x(out, y, modos, recorte):
+    """As cartas da luta a 2×, duas por linha; devolve o y de baixo."""
+    for j, (modo, _) in enumerate(modos):
+        im = amplia(abre(f"luta-{modo}-palco.png").crop(recorte), 2)
+        out.alpha_composite(im, (20 + (j % 2) * (im.width + 20), y + (j // 2) * (im.height + 12)))
+    return y + ((len(modos) + 1) // 2) * (2 * (recorte[3] - recorte[1]) + 12) + 16
+
+
+def fileira_caixas(out, d, y, f2, caixas):
+    """As caixas em tamanho real numa linha e a 3× na de baixo, com o rótulo; devolve o y de baixo."""
+    for j, (_, cx) in enumerate(caixas):
+        out.alpha_composite(cx, (20 + j * 46, y))
+    y += 50
+    for j, (rot, cx) in enumerate(caixas):
+        out.alpha_composite(amplia(cx, 3), (20 + j * 124, y))
+        d.text((20 + j * 124, y + 118), rot, fill=TEXTO2, font=f2)
+    return y + 3 * 38 + 40
+
+
+def comitiva():
+    ali = Image.open(PASTA.parent / "capturas/aliados-palco.png").convert("RGBA")
+    return [("Morel", ali.crop((46, 176, 84, 214))), ("Odette", ali.crop((46, 234, 84, 272))),
+            ("o herói", abre("luta-atual-palco.png").crop((46, 54, 84, 92)))]
+
+
+def folha_lobo_r2():
+    f, f2 = ImageFont.truetype("arial.ttf", 15), ImageFont.truetype("arial.ttf", 12)
+    out = Image.new("RGBA", (1800, 2200), CARVAO)
+    d = ImageDraw.Draw(out)
+    d.text((20, 10), "Lobo, segunda rodada: a cabeça A preservada; embaixo, o começo do pescoço de um quadrúpede no lugar do "
+                     "busto — proposta, nada no jogo", fill=TEXTO, font=f)
+    y = 44
+    versoes = (("lobo-a", "A original (a primeira rodada)"), ("lobo-a-base", "só a base nova"),
+               ("lobo-a-ajustado", "ajustado: a base, o olhar e o focinho"))
+    d.text((20, y), "a silhueta numa cor só (6×); 1×, a carta (2×) e a 12× com os pixels diferentes do original em vermelho",
+           fill=TEXTO, font=f2)
+    y += 20
+    orig = imagem("lobo-a")
+    for j, (ident, rot) in enumerate(versoes):
+        x = 20 + j * 330
+        im = imagem(ident)
+        d.text((x, y), rot, fill=TEXTO2, font=f2)
+        out.alpha_composite(silhueta(im), (x, y + 16))
+        g = grade12(im)
+        dd = ImageDraw.Draw(g)
+        for py in range(16):
+            for px in range(16):
+                if im.getpixel((px, py)) != orig.getpixel((px, py)):
+                    dd.rectangle([px * 12, py * 12, px * 12 + 11, py * 12 + 11], outline=(220, 40, 40, 255))
+        out.alpha_composite(im, (x + 110, y + 16)); out.alpha_composite(caixa(im), (x + 140, y + 16))
+        out.alpha_composite(g, (x + 100, y + 16 + 96 + 10))
+    y += 16 + 96 + 10 + 192 + 20
+    modos = (("atual", "atual (traço)"), ("a", "A original"), ("r2-base", "só a base"), ("r2-brutamontes", "ajustado"))
+    d.text((20, y), "a carta na luta a 1920×945 (os mesmos dados) — tamanho real", fill=TEXTO, font=f2)
+    y = fileira_modos(out, d, y + 20, f2, modos, CRIATURAS["lobo"]["carta"], "luta-{modo}-palco.png")
+    d.text((20, y), "a carta a 2×", fill=TEXTO, font=f2)
+    y = cartas_2x(out, y + 20, modos, CRIATURAS["lobo"]["carta"])
+    d.text((20, y), "o Bestiário (o retrato a 3×) — tamanho real", fill=TEXTO, font=f2)
+    y = fileira_modos(out, d, y + 20, f2, modos, CRIATURAS["lobo"]["cartao"], "bestiario-{modo}-pagina.png")
+    nic = nicho("lobo")
+    caixas = comitiva() + [(rot, abre(f"luta-{modo}-palco.png").crop(nic)) for modo, rot in modos]
+    d.text((20, y), "a fileira, na caixa da carta, com os retratos aprovados — tamanho real e 3×", fill=TEXTO, font=f2)
+    y = fileira_caixas(out, d, y + 20, f2, caixas)
+    out = out.crop((0, 0, 1800, y))
+    out.save(PASTA / "lobo-r2.png")
+    print("lobo-r2.png", out.size)
+
+
+def folha_bandido_r2():
+    f, f2 = ImageFont.truetype("arial.ttf", 15), ImageFont.truetype("arial.ttf", 12)
+    out = Image.new("RGBA", (1800, 2400), CARVAO)
+    d = ImageDraw.Draw(out)
+    d.text((20, 10), "Bandido, segunda rodada: três direções novas (o brutamontes, o do chapéu, o da faca); o A e o B da "
+                     "primeira ficam como histórico — proposta, nada no jogo", fill=TEXTO, font=f)
+    y = 44
+    novos = (("bandido-brutamontes", "1, o brutamontes"), ("bandido-chapeu", "2, o do chapéu"), ("bandido-faca", "3, o da faca"))
+    d.text((20, y), "os três novos: 1×, a carta (2×), a caixa a 3× e a 12×", fill=TEXTO, font=f2)
+    y += 20
+    for j, (ident, rot) in enumerate(novos):
+        x = 20 + j * 420
+        im = imagem(ident)
+        d.text((x, y), rot, fill=TEXTO, font=f2)
+        out.alpha_composite(im, (x, y + 20)); out.alpha_composite(caixa(im), (x + 24, y + 20))
+        out.alpha_composite(amplia(caixa(im), 3), (x + 70, y + 20)); out.alpha_composite(grade12(imagem(ident)), (x + 200, y + 20))
+    y += 20 + 192 + 20
+    modos = (("atual", "atual (traço)"), ("r2-brutamontes", "1, o brutamontes"), ("r2-chapeu", "2, o do chapéu"),
+             ("r2-faca", "3, o da faca"))
+    d.text((20, y), "a carta na luta a 1920×945 (os mesmos dados) — tamanho real", fill=TEXTO, font=f2)
+    y = fileira_modos(out, d, y + 20, f2, modos, CRIATURAS["bandido"]["carta"], "luta-{modo}-palco.png")
+    d.text((20, y), "a carta a 2×", fill=TEXTO, font=f2)
+    y = cartas_2x(out, y + 20, modos, CRIATURAS["bandido"]["carta"])
+    d.text((20, y), "o Bestiário (o retrato a 3×) — tamanho real", fill=TEXTO, font=f2)
+    y = fileira_modos(out, d, y + 20, f2, modos, CRIATURAS["bandido"]["cartao"], "bestiario-{modo}-pagina.png")
+    nic = nicho("bandido")
+    caixas = comitiva() + [("A (histórico)", abre("luta-a-palco.png").crop(nic)),
+                           ("B (histórico)", abre("luta-b-palco.png").crop(nic))] + \
+        [(rot, abre(f"luta-{modo}-palco.png").crop(nic)) for modo, rot in modos]
+    d.text((20, y), "a fileira, na caixa da carta, com os retratos aprovados e o histórico — tamanho real e 3×", fill=TEXTO,
+           font=f2)
+    y = fileira_caixas(out, d, y + 20, f2, caixas)
+    luta = abre("luta-r2-faca-palco.png").crop((30, 30, 1050, 210))
+    d.text((20, y), "a luta inteira com o 3 e o Lobo ajustado (tamanho real): o cultista continua no \"humano\", a aranha e o "
+                    "Lobo Cinzento no \"fera\"", fill=TEXTO, font=f2)
+    out.alpha_composite(luta, (20, y + 18))
+    y += 18 + luta.height + 16
+    out = out.crop((0, 0, 1800, y))
+    out.save(PASTA / "bandido-r2.png")
+    print("bandido-r2.png", out.size)
+
+
+if __name__ == "__main__" and sys.argv[1:] == ["r2"]:
+    folha_lobo_r2()
+    folha_bandido_r2()
+elif __name__ == "__main__":
     for nome in CRIATURAS:
         folha(nome)

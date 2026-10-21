@@ -69,3 +69,49 @@ carta e a 3× no Bestiário; nenhum desenho nativo de 32 nem de 48. Na escala da
 - **Bandido B:** a silhueta do capuz é a mais diferente de todos os retratos humanos e diz "salteador de estrada". Fraco:
   o capuz pardo ocupa quase todo o quadro e escurece a carta; a trança mal aparece a 2×, então a leitura de que é uma
   mulher depende da franja e do rosto; o capuz chega perto do cultista e dos vultos de capa da sacristia.
+
+## Segunda rodada (21/10/2026)
+
+**Pedido de Jean:** o Lobo A é a direção escolhida (a cabeça, a paleta, as orelhas e o focinho ficam), mas embaixo as
+massas dos lados e o centro claro liam como ombros e peito de um lobo humanoide: mostrar a cabeça de um quadrúpede com só
+o começo do pescoço e da pelagem, sem só subir a imagem, e depois um ajuste discreto no olhar e nos planos do focinho para
+tirar o ar de cachorro manso, sem caricatura nem nada sobrenatural. O Bandido A e o B não foram escolhidos (o A ficou comum
+e pouco ameaçador): três direções novas, com ameaça, malícia ou brutalidade legíveis no retrato pequeno. Nada aprovado.
+
+- **Lobo A, só a base** (`lobo-a-base`): a cabeça no mesmo lugar (as orelhas no topo, o espaço delas preservado); da
+  mandíbula para baixo, os tufos da bochecha saindo dos lados do queixo, a garganta na sombra e o pescoço estreito que
+  desce para a direita, para o corpo fora do quadro, com a borda da luz à esquerda. Saíram o peito claro e os dois
+  ombros; o canto de baixo à esquerda fica vazio.
+- **Lobo A ajustado** (`lobo-a-ajustado`): a mesma base, mais a sombra da testa por cima do canto de dentro dos olhos (o
+  olhar fica atento, um pouco franzido), o alto do focinho claro com os lados na cor do pelo (o focinho ganha volume) e a
+  linha escura da boca dos dois lados do queixo. A folha marca em vermelho os pixels diferentes do original.
+- **Bandido 1, o brutamontes** (`bandido-brutamontes`; roupa, pele, barba, rosto): careca e largo, a cicatriz vermelha
+  no alto do crânio, as sobrancelhas em V, os olhos pequenos, o nariz quebrado, os dentes falhados cerrados no meio da
+  barba, o pescoço grosso no couro. Na bancada, a primeira versão sorria como um camarada; a boca virou a careta.
+- **Bandido 2, o do chapéu** (`bandido-chapeu`; roupa, lenço, chapéu, cabelo, pele, rosto): a aba larga que põe a
+  testa na sombra, os olhos desviados, o meio sorriso de lado, o cabelo comprido, o lenço vermelho e o casaco escuro. Na
+  bancada, a boca aberta parecia um caçador falando; ficou o canto torto.
+- **Bandido 3, o da faca** (`bandido-faca`; capuz, pele, máscara, rosto, faca, mão): o capuz cinza, a máscara de pano
+  vermelho até o nariz, os olhos que encaram por baixo da testa franzida, a faca erguida na mão ao lado do rosto.
+- **Processo:** as grades em `auxiliares/grades.py`, as fontes pelo MCP (`pintar.lua`, 0 diferentes na releitura), a
+  exportação conferida (as nove iguais à grade, @2x exato). Fotos a 1920×945 com os mesmos dados da primeira rodada
+  (`MODOS=r2-base,r2-brutamontes,r2-chapeu,r2-faca`: o Lobo só com a base ao lado do bandido de hoje, e o Lobo ajustado
+  com cada Bandido novo), sem erro nem aviso no console. As folhas: `lobo-r2.png` e `bandido-r2.png`
+  (`python auxiliares/prancha.py r2`).
+
+**Avaliação (a minha leitura em tamanho real; quem aprova é o Jean):**
+
+- **O Lobo** deixou de ter o busto: na silhueta numa cor só, o original é uma cabeça sobre dois ombros; o novo é uma
+  cabeça com o pescoço indo para trás. Na carta (2×) a cabeça continua a mesma. O ajustado lê um pouco mais alerta que o
+  "só a base" sem mudar o animal; a diferença é pequena a 2× e aparece mais no Bestiário. Fraco: o pescoço de lado
+  deixa o quadro um pouco desequilibrado (o vazio embaixo à esquerda). Minha preferência: o ajustado.
+- **Bandido 1, o brutamontes:** o mais brutal e o de leitura mais imediata (a careca, a cicatriz, os dentes); bem
+  diferente dos heróis e da comitiva. Fraco: a careca clara e os dentes chegam perto de um ogro ou de um bárbaro, menos
+  de "salteador da estrada".
+- **Bandido 2, o do chapéu:** a malícia (o olhar desviado e o canto da boca) e uma silhueta própria; o lenço guarda a
+  ligação com o bandido de hoje. Fraco: a 2× o meio sorriso é sutil e pode ler como bigode; o chapéu puxa para um
+  caçador ou um pistoleiro.
+- **Bandido 3, o da faca (minha preferência):** a ameaça mais clara no tamanho da carta: a faca, a máscara e os olhos
+  dizem "assalto" sem texto; a máscara vermelha continua a identidade do bandido de hoje, mas com rosto e intenção. Fraco:
+  o capuz cinza é o mais escuro dos três, a faca encosta na borda do quadro, e a máscara esconde a boca (a expressão fica
+  só nos olhos).

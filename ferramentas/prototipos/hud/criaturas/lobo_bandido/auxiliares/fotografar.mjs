@@ -3,7 +3,7 @@
 // da criatura (o jogo escolhe pelo traço: o lobo é o "fera", o bandido o "humano"). Situações: uma luta com dois
 // lobos, uma aranha (também "fera"), dois bandidos e um cultista (também "humano"), com o Lobo Cinzento do patrulheiro
 // do lado do herói (também "fera": não troca); e o Bestiário com as mesmas espécies.
-//   [MODOS=atual,a,b] PLAYWRIGHT_MODULO=<file:// do index.mjs> node fotografar.mjs <raiz> <pasta das fotos>
+//   [MODOS=atual,a,b | r2-base,r2-brutamontes,r2-chapeu,r2-faca] PLAYWRIGHT_MODULO=<file:// do index.mjs> node fotografar.mjs <raiz> <pasta das fotos>
 import { spawn } from "child_process";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import path from "path";
@@ -16,7 +16,11 @@ const dados = (id) => "data:image/png;base64," + readFileSync(path.join(aqui, `$
 // o nome inteiro da espécie (o afixo, quando há, vem depois: "Lobo feroz"); o animal do herói ("Lobo Cinzento") fica
 // de fora porque a troca é só nas cartas inimigas
 const TROCAS = { a: [["^Lobo( |$)", dados("lobo-a")], ["^Bandido( |$)", dados("bandido-a")]],
-  b: [["^Lobo( |$)", dados("lobo-b")], ["^Bandido( |$)", dados("bandido-b")]] };
+  b: [["^Lobo( |$)", dados("lobo-b")], ["^Bandido( |$)", dados("bandido-b")]],
+  // a segunda rodada: o Lobo A só com a base nova (o bandido de hoje), e o Lobo A ajustado com cada Bandido novo
+  "r2-base": [["^Lobo( |$)", dados("lobo-a-base")]] };
+for (const bd of ["brutamontes", "chapeu", "faca"])
+  TROCAS[`r2-${bd}`] = [["^Lobo( |$)", dados("lobo-a-ajustado")], ["^Bandido( |$)", dados(`bandido-${bd}`)]];
 const MODOS = (process.env.MODOS || "atual,a,b").split(",");
 const SITUACOES = [
   { nome: "luta", cenario: "tutorial", amb: { TUTORIAL: "0", CLASSE: "arqueiro", NIVEL: "4", ANIMAL: "lobo", NIVEL_LUTA: "2",

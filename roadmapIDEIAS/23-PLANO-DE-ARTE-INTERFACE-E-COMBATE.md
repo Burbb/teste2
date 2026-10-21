@@ -901,7 +901,9 @@ escala da comitiva (`afogado-cabelo`, `afogado-perfil`, `afogado-cranio`); a fol
 `dados.retrato` e `Icones.criatura`; as outras criaturas continuam pelos traços (o par seguinte fica com o Jean).
 **Segundo par (21/10/2026, proposta): o Lobo e o Bandido**, duas direções de cada em
 `ferramentas/prototipos/hud/criaturas/lobo_bandido/` (o lobo de frente e de perfil; o desertor e a salteadora), as
-folhas `lobo.png` e `bandido.png`; o alcance previsto só nas famílias `lobo` e `bandido`.
+folhas `lobo.png` e `bandido.png`; o alcance previsto só nas famílias `lobo` e `bandido`. Segunda rodada: o Lobo A
+com a base de quadrúpede (e o ajuste do olhar) e três Bandidos novos (o brutamontes, o do chapéu, o da faca); as
+folhas `lobo-r2.png` e `bandido-r2.png`. Nada aprovado.
 
 O atalho **Mapa** da doca já foi concluído; esta frente trata dos símbolos internos de caminhos e mapas.
 Não afirmar que só restam talentos e habilidades após este bloco sem conferir os consumíveis, variantes e

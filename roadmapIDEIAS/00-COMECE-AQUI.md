@@ -5447,3 +5447,14 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   `fera` do animal do herói e das outras feras e o `humano` dos outros humanos continuam) e a avaliação no
   `LEIA-ME.md` da pasta. Minha preferência: Lobo A e Bandido A.
 - **Continua:** nada aprovado; a versão continua 1.162.0. O Afogado e a Ilse intactos.
+
+### 21/10/2026 (data do computador local) — Criaturas, segundo par, segunda rodada (proposta)
+
+- **Pedido de Jean:** o Lobo A continua, com a base refeita (o começo do pescoço de um quadrúpede no lugar dos ombros
+  e do peito) e um ajuste discreto no olhar e no focinho; três Bandidos novos com ameaça (o A e o B ficam como
+  histórico).
+- **Feito:** `lobo-a-base` e `lobo-a-ajustado`; `bandido-brutamontes`, `bandido-chapeu` e `bandido-faca`; fontes pelo
+  MCP, exportação conferida; as folhas `lobo-r2.png` e `bandido-r2.png` em
+  `ferramentas/prototipos/hud/criaturas/lobo_bandido/` (a carta e o Bestiário a 1920×945 com os mesmos dados, a
+  fileira com os retratos aprovados, a 12×). Minha preferência: o Lobo ajustado e o Bandido da faca.
+- **Continua:** nada aprovado; a versão continua 1.162.0.
