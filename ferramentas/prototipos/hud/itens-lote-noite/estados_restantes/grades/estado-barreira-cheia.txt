@@ -1,0 +1,16 @@
+.....######.....
+...##UUUuuu##...
+..#UUUuuuuubb#..
+.#UUuBBBBBBbbb#.
+#UUuBBUUBBBBbbB#
+#UuBBUBBBBBBBbB#
+#UuBBUBBBBBBBbB#
+#uuBBBBBBBBBBbB#
+#uuBBBBBBBBBBbB#
+#ubBBBBBBBBBBBB#
+#ubBBBBBBBBBvBB#
+#ubbBBBBBBvbBB#.
+.#bbbBBBBbbBB#..
+..#bbbbbbBBB#...
+...##bBBBB##....
+.....#####......

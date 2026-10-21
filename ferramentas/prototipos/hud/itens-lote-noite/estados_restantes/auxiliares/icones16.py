@@ -391,6 +391,60 @@ MARCADO_ALVO = com_contorno([
             ".....rrRRRR.....",
             "................"])
 
+BARREIRA_CHEIA = com_contorno([
+            "................",
+            ".....UUUuuu.....",
+            "...UUUuuuuubb...",
+            "..UUuBBBBBBbbb..",
+            ".UUuBBUUBBBBbbB.",
+            ".UuBBUBBBBBBBbB.",
+            ".UuBBUBBBBBBBbB.",
+            ".uuBBBBBBBBBBbB.",
+            ".uuBBBBBBBBBBbB.",
+            ".ubBBBBBBBBBBBB.",
+            ".ubBBBBBBBBBvBB.",
+            ".ubbBBBBBBvbBB..",
+            "..bbbBBBBbbBB...",
+            "...bbbbbbBBB....",
+            ".....bBBBB......",
+            "................"])
+
+PROVOCANDO_SETAS = com_contorno([
+              ".S......S.....S.",
+              "..S.....S....S..",
+              "...S....S...S...",
+              "...rSr.SSS.rSr..",
+              "....rS..S..Sr...",
+              ".....r.....r....",
+              "......7886......",
+              ".....788865.....",
+              ".....788665.....",
+              "......7665......",
+              "......7655......",
+              "...7776666555...",
+              "..776666665555..",
+              "..766666655555..",
+              "..766666655555..",
+              "................"])
+
+BARREIRA_FIGURA = com_contorno([
+            "................",
+            ".....UUUuuu.....",
+            "...UUUuuuuubb...",
+            "..UUu......bbb..",
+            ".UUu...78...bbB.",
+            ".Uu...7886...bB.",
+            ".Uu...7866...bB.",
+            ".uu....65....bB.",
+            ".uu..776655..bB.",
+            ".ub.77666555.BB.",
+            ".ub.76666555vBB.",
+            ".ubb......vbBB..",
+            "..bbb....bbBB...",
+            "...bbbbbbBBB....",
+            ".....bBBBB......",
+            "................"])
+
 # as camadas de cada desenho, de baixo para cima, pela letra
 def _por(mapa, resto):
     return lambda ch: "contorno" if ch == "#" else next((k for k, v in mapa.items() if ch in v), resto)
@@ -414,10 +468,14 @@ ICONES = {
     "estado-marcado-mira": (MARCADO, ["mira", "contorno"], lambda x, y, ch: "contorno" if ch == "#" else "mira"),
     "estado-furtivo": (FURTIVO, ["capuz", "rosto", "olhos", "contorno"],
                        lambda x, y, ch: "contorno" if ch == "#" else "olhos" if ch == "U" else "rosto" if ch == "k" else "capuz"),
-    "estado-barreira": (BARREIRA, ["bolha", "reflexo", "contorno"],
-                        lambda x, y, ch: "contorno" if ch == "#" else "reflexo" if 4 <= y <= 6 and 4 <= x <= 7 else "bolha"),
-    "estado-provocando": (PROVOCANDO, ["figura", "setas", "contorno"],
+    "estado-barreira": (BARREIRA_FIGURA, ["bolha", "figura", "contorno"],
+                        lambda x, y, ch: "contorno" if ch == "#" else "figura" if ch in "5678" else "bolha"),
+    "estado-barreira-anel": (BARREIRA, ["bolha", "reflexo", "contorno"],
+                             lambda x, y, ch: "contorno" if ch == "#" else "reflexo" if 4 <= y <= 6 and 4 <= x <= 7 else "bolha"),
+    "estado-provocando": (PROVOCANDO_SETAS, ["figura", "setas", "contorno"],
                           lambda x, y, ch: "contorno" if ch == "#" else "setas" if ch in "SsrR" else "figura"),
+    "estado-provocando-lados": (PROVOCANDO, ["figura", "setas", "contorno"],
+                                lambda x, y, ch: "contorno" if ch == "#" else "setas" if ch in "SsrR" else "figura"),
     "estado-fortalecido": (FORTALECIDO_SETA, ["espada", "seta", "contorno"],
                            lambda x, y, ch: "contorno" if ch == "#" else "seta" if x >= 9 else "espada"),
     "estado-fortalecido-setinhas": (FORTALECIDO, ["espada", "setas", "contorno"],
@@ -434,6 +492,9 @@ ICONES = {
     "estado-enfraquecido-partida": (ENFRAQUECIDO, ["lamina", "ponta", "punho", "contorno"],
                                     lambda x, y, ch: "contorno" if ch == "#" else "punho" if ch not in "345678"
                                     else "ponta" if y >= 10 else "lamina"),
+    "estado-barreira-cheia": (BARREIRA_CHEIA, ["bolha", "reflexo", "contorno"],
+                              lambda x, y, ch: "contorno" if ch == "#" else "reflexo" if 4 <= y <= 6 and 4 <= x <= 7 and ch == "U"
+                              else "bolha"),
     # tentativas guardadas (fora da proposta principal)
     "estado-veneno-presas": (VENENO_PRESAS, ["presas", "veneno", "contorno"],
                              lambda x, y, ch: "contorno" if ch == "#" else "presas" if ch in "Wwx" else "veneno"),

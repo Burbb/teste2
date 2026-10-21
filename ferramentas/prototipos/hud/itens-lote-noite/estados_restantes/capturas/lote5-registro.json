@@ -1,0 +1,58 @@
+{
+ "heroi-barreira/atual": {
+  "estados": [
+   "j:barreira"
+  ],
+  "imagens": [
+   "barreira 16px → 17.9px (png 16)"
+  ],
+  "cartas": [
+   "j"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "heroi-barreira/proposta": {
+  "estados": [
+   "j:barreira"
+  ],
+  "imagens": [
+   "barreira 16px → 17.9px (png 16)"
+  ],
+  "cartas": [
+   "j"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "servo-provocando/atual": {
+  "estados": [
+   "c1-3:provocando",
+   "c1-1:fortalecido",
+   "c1-2:fortalecido"
+  ],
+  "imagens": [
+   "provocando 16px → 16.0px (png 16)"
+  ],
+  "cartas": [
+   "c1-3"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "servo-provocando/proposta": {
+  "estados": [
+   "c1-3:provocando",
+   "c1-1:fortalecido",
+   "c1-2:fortalecido"
+  ],
+  "imagens": [
+   "provocando 16px → 16.0px (png 16)"
+  ],
+  "cartas": [
+   "c1-3"
+  ],
+  "erros": [],
+  "avisos": []
+ }
+}

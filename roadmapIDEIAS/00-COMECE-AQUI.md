@@ -5249,3 +5249,11 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Feito:** o alvo de anéis (Marcado) e o capuz com os olhos (Furtivo) em `estados_restantes/`, a mira guardada como
   tentativa; `lote4.png` com os lobos marcados e o herói furtivo a 1920×945.
 - **Continua:** nada aprovado; a versão continua 1.157.0.
+
+### 21/10/2026 (data do computador local) — Os estados restantes, lote 5: Barreira e Provocando (proposta)
+
+- **Feito:** a figura dentro da bolha azul (Barreira) e a figura com três setas vermelhas descendo sobre ela
+  (Provocando) em `estados_restantes/`, com as tentativas guardadas (a bolha vazia, a esfera, as setas dos lados);
+  `lote5.png` com o Mago e o esqueleto do Necromante a 1920×945. Os dois são os mais frágeis da noite (avaliação no
+  `LEIA-ME.md` da pasta).
+- **Continua:** nada aprovado; a versão continua 1.157.0.

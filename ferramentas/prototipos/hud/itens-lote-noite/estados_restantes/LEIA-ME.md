@@ -46,6 +46,8 @@ Esquiva (E6), já no jogo, são a referência de acabamento e não foram redesen
 | Enfraquecido (`enfraquecido`) | causa −25% de dano | no inimigo (Grito de Guerra) e no herói (Grito de Terror, ataques de alguns inimigos) |
 | Marcado (`marcado`) | recebe +v% de dano de todos os golpes (os seus, os da comitiva e os do animal) | no inimigo (Marcar Presa, Tiro Certeiro) |
 | Furtivo (`furtivo`) | o próximo ataque é crítico garantido e o estado se gasta; os inimigos continuam mirando você | no herói (Desaparecer, que também dá Esquiva por 1 turno) |
+| Barreira (`barreira`) | absorve v de dano e se gasta ("absorve mais N de dano") | no herói (Barreira, do Mago) |
+| Provocando (`provocando`) | os inimigos atacam quem está assim | no aliado: o esqueleto do Erguer Servo e o urso da Ordem da Fera (com Em guarda) |
 
 ## Lote 1: Veneno e Sangramento
 
@@ -112,3 +114,25 @@ Esquiva (E6), já no jogo, são a referência de acabamento e não foram redesen
   Sem erro nem aviso no console. Folha: `lote4.png`.
 - **Avaliação sincera:** o alvo é o mais legível do conjunto até aqui. O capuz lê como figura encapuzada, mas é escuro
   sobre o chip escuro: funciona pela silhueta e pelos olhos, não pelo contraste.
+
+## Lote 5: Barreira e Provocando
+
+- **Barreira — a figura dentro da bolha** (`estado-barreira`): o anel azul de energia, claro em cima e à esquerda, com
+  uma figura de ferro (cabeça e ombros) dentro; camadas bolha, figura, contorno. "Alguém protegido por uma bolha", sem
+  escudo: se separa do Em guarda (o escudo de ferro) pelo formato e pelo material.
+- **Provocando — os golpes vindo para a figura** (`estado-provocando`): a figura de ferro (cabeça e ombros) e três setas
+  vermelhas descendo sobre ela, da esquerda, do alto e da direita; camadas figura, setas, contorno. "Os inimigos atacam
+  ele".
+- **Tentativas guardadas:** `estado-barreira-anel` (a bolha vazia com o reflexo; na carta lia como "O" junto do número,
+  "O2"); `estado-barreira-cheia` (a esfera preenchida; lia como uma bola ou uma joia azul); `estado-provocando-lados`
+  (as setas apontando dos lados para a figura; em tamanho real pareciam uma gravata-borboleta). Antes delas, na
+  bancada: a cúpula (lia como gelatina), o hexágono (porca ou gema), o peão com as setas (lápide) e as setas em X sem
+  ponta (lia como explosão).
+- **Fotos:** o Mago com a Barreira e o esqueleto do Necromante provocando (o cenário `tutorial`, nível 4, Necromante; a
+  foto usa o Erguer Servo pela roda e pelo seletor, como o jogador; os lobos ainda chegam fortalecidos pelo uivo). Sem
+  erro nem aviso no console. Folha: `lote5.png`.
+- **Avaliação sincera:** os dois são os mais frágeis da noite. A Barreira lê como "pessoa na bolha", mas lembra o ícone
+  de "conta de usuário" (a figura num círculo). O Provocando é o mais fraco: a ideia (os golpes vindo para ele) aparece
+  a 2×; no 1× as setas viram um borrão vermelho sobre a figura. Os dois repetem a mesma figura de cabeça e ombros, o
+  que os aproxima. Se o Jean recusar, a próxima tentativa do Provocando seria de outra construção (o grito, ou a mão
+  chamando), não um retoque desta.
