@@ -2,7 +2,7 @@
 1920×945 em tamanho real e a 2× (a da cria também como invocada pelo antagonista), o cartão do Bestiário (48) em tamanho
 real, a fileira com os retratos aprovados pertinentes (na caixa da carta, real e 3×) e a 12× com a grade, sem
 suavização. Tudo trocado só na página (protótipo).
-    python prancha.py [cao|cria|cria-a2|cao-t ...]      (depois do fotografar.mjs)
+    python prancha.py [cao|cria|cria-a2|cao-t|cao-n ...]      (depois do fotografar.mjs)
 """
 import json
 import pathlib
@@ -37,6 +37,10 @@ CRIATURAS = {
                                ("T, a transposição da referência", "c", "cao-infernal-t")],
               ("lobo", "lobo-gelido", "caido", "xama-caido"), ["luta-cao"],
               ("Cão infernal em pixel art.png", (50, 40, 1250, 1240), "cao-infernal-t-guia-16.png")),
+    # a terceira tentativa do Cão: o T recusado × o N (sem guia: a referência só como direção)
+    "cao-n": ("Cão infernal", [("T (recusado)", "c", "cao-infernal-t"),
+                               ("N, a construção nova", "d", "cao-infernal-n")],
+              ("lobo", "lobo-gelido", "caido"), ["luta-cao"]),
 }
 REFERENCIAS = AQUI.parents[5] / "ferramentas/arte/referencias/icones"
 

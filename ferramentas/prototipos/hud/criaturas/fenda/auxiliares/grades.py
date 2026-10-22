@@ -40,6 +40,12 @@ PALETAS = {
         "r": "7a1a0a", "o": "d8501a", "O": "ff9a2a", "y": "ffe07a",  # a brasa funda (a gengiva, a orelha), viva, a goela
         "t": "120e18", "T": "6a6488", "e": "ffb030",  # a obsidiana das presas e o reflexo dela; o olho
     },
+    "cao_n": {  # a terceira: os valores primeiro (a luz nos planos de cima, o escuro nas sombras e no pescoço)
+        "k": "1a1214", "d": "2a1e20", "c": "4a3834", "C": "7a5e52", "H": "b08a6e",  # o carvão (do fundo à luz)
+        "n": "1a161c", "N": "8e8898",  # o nariz e o brilho dele
+        "r": "8a2010", "O": "ff8a2a", "y": "ffd060", "o": "d8501a",  # a gengiva, a goela acesa, a brasa do pescoço
+        "t": "16121c", "T": "7a7894", "e": "ffc040",  # a obsidiana das presas e o reflexo; o olho
+    },
 }
 
 CAO_A = [
@@ -165,6 +171,35 @@ CAO_T = [
     "......bBccccoc..",
     "......kbcccc....",
 ]
+# N, a terceira tentativa do Cão (pedido do Jean, depois de recusar o T: "uma massa marrom com pontos de fogo", o focinho
+# espremido à esquerda, a parte de trás dominando, a boca sem rosnado). A referência gerada fica só como direção de
+# expressão e material; a construção é nova, sem guia, resolvida a 32 px dentro da carta, na ordem: reconhecer o cão,
+# entender o rosnado, perceber o material. Em três quartos para a esquerda: as duas orelhas triangulares de cão (a de
+# trás menor), a testa clara, o sobrolho escuro sobre o olho de trás (um pixel) e o da frente (dois), a ponte do focinho
+# descendo até o nariz, que é escuro com o brilho em cima e fica recortado contra o focinho claro (contra o fundo ele
+# sumia), as rugas do focinho, o lábio levantado com a gengiva, a goela acesa com duas presas grandes de obsidiana que se
+# cruzam (a de cima com o reflexo), a mandíbula e o queixo claros, e o pescoço mais escuro que a cabeça, com a brasa em
+# três pontos. Na bancada: a primeira, com o focinho curto e os olhos iguais, lia como gato; a segunda, em tons médios,
+# não formava o focinho; com a luz nos planos de cima a cabeça apareceu; uma presa de três pixels virava uma grade na
+# boca.
+CAO_N = [
+    "............k...",
+    "......k....kHk..",
+    ".....kHk..kHCk..",
+    ".....kHCkkHCCck.",
+    "....kHHCCCCCCcck",
+    "...kHCkkCCkkCccd",
+    "..kHCCeCCcceeccd",
+    "NNHHHHCkCcccccdd",
+    "nnHCkCkccccccdd.",
+    ".nrrrrCccccccddd",
+    ".TOOOOkcccccdddd",
+    ".tyOtyCccccddodd",
+    "..CrtrCcccddoddd",
+    "..kCCCkcccdddod.",
+    "....kkkcddddddd.",
+    "......kddddddd..",
+]
 
 # Histórico (fora da exportação): a primeira B, de pernas finas, que virava um emaranhado na carta.
 CRIA_B_FINA = [
@@ -207,6 +242,7 @@ CAMADAS = {  # a grade, a paleta, as camadas de baixo para cima e a camada de ca
     "cria-vazio-b": (CRIA_B, "cria", ["corpo", "fenda"], _camada_cria),
     "cria-vazio-a2": (CRIA_A2, "cria", ["corpo", "fenda"], _camada_cria),
     "cao-infernal-t": (CAO_T, "cao_t", ["corpo", "nariz", "brasa", "boca", "dentes", "olhos"], _camada_cao_t),
+    "cao-infernal-n": (CAO_N, "cao_n", ["corpo", "nariz", "brasa", "boca", "dentes", "olhos"], _camada_cao_t),
 }
 
 

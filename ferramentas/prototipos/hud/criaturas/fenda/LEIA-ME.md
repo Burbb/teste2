@@ -153,3 +153,41 @@ em pixel art.png` (registrada no LEIA-ME das referências) passa a ser a princip
   Bestiário, o cartaz e o rastreador; nenhum pedido a `ferramentas/`; sem erro no console. A folha:
   `ferramentas/prototipos/hud/integracoes-22-10/integracoes-1185.png`.
 
+# A terceira tentativa do Cão: o N (22/10/2026, proposta; nada no jogo)
+
+**A avaliação do Jean:** o T foi recusado pela leitura da anatomia: na carta, uma massa marrom com pontos de fogo, o
+focinho espremido à esquerda, a parte de trás dominando o quadro, a boca sem o rosnado. A referência gerada fica como
+direção de expressão e material, com liberdade para simplificar e reorganizar as proporções. O A, o B e o T ficam aqui
+como histórico (nenhum serviu de anatomia).
+
+## O Cão N (`cao-infernal-n`)
+
+- **A ordem pedida, resolvida dentro da carta a 32 px:** reconhecer o cão, entender o rosnado, perceber o material.
+  Sem guia: a construção é nova.
+- **O cão:** em três quartos para a esquerda; as duas orelhas triangulares de cão, a de trás menor; a testa clara; o
+  sobrolho escuro sobre os olhos estreitos (o de trás com um pixel, o da frente com dois); a ponte do focinho descendo
+  da testa até o nariz, que é escuro com o brilho em cima e fica recortado contra o focinho claro.
+- **O rosnado:** as rugas do focinho; o lábio levantado com a gengiva; a goela acesa; duas presas grandes de obsidiana
+  que se cruzam (a de cima, com o reflexo frio, desce pela esquerda; a de baixo sobe no meio); a mandíbula e o queixo
+  claros.
+- **O material:** a cabeça em carvão quente com a luz nos planos de cima; o pescoço mais escuro que a cabeça (a cabeça
+  se destaca); a brasa em três pontos no pescoço, longe do rosto; os olhos e a goela acesos.
+- **Na bancada:** a primeira, com o focinho curto e os dois olhos iguais, lia como gato; a segunda, em tons médios
+  parecidos, não formava o focinho nem o nariz (o nariz negro sumia contra o fundo); com a estrutura de valores do
+  Lobo aprovado (a luz nos planos de cima, o escuro nas sombras) a cabeça apareceu; uma presa de três pixels na
+  vertical virava uma grade na boca e foi dividida nas duas que se cruzam.
+
+## A minha leitura (quem escolhe é o Jean)
+
+- **O N lê como cão na carta**, sem a ampliação: a cabeça, as orelhas, o focinho com o nariz e a boca aberta com as
+  presas; o rosnado vem do lábio levantado e das presas; o material, da goela, dos olhos e do pescoço escuro.
+  **Limitação:** o focinho ainda é curto para um cão de caça (o quadro de 16 não deixa projetá-lo mais sem cortar as
+  orelhas), e o carvão da luz fica perto do cinza do Lobo; a diferença do Lobo está na pose, na boca acesa e no pescoço.
+
+## Processo
+
+- A grade em `auxiliares/grades.py` (`CAO_N`, a paleta `cao_n`); a fonte pelo conector do Aseprite (0 diferentes na
+  releitura; o composto 183 = as camadas); a exportação igual à grade, o @2x exato, o 32 e o 48 em blocos inteiros.
+- As fotos no modo `d` (`MODOS=d`), a 1920×945, sem erro no console. A folha `cao-n.png` (`python auxiliares/prancha.py
+  cao-n`): T × N na carta (real e 2×) e no Bestiário, a fileira com o Lobo, o Lobo Gélido e o Caído, a 12× para o
+  diagnóstico.
