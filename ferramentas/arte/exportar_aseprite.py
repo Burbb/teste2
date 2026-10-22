@@ -116,6 +116,8 @@ DERIVADOS = {
     "retrato-lobo-gelido": {32: (16, 2), 48: (16, 3)},
     # 1.182.0: o caído (o CA: o diabrete que ri), pela família; o xamã caído continua no "demonio"
     "retrato-caido": {32: (16, 2), 48: (16, 3)},
+    # 1.183.0: o grifo (o GA3: a águia-leão com o gancho do bico), pela família; a harpia continua no "voador"
+    "retrato-grifo": {32: (16, 2), 48: (16, 3)},
 }
 # O martelo (1.149.0) só tem fontes do 40 e do 48 (aseprite/martelo/): o 32 e o 64 são a grade de desenhos.js, no
 # jogo, e não saem daqui.

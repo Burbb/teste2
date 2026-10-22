@@ -119,6 +119,23 @@ class TestRetratos(unittest.TestCase):
         self.assertIn('caido: "retrato-caido"', icones)
         self.assertNotIn("xama_caido:", icones)
 
+    def test_grifo_pela_familia(self):
+        # 1.183.0: o grifo pela família, também o feroz do ninho; a harpia (família própria, ainda sem retrato) e o
+        # Dragão de Gelo (guardião) continuam no "voador"
+        import random
+        from rpg.inimigos import criar
+        self.assertEqual(retrato(FAMILIAS["grifo"]["tracos"], "grifo"), "grifo")
+        grifo = criar(random.Random(4), "grifo", 4, "feroz")  # como o ninho de grifo faz
+        self.assertEqual(retrato(grifo.tracos, grifo.familia, grifo.chave), "grifo")
+        self.assertEqual(retrato(FAMILIAS["harpia"]["tracos"], "harpia"), "voador")
+        self.assertEqual(retrato(["voador"], "guardiao", "guardiao:4", "dragao_de_gelo"), "voador")
+        icones = (ESTATICO / "icones.js").read_text(encoding="utf-8")
+        self.assertIn('grifo: "retrato-grifo"', icones)
+        self.assertNotIn("harpia:", icones)
+        for lado in (16, 32, 48):
+            for sufixo in ("", "@2x"):
+                self.assertTrue((ESTATICO / f"hud/icones/retrato-grifo-{lado}{sufixo}.png").exists(), (lado, sufixo))
+
     def test_troll_pela_familia_e_o_rei_pelo_guardiao(self):
         # o troll da montanha pela família (1.166.0); o Rei Troll pelo id do guardião (1.167.0), em qualquer lugar
         self.assertEqual(retrato(FAMILIAS["troll"]["tracos"], "troll"), "troll")

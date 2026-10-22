@@ -1,0 +1,31 @@
+{
+ "luta": {
+  "arquivos": [
+   "Grifo: http://127.0.0.1:53808/static/hud/icones/retrato-grifo-32.png",
+   "Harpia: data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAKZJREFUOE9jZKAQMFKon4GRl5vr/+ev38gyCKQXbADIFaQaAtMHNsDWVI/h8OlLKIbAFMC8iGwBsh64ASCFMENgCpDDB5scSAzFAJghIBfNEBdhyHj5BmwGjA3SAJKDAbABIA42G4mJHbgB+AxZvqQHbFZkTAmKzbAwQYk+YlyCHtgY8Y9syLYDJ8DyXg4W4KhG1wwSw5qA0NMGvrRCVgpEDuBhYAAAtG9j1w6pFxkAAAAASUVORK5CYII=",
+   "Harpia: data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAKZJREFUOE9jZKAQMFKon4GRl5vr/+ev38gyCKQXbADIFaQaAtMHNsDWVI/h8OlLKIbAFMC8iGwBsh64ASCFMENgCpDDB5scSAzFAJghIBfNEBdhyHj5BmwGjA3SAJKDAbABIA42G4mJHbgB+AxZvqQHbFZkTAmKzbAwQYk+YlyCHtgY8Y9syLYDJ8DyXg4W4KhG1wwSw5qA0NMGvrRCVgpEDuBhYAAAtG9j1w6pFxkAAAAASUVORK5CYII=",
+   "Lobo gélido: http://127.0.0.1:53808/static/hud/icones/retrato-lobo-gelido-32.png"
+  ],
+  "erros": [],
+  "ferramentas": []
+ },
+ "bestiario": {
+  "arquivos": [
+   "Grifo: http://127.0.0.1:53920/static/hud/icones/retrato-grifo-48.png",
+   "Harpia: data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAKZJREFUOE9jZKAQMFKon4GRl5vr/+ev38gyCKQXbADIFaQaAtMHNsDWVI/h8OlLKIbAFMC8iGwBsh64ASCFMENgCpDDB5scSAzFAJghIBfNEBdhyHj5BmwGjA3SAJKDAbABIA42G4mJHbgB+AxZvqQHbFZkTAmKzbAwQYk+YlyCHtgY8Y9syLYDJ8DyXg4W4KhG1wwSw5qA0NMGvrRCVgpEDuBhYAAAtG9j1w6pFxkAAAAASUVORK5CYII=",
+   "Lobo gélido: http://127.0.0.1:53920/static/hud/icones/retrato-lobo-gelido-48.png",
+   "Troll da montanha: http://127.0.0.1:53920/static/hud/icones/retrato-troll-48.png"
+  ],
+  "erros": [],
+  "ferramentas": []
+ },
+ "contratos": {
+  "arquivos": [
+   "contrato tipo-caca: http://127.0.0.1:54041/static/hud/icones/retrato-carnical-48.png 48",
+   "contrato tipo-caca ativo: http://127.0.0.1:54041/static/hud/icones/retrato-grifo-48.png 48",
+   "painel m-painel: http://127.0.0.1:54041/static/hud/icones/retrato-grifo-32.png 32"
+  ],
+  "erros": [],
+  "ferramentas": []
+ }
+}

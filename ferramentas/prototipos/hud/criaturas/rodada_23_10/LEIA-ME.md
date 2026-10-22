@@ -133,3 +133,15 @@ como estavam.
 - **As três folhas compactas** (`python auxiliares/prancha.py harpia-t grifo-ga3 xama-x1r`): `harpia-t.png` (a
   referência, a guia e a T a 12×; o jogo de hoje × a T na carta e no Bestiário; a fileira com os retratos aprovados),
   `grifo-ga3.png` (GA2 × GA3) e `xama-x1r.png` (X1 × X1r).
+
+## O Grifo no jogo (1.183.0)
+
+- **Aprovado pelo Jean e integrado sem retoque:** o GA3, pela família (`RETRATO_FAMILIA`, o papel `CRIATURA` e os
+  `TAMANHOS` em `icones.js`), também o feroz do ninho de grifo. A Harpia (família própria, ainda sem retrato) e o
+  Dragão de Gelo continuam no `voador`. O GA e o GA2 ficam como histórico.
+- A fonte em `ferramentas/arte/aseprite/retrato-grifo/` (a cópia byte a byte de `fontes/grifo-ga3/`); o 32 e o 48 em
+  `DERIVADOS`; os seis PNGs idênticos byte a byte aos de `proposta/grifo-ga3-*`; `exportar_aseprite.py retrato-grifo
+  --conferir`: tudo igual ao jogo.
+- Conferido a 1920×945 com os arquivos de produção (`capturas-1183/`, `auxiliares/fotografar_jogo.mjs`): a luta (o
+  grifo com duas harpias no voador e o lobo gélido), o Bestiário, o cartaz do mural e o rastreador; nenhum pedido a
+  `ferramentas/`; sem erro no console. A folha: `ferramentas/prototipos/hud/integracoes-22-10/integracoes-1183.png`.
