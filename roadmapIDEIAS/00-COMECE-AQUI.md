@@ -5910,3 +5910,22 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   nenhum processo a encerrar; religar pelo `/mcp`). As fontes saíram pelo fluxo documentado em lote.
 - **Anotado, sem mexer:** na luta, "Falcão Peregrino rosna ao seu lado." (o verbo do lobo para o falcão).
 - **Continua:** o Jean escolhe os quatro; os chefes, as outras criaturas e o mapa não foram começados.
+
+### 23/10/2026 (data do computador local) — O Caído no jogo (1.182.0) e a rodada do Grifo, da Harpia e do Xamã
+
+- **Integrado (aprovado pelo Jean, sem retoque):** o Caído CA, o que ri, pela família, com os que o xamã ergue (o
+  Reviver levanta o mesmo caído morto, com o mesmo retrato; conferido em `tests/test_retratos.py`). O Xamã Caído e o
+  Cão infernal continuam no sprite de demônio. Os seis PNGs idênticos byte a byte à proposta; conferido com os arquivos
+  de produção na carta, no Bestiário, no cartaz e no rastreador (`criaturas/caidos/capturas-1182/`), sem pedido a
+  `ferramentas/`. Folha: `ferramentas/prototipos/hud/integracoes-22-10/integracoes-1182.png`.
+- **O gabarito** mudou só no retrato `demonio` → `caido` (134 vezes, nas partidas web), investigado contra as
+  transcrições da 1.181; nada mais.
+- **Verificações sobre o código final:** `unittest` (a fumaça pulada no comando), o gabarito, o pyflakes e uma fumaça
+  inteira (o resultado no commit da integração).
+- **No protótipo, aguardando o Jean (`criaturas/rodada_23_10/`):** o Grifo GA2 (a ponta do bico limpa: uma ponta
+  escura só, no gancho); três Harpias do zero (H1, a abutre de rosto humano; H2, a da asa erguida; H3, a de bico); três
+  Xamãs da cabeça do Caído CA (X1, o velho do capuz; X2, o do cajado; X3, o das penas). Minha preferência: GA2, H1 e X2
+  (as razões e as limitações no LEIA-ME). A HA, a HB, o XA e o XB ficam como histórico.
+- **O conector do Aseprite:** ainda indisponível (religar pelo `/mcp`); as fontes em camadas pelo Aseprite em lote,
+  com releitura.
+- **Continua:** a escolha do Jean; outras criaturas, chefes e o mapa não foram começados.

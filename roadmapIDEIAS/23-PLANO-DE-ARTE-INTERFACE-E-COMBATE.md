@@ -13,7 +13,8 @@ Não iniciar todo o plano numa única tarefa. As etapas técnicas A–I e a vali
 
 ## Estado de referência — 21/10/2026
 
-- Produção: **1.181.1** na branch `claude/tender-einstein-tx3tjl` (22/10/2026: o Mercenário MA e o Lobo Gélido LA pela
+- Produção: **1.182.0** na branch `claude/tender-einstein-tx3tjl` (23/10/2026: o Caído CA pela família, com os que o
+  xamã ergue; 22/10/2026: o Mercenário MA e o Lobo Gélido LA pela
   família na 1.179.0; o caixote no motivo "Esgotado" do mercado na 1.180.0; o ent jovem e o Ent Ancião renomeados para
   Árvore Desperta e Árvore Anciã, com a migração dos saves, na 1.181.0; a fala da Pita depois do último tratamento na
   1.181.1. Antes: o Esqueleto E1r pela família na 1.175.0,
@@ -1039,27 +1040,28 @@ foi escolhida.
 
 **A frente de criaturas em 22/10/2026 (na 1.174.6; conferido em `dados.retrato` com as 27 famílias e os 10 guardiões
 do catálogo):**
-- **Integrados (19):** pela família, o Afogado, o Lobo, o Bandido, o Troll da montanha, a Aranha gigante, o Sapo-touro,
+- **Integrados (20):** pela família, o Afogado, o Lobo, o Bandido, o Troll da montanha, a Aranha gigante, o Sapo-touro,
   a Sanguessuga, o Cultista, a Bruxa do pântano, o Rato, o Javali, o Carniçal, o Espectro, o Esqueleto, o Mercenário e
-  o Lobo Gélido (16; o Esqueleto E1r na 1.175.0, com os que o Lich invoca; o Mercenário MA e o Lobo Gélido LA na
-  1.179.0, com o Invicto da ponte e o Theodore; o MB e o LB guardados como não escolhidos); pela chave da capela, a Ilse; pelo id do guardião, o Rei Troll e
+  o Lobo Gélido e o Caído (17; o Esqueleto E1r na 1.175.0, com os que o Lich invoca; o Mercenário MA e o Lobo Gélido LA
+  na 1.179.0, com o Invicto da ponte e o Theodore; o MB e o LB guardados como não escolhidos; o Caído CA na 1.182.0, com
+  os que o xamã ergue); pela chave da capela, a Ilse; pelo id do guardião, o Rei Troll e
   a Rainha Aracnídea. Os animais do patrulheiro (o Urso Pardo, o Falcão Peregrino e o Lobo Cinzento) na carta aliada e
   no painel; os três também na fogueira, pelo tipo (o lobo c2 na 1.170.0, o urso r4 e o falcão na 1.176.0). O cajado
   aprovado no Atacar do Mago (1.177.0).
 - **Fora das criaturas, na 1.180.0:** o ícone do **Esgotado** do mercado (o caixote, papel próprio `MOTIVO`; o cesto
   guardado como não escolhido; o cadeado continua nos outros motivos e usos).
-- **Propostas aguardando o Jean (22/10/2026, nenhuma aprovada):** a **Harpia** (HA, a que grita; HB, a de perfil com a
-  asa) e o **Grifo** (GA, a águia-leão; GB, o de asas abertas), em `criaturas/harpia_grifo/`; o **Caído** (CA, o que
-  ri; CB, o que se esgueira) e o **Xamã Caído** (XA, o do crânio; XB, o do capuz), em `criaturas/caidos/` (no jogo, os
-  caídos são diabretes, do traço `demonio`). A folha dos oito em `criaturas/oito_candidatos.png`. Uso previsto de cada
+- **Propostas aguardando o Jean (23/10/2026, nenhuma aprovada):** o **Grifo GA2** (o GA com a ponta do bico limpa), as
+  **Harpias H1, H2 e H3** (do zero) e os **Xamãs X1, X2 e X3** (da cabeça do Caído CA), em `criaturas/rodada_23_10/`.
+  Histórico, não escolhidos: a HA e a HB, o GB (`criaturas/harpia_grifo/`), o CB, o XA e o XB (`criaturas/caidos/`).
+  No jogo, os caídos são diabretes, do traço `demonio`. Uso previsto de cada
   um: pela própria família (a carta, o Bestiário, o mural, o rastreador, a faixa do mestre caçador); o Dragão de Gelo
   e o Cão infernal continuam no `voador` e no `demonio`.
 - **Nomenclatura (1.181.0, aprovada pelo Jean):** o **ent jovem** é a **Árvore Desperta** e o **Ent Ancião**, a **Árvore
   Anciã** (árvores vivas: "árvores que acordaram com raiva"; o guardião, "uma árvore milenar"). Os ids `ent_jovem` e
   `ent_anciao`, os números, as habilidades e as regras ficam; os saves antigos passam pela migração v5 → v6.
-- **Ainda nos desenhos genéricos dos traços:** 11 famílias, a harpia e o grifo (`voador`, o morcego), o cavaleiro
+- **Ainda nos desenhos genéricos dos traços:** 10 famílias, a harpia e o grifo (`voador`, o morcego), o cavaleiro
   sombrio e o servo esquelético (`caveira`), a árvore desperta
-  (`planta`), o golem de pedra (`construto`), a abominação (`corrompido`), a cria do Vazio (`etereo`) e o caído, o xamã
+  (`planta`), o golem de pedra (`construto`), a abominação (`corrompido`), a cria do Vazio (`etereo`) e o xamã
   caído e o cão infernal (`demonio`); 8 guardiões, a Árvore Anciã, a Hidra do Brejo, a Bruxa Afogada, o Dragão de Gelo, o
   Senhor da Guerra, o Profeta das Cinzas, o Lich Menor (o `etereo` na fase 2) e o Golem Primordial; e, fora do
   catálogo, o antagonista (`humano`) e as crias dele (`etereo`).
@@ -1218,12 +1220,12 @@ volta à pauta quando essa expansão exigir; não é uma migração de engine.
 ## Próxima passagem de trabalho — atualizada em 22/10/2026
 
 1. **Concluídos:** os 31 equipamentos-base (1D); na 1E, o contador de flechas e os 17 estados; 19 criaturas com retrato
-   (16 famílias, a Ilse, o Rei Troll e a Rainha Aracnídea); o ícone do Esgotado do mercado e os três animais do patrulheiro (na carta, no painel e na
+   (17 famílias, a Ilse, o Rei Troll e a Rainha Aracnídea); o ícone do Esgotado do mercado e os três animais do patrulheiro (na carta, no painel e na
    fogueira); o cajado no Atacar do Mago. As variantes e os compartilhamentos provisórios ficam abertos, separados.
 2. **Agora, 1E.3:** as demais criaturas, os chefes e as invocações, em pares pequenos escolhidos pelo Jean, pelo mesmo
    caminho (o retrato por família, por chave ou pelo tipo, sem trocar o sprite compartilhado). O Mercenário, o Lobo
-   Gélido e o Esgotado integrados (1.179.0, 1.180.0). **Aguardando o Jean:** a Harpia, o Grifo, o Caído e o Xamã
-   Caído (dois candidatos cada, `criaturas/oito_candidatos.png`); depois, os outros comuns e os chefes, sem começar
+   Gélido e o Esgotado integrados (1.179.0, 1.180.0); o Caído CA (1.182.0). **Aguardando o Jean:** o Grifo GA2, as
+   Harpias H1 a H3 e os Xamãs X1 a X3 (`criaturas/rodada_23_10/`); depois, os outros comuns e os chefes, sem começar
    antes do pedido. A relação em "A frente de criaturas em 22/10/2026" (item 1.12). O Esqueleto E2 e o Bandido do
    chapéu estão reservados.
 3. **Depois, 1E.4:** os caminhos/destinos e os símbolos internos do mapa e do minimapa.
