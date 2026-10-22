@@ -162,8 +162,9 @@ RETRATOS = ("demonio", "etereo", "corrompido", "morto-vivo", "construto", "voado
 # selvagem e o carniçal; 1.174.0: o espectro; 1.175.0: o esqueleto, com os do ossuário e os que o Lich invoca; o servo
 # aliado do Necromante não tem família e fica na caveira; 1.179.0: o mercenário, com o Invicto da ponte e o Theodore dos
 # Cães de Ferro, e o lobo gélido; 1.182.0: o caído, com os que o xamã ergue, que são o mesmo caído; o xamã caído, de
-# família própria, e o cão infernal continuam no "demonio"; 1.183.0: o grifo; 1.184.0: a harpia e o xamã caído; o Dragão de
-# Gelo continua no "voador", o cão infernal no "demonio"). Quem não está aqui segue pelos traços: o animal do herói e as outras feras continuam
+# família própria, e o cão infernal continuam no "demonio"; 1.183.0: o grifo; 1.184.0: a harpia e o xamã caído; 1.185.0: a cria
+# do Vazio, com as que o antagonista invoca, que são da família; o Dragão de Gelo continua no "voador", o cão infernal no
+# "demonio" e o antagonista no "humano"). Quem não está aqui segue pelos traços: o animal do herói e as outras feras continuam
 # no "fera", os outros humanos (o Senhor da Guerra, o antagonista) no "humano". O guardião pelo id do catálogo (1.167.0: o Rei
 # Troll; 1.168.0: a Rainha Aracnídea; a chave de um guardião muda com o lugar), depois da chave; os outros guardiões
 # continuam pelos traços, e as aranhas que a Rainha invoca têm a família "aranha" (o retrato da Aranha gigante).
@@ -173,7 +174,8 @@ RETRATO_FAMILIA = {"afogado": "afogado", "lobo": "lobo", "bandido": "bandido", "
                    "sapo": "sapo", "sanguessuga": "sanguessuga", "cultista": "cultista", "bruxa_brejo": "bruxa", "rato": "rato",
                    "javali": "javali", "carnical": "carnical", "espectro": "espectro",
                    "esqueleto": "esqueleto", "mercenario": "mercenario", "lobo_gelido": "lobo_gelido",
-                   "caido": "caido", "grifo": "grifo", "harpia": "harpia", "xama_caido": "xama_caido"}
+                   "caido": "caido", "grifo": "grifo", "harpia": "harpia", "xama_caido": "xama_caido",
+                   "cria_vazio": "cria_vazio"}
 
 
 def retrato(tracos, familia=None, chave=None, guardiao=None):

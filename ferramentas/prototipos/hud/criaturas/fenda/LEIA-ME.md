@@ -138,3 +138,18 @@ em pixel art.png` (registrada no LEIA-ME das referências) passa a ser a princip
 - As fotos no modo `c` (`MODOS=c`), a 1920×945, com os mesmos dados, sem erro no console. As folhas (`python
   auxiliares/prancha.py cria-a2 cao-t`): `cria-a2.png` (A × A2 na carta, como invocada, no Bestiário, a fileira e a
   12×) e `cao-t.png` (a referência, a guia e a T a 12×; o jogo de hoje × a T na carta e no Bestiário; a fileira).
+
+## A Cria do Vazio no jogo (1.185.0)
+
+- **Aprovada pelo Jean e integrada sem retoque:** a A2 (`cria-vazio-a2`, a fonte do `71e2c80d`), pela família
+  (`RETRATO_FAMILIA`, o papel `CRIATURA` e os `TAMANHOS` em `icones.js`), com os afixos, o "Gato do Vazio" do aprendiz e
+  as crias que o antagonista invoca (a mesma família). O antagonista continua no `humano`; quem só tem o traço etéreo
+  (o Lich na fase 2), no `etereo`. A A, a B e a primeira B ficam aqui como histórico.
+- A fonte em `ferramentas/arte/aseprite/retrato-cria-vazio/`, a cópia byte a byte; o 32 e o 48 em `DERIVADOS`.
+  Exportados primeiro numa pasta temporária e comparados com a proposta (os seis, byte a byte iguais) antes de gravar
+  no jogo; depois, `--conferir`: tudo igual ao jogo.
+- Conferido a 1920×945 com os arquivos de produção (`capturas-1185/`, `auxiliares/fotografar_jogo.mjs`, com o
+  `cenario_vazio.py` para a invocação): as crias com o espectro e o cultista, as crias invocadas pelo antagonista, o
+  Bestiário, o cartaz e o rastreador; nenhum pedido a `ferramentas/`; sem erro no console. A folha:
+  `ferramentas/prototipos/hud/integracoes-22-10/integracoes-1185.png`.
+

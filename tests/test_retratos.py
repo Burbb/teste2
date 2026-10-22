@@ -46,10 +46,10 @@ class TestRetratos(unittest.TestCase):
         self.assertEqual(retrato(FAMILIAS["cavaleiro_sombrio"]["tracos"], "cavaleiro_sombrio"), "caveira")
 
     def test_espectro_pela_familia(self):
-        # 1.174.0: o espectro pela família; a cria do Vazio (etérea) e o Lich, que ganha o etéreo na fase 2, continuam
-        # pelos traços
+        # 1.174.0: o espectro pela família; o Lich, que ganha o etéreo na fase 2, continua pelos traços (a cria do Vazio,
+        # também etérea, tem o retrato dela desde a 1.185.0)
         self.assertEqual(retrato(FAMILIAS["espectro"]["tracos"], "espectro"), "espectro")
-        self.assertEqual(retrato(FAMILIAS["cria_vazio"]["tracos"], "cria_vazio"), "etereo")
+        self.assertEqual(retrato(FAMILIAS["cria_vazio"]["tracos"], "cria_vazio"), "cria_vazio")
         self.assertEqual(retrato(["morto-vivo", "conjurador", "etereo"], "guardiao", "guardiao:6", "lich_menor"), "etereo")
 
     def test_esqueleto_pela_familia(self):
@@ -148,6 +148,42 @@ class TestRetratos(unittest.TestCase):
             for lado in (16, 32, 48):
                 for sufixo in ("", "@2x"):
                     self.assertTrue((ESTATICO / f"hud/icones/{arquivo}-{lado}{sufixo}.png").exists(), (arquivo, lado))
+
+    def test_cria_do_vazio_pela_familia_e_invocada(self):
+        # 1.185.0: a cria do Vazio pela família, com os afixos, o "Gato do Vazio" do aprendiz (a família com outro nome) e
+        # as que o antagonista invoca (o Invocar cria pela mesma família); o antagonista continua no "humano" e quem só
+        # tem o traço etéreo continua no "etereo"
+        import random
+        from rpg.inimigos import _invocar, criar, instanciar_antagonista
+        from rpg.mundo import gerar_mundo
+        for afixo in (None, "feroz"):
+            e = criar(random.Random(8), "cria_vazio", 4, afixo)
+            self.assertEqual(retrato(e.tracos, e.familia, e.chave), "cria_vazio", afixo)
+        ant = instanciar_antagonista(gerar_mundo(random.Random(5))["antagonista"], 6)
+        self.assertEqual(retrato(ant.tracos, ant.familia, getattr(ant, "chave", None)), "humano")
+
+        class Luta:
+            inimigos, rng = [ant], random.Random(1)
+
+            class ui:
+                letras_nos_alvos = True
+
+            def inimigos_vivos(self):
+                return self.inimigos
+
+            def dizer(self, *_):
+                pass
+        luta = Luta()
+        _invocar(luta, ant, None)
+        invocada = luta.inimigos[-1]
+        self.assertTrue(invocada.invocado and "(invocado)" in invocada.nome)
+        self.assertEqual(retrato(invocada.tracos, invocada.familia, invocada.chave), "cria_vazio")
+        self.assertEqual(retrato(["etereo"], None), "etereo")
+        icones = (ESTATICO / "icones.js").read_text(encoding="utf-8")
+        self.assertIn('cria_vazio: "retrato-cria-vazio"', icones)
+        for lado in (16, 32, 48):
+            for sufixo in ("", "@2x"):
+                self.assertTrue((ESTATICO / f"hud/icones/retrato-cria-vazio-{lado}{sufixo}.png").exists(), (lado, sufixo))
 
     def test_troll_pela_familia_e_o_rei_pelo_guardiao(self):
         # o troll da montanha pela família (1.166.0); o Rei Troll pelo id do guardião (1.167.0), em qualquer lugar
