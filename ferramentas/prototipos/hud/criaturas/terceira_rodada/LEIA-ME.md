@@ -1,0 +1,38 @@
+# A terceira rodada (22/10/2026; propostas, nada no jogo)
+
+**Pedido de Jean**, depois da avaliação da segunda rodada (o cultista A, a bruxa B3 e o rato r2 foram para o jogo na
+1.172.0): o carniçal A2 com a bochecha direita menos larga (a boca e os dentes aprovados); o javali A2 com a curvatura
+de presa de javali (o tamanho e a grossura preservados); o espectro no conceito corporal escolhido (a referência gerada
+`ferramentas/arte/referencias/icones/Espectro do Manto Inflado.png`), no retrato de 16×16 com a cabeça e o começo dos
+ombros. Uma proposta de cada.
+
+## As propostas
+
+- **Carniçal A3** (`carnical-a3`; corpo, rosto, boca): o A2 com a bochecha direita recolhida. Nas linhas 8 e 9, a
+  cabeça ia até a coluna 13, um pixel além do resto (as colunas 3 a 12): o pixel sai e a sombra passa à coluna 12. A boca,
+  a mandíbula aberta e o resto iguais. Um retoque local na cópia da fonte do A2 (quatro pixels).
+  **Limite:** a mudança é discreta; a 32 px o rosto ainda é largo, porque a boca aberta ocupa a largura toda.
+- **Javali A3** (`javali-a3`; corpo, focinho, presas, olhos): o rosto do A com as presas refeitas em arco. A base grossa
+  sai da boca ao lado do focinho, abre para fora, sobe na vertical e afina na ponta, que volta para dentro (o arco de
+  dente de javali, não a diagonal reta do A2); o tamanho e a grossura das do A2, maiores que as do Troll.
+  **Limite:** a 32 px os dois arcos abraçam a cabeça e podem lembrar um par de parênteses; a ponta afinada só se lê bem
+  a 48 px.
+- **Espectro M** (`espectro-m`; manto, rasgos, cavidade, olho; a guia oculta): pela referência do manto inflado, com a
+  identidade do A (o azul-acinzentado, a cavidade escura, o olho único claro). O capuz pequeno no alto, a sombra na base
+  dele, o pano que incha nos ombros e desce até a borda de baixo (o corpo continua fora do quadro, nada de tiras
+  suspensas), a luz à esquerda, os rasgos escuros em fenda. Na bancada, a primeira passada virou um sino com furos (o
+  capuz fundido ao corpo, o olho pequeno): o capuz ganhou a sombra na base e a cavidade cresceu.
+  **Limite:** o olho é uma fenda de dois pixels e lê menos que o olho redondo do A; o retrato fica mais claro e mais
+  pesado que os da fileira.
+
+## Processo
+
+- As grades em `auxiliares/grades.py`; as fontes no Aseprite pelo conector (`pintar.lua`; a releitura das camadas, 0
+  diferentes; o composto igual à soma das camadas; a guia do espectro oculta) em `fontes/<id>/`; a exportação conferida
+  (`auxiliares/exportar.py`: igual à grade, o @2x exato, o 32 e o 48 em blocos inteiros).
+- As fotos a 1920×945 (`auxiliares/fotografar.mjs`): uma luta e o Bestiário com as três, junto de criaturas integradas
+  (o Troll ao lado do javali), nos modos atual, antes e depois, os mesmos dados; trocadas só na página (protótipo). Sem
+  erro nem aviso no console.
+- As folhas: `carnical.png`, `javali.png`, `espectro.png` (`python auxiliares/prancha.py`).
+
+Nada integrado. O Esqueleto E1r, o urso e o falcão do acampamento, o cajado e as propostas anteriores ficam como estão.

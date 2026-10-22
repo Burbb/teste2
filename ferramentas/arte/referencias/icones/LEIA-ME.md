@@ -80,3 +80,11 @@ quartos para a direita, a cabeça larga com as orelhas pequenas e o focinho clar
 duas patas da frente grossas, a coxa de trás. Ampliadas, não grades nativas (o halo e a suavização da geração ficam de
 fora): a transposição para 16×16 está em `ferramentas/prototipos/hud/acampamento_atacar/` (`animal-lobo-r3`,
 `animal-urso-r3`; as guias em `guias/`). A identidade e a paleta continuam as dos retratos aprovados.
+
+**`Espectro do Manto Inflado.png`** (1024×1536, 22/10/2026): **a referência escolhida para a construção do Espectro**,
+uma imagem gerada na conversa com o Jean e deixada aqui por ele; sem outra origem ou autoria informada. Mostra a
+entidade formada por pano vazio, rasgado e inflado: o corpo volumoso e arredondado, os ombros e os braços, afunilando até
+um capuz pequeno com a cavidade escura e o olho único; os rasgos revelam escuridão, sem corpo sólido dentro. Vale para a
+anatomia e a relação entre a cabeça e o corpo; o acabamento segue a pixel art simples do jogo. Ampliada, não uma grade
+nativa: o retrato de 16×16 (a cabeça e o começo dos ombros) está em `ferramentas/prototipos/hud/criaturas/terceira_rodada/`
+(`espectro-m`; a guia em `guias/`).
