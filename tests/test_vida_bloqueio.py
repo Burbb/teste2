@@ -44,6 +44,22 @@ class TestVidaBloqueio(unittest.TestCase):
         self.assertIn("Curandeira", b["dica"][1])
         self.assertIn("fome", b["dica"][1])
 
+    def test_comer_fora_do_amanhecer_devolve_a_vida_maxima(self):
+        # comprar ou achar comida com fome: a fome passa ali, e com ela o bloqueio e os atributos (a vida de agora fica)
+        g = heroi(["corte"], fome=2)
+        j = g.j
+        j.provisoes = 0
+        j.hp = j.max_hp
+        vida, limite, atk = j.hp, j.max_hp, j.atk
+        g.dar_provisoes(2)
+        self.assertEqual(j.fome, 0)
+        self.assertEqual(j.provisoes, 1)
+        b = sobrevivencia.vida_bloqueio(j)
+        self.assertEqual([f["nome"] for f in b["fontes"]], ["Corte profundo"])  # só o ferimento, nada sem causa
+        self.assertGreater(j.max_hp, limite)
+        self.assertGreater(j.atk, atk)
+        self.assertEqual(j.hp, vida)
+
     def test_so_le(self):
         g = heroi(["corte"], fome=2)
         antes = json.dumps(g.j.para_dict(), sort_keys=True, default=str)

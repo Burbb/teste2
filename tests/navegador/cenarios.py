@@ -896,8 +896,9 @@ def tutorial(ui):
         j.hp = min(j.hp, j.max_hp)
     if os.environ.get("BANDAGENS") is not None:  # BANDAGENS=0 tira as da bolsa
         j.consumiveis["bandagem"] = int(os.environ["BANDAGENS"])
-    if os.environ.get("FOME"):
+    if os.environ.get("FOME"):  # como o amanhecer que deu a fome: os atributos e a vida máxima já com ela
         j.fome = int(os.environ["FOME"])
+        j.recalcular()
     for qual in [q for q in os.environ.get("GRATIS_USADO", "").split(",") if q]:  # templo, curandeira
         g.marcar(f"{qual}_gratis_usado")
     if os.environ.get("PENA"):  # PENA=1: uma Pena de Fênix na bolsa (cair na luta levanta o herói)
