@@ -124,6 +124,30 @@ Cabeças de 16×16 no formato dos retratos de carta aprovados (sem contorno, cor
 - A folha `esqueleto-a2n.png` (`python auxiliares/prancha.py esqueleto-a2n`): a referência × A2 × A2n na carta e no
   Bestiário em tamanho real, a 4× e a 12×, sem suavização. Sem novas fotos de luta (só a cabeça mudou).
 
+### O sorriso: S1 e S2 sobre o A2n (21/10/2026, proposta)
+
+- **Pedido de Jean:** o A2n aprovado como base, agora com um sorriso macabro de caveira (a orientação anterior de evitar
+  sorriso deixa de valer aqui): a arcada mais evidente, os dentes claros em grupos separados pela sombra da boca, a
+  mandíbula e o queixo com volume; duas variações, uma contida e uma marcada. O nariz, as órbitas, o crânio, o
+  enquadramento, o pescoço e a paleta iguais; nada de olhos luminosos, acessórios ou efeitos.
+- **S1, contido** (`esqueleto-s1`, linhas 10 a 12): os dentes de cima (O L O o) entre dois cantos pretos que sobem uma
+  linha acima do meio da boca; a boca como uma faixa preta de quatro pixels com as pontas em sombra; os dentes de baixo
+  com o queixo sombreado nos lados (d, D).
+- **S2, marcado** (`esqueleto-s2`, linhas 9 a 12): o sorriso de maçã a maçã, com os cantos nas colunas 4 e 11 e a
+  boca de seis pixels, mais larga que a mandíbula; a sombra embaixo da maçã direita mais funda (D); os dentes de baixo
+  num grupo com a luz no meio e a mandíbula escurecendo nos lados.
+- **Na bancada (a 32 e a 48 px):** a boca preta sem cantos subindo (a primeira contida) lia como uma boca aberta de
+  susto; os vãos entre os dentes, um a um, viravam a grade do A, e ficaram de fora.
+- **Processo:** cópias da fonte do A2n (o A2n intacto, reexportado igual), retocadas no editor pelo conector
+  (`pintar.lua`, cada pixel na camada dele e transparente nas outras); releitura das três camadas contra a grade, 0
+  diferentes; a guia oculta intacta; o composto com a soma das camadas visíveis (124 e 128); a exportação igual à
+  grade, @2x exato, 32 e 48 em blocos inteiros.
+- A folha `esqueleto-sorriso.png` (`python auxiliares/prancha.py esqueleto-sorriso`): A2n × S1 × S2 na carta e no
+  Bestiário em tamanho real, a 4× e a 12×, sem suavização.
+- **A minha leitura (quem aprova é o Jean):** a S1 tem o sorriso fixo sem perder a seriedade do A2n e é a que melhor
+  combina com os outros retratos; a S2 é a mais ameaçadora e a de mais personalidade, mas a 32 px a boca larga começa a
+  pesar mais que as órbitas.
+
 ## Avaliação (a minha leitura a 32 px; quem aprova é o Jean)
 
 - **Rainha A (minha preferência):** é claramente a mesma espécie da Aranha gigante, maior e mais pesada; a ampulheta

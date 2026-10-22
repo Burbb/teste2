@@ -136,6 +136,23 @@ ESQUELETO_A2N[8] = "....oOOnDodd...."
 ESQUELETO_A2N[9] = "....oOnkkDnn...."
 
 
+# O sorriso (21/10/2026, pedido do Jean): o A2n com o sorriso fixo de caveira, só na boca e na mandíbula (linhas 9 a
+# 12); o nariz, as órbitas, o crânio, o pescoço e a paleta iguais. Os dentes em dois grupos claros (os de cima e os de
+# baixo), separados pela sombra da boca; os cantos pretos sobem uma linha, acima do meio da boca.
+# S1, contido: o sorriso na largura da mandíbula; os dentes de baixo com o queixo sombreado nos lados.
+ESQUELETO_S1 = list(ESQUELETO_A2N)
+ESQUELETO_S1[10] = ".....kOLOok....."
+ESQUELETO_S1[11] = ".....DkkkkD....."
+ESQUELETO_S1[12] = ".....dOOodD....."
+# S2, marcado: o sorriso de maçã a maçã (os cantos nas colunas 4 e 11, a sombra da maçã direita mais funda), a boca
+# mais larga que a mandíbula e os dentes de baixo num grupo com a luz no meio.
+ESQUELETO_S2 = list(ESQUELETO_A2N)
+ESQUELETO_S2[9] = "....oOnkkDnD...."
+ESQUELETO_S2[10] = "....kOLOOokn...."
+ESQUELETO_S2[11] = "....DkkkkkkD...."
+ESQUELETO_S2[12] = ".....dOoOod....."
+
+
 def _rainha(patas, marca_ate):
     return lambda x, y, ch: ("olhos" if ch in "Pu" else "marca" if ch in "Gg" and y <= marca_ate else "presas" if ch in "Gg"
                              else "patas" if patas(x, y, ch) else "corpo")
@@ -155,6 +172,10 @@ CAMADAS = {
                      lambda x, y, ch: "cavidades" if ch == "k" else "pescoco" if y >= 13 else "cranio"),
     "esqueleto-a2n": (ESQUELETO_A2N, ["pescoco", "cranio", "cavidades"],
                       lambda x, y, ch: "cavidades" if ch == "k" else "pescoco" if y >= 13 else "cranio"),
+    "esqueleto-s1": (ESQUELETO_S1, ["pescoco", "cranio", "cavidades"],
+                     lambda x, y, ch: "cavidades" if ch == "k" else "pescoco" if y >= 13 else "cranio"),
+    "esqueleto-s2": (ESQUELETO_S2, ["pescoco", "cranio", "cavidades"],
+                     lambda x, y, ch: "cavidades" if ch == "k" else "pescoco" if y >= 13 else "cranio"),
     "esqueleto-b": (ESQUELETO_B, ["pescoco", "cranio", "orbitas"], _esqueleto(lambda x, y: y >= 13 or (y == 12 and x >= 11))),
 }
 

@@ -292,6 +292,44 @@ def folha_nariz():
     print("esqueleto-a2n.png", out.size)
 
 
+def folha_sorriso():
+    """O sorriso (esqueleto-sorriso.png): A2n × S1 (contido) × S2 (marcado); a carta (32 px) e o Bestiário (48 px) em
+    tamanho real, as mesmas caixas a 4× e a 12× com a grade, sem suavização."""
+    f, f2 = ImageFont.truetype("arial.ttf", 15), ImageFont.truetype("arial.ttf", 12)
+    out = Image.new("RGBA", (1000, 900), CARVAO)
+    d = ImageDraw.Draw(out)
+    d.text((20, 10), "O sorriso do Esqueleto: A2n (ee82b54a) × S1, contido × S2, marcado (só a boca e a mandíbula); proposta, "
+                     "nada no jogo", fill=TEXTO, font=f)
+
+    def nicho_de(im, lado):
+        cx = Image.new("RGBA", (lado + 6, lado + 6), (42, 36, 32, 255)); cx.paste((13, 11, 10, 255), (2, 2, lado + 4, lado + 4))
+        cx.alpha_composite(amplia(im, lado // 16), (3, 3)); return cx
+    colunas = (("esqueleto-a2n", "A2n (a base)"), ("esqueleto-s1", "S1, contido"), ("esqueleto-s2", "S2, marcado"))
+    y = 40
+    for j, (_, rot) in enumerate(colunas):
+        d.text((20 + j * 320, y), rot, fill=TEXTO2, font=f2)
+    y += 18
+    d.text((20, y), "tamanho real: a carta (32) e o Bestiário (48)", fill=TEXTO, font=f2)
+    for j, (ident, _) in enumerate(colunas):
+        out.alpha_composite(nicho_de(imagem(ident), 32), (20 + j * 320, y + 18))
+        out.alpha_composite(nicho_de(imagem(ident), 48), (70 + j * 320, y + 18))
+    y += 18 + 54 + 16
+    d.text((20, y), "as mesmas caixas a 4× (vizinho mais próximo)", fill=TEXTO, font=f2)
+    for j, (ident, _) in enumerate(colunas):
+        out.alpha_composite(amplia(nicho_de(imagem(ident), 32), 4), (20 + j * 320, y + 18))
+    y += 18 + 38 * 4 + 12
+    for j, (ident, _) in enumerate(colunas):
+        out.alpha_composite(amplia(nicho_de(imagem(ident), 48), 4), (20 + j * 320, y))
+    y += 54 * 4 + 16
+    d.text((20, y), "a 12× com a grade", fill=TEXTO, font=f2)
+    for j, (ident, _) in enumerate(colunas):
+        out.alpha_composite(grade12(imagem(ident)), (20 + j * 320, y + 18))
+    y += 18 + 192 + 20
+    out = out.crop((0, 0, 1000, y))
+    out.save(PASTA / "esqueleto-sorriso.png")
+    print("esqueleto-sorriso.png", out.size)
+
+
 if __name__ == "__main__":
     import sys
     if sys.argv[1:] == ["rainha-final"]:
@@ -300,6 +338,8 @@ if __name__ == "__main__":
         folha_esqueleto_a2()
     elif sys.argv[1:] == ["esqueleto-a2n"]:
         folha_nariz()
+    elif sys.argv[1:] == ["esqueleto-sorriso"]:
+        folha_sorriso()
     else:
         folha_rainha()
         folha_esqueleto()

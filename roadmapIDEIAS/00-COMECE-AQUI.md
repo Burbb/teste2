@@ -5599,3 +5599,12 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   `ferramentas/prototipos/hud/criaturas/rainha_esqueleto/`.
 - **Continua:** a avaliação do Jean; nada no jogo (a versão continua 1.168.0; a Rainha integrada, os outros retratos
   intactos).
+
+### 21/10/2026 (data do computador local) — O sorriso do Esqueleto (S1 e S2), só no protótipo
+
+- **Decisão de Jean:** o A2n (`ee82b54a`) é a base; agora o sorriso macabro de caveira (a orientação anterior de evitar
+  sorriso deixa de valer nesse ponto), só na boca e na mandíbula, em duas variações.
+- **Feito:** `esqueleto-s1` (contido) e `esqueleto-s2` (marcado), retocados em cópias da fonte do A2n pelo conector
+  (releitura, composto, exportação e ampliações conferidos; o A2n intacto), e a folha `esqueleto-sorriso.png`, em
+  `ferramentas/prototipos/hud/criaturas/rainha_esqueleto/`.
+- **Continua:** a escolha do Jean; nada no jogo (a versão continua 1.168.0).
