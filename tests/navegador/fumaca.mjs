@@ -252,6 +252,12 @@ async function cenarioVila(browser) {
     await guardar.click();
     for (let t = 0; t < 30 && (await page.$("#sobre-achado")); t++) await page.waitForTimeout(100);
     conferir(!(await page.$("#sobre-achado")), "guardar fecha a janela do item");
+    // Os testes do d20 na ficha: texto com dica, não botão (o cursor normal, como os atributos; a dica no mouse)
+    await page.hover("#heroi .testes-ficha");
+    await page.waitForTimeout(200);
+    const d20 = await page.evaluate(() => ({ cursor: getComputedStyle(document.querySelector("#heroi .testes-ficha")).cursor,
+      dica: !document.getElementById("dica-item").hidden && /Testes do d20/.test(document.getElementById("dica-item").textContent) }));
+    conferir(d20.cursor === "default" && d20.dica, `os Testes do d20: cursor normal e a dica no mouse (${JSON.stringify(d20)})`);
     const aceitar = await esperar("[data-aceitar]");
     // Cartazes do mural com a mesma altura e o botão no pé: três cliques seguidos, sem mexer o mouse, pegam os três.
     // (Medidos sem o mouse em cima: o cartaz sob o mouse se endireita e sobe.)

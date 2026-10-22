@@ -255,9 +255,9 @@
 :root body .atributo.abaixo .valor { color: var(--vermelho, #e2574c); }
 :root body .atributo:hover { background: rgba(255, 255, 255, 0.045); border-color: rgba(255, 255, 255, 0.07); }
 /* os testes do d20 (inventario.js, testesHtml): uma linha só, embaixo dos atributos; os seis bônus e de onde vêm
-   ficam na dica, não na ficha */
+   ficam na dica, não na ficha. É texto com dica, como os atributos: o cursor normal (a mão fica para o que se clica) */
 :root body .testes-ficha { display: flex; align-items: center; gap: 8px; padding: 6px 4px 5px 2px; border-top: 1px solid rgba(255, 255, 255, 0.07);
-  cursor: help; }
+  cursor: default; }
 :root body .testes-ficha .d20 { width: 22px; height: 22px; }
 :root body .testes-ficha .d20 text { display: none; }
 :root body .testes-ficha .nome { font-size: 13px; color: var(--sec); }
