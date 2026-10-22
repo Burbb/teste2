@@ -6077,3 +6077,16 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   de presas). A folha `cao-p.png`. Minha preferência: a P3.
 - **Processo:** fontes pelo conector do Aseprite (0 diferentes; o composto = as camadas); exportação igual à grade, @2x
   exato, 32 e 48 em blocos inteiros; fotos nos modos `k`, `l` e `m`, sem erro no console.
+
+### 22/10/2026 (data do computador local) — O Cão infernal no jogo (1.186.0)
+
+- **Estado conferido:** a branch em `e5c14698`, sem alterações locais; a fonte e os PNGs da P1 iguais aos do commit.
+- **Integrado (aprovado pelo Jean, sem retoque):** o Cão infernal P1, pela família, com os afixos. Nenhuma família nem
+  guardião do catálogo fica mais no sprite `demonio` (ele fica como reserva). Fonte em
+  `ferramentas/arte/aseprite/retrato-cao-infernal/`; exportada numa pasta temporária e comparada byte a byte com a P1
+  antes de gravar. Conferido no jogo (`criaturas/fenda/capturas-1186/`): a carta com os caídos e o xamã, o Bestiário com a
+  faixa do mestre caçador, o cartaz e o rastreador; nenhum pedido a `ferramentas/`. Folha:
+  `ferramentas/prototipos/hud/integracoes-22-10/integracoes-1186.png`. As outras tentativas ficam como histórico.
+- **O gabarito** saiu idêntico (nenhuma partida encontra um cão infernal); não foi atualizado.
+- **Verificações sobre o código final:** `unittest`, o gabarito, o pyflakes e uma fumaça inteira.
+- **Continua:** o próximo par recomendado é a abominação com o cavaleiro sombrio; nada começado antes do pedido.
