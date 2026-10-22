@@ -128,3 +128,26 @@ real e 2×), a figura a 8× e o retrato aprovado; o Atacar do Mago, hoje × o ca
 - **Processo:** as fontes pelo conector (`pintar.lua`; releitura, 0 diferentes; o composto 95 e 140); a exportação
   igual à grade, @2x exato; a primeira rodada preservada (reexportada igual). As fotos `capturas/fogueira-<tipo>-r2.png`.
 - A folha `rodada2.png` (`python auxiliares/prancha.py rodada2`): antes × depois do E1, do lobo e do urso.
+
+## A terceira rodada do lobo e do urso, pelas referências geradas (21/10/2026, proposta; nada no jogo)
+
+- **Pedido de Jean:** refazer os dois pelas duas referências geradas (`ferramentas/arte/referencias/icones/Lobo
+  cinzento deitado em pixel art-1.png` e `Urso-pardo sentado em pixel art-2.png`), a direção principal de anatomia,
+  pose e proporções; o pelo em poucas áreas, as paletas dos retratos aprovados, o acabamento das figuras da fogueira;
+  o urso mais volumoso que o lobo e a escala coerente com o personagem sentado.
+- **As guias** (`guias/lobo-guia-16.png`, `guias/urso-guia-16.png`): o animal recortado pela caixa dele (sem o halo e o
+  fundo) e reduzido pela média só onde há animal; o lobo com 15 px de comprimento (8 de altura), o urso com 12 de altura
+  (12 de largura), os pés na linha de baixo. Ocultas nas fontes.
+- **Lobo r3** (`animal-lobo-r3`): o corpo baixo no chão, com as costas retas na linha 12 (nada de rampa), a cabeça
+  erguida para a direita com as orelhas, o olho âmbar e o focinho comprido, o pescoço saindo dos ombros, o peito claro,
+  a coxa de trás clara, as patas da frente estendidas para o fogo, a cauda atrás.
+- **Urso r3** (`animal-urso-r3`): sentado em leve três quartos para a direita, a cabeça larga com as orelhas pequenas,
+  o olho e o focinho claro com o nariz na ponta, o pescoço curto, as costas descendo da nuca à garupa, o plano claro do
+  braço, as duas patas da frente grossas até o chão, a coxa de trás com o pé à frente; 12 linhas de altura (o lobo 8),
+  abaixo do arqueiro sentado.
+- **Processo:** a primeira passada já conferida na fogueira, com a luz do fogo e ao lado do arqueiro (`ANIMAIS=<pasta>`
+  no `fotografar.mjs`); as fontes pelo conector com a guia oculta (`Image{fromFile=...}`; `pintar.lua`, releitura das
+  camadas, 0 diferentes; o composto 68 e 119); a exportação igual à grade, @2x exato; a primeira e a segunda rodada, o
+  falcão e o cajado reexportados iguais. As fotos `capturas/fogueira-<tipo>-r3.png`.
+- A folha `rodada3.png` (`python auxiliares/prancha.py rodada3`): a referência e a guia, antes (r2) × depois (r3) na
+  fogueira, em tamanho real e a 2×, e as figuras a 8×.

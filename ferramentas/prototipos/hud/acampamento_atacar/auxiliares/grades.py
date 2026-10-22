@@ -103,6 +103,41 @@ URSO_R2 = [V] * 4 + [
     "ttUUuuuuUbuUbu..",
     ".ttttBBBtBBtBB..",
 ]
+# A terceira rodada do lobo e do urso (21/10/2026, pedido do Jean): pelas duas referências geradas que ele mandou
+# ("Lobo cinzento deitado em pixel art-1.png" e "Urso-pardo sentado em pixel art-2.png", em
+# ferramentas/arte/referencias/icones/), a direção principal de anatomia, pose e proporções; medidas na guia (o animal
+# recortado pela caixa dele e reduzido: o lobo com 15 px de comprimento, o urso com 12 de altura; guias/, oculta nas
+# fontes), redesenhadas à mão com as paletas dos retratos aprovados e o pelo em poucas áreas:
+#   - lobo r3: o corpo baixo no chão (as costas retas na linha 12, sem rampa), a cabeça erguida para a direita com as
+#     orelhas, o olho âmbar e o focinho comprido, o pescoço saindo dos ombros, o peito claro, a coxa de trás clara, as
+#     patas da frente estendidas, a cauda atrás;
+#   - urso r3: sentado em leve três quartos para a direita, a cabeça larga com as orelhas pequenas e o focinho claro com
+#     o nariz, o pescoço curto, as costas descendo da nuca à garupa, o plano claro do braço, as duas patas da frente
+#     grossas até o chão, a coxa de trás com o pé à frente; mais alto e mais volumoso que o lobo.
+LOBO_R3 = [V] * 8 + [
+    "...........M.M..",
+    "..........mlMmM.",
+    "..........lmeLLn",
+    ".........mlLLm..",
+    "....mmmmmmlLL...",
+    "..mmlllmmmmlL...",
+    ".mmMlLLlMMmMlLLl",
+    ".sMMmLLmssMmlLLl",
+]
+URSO_R3 = [V] * 4 + [
+    "........Ub.Ub...",
+    "........uuuuuu..",
+    ".......UuuuNuu..",
+    "......UuuuuuBBB.",
+    ".....UuuuUuuBBN.",
+    "....UuubbUUuuU..",
+    "....UuuubbUuubU.",
+    "...UuuUUubbUubU.",
+    "..UuuUuuUubUubU.",
+    "..UuUuuuuUbUubU.",
+    "..UUuuuuUUbUubU.",
+    "...tBBUt.BBtBBt.",
+]
 CAMADAS = {
     "animal-lobo": (LOBO, ["corpo", "cabeca", "detalhes"],
                     lambda x, y, ch: "detalhes" if ch in "en" else "cabeca" if y <= 11 and x >= 9 else "corpo"),
@@ -112,6 +147,10 @@ CAMADAS = {
                        lambda x, y, ch: "detalhes" if ch in "en" else "cabeca" if y <= 9 and x >= 9 else "corpo"),
     "animal-urso-r2": (URSO_R2, ["corpo", "cabeca", "detalhes"],
                        lambda x, y, ch: "detalhes" if ch == "N" else "cabeca" if 4 <= y <= 8 and x >= 5 else "corpo"),
+    "animal-lobo-r3": (LOBO_R3, ["corpo", "cabeca", "detalhes"],
+                       lambda x, y, ch: "detalhes" if ch in "en" else "cabeca" if y <= 11 and x >= 9 else "corpo"),
+    "animal-urso-r3": (URSO_R3, ["corpo", "cabeca", "detalhes"],
+                       lambda x, y, ch: "detalhes" if ch == "N" else "cabeca" if y <= 8 and x >= 6 else "corpo"),
     "animal-falcao": (FALCAO, ["toco", "corpo", "cabeca", "detalhes"],
                       lambda x, y, ch: "toco" if ch in "TRr" else "detalhes" if ch == "y" else "cabeca" if y <= 7 else "corpo"),
 }

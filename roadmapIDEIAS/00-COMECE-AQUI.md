@@ -5672,3 +5672,13 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Feito:** `esqueleto-e1r` (um pixel), `animal-lobo-r2` e `animal-urso-r2` pelo conector, conferidos na cena; a
   folha `ferramentas/prototipos/hud/acampamento_atacar/rodada2.png`.
 - **Continua:** a avaliação do Jean; nada no jogo (a versão continua 1.169.0).
+
+### 21/10/2026 (data do computador local) — O lobo e o urso pelas referências geradas (só no protótipo)
+
+- **Pedido de Jean:** refazer os dois pelas referências geradas que ele deixou em `ferramentas/arte/referencias/icones/`
+  (`Lobo cinzento deitado em pixel art-1.png`, `Urso-pardo sentado em pixel art-2.png`), a direção de anatomia, pose e
+  proporções.
+- **Feito:** as guias, `animal-lobo-r3` e `animal-urso-r3` pelo conector (a guia oculta), conferidos na fogueira; a
+  folha `ferramentas/prototipos/hud/acampamento_atacar/rodada3.png`. As rodadas anteriores, o falcão, a E1r e o
+  cajado preservados.
+- **Continua:** a avaliação do Jean; nada no jogo (a versão continua 1.169.0).

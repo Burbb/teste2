@@ -30,6 +30,8 @@ const SITUACOES = [
     amb: { CLASSE: "arqueiro", COMITIVA: "morel", RESERVA: "", FERA: t }, acampar: true, animal: t })),
   ...["lobo", "urso"].map((t) => ({ nome: `fogueira-${t}-r2`, cenario: "fogueira",   // a segunda rodada
     amb: { CLASSE: "arqueiro", COMITIVA: "morel", RESERVA: "", FERA: t }, acampar: true, animal: `${t}-r2` })),
+  ...["lobo", "urso"].map((t) => ({ nome: `fogueira-${t}-r3`, cenario: "fogueira",   // a terceira, pelas referências
+    amb: { CLASSE: "arqueiro", COMITIVA: "morel", RESERVA: "", FERA: t }, acampar: true, animal: `${t}-r3` })),
   { nome: "roda-arqueiro", cenario: "tutorial", amb: { ...LUTA, CLASSE: "arqueiro" } },
   { nome: "roda-arqueiro-arco", cenario: "tutorial", amb: { ...LUTA, CLASSE: "arqueiro" }, troca: "arco" },
   { nome: "roda-arqueiro-besta", cenario: "tutorial", amb: { ...LUTA, CLASSE: "arqueiro", ARMA: "besta" } },

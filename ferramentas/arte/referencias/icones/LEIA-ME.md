@@ -70,3 +70,13 @@ frente com o sorriso macabro de dentes expostos: os cantos da arcada subindo com
 as cavidades nas laterais da mandíbula, o nariz curto e triangular separado das órbitas inclinadas, o osso envelhecido
 com a luz da esquerda. Ampliada, não uma grade nativa (o fundo branco é tirado antes de reduzir): a transposição para
 16×16 está em `ferramentas/prototipos/hud/criaturas/rainha_esqueleto/` (`esqueleto-c`; a guia em `guias/`).
+
+**`Lobo cinzento deitado em pixel art-1.png`** (1536×1024) e **`Urso-pardo sentado em pixel art-2.png`** (1254×1254),
+21/10/2026: **as referências principais de anatomia, pose e proporções do lobo e do urso do acampamento** (a figura de
+corpo inteiro do animal do patrulheiro na fogueira). Imagens geradas na conversa com o Jean e deixadas aqui por ele;
+sem outra origem ou autoria informada. O lobo: deitado de perfil para a direita, o corpo baixo no chão, as patas da
+frente estendidas, a cauda atrás, a cabeça erguida com o focinho comprido, o peito claro. O urso: sentado em leve três
+quartos para a direita, a cabeça larga com as orelhas pequenas e o focinho claro, o pescoço curto, o peito pesado, as
+duas patas da frente grossas, a coxa de trás. Ampliadas, não grades nativas (o halo e a suavização da geração ficam de
+fora): a transposição para 16×16 está em `ferramentas/prototipos/hud/acampamento_atacar/` (`animal-lobo-r3`,
+`animal-urso-r3`; as guias em `guias/`). A identidade e a paleta continuam as dos retratos aprovados.

@@ -989,6 +989,8 @@ foi escolhida.
   toco; 16×16 de corpo inteiro, conferidos na cena) e o teste do cajado aprovado no Atacar do Mago; a folha
   `ferramentas/prototipos/hud/acampamento_atacar/animais-cajado.png`. A seleção futura pelo tipo, num papel próprio.
   Segunda rodada do lobo (a anatomia e a pose) e do urso (refeito como urso pardo sentado); a folha `rodada2.png`.
+  Terceira rodada, pelas duas referências geradas do Jean (o lobo deitado, o urso sentado), com as guias ocultas; a
+  folha `rodada3.png`.
 
 O atalho **Mapa** da doca já foi concluído; esta frente trata dos símbolos internos de caminhos e mapas.
 Não afirmar que só restam talentos e habilidades após este bloco sem conferir os consumíveis, variantes e
