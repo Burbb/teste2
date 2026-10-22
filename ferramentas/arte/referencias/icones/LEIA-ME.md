@@ -53,3 +53,11 @@ saindo de baixo, o pescoço grosso. Ampliadas, não grades nativas: as propostas
 mandada pelo Jean na conversa (guardada aqui com esse nome; sem outra origem ou autoria informada). Vale só para a
 coroa: o aro grosso de ouro velho e as três pontas desiguais, a do meio mais alta. A cabeça da imagem **não** é
 referência: a base do Rei continua o Troll 2 de `ferramentas/prototipos/hud/criaturas/aranha_troll/`.
+
+**`Esqueleto frontal em pixel art.png`** (1254×1254, 21/10/2026): **a referência principal do Esqueleto A2**, a nova
+transposição que desenvolve a direção do Esqueleto A (não é outro ângulo). Imagem gerada na conversa com o Jean e
+deixada aqui por ele, guardada como o original; sem outra origem ou autoria informada. Mostra o esqueleto de frente: o
+crânio arredondado, as têmporas recolhendo, as maçãs angulares, as órbitas fundas e separadas, a cavidade nasal, os
+dentes, a mandíbula com o queixo, as vértebras do pescoço ligadas às clavículas e o osso envelhecido com a luz da
+esquerda. Ampliada (cerca de 33 células de ~38 px), não uma grade nativa: a transposição para 16×16 está em
+`ferramentas/prototipos/hud/criaturas/rainha_esqueleto/` (`esqueleto-a2`; a guia reduzida em `guias/`).

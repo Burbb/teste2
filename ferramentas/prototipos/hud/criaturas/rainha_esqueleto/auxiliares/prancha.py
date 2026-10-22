@@ -183,10 +183,79 @@ def folha_rainha_final():
     print("rainha-final.png", out.size)
 
 
+def folha_esqueleto_a2():
+    """O Esqueleto A × A2 (esqueleto-a2.png): a referência gerada e a guia; a carta (tamanho real e 2×) e o Bestiário
+    (48 px); as lutas com o A2 (o servo, o carniçal e o Lich com o sprite de hoje); a fileira com os retratos do jogo
+    (a Rainha da 1.168.0 inclusive); as ampliações inteiras 1×, 2× e 3×; a 12×."""
+    f, f2 = ImageFont.truetype("arial.ttf", 15), ImageFont.truetype("arial.ttf", 12)
+    out = Image.new("RGBA", (2020, 2600), CARVAO)
+    d = ImageDraw.Draw(out)
+    d.text((20, 10), "O Esqueleto — A (anterior) × A2 (a transposição da referência gerada); proposta, nada no jogo",
+           fill=TEXTO, font=f)
+    ref = Image.open(AQUI.parents[5] / "ferramentas/arte/referencias/icones/Esqueleto frontal em pixel art.png").convert("RGBA")
+    fundo = Image.new("RGBA", ref.size, (0, 0, 0, 255)); fundo.alpha_composite(ref)
+    guia = Image.open(PASTA / "guias/esqueleto-guia-16.png").convert("RGBA")
+    d.text((20, 32), "a referência (reduzida, só para olhar) | a guia a 16 (oculta na fonte) | A | A2, a 12×", fill=TEXTO2, font=f2)
+    out.alpha_composite(fundo.resize((192, 192), Image.LANCZOS), (20, 50))
+    out.alpha_composite(grade12(guia), (232, 50))
+    out.alpha_composite(grade12(imagem("esqueleto-a")), (444, 50)); out.alpha_composite(grade12(imagem("esqueleto-a2")), (656, 50))
+    y = 50 + 192 + 20
+    d.text((20, y), "a carta na luta (1920×945), tamanho real e 2×", fill=TEXTO, font=f2)
+    y += 18
+    for j, (modo, rot) in enumerate((("a", "A"), ("a2", "A2"))):
+        cx = abre(f"luta-{modo}-palco.png").crop(caixa_de("luta", modo, "Esqueleto"))
+        x = 20 + j * 470
+        d.text((x, y), rot, fill=TEXTO2, font=f2)
+        out.alpha_composite(cx, (x, y + 16)); out.alpha_composite(amplia(cx, 2), (x, y + 16 + cx.height + 6))
+    y += 16 + 3 * 50 + 24
+    d.text((20, y), "o Bestiário (48 px), tamanho real: A | A2 (o carniçal ao lado continua na caveira)", fill=TEXTO, font=f2)
+    y += 18
+    alto = 0
+    for j, modo in enumerate(("a", "a2")):
+        cartao = abre(f"bestiario-{modo}-pagina.png").crop(caixa_de("bestiario", modo, "Esqueleto"))
+        out.alpha_composite(cartao, (20 + j * 380, y)); alto = max(alto, cartao.height)
+    car = abre("bestiario-a2-pagina.png").crop(caixa_de("bestiario", "a2", "Carniçal"))
+    out.alpha_composite(car, (780, y)); alto = max(alto, car.height)
+    y += alto + 24
+    d.text((20, y), "as lutas com o A2 (tamanho real): o Necromante com o servo aliado (fica com o sprite), dois esqueletos, o "
+                    "carniçal e o afogado; o Lich Menor (fica) com dois esqueletos invocados", fill=TEXTO, font=f2)
+    y += 18
+    for arq in ("luta-a2-palco.png", "lich-a2-palco.png"):
+        luta = abre(arq).crop((30, 30, 1060, 210))
+        out.alpha_composite(luta, (20, y))
+        y += luta.height + 10
+    ali = Image.open(PASTA.parent / "capturas/aliados-palco.png").convert("RGBA")
+    linha = [("Morel", ali.crop((46, 176, 84, 214))), ("Odette", ali.crop((46, 234, 84, 272)))] +         [(n.replace("-", " ").capitalize(), caixa(Image.open(JOGO / f"retrato-{n}-16.png").convert("RGBA")))
+         for n in APROVADOS + ("rainha-aracnidea",)] +         [("Esqueleto A", caixa(imagem("esqueleto-a"))), ("Esqueleto A2", caixa(imagem("esqueleto-a2")))]
+    d.text((20, y + 10), "a fileira, na caixa da carta, com os retratos do jogo — tamanho real e 3×", fill=TEXTO, font=f2)
+    y += 30
+    for j, (_, cx) in enumerate(linha):
+        out.alpha_composite(cx, (20 + j * 46, y))
+    y += 50
+    for j, (rot, cx) in enumerate(linha):
+        out.alpha_composite(amplia(cx, 3), (20 + (j % 16) * 124, y + (j // 16) * 140))
+        d.text((20 + (j % 16) * 124, y + (j // 16) * 140 + 118), rot[:18], fill=TEXTO2, font=f2)
+    y += ((len(linha) + 15) // 16) * 140 + 10
+    d.text((20, y), "A2 nas ampliações inteiras dos PNGs exportados: 16 (1×) | 32 (2×, a carta) | 48 (3×, o Bestiário)",
+           fill=TEXTO, font=f2)
+    y += 18
+    x = 20
+    for lado in (16, 32, 48):
+        im = Image.open(PASTA / f"proposta/esqueleto-a2-{lado}.png").convert("RGBA")
+        cx = Image.new("RGBA", (lado + 12, lado + 12), (42, 36, 32, 255)); cx.paste((13, 11, 10, 255), (2, 2, lado + 10, lado + 10))
+        cx.alpha_composite(im, (6, 6)); out.alpha_composite(cx, (x, y)); x += lado + 30
+    y += 48 + 12 + 20
+    out = out.crop((0, 0, 2020, y))
+    out.save(PASTA / "esqueleto-a2.png")
+    print("esqueleto-a2.png", out.size)
+
+
 if __name__ == "__main__":
     import sys
     if sys.argv[1:] == ["rainha-final"]:
         folha_rainha_final()
+    elif sys.argv[1:] == ["esqueleto-a2"]:
+        folha_esqueleto_a2()
     else:
         folha_rainha()
         folha_esqueleto()

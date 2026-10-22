@@ -25,6 +25,8 @@ CORES = {
     "Q": "17120f", "R": "3a2f28", "S": "5e4c40", "U": "86705e", "V": "b8a48e", "P": "e08a34", "u": "b06a28", "k": "0e0b08", "G": "7a2018", "g": "b8402e",
     # o Esqueleto: o osso do claro ao escuro e as órbitas
     "W": "cfc6b0", "O": "d6cba6", "o": "aa9e7c", "d": "766a50", "D": "3e3628",
+    # o Esqueleto A2 (a transposição da referência gerada): mais três tons do mesmo osso, a luz, o meio e a sombra funda
+    "L": "e4d9b6", "m": "8e8266", "n": "5a4f3c",
 }
 
 RAINHA_A = [
@@ -99,6 +101,30 @@ ESQUELETO_B = [
     ".......dOdOOooOo",
     "......dOdOoooooO",
 ]
+# A2 (21/10/2026, pedido do Jean): o Esqueleto A desenvolvido pela referência gerada ("Esqueleto frontal em pixel
+# art.png", em ferramentas/arte/referencias/icones/), redesenhado à mão na grade de 16 com a referência reduzida como
+# guia oculta (guias/esqueleto-guia-16.png). Medido na guia: o crânio redondo, as têmporas recolhendo na altura das
+# órbitas, as órbitas de 2×2 separadas pela ponte de 2 px (a de cima inclinada para dentro), o nariz de dois pixels,
+# as maçãs (a luz embaixo da órbita esquerda), a mandíbula estreita com os dentes num grupo e o queixo, o pescoço
+# curto e as clavículas subindo para os ombros, ligadas à coluna.
+ESQUELETO_A2 = [
+    "................",
+    ".....oOOOod.....",
+    "....oLLOOOod....",
+    "...oLLOOOOomd...",
+    "...oLOOOOOomD...",
+    "...doOOOOoonD...",
+    "...dODkOokDdD...",
+    "....mkkOmkkn....",
+    "....oOmnkddd....",
+    "....omOkkdnn....",
+    ".....noOodD.....",
+    ".....DkDDkD.....",
+    "......oLOd......",
+    "......DodD......",
+    "...nOooOoddOd...",
+    ".noOodDOoDdooon.",
+]
 
 
 def _rainha(patas, marca_ate):
@@ -116,6 +142,8 @@ CAMADAS = {
     "rainha-b": (RAINHA_B, ["patas", "corpo", "marca", "presas", "olhos"],
                  _rainha(lambda x, y, ch: not 4 <= x <= 11 or ch == "V", 5)),
     "esqueleto-a": (ESQUELETO_A, ["pescoco", "cranio", "orbitas"], _esqueleto(lambda x, y: y >= 14)),
+    "esqueleto-a2": (ESQUELETO_A2, ["pescoco", "cranio", "cavidades"],
+                     lambda x, y, ch: "cavidades" if ch == "k" else "pescoco" if y >= 13 else "cranio"),
     "esqueleto-b": (ESQUELETO_B, ["pescoco", "cranio", "orbitas"], _esqueleto(lambda x, y: y >= 13 or (y == 12 and x >= 11))),
 }
 

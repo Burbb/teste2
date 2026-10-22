@@ -957,7 +957,8 @@ família, com as que a Rainha invoca); a Rainha Aracnídea continua no `fera`.
 `ferramentas/prototipos/hud/criaturas/rainha_esqueleto/`; o alcance previsto: a Rainha pelo id do guardião, o Esqueleto
 pela família (o servo aliado do Necromante e os chefes mortos-vivos fora); as folhas `rainha.png` e `esqueleto.png`.
 **No jogo desde a 1.168.0:** a Rainha Aracnídea (`rainha-a`, sem retoques, pelo id da guardiã; as aranhas que ela
-invoca continuam com o retrato da Aranha gigante); a folha `rainha-final.png`. O Esqueleto segue no protótipo.
+invoca continuam com o retrato da Aranha gigante); a folha `rainha-final.png`. O Esqueleto segue no protótipo: o
+A2 (o A desenvolvido pela referência gerada do Jean; a folha `esqueleto-a2.png`) aguarda avaliação.
 
 O atalho **Mapa** da doca já foi concluído; esta frente trata dos símbolos internos de caminhos e mapas.
 Não afirmar que só restam talentos e habilidades após este bloco sem conferir os consumíveis, variantes e

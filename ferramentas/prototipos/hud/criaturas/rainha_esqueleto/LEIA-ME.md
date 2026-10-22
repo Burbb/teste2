@@ -73,6 +73,39 @@ Cabeças de 16×16 no formato dos retratos de carta aprovados (sem contorno, cor
   Rainha): a carta da Rainha com `retrato-rainha-aracnidea-32` e as duas invocadas com `retrato-aranha-32`, sem erro no
   console. A folha `rainha-final.png` (`python auxiliares/prancha.py rainha-final`).
 
+## O Esqueleto A2: o A desenvolvido pela referência gerada (21/10/2026, proposta)
+
+- **Pedido de Jean:** o Esqueleto A como direção, melhorado por uma referência gerada na conversa
+  (`ferramentas/arte/referencias/icones/Esqueleto frontal em pixel art.png`), só no protótipo. Preservar a cabeça de
+  frente, o crânio arredondado, as maçãs angulares, as órbitas fundas e separadas, a cavidade nasal, a mandíbula com
+  contorno e o queixo, a coluna cervical ligada às clavículas, o osso envelhecido e a luz dos retratos do jogo; os
+  dentes e as vértebras simplificados em grupos (sem grade de dentes, sorriso exagerado nem osso solto).
+- **Medido na guia** (a referência reduzida a 16×16 por média, `guias/esqueleto-guia-16.png`): as órbitas são menores
+  que as do A (2×2, separadas por uma ponte de 2 px), as têmporas recolhem na altura delas, a mandíbula é estreita
+  (6 px, o queixo 4), o pescoço tem uma vértebra e as clavículas sobem para os ombros.
+- **O desenho** (`esqueleto-a2`; pescoço, crânio, cavidades; a paleta do A com mais três tons do mesmo osso): o crânio
+  redondo com a luz em cima à esquerda; as órbitas de 2×2, a de cima inclinada para dentro; o nariz de dois pixels; a
+  luz da maçã embaixo da órbita esquerda; os dentes num grupo claro e a boca como uma faixa escura com dois vãos; o
+  queixo; a vértebra ligando o queixo às clavículas.
+- **Na bancada:** as primeiras passadas (órbitas de 3 px como as do A) davam óculos escuros ou um rosto simpático, e a
+  boca subia nos cantos, como um sorriso; o crânio sem as têmporas ficava um retângulo e depois um triângulo. A guia
+  resolveu as proporções; a boca virou uma faixa reta.
+- **Processo:** a grade em `auxiliares/grades.py`; a fonte no editor pelo conector (`pintar.lua`, 0 diferentes na
+  releitura nas três camadas; a guia por `Image{fromFile=...}`, oculta; o composto com a soma das camadas visíveis, 122)
+  em `fontes/esqueleto-a2/esqueleto-a2-16.aseprite`; a exportação conferida (`auxiliares/exportar.py`: igual à grade, o
+  @2x exato, o 32 e o 48 em blocos inteiros com os @2x); o conector respondendo depois da exportação em lote.
+- **Fotos** (`MODOS=a,a2`, os mesmos dados, 1920×945): a luta do Necromante e a do Lich Menor, e o Bestiário; só os
+  Esqueletos inimigos trocam (o servo aliado, o carniçal e o Lich com o sprite de hoje), sem erro nem aviso no console.
+  A folha `esqueleto-a2.png` (`python auxiliares/prancha.py esqueleto-a2`): a referência e a guia; A × A2 na carta
+  (tamanho real e 2×) e no Bestiário (48 px); as lutas com o A2; a fileira com os retratos do jogo (a Rainha
+  inclusive); os PNGs a 16, 32 e 48; a 12×.
+- **A minha leitura (quem aprova é o Jean):** o A2 lê como um crânio de verdade, mais magro e mais ameaçador que o A: as
+  órbitas pequenas e fundas, a cavidade nasal e o queixo estreito; os dentes deixaram de ser a grade do A. Limites: a
+  32 px a boca é só uma faixa escura (os dentes de baixo não aparecem), e o osso continua o retrato mais claro da
+  fileira.
+- **Continua fora do jogo:** o Esqueleto segue na caveira; o servo aliado do Necromante, o Lich e os outros
+  mortos-vivos não mudam.
+
 ## Avaliação (a minha leitura a 32 px; quem aprova é o Jean)
 
 - **Rainha A (minha preferência):** é claramente a mesma espécie da Aranha gigante, maior e mais pesada; a ampulheta

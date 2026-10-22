@@ -5577,3 +5577,15 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   continuam com o retrato da Aranha gigante; `tests/test_retratos.py`. A luta com as aranhas invocadas, com os arquivos
   reais, na folha `ferramentas/prototipos/hud/criaturas/rainha_esqueleto/rainha-final.png`.
 - **Continua:** o Esqueleto no protótipo.
+
+### 21/10/2026 (data do computador local) — O Esqueleto A2, só no protótipo
+
+- **Pedido de Jean:** o Esqueleto A melhorado pela referência gerada na conversa (guardada como o original em
+  `ferramentas/arte/referencias/icones/Esqueleto frontal em pixel art.png`), em 16×16 nativos, no Aseprite pelo
+  conector com a guia oculta; A × nova na carta e no Bestiário; nada no jogo.
+- **Feito:** `esqueleto-a2` em `ferramentas/prototipos/hud/criaturas/rainha_esqueleto/` (a guia, a grade, a fonte em
+  camadas, a exportação conferida, as fotos `MODOS=a,a2` e a folha `esqueleto-a2.png`); o processo e a minha leitura
+  no `LEIA-ME.md` da pasta. Registrada a exclusão de `referencias/capacete/elmo-frente-jean.webp`, feita e autorizada
+  pelo Jean.
+- **Continua:** a avaliação do A2 pelo Jean; a versão continua 1.168.0; o servo aliado, o Lich e os outros
+  mortos-vivos fora.

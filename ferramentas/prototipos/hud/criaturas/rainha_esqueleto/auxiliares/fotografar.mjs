@@ -4,7 +4,7 @@
 // fora da troca (outro papel). Situações: a Rainha (o guardião, pelo CHEFE do cenário) com duas aranhas invocadas (o
 // retrato da 1.167.0); uma luta do mago necromante com dois esqueletos, um carniçal e um afogado e um servo de pé; o
 // Lich Menor (chefe) com dois esqueletos invocados; o Bestiário com o esqueleto, o carniçal, a aranha e o afogado.
-//   [MODOS=atual,a,b | final] PLAYWRIGHT_MODULO=<file:// do index.mjs> node fotografar.mjs <raiz> <pasta das fotos>
+//   [MODOS=atual,a,b | final | a,a2] PLAYWRIGHT_MODULO=<file:// do index.mjs> node fotografar.mjs <raiz> <pasta das fotos>
 import { spawn } from "child_process";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import path from "path";
@@ -15,11 +15,13 @@ const espera = (ms) => new Promise((r) => setTimeout(r, ms));
 const aqui = path.join(raiz, "ferramentas/prototipos/hud/criaturas/rainha_esqueleto/proposta");
 const dados = (id) => "data:image/png;base64," + readFileSync(path.join(aqui, `${id}-16.png`)).toString("base64");
 const TROCAS = { a: [["^Rainha Aracnídea$", dados("rainha-a")], ["^Esqueleto( |$)", dados("esqueleto-a")]],
-  b: [["^Rainha Aracnídea$", dados("rainha-b")], ["^Esqueleto( |$)", dados("esqueleto-b")]] };
+  b: [["^Rainha Aracnídea$", dados("rainha-b")], ["^Esqueleto( |$)", dados("esqueleto-b")]],
+  // a2: o Esqueleto A desenvolvido pela referência gerada (a Rainha já é a do jogo, sem troca)
+  a2: [["^Esqueleto( |$)", dados("esqueleto-a2")]] };
 const MODOS = (process.env.MODOS || "atual,a,b").split(",");
 const SITUACOES = [
   { nome: "rainha", cenario: "tutorial", amb: { TUTORIAL: "0", CLASSE: "guerreiro", NIVEL_LUTA: "4", CHEFE: "rainha_aracnidea",
-    INVOCADOS: "1", GRUPO: "aranha:2" }, espera: '.carta[data-uid="j"]', fotos: [["#palco", "palco"]] },
+    INVOCADOS: "1", GRUPO: "aranha:2" }, espera: '.carta[data-uid="j"]', fotos: [["#palco", "palco"]], nao: ["a2"] },
   { nome: "luta", cenario: "tutorial", amb: { TUTORIAL: "0", CLASSE: "mago", NIVEL: "6", ESPEC: "necromante", SERVOS: "1",
     NIVEL_LUTA: "4", GRUPO: "esqueleto:2,carnical:1,afogado:1" }, espera: '.carta[data-uid="j"]', fotos: [["#palco", "palco"]], nao: ["final"] },
   { nome: "lich", cenario: "tutorial", amb: { TUTORIAL: "0", CLASSE: "guerreiro", NIVEL_LUTA: "4", CHEFE: "lich_menor",
