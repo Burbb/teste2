@@ -143,6 +143,50 @@ def folha_esqueleto():
     print("esqueleto.png", out.size)
 
 
+def folha_rainha_final():
+    """A Rainha Aracnídea no jogo (1.168.0, rainha-final.png): a aprovada × o PNG de produção; a luta com as aranhas
+    invocadas, com os arquivos reais (o modo "final"); a carta a 32 px; a fileira dos retratos do jogo."""
+    f, f2 = ImageFont.truetype("arial.ttf", 15), ImageFont.truetype("arial.ttf", 12)
+    out = Image.new("RGBA", (1800, 1000), CARVAO)
+    d = ImageDraw.Draw(out)
+    d.text((20, 10), "A Rainha Aracnídea no jogo (1.168.0): a rainha-a, sem retoques, pelo id da guardiã", fill=TEXTO, font=f)
+    a, b = imagem("rainha-a"), Image.open(JOGO / "retrato-rainha-aracnidea-16.png").convert("RGBA")
+    d.text((20, 32), f"rainha-a (aprovada) | retrato-rainha-aracnidea-16 (no jogo): {'idênticas' if a.tobytes() == b.tobytes() else 'DIFERENTES'}",
+           fill=TEXTO2, font=f2)
+    out.alpha_composite(grade12(a), (20, 50)); out.alpha_composite(grade12(b), (230, 50))
+    y = 50 + 192 + 20
+    d.text((20, y), "a Rainha e uma aranha invocada (o retrato da Aranha gigante) na carta — tamanho real e 2×", fill=TEXTO, font=f2)
+    y += 20
+    for k, nome in enumerate(("Rainha Aracnídea", "Aranha gigante A (invocado)")):
+        cx = abre("rainha-final-palco.png").crop(caixa_de("rainha", "final", nome))
+        out.alpha_composite(cx, (20 + k * 460, y)); out.alpha_composite(amplia(cx, 2), (20 + k * 460, y + cx.height + 6))
+    y += 3 * 50 + 20
+    luta = abre("rainha-final-palco.png").crop((30, 30, 1060, 210))
+    d.text((20, y), "a luta com os arquivos de produção (tamanho real)", fill=TEXTO, font=f2)
+    out.alpha_composite(luta, (20, y + 18))
+    y += 18 + luta.height + 16
+    ali = Image.open(PASTA.parent / "capturas/aliados-palco.png").convert("RGBA")
+    linha = [("Morel", ali.crop((46, 176, 84, 214))), ("Odette", ali.crop((46, 234, 84, 272)))] + \
+        [(n.replace("-", " ").capitalize(), caixa(Image.open(JOGO / f"retrato-{n}-16.png").convert("RGBA")))
+         for n in APROVADOS + ("rainha-aracnidea",)]
+    d.text((20, y), "a fileira dos retratos do jogo, na caixa da carta — tamanho real e 3×", fill=TEXTO, font=f2)
+    y += 20
+    for j, (_, cx) in enumerate(linha):
+        out.alpha_composite(cx, (20 + j * 46, y))
+    y += 50
+    for j, (rot, cx) in enumerate(linha):
+        out.alpha_composite(amplia(cx, 3), (20 + j * 124, y))
+        d.text((20 + j * 124, y + 118), rot[:18], fill=TEXTO2, font=f2)
+    y += 3 * 38 + 40
+    out = out.crop((0, 0, 1800, y))
+    out.save(PASTA / "rainha-final.png")
+    print("rainha-final.png", out.size)
+
+
 if __name__ == "__main__":
-    folha_rainha()
-    folha_esqueleto()
+    import sys
+    if sys.argv[1:] == ["rainha-final"]:
+        folha_rainha_final()
+    else:
+        folha_rainha()
+        folha_esqueleto()

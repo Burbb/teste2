@@ -4,7 +4,7 @@
 // fora da troca (outro papel). Situações: a Rainha (o guardião, pelo CHEFE do cenário) com duas aranhas invocadas (o
 // retrato da 1.167.0); uma luta do mago necromante com dois esqueletos, um carniçal e um afogado e um servo de pé; o
 // Lich Menor (chefe) com dois esqueletos invocados; o Bestiário com o esqueleto, o carniçal, a aranha e o afogado.
-//   [MODOS=atual,a,b] PLAYWRIGHT_MODULO=<file:// do index.mjs> node fotografar.mjs <raiz> <pasta das fotos>
+//   [MODOS=atual,a,b | final] PLAYWRIGHT_MODULO=<file:// do index.mjs> node fotografar.mjs <raiz> <pasta das fotos>
 import { spawn } from "child_process";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import path from "path";
@@ -21,12 +21,12 @@ const SITUACOES = [
   { nome: "rainha", cenario: "tutorial", amb: { TUTORIAL: "0", CLASSE: "guerreiro", NIVEL_LUTA: "4", CHEFE: "rainha_aracnidea",
     INVOCADOS: "1", GRUPO: "aranha:2" }, espera: '.carta[data-uid="j"]', fotos: [["#palco", "palco"]] },
   { nome: "luta", cenario: "tutorial", amb: { TUTORIAL: "0", CLASSE: "mago", NIVEL: "6", ESPEC: "necromante", SERVOS: "1",
-    NIVEL_LUTA: "4", GRUPO: "esqueleto:2,carnical:1,afogado:1" }, espera: '.carta[data-uid="j"]', fotos: [["#palco", "palco"]] },
+    NIVEL_LUTA: "4", GRUPO: "esqueleto:2,carnical:1,afogado:1" }, espera: '.carta[data-uid="j"]', fotos: [["#palco", "palco"]], nao: ["final"] },
   { nome: "lich", cenario: "tutorial", amb: { TUTORIAL: "0", CLASSE: "guerreiro", NIVEL_LUTA: "4", CHEFE: "lich_menor",
-    INVOCADOS: "1", GRUPO: "esqueleto:2" }, espera: '.carta[data-uid="j"]', fotos: [["#palco", "palco"]] },
+    INVOCADOS: "1", GRUPO: "esqueleto:2" }, espera: '.carta[data-uid="j"]', fotos: [["#palco", "palco"]], nao: ["final"] },
   { nome: "bestiario", cenario: "covil", amb: { CLASSE: "guerreiro", LUGAR: "vila",
     BESTIARIO: "esqueleto:3,carnical:2,aranha:2,afogado:2" }, passos: [{ tecla: "b" }], espera: ".cartao .cab",
-    fotos: [["body", "pagina"]] },
+    fotos: [["body", "pagina"]], nao: ["final"] },
 ];
 mkdirSync(saida, { recursive: true });
 const b = await chromium.launch();

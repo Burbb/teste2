@@ -13,8 +13,8 @@ Não iniciar todo o plano numa única tarefa. As etapas técnicas A–I e a vali
 
 ## Estado de referência — 21/10/2026
 
-- Produção: **1.167.0** na branch `claude/tender-einstein-tx3tjl` (o Rei Troll e a Aranha gigante com retrato; antes,
-  o Troll da montanha na 1.166.0 e os três animais do patrulheiro na 1.165.0).
+- Produção: **1.168.0** na branch `claude/tender-einstein-tx3tjl` (a Rainha Aracnídea com retrato; antes, o Rei Troll
+  e a Aranha gigante na 1.167.0 e o Troll da montanha na 1.166.0).
 - **Etapa 1D concluída:** os **31 equipamentos-base** estão finais desde a 1.150.0, com os acabamentos das luvas L7
   (1.151.0), das perneiras P7 (1.152.0), do capacete C1 (1.153.0) e das botas A1 (1.154.0). **Fora dessa contagem, e
   ainda abertos:** as variantes (os únicos e raros com desenho próprio) e os compartilhamentos provisórios (a Capa de
@@ -24,8 +24,8 @@ Não iniciar todo o plano numa única tarefa. As etapas técnicas A–I e a vali
   do catálogo (1.155.0 a 1.161.0). Criaturas com retrato próprio: o **Afogado e a Ilse** (1.162.0), o **Lobo e o
   Bandido** (1.163.0) e os **três animais do patrulheiro** (o Urso Pardo e o Falcão Peregrino na 1.164.0; o Lobo
   Cinzento, com o mesmo retrato do Lobo inimigo, na 1.165.0), o **Troll da montanha** (1.166.0, pela família), o
-  **Rei Troll** (1.167.0, pelo id do guardião) e a **Aranha gigante** (1.167.0, pela família, com as invocadas; a
-  Rainha Aracnídea fora). O Bandido do chapéu está reservado como conceito de um possível chefe, fora do jogo.
+  **Rei Troll** (1.167.0, pelo id do guardião) e a **Aranha gigante** (1.167.0, pela família, com as invocadas) e a
+  **Rainha Aracnídea** (1.168.0, pelo id da guardiã). O Bandido do chapéu está reservado como conceito de um possível chefe, fora do jogo.
 - **Agora: 1E.3, as demais criaturas, os chefes e as invocações** (as outras ainda saem dos traços: o `fera`, o
   `humano`, a caveira e os outros sprites de 16×16; o levantamento em `ferramentas/prototipos/hud/criaturas/`).
   **Depois: 1E.4**, os caminhos e os símbolos internos do mapa e do minimapa. Em seguida, as **etapas 2–9** como estão
@@ -956,7 +956,8 @@ família, com as que a Rainha invoca); a Rainha Aracnídea continua no `fera`.
 **O par seguinte (21/10/2026, proposta): a Rainha Aracnídea e o Esqueleto**, duas de cada em
 `ferramentas/prototipos/hud/criaturas/rainha_esqueleto/`; o alcance previsto: a Rainha pelo id do guardião, o Esqueleto
 pela família (o servo aliado do Necromante e os chefes mortos-vivos fora); as folhas `rainha.png` e `esqueleto.png`.
-Nada aprovado.
+**No jogo desde a 1.168.0:** a Rainha Aracnídea (`rainha-a`, sem retoques, pelo id da guardiã; as aranhas que ela
+invoca continuam com o retrato da Aranha gigante); a folha `rainha-final.png`. O Esqueleto segue no protótipo.
 
 O atalho **Mapa** da doca já foi concluído; esta frente trata dos símbolos internos de caminhos e mapas.
 Não afirmar que só restam talentos e habilidades após este bloco sem conferir os consumíveis, variantes e

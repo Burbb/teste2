@@ -5568,3 +5568,12 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   Bestiário, a Rainha ao lado da Aranha, os papéis do esqueleto, a fileira, a 12×). O alcance e a avaliação no
   `LEIA-ME.md` da pasta. Minha preferência: a Rainha A e o Esqueleto A.
 - **Continua:** nada aprovado; a versão continua 1.167.0.
+
+### 21/10/2026 (data do computador local) — A Rainha Aracnídea no jogo (1.168.0)
+
+- **Decisão de Jean:** a Rainha A, sem retoques (o abdome e a marca vermelha inclusive), pelo id estável da guardiã.
+- **Feito:** a fonte em `ferramentas/arte/aseprite/retrato-rainha-aracnidea/` (só o 32 derivado, a carta da luta;
+  `DERIVADOS`); os PNGs idênticos aos da proposta; `RETRATO_GUARDIAO` com a Rainha; as aranhas comuns e as invocadas
+  continuam com o retrato da Aranha gigante; `tests/test_retratos.py`. A luta com as aranhas invocadas, com os arquivos
+  reais, na folha `ferramentas/prototipos/hud/criaturas/rainha_esqueleto/rainha-final.png`.
+- **Continua:** o Esqueleto no protótipo.

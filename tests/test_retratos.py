@@ -37,8 +37,9 @@ class TestRetratos(unittest.TestCase):
             for t in lista:
                 e = instanciar_guardiao({"bioma": bioma, "id": t["id"], "idx": 0, "nome": t["base"], "g": t["g"]}, 3)
                 ret = retrato(e.tracos, e.familia, e.chave, e.guardiao)
-                # o Rei tem o retrato dele; a Rainha Aracnídea e os outros continuam pelos traços
-                self.assertEqual(ret, "rei_troll" if t["id"] == "rei_troll" else retrato(e.tracos), t["id"])
+                # o Rei e a Rainha Aracnídea têm o retrato deles; os outros guardiões continuam pelos traços
+                proprio = t["id"] in ("rei_troll", "rainha_aracnidea")
+                self.assertEqual(ret, t["id"] if proprio else retrato(e.tracos), t["id"])
 
     def test_aranha_pela_familia_e_as_invocadas(self):
         import random

@@ -159,10 +159,10 @@ RETRATOS = ("demonio", "etereo", "corrompido", "morto-vivo", "construto", "voado
 # da espécie pela família (a variante, o líder de nome próprio e o invocado da mesma família também; 1.163.0: o lobo e
 # o bandido; 1.166.0: o troll da montanha). Quem não está aqui segue pelos traços: o lobo gélido e o animal do herói
 # continuam no "fera", o cultista e os outros humanos no "humano". O guardião pelo id do catálogo (1.167.0: o Rei
-# Troll; a chave de um guardião muda com o lugar), depois da chave; a Rainha Aracnídea e os outros continuam pelos traços,
-# e as aranhas que a Rainha invoca têm a família "aranha".
+# Troll; 1.168.0: a Rainha Aracnídea; a chave de um guardião muda com o lugar), depois da chave; os outros guardiões
+# continuam pelos traços, e as aranhas que a Rainha invoca têm a família "aranha" (o retrato da Aranha gigante).
 RETRATO_CHAVE = {"ilse": "ilse"}
-RETRATO_GUARDIAO = {"rei_troll": "rei_troll"}
+RETRATO_GUARDIAO = {"rei_troll": "rei_troll", "rainha_aracnidea": "rainha_aracnidea"}  # 1.168.0: a Rainha
 RETRATO_FAMILIA = {"afogado": "afogado", "lobo": "lobo", "bandido": "bandido", "troll": "troll", "aranha": "aranha"}
 
 

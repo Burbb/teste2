@@ -60,6 +60,19 @@ Cabeças de 16×16 no formato dos retratos de carta aprovados (sem contorno, cor
 - As folhas: `rainha.png` e `esqueleto.png` (`python auxiliares/prancha.py`): a carta (tamanho real e 2×); a Rainha ao
   lado da Aranha gigante; o Esqueleto no Bestiário e nos papéis separados; a fileira com os retratos do jogo; a 12×.
 
+## A integração da Rainha (1.168.0)
+
+- **Decisão de Jean:** a Rainha A, sem retoques, inclusive o abdome e a marca vermelha.
+- A fonte de produção em `ferramentas/arte/aseprite/retrato-rainha-aracnidea/retrato-rainha-aracnidea-16.aseprite`
+  (as mesmas camadas: patas, corpo, marca, presas, olhos); o 32 é o 16 ×2 (`DERIVADOS` do exportador), sem 48 (a
+  guardiã não tem Bestiário nem contrato). Os PNGs exportados (16, 32 e os @2x) são idênticos aos da proposta;
+  `exportar_aseprite.py retrato-rainha-aracnidea --conferir` fica igual ao jogo.
+- No motor, `RETRATO_GUARDIAO` ganhou `rainha_aracnidea`; as aranhas comuns e as que ela invoca continuam pela família
+  (o retrato da Aranha gigante). Regras, atributos e medidas iguais.
+- A conferência no jogo, com os arquivos reais (o modo `final` de `auxiliares/fotografar.mjs`, só a situação da
+  Rainha): a carta da Rainha com `retrato-rainha-aracnidea-32` e as duas invocadas com `retrato-aranha-32`, sem erro no
+  console. A folha `rainha-final.png` (`python auxiliares/prancha.py rainha-final`).
+
 ## Avaliação (a minha leitura a 32 px; quem aprova é o Jean)
 
 - **Rainha A (minha preferência):** é claramente a mesma espécie da Aranha gigante, maior e mais pesada; a ampulheta

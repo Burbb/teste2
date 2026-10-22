@@ -94,6 +94,8 @@ DERIVADOS = {
     # gigante (a aranha-2b; a carta, o Bestiário, o mural e o rastro, pela família)
     "retrato-rei-troll": {32: (16, 2), 48: (16, 3)},
     "retrato-aranha": {32: (16, 2), 48: (16, 3)},
+    # 1.168.0: a Rainha Aracnídea (a rainha-a; pelo id da guardiã): só a carta da luta, o 32 (o 16 ×2)
+    "retrato-rainha-aracnidea": {32: (16, 2)},
 }
 # O martelo (1.149.0) só tem fontes do 40 e do 48 (aseprite/martelo/): o 32 e o 64 são a grade de desenhos.js, no
 # jogo, e não saem daqui.

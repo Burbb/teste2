@@ -119,6 +119,8 @@ A escolha do par e da direção é do Jean; nada foi começado.
   Rei Troll (guardião) continua na caveira; a Aranha segue no protótipo.
 - **1.167.0: o Rei Troll e a Aranha gigante** (`aranha_troll/`): o Rei (o Troll 2 com a coroa dourada) pelo id do
   guardião; a Aranha (a 2B) pela família, com as que a Rainha invoca. A Rainha Aracnídea continua no `fera`.
+- **1.168.0: a Rainha Aracnídea** (`rainha_esqueleto/`, a `rainha-a`, sem retoques): pelo id da guardiã; as aranhas
+  que ela invoca continuam com o retrato da Aranha gigante. O Esqueleto segue no protótipo.
 
 ## Em proposta
 
@@ -132,7 +134,8 @@ A escolha do par e da direção é do Jean; nada foi começado.
 
 - **A Rainha Aracnídea e o Esqueleto** (`rainha_esqueleto/`, 21/10/2026): duas propostas de cada (a Rainha de frente e
   descendo pelo fio; o Esqueleto de frente e em três quartos), com o alcance previsto e os papéis do esqueleto
-  separados (o inimigo, os invocados pelo Lich, o servo aliado, os chefes). Nada integrado.
+  separados (o inimigo, os invocados pelo Lich, o servo aliado, os chefes). A Rainha A entrou na 1.168.0; o Esqueleto
+  continua em proposta.
 
 ## Reservado
 
