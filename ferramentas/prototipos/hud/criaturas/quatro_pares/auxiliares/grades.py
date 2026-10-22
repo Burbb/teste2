@@ -273,6 +273,92 @@ ESP_B = [
     "......s...s.....",
 ]
 
+# Par 4, as feras comuns: o javali selvagem e o rato gigante (hoje no "fera", o rosto de lobo)
+CORES4 = {
+    # o javali: as cerdas (do escuro ao claro), o focinho, o focinho claro, as narinas, as presas, o olho
+    "J": "1e1612", "j": "3a2a20", "b": "5a4232", "B": "7a5c44", "n": "9a7462", "N": "c0988a", "o": "2a1814", "T": "e6dcc4", "E": "b0381e",
+    # o rato: o pelo (do escuro ao claro), a pele rosada (as orelhas, o focinho, a cauda), os dentes amarelos, o olho
+    "K": "1e1a18", "r": "443a34", "R": "6a5e56", "g": "928678", "p": "c4908a", "P": "8a5a58", "Y": "d8c070", "e": "d0302a",
+}
+# Javali A, de frente em investida: a cabeça baixa, a crina eriçada e as orelhas pontudas, os olhinhos vermelhos, o
+# focinho em disco com as narinas, as presas subindo dos lados
+JAV_A = [
+    "................",
+    "..J..........J..",
+    "..jJ.J.JJ.J.Jj..",
+    "..jbJjJjjJjJbj..",
+    ".jbbBbbjjbbBbbj.",
+    ".jbEbBbbbbBbEbj.",
+    ".jbbBBbbbbBBbbj.",
+    "..jbBBnnnnBBbj..",
+    "..jbBnNNNNnBbj..",
+    ".TjbnNoNNoNnbjT.",
+    ".TjbnNNNNNNnbjT.",
+    "..TjbnnnnnnbjT..",
+    "...jjbbbbbbjj...",
+    "..jbbjbbbbjbbj..",
+    ".jbbBbJJJJbBbbj.",
+    "JjjjjJJJJJJjjjjJ",
+]
+# Javali B, de perfil em investida: o focinho e a presa para a esquerda, a crina no dorso, as patas curtas
+JAV_B = [
+    "................",
+    "................",
+    ".......J.J.J....",
+    "......JjJjJjJ...",
+    "....JjjbjbjbjJ..",
+    "...JbBbbbbbbbjJ.",
+    "..jbEBbBBbbbbbjJ",
+    "nnNbBBBBbbbbbbjJ",
+    "oNNbBBbbbbbbbbjJ",
+    "nnNTbBbbbbbbbjjJ",
+    ".TTjbbbbbbbbjjJ.",
+    "..T.jbbjjbbbjj..",
+    "....jbj..jbj....",
+    "....jb...jb.....",
+    "...jJj...jJ.....",
+    "................",
+]
+# Rato A, de perto: as orelhas rosadas, os olhos vermelhos, o focinho, os incisivos amarelos, os bigodes
+RATO_A = [
+    "................",
+    "................",
+    "..pPr......rPp..",
+    "..PRRr....rRRP..",
+    "..rRRRrrrrRRRr..",
+    "..rRRggggggRRr..",
+    "..rReKRggRKeRr..",
+    "..rRRRggggRRRr..",
+    "...rRRggggRRr...",
+    "...rRgggggRRr...",
+    "..g.rRgPPgRr.g..",
+    ".g..rRRppRRr..g.",
+    "....rrYYYYrr....",
+    ".....rYrrYr.....",
+    "....rRRrrRRr....",
+    "...rrRRrrRRrr...",
+]
+# Rato B, o corpo inteiro agachado: o dorso curvado, o olho vermelho, os dentes, a cauda pelada enrolada (vêm em
+# bando)
+RATO_B = [
+    "................",
+    "................",
+    "................",
+    "................",
+    "..pP............",
+    ".pPrRRr.........",
+    "pPRRRRRrr.......",
+    "eRRggRRRRrr.....",
+    "RRgggRRRRRRr....",
+    "pggggRRRRRRRr...",
+    "YYgRRRRRRRRRr...",
+    ".rgRRRRRRRRrr..p",
+    "..rRrrRRRRrr..pP",
+    "..pp.rRr.rp..pP.",
+    "....pp...pp.pP..",
+    ".......pPPPPP...",
+]
+
 CAMADAS = {
     "sapo-a": (SAPO_A, ["corpo", "barriga", "olhos", "manchas"],
                lambda x, y, ch: "olhos" if ch in "Yk" else "manchas" if ch == "O" else "barriga" if ch in "cCM" else "corpo"),
@@ -296,10 +382,19 @@ CAMADAS = {
                    lambda x, y, ch: "boca" if ch in "RTk" else "rosto" if ch == "Y" or y <= 10 else "corpo"),
     "espectro-a": (ESP_A, ["nevoa", "vazio"], lambda x, y, ch: "vazio" if ch in "VE" else "nevoa"),
     "espectro-b": (ESP_B, ["nevoa", "vazio"], lambda x, y, ch: "vazio" if ch in "VE" else "nevoa"),
+    "javali-a": (JAV_A, ["corpo", "focinho", "presas", "olhos"],
+                 lambda x, y, ch: "olhos" if ch == "E" else "presas" if ch == "T" else "focinho" if ch in "nNo" else "corpo"),
+    "javali-b": (JAV_B, ["corpo", "focinho", "presas", "olhos"],
+                 lambda x, y, ch: "olhos" if ch == "E" else "presas" if ch == "T" else "focinho" if ch in "nNo" else "corpo"),
+    "rato-a": (RATO_A, ["corpo", "pele", "dentes", "olhos"],
+               lambda x, y, ch: "olhos" if ch in "eK" else "dentes" if ch == "Y" else "pele" if ch in "pP" else "corpo"),
+    "rato-b": (RATO_B, ["corpo", "pele", "dentes", "olhos"],
+               lambda x, y, ch: "olhos" if ch in "eK" else "dentes" if ch == "Y" else "pele" if ch in "pP" else "corpo"),
 }
 # o mapa de cores de cada desenho (o par 1 usa CORES; os outros pares, o próprio)
 PALETA = {"cultista-a": CORES2, "cultista-b": CORES2, "bruxa-a": CORES2, "bruxa-b": CORES2,
-          **dict.fromkeys(("carnical-a", "carnical-b", "espectro-a", "espectro-b"), CORES3)}
+          **dict.fromkeys(("carnical-a", "carnical-b", "espectro-a", "espectro-b"), CORES3),
+          **dict.fromkeys(("javali-a", "javali-b", "rato-a", "rato-b"), CORES4)}
 
 
 def imagem(ident):

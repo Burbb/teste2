@@ -655,5 +655,224 @@
     ]
    }
   ]
+ },
+ "par4/luta/atual": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Javali selvagem",
+    "caixa": [
+     830,
+     38,
+     1040,
+     88
+    ]
+   },
+   {
+    "nome": "Rato gigante",
+    "caixa": [
+     830,
+     96,
+     1040,
+     146
+    ]
+   },
+   {
+    "nome": "Rato gigante",
+    "caixa": [
+     830,
+     154,
+     1040,
+     204
+    ]
+   }
+  ]
+ },
+ "par4/luta/a": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Javali selvagem",
+    "caixa": [
+     830,
+     38,
+     1040,
+     88
+    ]
+   },
+   {
+    "nome": "Rato gigante",
+    "caixa": [
+     830,
+     96,
+     1040,
+     146
+    ]
+   },
+   {
+    "nome": "Rato gigante",
+    "caixa": [
+     830,
+     154,
+     1040,
+     204
+    ]
+   }
+  ]
+ },
+ "par4/luta/b": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Javali selvagem",
+    "caixa": [
+     830,
+     38,
+     1040,
+     88
+    ]
+   },
+   {
+    "nome": "Rato gigante",
+    "caixa": [
+     830,
+     96,
+     1040,
+     146
+    ]
+   },
+   {
+    "nome": "Rato gigante",
+    "caixa": [
+     830,
+     154,
+     1040,
+     204
+    ]
+   }
+  ]
+ },
+ "par4/bestiario/atual": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Aranha gigante",
+    "caixa": [
+     585,
+     248,
+     935,
+     403
+    ]
+   },
+   {
+    "nome": "Javali selvagem",
+    "caixa": [
+     945,
+     248,
+     1295,
+     403
+    ]
+   },
+   {
+    "nome": "Lobo",
+    "caixa": [
+     585,
+     413,
+     935,
+     568
+    ]
+   },
+   {
+    "nome": "Rato gigante",
+    "caixa": [
+     945,
+     413,
+     1295,
+     568
+    ]
+   }
+  ]
+ },
+ "par4/bestiario/a": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Aranha gigante",
+    "caixa": [
+     585,
+     248,
+     935,
+     403
+    ]
+   },
+   {
+    "nome": "Javali selvagem",
+    "caixa": [
+     945,
+     248,
+     1295,
+     403
+    ]
+   },
+   {
+    "nome": "Lobo",
+    "caixa": [
+     585,
+     413,
+     935,
+     568
+    ]
+   },
+   {
+    "nome": "Rato gigante",
+    "caixa": [
+     945,
+     413,
+     1295,
+     568
+    ]
+   }
+  ]
+ },
+ "par4/bestiario/b": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Aranha gigante",
+    "caixa": [
+     585,
+     248,
+     935,
+     403
+    ]
+   },
+   {
+    "nome": "Javali selvagem",
+    "caixa": [
+     945,
+     248,
+     1295,
+     403
+    ]
+   },
+   {
+    "nome": "Lobo",
+    "caixa": [
+     585,
+     413,
+     935,
+     568
+    ]
+   },
+   {
+    "nome": "Rato gigante",
+    "caixa": [
+     945,
+     413,
+     1295,
+     568
+    ]
+   }
+  ]
  }
 }

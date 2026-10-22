@@ -30,6 +30,10 @@ PARES = {
         [("Carniçal", "carnical", "A, de frente (a mandíbula)", "B, de perfil (mordendo)"),
          ("Espectro", "espectro", "A, o capuz de névoa", "B, o grito")],
         ("afogado", "ilse", "lobo", "bandido")),
+    4: ("Par 4, as feras comuns: o javali selvagem e o rato gigante",
+        [("Javali selvagem", "javali", "A, de frente (a investida)", "B, de perfil"),
+         ("Rato gigante", "rato", "A, de perto (os dentes)", "B, o corpo agachado")],
+        ("lobo", "urso", "aranha", "troll")),
 }
 
 

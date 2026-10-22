@@ -99,3 +99,24 @@ os outros guardiões), o antagonista, os servos aliados e os aliados; nenhum her
   - **espectro: o A.** Forte: a silhueta do capuz que se desfaz é imediata e diferente de todo o resto da fileira; o
     vazio do rosto é a ameaça. Limite: o ponto de olho único lê como um ciclope. O B tem a ação (o grito), mas ainda é
     leve demais, mais assombração simpática que ameaça.
+
+## Par 4, as feras comuns: o javali selvagem e o rato gigante (`par4.png`)
+
+- **Os dados:** o javali (fera; investida; "teimosos e brutais; a investida de um javali derruba até cavaleiros"); o
+  rato (fera; mordida sangrenta, veneno; "onde há um, há vinte; mordidas sujas que infeccionam"; em grupos de dois a
+  quatro). **O alcance:** cada um pela família (o javali robusto de um evento inclusive); o lobo, a aranha, os animais
+  do herói e os chefes ficam fora.
+- **Javali A, de frente em investida** (`javali-a`; corpo, focinho, presas, olhos): a cabeça baixa, a crina eriçada e
+  as orelhas pontudas, os olhinhos vermelhos, o focinho em disco com as narinas, as presas subindo dos lados. **Javali
+  B, de perfil** (`javali-b`): o focinho e a presa para a esquerda, a crina no dorso, as patas curtas.
+- **Rato A, de perto** (`rato-a`; corpo, pele, dentes, olhos): as orelhas rosadas, os olhos vermelhos, o focinho, os
+  incisivos amarelos, os bigodes. **Rato B, o corpo inteiro agachado** (`rato-b`): o dorso curvado, o olho vermelho,
+  os dentes, a cauda pelada enrolada.
+- **Na bancada:** o primeiro javali de frente era um rosto de macaco (as presas pareciam braços): o focinho em disco
+  passou para o centro, com as presas ao lado; o primeiro rato de frente era um camundongo (as orelhonas).
+- **A minha preferência:**
+  - **javali: o A.** Forte: o focinho de porco com as presas e os olhinhos vermelhos dizem javali e ameaça de frente,
+    como a investida. Limite: a cabeça é larga e baixa, e a 32 px a crina vira uma borda escura sem forma.
+  - **rato: o B.** Forte: a silhueta de rato inteiro (o dorso, a cauda pelada) é a mais reconhecível e diferente dos
+    outros retratos, e combina com o bando. Limite: pequeno na caixa e de perfil, perde o olho e os dentes; a ameaça
+    vem do número. O A tem os dentes e o olhar, mas de frente lembra um morcego ou um gato.
