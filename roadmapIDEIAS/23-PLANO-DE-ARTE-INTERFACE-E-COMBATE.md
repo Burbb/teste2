@@ -13,8 +13,8 @@ Não iniciar todo o plano numa única tarefa. As etapas técnicas A–I e a vali
 
 ## Estado de referência — 21/10/2026
 
-- Produção: **1.171.0** na branch `claude/tender-einstein-tx3tjl` (o Sapo-touro gigante e a Sanguessuga gigante com
-  retrato, pela família; antes, o Lobo Cinzento na fogueira na 1.170.0 e o arco no Atacar do Arqueiro na 1.169.0).
+- Produção: **1.172.0** na branch `claude/tender-einstein-tx3tjl` (o Cultista, a Bruxa do pântano e o Rato gigante com
+  retrato, pela família; antes, o Sapo e a Sanguessuga na 1.171.0 e o Lobo Cinzento na fogueira na 1.170.0).
 - **Etapa 1D concluída:** os **31 equipamentos-base** estão finais desde a 1.150.0, com os acabamentos das luvas L7
   (1.151.0), das perneiras P7 (1.152.0), do capacete C1 (1.153.0) e das botas A1 (1.154.0). **Fora dessa contagem, e
   ainda abertos:** as variantes (os únicos e raros com desenho próprio) e os compartilhamentos provisórios (a Capa de
@@ -1011,6 +1011,10 @@ foi escolhida.
   três capuzes do cultista, três rostos da bruxa, o carniçal com a boca refeita, o espectro de olho único, o javali de
   presas grandes e três reconstruções do rato; as folhas por criatura e as minhas preferências (o cultista c1, a bruxa
   b1, o rato r1) no `LEIA-ME.md` da pasta. Em avaliação, com o Esqueleto E1r, o urso, o falcão e o cajado.
+- **No jogo desde a 1.172.0:** o Cultista A (o original; os capuzes c1 a c3 ficam como alternativas não escolhidas),
+  a Bruxa do pântano B3 (o sorriso banguela) e o Rato gigante r2 (de frente, a cabeça baixa), pela família; o cultista
+  também nos fiéis do Profeta e nos dois de capa escura da sacristia. O Profeta, o mercenário e as outras feras
+  continuam pelos traços.
 
 O atalho **Mapa** da doca já foi concluído; esta frente trata dos símbolos internos de caminhos e mapas.
 Não afirmar que só restam talentos e habilidades após este bloco sem conferir os consumíveis, variantes e

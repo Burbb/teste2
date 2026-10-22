@@ -84,3 +84,15 @@ três reconstruções do rato a partir da direção A. As propostas do primeiro 
 
 Nada integrado nesta rodada; os chefes, os aliados e os sprites compartilhados não mudaram. O Esqueleto E1r, o urso e o
 falcão do acampamento e o cajado continuam como estavam.
+
+## No jogo desde a 1.172.0: o cultista A, a bruxa B3 e o rato r2
+
+- **Decisão de Jean:** o Cultista A original (os capuzes c1 a c3 ficam como alternativas não escolhidas), a Bruxa B3 e o
+  Rato r2, sem retoques.
+- As fontes conferidas iguais às dos commits das propostas e levadas para `ferramentas/arte/aseprite/retrato-cultista/`,
+  `retrato-bruxa/` e `retrato-rato/`; os dezoito PNGs (16, 32, 48 e os @2x, `DERIVADOS`) idênticos byte a byte aos da
+  proposta; `--conferir` igual ao jogo.
+- No motor, `RETRATO_FAMILIA` ganhou `cultista`, `bruxa_brejo` (o retrato `bruxa`) e `rato`; em `icones.js`, o papel
+  `CRIATURA` e os tamanhos; `tests/test_retratos.py` confere as famílias e o Profeta pelos traços.
+- Conferido nos usos reais com os arquivos do jogo (`capturas-1172/`): a luta e o Bestiário com as seis criaturas, sem
+  erro no console.

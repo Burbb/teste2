@@ -125,6 +125,8 @@ A escolha do par e da direção é do Jean; nada foi começado.
   animal no acampamento, pelo tipo (o papel `FIGURA_ANIMAL`); o urso e o falcão continuam nos sprites.
 - **1.171.0: o Sapo-touro gigante e a Sanguessuga gigante** (`quatro_pares/`, o `sapo-a` e a `sanguessuga-a`, sem
   retoques): pela família; a Hidra do Brejo e as outras feras continuam pelos traços.
+- **1.172.0: o Cultista, a Bruxa do pântano e o Rato gigante** (o `cultista-a` de `quatro_pares/`, a `bruxa-b3` e o
+  `rato-r2` de `segunda_rodada/`, sem retoques): pela família; o Profeta e as outras feras continuam pelos traços.
 
 ## Em proposta
 

@@ -99,6 +99,11 @@ DERIVADOS = {
     # 1.171.0: o sapo-touro gigante e a sanguessuga gigante (o sapo-a e a sanguessuga-a, pela família)
     "retrato-sapo": {32: (16, 2), 48: (16, 3)},
     "retrato-sanguessuga": {32: (16, 2), 48: (16, 3)},
+    # 1.172.0: o cultista (o cultista-a dos quatro pares), a bruxa do pântano (a bruxa-b3) e o rato gigante (o rato-r2 da
+    # segunda rodada), pela família
+    "retrato-cultista": {32: (16, 2), 48: (16, 3)},
+    "retrato-bruxa": {32: (16, 2), 48: (16, 3)},
+    "retrato-rato": {32: (16, 2), 48: (16, 3)},
 }
 # O martelo (1.149.0) só tem fontes do 40 e do 48 (aseprite/martelo/): o 32 e o 64 são a grade de desenhos.js, no
 # jogo, e não saem daqui.

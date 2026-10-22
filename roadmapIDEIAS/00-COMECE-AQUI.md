@@ -5743,3 +5743,10 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   proposta cada.
 - **Continua:** a avaliação do Jean; nada novo no jogo (a versão continua 1.171.0); o Esqueleto E1r, o urso, o falcão e
   o cajado como estavam.
+
+### 22/10/2026 (data do computador local) — O cultista, a bruxa e o rato no jogo (1.172.0)
+
+- **Decisão de Jean:** o Cultista A original, a Bruxa B3 e o Rato r2, sem retoques; o carniçal A2 (a bochecha), o
+  javali A2 (a curva das presas) e o espectro (o retrato com os ombros, pela referência nova) seguem no protótipo.
+- **Feito:** as fontes de produção, os PNGs idênticos aos aprovados, `RETRATO_FAMILIA` e o papel `CRIATURA`, o teste;
+  conferido na luta e no Bestiário.
