@@ -51,3 +51,14 @@ presumir que seja um dos 17 estados, e preparar duas propostas de papel próprio
 
 O motor passa a dizer qual motivo é (o Esgotado com um id próprio, sem a tela deduzir pelo texto) e a tela desenha esse
 papel pelo `Icones` (um arquivo `esgotado-16.png`, com o @2x); o `cadeado` continua em todos os outros usos.
+
+## A escolha (22/10/2026) e o jogo (1.180.0)
+
+- **A, o caixote vazio, aprovado pelo Jean sem retoque**, só no motivo do suprimento esgotado: o motor manda
+  `motivo_id: "esgotado"` (`loja.py`), a tela desenha `Icones.motivo("esgotado")` (o papel `MOTIVO`,
+  `motivo-esgotado-16.png` e o @2x, idênticos aos de `proposta/`); "Ouro insuficiente.", a mochila cheia, o teto da
+  comida, o Salvar, o bloqueio de vida e o talento trancado continuam no `cadeado`; o Firme continua com a corrente.
+- A fonte em `ferramentas/arte/aseprite/motivo-esgotado/` (a cópia da `fontes/esgotado-caixote/`).
+- Conferido no mercado com os arquivos de produção (`criaturas/mercenario_lobo_gelido/capturas-1179/mercado.png`): o
+  caixote nos três "Esgotado", o cadeado nos oito "Ouro insuficiente.".
+- **B, o cesto vazio, fica guardado como alternativa não escolhida.**

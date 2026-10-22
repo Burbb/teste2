@@ -95,6 +95,18 @@ class TestMotivos(unittest.TestCase):
         g.lojas.setdefault(g._chave_vendidos(), {})["tocha"] = estoque["tocha"]  # esgotada hoje
         g.j.ouro = 999
         self.assertEqual(next(c for c in g.dados_loja()["consumiveis"] if c["id"] == "tocha")["motivo"], "Esgotado")
+        # o Esgotado diz qual motivo é (o ícone próprio, o caixote); os outros motivos não têm id (ficam no cadeado)
+        ids = {c["id"]: c["motivo_id"] for c in g.dados_loja()["consumiveis"]}
+        self.assertEqual(ids["tocha"], "esgotado")
+        g.j.ouro = 0
+        self.assertEqual({c["motivo_id"] for c in g.dados_loja()["consumiveis"] if c["motivo"] == "Ouro insuficiente."}, {None})
+        g.j.ouro = 999
+        import pathlib
+        estatico = pathlib.Path(__file__).resolve().parents[1] / "rpg/web/static"
+        self.assertIn('MOTIVO = { esgotado: "motivo-esgotado" }', (estatico / "icones.js").read_text(encoding="utf-8"))
+        self.assertIn('Icones.motivo(id)) || S("cadeado", 1)', (estatico / "telas/mercado.js").read_text(encoding="utf-8"))
+        for sufixo in ("", "@2x"):
+            self.assertTrue((estatico / f"hud/icones/motivo-esgotado-16{sufixo}.png").exists())
         g.j.provisoes = sobrevivencia.MAX_PROVISOES
         self.assertEqual(next(c for c in g.dados_loja()["consumiveis"] if c["id"] == "provisoes")["motivo"],
                          "Você já carrega o máximo de comida.")

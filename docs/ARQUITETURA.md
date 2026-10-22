@@ -224,7 +224,9 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   O mercado (`telas/mercado.js`) é a tela com abas: elas são só da tela (não falam com o motor); a tela ocupa a altura
   visível da página e só a lista da aba rola; a banca é uma faixa em cima (em qualquer largura), desenhada em canvas
   no estilo das paisagens, com vãos de mercadoria que aparecem conforme a largura. O que não se compra vem com o
-  `motivo` do motor (`Loja.dados_loja`). Ver roadmapIDEIAS/19. Tentar o que não se compra (ou um serviço da forja, da
+  `motivo` do motor (`Loja.dados_loja`), desenhado na linha do motivo com o `cadeado` do jogo; desde a 1.180.0, o
+  suprimento esgotado vem com `motivo_id` "esgotado" e ganha o ícone próprio (`Icones.motivo`, o papel `MOTIVO`: o
+  caixote vazio, `motivo-esgotado-16.png`), e os outros motivos continuam no cadeado. Ver roadmapIDEIAS/19. Tentar o que não se compra (ou um serviço da forja, da
   curandeira, da taverna e do templo sem ouro: o motor manda `motivo` nos dados e nas metas, `Servicos.motivo_pagar`) é
   recusado na tela (`App.recusar`, pagina.js): o som de falha e um aviso só, preso ao controle, com o motivo do motor;
   clique, Enter e as teclas de número passam por ali, e a escolha não chega ao motor (nem tempo, nem sorteio).

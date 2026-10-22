@@ -14,7 +14,8 @@
   let visitaNova = true;  // a banca se revela só ao entrar (não a cada compra nem troca de aba)
 
   function maxCompra(c, ouro) { return Math.max(0, Math.min(99, c.limite ?? 99, Math.floor(ouro / c.preco))); }
-  const motivoHtml = (m) => `<span class="merc-motivo">${S("cadeado", 1)}${h(m)}</span>`;
+  // o ícone do motivo: o próprio dele pelo `motivo_id` do motor (o Esgotado, o caixote), senão o cadeado
+  const motivoHtml = (m, id) => `<span class="merc-motivo">${(id && Icones.motivo(id)) || S("cadeado", 1)}${h(m)}</span>`;
 
   function suprimento(c, ouro) {
     const max = maxCompra(c, ouro);
@@ -27,7 +28,7 @@
       <span class="slot-px">${Icones.consumivel(c.id) || Icones.porDesenho(c.icone) || S(c.icone || "pocao", 2)}</span>
       <span class="merc-nome">${h(c.nome)}</span>
       <span class="merc-contas"><span class="merc-bolsa${cheio ? " cheio" : ""}">Na bolsa: <b>${tem}</b></span><span class="merc-estoque${c.estoque ? "" : " esgotado"}">Estoque: <b>${c.estoque}</b></span></span>
-      ${c.motivo ? motivoHtml(c.motivo) : `<span class="merc-acao"><span class="qtd-ctrl"><button type="button" data-q="-1" aria-label="menos ${h(c.nome)}">−</button><b aria-label="quantidade">${q}</b><button type="button" data-q="1" aria-label="mais ${h(c.nome)}">+</button></span>
+      ${c.motivo ? motivoHtml(c.motivo, c.motivo_id) : `<span class="merc-acao"><span class="qtd-ctrl"><button type="button" data-q="-1" aria-label="menos ${h(c.nome)}">−</button><b aria-label="quantidade">${q}</b><button type="button" data-q="1" aria-label="mais ${h(c.nome)}">+</button></span>
         <span class="merc-total" title="Preço total">${Icones.moeda() || S("moeda", 1)}<span class="total">${c.preco * q}</span></span></span>`}</div>`;
   }
 

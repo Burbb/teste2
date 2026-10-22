@@ -28,7 +28,7 @@ const Icones = (() => {
     "atalho-mapa": [32, 36], "atalho-sair": [32, 36], "atalho-salvar": [32, 36], "atalho-talentos": [32, 36],
     "attr-agilidade": [24, 32, 64], "attr-ataque": [24, 32, 64], "attr-defesa": [24, 32, 64], "attr-poder": [24, 32, 64],
     "bandagem": [16, 24, 32], "bau": [32, 48, 64], "bomba": [32], "botas-ferro": [32, 40, 48, 64],
-    "contador-flechas": [16], "estado-firme": [16], "estado-guarda": [16], "estado-esquiva": [16],
+    "contador-flechas": [16], "motivo-esgotado": [16], "estado-firme": [16], "estado-guarda": [16], "estado-esquiva": [16],
     "estado-sangramento": [16], "estado-maldito": [16], "estado-marcado": [16], "estado-furtivo": [16], "estado-furia": [16],
     "estado-queimadura": [16], "estado-fortalecido": [16], "estado-enfraquecido": [16], "estado-frenesi": [16],
     "estado-veneno": [16], "estado-atordoado": [16], "estado-barreira": [16], "estado-provocando": [16], "estado-iniciativa": [16],
@@ -182,6 +182,9 @@ const Icones = (() => {
   // Agilidade das celebrações, e a "gota", a "gota_roxa", a "gota_verde", a "flecha", o "olho", o "machado", a "chama",
   // a "espada", o "osso", o "raio", a "estrela", o "escudo_azul", a "caveira" e a "bota" nas habilidades, nos talentos,
   // nos ferimentos, nos serviços e nos outros usos
+  // o ícone próprio de um motivo do mercado, pelo `motivo_id` do motor (1.179.0: o Esgotado, o caixote vazio); os outros
+  // motivos (o ouro, a mochila cheia, o teto da comida) continuam no cadeado do jogo, como o Salvar e o bloqueio de vida
+  const MOTIVO = { esgotado: "motivo-esgotado" };
   const ESTADO = { firme: "estado-firme", guarda: "estado-guarda", esquiva: "estado-esquiva", sangramento: "estado-sangramento",
                    maldito: "estado-maldito", marcado: "estado-marcado", furtivo: "estado-furtivo", furia: "estado-furia",
                    queimadura: "estado-queimadura", fortalecido: "estado-fortalecido", enfraquecido: "estado-enfraquecido",
@@ -299,6 +302,8 @@ const Icones = (() => {
      *  como os sprites dos outros estados na mesma fileira (o zoom da HUD o leva a ~18 px, e o "auto" dos desenhos o
      *  borrava ao lado deles). */
     estado: (id, lado = 16) => img(ESTADO[id], lado, "pixel"),
+    /** O ícone de um motivo do mercado pelo id do motor (MOTIVO), ou "" para o cadeado. Pixel a pixel. */
+    motivo: (id, lado = 16) => img(MOTIVO[id], lado, "pixel"),
     /** A cabeça própria de uma criatura pelo retrato do motor (CRIATURA), ou "" para o sprite do traço. Pixel a pixel. */
     criatura: (retrato, lado = 32) => img(CRIATURA[retrato], lado, "pixel"),
     /** A cabeça do animal do herói pelo tipo (ANIMAL), ou "" para o sprite de sempre. Pixel a pixel. */
