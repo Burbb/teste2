@@ -133,6 +133,28 @@ ESP_AP = [
     "cCcccsccccscssss",
 ]
 
+# Espectro AP2 (22/10/2026, pedido do Jean): o AP com as duas dobras escuras de baixo (as colunas 5 e 10, que sugeriam
+# braços) trocadas pelo pano ao redor, e a cavidade do capuz mais larga (seis colunas, o tecido em volta), o olho no
+# mesmo lugar
+ESP_AP2 = [
+    "................",
+    "......cccc......",
+    ".....cCCCcs.....",
+    "....cCcSSccs....",
+    "...cCSVVVVScs...",
+    "...cCVVEVVVcs...",
+    "...cCVVVEVVcs...",
+    "...cCVVVVVVcss..",
+    "...cCSVVVVScss..",
+    "..ccCcSSSScccs..",
+    "..cCccccccccss..",
+    ".cCcccccccccss..",
+    ".cCcccccccccsss.",
+    "cCCcccccccccsss.",
+    "cCccccccccccssss",
+    "cCccccccccccssss",
+]
+
 
 CAMADAS = {
     "carnical-a3": (CARN_A3, ["corpo", "rosto", "boca"],
@@ -145,6 +167,7 @@ CAMADAS = {
                    lambda x, y, ch: "olho" if ch == "E" else "cavidade" if ch in "VS" and y <= 6 else "rasgos" if ch == "V" else "manto",
                    CORES_CARNE_NEVOA),
     "espectro-ap": (ESP_AP, ["nevoa", "vazio"], lambda x, y, ch: "vazio" if ch in "VE" else "nevoa", CORES_CARNE_NEVOA),
+    "espectro-ap2": (ESP_AP2, ["nevoa", "vazio"], lambda x, y, ch: "vazio" if ch in "VE" else "nevoa", CORES_CARNE_NEVOA),
 }
 
 

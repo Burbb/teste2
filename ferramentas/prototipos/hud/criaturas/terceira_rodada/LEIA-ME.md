@@ -62,3 +62,18 @@ Nada integrado. O Esqueleto E1r, o urso e o falcão do acampamento, o cajado e a
 - **A minha leitura:** o AP fecha o retrato como os outros bustos da fileira (o pano saindo do quadro, como os ombros do
   afogado e do cultista), sem mudar a cabeça. Limite: embaixo o pano fica uma massa clara sem os rasgos, e a figura perde
   um pouco do ar de coisa que flutua.
+
+## O espectro AP2 (22/10/2026, proposta; nada no jogo)
+
+- **Jean, sobre o AP:** as duas linhas verticais escuras de baixo sugeriam braços ou ombros que o conceito não tem; e a
+  abertura do capuz devia ser mais ampla, cercada pelo tecido, como na referência do corpo inteiro.
+- **O ajuste** (`espectro-ap2`), numa cópia da fonte do AP: as dobras escuras das colunas 5 e 10 (linhas 12 a 15)
+  trocadas pelo pano ao redor, sem abrir transparência; a cavidade alargada de quatro para seis colunas nas linhas 5 a 7
+  (e a borda dela nas 4, 8 e 9), com o tecido do capuz em volta e o olho no mesmo lugar (as colunas 7 e 8). Pelo
+  conector: 26 pixels no composto, todos nas linhas 4 a 9 e 12 a 15, nenhum transparente novo; 0 diferentes na
+  releitura; o composto bate com o PNG exportado; o 32 e o 48 em blocos inteiros.
+- A comparação `espectro-ap2.png` (`python auxiliares/espectro_ap.py ap2`): o AP × o AP2 a 32 e 48 px, na fileira e a
+  12×, com a referência do corpo ao lado. O A, o M e o AP ficam como histórico.
+- **A minha leitura:** a cavidade larga dá mais o vazio dentro do capuz da referência, e o pano sem as dobras deixa de
+  sugerir braços. Limite: com a cavidade maior, a borda esquerda do capuz fica com dois pixels de tecido, e a 32 px a
+  massa clara de baixo fica lisa.

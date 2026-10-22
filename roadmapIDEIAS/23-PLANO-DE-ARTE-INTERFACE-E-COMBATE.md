@@ -1022,7 +1022,8 @@ foi escolhida.
   Lich e as outras feras continuam pelos traços. O espectro M não foi escolhido.
 - **O espectro AP (22/10/2026, proposta; nada no jogo):** o A original com o pano continuando até a borda de baixo (só
   as linhas 11 a 15); a referência do manto inflado fica como conceito do corpo para a arte de cenário; a comparação
-  `terceira_rodada/espectro-ap.png`. Em avaliação.
+  `terceira_rodada/espectro-ap.png`. O AP2: sem as dobras escuras de baixo e com a cavidade mais larga
+  (`espectro-ap2.png`). Em avaliação.
 
 O atalho **Mapa** da doca já foi concluído; esta frente trata dos símbolos internos de caminhos e mapas.
 Não afirmar que só restam talentos e habilidades após este bloco sem conferir os consumíveis, variantes e

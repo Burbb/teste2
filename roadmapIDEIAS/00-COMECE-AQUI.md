@@ -5773,3 +5773,10 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Feito:** `espectro-ap` numa cópia da fonte do A (só as linhas 11 a 15; conferido no editor e na exportação) e a
   comparação `ferramentas/prototipos/hud/criaturas/terceira_rodada/espectro-ap.png`.
 - **Continua:** a avaliação do Jean; a versão continua 1.173.0.
+
+### 22/10/2026 (data do computador local) — O espectro AP2 (só no protótipo)
+
+- **Pedido de Jean:** tirar as duas dobras escuras de baixo do AP e alargar a abertura do capuz, com o olho no lugar.
+- **Feito:** `espectro-ap2` numa cópia da fonte do AP (26 pixels, só na cavidade e nas dobras; conferido no editor e na
+  exportação); a comparação `ferramentas/prototipos/hud/criaturas/terceira_rodada/espectro-ap2.png`.
+- **Continua:** a avaliação do Jean; a versão continua 1.173.0.
