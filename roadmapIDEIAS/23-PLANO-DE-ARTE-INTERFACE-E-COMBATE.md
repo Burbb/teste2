@@ -1047,7 +1047,13 @@ do catálogo):**
   no painel; os três também na fogueira, pelo tipo (o lobo c2 na 1.170.0, o urso r4 e o falcão na 1.176.0). O cajado
   aprovado no Atacar do Mago (1.177.0).
 - **Fora das criaturas, na 1.180.0:** o ícone do **Esgotado** do mercado (o caixote, papel próprio `MOTIVO`; o cesto
-  guardado como não escolhido; o cadeado continua nos outros motivos e usos). Nenhuma proposta aguardando o Jean.
+  guardado como não escolhido; o cadeado continua nos outros motivos e usos).
+- **Propostas aguardando o Jean (22/10/2026, nenhuma aprovada):** a **Harpia** (HA, a que grita; HB, a de perfil com a
+  asa) e o **Grifo** (GA, a águia-leão; GB, o de asas abertas), em `criaturas/harpia_grifo/`; o **Caído** (CA, o que
+  ri; CB, o que se esgueira) e o **Xamã Caído** (XA, o do crânio; XB, o do capuz), em `criaturas/caidos/` (no jogo, os
+  caídos são diabretes, do traço `demonio`). A folha dos oito em `criaturas/oito_candidatos.png`. Uso previsto de cada
+  um: pela própria família (a carta, o Bestiário, o mural, o rastreador, a faixa do mestre caçador); o Dragão de Gelo
+  e o Cão infernal continuam no `voador` e no `demonio`.
 - **Nomenclatura (1.181.0, aprovada pelo Jean):** o **ent jovem** é a **Árvore Desperta** e o **Ent Ancião**, a **Árvore
   Anciã** (árvores vivas: "árvores que acordaram com raiva"; o guardião, "uma árvore milenar"). Os ids `ent_jovem` e
   `ent_anciao`, os números, as habilidades e as regras ficam; os saves antigos passam pela migração v5 → v6.
@@ -1064,7 +1070,8 @@ do catálogo):**
 - **Conceitos reservados (fora do jogo, sem espécie, regra nem mapeamento):** o Esqueleto E2 (um possível mago
   esqueleto) e o Bandido do chapéu (um possível chefe).
 - **Próximos pares recomendados (a escolha é do Jean):** (1) o mercenário e o lobo gélido, integrados na 1.179.0;
-  (2) a **harpia e o grifo**, os dois
+  (2) a harpia e o grifo e (3) o caído e o xamã caído, em avaliação desde 22/10/2026; antes deles, (2) a **harpia e o
+  grifo**, os dois
   voadores comuns no morcego, que não lê nenhum dos dois (e liberam o `voador` para o Dragão de Gelo, depois); (3) o
   **caído e o xamã caído**, dois dos três que dividem o `demonio` (o cão infernal pode vir junto ou ficar com eles por
   família). Os guardiões genéricos ficam para pares próprios, um chefe por vez, depois dos comuns.
@@ -1215,8 +1222,9 @@ volta à pauta quando essa expansão exigir; não é uma migração de engine.
    fogueira); o cajado no Atacar do Mago. As variantes e os compartilhamentos provisórios ficam abertos, separados.
 2. **Agora, 1E.3:** as demais criaturas, os chefes e as invocações, em pares pequenos escolhidos pelo Jean, pelo mesmo
    caminho (o retrato por família, por chave ou pelo tipo, sem trocar o sprite compartilhado). O Mercenário, o Lobo
-   Gélido e o Esgotado integrados (1.179.0, 1.180.0); o próximo par (a harpia e o grifo é a recomendação) espera o
-   pedido do Jean. A relação em "A frente de criaturas em 22/10/2026" (item 1.12). O Esqueleto E2 e o Bandido do
+   Gélido e o Esgotado integrados (1.179.0, 1.180.0). **Aguardando o Jean:** a Harpia, o Grifo, o Caído e o Xamã
+   Caído (dois candidatos cada, `criaturas/oito_candidatos.png`); depois, os outros comuns e os chefes, sem começar
+   antes do pedido. A relação em "A frente de criaturas em 22/10/2026" (item 1.12). O Esqueleto E2 e o Bandido do
    chapéu estão reservados.
 3. **Depois, 1E.4:** os caminhos/destinos e os símbolos internos do mapa e do minimapa.
 4. **Retomar a etapa 2** e **seguir 3–7**, como na sequência abaixo; **etapa 8** com habilidades, talentos, Grimório e

@@ -5890,3 +5890,23 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   `/mcp`). Não foi preciso editar no Aseprite: as fontes aprovadas foram copiadas sem retoque.
 - **A folha:** `ferramentas/prototipos/hud/integracoes-22-10/integracoes-1181.png`.
 - **Continua:** o próximo par (a harpia e o grifo é a recomendação) e o mapa esperam o pedido do Jean.
+
+### 22/10/2026 (madrugada seguinte, data do computador local) — Dois pares da 1E.3: a Harpia e o Grifo, o Caído e o Xamã
+
+- **Pedido do Jean:** dois pares, duas propostas por criatura (oito candidatos), só no protótipo, sem parar entre eles.
+- **Feito, nada no jogo:** a Harpia (HA, a que grita; HB, a de perfil com a asa) e o Grifo (GA, a águia-leão; GB, o de
+  asas abertas) em `ferramentas/prototipos/hud/criaturas/harpia_grifo/`; o Caído (CA, o que ri; CB, o que se esgueira)
+  e o Xamã Caído (XA, o do crânio; XB, o do capuz) em `criaturas/caidos/`. Folhas por criatura (atual × A × B, a carta e
+  o Bestiário em tamanho real, a fileira com os aprovados, a 12× com a grade) e `criaturas/oito_candidatos.png`.
+- **O que define cada um** (dos dados): a harpia, "metade mulher, metade abutre"; o grifo, o rei dos céus que protege o
+  ninho (também a mãe do evento do ninho); os caídos são **diabretes** (o traço `demonio`, "cria do Inferno"), covardes
+  e em bando, e o xamã é o pequeno feiticeiro deles, que cospe fogo e levanta os caídos. Nenhum invoca outra entidade;
+  o Dragão de Gelo (`voador`) e o Cão infernal (`demonio`) ficam fora.
+- **A minha preferência (não é aprovação):** HA, GA, CA e XA; as razões e as limitações no tamanho real nos LEIA-MEs.
+- **Conferências:** as fontes em camadas pelo Aseprite em lote, com releitura (0 diferentes); o composto exportado
+  igual à grade, o @2x exato, o 32 e o 48 em blocos inteiros; as fotos a 1920×945 nos modos atual, A e B, trocados só na
+  página, sem erro no console. Nenhum arquivo do jogo mudou.
+- **O conector do Aseprite:** indisponível nesta sessão ("Connection closed", sem ferramentas; a porta 6515 livre,
+  nenhum processo a encerrar; religar pelo `/mcp`). As fontes saíram pelo fluxo documentado em lote.
+- **Anotado, sem mexer:** na luta, "Falcão Peregrino rosna ao seu lado." (o verbo do lobo para o falcão).
+- **Continua:** o Jean escolhe os quatro; os chefes, as outras criaturas e o mapa não foram começados.

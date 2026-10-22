@@ -179,3 +179,11 @@ A escolha do par e da direção é do Jean; nada foi começado.
 - **Em avaliação:** o Mercenário (MA, o chapéu de ferro; MB, a coifa de malha) e o Lobo Gélido (LA, o lobo da geada;
   LB, o lobo da nevasca), em `mercenario_lobo_gelido/` (as folhas `mercenario.png` e `lobo_gelido.png`).
 - **Conceitos reservados:** o Esqueleto E2 e o Bandido do chapéu, como antes.
+
+## A noite de 22/10/2026
+
+- **Integrados (1.179.0):** o Mercenário MA e o Lobo Gélido LA (`mercenario_lobo_gelido/`); o MB e o LB guardados.
+- **Em avaliação, nenhum aprovado:** a Harpia (HA, HB) e o Grifo (GA, GB) em `harpia_grifo/`; o Caído (CA, CB) e o
+  Xamã Caído (XA, XB) em `caidos/`. A folha dos oito em `oito_candidatos.png` (`python oito_candidatos.py`).
+- **O conector do Aseprite estava indisponível:** as fontes em camadas saíram do Aseprite em lote
+  (`montar_camadas.lua`), com releitura; a limitação está em cada LEIA-ME.
