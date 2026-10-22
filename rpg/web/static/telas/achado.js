@@ -33,7 +33,7 @@
         <div class="achado-raios" aria-hidden="true"></div>
         <span class="achado-selo">Você encontrou</span>
         <div class="achado-arte">${arte(iconeItem(it), 4)}</div>
-        ${htmlItem(it, "", true)}${aviso}
+        ${htmlItem(it, "", true, false)}${aviso}
       </div>${eq}</div>`;
   }
   /** O item achado abre numa janela própria, por cima do jogo e fora do log. Como nos ARPGs, o achado é a estrela:

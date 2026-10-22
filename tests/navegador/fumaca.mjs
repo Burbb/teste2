@@ -1841,6 +1841,7 @@ async function cenarioAneis(browser) {
         return { botoes: [...document.querySelectorAll("#sobre-achado .achado-acoes button")].map((b) => b.textContent.replace(/^\d/, "")),
           selos: [...document.querySelectorAll(".achado-aneis .achado-selo")].map((s) => s.textContent),
           trocas: [...document.querySelectorAll(".achado-cartao.novo .comparacao.por-espaco .troca small")].map((s) => s.textContent),
+          novo: document.querySelector(".achado-cartao.novo").textContent,
           cabe: j.top >= 0 && j.bottom <= innerHeight, eq: { ...App.estado.heroi.equip } };
       });
       const n1 = info.eq.anel1.nome.replace(/^★ /, "").replace(/ \(Anel\)$/, "");
@@ -1851,8 +1852,10 @@ async function cenarioAneis(browser) {
         conferir(info.selos.join("|") === "Anel 1 · você usa|Anel 2 · você usa" && info.trocas.length === 2 && info.trocas[1].startsWith("Anel 2 · no lugar de"),
           "a comparação mostra a troca com cada anel, pelo nome do espaço");
       } else {
-        conferir(info.botoes[1] === "Equipar no Anel 2 (vazio)" && info.selos[1] === "Anel 2 · vazio" && /Anel 2 · vazio/.test(info.trocas[1]),
-          "um espaço vazio: o botão, o cartão e a comparação dizem que ele está vazio");
+        // a comparação só com o anel vestido: o espaço vazio já está no cartão ao lado (1.174.2, sem o "tudo é ganho")
+        conferir(info.botoes[1] === "Equipar no Anel 2 (vazio)" && info.selos[1] === "Anel 2 · vazio"
+          && info.trocas.length === 1 && info.trocas[0].startsWith("Anel 1 · no lugar de") && !/tudo é ganho/.test(info.novo),
+          "um espaço vazio: o botão e o cartão dizem que ele está vazio; a comparação, só com o anel do Anel 1");
       }
       conferir(info.cabe, `a janela do anel cabe na tela de 1280×${altura}`);
       await page.keyboard.press("2");  // o segundo espaço, pelo teclado
