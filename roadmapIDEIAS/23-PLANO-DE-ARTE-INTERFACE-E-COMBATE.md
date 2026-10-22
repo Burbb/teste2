@@ -1050,9 +1050,11 @@ do catálogo):**
   aprovado no Atacar do Mago (1.177.0).
 - **Fora das criaturas, na 1.180.0:** o ícone do **Esgotado** do mercado (o caixote, papel próprio `MOTIVO`; o cesto
   guardado como não escolhido; o cadeado continua nos outros motivos e usos).
-- **Propostas aguardando o Jean (23/10/2026, nenhuma aprovada):** o **Grifo GA2** (o GA com a ponta do bico limpa), as
-  **Harpias H1, H2 e H3** (do zero) e os **Xamãs X1, X2 e X3** (da cabeça do Caído CA), em `criaturas/rodada_23_10/`.
-  Histórico, não escolhidos: a HA e a HB, o GB (`criaturas/harpia_grifo/`), o CB, o XA e o XB (`criaturas/caidos/`).
+- **Propostas aguardando o Jean (a segunda rodada, nenhuma aprovada):** a **Harpia T** (a transposição da nova
+  referência gerada, `Harpia vulturina em pixel art.png`, a principal da Harpia), o **Grifo GA3** (o GA2 com o gancho
+  do bico) e o **Xamã X1r** (o X1, a direção escolhida, com o colar menor), em `criaturas/rodada_23_10/`; o GA2 e o X1
+  continuam disponíveis para a comparação. Histórico, não escolhidos: as Harpias HA, HB e H1 a H3, o GB
+  (`criaturas/harpia_grifo/`), o CB, o XA e o XB (`criaturas/caidos/`), os Xamãs X2 e X3.
   No jogo, os caídos são diabretes, do traço `demonio`. Uso previsto de cada
   um: pela própria família (a carta, o Bestiário, o mural, o rastreador, a faixa do mestre caçador); o Dragão de Gelo
   e o Cão infernal continuam no `voador` e no `demonio`.
@@ -1224,8 +1226,8 @@ volta à pauta quando essa expansão exigir; não é uma migração de engine.
    fogueira); o cajado no Atacar do Mago. As variantes e os compartilhamentos provisórios ficam abertos, separados.
 2. **Agora, 1E.3:** as demais criaturas, os chefes e as invocações, em pares pequenos escolhidos pelo Jean, pelo mesmo
    caminho (o retrato por família, por chave ou pelo tipo, sem trocar o sprite compartilhado). O Mercenário, o Lobo
-   Gélido e o Esgotado integrados (1.179.0, 1.180.0); o Caído CA (1.182.0). **Aguardando o Jean:** o Grifo GA2, as
-   Harpias H1 a H3 e os Xamãs X1 a X3 (`criaturas/rodada_23_10/`); depois, os outros comuns e os chefes, sem começar
+   Gélido e o Esgotado integrados (1.179.0, 1.180.0); o Caído CA (1.182.0). **Aguardando o Jean:** a Harpia T, o Grifo
+   GA3 (× GA2) e o Xamã X1r (× X1) (`criaturas/rodada_23_10/`, a segunda rodada); depois, os outros comuns e os chefes, sem começar
    antes do pedido. A relação em "A frente de criaturas em 22/10/2026" (item 1.12). O Esqueleto E2 e o Bandido do
    chapéu estão reservados.
 3. **Depois, 1E.4:** os caminhos/destinos e os símbolos internos do mapa e do minimapa.

@@ -5929,3 +5929,21 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **O conector do Aseprite:** ainda indisponível (religar pelo `/mcp`); as fontes em camadas pelo Aseprite em lote,
   com releitura.
 - **Continua:** a escolha do Jean; outras criaturas, chefes e o mapa não foram começados.
+
+### 22/10/2026 (data do computador local) — A segunda rodada da Harpia, do Grifo e do Xamã (nada no jogo)
+
+- **Retomada noutra conta:** a branch em `3efb488c`; a única alteração local era a referência nova da Harpia, sem
+  rastreio. Produção continua na 1.182.0; nada deste lote foi para o jogo.
+- **A avaliação do Jean:** nenhuma Harpia aprovada (a H3 e a HA, as mais próximas, ficam como histórico); a nova
+  referência gerada (`ferramentas/arte/referencias/icones/Harpia vulturina em pixel art.png`, registrada no LEIA-ME
+  das referências) é a principal; o GA2 ficou com a ponta reta; o X1 é a direção do Xamã, ainda não autorizado.
+- **No protótipo, aguardando o Jean (`criaturas/rodada_23_10/`, a segunda seção do LEIA-ME):** a **Harpia T**, a
+  transposição da referência pela guia proporcional oculta (o recorte de 1000 px reduzido por média); o **Grifo GA3**,
+  dois pixels na linha 8 (a ponta escura desce da extremidade); o **Xamã X1r**, a cabeça do X1 igual e o colar num U
+  pequeno sob o queixo. As folhas `harpia-t.png`, `grifo-ga3.png` e `xama-x1r.png`. Minha leitura: a T traz a
+  construção da referência, mas a 32 lê mais como mulher de cabelo selvagem do que como abutre; o gancho é sutil; o
+  X1r é uma melhora contida, e o X1 continua disponível.
+- **O conector do Aseprite funcionou:** o bridge desta sessão escutava a 6515 e o Aseprite estava fechado; aberto o
+  Aseprite, conectou. Fontes pelo conector (`pintar.lua`, 0 diferentes), a exportação igual à grade. Fotos a 1920×945
+  no modo `d`, sem erro no console.
+- **Continua:** a escolha do Jean; outras criaturas, chefes e o mapa não foram começados.
