@@ -1,0 +1,329 @@
+{
+ "luta/atual": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Harpia",
+    "caixa": [
+     830,
+     38,
+     1040,
+     88
+    ]
+   },
+   {
+    "nome": "Grifo",
+    "caixa": [
+     830,
+     96,
+     1040,
+     146
+    ]
+   },
+   {
+    "nome": "Lobo gélido",
+    "caixa": [
+     830,
+     154,
+     1040,
+     204
+    ]
+   },
+   {
+    "nome": "Troll da montanha",
+    "caixa": [
+     612,
+     38,
+     822,
+     88
+    ]
+   },
+   {
+    "nome": "Lobo",
+    "caixa": [
+     612,
+     96,
+     822,
+     146
+    ]
+   }
+  ]
+ },
+ "luta/a": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Harpia",
+    "caixa": [
+     830,
+     38,
+     1040,
+     88
+    ]
+   },
+   {
+    "nome": "Grifo",
+    "caixa": [
+     830,
+     96,
+     1040,
+     146
+    ]
+   },
+   {
+    "nome": "Lobo gélido",
+    "caixa": [
+     830,
+     154,
+     1040,
+     204
+    ]
+   },
+   {
+    "nome": "Troll da montanha",
+    "caixa": [
+     612,
+     38,
+     822,
+     88
+    ]
+   },
+   {
+    "nome": "Lobo",
+    "caixa": [
+     612,
+     96,
+     822,
+     146
+    ]
+   }
+  ]
+ },
+ "luta/b": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Harpia",
+    "caixa": [
+     830,
+     38,
+     1040,
+     88
+    ]
+   },
+   {
+    "nome": "Grifo",
+    "caixa": [
+     830,
+     96,
+     1040,
+     146
+    ]
+   },
+   {
+    "nome": "Lobo gélido",
+    "caixa": [
+     830,
+     154,
+     1040,
+     204
+    ]
+   },
+   {
+    "nome": "Troll da montanha",
+    "caixa": [
+     612,
+     38,
+     822,
+     88
+    ]
+   },
+   {
+    "nome": "Lobo",
+    "caixa": [
+     612,
+     96,
+     822,
+     146
+    ]
+   }
+  ]
+ },
+ "bestiario/atual": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Bandido",
+    "caixa": [
+     585,
+     248,
+     935,
+     403
+    ]
+   },
+   {
+    "nome": "Grifo",
+    "caixa": [
+     945,
+     248,
+     1295,
+     403
+    ]
+   },
+   {
+    "nome": "Harpia",
+    "caixa": [
+     585,
+     413,
+     935,
+     568
+    ]
+   },
+   {
+    "nome": "Lobo",
+    "caixa": [
+     945,
+     413,
+     1295,
+     568
+    ]
+   },
+   {
+    "nome": "Lobo gélido",
+    "caixa": [
+     585,
+     578,
+     935,
+     765
+    ]
+   },
+   {
+    "nome": "Troll da montanha",
+    "caixa": [
+     945,
+     578,
+     1295,
+     765
+    ]
+   }
+  ]
+ },
+ "bestiario/a": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Bandido",
+    "caixa": [
+     585,
+     248,
+     935,
+     403
+    ]
+   },
+   {
+    "nome": "Grifo",
+    "caixa": [
+     945,
+     248,
+     1295,
+     403
+    ]
+   },
+   {
+    "nome": "Harpia",
+    "caixa": [
+     585,
+     413,
+     935,
+     568
+    ]
+   },
+   {
+    "nome": "Lobo",
+    "caixa": [
+     945,
+     413,
+     1295,
+     568
+    ]
+   },
+   {
+    "nome": "Lobo gélido",
+    "caixa": [
+     585,
+     578,
+     935,
+     765
+    ]
+   },
+   {
+    "nome": "Troll da montanha",
+    "caixa": [
+     945,
+     578,
+     1295,
+     765
+    ]
+   }
+  ]
+ },
+ "bestiario/b": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Bandido",
+    "caixa": [
+     585,
+     248,
+     935,
+     403
+    ]
+   },
+   {
+    "nome": "Grifo",
+    "caixa": [
+     945,
+     248,
+     1295,
+     403
+    ]
+   },
+   {
+    "nome": "Harpia",
+    "caixa": [
+     585,
+     413,
+     935,
+     568
+    ]
+   },
+   {
+    "nome": "Lobo",
+    "caixa": [
+     945,
+     413,
+     1295,
+     568
+    ]
+   },
+   {
+    "nome": "Lobo gélido",
+    "caixa": [
+     585,
+     578,
+     935,
+     765
+    ]
+   },
+   {
+    "nome": "Troll da montanha",
+    "caixa": [
+     945,
+     578,
+     1295,
+     765
+    ]
+   }
+  ]
+ }
+}
