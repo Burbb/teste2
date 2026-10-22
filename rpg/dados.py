@@ -160,8 +160,9 @@ RETRATOS = ("demonio", "etereo", "corrompido", "morto-vivo", "construto", "voado
 # o bandido; 1.166.0: o troll da montanha; 1.171.0: o sapo-touro gigante e a sanguessuga gigante, do pântano; 1.172.0:
 # o cultista, com os fiéis do Profeta e os da sacristia, a bruxa do pântano e o rato gigante; 1.173.0: o javali
 # selvagem e o carniçal; 1.174.0: o espectro; 1.175.0: o esqueleto, com os do ossuário e os que o Lich invoca; o servo
-# aliado do Necromante não tem família e fica na caveira). Quem não está aqui segue pelos traços: o lobo gélido e o animal do herói
-# continuam no "fera", o cultista e os outros humanos no "humano". O guardião pelo id do catálogo (1.167.0: o Rei
+# aliado do Necromante não tem família e fica na caveira; 1.179.0: o mercenário, com o Invicto da ponte e o Theodore dos
+# Cães de Ferro, e o lobo gélido). Quem não está aqui segue pelos traços: o animal do herói e as outras feras continuam
+# no "fera", os outros humanos (o Senhor da Guerra, o antagonista) no "humano". O guardião pelo id do catálogo (1.167.0: o Rei
 # Troll; 1.168.0: a Rainha Aracnídea; a chave de um guardião muda com o lugar), depois da chave; os outros guardiões
 # continuam pelos traços, e as aranhas que a Rainha invoca têm a família "aranha" (o retrato da Aranha gigante).
 RETRATO_CHAVE = {"ilse": "ilse"}
@@ -169,7 +170,7 @@ RETRATO_GUARDIAO = {"rei_troll": "rei_troll", "rainha_aracnidea": "rainha_aracni
 RETRATO_FAMILIA = {"afogado": "afogado", "lobo": "lobo", "bandido": "bandido", "troll": "troll", "aranha": "aranha",
                    "sapo": "sapo", "sanguessuga": "sanguessuga", "cultista": "cultista", "bruxa_brejo": "bruxa", "rato": "rato",
                    "javali": "javali", "carnical": "carnical", "espectro": "espectro",
-                   "esqueleto": "esqueleto"}
+                   "esqueleto": "esqueleto", "mercenario": "mercenario", "lobo_gelido": "lobo_gelido"}
 
 
 def retrato(tracos, familia=None, chave=None, guardiao=None):

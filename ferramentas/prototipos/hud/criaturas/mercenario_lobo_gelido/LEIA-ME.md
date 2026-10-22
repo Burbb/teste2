@@ -60,3 +60,15 @@ carta e no Bestiário junto dos aprovados, com os mesmos dados.
 Pela família (`RETRATO_FAMILIA`: `mercenario`, `lobo_gelido`; o papel `CRIATURA` e os `TAMANHOS` em `icones.js`), com
 os líderes, os afixos e os nomeados (o Invicto da ponte, o Theodore). O `humano` e o `fera` dos traços continuam nos
 outros usos.
+
+## A escolha (22/10/2026) e o jogo (1.179.0)
+
+- **O MA (o chapéu de ferro) e o LA (o lobo da geada), aprovados pelo Jean sem retoque**, integrados pela família
+  (`RETRATO_FAMILIA`, o papel `CRIATURA`): o mercenário com o Invicto da ponte, os guardas do nobre, a escolta e o
+  Theodore, o Ruivo; o lobo gélido nas montanhas. O Senhor da Guerra (guardião humano) e o antagonista ficam no `humano`.
+- As fontes em `ferramentas/arte/aseprite/retrato-mercenario/` e `retrato-lobo-gelido/` (cópias das `fontes/`); os
+  doze PNGs idênticos byte a byte aos de `proposta/`.
+- Conferido com os arquivos de produção, nada trocado na página (`auxiliares/fotografar_jogo.mjs`, `capturas-1179/`, a
+  1920×945): a carta (32), o Bestiário (48), o cartaz do mural (48) e o rastreador (32) dos contratos de caça dos dois
+  (o cenário `covil` com `CONTRATOS=mercenario,lobo_gelido`); nenhum pedido a `ferramentas/`; sem erro no console.
+- **O MB e o LB ficam guardados como alternativas não escolhidas** (as fontes e os PNGs continuam aqui).

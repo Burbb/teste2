@@ -111,6 +111,9 @@ DERIVADOS = {
     "retrato-espectro": {32: (16, 2), 48: (16, 3)},
     # 1.175.0: o esqueleto (o E1r do esqueleto_novo: o guarda morto de elmo, com a aba limpa), pela família
     "retrato-esqueleto": {32: (16, 2), 48: (16, 3)},
+    # 1.179.0: o mercenário (o MA: o chapéu de ferro) e o lobo gélido (o LA: o lobo da geada), pela família
+    "retrato-mercenario": {32: (16, 2), 48: (16, 3)},
+    "retrato-lobo-gelido": {32: (16, 2), 48: (16, 3)},
 }
 # O martelo (1.149.0) só tem fontes do 40 e do 48 (aseprite/martelo/): o 32 e o 64 são a grade de desenhos.js, no
 # jogo, e não saem daqui.

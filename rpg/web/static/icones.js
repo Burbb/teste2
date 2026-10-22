@@ -45,7 +45,7 @@ const Icones = (() => {
     "retrato-rainha-aracnidea": [16, 32], "retrato-sapo": [16, 32, 48], "retrato-sanguessuga": [16, 32, 48],
     "retrato-cultista": [16, 32, 48], "retrato-bruxa": [16, 32, 48], "retrato-rato": [16, 32, 48],
     "retrato-javali": [16, 32, 48], "retrato-carnical": [16, 32, 48], "retrato-espectro": [16, 32, 48],
-    "retrato-esqueleto": [16, 32, 48]};
+    "retrato-esqueleto": [16, 32, 48], "retrato-mercenario": [16, 32, 48], "retrato-lobo-gelido": [16, 32, 48]};
 
   // Cada desenho vai para o tipo de ferro que o jogo já tem (elmo, armadura, manopla, calca = perneira, bota_ferro, maca);
   // couro sem desenho (a calça de couro) e as outras peças sem desenho ficam com o do jogo. O anel (1.140.0, o aro de
@@ -203,7 +203,8 @@ const Icones = (() => {
                      cultista: "retrato-cultista", bruxa: "retrato-bruxa", rato: "retrato-rato",  // 1.172.0
                      javali: "retrato-javali", carnical: "retrato-carnical",  // 1.173.0
                      espectro: "retrato-espectro",  // 1.174.0: o espectro, pela família
-                     esqueleto: "retrato-esqueleto" };  // 1.175.0: o esqueleto (o guarda morto de elmo), pela família
+                     esqueleto: "retrato-esqueleto",  // 1.175.0: o esqueleto (o guarda morto de elmo), pela família
+                     mercenario: "retrato-mercenario", lobo_gelido: "retrato-lobo-gelido" };  // 1.179.0: o chapéu de ferro e o lobo da geada
   // o animal do patrulheiro (1.164.0), pelo tipo dele (classes.COMPANHEIROS), na carta aliada da luta e no painel da
   // comitiva, a 2×: o Urso Pardo (de frente, severo) e o Falcão Peregrino (de perfil, a máscara escura); desde a 1.165.0,
   // o Lobo Cinzento com o mesmo arquivo do Lobo inimigo (o mesmo rosto de propósito: o lado, o nome e a borda separam os

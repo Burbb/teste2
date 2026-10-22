@@ -20,9 +20,9 @@ class TestRetratos(unittest.TestCase):
     def test_lobo_e_bandido_pela_familia(self):
         self.assertEqual(retrato(FAMILIAS["lobo"]["tracos"], "lobo"), "lobo")
         self.assertEqual(retrato(FAMILIAS["bandido"]["tracos"], "bandido"), "bandido")
-        # as outras feras e os outros humanos continuam no desenho do traço
-        for fam, tr in (("lobo_gelido", "fera"), ("mercenario", "humano")):
-            self.assertEqual(retrato(FAMILIAS[fam]["tracos"], fam), tr, fam)
+        # os guardiões fera e humano sem retrato próprio continuam no desenho do traço
+        self.assertEqual(retrato(["fera"], "guardiao", "guardiao:3", "hidra_do_brejo"), "fera")
+        self.assertEqual(retrato(["humano", "blindado"], "guardiao", "guardiao:5", "senhor_da_guerra"), "humano")
 
     def test_sapo_e_sanguessuga_pela_familia(self):
         # 1.171.0: o sapo-touro gigante e a sanguessuga gigante pela família; a Hidra do Brejo (guardiã) e as outras
@@ -30,11 +30,10 @@ class TestRetratos(unittest.TestCase):
         self.assertEqual(retrato(FAMILIAS["sapo"]["tracos"], "sapo"), "sapo")
         self.assertEqual(retrato(FAMILIAS["sanguessuga"]["tracos"], "sanguessuga"), "sanguessuga")
         self.assertEqual(retrato(["fera"], "guardiao", "guardiao:3", "hidra_do_brejo"), "fera")
-        self.assertEqual(retrato(FAMILIAS["lobo_gelido"]["tracos"], "lobo_gelido"), "fera")
 
     def test_cultista_bruxa_e_rato_pela_familia(self):
         # 1.172.0: pela família (o cultista também nos fiéis do Profeta e nos da sacristia, que são cultistas); o Profeta
-        # das Cinzas (guardião), o mercenário e as outras feras continuam pelos traços
+        # das Cinzas (guardião) continua pelos traços
         self.assertEqual(retrato(FAMILIAS["cultista"]["tracos"], "cultista"), "cultista")
         self.assertEqual(retrato(FAMILIAS["bruxa_brejo"]["tracos"], "bruxa_brejo"), "bruxa")
         self.assertEqual(retrato(FAMILIAS["rato"]["tracos"], "rato"), "rato")
@@ -71,6 +70,25 @@ class TestRetratos(unittest.TestCase):
         for lado in (16, 32, 48):
             for sufixo in ("", "@2x"):
                 self.assertTrue((ESTATICO / f"hud/icones/retrato-esqueleto-{lado}{sufixo}.png").exists(), (lado, sufixo))
+
+    def test_mercenario_e_lobo_gelido_pela_familia(self):
+        # 1.179.0: pela família, com os de nome próprio da família (o Invicto da ponte, o Theodore dos Cães de Ferro) e
+        # os afixos; o Senhor da Guerra (guardião humano) e o antagonista não são da família e ficam no "humano"
+        import random
+        from rpg.inimigos import criar
+        self.assertEqual(retrato(FAMILIAS["mercenario"]["tracos"], "mercenario"), "mercenario")
+        self.assertEqual(retrato(FAMILIAS["lobo_gelido"]["tracos"], "lobo_gelido"), "lobo_gelido")
+        for fam, afixo, nome in (("mercenario", None, "Theodore, o Ruivo"), ("mercenario", "feroz", "Varn"),
+                                 ("lobo_gelido", "feroz", None)):
+            e = criar(random.Random(2), fam, 4, afixo, nome)
+            self.assertEqual(retrato(e.tracos, e.familia, e.chave), fam, (fam, afixo, nome))
+        self.assertEqual(retrato(["humano", "blindado"], "guardiao", "guardiao:5", "senhor_da_guerra"), "humano")
+        icones = (ESTATICO / "icones.js").read_text(encoding="utf-8")
+        for papel, arquivo in (("mercenario", "retrato-mercenario"), ("lobo_gelido", "retrato-lobo-gelido")):
+            self.assertIn(f'{papel}: "{arquivo}"', icones)
+            for lado in (16, 32, 48):
+                for sufixo in ("", "@2x"):
+                    self.assertTrue((ESTATICO / f"hud/icones/{arquivo}-{lado}{sufixo}.png").exists(), (arquivo, lado))
 
     def test_troll_pela_familia_e_o_rei_pelo_guardiao(self):
         # o troll da montanha pela família (1.166.0); o Rei Troll pelo id do guardião (1.167.0), em qualquer lugar
@@ -111,11 +129,12 @@ class TestRetratos(unittest.TestCase):
         icones = (ESTATICO / "icones.js").read_text(encoding="utf-8")
         papel = re.search(r"const CRIATURA = \{([^}]*)\}", icones).group(1)
         for nome in set(RETRATO_CHAVE.values()) | set(RETRATO_FAMILIA.values()):
-            self.assertIn(f'{nome}: "retrato-{nome}"', papel)
-            self.assertIn(f'"retrato-{nome}": [16, 32, 48]', icones)
+            arquivo = "retrato-" + nome.replace("_", "-")  # o arquivo com hífen, como o retrato-rainha-aracnidea
+            self.assertIn(f'{nome}: "{arquivo}"', papel)
+            self.assertIn(f'"{arquivo}": [16, 32, 48]', icones)
             for lado in (16, 32, 48):
                 for sufixo in ("", "@2x"):
-                    self.assertTrue((ESTATICO / f"hud/icones/retrato-{nome}-{lado}{sufixo}.png").exists(), (nome, lado, sufixo))
+                    self.assertTrue((ESTATICO / f"hud/icones/{arquivo}-{lado}{sufixo}.png").exists(), (nome, lado, sufixo))
 
     def test_animais_do_patrulheiro_pelo_tipo(self):
         # os três animais do herói têm cabeça (Icones.animal): o urso e o falcão próprias (1.164.0), o lobo o mesmo

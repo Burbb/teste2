@@ -600,7 +600,9 @@ def covil(ui):
     mendigo_misterioso...), o evento toca antes do menu. EFEITOS e EFEITOS_INIMIGO ("firme:2,guarda:2:0.3": o estado, os turnos e o
     valor) começam a LUTA com esses estados no herói e em cada inimigo (para ver os ícones dos estados na carta);
     HABILIDADES ("passo_agil,...") acrescenta essas habilidades ao herói (para ver o selo de um estado que chega).
-    BESTIARIO ("lobo:5,bandido:2,..."): a família e os abates, para abrir o Bestiário já com essas criaturas."""
+    BESTIARIO ("lobo:5,bandido:2,..."): a família e os abates, para abrir o Bestiário já com essas criaturas.
+    CONTRATOS ("mercenario,lobo_gelido"): um contrato de caça aceito de cada família, num lugar selvagem onde ela vive
+    (o rastreador e o cartaz do mural com o retrato dela)."""
     from rpg import balanceamento as bal, sobrevivencia
     from rpg.eventos import classe as ev_classe, comitiva as ev_comitiva, comuns as ev_comuns, vila as ev_vila
     g = Jogo(ui, seed=int(os.environ.get("SEMENTE", "8")), pasta_saves=tempfile.mkdtemp(), hardcore=False)
@@ -611,6 +613,13 @@ def covil(ui):
     g.periodo, g.clima = int(os.environ.get("PERIODO", "0")), "limpo"
     for fam, abates in (x.split(":") for x in os.environ.get("BESTIARIO", "").split(",") if x):  # o Bestiário já com
         g.bestiario[fam] = {"vistos": max(1, int(abates)), "abates": int(abates)}  # essas criaturas (BESTIARIO="lobo:5,...")
+    for n, fam in enumerate(f for f in os.environ.get("CONTRATOS", "").split(",") if f):
+        from rpg.dados import BIOMAS, FAMILIAS
+        lugar = next((l for l in g.mundo["locais"] if l["tipo"] == "selvagem"
+                      and fam in BIOMAS.get(l["bioma"], {}).get("familias", ())),
+                     next(l for l in g.mundo["locais"] if l["tipo"] == "selvagem"))
+        g.contratos.append({"id": 900 + n, "tipo": "caca", "local": lugar["id"], "familia": fam, "total": 3, "feito": 1,
+                            "ouro": 30, "xp": 40, "desc": f"Eliminar 3 {FAMILIAS[fam]['plural']} em {lugar['nome']}."})
     if os.environ.get("LUGAR"):  # outro tipo de lugar: "vila" ou "selvagem" (o primeiro do mapa)
         loc = next(l for l in g.mundo["locais"] if l["tipo"] == os.environ["LUGAR"])
         g.mundo["atual"], loc["visitado"] = loc["id"], True
