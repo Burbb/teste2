@@ -7,6 +7,7 @@ como está, com o arco aprovado trocado só na página e com a Besta equipada; o
     python auxiliares/prancha.py rodada2    # rodada2.png
     python auxiliares/prancha.py rodada3    # rodada3.png
     python auxiliares/prancha.py rodada4    # rodada4.png
+    python auxiliares/prancha.py lobo-r5    # lobo-r5.png
 """
 import json
 import pathlib
@@ -186,6 +187,32 @@ def folha_rodada(r_antes, r_depois, saida, titulo):
     print(saida, out.size)
 
 
+def folha_lobo_r5():
+    """O lobo r5 (lobo-r5.png): na fogueira, o r4 × o r5 (tamanho real e 2×) e, para a escala, o urso r4 na mesma cena;
+    as figuras a 8× (r4 | r5 | o urso r4). Sem suavização."""
+    import grades as gr
+    f, f2 = ImageFont.truetype("arial.ttf", 15), ImageFont.truetype("arial.ttf", 12)
+    out = Image.new("RGBA", (1500, 500), CARVAO)
+    d = ImageDraw.Draw(out)
+    d.text((20, 10), "O lobo: antes (r4, bab7afba) × depois (r5, mais alto), na fogueira a 1920×945; o urso r4 para a escala; "
+                     "proposta, nada no jogo", fill=TEXTO, font=f)
+    y = 38
+    d.text((20, y), "na fogueira: lobo r4 | lobo r5 | urso r4 (tamanho real); o lobo r5 a 2×", fill=TEXTO2, font=f2)
+    rec = lambda n: Image.open(CAP / f"{n}.png").convert("RGBA").crop((340, 120, 520, 205))
+    for k, n in enumerate(("fogueira-lobo-r4", "fogueira-lobo-r5", "fogueira-urso-r4")):
+        out.alpha_composite(rec(n), (20 + k * 190, y + 18))
+    out.alpha_composite(amplia(rec("fogueira-lobo-r5"), 2), (600, y + 18))
+    y += 18 + 170 + 16
+    d.text((20, y), "as figuras a 8×: lobo r4 | lobo r5 | urso r4", fill=TEXTO2, font=f2)
+    for k, ident in enumerate(("animal-lobo-r4", "animal-lobo-r5", "animal-urso-r4")):
+        fig = Image.new("RGBA", (16, 16), (24, 21, 19, 255)); fig.alpha_composite(gr.imagem(ident))
+        out.alpha_composite(amplia(fig, 8), (20 + k * 140, y + 18))
+    y += 18 + 128 + 16
+    out = out.crop((0, 0, 1500, y))
+    out.save(PASTA / "lobo-r5.png")
+    print("lobo-r5.png", out.size)
+
+
 if __name__ == "__main__":
     import sys
     if sys.argv[1:] == ["animais"]:
@@ -195,6 +222,8 @@ if __name__ == "__main__":
     elif sys.argv[1:] == ["rodada3"]:
         folha_rodada("r2", "r3", "rodada3.png", "O lobo e o urso pelas referências geradas: antes (segunda rodada) × depois "
                      "(terceira); proposta, nada no jogo")
+    elif sys.argv[1:] == ["lobo-r5"]:
+        folha_lobo_r5()
     elif sys.argv[1:] == ["rodada4"]:
         folha_rodada("r3", "r4", "rodada4.png", "O lobo e o urso refinados: antes (terceira rodada, 23bb15bb) × depois "
                      "(quarta), na fogueira a 1920×945; proposta, nada no jogo")

@@ -175,3 +175,21 @@ real e 2×), a figura a 8× e o retrato aprovado; o Atacar do Mago, hoje × o ca
   aparece, mas é um pixel e some um pouco contra o fundo escuro. O urso lê como urso (a cabeça larga, as orelhas, o
   focinho curto) e pesado ao lado do lobo e do arqueiro; o limite é a silhueta, ainda um pouco triangular de longe, e as
   patas, que a 1× se juntam num bloco claro na base.
+
+## O lobo r5, mais alto (22/10/2026, proposta; nada no jogo)
+
+- **Jean, sobre o lobo r4:** achatado demais (o tronco uma faixa no chão, a cabeça pequena para reconhecer o lobo); as
+  oito linhas de altura deixam de ser restrição. O urso r4, o falcão e o resto ficam.
+- **Lobo r5** (`animal-lobo-r5`, onze linhas): a cabeça maior (seis linhas), com as orelhas, o olho âmbar, o focinho, o
+  nariz na ponta e a linha escura da boca e da mandíbula separados; o pescoço curto ligado aos ombros; o tronco mais
+  grosso, com o volume dos ombros e as costas planas (na primeira passada, as costas desciam em rampa até a cauda); as
+  patas da frente apoiadas no chão e a cauda atrás. Redesenhado na grade, não esticado do r4.
+- **A guia** (`guias/lobo-guia-r5-16.png`): a referência na nova escala (onze linhas de altura), presa pela cabeça à
+  direita; a ponta da cauda fica fora do quadro (nessa escala o lobo da referência tem 21 px). Oculta na fonte.
+- **Processo:** duas passadas na fogueira, ao lado do arqueiro e com o urso r4 na mesma cena; a fonte pelo conector
+  (releitura das camadas, 0 diferentes; o composto 107, a soma das camadas); o PNG exportado igual à grade, @2x exato;
+  as outras rodadas, o urso r4 e o falcão reexportados iguais. A foto `capturas/fogueira-lobo-r5.png`; a folha
+  `lobo-r5.png` (`python auxiliares/prancha.py lobo-r5`).
+- **A minha leitura em tamanho real:** um lobo adulto deitado e atento, a cabeça agora reconhecível (as orelhas, o olho,
+  o focinho com o nariz); o urso continua mais pesado. O limite: o pescoço e o peito claros ainda se juntam numa faixa
+  vertical, na sombra da luz do fogo.

@@ -170,6 +170,24 @@ URSO_R4 = [V] * 4 + [
     ".UbbbuuuuUubbuuU",
     "..ttBBttt.uBBBBt",
 ]
+# O lobo r5 (22/10/2026, pedido do Jean): o r4 era achatado demais (o tronco uma faixa no chão, a cabeça pequena). Onze
+# linhas de altura: a cabeça maior (seis linhas), com as orelhas, o olho âmbar, o focinho, o nariz na ponta e a linha
+# escura da boca e da mandíbula separados; o pescoço curto ligado aos ombros; o tronco deitado mais grosso, com as
+# costas planas (sem rampa) e o volume dos ombros; as patas da frente apoiadas no chão e a cauda atrás. O urso r4
+# continua mais pesado.
+LOBO_R5 = [V] * 5 + [
+    "..........M..M..",
+    "..........lMmlM.",
+    ".........mllmmm.",
+    ".........lmemLLn",
+    ".........llmlMMs",
+    "...mmmmmmllLLl..",
+    "..mmllllmlLLl...",
+    ".mllllmmmmlLm...",
+    ".mmMllmmMMmllLl.",
+    "sMMMMmmMMMMmlLLl",
+    "ssMMMssMMssMmmmL",
+]
 CAMADAS = {
     "animal-lobo": (LOBO, ["corpo", "cabeca", "detalhes"],
                     lambda x, y, ch: "detalhes" if ch in "en" else "cabeca" if y <= 11 and x >= 9 else "corpo"),
@@ -187,6 +205,8 @@ CAMADAS = {
                        lambda x, y, ch: "detalhes" if ch in "en" else "cabeca" if y <= 11 and x >= 9 else "corpo"),
     "animal-urso-r4": (URSO_R4, ["corpo", "cabeca", "detalhes"],
                        lambda x, y, ch: "detalhes" if ch == "N" else "cabeca" if y <= 8 and x >= 6 else "corpo"),
+    "animal-lobo-r5": (LOBO_R5, ["corpo", "cabeca", "detalhes"],
+                       lambda x, y, ch: "detalhes" if ch in "en" else "cabeca" if y <= 9 and x >= 9 else "corpo"),
     "animal-falcao": (FALCAO, ["toco", "corpo", "cabeca", "detalhes"],
                       lambda x, y, ch: "toco" if ch in "TRr" else "detalhes" if ch == "y" else "cabeca" if y <= 7 else "corpo"),
 }

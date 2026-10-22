@@ -5690,3 +5690,10 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Feito:** `animal-lobo-r4` e `animal-urso-r4` pelo conector, conferidos na fogueira; a folha
   `ferramentas/prototipos/hud/acampamento_atacar/rodada4.png`. A r3, o falcão, a E1r, o cajado e a produção intactos.
 - **Continua:** a avaliação do Jean; nada no jogo (a versão continua 1.169.0).
+
+### 22/10/2026 (data do computador local) — O lobo r5, mais alto (só no protótipo)
+
+- **Pedido de Jean:** o lobo r4 achatado demais; mais altura, a cabeça maior, o tronco mais grosso, o pescoço curto.
+- **Feito:** `animal-lobo-r5` (onze linhas) pelo conector, com uma guia na nova escala; conferido na fogueira com o urso
+  r4; a folha `ferramentas/prototipos/hud/acampamento_atacar/lobo-r5.png`. O urso r4, o falcão e o resto intactos.
+- **Continua:** a avaliação do Jean; nada no jogo (a versão continua 1.169.0).
