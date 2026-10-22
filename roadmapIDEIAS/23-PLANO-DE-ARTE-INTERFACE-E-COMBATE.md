@@ -13,7 +13,10 @@ Não iniciar todo o plano numa única tarefa. As etapas técnicas A–I e a vali
 
 ## Estado de referência — 21/10/2026
 
-- Produção: **1.178.0** na branch `claude/tender-einstein-tx3tjl` (22/10/2026: o Esqueleto E1r pela família na 1.175.0,
+- Produção: **1.181.1** na branch `claude/tender-einstein-tx3tjl` (22/10/2026: o Mercenário MA e o Lobo Gélido LA pela
+  família na 1.179.0; o caixote no motivo "Esgotado" do mercado na 1.180.0; o ent jovem e o Ent Ancião renomeados para
+  Árvore Desperta e Árvore Anciã, com a migração dos saves, na 1.181.0; a fala da Pita depois do último tratamento na
+  1.181.1. Antes: o Esqueleto E1r pela família na 1.175.0,
   o urso e o falcão na fogueira na 1.176.0, o cajado no Atacar do Mago na 1.177.0; a mochila e o mercado sem o "tudo é
   ganho" e a marca de contrato com o cursor normal na 1.177.1 e 1.177.2; a curandeira aberta depois de tratar na
   1.178.0). Antes, o Espectro (1.174.0) e as correções da 1.174.1 à 1.174.6.
@@ -29,7 +32,8 @@ Não iniciar todo o plano numa única tarefa. As etapas técnicas A–I e a vali
   **Rei Troll** (1.167.0, pelo id do guardião) e a **Aranha gigante** (1.167.0, pela família, com as invocadas) e a
   **Rainha Aracnídea** (1.168.0, pelo id da guardiã); depois, pela família, o Sapo e a Sanguessuga (1.171.0), o
   Cultista, a Bruxa e o Rato (1.172.0), o Javali e o Carniçal (1.173.0), o Espectro (1.174.0) e o Esqueleto (1.175.0,
-  com os invocados do Lich); o urso e o falcão também na fogueira (1.176.0). A relação do que falta
+  com os invocados do Lich); o urso e o falcão também na fogueira (1.176.0); o Mercenário e o Lobo Gélido (1.179.0).
+  A relação do que falta
   está em "A frente de criaturas em 22/10/2026", no item 1.12. O Bandido do chapéu está reservado como conceito de um possível chefe, fora do jogo.
 - **Agora: 1E.3, as demais criaturas, os chefes e as invocações** (as outras ainda saem dos traços: o `fera`, o
   `humano`, a caveira e os outros sprites de 16×16; o levantamento em `ferramentas/prototipos/hud/criaturas/`).
@@ -1035,20 +1039,22 @@ foi escolhida.
 
 **A frente de criaturas em 22/10/2026 (na 1.174.6; conferido em `dados.retrato` com as 27 famílias e os 10 guardiões
 do catálogo):**
-- **Integrados (17):** pela família, o Afogado, o Lobo, o Bandido, o Troll da montanha, a Aranha gigante, o Sapo-touro,
-  a Sanguessuga, o Cultista, a Bruxa do pântano, o Rato, o Javali, o Carniçal, o Espectro e o Esqueleto (14; o
-  Esqueleto E1r na 1.175.0, com os que o Lich invoca); pela chave da capela, a Ilse; pelo id do guardião, o Rei Troll e
+- **Integrados (19):** pela família, o Afogado, o Lobo, o Bandido, o Troll da montanha, a Aranha gigante, o Sapo-touro,
+  a Sanguessuga, o Cultista, a Bruxa do pântano, o Rato, o Javali, o Carniçal, o Espectro, o Esqueleto, o Mercenário e
+  o Lobo Gélido (16; o Esqueleto E1r na 1.175.0, com os que o Lich invoca; o Mercenário MA e o Lobo Gélido LA na
+  1.179.0, com o Invicto da ponte e o Theodore; o MB e o LB guardados como não escolhidos); pela chave da capela, a Ilse; pelo id do guardião, o Rei Troll e
   a Rainha Aracnídea. Os animais do patrulheiro (o Urso Pardo, o Falcão Peregrino e o Lobo Cinzento) na carta aliada e
   no painel; os três também na fogueira, pelo tipo (o lobo c2 na 1.170.0, o urso r4 e o falcão na 1.176.0). O cajado
   aprovado no Atacar do Mago (1.177.0).
-- **Propostas aguardando o Jean (22/10/2026, não aprovadas):** o **Mercenário** (MA, o chapéu de ferro; MB, a coifa de
-  malha) e o **Lobo Gélido** (LA, o lobo da geada; LB, o lobo da nevasca), em `criaturas/mercenario_lobo_gelido/`; o
-  ícone do **Esgotado** do mercado (o caixote ou o cesto, papel próprio; `itens-lote-noite/esgotado/`).
-- **Ainda nos desenhos genéricos dos traços:** 13 famílias, a harpia e o grifo (`voador`, o morcego), o lobo gélido
-  (`fera`) e o mercenário (`humano`), com propostas em avaliação, o cavaleiro sombrio e o servo esquelético
-  (`caveira`), o ent jovem
+- **Fora das criaturas, na 1.180.0:** o ícone do **Esgotado** do mercado (o caixote, papel próprio `MOTIVO`; o cesto
+  guardado como não escolhido; o cadeado continua nos outros motivos e usos). Nenhuma proposta aguardando o Jean.
+- **Nomenclatura (1.181.0, aprovada pelo Jean):** o **ent jovem** é a **Árvore Desperta** e o **Ent Ancião**, a **Árvore
+  Anciã** (árvores vivas: "árvores que acordaram com raiva"; o guardião, "uma árvore milenar"). Os ids `ent_jovem` e
+  `ent_anciao`, os números, as habilidades e as regras ficam; os saves antigos passam pela migração v5 → v6.
+- **Ainda nos desenhos genéricos dos traços:** 11 famílias, a harpia e o grifo (`voador`, o morcego), o cavaleiro
+  sombrio e o servo esquelético (`caveira`), a árvore desperta
   (`planta`), o golem de pedra (`construto`), a abominação (`corrompido`), a cria do Vazio (`etereo`) e o caído, o xamã
-  caído e o cão infernal (`demonio`); 8 guardiões, o Ent Ancião, a Hidra do Brejo, a Bruxa Afogada, o Dragão de Gelo, o
+  caído e o cão infernal (`demonio`); 8 guardiões, a Árvore Anciã, a Hidra do Brejo, a Bruxa Afogada, o Dragão de Gelo, o
   Senhor da Guerra, o Profeta das Cinzas, o Lich Menor (o `etereo` na fase 2) e o Golem Primordial; e, fora do
   catálogo, o antagonista (`humano`) e as crias dele (`etereo`).
 - **Compartilhamentos deliberados:** o Lobo Cinzento aliado com o retrato do Lobo (1.165.0; o lado, o nome e a borda
@@ -1057,8 +1063,8 @@ do catálogo):**
   com o Cultista.
 - **Conceitos reservados (fora do jogo, sem espécie, regra nem mapeamento):** o Esqueleto E2 (um possível mago
   esqueleto) e o Bandido do chapéu (um possível chefe).
-- **Próximos pares recomendados (a escolha é do Jean):** (1) o **mercenário e o lobo gélido**, em avaliação desde
-  22/10/2026; (2) a **harpia e o grifo**, os dois
+- **Próximos pares recomendados (a escolha é do Jean):** (1) o mercenário e o lobo gélido, integrados na 1.179.0;
+  (2) a **harpia e o grifo**, os dois
   voadores comuns no morcego, que não lê nenhum dos dois (e liberam o `voador` para o Dragão de Gelo, depois); (3) o
   **caído e o xamã caído**, dois dos três que dividem o `demonio` (o cão infernal pode vir junto ou ficar com eles por
   família). Os guardiões genéricos ficam para pares próprios, um chefe por vez, depois dos comuns.
@@ -1204,14 +1210,13 @@ volta à pauta quando essa expansão exigir; não é uma migração de engine.
 
 ## Próxima passagem de trabalho — atualizada em 22/10/2026
 
-1. **Concluídos:** os 31 equipamentos-base (1D); na 1E, o contador de flechas e os 17 estados; 17 criaturas com retrato
-   (14 famílias, a Ilse, o Rei Troll e a Rainha Aracnídea) e os três animais do patrulheiro (na carta, no painel e na
+1. **Concluídos:** os 31 equipamentos-base (1D); na 1E, o contador de flechas e os 17 estados; 19 criaturas com retrato
+   (16 famílias, a Ilse, o Rei Troll e a Rainha Aracnídea); o ícone do Esgotado do mercado e os três animais do patrulheiro (na carta, no painel e na
    fogueira); o cajado no Atacar do Mago. As variantes e os compartilhamentos provisórios ficam abertos, separados.
 2. **Agora, 1E.3:** as demais criaturas, os chefes e as invocações, em pares pequenos escolhidos pelo Jean, pelo mesmo
-   caminho (o retrato por família, por chave ou pelo tipo, sem trocar o sprite compartilhado). **Aguardando o Jean:** o
-   Mercenário (MA ou MB) e o Lobo Gélido (LA ou LB), em `criaturas/mercenario_lobo_gelido/`; à parte, o ícone do
-   Esgotado do mercado (o caixote ou o cesto). Depois, o próximo par (a harpia e o grifo é a recomendação), sem começar
-   antes da escolha. A relação em "A frente de criaturas em 22/10/2026" (item 1.12). O Esqueleto E2 e o Bandido do
+   caminho (o retrato por família, por chave ou pelo tipo, sem trocar o sprite compartilhado). O Mercenário, o Lobo
+   Gélido e o Esgotado integrados (1.179.0, 1.180.0); o próximo par (a harpia e o grifo é a recomendação) espera o
+   pedido do Jean. A relação em "A frente de criaturas em 22/10/2026" (item 1.12). O Esqueleto E2 e o Bandido do
    chapéu estão reservados.
 3. **Depois, 1E.4:** os caminhos/destinos e os símbolos internos do mapa e do minimapa.
 4. **Retomar a etapa 2** e **seguir 3–7**, como na sequência abaixo; **etapa 8** com habilidades, talentos, Grimório e

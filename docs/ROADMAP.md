@@ -62,7 +62,7 @@ A sequência aprovada por Jean está detalhada em
 Consultar esse documento antes de escolher a próxima entrega. Aprovar a ordem não aprova automaticamente
 protótipos, desenhos ou regras e não autoriza executar todo o plano de uma vez.
 
-**Estado confirmado nesta atualização (22/10/2026):** produção **1.178.0** (o Esqueleto, o urso e o falcão da fogueira e o cajado do Mago da 1.175.0 à 1.177.0; correções de interface na 1.177.1 e 1.177.2; a curandeira aberta depois de tratar na 1.178.0). A 1D está concluída: **31
+**Estado confirmado nesta atualização (22/10/2026):** produção **1.181.1** (o Mercenário e o Lobo Gélido na 1.179.0; o ícone do Esgotado do mercado na 1.180.0; as árvores vivas renomeadas, Árvore Desperta e Árvore Anciã, com a migração dos saves, na 1.181.0; a fala da Pita depois do último tratamento na 1.181.1; antes, da 1.175.0 à 1.178.0, o Esqueleto, o urso e o falcão da fogueira, o cajado do Mago e correções de interface). A 1D está concluída: **31
 equipamentos-base** finais (as variantes e os compartilhamentos provisórios ficam separados, ainda abertos). Na 1E, o
 **contador de flechas** e os **17 estados** estão concluídos; o **Afogado, a Ilse, o Lobo e o Bandido** estão integrados,
 e os **três animais do patrulheiro** (Urso, Falcão e Lobo Cinzento) concluídos. **Agora: 1E.3**, as demais criaturas,

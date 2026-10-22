@@ -5854,3 +5854,39 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   cuidados, sou eu que atendo") é a do prédio fechado, escrita para quem chega.
 - **Continua:** o Jean escolhe o Esgotado, o Mercenário, o Lobo Gélido e o nome do Ent; o próximo par e o mapa não foram
   começados.
+
+### 22/10/2026 (noite, data do computador local) — O Mercenário, o Lobo Gélido, o Esgotado e as árvores (1.179.0 a 1.181.1)
+
+- **Aprovados pelo Jean, sem retoque, e integrados:** o Mercenário MA (o chapéu de ferro) e o Lobo Gélido LA (o lobo da
+  geada), pela família, com os usos dela (o Invicto da ponte, os guardas do nobre, a escolta, o Theodore dos Cães de
+  Ferro; os afixos; a carta, o Bestiário, o cartaz do mural e o rastreador dos contratos), na 1.179.0; o Senhor da Guerra
+  (guardião) e o antagonista continuam no `humano`. O caixote vazio no motivo "Esgotado" do mercado, na 1.180.0: o
+  motor manda `motivo_id: "esgotado"`, a tela desenha o papel `MOTIVO`; o cadeado continua nos outros motivos, no
+  Salvar, no bloqueio de vida e no talento trancado; o Firme continua com a corrente. O MB, o LB e o cesto ficam
+  guardados como não escolhidos. Os PNGs do jogo idênticos byte a byte às propostas; `exportar_aseprite.py todas
+  --conferir`: tudo igual ao jogo. Conferido com os arquivos de produção a 1920×945
+  (`criaturas/mercenario_lobo_gelido/capturas-1179/`), sem pedido a `ferramentas/` (o cenário `covil` ganhou
+  `CONTRATOS=` para os contratos de caça dessas famílias, que não existem no Vale).
+- **Os nomes (1.181.0, aprovados):** o ent jovem é a **Árvore Desperta** (plural "árvores despertas", feminino) e o Ent
+  Ancião, a **Árvore Anciã**. Os ids `ent_jovem` e `ent_anciao`, os números, as habilidades e as regras ficam. O nome
+  vem do catálogo (`FAMILIAS`, `GUARDIOES`); a fala da fase 2 ("A casca da árvore racha"), os sinais do covil e o
+  `NOMES_ANTIGOS` do replay acompanham; o Espantalho Possuído, que usa os números da árvore, continua no masculino. O
+  texto dos contratos saiu para `contratos.desc_caca` e `desc_alvo`, os mesmos da geração e da migração.
+- **Saves antigos (formato 5 → 6, `migracoes._v5_para_v6`):** o guardião gravado (o nome com o artigo, o `base`, o
+  gênero), os rumores que citam o nome antigo dele e o texto dos contratos de árvores (aceitos e no mural) são refeitos
+  pelo catálogo; ids, progresso e quantidade não mudam, e rodar de novo não muda nada. **Conferido num save gravado pela
+  1.178.0** (semente 9): "Vharnar, o Ent Ancião" → "Vharnar, a Árvore Anciã" (também na luta); o rumor; o contrato 23
+  (1/4) "Eliminar 4 ents jovens em Bosque da Névoa." → "Eliminar 4 árvores despertas em Bosque da Névoa."; o do mural
+  "Caçar Vhararmus, um ent jovem enorme…" → "uma árvore desperta enorme…"; salvar e carregar de novo deu o mesmo save.
+  Num jogo novo, a carta e o Bestiário dizem "Árvore desperta". Testes em `tests/test_nomes_arvores.py`.
+- **A fala da Pita (1.181.1):** depois do último tratamento, "Pronto. Por aqui, terminamos." na cabana, que continua
+  aberta com o Voltar/Esc; quem chega saudável continua vendo a fala de chegada no prédio; a Marta e a curandeira de
+  fora do Vau, como antes.
+- **O gabarito** mudou só em três coisas, investigadas linha a linha contra as transcrições da 1.178.0: o campo
+  `motivo_id` nos dados do mercado, o retrato `humano` → `mercenario` (partidas web) e a versão 5 → 6 do save final;
+  nenhuma linha a mais ou a menos, nenhuma escolha, lance ou número. Nenhuma partida do gabarito encontra árvores ou
+  lobos gélidos.
+- **O conector do Aseprite:** a porta 6515 livre; o `aseprite-bridge` desta sessão continua desligado (religar pelo
+  `/mcp`). Não foi preciso editar no Aseprite: as fontes aprovadas foram copiadas sem retoque.
+- **A folha:** `ferramentas/prototipos/hud/integracoes-22-10/integracoes-1181.png`.
+- **Continua:** o próximo par (a harpia e o grifo é a recomendação) e o mapa esperam o pedido do Jean.
