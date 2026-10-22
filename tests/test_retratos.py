@@ -92,14 +92,14 @@ class TestRetratos(unittest.TestCase):
 
     def test_caido_pela_familia(self):
         # 1.182.0: o caído pela família, com os que o xamã ergue (o Reviver levanta o mesmo caído morto); o xamã caído
-        # (família própria) tem o retrato dele desde a 1.184.0; o cão infernal continua no "demonio"
+        # (família própria) tem o retrato dele desde a 1.184.0; o cão infernal, desde a 1.186.0
         import random
         from rpg.inimigos import criar
         self.assertEqual(retrato(FAMILIAS["caido"]["tracos"], "caido"), "caido")
         self.assertEqual(FAMILIAS["xama_caido"]["revive"], "caido")
         caido = criar(random.Random(5), "caido", 3, "feroz")
         self.assertEqual(retrato(caido.tracos, caido.familia, caido.chave), "caido")
-        self.assertEqual(retrato(FAMILIAS["cao_infernal"]["tracos"], "cao_infernal"), "demonio")
+        self.assertEqual(retrato(FAMILIAS["cao_infernal"]["tracos"], "cao_infernal"), "cao_infernal")
         # o reerguido: o Reviver do xamã levanta o mesmo caído morto, que continua com o retrato da família
         from rpg.inimigos import HABS_INIMIGO
         xama = criar(random.Random(6), "xama_caido", 3)
@@ -133,7 +133,7 @@ class TestRetratos(unittest.TestCase):
 
     def test_harpia_e_xama_caido_pela_familia(self):
         # 1.184.0: a harpia e o xamã caído pela família, com os afixos; o xamã que escolta o bando de caídos é da
-        # família dele (o retrato do xamã ao lado dos caídos); o Dragão de Gelo e o cão infernal continuam nos traços
+        # família dele (o retrato do xamã ao lado dos caídos); o Dragão de Gelo continua nos traços
         import random
         from rpg.inimigos import criar
         self.assertEqual(FAMILIAS["caido"]["escolta"]["familia"], "xama_caido")
@@ -141,7 +141,7 @@ class TestRetratos(unittest.TestCase):
             e = criar(random.Random(7), fam, 4, afixo)
             self.assertEqual(retrato(e.tracos, e.familia, e.chave), fam, (fam, afixo))
         self.assertEqual(retrato(["voador"], "guardiao", "guardiao:4", "dragao_de_gelo"), "voador")
-        self.assertEqual(retrato(FAMILIAS["cao_infernal"]["tracos"], "cao_infernal"), "demonio")
+        self.assertEqual(retrato(["demonio", "fera"], None), "demonio")  # o demônio sem família continua no sprite
         icones = (ESTATICO / "icones.js").read_text(encoding="utf-8")
         for papel, arquivo in (("harpia", "retrato-harpia"), ("xama_caido", "retrato-xama-caido")):
             self.assertIn(f'{papel}: "{arquivo}"', icones)
@@ -184,6 +184,20 @@ class TestRetratos(unittest.TestCase):
         for lado in (16, 32, 48):
             for sufixo in ("", "@2x"):
                 self.assertTrue((ESTATICO / f"hud/icones/retrato-cria-vazio-{lado}{sufixo}.png").exists(), (lado, sufixo))
+
+    def test_cao_infernal_pela_familia(self):
+        # 1.186.0: o cão infernal pela família, com os afixos; quem tem o traço demônio sem família continua no sprite
+        import random
+        from rpg.inimigos import criar
+        for afixo in (None, "feroz", "flamejante"):
+            e = criar(random.Random(9), "cao_infernal", 4, afixo)
+            self.assertEqual(retrato(e.tracos, e.familia, e.chave), "cao_infernal", afixo)
+        self.assertEqual(retrato(["demonio"], None), "demonio")
+        icones = (ESTATICO / "icones.js").read_text(encoding="utf-8")
+        self.assertIn('cao_infernal: "retrato-cao-infernal"', icones)
+        for lado in (16, 32, 48):
+            for sufixo in ("", "@2x"):
+                self.assertTrue((ESTATICO / f"hud/icones/retrato-cao-infernal-{lado}{sufixo}.png").exists(), (lado, sufixo))
 
     def test_troll_pela_familia_e_o_rei_pelo_guardiao(self):
         # o troll da montanha pela família (1.166.0); o Rei Troll pelo id do guardião (1.167.0), em qualquer lugar

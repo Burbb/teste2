@@ -124,6 +124,8 @@ DERIVADOS = {
     "retrato-xama-caido": {32: (16, 2), 48: (16, 3)},
     # 1.185.0: a cria do Vazio (a A2: o caco da Fenda com volume nos cacos), pela família, com as que o antagonista invoca
     "retrato-cria-vazio": {32: (16, 2), 48: (16, 3)},
+    # 1.186.0: o cão infernal (a P1: o cão de carvão de perfil com a bocarra de presas), pela família
+    "retrato-cao-infernal": {32: (16, 2), 48: (16, 3)},
 }
 # O martelo (1.149.0) só tem fontes do 40 e do 48 (aseprite/martelo/): o 32 e o 64 são a grade de desenhos.js, no
 # jogo, e não saem daqui.

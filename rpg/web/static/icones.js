@@ -48,7 +48,7 @@ const Icones = (() => {
     "retrato-esqueleto": [16, 32, 48], "retrato-mercenario": [16, 32, 48], "retrato-lobo-gelido": [16, 32, 48],
     "retrato-caido": [16, 32, 48], "retrato-grifo": [16, 32, 48],
     "retrato-harpia": [16, 32, 48], "retrato-xama-caido": [16, 32, 48],
-    "retrato-cria-vazio": [16, 32, 48]};
+    "retrato-cria-vazio": [16, 32, 48], "retrato-cao-infernal": [16, 32, 48]};
 
   // Cada desenho vai para o tipo de ferro que o jogo já tem (elmo, armadura, manopla, calca = perneira, bota_ferro, maca);
   // couro sem desenho (a calça de couro) e as outras peças sem desenho ficam com o do jogo. O anel (1.140.0, o aro de
@@ -214,8 +214,9 @@ const Icones = (() => {
                      caido: "retrato-caido",  // 1.182.0: o diabrete que ri, pela família (o xamã continua no sprite)
                      grifo: "retrato-grifo",  // 1.183.0: a águia-leão, pela família
                      harpia: "retrato-harpia",  // 1.184.0: o rosto de mulher com as penas e a gola de abutre
-                     xama_caido: "retrato-xama-caido",  // 1.184.0: o caído velho de capuz (o cão infernal continua no sprite)
-                     cria_vazio: "retrato-cria-vazio" };  // 1.185.0: o caco da Fenda, também a invocada pelo antagonista
+                     xama_caido: "retrato-xama-caido",  // 1.184.0: o caído velho de capuz
+                     cria_vazio: "retrato-cria-vazio",  // 1.185.0: o caco da Fenda, também a invocada pelo antagonista
+                     cao_infernal: "retrato-cao-infernal" };  // 1.186.0: o cão de carvão com a bocarra de presas
   // o animal do patrulheiro (1.164.0), pelo tipo dele (classes.COMPANHEIROS), na carta aliada da luta e no painel da
   // comitiva, a 2×: o Urso Pardo (de frente, severo) e o Falcão Peregrino (de perfil, a máscara escura); desde a 1.165.0,
   // o Lobo Cinzento com o mesmo arquivo do Lobo inimigo (o mesmo rosto de propósito: o lado, o nome e a borda separam os

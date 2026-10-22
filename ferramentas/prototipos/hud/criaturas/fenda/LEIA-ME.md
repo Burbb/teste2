@@ -368,3 +368,16 @@ fraco (a ameaça vem das pontas das presas e da fresta acesa).
 conector do Aseprite (0 diferentes na releitura; os compostos 185, 180 e 183 = as camadas); a exportação igual à grade,
 o @2x exato, o 32 e o 48 em blocos inteiros. As fotos nos modos `k`, `l` e `m`, a 1920×945, sem erro no console. A folha
 `cao-p.png` (`python auxiliares/prancha.py cao-p`): RA3 × P1 × P2 × P3.
+
+## O Cão infernal no jogo (1.186.0): a P1
+
+- **Aprovada pelo Jean e integrada sem retoque:** a P1 (`cao-infernal-p1`, exatamente como no `e5c14698`), pela família
+  (`RETRATO_FAMILIA`, o papel `CRIATURA` e os `TAMANHOS` em `icones.js`), com os afixos. Nenhuma família nem guardião do
+  catálogo fica mais no sprite `demonio`; ele continua como reserva de quem só tiver o traço. As outras tentativas (o A, o
+  B, o T, o N, o N2, a RA, a RB, a RC, a RA2, a RA3, a P2 e a P3) ficam aqui como histórico.
+- A fonte em `ferramentas/arte/aseprite/retrato-cao-infernal/`, a cópia byte a byte; o 32 e o 48 em `DERIVADOS`.
+  Exportados numa pasta temporária e comparados com a P1 (os seis, byte a byte) antes de gravar no jogo; depois,
+  `--conferir`: tudo igual ao jogo.
+- Conferido a 1920×945 com os arquivos de produção (`capturas-1186/`, `auxiliares/fotografar_jogo_cao.mjs`): os cães na
+  luta com os caídos e o xamã, o Bestiário com a faixa do mestre caçador (6 abates), o cartaz e o rastreador; nenhum
+  pedido a `ferramentas/`; sem erro no console. A folha: `ferramentas/prototipos/hud/integracoes-22-10/integracoes-1186.png`.

@@ -1,0 +1,35 @@
+{
+ "luta-cao": {
+  "arquivos": [
+   "Cão infernal: http://127.0.0.1:53625/static/hud/icones/retrato-cao-infernal-32.png",
+   "Cão infernal: http://127.0.0.1:53625/static/hud/icones/retrato-cao-infernal-32.png",
+   "Caído: http://127.0.0.1:53625/static/hud/icones/retrato-caido-32.png",
+   "Caído: http://127.0.0.1:53625/static/hud/icones/retrato-caido-32.png",
+   "Xamã caído: http://127.0.0.1:53625/static/hud/icones/retrato-xama-caido-32.png"
+  ],
+  "erros": [],
+  "ferramentas": []
+ },
+ "bestiario": {
+  "arquivos": [
+   "Caído: http://127.0.0.1:53738/static/hud/icones/retrato-caido-48.png",
+   "Cria do Vazio: http://127.0.0.1:53738/static/hud/icones/retrato-cria-vazio-48.png",
+   "Cão infernal: http://127.0.0.1:53738/static/hud/icones/retrato-cao-infernal-48.png",
+   "Lobo: http://127.0.0.1:53738/static/hud/icones/retrato-lobo-48.png",
+   "Lobo gélido: http://127.0.0.1:53738/static/hud/icones/retrato-lobo-gelido-48.png",
+   "Xamã caído: http://127.0.0.1:53738/static/hud/icones/retrato-xama-caido-48.png"
+  ],
+  "erros": [],
+  "ferramentas": []
+ },
+ "contratos": {
+  "arquivos": [
+   "contrato tipo-caca: http://127.0.0.1:53862/static/hud/icones/retrato-cao-infernal-48.png 48",
+   "contrato tipo-caca: http://127.0.0.1:53862/static/hud/icones/retrato-carnical-48.png 48",
+   "contrato tipo-caca ativo: http://127.0.0.1:53862/static/hud/icones/retrato-cao-infernal-48.png 48",
+   "painel m-painel: http://127.0.0.1:53862/static/hud/icones/retrato-cao-infernal-32.png 32"
+  ],
+  "erros": [],
+  "ferramentas": []
+ }
+}

@@ -458,13 +458,13 @@ id, `ficha_guardiao`; os contratos por `contratos.desc_caca` e `desc_alvo`, os m
   com as que a Rainha Aracnídea invoca; desde a 1.171.0, o sapo-touro gigante e a sanguessuga gigante; desde a 1.172.0, o cultista, a bruxa do pântano e o
   rato gigante; desde a 1.173.0, o javali selvagem e o carniçal;
   desde a 1.174.0, o espectro; desde a 1.175.0, o esqueleto, com os que o Lich invoca; desde a 1.179.0, o mercenário,
-  com o Invicto da ponte e o Theodore, e o lobo gélido; desde a 1.182.0, o caído, com os que o xamã ergue; desde a 1.183.0, o grifo; desde a 1.184.0, a harpia e o xamã caído; desde a 1.185.0, a cria do Vazio, com as que o antagonista invoca), senão os
+  com o Invicto da ponte e o Theodore, e o lobo gélido; desde a 1.182.0, o caído, com os que o xamã ergue; desde a 1.183.0, o grifo; desde a 1.184.0, a harpia e o xamã caído; desde a 1.185.0, a cria do Vazio, com as que o antagonista invoca; desde a 1.186.0, o cão infernal), senão os
   traços. Um guardião pelo id do catálogo (`RETRATO_GUARDIAO`, 1.167.0:
   o Rei Troll; 1.168.0: a Rainha Aracnídea; `instanciar_guardiao` guarda o id em `guardiao`, porque a chave do guardião
   muda com o lugar); os outros guardiões continuam pelos traços, como antes (a caveira dos outros mortos-vivos, o
   `fera` do animal do herói e dos guardiões feras e o `humano` dos guardiões humanos e do antagonista continuam). A luta, o Bestiário, o mural e o rastro dos contratos e a
   faixa do mestre caçador pedem `Icones.criatura(retrato, lado)` (o papel `CRIATURA`) antes do sprite: o 16×16 a 2×
-  (32) e a 3× (48), em arquivos (`retrato-afogado`, `retrato-ilse`, `retrato-lobo`, `retrato-bandido`, `retrato-troll`, `retrato-rei-troll`, `retrato-aranha`, `retrato-sapo`, `retrato-sanguessuga`, `retrato-cultista`, `retrato-bruxa`, `retrato-rato`, `retrato-javali`, `retrato-carnical`, `retrato-espectro`, `retrato-esqueleto`, `retrato-mercenario`, `retrato-lobo-gelido`, `retrato-caido`, `retrato-grifo`, `retrato-harpia`, `retrato-xama-caido`, `retrato-cria-vazio`; a Rainha Aracnídea, `retrato-rainha-aracnidea`, só o 32 da carta; fontes em
+  (32) e a 3× (48), em arquivos (`retrato-afogado`, `retrato-ilse`, `retrato-lobo`, `retrato-bandido`, `retrato-troll`, `retrato-rei-troll`, `retrato-aranha`, `retrato-sapo`, `retrato-sanguessuga`, `retrato-cultista`, `retrato-bruxa`, `retrato-rato`, `retrato-javali`, `retrato-carnical`, `retrato-espectro`, `retrato-esqueleto`, `retrato-mercenario`, `retrato-lobo-gelido`, `retrato-caido`, `retrato-grifo`, `retrato-harpia`, `retrato-xama-caido`, `retrato-cria-vazio`, `retrato-cao-infernal`; a Rainha Aracnídea, `retrato-rainha-aracnidea`, só o 32 da carta; fontes em
   `ferramentas/arte/aseprite/`). O animal do patrulheiro (1.164.0) tem o papel `ANIMAL` (`Icones.animal(tipo, 32)`,
   pelo `tipo` de `classes.COMPANHEIROS`): o Urso Pardo e o Falcão Peregrino na carta aliada e no painel da comitiva
   (`retrato-urso`, `retrato-falcao`); desde a 1.165.0, o Lobo Cinzento com o mesmo arquivo do Lobo inimigo
