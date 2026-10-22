@@ -151,3 +151,27 @@ real e 2×), a figura a 8× e o retrato aprovado; o Atacar do Mago, hoje × o ca
   falcão e o cajado reexportados iguais. As fotos `capturas/fogueira-<tipo>-r3.png`.
 - A folha `rodada3.png` (`python auxiliares/prancha.py rodada3`): a referência e a guia, antes (r2) × depois (r3) na
   fogueira, em tamanho real e a 2×, e as figuras a 8×.
+
+## A quarta rodada: o refinamento do lobo e do urso (22/10/2026, proposta; nada no jogo)
+
+- **Jean, sobre a r3:** a construção melhorou, mas falta clareza na cena. No lobo, a coxa virou uma mancha clara e o
+  peito com as patas parecia um bloco vertical separado do corpo; o nariz precisava ler. No urso, a cabeça lembrava um
+  cachorro, as patas eram duas hastes e a coxa tinha divisões internas.
+- **Lobo r4** (`animal-lobo-r4`, a mesma silhueta baixa): a coxa no cinza claro médio; o peito sem o bloco claro; as
+  patas da frente numa faixa contínua apoiada no chão (o claro em cima, o meio embaixo), saindo do peito para o fogo;
+  a sombra embaixo do focinho, para o nariz escuro ler na ponta.
+- **Urso r4** (`animal-urso-r4`): a cabeça mais larga (oito colunas), com as orelhas redondas nos cantos; o focinho
+  curto e claro com o nariz escuro na ponta; a linha escura entre a mandíbula e o peito; o corcunda arredondando o alto
+  das costas (na primeira passada, as costas eram uma rampa reta da orelha à garupa); o peito num plano claro; as patas
+  da frente com a base larga no chão; a coxa num volume só, com um plano de luz e o pé à frente. Treze linhas de
+  altura, o lobo oito.
+- **Na bancada:** duas passadas, cada uma fotografada na fogueira a 1920×945 antes do editor.
+- **Processo:** as fontes pelo conector com a guia oculta (`pintar.lua`; releitura das camadas contra a grade, 0
+  diferentes; o composto 68 e 137, a soma das camadas); o PNG exportado pela linha de comando (o composto do arquivo
+  salvo) igual à grade, @2x exato; as rodadas anteriores, o falcão e o cajado reexportados iguais. As fotos
+  `capturas/fogueira-<tipo>-r4.png`; a folha `rodada4.png` (`python auxiliares/prancha.py rodada4`, o mesmo
+  enquadramento da `rodada3.png`).
+- **A minha leitura em tamanho real:** o lobo lê como um corpo só, da cabeça às patas, e a coxa não salta mais; o nariz
+  aparece, mas é um pixel e some um pouco contra o fundo escuro. O urso lê como urso (a cabeça larga, as orelhas, o
+  focinho curto) e pesado ao lado do lobo e do arqueiro; o limite é a silhueta, ainda um pouco triangular de longe, e as
+  patas, que a 1× se juntam num bloco claro na base.

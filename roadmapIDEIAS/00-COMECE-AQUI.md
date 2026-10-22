@@ -5682,3 +5682,11 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   folha `ferramentas/prototipos/hud/acampamento_atacar/rodada3.png`. As rodadas anteriores, o falcão, a E1r e o
   cajado preservados.
 - **Continua:** a avaliação do Jean; nada no jogo (a versão continua 1.169.0).
+
+### 22/10/2026 (data do computador local) — O lobo e o urso, quarta rodada (só no protótipo)
+
+- **Pedido de Jean:** refinar a r3 (`23bb15bb`) pela leitura na cena: no lobo, os claros (a coxa, o peito, as patas) e
+  o nariz; no urso, a cabeça de urso, as patas com peso e a coxa num volume.
+- **Feito:** `animal-lobo-r4` e `animal-urso-r4` pelo conector, conferidos na fogueira; a folha
+  `ferramentas/prototipos/hud/acampamento_atacar/rodada4.png`. A r3, o falcão, a E1r, o cajado e a produção intactos.
+- **Continua:** a avaliação do Jean; nada no jogo (a versão continua 1.169.0).

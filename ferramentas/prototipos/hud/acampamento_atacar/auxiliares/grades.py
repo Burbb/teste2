@@ -138,6 +138,38 @@ URSO_R3 = [V] * 4 + [
     "..UUuuuuUUbUubU.",
     "...tBBUt.BBtBBt.",
 ]
+# A quarta rodada (22/10/2026, pedido do Jean): o refinamento da terceira, julgado na fogueira em tamanho real;
+#   - lobo r4: a mesma pose baixa; a coxa no cinza claro médio (era uma mancha clara), o peito sem o bloco claro
+#     vertical, as patas da frente numa faixa contínua apoiada no chão (o claro em cima, o meio embaixo), a sombra
+#     embaixo do focinho para o nariz escuro ler na ponta;
+#   - urso r4: a cabeça mais larga (oito colunas) com as orelhas redondas nos cantos, o focinho curto e claro com o
+#     nariz escuro na ponta, a linha escura entre a mandíbula e o peito, o corcunda arredondando o alto das costas (a
+#     rampa reta sumiu), o peito num plano claro, as patas da frente com a base larga no chão, a coxa num volume só com
+#     um plano de luz e o pé à frente.
+LOBO_R4 = [V] * 8 + [
+    "...........M.M..",
+    "..........mlMmM.",
+    "..........lmeLLn",
+    ".........mlLlM..",
+    "....mmmmmmllL...",
+    "..mmlllmmmmlm...",
+    ".mmMllmMMmmllLLl",
+    ".sMMMmmMssMmmmLl",
+]
+URSO_R4 = [V] * 4 + [
+    ".......Ub...bU..",
+    ".......ubbbbbu..",
+    ".....UUuubbbbuu.",
+    "....UuuuuubNuBBN",
+    "....UuuuuuuuuBBU",
+    "....UuuuuuUUUU..",
+    "...UuuuuuubbbbU.",
+    "..UuuuuuuubbbuU.",
+    "..UbbbuuuUubbuuU",
+    ".UbbbbuuuUubbuuU",
+    ".UbbbuuuuUubbuuU",
+    "..ttBBttt.uBBBBt",
+]
 CAMADAS = {
     "animal-lobo": (LOBO, ["corpo", "cabeca", "detalhes"],
                     lambda x, y, ch: "detalhes" if ch in "en" else "cabeca" if y <= 11 and x >= 9 else "corpo"),
@@ -150,6 +182,10 @@ CAMADAS = {
     "animal-lobo-r3": (LOBO_R3, ["corpo", "cabeca", "detalhes"],
                        lambda x, y, ch: "detalhes" if ch in "en" else "cabeca" if y <= 11 and x >= 9 else "corpo"),
     "animal-urso-r3": (URSO_R3, ["corpo", "cabeca", "detalhes"],
+                       lambda x, y, ch: "detalhes" if ch == "N" else "cabeca" if y <= 8 and x >= 6 else "corpo"),
+    "animal-lobo-r4": (LOBO_R4, ["corpo", "cabeca", "detalhes"],
+                       lambda x, y, ch: "detalhes" if ch in "en" else "cabeca" if y <= 11 and x >= 9 else "corpo"),
+    "animal-urso-r4": (URSO_R4, ["corpo", "cabeca", "detalhes"],
                        lambda x, y, ch: "detalhes" if ch == "N" else "cabeca" if y <= 8 and x >= 6 else "corpo"),
     "animal-falcao": (FALCAO, ["toco", "corpo", "cabeca", "detalhes"],
                       lambda x, y, ch: "toco" if ch in "TRr" else "detalhes" if ch == "y" else "cabeca" if y <= 7 else "corpo"),

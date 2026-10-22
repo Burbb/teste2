@@ -6,6 +6,7 @@ como está, com o arco aprovado trocado só na página e com a Besta equipada; o
     python auxiliares/prancha.py animais    # animais-cajado.png
     python auxiliares/prancha.py rodada2    # rodada2.png
     python auxiliares/prancha.py rodada3    # rodada3.png
+    python auxiliares/prancha.py rodada4    # rodada4.png
 """
 import json
 import pathlib
@@ -150,16 +151,16 @@ def folha_rodada2():
     print("rodada2.png", out.size)
 
 
-def folha_rodada3():
-    """A terceira rodada (rodada3.png): para o lobo e o urso, a referência gerada (reduzida) e a guia; na fogueira, a
-    segunda rodada × a terceira (o recorte em tamanho real e a 2×, ao lado do arqueiro sentado, com a luz do fogo); as
+def folha_rodada(r_antes, r_depois, saida, titulo):
+    """Uma rodada do lobo e do urso (`saida`): a referência gerada (reduzida) e a guia; na fogueira, a rodada
+    `r_antes` × a `r_depois` (o recorte em tamanho real e a 2×, ao lado do arqueiro sentado, com a luz do fogo); as
     figuras a 8× (segunda | terceira). Sem suavização."""
     import grades as gr
     refs = AQUI.parents[4] / "ferramentas/arte/referencias/icones"
     f, f2 = ImageFont.truetype("arial.ttf", 15), ImageFont.truetype("arial.ttf", 12)
     out = Image.new("RGBA", (1500, 1200), CARVAO)
     d = ImageDraw.Draw(out)
-    d.text((20, 10), "O lobo e o urso pelas referências geradas: antes (segunda rodada) × depois (terceira); proposta, nada no jogo",
+    d.text((20, 10), titulo,
            fill=TEXTO, font=f)
     y = 38
     for t, nome, arq in (("lobo", "Lobo Cinzento, deitado", "Lobo cinzento deitado em pixel art-1.png"),
@@ -172,17 +173,17 @@ def folha_rodada3():
         out.alpha_composite(fundo, (20, y + 18))
         g = Image.new("RGBA", (16, 16), (24, 21, 19, 255)); g.alpha_composite(Image.open(PASTA / f"guias/{t}-guia-16.png").convert("RGBA"))
         out.alpha_composite(amplia(g, 8), (160, y + 18))
-        antes = Image.open(CAP / f"fogueira-{t}-r2.png").convert("RGBA").crop((340, 120, 520, 205))
-        depois = Image.open(CAP / f"fogueira-{t}-r3.png").convert("RGBA").crop((340, 120, 520, 205))
+        antes = Image.open(CAP / f"fogueira-{t}-{r_antes}.png").convert("RGBA").crop((340, 120, 520, 205))
+        depois = Image.open(CAP / f"fogueira-{t}-{r_depois}.png").convert("RGBA").crop((340, 120, 520, 205))
         out.alpha_composite(antes, (300, y + 18)); out.alpha_composite(depois, (490, y + 18))
         out.alpha_composite(amplia(depois, 2), (680, y + 18))
-        for k, ident in enumerate((f"animal-{t}-r2", f"animal-{t}-r3")):
+        for k, ident in enumerate((f"animal-{t}-{r_antes}", f"animal-{t}-{r_depois}")):
             fig = Image.new("RGBA", (16, 16), (24, 21, 19, 255)); fig.alpha_composite(gr.imagem(ident))
             out.alpha_composite(amplia(fig, 8), (1050 + k * 140, y + 18))
         y += 18 + 170 + 16
     out = out.crop((0, 0, 1500, y))
-    out.save(PASTA / "rodada3.png")
-    print("rodada3.png", out.size)
+    out.save(PASTA / saida)
+    print(saida, out.size)
 
 
 if __name__ == "__main__":
@@ -192,6 +193,10 @@ if __name__ == "__main__":
     elif sys.argv[1:] == ["rodada2"]:
         folha_rodada2()
     elif sys.argv[1:] == ["rodada3"]:
-        folha_rodada3()
+        folha_rodada("r2", "r3", "rodada3.png", "O lobo e o urso pelas referências geradas: antes (segunda rodada) × depois "
+                     "(terceira); proposta, nada no jogo")
+    elif sys.argv[1:] == ["rodada4"]:
+        folha_rodada("r3", "r4", "rodada4.png", "O lobo e o urso refinados: antes (terceira rodada, 23bb15bb) × depois "
+                     "(quarta), na fogueira a 1920×945; proposta, nada no jogo")
     else:
         folha()
