@@ -5963,3 +5963,20 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   T2** (o olhar severo sem a mancha escura no olho; as penas em três tufos longos). As folhas `xama-x1r2.png` e
   `harpia-t2.png`.
 - **Continua:** a avaliação do Xamã e da Harpia; outras criaturas, chefes e o mapa não foram começados.
+
+### 22/10/2026 (data do computador local) — A Harpia e o Xamã Caído no jogo (1.184.0)
+
+- **Integrados (aprovados pelo Jean, sem retoque):** a Harpia T2 e o Xamã Caído X1r2, as fontes do `b3f95e28`, pela
+  família, com os afixos e o xamã que escolta o bando de caídos. O Dragão de Gelo continua no `voador`, o cão infernal
+  no `demonio`; o Grifo GA3 e o Caído CA não mudam. Fontes em `ferramentas/arte/aseprite/retrato-harpia/` (a guia
+  oculta) e `retrato-xama-caido/`; exportados numa pasta temporária e comparados byte a byte com as propostas antes de
+  gravar no jogo. Conferido no jogo (`criaturas/rodada_23_10/capturas-1184/`): a Harpia ao lado do Grifo, o Xamã ao lado
+  dos Caídos, o Bestiário, os cartazes e o rastreador; nenhum pedido a `ferramentas/`. Folha:
+  `ferramentas/prototipos/hud/integracoes-22-10/integracoes-1184.png`.
+- **O gabarito** mudou só no retrato `demonio` → `xama_caido` (2 estados de combate e 5 painéis do Bestiário da
+  `arqueiro-42-web`), comparado campo a campo com as transcrições da 1.183; nenhuma partida encontra uma harpia.
+- **Verificações sobre o código final:** `unittest` (655), o gabarito, o pyflakes e uma fumaça inteira.
+- **Ainda genéricos:** 7 famílias (Árvore Desperta, golem de pedra, cavaleiro sombrio, servo esquelético, abominação,
+  cria do Vazio, cão infernal) e 8 guardiões; a lista no plano 23. **Recomendado a seguir:** o cão infernal e a cria do
+  Vazio (as criaturas da Fenda ainda sem retrato).
+- **Continua:** a escolha do próximo par pelo Jean; nenhum desenho novo nem o mapa começados.

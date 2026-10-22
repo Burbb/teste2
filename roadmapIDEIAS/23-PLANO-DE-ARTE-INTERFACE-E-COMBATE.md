@@ -13,7 +13,7 @@ Não iniciar todo o plano numa única tarefa. As etapas técnicas A–I e a vali
 
 ## Estado de referência — 21/10/2026
 
-- Produção: **1.183.0** na branch `claude/tender-einstein-tx3tjl` (22/10/2026: o Grifo GA3 pela família; 23/10/2026: o Caído CA pela família, com os que o
+- Produção: **1.184.0** na branch `claude/tender-einstein-tx3tjl` (22/10/2026: a Harpia T2 e o Xamã Caído X1r2 pela família na 1.184.0; o Grifo GA3 pela família na 1.183.0; 23/10/2026: o Caído CA pela família, com os que o
   xamã ergue; 22/10/2026: o Mercenário MA e o Lobo Gélido LA pela
   família na 1.179.0; o caixote no motivo "Esgotado" do mercado na 1.180.0; o ent jovem e o Ent Ancião renomeados para
   Árvore Desperta e Árvore Anciã, com a migração dos saves, na 1.181.0; a fala da Pita depois do último tratamento na
@@ -1040,31 +1040,30 @@ foi escolhida.
 
 **A frente de criaturas em 22/10/2026 (na 1.174.6; conferido em `dados.retrato` com as 27 famílias e os 10 guardiões
 do catálogo):**
-- **Integrados (21):** pela família, o Afogado, o Lobo, o Bandido, o Troll da montanha, a Aranha gigante, o Sapo-touro,
+- **Integrados (23):** pela família, o Afogado, o Lobo, o Bandido, o Troll da montanha, a Aranha gigante, o Sapo-touro,
   a Sanguessuga, o Cultista, a Bruxa do pântano, o Rato, o Javali, o Carniçal, o Espectro, o Esqueleto, o Mercenário e
-  o Lobo Gélido, o Caído e o Grifo (18; o Esqueleto E1r na 1.175.0, com os que o Lich invoca; o Mercenário MA e o Lobo Gélido LA
+  o Lobo Gélido, o Caído, o Grifo, a Harpia e o Xamã Caído (20; o Esqueleto E1r na 1.175.0, com os que o Lich invoca; o Mercenário MA e o Lobo Gélido LA
   na 1.179.0, com o Invicto da ponte e o Theodore; o MB e o LB guardados como não escolhidos; o Caído CA na 1.182.0, com
-  os que o xamã ergue; o Grifo GA3 na 1.183.0, com o feroz do ninho; o GA e o GA2 como histórico); pela chave da capela, a Ilse; pelo id do guardião, o Rei Troll e
+  os que o xamã ergue; o Grifo GA3 na 1.183.0, com o feroz do ninho; o GA e o GA2 como histórico; a Harpia T2 e o Xamã
+  Caído X1r2 na 1.184.0, com os afixos e o xamã que escolta o bando de caídos); pela chave da capela, a Ilse; pelo id do guardião, o Rei Troll e
   a Rainha Aracnídea. Os animais do patrulheiro (o Urso Pardo, o Falcão Peregrino e o Lobo Cinzento) na carta aliada e
   no painel; os três também na fogueira, pelo tipo (o lobo c2 na 1.170.0, o urso r4 e o falcão na 1.176.0). O cajado
   aprovado no Atacar do Mago (1.177.0).
 - **Fora das criaturas, na 1.180.0:** o ícone do **Esgotado** do mercado (o caixote, papel próprio `MOTIVO`; o cesto
   guardado como não escolhido; o cadeado continua nos outros motivos e usos).
-- **Propostas aguardando o Jean (a terceira passada):** a **Harpia T2** (a T, a base escolhida, com o olhar severo e
-  as penas em três tufos; a referência principal é `Harpia vulturina em pixel art.png`) e o **Xamã X1r2** (o X1r, a
-  base final escolhida, com a pintura branca dos olhos igualada), em `criaturas/rodada_23_10/`; a T e o X1r continuam
-  disponíveis para a comparação. Histórico, não escolhidos: as Harpias HA, HB e H1 a H3, o GB
-  (`criaturas/harpia_grifo/`), o CB, o XA e o XB (`criaturas/caidos/`), os Xamãs X1, X2 e X3.
+- **Nenhuma proposta aguardando o Jean** (22/10/2026, na 1.184.0). Histórico, não escolhidos: as Harpias HA, HB, H1 a
+  H3 e a T, o GB, o GA e o GA2 (`criaturas/harpia_grifo/`, `criaturas/rodada_23_10/`), o CB, o XA e o XB
+  (`criaturas/caidos/`), os Xamãs X1, X2, X3 e o X1r.
   No jogo, os caídos são diabretes, do traço `demonio`. Uso previsto de cada
   um: pela própria família (a carta, o Bestiário, o mural, o rastreador, a faixa do mestre caçador); o Dragão de Gelo
   e o Cão infernal continuam no `voador` e no `demonio`.
 - **Nomenclatura (1.181.0, aprovada pelo Jean):** o **ent jovem** é a **Árvore Desperta** e o **Ent Ancião**, a **Árvore
   Anciã** (árvores vivas: "árvores que acordaram com raiva"; o guardião, "uma árvore milenar"). Os ids `ent_jovem` e
   `ent_anciao`, os números, as habilidades e as regras ficam; os saves antigos passam pela migração v5 → v6.
-- **Ainda nos desenhos genéricos dos traços:** 9 famílias, a harpia (`voador`, o morcego), o cavaleiro
-  sombrio e o servo esquelético (`caveira`), a árvore desperta
-  (`planta`), o golem de pedra (`construto`), a abominação (`corrompido`), a cria do Vazio (`etereo`) e o xamã
-  caído e o cão infernal (`demonio`); 8 guardiões, a Árvore Anciã, a Hidra do Brejo, a Bruxa Afogada, o Dragão de Gelo, o
+- **Ainda nos desenhos genéricos dos traços (levantado em `dados.retrato` na 1.184.0):** 7 famílias, a Árvore
+  Desperta (`planta`), o golem de pedra (`construto`), o cavaleiro sombrio e o servo esquelético do Necromante
+  (`caveira`), a abominação (`corrompido`), a cria do Vazio (`etereo`; também a invocação do antagonista) e o cão
+  infernal (`demonio`, o último); 8 guardiões, a Árvore Anciã, a Hidra do Brejo, a Bruxa Afogada, o Dragão de Gelo, o
   Senhor da Guerra, o Profeta das Cinzas, o Lich Menor (o `etereo` na fase 2) e o Golem Primordial; e, fora do
   catálogo, o antagonista (`humano`) e as crias dele (`etereo`).
 - **Compartilhamentos deliberados:** o Lobo Cinzento aliado com o retrato do Lobo (1.165.0; o lado, o nome e a borda
@@ -1073,12 +1072,13 @@ do catálogo):**
   com o Cultista.
 - **Conceitos reservados (fora do jogo, sem espécie, regra nem mapeamento):** o Esqueleto E2 (um possível mago
   esqueleto) e o Bandido do chapéu (um possível chefe).
-- **Próximos pares recomendados (a escolha é do Jean):** (1) o mercenário e o lobo gélido, integrados na 1.179.0;
-  (2) a harpia e o grifo e (3) o caído e o xamã caído, em avaliação desde 22/10/2026; antes deles, (2) a **harpia e o
-  grifo**, os dois
-  voadores comuns no morcego, que não lê nenhum dos dois (e liberam o `voador` para o Dragão de Gelo, depois); (3) o
-  **caído e o xamã caído**, dois dos três que dividem o `demonio` (o cão infernal pode vir junto ou ficar com eles por
-  família). Os guardiões genéricos ficam para pares próprios, um chefe por vez, depois dos comuns.
+- **Próximos pares recomendados (a escolha é do Jean):** os três primeiros estão no jogo (o mercenário e o lobo
+  gélido, 1.179.0; o caído e o xamã caído, 1.182.0 e 1.184.0; o grifo e a harpia, 1.183.0 e 1.184.0). **O próximo: o
+  cão infernal e a cria do Vazio**, as duas criaturas da Fenda que ainda não têm retrato (`CRIATURAS_DA_FENDA`: aparecem
+  fora do bioma a partir do perigo 4; os dois vivem na Cidadela, e o cão também na montanha). O cão é o último no `demonio` e luta ao lado
+  dos caídos e do xamã, que já têm os seus (a carta da 1.184.0 mostra o contraste); a cria é a invocação do antagonista
+  e aparece em eventos. Depois, a abominação (a outra da Fenda) com o cavaleiro sombrio, e a Árvore Desperta com o golem
+  de pedra. Os guardiões genéricos ficam para pares próprios, um chefe por vez, depois dos comuns.
 
 O atalho **Mapa** da doca já foi concluído; esta frente trata dos símbolos internos de caminhos e mapas.
 Não afirmar que só restam talentos e habilidades após este bloco sem conferir os consumíveis, variantes e
@@ -1221,14 +1221,14 @@ volta à pauta quando essa expansão exigir; não é uma migração de engine.
 
 ## Próxima passagem de trabalho — atualizada em 22/10/2026
 
-1. **Concluídos:** os 31 equipamentos-base (1D); na 1E, o contador de flechas e os 17 estados; 20 criaturas com retrato
-   (18 famílias, a Ilse, o Rei Troll e a Rainha Aracnídea); o ícone do Esgotado do mercado e os três animais do patrulheiro (na carta, no painel e na
+1. **Concluídos:** os 31 equipamentos-base (1D); na 1E, o contador de flechas e os 17 estados; 22 criaturas com retrato
+   (20 famílias, a Ilse, o Rei Troll e a Rainha Aracnídea); o ícone do Esgotado do mercado e os três animais do patrulheiro (na carta, no painel e na
    fogueira); o cajado no Atacar do Mago. As variantes e os compartilhamentos provisórios ficam abertos, separados.
 2. **Agora, 1E.3:** as demais criaturas, os chefes e as invocações, em pares pequenos escolhidos pelo Jean, pelo mesmo
    caminho (o retrato por família, por chave ou pelo tipo, sem trocar o sprite compartilhado). O Mercenário, o Lobo
-   Gélido e o Esgotado integrados (1.179.0, 1.180.0); o Caído CA (1.182.0); o Grifo GA3 (1.183.0). **Aguardando o Jean:** a
-   Harpia T2 (× T) e o Xamã X1r2 (× X1r) (`criaturas/rodada_23_10/`, a terceira passada); depois, os outros comuns e os chefes, sem começar
-   antes do pedido. A relação em "A frente de criaturas em 22/10/2026" (item 1.12). O Esqueleto E2 e o Bandido do
+   Gélido e o Esgotado integrados (1.179.0, 1.180.0); o Caído CA (1.182.0); o Grifo GA3 (1.183.0); a Harpia T2 e o Xamã
+   Caído X1r2 (1.184.0). **A seguir, quando o Jean pedir:** o cão infernal e a cria do Vazio (recomendado); depois, os
+   outros comuns e os chefes, sem começar antes do pedido. A relação em "A frente de criaturas em 22/10/2026" (item 1.12). O Esqueleto E2 e o Bandido do
    chapéu estão reservados.
 3. **Depois, 1E.4:** os caminhos/destinos e os símbolos internos do mapa e do minimapa.
 4. **Retomar a etapa 2** e **seguir 3–7**, como na sequência abaixo; **etapa 8** com habilidades, talentos, Grimório e
