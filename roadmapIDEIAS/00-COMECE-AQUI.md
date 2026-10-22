@@ -6023,3 +6023,15 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **No protótipo, aguardando o Jean:** o **Cão N** (`criaturas/fenda/`, a terceira seção do LEIA-ME), a construção nova
   depois da recusa do T, resolvida a 32 px; a folha `cao-n.png` (T × N com o Lobo, o Lobo Gélido e o Caído).
 - **Continua:** a avaliação do Cão; outras criaturas, chefes e o mapa não foram começados.
+
+### 22/10/2026 (data do computador local) — O retoque do rosto do Cão: o N2 (nada no jogo)
+
+- **Estado conferido:** a branch em `0c17200d`, sem alterações locais; produção na 1.185.0 (a Cria do Vazio integrada
+  não mudou). A fonte do N conferida contra a grade antes do retoque.
+- **No protótipo, aguardando o Jean (`criaturas/fenda/`, a quarta seção do LEIA-ME):** o **Cão N2**, só as linhas 7 a 14
+  do N: o nariz como ponta sólida (o risco era o brilho sobre um nariz negro que sumia), o lábio levantado com a gengiva
+  e a abertura estreita com as presas de obsidiana, a mandíbula separada do pescoço por uma sombra. A folha
+  `cao-n2.png` (N × N2). Limitação: o rosnado é contido (a boca é pequena) e o focinho continua curto.
+- **Processo:** o retoque numa cópia da fonte em camadas pelo conector do Aseprite (0 diferentes; o composto = as
+  camadas); exportação igual à grade, @2x exato, 32 e 48 em blocos inteiros; fotos no modo `e`, sem erro no console.
+- **Continua:** a avaliação do Cão; outras criaturas, chefes e o mapa não foram começados.
