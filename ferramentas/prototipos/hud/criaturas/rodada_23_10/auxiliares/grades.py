@@ -48,6 +48,12 @@ PALETAS = {
         "B": "2e2420", "b": "4e3c32", "F": "6e5440", "D": "1e1816",  # as penas escuras das asas
     },
     "xama": {**_CAIDOS.PALETAS["a"], "q": "2a1a1a", "Q": "7a2a26"},  # o vermelho do CA; as penas do cocar
+    "harpia_t": {  # as cores medidas na referência "Harpia vulturina em pixel art.png"
+        "p": "e0c4ac", "P": "b48f78", "x": "86604f", "X": "573a30",  # a pele pálida (luz, meio, sombra, sombra funda)
+        "m": "8a5450", "e": "e09a2a", "E": "9a6420", "k": "1c1210",  # a boca; o olho âmbar (o de trás mais escuro)
+        "h": "2a1e1a", "H": "4a372d", "j": "735443",  # as penas escuras (o corpo, a luz de cada tufo, a raiz clara)
+        "c": "e2d1b5", "C": "b39d82", "Q": "7d6853",  # a gola clara de abutre
+    },
 }
 
 GA2 = list(_GRIFO.GA)
@@ -165,6 +171,61 @@ X3 = [
     "DRRRRRFFRRRRRRDD",
 ]
 
+# A segunda rodada (pedido do Jean; propostas, nada no jogo). As anteriores ficam como histórico.
+# T, a Harpia pela referência nova (ferramentas/arte/referencias/icones/"Harpia vulturina em pixel art.png", imagem
+# gerada na conversa com o Jean): redesenhada à mão na grade de 16, medindo na guia oculta (guias/harpia-t-guia-16.png,
+# o recorte quadrado de 1000 px a partir de (200, 120), reduzido por média: cada pixel vale 62,5 px da referência). Em
+# três quartos para a esquerda, como nela: a testa pálida, a sobrancelha pesada descendo para o nariz (o olhar cruel), o
+# olho âmbar da frente sob ela e o de trás mais escuro (em perspectiva; dois iguais liam como óculos), o nariz curvo
+# saindo do perfil, a boca fechada numa linha (sem o escuro sob o nariz, que a alargava), o queixo e a sombra da
+# mandíbula; as penas escuras nascendo das duas têmporas e varrendo para trás em cinco tufos, cada um com a luz em
+# cima (o salpicado de tons lia como cabelo crespo); o pescoço na sombra entrando na gola clara de abutre; os ombros de
+# penas escuras ligados ao cabelo pelo lado direito. Os fios e as rugas da referência não cabem: ficam agrupados.
+HARPIA_T = [
+    "....hHHh..Hh....",
+    "..hjjhhhhHhhh...",
+    ".hjPpPhHHhhhHH..",
+    ".hpppPjhhhHHhhh.",
+    ".PpppPjhHHhhhHh.",
+    ".hPxXXxjhhhHHh..",
+    ".hEpkePjhHHhhhh.",
+    "..pPppPxHhhhHh..",
+    ".pxPpPPxhhHHhh..",
+    "...mmPPxxHhhhh..",
+    "...ppPXxPxCCchh.",
+    "...QxXXxPxCcccCh",
+    "hhHCcCQxPPcCcHhh",
+    "hjhcCcQxPcccHjHh",
+    "HhhcCcccCccCchjh",
+    "hhHCcCccCccCHhhH",
+]
+# GA3, o gancho do bico do GA2: a ponta escura sai de baixo da mandíbula (13,8), que termina amarela, e desce um pixel
+# da própria extremidade (14,8), num marrom do pelo que aparece contra a caixa escura (o `d` sumia nela). O resto é o
+# GA2 pixel a pixel.
+GA3 = list(GA2)
+GA3[8] = ".qOwwWWWwyyYYYq."
+# X1r, o X1 refinado: a cabeça igual, pixel a pixel (subir o rosto uma linha para ganhar testa alongava a cara e a
+# afastava do CA); o colar encolhe para um U pequeno de cinco contas logo abaixo do queixo, na sombra o de baixo, e a
+# capa fecha a parte de baixo: o queixo e o pescoço respiram e o colar deixa de ocupar a base.
+X1R = list(X1)
+X1R[11:16] = [
+    ".CccCRRrrRRCccC.",
+    "CcccCbRrrRbCcccC",
+    "CcccCHbRRbHCcccC",
+    "CCcccCCHHCCcccCC",
+    "CCCcccccccccCCCC",
+]
+
+
+def _camada_harpia_t(x, y, ch):
+    if ch in "eEkm":
+        return "rosto"
+    if ch in "pPxX":
+        return "pescoco" if y >= 11 or (y >= 9 and x >= 7) else "rosto"
+    if ch in "hHj":
+        return "cabelo" if y <= 10 else "penas"
+    return "gola"
+
 
 def _camada_harpia(x, y, ch):
     if ch in "ke" or (ch == "m" and y < 12):
@@ -199,12 +260,16 @@ CAMADAS = {
     "xama-caido-x1": (X1, "xama", ["pele", "adornos", "chifres", "olhos", "boca"], _camada_xama),
     "xama-caido-x2": (X2, "xama", ["pele", "adornos", "cajado", "chifres", "olhos", "boca", "fogo"], _camada_xama),
     "xama-caido-x3": (X3, "xama", ["pele", "adornos", "chifres", "olhos", "boca", "fogo"], _camada_xama),
+    "harpia-t": (HARPIA_T, "harpia_t", ["penas", "gola", "pescoco", "cabelo", "rosto"], _camada_harpia_t),
+    "grifo-ga3": (GA3, "grifo", ["pelo", "cabeca", "bico", "olho"], _GRIFO.CAMADAS["grifo-ga"][3]),
+    "xama-caido-x1r": (X1R, "xama", ["pele", "adornos", "chifres", "olhos", "boca"],  # as contas em sombra no colar
+                       lambda x, y, ch: "adornos" if ch == "H" and y >= 11 else _camada_xama(x, y, ch)),
 }
 
 
 def cor(ident, ch):
     paleta = PALETAS[CAMADAS[ident][1]]
-    if ident == "xama-caido-x1" and ch == "w":
+    if ident in ("xama-caido-x1", "xama-caido-x1r") and ch == "w":
         return "e8dcc0"  # a pintura branca do X1 (o osso do catálogo dos caídos)
     if ident == "xama-caido-x2" and ch == "W":
         return "d8ccac"  # o osso do cajado

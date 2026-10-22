@@ -1,7 +1,8 @@
 // As fotos da rodada depois do Caído CA (protótipo; nada no jogo), a 1920×945 e com os mesmos dados em cada modo: uma
 // luta (o Arqueiro com o Falcão Peregrino do lado; dois caídos com o retrato de produção e o xamã) e o Bestiário. Modos:
 // "atual" (o jogo), "antes" (o GA, a HA e o XA da rodada anterior), "a", "b" e "c" (o GA2 nos três; a H1, H2, H3; o
-// X1, X2, X3), trocados só na página, nas cartas inimigas e nos cartões do Bestiário, pelo nome.
+// X1, X2, X3) e "d", a segunda rodada (o GA3, a Harpia T e o X1r), trocados só na página, nas cartas inimigas e nos
+// cartões do Bestiário, pelo nome.
 //   [MODOS=atual,a,b] PLAYWRIGHT_MODULO=<file:// do index.mjs> node fotografar.mjs <raiz> <pasta das fotos>
 import { spawn } from "child_process";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
@@ -16,11 +17,11 @@ const dados = (pasta, id) => "data:image/png;base64," + readFileSync(path.join(a
 // cada criatura: o nome na carta e o desenho de cada modo
 const P = "../proposta";
 const BICHOS = [
-  ["^Grifo", { antes: ["../../harpia_grifo/proposta", "grifo-ga"], a: [P, "grifo-ga2"], b: [P, "grifo-ga2"], c: [P, "grifo-ga2"] }],
-  ["^Harpia", { antes: ["../../harpia_grifo/proposta", "harpia-ha"], a: [P, "harpia-h1"], b: [P, "harpia-h2"], c: [P, "harpia-h3"] }],
-  ["^Xamã", { antes: ["../../caidos/proposta", "xama-caido-xa"], a: [P, "xama-caido-x1"], b: [P, "xama-caido-x2"], c: [P, "xama-caido-x3"] }],
+  ["^Grifo", { antes: ["../../harpia_grifo/proposta", "grifo-ga"], a: [P, "grifo-ga2"], b: [P, "grifo-ga2"], c: [P, "grifo-ga2"], d: [P, "grifo-ga3"] }],
+  ["^Harpia", { antes: ["../../harpia_grifo/proposta", "harpia-ha"], a: [P, "harpia-h1"], b: [P, "harpia-h2"], c: [P, "harpia-h3"], d: [P, "harpia-t"] }],
+  ["^Xamã", { antes: ["../../caidos/proposta", "xama-caido-xa"], a: [P, "xama-caido-x1"], b: [P, "xama-caido-x2"], c: [P, "xama-caido-x3"], d: [P, "xama-caido-x1r"] }],
 ];
-const TROCAS = Object.fromEntries(["antes", "a", "b", "c"].map((m) => [m, BICHOS.map(([n, ms]) => [n, dados(...ms[m])])]));
+const TROCAS = Object.fromEntries(["antes", "a", "b", "c", "d"].map((m) => [m, BICHOS.map(([n, ms]) => [n, dados(...ms[m])])]));
 const MODOS = (process.env.MODOS || "atual,antes,a,b,c").split(",");
 const GRUPO = "harpia:1,grifo:1,caido:2,xama_caido:1";
 const SITUACOES = [
