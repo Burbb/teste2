@@ -6058,3 +6058,14 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Processo:** o retoque numa cópia da fonte em camadas pelo conector do Aseprite (0 diferentes; o composto = as
   camadas); exportação igual à grade, @2x exato, 32 e 48 em blocos inteiros; fotos no modo `i`, sem erro no console.
 - **Continua:** a avaliação do Cão; outras criaturas, chefes e o mapa não foram começados.
+
+### 22/10/2026 (data do computador local) — Os dentes da RA2 refeitos: a RA3 (nada no jogo)
+
+- **Estado conferido:** a branch em `c36bec5c`, sem alterações locais; produção na 1.185.0.
+- **No protótipo, aguardando o Jean (`criaturas/fenda/`, a sétima seção do LEIA-ME):** a **RA3**, só as linhas 8 a 10 da
+  RA2: a presa de cima saindo do maxilar com a face iluminada em cinza de obsidiana e a de baixo menor, mais atrás,
+  saindo da mandíbula (na RA2, a presa quase negra sumia e a boca parecia banguela). A folha `cao-ra3.png`. Limitação a
+  32: a presa de baixo é um pixel discreto.
+- **Processo:** o retoque numa cópia da fonte em camadas pelo conector do Aseprite (0 diferentes; o composto = as
+  camadas); exportação igual à grade, @2x exato, 32 e 48 em blocos inteiros; fotos no modo `j`, sem erro no console.
+- **Continua:** a avaliação do Cão; outras criaturas, chefes e o mapa não foram começados.
