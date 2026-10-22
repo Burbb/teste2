@@ -2,7 +2,7 @@
 1920×945 em tamanho real e a 2× (a da cria também como invocada pelo antagonista), o cartão do Bestiário (48) em tamanho
 real, a fileira com os retratos aprovados pertinentes (na caixa da carta, real e 3×) e a 12× com a grade, sem
 suavização. Tudo trocado só na página (protótipo).
-    python prancha.py [cao|cria|cria-a2|cao-t|cao-n|cao-n2|cao-r|cao-ra2|cao-ra3 ...]      (depois do fotografar.mjs)
+    python prancha.py [cao|cria|cria-a2|cao-t|cao-n|cao-n2|cao-r|cao-ra2|cao-ra3|cao-p ...]      (depois do fotografar.mjs)
 """
 import json
 import pathlib
@@ -59,6 +59,12 @@ CRIATURAS = {
     "cao-ra3": ("Cão infernal", [("RA2 (a boca banguela)", "i", "cao-infernal-ra2"),
                                  ("RA3, as presas de obsidiana em cinza", "j", "cao-infernal-ra3")],
                 ("lobo", "lobo-gelido", "caido", "xama-caido", "cria-vazio"), ["luta-cao"]),
+    # três bocas cheias sobre a cabeça da RA3
+    "cao-p": ("Cão infernal", [("RA3", "j", "cao-infernal-ra3"),
+                               ("P1, a bocarra de presas", "k", "cao-infernal-p1"),
+                               ("P2, a boca fechada", "l", "cao-infernal-p2"),
+                               ("P3, o lábio repuxado", "m", "cao-infernal-p3")],
+              ("lobo", "lobo-gelido", "caido", "xama-caido", "cria-vazio"), ["luta-cao"]),
 }
 REFERENCIAS = AQUI.parents[5] / "ferramentas/arte/referencias/icones"
 

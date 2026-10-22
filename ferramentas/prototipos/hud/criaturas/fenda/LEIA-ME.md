@@ -346,3 +346,25 @@ os dentes e o contraste dentro da boca. A RA2 continua aqui como estava.
 - As fotos no modo `j` (`MODOS=j`), a 1920×945, com os mesmos dados, sem erro no console. A folha `cao-ra3.png`
   (`python auxiliares/prancha.py cao-ra3`): RA2 × RA3 na carta e no Bestiário, a fileira com os aprovados, a 12× para o
   diagnóstico.
+
+# Três bocas cheias: P1, P2 e P3 (22/10/2026, propostas; nada no jogo)
+
+**O pedido do Jean:** três variações da boca preenchida ("várias presas pontiagudas, boca fechada"). A cabeça e a
+paleta são as da RA3; só a boca muda, da linha 7 em diante. A RA3 continua aqui como estava.
+
+- **P1, a bocarra de presas** (`cao-infernal-p1`): a gengiva à mostra, várias presas pontudas de tamanhos diferentes em
+  cima (as longas na frente e no meio) e embaixo, o escuro entre elas e o calor no fundo.
+- **P2, a boca fechada** (`cao-infernal-p2`): os lábios fechados, com as presas por fora (a de cima desce sobre o lábio
+  de baixo na frente, a de baixo sobe pelo de cima mais atrás) e o calor vazando pela fresta; a mandíbula sobe.
+- **P3, o lábio repuxado** (`cao-infernal-p3`): a gengiva alta, uma fileira irregular de presas (as longas na frente e
+  no meio, descendo sobre o lábio de baixo), o calor entre elas, a mandíbula quase fechada.
+
+**A minha leitura (quem escolhe é o Jean):** **prefiro a P3**: na carta é a que mais lê como rosnado com várias presas,
+sob o lábio repuxado. **Limitação:** as presas alternadas com o calor ainda lembram um pouco a fileira regular. A P1 é
+a mais cheia de dentes, mas a 32 vira um emaranhado claro na boca. A P2 é a mais contida e limpa, mas o rosnado fica
+fraco (a ameaça vem das pontas das presas e da fresta acesa).
+
+**Processo:** as grades em `auxiliares/grades.py` (`CAO_P1`, `CAO_P2`, `CAO_P3`, sobre a `CAO_RA3`); as fontes pelo
+conector do Aseprite (0 diferentes na releitura; os compostos 185, 180 e 183 = as camadas); a exportação igual à grade,
+o @2x exato, o 32 e o 48 em blocos inteiros. As fotos nos modos `k`, `l` e `m`, a 1920×945, sem erro no console. A folha
+`cao-p.png` (`python auxiliares/prancha.py cao-p`): RA3 × P1 × P2 × P3.

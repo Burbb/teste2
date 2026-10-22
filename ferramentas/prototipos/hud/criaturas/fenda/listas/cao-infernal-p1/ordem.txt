@@ -1,0 +1,1 @@
+corpo,nariz,brasa,boca,dentes,olhos

@@ -313,6 +313,42 @@ CAO_RA3[8:11] = [
     ".vgvvvrOkccccddd",
     ".vvvgmrOkcccddod",
 ]
+# P, três bocas cheias (pedido do Jean: "várias presas pontiagudas, boca fechada"), sobre a cabeça e a paleta da RA3;
+# só a boca muda, das linhas 7 em diante.
+def _boca_ra3(linhas):
+    g = list(CAO_RA3)
+    g[7:7 + len(linhas)] = linhas
+    return g
+
+
+# P1, a bocarra de presas: a gengiva à mostra, várias presas pontudas de tamanhos diferentes em cima (as longas na
+# frente e no meio) e embaixo, o escuro entre elas e o calor no fundo.
+CAO_P1 = _boca_ra3([
+    "kCrrrrCkcccccccd",
+    ".gsgvgrrkcccccdd",
+    ".gvvvgOykccccddd",
+    ".vgvgvrOkcccddod",
+    ".kgCgCCkkcccddod",
+])
+# P2, a boca fechada com as presas por fora: a de cima desce sobre o lábio de baixo na frente, a de baixo sobe pelo de
+# cima mais atrás; o calor vaza pela fresta entre os lábios; a mandíbula sobe (a boca fechada).
+CAO_P2 = _boca_ra3([
+    "kCCCCgCkcccccccd",
+    ".CCCCsCkccccccdd",
+    ".gkOrOrkkccccddd",
+    ".gCCCCCkkcccddod",
+    "..kCCCkkcccdddd.",
+    "....kkkddddddd..",
+])
+# P3, o lábio repuxado: a gengiva alta, uma fileira irregular de presas (as longas na frente e no meio, descendo sobre o
+# lábio de baixo), o calor entre elas, a mandíbula quase fechada.
+CAO_P3 = _boca_ra3([
+    "kCrrrrrkcccccccd",
+    ".rgsggsrkcccccdd",
+    ".gvOgvOkkccccddd",
+    ".gCCgCCkkcccddod",
+    "..kCCCkkcccdddd.",
+])
 
 # Histórico (fora da exportação): a primeira B, de pernas finas, que virava um emaranhado na carta.
 CRIA_B_FINA = [
@@ -368,6 +404,9 @@ CAMADAS = {  # a grade, a paleta, as camadas de baixo para cima e a camada de ca
     "cao-infernal-rc": (CAO_RC, "cao_n2", ["corpo", "nariz", "brasa", "boca", "dentes", "olhos"], _camada_cao_r),
     "cao-infernal-ra2": (CAO_RA2, "cao_ra2", ["corpo", "nariz", "brasa", "boca", "dentes", "olhos"], _camada_cao_r),
     "cao-infernal-ra3": (CAO_RA3, "cao_ra3", ["corpo", "nariz", "brasa", "boca", "dentes", "olhos"], _camada_cao_r),
+    "cao-infernal-p1": (CAO_P1, "cao_ra3", ["corpo", "nariz", "brasa", "boca", "dentes", "olhos"], _camada_cao_r),
+    "cao-infernal-p2": (CAO_P2, "cao_ra3", ["corpo", "nariz", "brasa", "boca", "dentes", "olhos"], _camada_cao_r),
+    "cao-infernal-p3": (CAO_P3, "cao_ra3", ["corpo", "nariz", "brasa", "boca", "dentes", "olhos"], _camada_cao_r),
 }
 
 

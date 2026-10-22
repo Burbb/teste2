@@ -6069,3 +6069,11 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Processo:** o retoque numa cópia da fonte em camadas pelo conector do Aseprite (0 diferentes; o composto = as
   camadas); exportação igual à grade, @2x exato, 32 e 48 em blocos inteiros; fotos no modo `j`, sem erro no console.
 - **Continua:** a avaliação do Cão; outras criaturas, chefes e o mapa não foram começados.
+
+### 22/10/2026 (data do computador local) — Três bocas cheias do Cão: P1, P2 e P3 (nada no jogo)
+
+- **No protótipo, aguardando o Jean (`criaturas/fenda/`, a oitava seção do LEIA-ME):** sobre a cabeça da RA3, **P1** (a
+  bocarra de presas), **P2** (a boca fechada com as presas por fora) e **P3** (o lábio repuxado com a fileira irregular
+  de presas). A folha `cao-p.png`. Minha preferência: a P3.
+- **Processo:** fontes pelo conector do Aseprite (0 diferentes; o composto = as camadas); exportação igual à grade, @2x
+  exato, 32 e 48 em blocos inteiros; fotos nos modos `k`, `l` e `m`, sem erro no console.
