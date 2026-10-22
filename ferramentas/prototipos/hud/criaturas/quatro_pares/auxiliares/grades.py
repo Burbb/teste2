@@ -98,6 +98,95 @@ SANG_B = [
     "aAaAasssssaAaAaA",
 ]
 
+# Par 2, os conjuradores humanos: o cultista e a bruxa do pântano (os dois hoje no "humano", o bandido de lenço)
+CORES2 = {
+    # o cultista: o manto vermelho-escuro (do escuro ao claro), a pele, a sombra da pele, o olho, a marca violeta da Fenda
+    "V": "241010", "v": "461c1c", "x": "6a2a26", "X": "8c3c30", "F": "c4a284", "f": "8e6a54", "E": "1a1210", "Z": "9a6ac0",
+    "z": "5a3a7a",
+    # a bruxa: o chapéu e o xale (o escuro, o meio, o musgo), a pele, a pele na sombra, o olho branco, o olho, o cabelo, o
+    # frasco verde (a cura e o veneno)
+    "H": "1f1c16", "h": "3a352a", "m": "4f5a2e", "M": "6f7a3a", "P": "b0a48a", "p": "7e745e", "c": "c8c4b4", "e": "141210",
+    "q": "8a8478", "Q": "b8b4a8", "G": "6cc04a", "g": "3a7a2e",
+}
+# Cultista A, encapuzado de frente: o capuz vermelho-escuro, o rosto na sombra, a marca violeta da Fenda na testa e no
+# peito
+CULT_A = [
+    "......xxxx......",
+    ".....xXXxxv.....",
+    "....xXxxxxvv....",
+    "...xXxVVVVvvv...",
+    "...xXVVZZVVvv...",
+    "..xXxVfzzfVvvv..",
+    "..xXvVEffEVvvv..",
+    "..xXvVfFFfVvvv..",
+    "..xXvVfFFfVvvv..",
+    "..xxvVVffVVvvv..",
+    ".xXxvvVVVVvvvvv.",
+    ".xXxxvvzZvvvvvv.",
+    "xXxxxvvzZvvvvvvv",
+    "xXxxvvvzZvvvvvVV",
+    "xxxvvvvvvvvvvVVV",
+    "xxvvvvvvvvvvVVVV",
+]
+# Cultista B, sem capuz: a cabeça raspada com a cicatriz ritual em fenda, o olhar fixo, a boca fina, o manto com a faixa
+CULT_B = [
+    "................",
+    "......ffFFf.....",
+    ".....fFFFFFf....",
+    "....fFFFZFFff...",
+    "....FFFFzFFff...",
+    "....FFFFzFFff...",
+    "....FcEFzFcEf...",
+    "....fFFFFFFff...",
+    ".....FfFfFff....",
+    ".....fFfffFf....",
+    "......fFFff.....",
+    "...xxXxffxxvv...",
+    "..xXXxxxxxxvvV..",
+    ".xXxxzZzZzxvvVV.",
+    "xXxxxxxxxxxvvVVV",
+    "xxxxxxxxxxvvvVVV",
+]
+# Bruxa A, a velha do chapéu: a aba mole com musgo, o cabelo grisalho, um olho branco, a boca pequena, o xale
+BRUXA_A = [
+    "................",
+    "......hhhh......",
+    ".....hMmhhh.....",
+    "....hMmmhhhh....",
+    "..HhhhhhhhhhhhH.",
+    ".HhhmmhhhhhhmhhH",
+    "...qqPPPPppqq...",
+    "..qqPcePPePpq...",
+    "..qqPPPPPPppq...",
+    "..q.PPPPPppqq...",
+    "..q.pPPPpppq....",
+    "..qq.ppEppqq....",
+    "..hhhmmppmmhhh..",
+    ".hhhhmmhhmmhhhh.",
+    "hhhhhhhhhhhhhhhh",
+    "HHhhhhhhhhhhhhHH",
+]
+# Bruxa B, encapuzada com o frasco: o sorriso torto e o frasco verde de rolha erguido na mão ("curas, maldições e às
+# vezes as duas coisas no mesmo frasco")
+BRUXA_B = [
+    "................",
+    ".....hhhhh......",
+    "....hhmmhhh.....",
+    "...hhmPPPhhh....",
+    "...hmPPPPPhh....",
+    "...hPePPePhh....",
+    "...hPPPPPPhh....",
+    "...hPPpEEphh....",
+    "...hhpPPphhh.cc.",
+    "..hhhhppphhh.Qq.",
+    ".hhhhhhhhhhhgGGg",
+    ".hhhhhhhhhhhGGGg",
+    "hhhhhhhhhhhhgGgP",
+    "hhhhhhhhhhhhhPPp",
+    "hhhhhhhhhhhhhhhh",
+    "HHhhhhhhhhhhhhHH",
+]
+
 CAMADAS = {
     "sapo-a": (SAPO_A, ["corpo", "barriga", "olhos", "manchas"],
                lambda x, y, ch: "olhos" if ch in "Yk" else "manchas" if ch == "O" else "barriga" if ch in "cCM" else "corpo"),
@@ -107,7 +196,17 @@ CAMADAS = {
                       lambda x, y, ch: "agua" if ch in "Aa" else "boca" if ch in "RPkr" and y <= 8 else "corpo"),
     "sanguessuga-b": (SANG_B, ["agua", "corpo", "boca"],
                       lambda x, y, ch: "agua" if ch in "Aa" else "boca" if ch in "RPk" and y <= 5 else "corpo"),
+    "cultista-a": (CULT_A, ["manto", "rosto", "marca"],
+                   lambda x, y, ch: "marca" if ch in "Zz" else "rosto" if ch in "FfE" else "manto"),
+    "cultista-b": (CULT_B, ["manto", "rosto", "marca"],
+                   lambda x, y, ch: "marca" if ch in "Zz" else "rosto" if ch in "FfEc" else "manto"),
+    "bruxa-a": (BRUXA_A, ["xale", "cabelo", "rosto", "chapeu"],
+                lambda x, y, ch: "chapeu" if y <= 5 else "cabelo" if ch in "qQ" else "rosto" if ch in "Ppce" else "xale"),
+    "bruxa-b": (BRUXA_B, ["capuz", "rosto", "frasco"],
+                lambda x, y, ch: "frasco" if ch in "GgcQq" or (x >= 12 and ch in "Pp") else "rosto" if ch in "Ppe" else "capuz"),
 }
+# o mapa de cores de cada desenho (o par 1 usa CORES; os outros pares, o próprio)
+PALETA = {"cultista-a": CORES2, "cultista-b": CORES2, "bruxa-a": CORES2, "bruxa-b": CORES2}
 
 
 def imagem(ident):
@@ -115,7 +214,7 @@ def imagem(ident):
     for y, l in enumerate(CAMADAS[ident][0]):
         for x, ch in enumerate(l):
             if ch != ".":
-                im.putpixel((x, y), tuple(int(CORES[ch][i:i + 2], 16) for i in (0, 2, 4)) + (255,))
+                im.putpixel((x, y), tuple(int(PALETA.get(ident, CORES)[ch][i:i + 2], 16) for i in (0, 2, 4)) + (255,))
     return im
 
 
@@ -129,7 +228,7 @@ def gravar(base, ids=None):
         for y, l in enumerate(grade):
             for x, ch in enumerate(l):
                 if ch != ".":
-                    listas[camada(x, y, ch)].append(f"{x},{y},{CORES[ch]}")
+                    listas[camada(x, y, ch)].append(f"{x},{y},{PALETA.get(ident, CORES)[ch]}")
         d = base / f"listas/{ident}"
         d.mkdir(parents=True, exist_ok=True)
         for k, v in listas.items():

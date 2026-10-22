@@ -22,6 +22,10 @@ PARES = {
         [("Sapo-touro gigante", "sapo", "A, de frente (a cabeçorra)", "B, de perfil (o papo)"),
          ("Sanguessuga gigante", "sanguessuga", "A, empinada (a ventosa)", "B, em curva"),],
         ("afogado", "lobo", "troll", "aranha")),
+    2: ("Par 2, os conjuradores humanos: o cultista e a bruxa do pântano",
+        [("Cultista", "cultista", "A, encapuzado (a marca da Fenda)", "B, sem capuz (a cicatriz ritual)"),
+         ("Bruxa do pântano", "bruxa", "A, a velha do chapéu", "B, encapuzada com o frasco")],
+        ("bandido", "ilse", "afogado", "troll")),
 }
 
 

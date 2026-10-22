@@ -217,5 +217,224 @@
     ]
    }
   ]
+ },
+ "par2/luta/atual": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Cultista",
+    "caixa": [
+     830,
+     38,
+     1040,
+     88
+    ]
+   },
+   {
+    "nome": "Cultista",
+    "caixa": [
+     830,
+     96,
+     1040,
+     146
+    ]
+   },
+   {
+    "nome": "Bruxa do pântano",
+    "caixa": [
+     830,
+     154,
+     1040,
+     204
+    ]
+   }
+  ]
+ },
+ "par2/luta/a": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Cultista",
+    "caixa": [
+     830,
+     38,
+     1040,
+     88
+    ]
+   },
+   {
+    "nome": "Cultista",
+    "caixa": [
+     830,
+     96,
+     1040,
+     146
+    ]
+   },
+   {
+    "nome": "Bruxa do pântano",
+    "caixa": [
+     830,
+     154,
+     1040,
+     204
+    ]
+   }
+  ]
+ },
+ "par2/luta/b": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Cultista",
+    "caixa": [
+     830,
+     38,
+     1040,
+     88
+    ]
+   },
+   {
+    "nome": "Cultista",
+    "caixa": [
+     830,
+     96,
+     1040,
+     146
+    ]
+   },
+   {
+    "nome": "Bruxa do pântano",
+    "caixa": [
+     830,
+     154,
+     1040,
+     204
+    ]
+   }
+  ]
+ },
+ "par2/bestiario/atual": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Afogado",
+    "caixa": [
+     585,
+     248,
+     935,
+     403
+    ]
+   },
+   {
+    "nome": "Bandido",
+    "caixa": [
+     945,
+     248,
+     1295,
+     403
+    ]
+   },
+   {
+    "nome": "Bruxa do pântano",
+    "caixa": [
+     585,
+     413,
+     935,
+     568
+    ]
+   },
+   {
+    "nome": "Cultista",
+    "caixa": [
+     945,
+     413,
+     1295,
+     568
+    ]
+   }
+  ]
+ },
+ "par2/bestiario/a": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Afogado",
+    "caixa": [
+     585,
+     248,
+     935,
+     403
+    ]
+   },
+   {
+    "nome": "Bandido",
+    "caixa": [
+     945,
+     248,
+     1295,
+     403
+    ]
+   },
+   {
+    "nome": "Bruxa do pântano",
+    "caixa": [
+     585,
+     413,
+     935,
+     568
+    ]
+   },
+   {
+    "nome": "Cultista",
+    "caixa": [
+     945,
+     413,
+     1295,
+     568
+    ]
+   }
+  ]
+ },
+ "par2/bestiario/b": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Afogado",
+    "caixa": [
+     585,
+     248,
+     935,
+     403
+    ]
+   },
+   {
+    "nome": "Bandido",
+    "caixa": [
+     945,
+     248,
+     1295,
+     403
+    ]
+   },
+   {
+    "nome": "Bruxa do pântano",
+    "caixa": [
+     585,
+     413,
+     935,
+     568
+    ]
+   },
+   {
+    "nome": "Cultista",
+    "caixa": [
+     945,
+     413,
+     1295,
+     568
+    ]
+   }
+  ]
  }
 }

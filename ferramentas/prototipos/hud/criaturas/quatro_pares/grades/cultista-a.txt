@@ -1,0 +1,16 @@
+......xxxx......
+.....xXXxxv.....
+....xXxxxxvv....
+...xXxVVVVvvv...
+...xXVVZZVVvv...
+..xXxVfzzfVvvv..
+..xXvVEffEVvvv..
+..xXvVfFFfVvvv..
+..xXvVfFFfVvvv..
+..xxvVVffVVvvv..
+.xXxvvVVVVvvvvv.
+.xXxxvvzZvvvvvv.
+xXxxxvvzZvvvvvvv
+xXxxvvvzZvvvvvVV
+xxxvvvvvvvvvvVVV
+xxvvvvvvvvvvVVVV

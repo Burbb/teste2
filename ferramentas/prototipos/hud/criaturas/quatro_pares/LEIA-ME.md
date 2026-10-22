@@ -54,3 +54,26 @@ os outros guardiões), o antagonista, os servos aliados e os aliados; nenhum her
   - **sanguessuga: a A.** Forte: a ventosa de dentes, a ameaça e a identidade (uma sanguessuga, não um verme comum).
     Limite: o corpo em anéis, reto, lembra um pouco um barril. A B lê como verme, mas o zigue-zague da faixa puxa para
     uma cobra.
+
+## Par 2, os conjuradores humanos: o cultista e a bruxa do pântano (`par2.png`)
+
+- **Os dados:** o cultista (humano, conjurador; bola de sombra, cura, grito de terror; "servos da Fenda; curam uns aos
+  outros"); a bruxa do pântano (humana, conjuradora; maldição, bola de fogo, cura; "vendem curas, maldições e às vezes
+  as duas coisas no mesmo frasco"). **O alcance:** o cultista vale para a família, os fiéis do Profeta das Cinzas e os
+  dois de capa escura da sacristia (são cultistas); o Profeta, o antagonista e os outros humanos ficam fora. A bruxa vale
+  para a família (a anciã do evento inclusive); a Bruxa Afogada (guardiã) e a Ilse ficam fora.
+- **Cultista A, encapuzado** (`cultista-a`; manto, rosto, marca): o capuz vermelho-escuro de frente, o rosto na
+  sombra, a marca violeta da Fenda na testa e a faixa no peito. **Cultista B, sem capuz** (`cultista-b`): a cabeça
+  raspada com a cicatriz ritual em fenda, o olhar fixo, a boca fina, o manto com a faixa violeta.
+- **Bruxa A, a velha do chapéu** (`bruxa-a`; xale, cabelo, rosto, chapéu): a aba mole com o musgo, o cabelo grisalho
+  dos lados, um olho branco, a boca pequena, o xale. **Bruxa B, encapuzada com o frasco** (`bruxa-b`; capuz, rosto,
+  frasco): o capuz do brejo, o sorriso torto e o frasco verde de rolha erguido na mão.
+- **Na bancada:** o cultista sem capuz e as bruxas tinham a boca de três pixels escuros, que lia como boca aberta
+  (susto ou riso): viraram uma linha fina, uma boca pequena e um sorriso torto; a primeira bruxa de chapéu tinha o
+  cabelo branco confundido com o rosto, e a primeira com o frasco parecia uma moça de cabelo verde segurando uma folha.
+- **A minha preferência:**
+  - **cultista: o A.** Forte: a silhueta do capuz vermelho e a marca da Fenda dizem "seita" de longe e separam do
+    Bandido cinza. Limite: o rosto é pequeno e quase não tem expressão; a ameaça vem do conjunto.
+  - **bruxa: a B.** Forte: o frasco verde conta o "cura e veneno" da descrição, e a figura não repete o capuz do
+    Bandido nem o do cultista (a cor e o frasco). Limite: o rosto é pálido e redondo, mais sinistro pelo sorriso que
+    pela forma. A A tem a silhueta mais clássica (o chapéu), mas o rosto e o cabelo ainda se misturam a 32 px.
