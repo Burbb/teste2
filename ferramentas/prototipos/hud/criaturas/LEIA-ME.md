@@ -187,3 +187,14 @@ A escolha do par e da direção é do Jean; nada foi começado.
   Xamã Caído (XA, XB) em `caidos/`. A folha dos oito em `oito_candidatos.png` (`python oito_candidatos.py`).
 - **O conector do Aseprite estava indisponível:** as fontes em camadas saíram do Aseprite em lote
   (`montar_camadas.lua`), com releitura; a limitação está em cada LEIA-ME.
+
+## Do Grifo ao Cão infernal e à Cria do Vazio (22/10/2026, 1.183.0 a 1.184.0)
+
+- **Integrados:** o Grifo GA3 (1.183.0), a Harpia T2 e o Xamã Caído X1r2 (1.184.0), de `rodada_23_10/` (o Caído CA,
+  1.182.0, de `caidos/`); as outras propostas ficam lá como histórico.
+- **Em avaliação, nenhum aprovado:** o Cão infernal (A, o que rosna de perfil; B, o mastim de cabeça baixa) e a Cria
+  do Vazio (A, o caco da Fenda; B, a fera que anda), em `fenda/` (as folhas `cao.png` e `cria.png`).
+- **Esclarecido no levantamento (`fenda/LEIA-ME.md`):** a invocação aliada do Necromante (o Erguer Servo e o inimigo
+  erguido pelo Rei dos Mortos) é um `Aliado` de `tipo` servo, desenhado na `caveira` pela tela, sem família; a família
+  `esqueleto_servo` do catálogo não é criada por nenhum código. O antagonista (família `antagonista`, só no mundo
+  gerado) cai no `humano` pelo traço `conjurador`; a cria que ele invoca é da família `cria_vazio`.
