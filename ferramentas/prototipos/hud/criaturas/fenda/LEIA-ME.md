@@ -229,3 +229,52 @@ pose, as duas orelhas, o enquadramento, a forma da cabeça e o calor contido fic
 - As fotos no modo `e` (`MODOS=e`), a 1920×945, com os mesmos dados e o mesmo enquadramento do N, sem erro no console.
   A folha `cao-n2.png` (`python auxiliares/prancha.py cao-n2`): N × N2 na carta e no Bestiário, a fileira com o Lobo, o
   Lobo Gélido, o Caído, o Xamã e a Cria, a 12× para o diagnóstico.
+
+# Três rosnados: RA, RB e RC (22/10/2026, propostas; nada no jogo)
+
+**A avaliação do Jean:** o N2 ficou mais limpo, mas a expressão parecia uma careta cômica: o focinho comprimido, a boca
+repuxada e os dentinhos pendurados. Três variações do rosto, com liberdade para refazer o focinho e a mandíbula. O N e
+o N2 continuam aqui como histórico.
+
+## A cabeça nova (comum às três)
+
+- Do N2 ficam as orelhas, a orientação e a paleta (`cao_n2`). **O diagnóstico:** era a proporção do crânio herdado
+  (da linha 0 à 6, quase o quadro todo) que espremia o focinho; com o crânio antigo, as três primeiras tentativas liam
+  fraco na carta (uma grelha de fogo, um focinho de porco). **A mudança:** o crânio e as orelhas sobem e recuam para a
+  direita, e o focinho ganha de 7 a 8 pixels, com o nariz sólido na ponta.
+- Os olhos sob o sobrolho escuro e a testa clara participam nas três. Os dentes ficam dentro do calor, como parte da
+  mordida (na borda, sumiam no fundo). A brasa fica em dois pontos no pescoço.
+
+## As três propostas
+
+- **RA, a bocarra aberta** (`cao-infernal-ra`): a mandíbula caída em cunha, mais aberta na frente e fechando na dobra; as
+  presas grandes se cruzando dentro da goela acesa (a de cima na frente, uma menor atrás, a de baixo subindo entre elas);
+  a mandíbula clara e pesada. Na bancada, a fileira de dentes alternados com o fogo virava uma grelha.
+- **RB, o lábio repuxado** (`cao-infernal-rb`): a boca quase fechada; as rugas no dorso do focinho; o lábio de cima
+  levantado com a gengiva vermelha à mostra; os dentes cerrados com o calor entre eles e o reflexo frio; a presa longa na
+  frente cruzando a de baixo; o lábio de baixo claro.
+- **RC, a cabeça baixa** (`cao-infernal-rc`): o focinho desce em diagonal da testa até o nariz, como quem avança de cabeça
+  baixa; a gengiva à mostra embaixo do nariz; a goela acesa com as presas se cruzando; a mandíbula curta e pesada
+  apontando para baixo.
+
+## A minha leitura (quem escolhe é o Jean)
+
+- **Prefiro a RB.** Na carta, é a que mais comunica "cão rosnando": o focinho longo com o nariz, o lábio levantado com a
+  gengiva e os dentes cerrados com a presa leem como ameaça dirigida, sem careta. **Limitação a 32:** a gengiva lê como
+  uma faixa vermelha reta, e os dentes ficam pequenos; o calor aparece pouco (a boca fechada), então o "infernal" vem dos
+  olhos e do corpo de carvão.
+- **RA:** a mais infernal (a bocarra em brasa) e a mais legível como mordida a 48. **Limitação a 32:** a boca aberta vira
+  uma mancha de fogo, e as presas somem dentro dela.
+- **RC:** a pose mais ameaçadora (a cabeça baixa, avançando). **Limitação a 32:** o focinho em diagonal fica mais fino, e
+  a cabeça perde um pouco do peso.
+- **Nas três:** a cabeça nova lê como cão ao lado do Lobo e do Lobo Gélido, pelo perfil e pelo focinho longo; o carvão
+  da luz continua perto do cinza do Lobo, e a diferença vem da pose, da boca e dos olhos.
+
+## Processo
+
+- As grades em `auxiliares/grades.py` (`CABECA_R`, `CAO_RA`, `CAO_RB`, `CAO_RC`; a camada da gengiva na boca pela regra
+  `_camada_cao_r`); as fontes pelo conector do Aseprite (0 diferentes na releitura; os compostos 185, 176 e 185 = as
+  camadas); a exportação igual à grade, o @2x exato, o 32 e o 48 em blocos inteiros.
+- As fotos nos modos `f`, `g` e `h` (`MODOS=f,g,h`), a 1920×945, com os mesmos dados, sem erro no console. A folha
+  `cao-r.png` (`python auxiliares/prancha.py cao-r`): N2 × RA × RB × RC na carta e no Bestiário, a fileira com os
+  aprovados (o Lobo, o Lobo Gélido, o Caído, o Xamã e a Cria), a 12× para o diagnóstico.

@@ -222,6 +222,66 @@ CAO_N2[7:15] = [
     "...kkkkddddddod.",
     "....kkkdddddddd.",
 ]
+# R, três rosnados (pedido do Jean: o N2 ficou limpo, mas a expressão parecia uma careta cômica, o focinho comprimido,
+# a boca repuxada e os dentinhos pendurados). Do N2 ficam as orelhas, a orientação e a paleta (`cao_n2`); o crânio sobe e
+# recua para a direita, e o focinho ganha de 7 a 8 pixels, com o nariz na ponta: era a proporção do crânio herdado que
+# espremia o focinho. Os dentes ficam dentro do calor, como parte da mordida (na borda, sumiam no fundo); os olhos sob o
+# sobrolho escuro e a testa clara participam nas três. Na bancada, com o crânio antigo as três liam fraco (uma grelha de
+# fogo, um focinho de porco); com o focinho longo, as três leem como cão.
+CABECA_R = [
+    "........k...k...",
+    ".......kHk.kHk..",
+    ".......kHCkHCck.",
+    "......kHCCCCCcck",
+    "....kHHkkCkkCccd",
+]
+# RA, a bocarra aberta: a mandíbula caída em cunha (mais aberta na frente, fechando na dobra), as presas grandes se
+# cruzando dentro da goela acesa (a de cima na frente, uma menor atrás, a de baixo subindo entre elas), a mandíbula clara
+# e pesada. Uma fileira de dentes alternados com o fogo virava uma grelha.
+CAO_RA = CABECA_R + [
+    "nNHHHHCeCCeeCccd",
+    "nnHHCCkkcccccccd",
+    "kCCCCCCkcccccccd",
+    ".rtOOtOOkcccccdd",
+    ".OtyOOyOkccccddd",
+    ".OOOtOtkcccccdod",
+    ".kCCCCCkccccddod",
+    "..kCCCkkcccdddd.",
+    "....kkkddddddd..",
+    "......kdddddddd.",
+    "......kdddddd...",
+]
+# RB, o lábio repuxado: a boca quase fechada, as rugas no dorso do focinho, o lábio de cima levantado com a gengiva
+# vermelha de ponta a ponta, os dentes cerrados com o calor entre eles e o reflexo, a presa longa na frente cruzando a de
+# baixo, o lábio de baixo claro.
+CAO_RB = CABECA_R + [
+    "nNHHHHCeCCeeCccd",
+    "nnHkHkkccccccccd",
+    "kCrrrrrrkccccccd",
+    ".tTtOtTtkcccccdd",
+    ".tCCCCCCkccccddd",
+    "..kCCCCkcccccdod",
+    "...kkkkcccccddod",
+    "......kccdddddd.",
+    "......kddddddd..",
+    "......kdddddddd.",
+    "......kdddddd...",
+]
+# RC, a cabeça baixa: o focinho desce em diagonal da testa até o nariz, como quem avança de cabeça baixa; a gengiva à
+# mostra embaixo do nariz, a goela acesa com as presas se cruzando, a mandíbula curta e pesada apontando para baixo.
+CAO_RC = CABECA_R + [
+    "..kHHHCeCCeeCccd",
+    "..kHHHCkcccccccd",
+    ".kHHCCkccccccccd",
+    "nNHCCkcccccccccd",
+    "nnrrrrkcccccccdd",
+    ".tOyOtOkcccccddd",
+    ".OtOyOtkccccddod",
+    "..kCCCCkcccdddod",
+    "...kCCkkdddddd..",
+    "....kkkddddddd..",
+    "......kdddddd...",
+]
 
 # Histórico (fora da exportação): a primeira B, de pernas finas, que virava um emaranhado na carta.
 CRIA_B_FINA = [
@@ -253,6 +313,10 @@ def _camada_cao_t(x, y, ch):
     return "brasa" if ch == "o" else "corpo"
 
 
+def _camada_cao_r(x, y, ch):  # nas cabeças R, todo vermelho é a gengiva (as orelhas não têm), então é da boca
+    return "boca" if ch == "r" else _camada_cao_t(x, y, ch)
+
+
 def _camada_cria(x, y, ch):
     return "fenda" if ch in "mMw" else "corpo"
 
@@ -266,6 +330,9 @@ CAMADAS = {  # a grade, a paleta, as camadas de baixo para cima e a camada de ca
     "cao-infernal-t": (CAO_T, "cao_t", ["corpo", "nariz", "brasa", "boca", "dentes", "olhos"], _camada_cao_t),
     "cao-infernal-n": (CAO_N, "cao_n", ["corpo", "nariz", "brasa", "boca", "dentes", "olhos"], _camada_cao_t),
     "cao-infernal-n2": (CAO_N2, "cao_n2", ["corpo", "nariz", "brasa", "boca", "dentes", "olhos"], _camada_cao_t),
+    "cao-infernal-ra": (CAO_RA, "cao_n2", ["corpo", "nariz", "brasa", "boca", "dentes", "olhos"], _camada_cao_r),
+    "cao-infernal-rb": (CAO_RB, "cao_n2", ["corpo", "nariz", "brasa", "boca", "dentes", "olhos"], _camada_cao_r),
+    "cao-infernal-rc": (CAO_RC, "cao_n2", ["corpo", "nariz", "brasa", "boca", "dentes", "olhos"], _camada_cao_r),
 }
 
 
