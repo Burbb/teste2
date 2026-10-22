@@ -1,0 +1,33 @@
+{
+  "alvo": {
+    "id": "antidoto",
+    "preco": 15,
+    "estoque": 1
+  },
+  "motivos": [
+    "Ouro insuficiente.",
+    "Esgotado",
+    "Ouro insuficiente.",
+    "Ouro insuficiente.",
+    "Esgotado",
+    "Ouro insuficiente.",
+    "Esgotado",
+    "Ouro insuficiente.",
+    "Ouro insuficiente.",
+    "Ouro insuficiente.",
+    "Ouro insuficiente."
+  ],
+  "atual": {
+    "trocados": 3,
+    "tamanho": "16×16"
+  },
+  "caixote": {
+    "trocados": 3,
+    "tamanho": "16×16"
+  },
+  "cesto": {
+    "trocados": 3,
+    "tamanho": "16×16"
+  },
+  "erros": []
+}

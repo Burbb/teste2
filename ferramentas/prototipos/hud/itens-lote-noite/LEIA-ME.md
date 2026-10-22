@@ -3766,3 +3766,9 @@ Firme (1.155.0), Em guarda (1.156.0), Esquiva (1.157.0); Sangramento, Maldição
 Chamas, Fortalecido, Enfraquecido e Frenesi (1.159.0); Veneno, Atordoado e Barreira (1.160.0); Provocando e Iniciativa
 (1.161.0). As rodadas, as alternativas e as conferências estão em `estados_restantes/LEIA-ME.md`; a prancha final em
 `estados_restantes/estados-final.png`.
+
+### O Esgotado do mercado (`esgotado/`, 22/10/2026, em avaliação)
+
+Não é estado de combate: é o motivo do suprimento sem estoque no dia, no cartão do mercado, a 16×16, hoje no `cadeado`
+compartilhado (o antigo Firme). Duas propostas de papel próprio, sem trocar o cadeado: **A, o caixote vazio** e **B, o
+cesto vazio**. O levantamento, o processo e a folha `esgotado/esgotado.png` em `esgotado/LEIA-ME.md`. Nada integrado.
