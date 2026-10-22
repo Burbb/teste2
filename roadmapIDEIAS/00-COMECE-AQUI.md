@@ -5637,3 +5637,11 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Feito:** `animal-lobo`, `animal-urso`, `animal-falcao` em `ferramentas/prototipos/hud/acampamento_atacar/` (as
   fontes pelo conector, a exportação conferida, as fotos na fogueira) e o teste do cajado; a folha `animais-cajado.png`.
 - **Continua:** a avaliação do Jean; a seleção futura pelo tipo num papel próprio; o Grimório na etapa 8.
+
+### 21/10/2026 (data do computador local) — O Esqueleto C, pela segunda referência gerada, só no protótipo
+
+- **Decisão de Jean:** S1 e S2 não aprovados; a nova referência (`ferramentas/arte/referencias/icones/Caveira
+  esquelética sombria em pixel art.png`) é a principal do rosto inteiro; as anteriores ficam como histórico.
+- **Feito:** `esqueleto-c` (a guia oculta, a fonte pelo conector, a exportação e os derivados conferidos) e a folha
+  `esqueleto-c.png`, em `ferramentas/prototipos/hud/criaturas/rainha_esqueleto/`.
+- **Continua:** a avaliação do Jean; nada no jogo.

@@ -153,6 +153,34 @@ ESQUELETO_S2[11] = "....DkkkkkkD...."
 ESQUELETO_S2[12] = ".....dOoOod....."
 
 
+# C (21/10/2026, pedido do Jean): a nova direção, pela referência gerada "Caveira esquelética sombria em pixel art.png"
+# (ferramentas/arte/referencias/icones/), a principal do rosto inteiro; o A2, o A2n e os sorrisos S1 e S2 ficam como
+# histórico. Redesenhado à mão na grade de 16 com a referência reduzida como guia oculta (guias/esqueleto-c-guia-16.png):
+# o crânio largo e redondo; as órbitas grandes e inclinadas (mais altas por fora, descendo para dentro: a expressão
+# brava); as maçãs largas; o nariz curto e triangular entre as órbitas; as cavidades escuras nas laterais da mandíbula,
+# que descem das maçãs e viram os cantos do sorriso; a boca em U (a linha escura desce dos cantos ao meio), com a arcada
+# de cima clara num grupo e os dentes de baixo no queixo; a mandíbula envolvendo a boca; o pescoço curto e as
+# clavículas.
+ESQUELETO_C = [
+    ".....oOOOod.....",
+    "....oOLLOOod....",
+    "...DOLLOOoomd...",
+    "...dOLOOOomdd...",
+    "...mOLOooomdn...",
+    "...dOOoOoOodn...",
+    "...DkkDmmDkkD...",
+    "...nDkkodkkDD...",
+    "...dOomDkmmdD...",
+    "....nDokkmDn....",
+    "....kLOOOOok....",
+    "....DkOLOOkD....",
+    ".....DkkkkD.....",
+    ".....DoOodD.....",
+    "...nmdDodDdmn...",
+    ".nmoodDmnDdoomn.",
+]
+
+
 def _rainha(patas, marca_ate):
     return lambda x, y, ch: ("olhos" if ch in "Pu" else "marca" if ch in "Gg" and y <= marca_ate else "presas" if ch in "Gg"
                              else "patas" if patas(x, y, ch) else "corpo")
@@ -176,6 +204,8 @@ CAMADAS = {
                      lambda x, y, ch: "cavidades" if ch == "k" else "pescoco" if y >= 13 else "cranio"),
     "esqueleto-s2": (ESQUELETO_S2, ["pescoco", "cranio", "cavidades"],
                      lambda x, y, ch: "cavidades" if ch == "k" else "pescoco" if y >= 13 else "cranio"),
+    "esqueleto-c": (ESQUELETO_C, ["pescoco", "cranio", "cavidades"],
+                    lambda x, y, ch: "cavidades" if ch == "k" else "pescoco" if y >= 14 else "cranio"),
     "esqueleto-b": (ESQUELETO_B, ["pescoco", "cranio", "orbitas"], _esqueleto(lambda x, y: y >= 13 or (y == 12 and x >= 11))),
 }
 

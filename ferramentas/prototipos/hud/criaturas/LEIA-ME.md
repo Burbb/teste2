@@ -137,7 +137,8 @@ A escolha do par e da direção é do Jean; nada foi começado.
   separados (o inimigo, os invocados pelo Lich, o servo aliado, os chefes). A Rainha A entrou na 1.168.0; o Esqueleto
   continua em proposta: o A2 (o A desenvolvido pela referência gerada, `esqueleto-a2.png`) e o A2n (o mesmo com o nariz refeito,
   `esqueleto-a2n.png`, a base aprovada); sobre ele, o sorriso contido (S1) e o marcado (S2),
-  `esqueleto-sorriso.png`, aguardam o Jean.
+  `esqueleto-sorriso.png`, não aprovados; o C, a nova direção pela segunda referência gerada (`esqueleto-c.png`),
+  aguarda o Jean.
 
 ## Reservado
 

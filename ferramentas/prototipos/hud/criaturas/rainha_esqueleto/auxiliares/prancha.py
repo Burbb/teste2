@@ -330,6 +330,47 @@ def folha_sorriso():
     print("esqueleto-sorriso.png", out.size)
 
 
+def folha_c():
+    """A nova direção (esqueleto-c.png): a referência gerada (reduzida) × A2n × C, na carta (32) e no Bestiário (48) em
+    tamanho real, as mesmas caixas a 4× e a 12× com a grade (a referência: a guia de 16), sem suavização."""
+    f, f2 = ImageFont.truetype("arial.ttf", 15), ImageFont.truetype("arial.ttf", 12)
+    out = Image.new("RGBA", (1000, 900), CARVAO)
+    d = ImageDraw.Draw(out)
+    d.text((20, 10), "O Esqueleto C, pela nova referência: referência × A2n (ee82b54a) × C; proposta, nada no jogo", fill=TEXTO, font=f)
+    ref = Image.open(AQUI.parents[5] / "ferramentas/arte/referencias/icones/Caveira esquelética sombria em pixel art.png").convert("RGBA")
+    fundo = Image.new("RGBA", ref.size, (13, 11, 10, 255)); fundo.alpha_composite(ref)
+
+    def nicho_de(im, lado):
+        cx = Image.new("RGBA", (lado + 6, lado + 6), (42, 36, 32, 255)); cx.paste((13, 11, 10, 255), (2, 2, lado + 4, lado + 4))
+        cx.alpha_composite(im, (3, 3)); return cx
+    colunas = [("referência (reduzida)", lambda lado: fundo.resize((lado, lado), Image.LANCZOS), None),
+               ("A2n", lambda lado: amplia(imagem("esqueleto-a2n"), lado // 16), "esqueleto-a2n"),
+               ("C, a nova direção", lambda lado: amplia(imagem("esqueleto-c"), lado // 16), "esqueleto-c")]
+    y = 40
+    for j, (rot, _, _) in enumerate(colunas):
+        d.text((20 + j * 320, y), rot, fill=TEXTO2, font=f2)
+    y += 18
+    d.text((20, y), "tamanho real: a carta (32) e o Bestiário (48)", fill=TEXTO, font=f2)
+    for j, (_, im, _) in enumerate(colunas):
+        out.alpha_composite(nicho_de(im(32), 32), (20 + j * 320, y + 18)); out.alpha_composite(nicho_de(im(48), 48), (70 + j * 320, y + 18))
+    y += 18 + 54 + 16
+    d.text((20, y), "as mesmas caixas a 4× (vizinho mais próximo)", fill=TEXTO, font=f2)
+    for j, (_, im, _) in enumerate(colunas):
+        out.alpha_composite(amplia(nicho_de(im(32), 32), 4), (20 + j * 320, y + 18))
+    y += 18 + 38 * 4 + 12
+    for j, (_, im, _) in enumerate(colunas):
+        out.alpha_composite(amplia(nicho_de(im(48), 48), 4), (20 + j * 320, y))
+    y += 54 * 4 + 16
+    d.text((20, y), "a 12× com a grade (a referência: a guia de 16 que mediu)", fill=TEXTO, font=f2)
+    guia = Image.open(PASTA / "guias/esqueleto-c-guia-16.png").convert("RGBA")
+    for j, (_, _, ident) in enumerate(colunas):
+        out.alpha_composite(grade12(imagem(ident) if ident else guia), (20 + j * 320, y + 18))
+    y += 18 + 192 + 20
+    out = out.crop((0, 0, 1000, y))
+    out.save(PASTA / "esqueleto-c.png")
+    print("esqueleto-c.png", out.size)
+
+
 if __name__ == "__main__":
     import sys
     if sys.argv[1:] == ["rainha-final"]:
@@ -340,6 +381,8 @@ if __name__ == "__main__":
         folha_nariz()
     elif sys.argv[1:] == ["esqueleto-sorriso"]:
         folha_sorriso()
+    elif sys.argv[1:] == ["esqueleto-c"]:
+        folha_c()
     else:
         folha_rainha()
         folha_esqueleto()

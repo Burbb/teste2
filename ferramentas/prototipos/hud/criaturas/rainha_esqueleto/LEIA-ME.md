@@ -148,6 +148,31 @@ Cabeças de 16×16 no formato dos retratos de carta aprovados (sem contorno, cor
   combina com os outros retratos; a S2 é a mais ameaçadora e a de mais personalidade, mas a 32 px a boca larga começa a
   pesar mais que as órbitas.
 
+### C: a nova direção pela segunda referência gerada (21/10/2026, proposta)
+
+- **Decisão de Jean:** os sorrisos S1 e S2 não foram aprovados (a boca virou faixas horizontais e perdeu a arcada); a
+  nova referência (`Caveira esquelética sombria em pixel art.png`) passa a ser a principal do rosto inteiro, e as
+  anteriores ficam como histórico. Preservar o sorriso de dentes expostos com os cantos acompanhando as maçãs, a sombra
+  atrás dos dentes e a mandíbula envolvendo a boca, o nariz curto e triangular separado das órbitas, o osso envelhecido
+  com a luz da esquerda.
+- **Medido na guia** (a referência sem o fundo branco, reduzida a 16×16, `guias/esqueleto-c-guia-16.png`): o crânio
+  ocupa as seis primeiras linhas, largo; as órbitas são inclinadas (o escuro começa por fora e desce para dentro); as
+  maçãs largas na linha 8; as cavidades escuras dos lados da mandíbula nas linhas 9 a 11; o queixo estreito; o pescoço
+  curto e as clavículas.
+- **O desenho** (`esqueleto-c`; pescoço, crânio, cavidades): o crânio largo e redondo; as órbitas grandes e
+  inclinadas, a expressão brava; o nariz de três pixels em triângulo entre elas; as cavidades sob as maçãs descendo até
+  os cantos da boca; a boca em U (a linha escura desce dos cantos ao meio), com a arcada de cima clara num grupo e os
+  dentes de baixo no queixo; a mandíbula em volta.
+- **Na bancada (a 32 e a 48 px):** com a boca reta (os cantos só uma linha acima), voltavam as duas faixas horizontais;
+  com o U, o sorriso aparece. A variante com o queixo em V lia como um triângulo e ficou de fora.
+- **Processo:** a fonte no editor pelo conector, com a guia oculta (`Image{fromFile=...}`); `pintar.lua`, releitura das
+  três camadas contra a grade, 0 diferentes; o composto com a soma das camadas visíveis (144); a exportação igual à
+  grade, @2x exato, o 32 e o 48 em blocos inteiros. A folha `esqueleto-c.png` (`python auxiliares/prancha.py
+  esqueleto-c`): a referência × A2n × C na carta e no Bestiário, em tamanho real, a 4× e a 12×.
+- **A minha leitura (quem aprova é o Jean):** o C tem a expressão da referência (as órbitas bravas e o sorriso em U)
+  e lê a 32 px; limites: os dentes de baixo se juntam ao queixo, e o crânio, mais largo, fica mais pesado na carta que o
+  A2n.
+
 ## Avaliação (a minha leitura a 32 px; quem aprova é o Jean)
 
 - **Rainha A (minha preferência):** é claramente a mesma espécie da Aranha gigante, maior e mais pesada; a ampulheta

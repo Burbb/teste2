@@ -61,3 +61,12 @@ crânio arredondado, as têmporas recolhendo, as maçãs angulares, as órbitas 
 dentes, a mandíbula com o queixo, as vértebras do pescoço ligadas às clavículas e o osso envelhecido com a luz da
 esquerda. Ampliada (cerca de 33 células de ~38 px), não uma grade nativa: a transposição para 16×16 está em
 `ferramentas/prototipos/hud/criaturas/rainha_esqueleto/` (`esqueleto-a2`; a guia reduzida em `guias/`).
+
+**`Caveira esquelética sombria em pixel art.png`** (1254×1254, 21/10/2026): **a referência principal do Esqueleto C**, a
+nova direção do rosto inteiro (a proporção do crânio, as órbitas, o nariz, as maçãs, os dentes e a mandíbula); a
+`Esqueleto frontal em pixel art.png` e as propostas A2, A2n, S1 e S2 ficam como histórico. Imagem gerada na conversa
+com o Jean e deixada aqui por ele, guardada como o original; sem outra origem ou autoria informada. Mostra a caveira de
+frente com o sorriso macabro de dentes expostos: os cantos da arcada subindo com as maçãs, a sombra atrás dos dentes,
+as cavidades nas laterais da mandíbula, o nariz curto e triangular separado das órbitas inclinadas, o osso envelhecido
+com a luz da esquerda. Ampliada, não uma grade nativa (o fundo branco é tirado antes de reduzir): a transposição para
+16×16 está em `ferramentas/prototipos/hud/criaturas/rainha_esqueleto/` (`esqueleto-c`; a guia em `guias/`).
