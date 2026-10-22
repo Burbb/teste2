@@ -145,3 +145,41 @@ como estavam.
 - Conferido a 1920×945 com os arquivos de produção (`capturas-1183/`, `auxiliares/fotografar_jogo.mjs`): a luta (o
   grifo com duas harpias no voador e o lobo gélido), o Bestiário, o cartaz do mural e o rastreador; nenhum pedido a
   `ferramentas/`; sem erro no console. A folha: `ferramentas/prototipos/hud/integracoes-22-10/integracoes-1183.png`.
+
+# A terceira passada: o Xamã X1r2 e a Harpia T2 (propostas; nada no jogo)
+
+**O pedido do Jean:** o X1r é a base final do Xamã, mas a pintura junto dos olhos estava diferente de um lado e do
+outro; a T é a base da Harpia, com uma passada no olhar e nas penas. A T e o X1r continuam aqui como estavam.
+
+## O Xamã X1r2 (`xama-caido-x1r2`)
+
+- **Conferido na prancha dos dois lados:** os traços são a pintura branca (`w`) do X1, descendo dos olhos. Do lado
+  esquerdo da imagem (o olho direito dele) ela ia em diagonal, começando fora do olho e entrando: (3,6) → (4,7). Do
+  lado direito da imagem (o olho esquerdo dele), descia reta sob o canto de fora do olho: (11,6) → (11,7). A diferença
+  não acompanhava a luz nem o sorriso: a diagonal lia como ruga, a reta como pintura.
+- **O retoque (dois pixels, só a linha 6):** (3,6) volta à pele e (4,6) recebe a pintura: as duas descem retas sob o
+  canto de fora de cada olho. O sorriso, os olhos amarelos, a cabeça, os chifres, o capuz e o colar menor são os do
+  X1r.
+- Na bancada: com as duas em diagonal, uma lia como ruga e a outra como a borda da bochecha; descendo para os cantos da
+  boca, alargavam o sorriso.
+
+## A Harpia T2 (`harpia-t2`)
+
+- **O olhar:** na T, o preto ao lado do âmbar (4,6) com o escuro em cima fazia do olho uma mancha. Na T2 o canto de
+  dentro é meia-sombra, o âmbar fica limpo e a sobrancelha escura vai para cima do olho, em diagonal, baixa junto do
+  nariz (3,5)(4,5) e subindo para fora (5,5)(6,4), como a da referência; o olho de trás ganha a sobrancelha (2,5). Na
+  bancada, a pálpebra toda escura engolia o âmbar.
+- **As penas:** os traços de luz de dois pixels, salpicados (o que lia como cabelo crespo), viram três tufos longos e
+  contínuos, cada um saindo da raiz clara na têmpora e varrendo para trás e para cima: a coroa até (11,0), o do lado
+  até (13,3), o da nuca até (13,7), com o escuro entre eles; as pontas formam a silhueta.
+- Só as linhas 0 a 7 mudam; o nariz, a boca, o pescoço, a gola, a pose, o enquadramento e a guia são os da T.
+
+## Processo e folhas
+
+- As grades em `auxiliares/grades.py` (`X1R2`, `HARPIA_T2`); as fontes pelo conector do Aseprite (0 diferentes na
+  releitura; o composto 226 e 209 = as camadas visíveis; a guia oculta na Harpia); a exportação igual à grade, sem a
+  guia, @2x exato, 32 e 48 em blocos inteiros.
+- As fotos no modo `e` (`MODOS=e`), a 1920×945, sem erro no console. As folhas (`python auxiliares/prancha.py
+  harpia-t2 xama-x1r2`): `harpia-t2.png` (a referência, a guia, a T e a T2 a 12×; T × T2 na carta e no Bestiário; a
+  fileira com os retratos aprovados, já com o Grifo) e `xama-x1r2.png` (X1r × X1r2). A folha da Harpia agora mostra
+  a 12× de cada proposta dela (a `harpia-t.png` refeita: o mesmo conteúdo, o rótulo no plural).

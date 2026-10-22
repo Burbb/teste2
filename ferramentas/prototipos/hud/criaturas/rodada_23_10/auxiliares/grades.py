@@ -216,6 +216,33 @@ X1R[11:16] = [
     "CCCcccccccccCCCC",
 ]
 
+# A terceira passada (pedido do Jean; propostas, nada no jogo). A T e o X1r ficam como estavam.
+# T2, a T com o olhar e as penas: o preto ao lado do âmbar (4,6), que fazia do olho uma mancha, vira meia-sombra; a
+# sobrancelha escura passa para cima do olho, em diagonal, baixa junto do nariz (3,5)(4,5) e subindo para fora (5,5)(6,4),
+# como a da referência; o olho de trás ganha a sobrancelha (2,5). As penas da cabeça: os traços de luz de dois pixels,
+# salpicados, viram três tufos longos e contínuos, cada um saindo da raiz clara na têmpora e varrendo para trás e para
+# cima (a coroa até (11,0), o do lado até (13,3), o da nuca até (13,7)), com o escuro entre eles. O nariz, a boca, o
+# pescoço, a gola, a pose e o enquadramento são os da T.
+HARPIA_T2 = list(HARPIA_T)
+HARPIA_T2[0:10] = [
+    "....hjHh..HH....",
+    "..hjjhhhhHHh....",
+    ".hjPpPhHHhhhhh..",
+    ".hpppPjhhhhhHHh.",
+    ".PpppPxhhhHHhhh.",
+    ".hxXXxPjHHhhhh..",
+    ".hEpxePjhhhhhhh.",
+    "..pPppPxhhhhHH..",
+    ".pxPpPPxhhHHhh..",
+    "...mmPPxxHhhhh..",
+]
+# X1r2, o X1r com a pintura branca dos olhos igualada: ela descia reta sob o canto de fora do olho direito da imagem
+# (11,6)(11,7) e, do outro lado, em diagonal, começando fora do olho (3,6)(4,7), o que parecia acidental (uma ruga de um
+# lado, a pintura do outro). As duas descem retas sob o canto de fora de cada olho: (4,6)(4,7) e (11,6)(11,7). Em
+# diagonal, liam como ruga e borda da bochecha; descendo para os cantos da boca, alargavam o sorriso. O resto é o X1r.
+X1R2 = list(X1R)
+X1R2[6] = ".CarwrrRrrrwRRC."
+
 
 def _camada_harpia_t(x, y, ch):
     if ch in "eEkm":
@@ -264,12 +291,15 @@ CAMADAS = {
     "grifo-ga3": (GA3, "grifo", ["pelo", "cabeca", "bico", "olho"], _GRIFO.CAMADAS["grifo-ga"][3]),
     "xama-caido-x1r": (X1R, "xama", ["pele", "adornos", "chifres", "olhos", "boca"],  # as contas em sombra no colar
                        lambda x, y, ch: "adornos" if ch == "H" and y >= 11 else _camada_xama(x, y, ch)),
+    "harpia-t2": (HARPIA_T2, "harpia_t", ["penas", "gola", "pescoco", "cabelo", "rosto"], _camada_harpia_t),
+    "xama-caido-x1r2": (X1R2, "xama", ["pele", "adornos", "chifres", "olhos", "boca"],
+                        lambda x, y, ch: "adornos" if ch == "H" and y >= 11 else _camada_xama(x, y, ch)),
 }
 
 
 def cor(ident, ch):
     paleta = PALETAS[CAMADAS[ident][1]]
-    if ident in ("xama-caido-x1", "xama-caido-x1r") and ch == "w":
+    if ident in ("xama-caido-x1", "xama-caido-x1r", "xama-caido-x1r2") and ch == "w":
         return "e8dcc0"  # a pintura branca do X1 (o osso do catálogo dos caídos)
     if ident == "xama-caido-x2" and ch == "W":
         return "d8ccac"  # o osso do cajado

@@ -2,7 +2,8 @@
 desta), a carta na luta a 1920×945 em tamanho real e a 2×, o cartão do Bestiário (48) em tamanho real, a fileira com os
 retratos aprovados pertinentes (na caixa da carta, real e 3×) e a 12× com a grade, sem suavização. Tudo trocado só na
 página (protótipo).
-    python prancha.py [<criatura> ...]      (depois do fotografar.mjs; a segunda rodada: harpia-t grifo-ga3 xama-x1r)
+    python prancha.py [<criatura> ...]      (depois do fotografar.mjs; a segunda rodada: harpia-t grifo-ga3 xama-x1r; a terceira passada:
+                                            harpia-t2 xama-x1r2)
 """
 import json
 import pathlib
@@ -46,6 +47,13 @@ CRIATURAS = {
     "xama-x1r": ("Xamã caído", [("X1, o velho do capuz", "a", ("rodada_23_10", "xama-caido-x1")),
                                 ("X1r, o colar menor e o pescoço livre", "d", ("rodada_23_10", "xama-caido-x1r"))],
                  ("caido", "cultista", "troll")),
+    # a terceira passada: a T × T2 (o olhar e as penas) e o X1r × X1r2 (a pintura dos olhos)
+    "harpia-t2": ("Harpia", [("T (a segunda rodada)", "d", ("rodada_23_10", "harpia-t")),
+                             ("T2, o olhar severo e as penas em três tufos", "e", ("rodada_23_10", "harpia-t2"))],
+                  ("bruxa", "ilse", "cultista", "falcao", "espectro", "grifo"), "harpia-t-guia-16.png"),
+    "xama-x1r2": ("Xamã caído", [("X1r (a segunda rodada)", "d", ("rodada_23_10", "xama-caido-x1r")),
+                                 ("X1r2, a pintura dos olhos igualada", "e", ("rodada_23_10", "xama-caido-x1r2"))],
+                  ("caido", "cultista", "troll")),
 }
 REFERENCIA = AQUI.parents[5] / "ferramentas/arte/referencias/icones/Harpia vulturina em pixel art.png"
 
@@ -93,13 +101,14 @@ def folha(chave):
     y = 38
     if guia:  # a referência (reduzida, só para olhar), a guia de 16 que mediu (oculta na fonte) e a proposta, a 12×
         d.text((20, y), "a referência nova (imagem gerada; reduzida só para olhar) | a guia de 16, oculta na fonte "
-               "(o recorte quadrado reduzido por média) | a proposta — a 12×", fill=TEXTO, font=f2)
+               "(o recorte quadrado reduzido por média) | as propostas — a 12×", fill=TEXTO, font=f2)
         ref = Image.open(REFERENCIA).convert("RGBA")
         fundo = Image.new("RGBA", ref.size, CARVAO)
         fundo.alpha_composite(ref)
         out.alpha_composite(fundo.resize((192, 192), Image.LANCZOS), (20, y + 18))
         out.alpha_composite(grade12(Image.open(PASTA / "guias" / guia[0]).convert("RGBA")), (232, y + 18))
-        out.alpha_composite(grade12(desenho(colunas[-1][2])), (444, y + 18))
+        for k, (_, _, fonte) in enumerate(c for c in colunas if c[2]):  # cada proposta da folha, na ordem das colunas
+            out.alpha_composite(grade12(desenho(fonte)), (444 + k * 212, y + 18))
         y += 18 + 192 + 24
     d.text((20, y), "a carta na luta (1920×945), tamanho real e 2×", fill=TEXTO, font=f2)
     y += 18
