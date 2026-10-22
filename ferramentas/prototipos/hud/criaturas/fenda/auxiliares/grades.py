@@ -47,6 +47,8 @@ PALETAS = {
         "t": "16121c", "T": "7a7894", "e": "ffc040",  # a obsidiana das presas e o reflexo; o olho
     },}
 PALETAS["cao_n2"] = {**PALETAS["cao_n"], "n": "3a3440"}  # a do N com o nariz num cinza escuro que aparece na caixa
+# a da RA2: a cavidade quase negra e o vermelho escuro do fundo dela; a obsidiana da presa um pouco acima da cavidade
+PALETAS["cao_ra2"] = {**PALETAS["cao_n2"], "v": "0c0809", "m": "4a120c", "t": "24202c"}
 
 CAO_A = [
     ".........kk.....",
@@ -282,6 +284,22 @@ CAO_RC = CABECA_R + [
     "....kkkddddddd..",
     "......kdddddd...",
 ]
+# RA2, a boca da RA refeita (pedido do Jean: a cabeça da RA é a base; a alternância regular de claros e escuros fazia os
+# dentes parecerem um aparelho, e a boca tinha divisões demais para o tamanho). A cabeça, as orelhas, o focinho, o olhar
+# e o enquadramento da RA ficam; só as linhas 7 a 11 mudam: o lábio de cima levantado na frente, com a gengiva à mostra;
+# uma cavidade escura e contínua entre os maxilares, em cunha, mais aberta na frente; uma presa de cima só, dominante e
+# afunilada (dois pixels no alto, um na ponta), de obsidiana, com o reflexo frio na borda da frente e o escuro em volta;
+# os dentes de baixo apenas sugeridos no vermelho escuro do fundo; o calor no fundo, junto da dobra da mandíbula; a
+# mandíbula clara e pesada. Na bancada: uma boca compacta (a presa com o reflexo no alto e na ponta) e outra com a presa
+# longa e a gengiva mais alta; a cavidade maior com a gengiva alta leu como a mordida mais ameaçadora na carta.
+CAO_RA2 = list(CAO_RA)
+CAO_RA2[7:12] = [
+    "kCrrCCCkcccccccd",
+    ".rTtvvrrkcccccdd",
+    ".vTvvvrOkccccddd",
+    ".vvvmmOykcccddod",
+    ".kCCCCCkkcccddod",
+]
 
 # Histórico (fora da exportação): a primeira B, de pernas finas, que virava um emaranhado na carta.
 CRIA_B_FINA = [
@@ -313,8 +331,8 @@ def _camada_cao_t(x, y, ch):
     return "brasa" if ch == "o" else "corpo"
 
 
-def _camada_cao_r(x, y, ch):  # nas cabeças R, todo vermelho é a gengiva (as orelhas não têm), então é da boca
-    return "boca" if ch == "r" else _camada_cao_t(x, y, ch)
+def _camada_cao_r(x, y, ch):  # nas cabeças R, todo vermelho é a gengiva (as orelhas não têm), então é da boca, como a
+    return "boca" if ch in "rvm" else _camada_cao_t(x, y, ch)  # cavidade e o fundo dela (a RA2)
 
 
 def _camada_cria(x, y, ch):
@@ -333,6 +351,7 @@ CAMADAS = {  # a grade, a paleta, as camadas de baixo para cima e a camada de ca
     "cao-infernal-ra": (CAO_RA, "cao_n2", ["corpo", "nariz", "brasa", "boca", "dentes", "olhos"], _camada_cao_r),
     "cao-infernal-rb": (CAO_RB, "cao_n2", ["corpo", "nariz", "brasa", "boca", "dentes", "olhos"], _camada_cao_r),
     "cao-infernal-rc": (CAO_RC, "cao_n2", ["corpo", "nariz", "brasa", "boca", "dentes", "olhos"], _camada_cao_r),
+    "cao-infernal-ra2": (CAO_RA2, "cao_ra2", ["corpo", "nariz", "brasa", "boca", "dentes", "olhos"], _camada_cao_r),
 }
 
 

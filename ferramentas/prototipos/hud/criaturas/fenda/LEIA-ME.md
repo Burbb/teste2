@@ -278,3 +278,39 @@ o N2 continuam aqui como histórico.
 - As fotos nos modos `f`, `g` e `h` (`MODOS=f,g,h`), a 1920×945, com os mesmos dados, sem erro no console. A folha
   `cao-r.png` (`python auxiliares/prancha.py cao-r`): N2 × RA × RB × RC na carta e no Bestiário, a fileira com os
   aprovados (o Lobo, o Lobo Gélido, o Caído, o Xamã e a Cria), a 12× para o diagnóstico.
+
+# A boca da RA refeita: a RA2 (22/10/2026, proposta; nada no jogo)
+
+**A avaliação do Jean:** a cabeça da RA é a base; falta a boca. Na RA e na RB, a alternância regular de claros e
+escuros fazia os dentes parecerem um aparelho, e a boca tinha divisões demais para o tamanho. As presas cruzadas
+deixam de ser exigência. A RA, a RB e a RC continuam aqui como estavam.
+
+## O que mudou (`cao-infernal-ra2`; só as linhas 7 a 11)
+
+- **O lábio de cima** levantado na frente, com a gengiva à mostra.
+- **A cavidade:** escura e contínua entre os maxilares (um quase negro, 0c0809), em cunha, mais aberta na frente.
+- **A presa:** uma só, a de cima, dominante e afunilada (dois pixels no alto, um na ponta), de obsidiana um pouco
+  acima da cavidade (24202c), com o reflexo frio na borda da frente e o escuro em volta.
+- **Os dentes de baixo** ficam apenas sugeridos no vermelho escuro do fundo (4a120c).
+- **O calor** foi para o fundo, junto da dobra da mandíbula; a mandíbula de baixo continua clara e pesada.
+- Na bancada: uma boca compacta (M1), uma com a presa longa e a gengiva mais alta (M2) e uma com a cavidade maior e a
+  mandíbula descendo mais (M3); a M3 com a gengiva da M2 leu como a mordida mais ameaçadora na carta.
+
+## A minha leitura (quem escolhe é o Jean)
+
+- **Na carta (32):** a boca lê como mordida aberta e ameaçadora: a gengiva levantada, a cavidade escura, a presa com o
+  reflexo e o calor no fundo; sem barras nem xadrez. **Limitações que continuam:** a frente da cavidade, quase negra,
+  encosta no fundo escuro da caixa na borda esquerda, então o contorno da boca ali depende da gengiva e da mandíbula
+  clara; a presa tem dois pixels de largura e lê pelo reflexo; o carvão da luz continua perto do cinza do Lobo.
+- **No Bestiário (48):** a presa afunilada e a cavidade ficam claras.
+
+## Processo
+
+- A grade em `auxiliares/grades.py` (`CAO_RA2`, a paleta `cao_ra2`; a cavidade e o fundo na camada da boca pela regra
+  `_camada_cao_r`, que não muda as listas da RA, da RB e da RC). O retoque numa cópia da fonte da RA
+  (`fontes/cao-infernal-ra2/`, copiada de `fontes/cao-infernal-ra/`, que não mudou), aberta pelo conector do Aseprite:
+  cada camada esvaziada e repintada pelo `pintar.lua` (0 diferentes na releitura; o composto 185 = as camadas). A
+  exportação igual à grade, o @2x exato, o 32 e o 48 em blocos inteiros.
+- As fotos no modo `i` (`MODOS=i`), a 1920×945, com os mesmos dados, sem erro no console. A folha `cao-ra2.png`
+  (`python auxiliares/prancha.py cao-ra2`): RA × RA2 na carta e no Bestiário, a fileira com os aprovados, a 12× para o
+  diagnóstico.
