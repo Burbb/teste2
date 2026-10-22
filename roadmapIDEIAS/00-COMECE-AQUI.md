@@ -5980,3 +5980,19 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   cria do Vazio, cão infernal) e 8 guardiões; a lista no plano 23. **Recomendado a seguir:** o cão infernal e a cria do
   Vazio (as criaturas da Fenda ainda sem retrato).
 - **Continua:** a escolha do próximo par pelo Jean; nenhum desenho novo nem o mapa começados.
+
+### 22/10/2026 (data do computador local) — O Cão infernal e a Cria do Vazio: duas propostas de cada (nada no jogo)
+
+- **Estado conferido:** a branch em `fa7d526b`, sem alterações locais; produção na 1.184.0.
+- **Levantado antes de desenhar (`ferramentas/prototipos/hud/criaturas/fenda/LEIA-ME.md`):** a identidade e os usos das
+  duas. A cria que o antagonista invoca é criada pela mesma família `cria_vazio`, com "(invocado)" no nome, e usará o
+  mesmo retrato. As pendências: o servo do Necromante é um aliado de `tipo` servo (na `caveira`), separado das famílias
+  inimigas (a família `esqueleto_servo` não é criada por nenhum código); o antagonista fica no `humano`, pelo traço
+  `conjurador`.
+- **No protótipo, aguardando o Jean (`criaturas/fenda/`):** o Cão infernal A (o que rosna de perfil) e B (o mastim de
+  cabeça baixa); a Cria do Vazio A (o caco da Fenda) e B (a fera que anda). As folhas `cao.png` e `cria.png`. Minha
+  preferência: o A e a A (as razões e as limitações no LEIA-ME).
+- **Processo:** grades à mão; fontes pelo conector do Aseprite (0 diferentes; o composto = as camadas); a exportação
+  igual à grade, @2x exato, 32 e 48 em blocos inteiros. Fotos a 1920×945 nos modos atual, a e b (inclusive as crias
+  invocadas pelo antagonista, num cenário só do protótipo), sem erro no console.
+- **Continua:** a escolha do Jean; outras criaturas, chefes e o mapa não foram começados.

@@ -1051,21 +1051,27 @@ do catálogo):**
   aprovado no Atacar do Mago (1.177.0).
 - **Fora das criaturas, na 1.180.0:** o ícone do **Esgotado** do mercado (o caixote, papel próprio `MOTIVO`; o cesto
   guardado como não escolhido; o cadeado continua nos outros motivos e usos).
-- **Nenhuma proposta aguardando o Jean** (22/10/2026, na 1.184.0). Histórico, não escolhidos: as Harpias HA, HB, H1 a
-  H3 e a T, o GB, o GA e o GA2 (`criaturas/harpia_grifo/`, `criaturas/rodada_23_10/`), o CB, o XA e o XB
-  (`criaturas/caidos/`), os Xamãs X1, X2, X3 e o X1r.
-  No jogo, os caídos são diabretes, do traço `demonio`. Uso previsto de cada
-  um: pela própria família (a carta, o Bestiário, o mural, o rastreador, a faixa do mestre caçador); o Dragão de Gelo
-  e o Cão infernal continuam no `voador` e no `demonio`.
+- **Propostas aguardando o Jean (22/10/2026, na 1.184.0; nenhuma autorizada):** o **Cão infernal** (A, o que rosna de
+  perfil; B, o mastim de cabeça baixa) e a **Cria do Vazio** (A, o caco da Fenda; B, a fera que anda), em
+  `criaturas/fenda/` (as folhas `cao.png` e `cria.png`; a minha preferência, o A e a A). A cria que o antagonista
+  invoca é da família `cria_vazio` e usará o mesmo retrato. Histórico, não escolhidos: as Harpias HA, HB, H1 a H3 e a
+  T, o GB, o GA e o GA2 (`criaturas/harpia_grifo/`, `criaturas/rodada_23_10/`), o CB, o XA e o XB
+  (`criaturas/caidos/`), os Xamãs X1, X2, X3 e o X1r. Uso previsto de cada um: pela própria família (a carta, o
+  Bestiário, o mural, o rastreador, a faixa do mestre caçador); o Dragão de Gelo continua no `voador`.
 - **Nomenclatura (1.181.0, aprovada pelo Jean):** o **ent jovem** é a **Árvore Desperta** e o **Ent Ancião**, a **Árvore
   Anciã** (árvores vivas: "árvores que acordaram com raiva"; o guardião, "uma árvore milenar"). Os ids `ent_jovem` e
   `ent_anciao`, os números, as habilidades e as regras ficam; os saves antigos passam pela migração v5 → v6.
-- **Ainda nos desenhos genéricos dos traços (levantado em `dados.retrato` na 1.184.0):** 7 famílias, a Árvore
-  Desperta (`planta`), o golem de pedra (`construto`), o cavaleiro sombrio e o servo esquelético do Necromante
-  (`caveira`), a abominação (`corrompido`), a cria do Vazio (`etereo`; também a invocação do antagonista) e o cão
-  infernal (`demonio`, o último); 8 guardiões, a Árvore Anciã, a Hidra do Brejo, a Bruxa Afogada, o Dragão de Gelo, o
-  Senhor da Guerra, o Profeta das Cinzas, o Lich Menor (o `etereo` na fase 2) e o Golem Primordial; e, fora do
-  catálogo, o antagonista (`humano`) e as crias dele (`etereo`).
+- **Ainda nos desenhos genéricos dos traços (levantado em `dados.retrato` na 1.184.0):**
+  - **6 famílias inimigas:** a Árvore Desperta (`planta`), o golem de pedra (`construto`), o cavaleiro sombrio
+    (`caveira`), a abominação (`corrompido`), a cria do Vazio (`etereo`; a mesma família quando o antagonista a invoca)
+    e o cão infernal (`demonio`, o último); os dois últimos em proposta (`criaturas/fenda/`).
+  - **8 guardiões:** a Árvore Anciã, a Hidra do Brejo, a Bruxa Afogada, o Dragão de Gelo, o Senhor da Guerra, o Profeta
+    das Cinzas, o Lich Menor (o `etereo` na fase 2) e o Golem Primordial.
+  - **O antagonista** (família `antagonista`, só no mundo gerado): sem retrato próprio, no `humano` pelo traço
+    `conjurador`.
+  - **À parte, do lado do herói:** o servo do Necromante (o "Esqueleto (Invocado)" do Erguer Servo e o inimigo erguido
+    pelo Rei dos Mortos) é um aliado de `tipo` servo, sem família, desenhado na `caveira` pela tela; a família
+    `esqueleto_servo` do catálogo não é criada por nenhum código.
 - **Compartilhamentos deliberados:** o Lobo Cinzento aliado com o retrato do Lobo (1.165.0; o lado, o nome e a borda
   separam os papéis); os invocados com o retrato da família que os invoca ou a que pertencem (os afogados da Ilse, as
   aranhas da Rainha, os lobos e bandidos líderes e invocados); os fiéis do Profeta e os dois de capa escura da sacristia
@@ -1227,7 +1233,8 @@ volta à pauta quando essa expansão exigir; não é uma migração de engine.
 2. **Agora, 1E.3:** as demais criaturas, os chefes e as invocações, em pares pequenos escolhidos pelo Jean, pelo mesmo
    caminho (o retrato por família, por chave ou pelo tipo, sem trocar o sprite compartilhado). O Mercenário, o Lobo
    Gélido e o Esgotado integrados (1.179.0, 1.180.0); o Caído CA (1.182.0); o Grifo GA3 (1.183.0); a Harpia T2 e o Xamã
-   Caído X1r2 (1.184.0). **A seguir, quando o Jean pedir:** o cão infernal e a cria do Vazio (recomendado); depois, os
+   Caído X1r2 (1.184.0). **Aguardando o Jean:** o Cão infernal (A, B) e a Cria do Vazio (A, B)
+   (`criaturas/fenda/`); depois, os
    outros comuns e os chefes, sem começar antes do pedido. A relação em "A frente de criaturas em 22/10/2026" (item 1.12). O Esqueleto E2 e o Bandido do
    chapéu estão reservados.
 3. **Depois, 1E.4:** os caminhos/destinos e os símbolos internos do mapa e do minimapa.
