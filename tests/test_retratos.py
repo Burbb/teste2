@@ -90,6 +90,35 @@ class TestRetratos(unittest.TestCase):
                 for sufixo in ("", "@2x"):
                     self.assertTrue((ESTATICO / f"hud/icones/{arquivo}-{lado}{sufixo}.png").exists(), (arquivo, lado))
 
+    def test_caido_pela_familia(self):
+        # 1.182.0: o caído pela família, com os que o xamã ergue (o Reviver levanta o mesmo caído morto); o xamã caído
+        # (família própria) e o cão infernal continuam no "demonio"
+        import random
+        from rpg.inimigos import criar
+        self.assertEqual(retrato(FAMILIAS["caido"]["tracos"], "caido"), "caido")
+        self.assertEqual(FAMILIAS["xama_caido"]["revive"], "caido")
+        caido = criar(random.Random(5), "caido", 3, "feroz")
+        self.assertEqual(retrato(caido.tracos, caido.familia, caido.chave), "caido")
+        for fam in ("xama_caido", "cao_infernal"):
+            self.assertEqual(retrato(FAMILIAS[fam]["tracos"], fam), "demonio", fam)
+        # o reerguido: o Reviver do xamã levanta o mesmo caído morto, que continua com o retrato da família
+        from rpg.inimigos import HABS_INIMIGO
+        xama = criar(random.Random(6), "xama_caido", 3)
+        caido.hp = 0
+
+        class Luta:
+            inimigos, mortos, rng = [xama, caido], [caido], random.Random(1)
+
+            def dizer(self, *_):
+                pass
+        luta = Luta()
+        HABS_INIMIGO["reviver"](luta, xama, None)
+        self.assertTrue(caido.vivo and caido not in luta.mortos)
+        self.assertEqual(retrato(caido.tracos, caido.familia, caido.chave), "caido")
+        icones = (ESTATICO / "icones.js").read_text(encoding="utf-8")
+        self.assertIn('caido: "retrato-caido"', icones)
+        self.assertNotIn("xama_caido:", icones)
+
     def test_troll_pela_familia_e_o_rei_pelo_guardiao(self):
         # o troll da montanha pela família (1.166.0); o Rei Troll pelo id do guardião (1.167.0), em qualquer lugar
         self.assertEqual(retrato(FAMILIAS["troll"]["tracos"], "troll"), "troll")

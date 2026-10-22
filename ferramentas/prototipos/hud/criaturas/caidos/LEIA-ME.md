@@ -59,3 +59,15 @@ cabeça e se distingue pelo que veste e pelo fogo (a Bola de Fogo), não pela co
   Bestiário, nos modos atual, A e B, trocados só na página pelo nome; sem erro no console.
 - As folhas `caido.png` e `xama_caido.png` (`python auxiliares/prancha.py`); na fileira do xamã, os dois caídos
   propostos ao lado.
+
+## A escolha e o jogo (1.182.0)
+
+- **O CA, o que ri, aprovado pelo Jean sem retoque**, integrado pela família (`RETRATO_FAMILIA`: `caido`; o papel
+  `CRIATURA`): os caídos comuns, os afixos, os do bando e os que o xamã ergue (o Reviver levanta o mesmo caído morto,
+  com o mesmo retrato). O Xamã Caído (família própria) e o Cão infernal continuam no sprite de demônio.
+- A fonte em `ferramentas/arte/aseprite/retrato-caido/` (a cópia da `fontes/caido-ca/`); os seis PNGs idênticos byte a
+  byte aos de `proposta/`. Conferido com os arquivos de produção (`auxiliares/fotografar_jogo.mjs`, `capturas-1182/`,
+  a 1920×945): o bando na carta, o Bestiário, o cartaz do mural e o rastreador; nenhum pedido a `ferramentas/`; sem erro
+  no console.
+- **O CB não foi escolhido; o XA e o XB ficam como histórico** (o XA: o crânio claro lia como um segundo rosto acima do
+  verdadeiro, e o crânio, os olhos e a chama disputavam a atenção). A rodada nova do xamã está em `../rodada_23_10/`.

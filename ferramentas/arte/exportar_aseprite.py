@@ -114,6 +114,8 @@ DERIVADOS = {
     # 1.179.0: o mercenário (o MA: o chapéu de ferro) e o lobo gélido (o LA: o lobo da geada), pela família
     "retrato-mercenario": {32: (16, 2), 48: (16, 3)},
     "retrato-lobo-gelido": {32: (16, 2), 48: (16, 3)},
+    # 1.182.0: o caído (o CA: o diabrete que ri), pela família; o xamã caído continua no "demonio"
+    "retrato-caido": {32: (16, 2), 48: (16, 3)},
 }
 # O martelo (1.149.0) só tem fontes do 40 e do 48 (aseprite/martelo/): o 32 e o 64 são a grade de desenhos.js, no
 # jogo, e não saem daqui.
