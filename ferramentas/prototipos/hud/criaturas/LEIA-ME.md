@@ -198,3 +198,9 @@ A escolha do par e da direção é do Jean; nada foi começado.
   erguido pelo Rei dos Mortos) é um `Aliado` de `tipo` servo, desenhado na `caveira` pela tela, sem família; a família
   `esqueleto_servo` do catálogo não é criada por nenhum código. O antagonista (família `antagonista`, só no mundo
   gerado) cai no `humano` pelo traço `conjurador`; a cria que ele invoca é da família `cria_vazio`.
+
+## A Abominação e o Cavaleiro Sombrio (22/10/2026, na 1.186.0)
+
+- **Integrados desde a seção anterior:** a Cria do Vazio A2 (1.185.0) e o Cão infernal P1 (1.186.0), de `fenda/`.
+- **Em avaliação, nenhum aprovado:** a Abominação (A, a boca costurada; B, o brutamontes curvado) e o Cavaleiro Sombrio
+  (A, o elmo fechado; B, a espada e a crista), em `cidadela/` (as folhas `abominacao.png` e `cavaleiro.png`).
