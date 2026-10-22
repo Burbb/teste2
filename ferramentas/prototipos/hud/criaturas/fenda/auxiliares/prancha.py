@@ -2,7 +2,7 @@
 1920×945 em tamanho real e a 2× (a da cria também como invocada pelo antagonista), o cartão do Bestiário (48) em tamanho
 real, a fileira com os retratos aprovados pertinentes (na caixa da carta, real e 3×) e a 12× com a grade, sem
 suavização. Tudo trocado só na página (protótipo).
-    python prancha.py [cao|cria ...]      (depois do fotografar.mjs)
+    python prancha.py [cao|cria|cria-a2|cao-t ...]      (depois do fotografar.mjs)
 """
 import json
 import pathlib
@@ -29,7 +29,16 @@ CRIATURAS = {
                                ("A, o caco da Fenda", "a", "cria-vazio-a"),
                                ("B, a fera que anda", "b", "cria-vazio-b")],
              ("espectro", "cultista", "carnical", "aranha"), ["luta-cria", "luta-invocada"]),
+    # a segunda passada: a Cria A × A2 e a referência do Cão × a transposição T
+    "cria-a2": ("Cria do Vazio", [("A (a primeira passada)", "a", "cria-vazio-a"),
+                                  ("A2, o volume nos cacos", "c", "cria-vazio-a2")],
+                ("espectro", "cultista", "carnical", "aranha"), ["luta-cria", "luta-invocada"]),
+    "cao-t": ("Cão infernal", [("atual (o jogo: o demônio)", "atual", None),
+                               ("T, a transposição da referência", "c", "cao-infernal-t")],
+              ("lobo", "lobo-gelido", "caido", "xama-caido"), ["luta-cao"],
+              ("Cão infernal em pixel art.png", (50, 40, 1250, 1240), "cao-infernal-t-guia-16.png")),
 }
+REFERENCIAS = AQUI.parents[5] / "ferramentas/arte/referencias/icones"
 
 
 def amplia(im, z):
@@ -59,7 +68,7 @@ def desenho(ident):
 
 
 def folha(chave):
-    nome, colunas, aprovados, lutas = CRIATURAS[chave]
+    nome, colunas, aprovados, lutas, *ref = CRIATURAS[chave]
     reg = json.loads((CAP / "registro.json").read_text(encoding="utf-8"))
 
     def caixa_de(sit, modo):  # a carta da criatura (a primeira, se houver duas; a invocada pelo nome com a letra)
@@ -70,6 +79,17 @@ def folha(chave):
     d = ImageDraw.Draw(out)
     d.text((20, 10), f"{nome} — trocados só na página (protótipo); nada no jogo", fill=TEXTO, font=f)
     y = 38
+    if ref:  # a referência (o recorte da guia, reduzido só para olhar), a guia de 16 (oculta na fonte) e a proposta, a 12×
+        arquivo, corte, guia = ref[0]
+        d.text((20, y), "a referência (imagem gerada; o recorte da guia, reduzido só para olhar) | a guia de 16, oculta na "
+               "fonte (o recorte reduzido por média) | a transposição — a 12×", fill=TEXTO, font=f2)
+        im = Image.open(REFERENCIAS / arquivo).convert("RGBA")
+        fundo = Image.new("RGBA", im.size, CARVAO)
+        fundo.alpha_composite(im)
+        out.alpha_composite(fundo.crop(corte).resize((192, 192), Image.LANCZOS), (20, y + 18))
+        out.alpha_composite(grade12(Image.open(PASTA / "guias" / guia).convert("RGBA")), (232, y + 18))
+        out.alpha_composite(grade12(desenho(colunas[-1][2])), (444, y + 18))
+        y += 18 + 192 + 24
     for sit in lutas:
         rot_sit = "a carta na luta" if sit != "luta-invocada" else "a carta da cria invocada pelo antagonista"
         d.text((20, y), f"{rot_sit} (1920×945), tamanho real e 2×", fill=TEXTO, font=f2)

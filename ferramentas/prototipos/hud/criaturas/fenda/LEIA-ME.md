@@ -86,3 +86,55 @@ acesa por dentro e os dentes negros de obsidiana contra ela, com um brilho frio 
   Bestiário; sem erro no console.
 - As folhas (`python auxiliares/prancha.py`): `cao.png` e `cria.png`, com o jogo de hoje × A × B na carta (real e 2×; a
   da cria também como invocada), no Bestiário (48), a fileira com os aprovados e a 12×.
+
+# A segunda passada: a Cria A2 e o Cão T (22/10/2026, propostas; nada no jogo)
+
+**A avaliação do Jean:** da Cria, a A é a direção (o caco flutuante, rachado, com a energia saindo de dentro), com uma
+alternativa de mais volume nos planos sólidos; do Cão, o A e o B não foram escolhidos, e a imagem gerada `Cão infernal
+em pixel art.png` (registrada no LEIA-ME das referências) passa a ser a principal. As A e B continuam aqui como estavam.
+
+## A Cria A2 (`cria-vazio-a2`)
+
+- **O problema da A:** o miolo escuro dos cacos se misturava ao fundo da carta, e a leitura dependia só da borda e da
+  fissura.
+- **O refinamento:** a silhueta, os fragmentos, a fissura e a paleta da A pixel a pixel (conferido); cada caco ganha um
+  plano de luz violeta (`p`, 46356e) junto da borda de fora (o da esquerda em cima, o da direita no meio), e o escuro
+  fundo fica junto da fissura, como a profundidade da abertura entre eles. Sem rosto, olhos, inscrições nem acessórios.
+- Na bancada, um plano mais escuro (34284f) quase não se distinguia da A na carta; o 46356e continua escuro o bastante
+  para a cria seguir etérea, e o centro aceso continua o ponto principal.
+
+## O Cão T, a transposição da referência (`cao-infernal-t`)
+
+- **A guia** (`guias/cao-infernal-t-guia-16.png`, a camada `guia` oculta na fonte, fora da exportação): o recorte
+  quadrado de 1200 px a partir de (50, 40) da referência (1254×1254, ampliada; não é grade nativa), reduzido a 16 por
+  média, sem esticar (75 px por pixel); a silhueta medida pelo alfa da referência no mesmo recorte.
+- **Medido e redesenhado à mão:** a orelha dobrada no alto (colunas 2 a 5, linhas 0 a 2); a testa pesada como a faixa
+  de luz (linha 4) sobre o sobrolho escuro (linha 5); o olho de trás em (3,5) e o da frente, estreito e aceso, em (8,6)
+  e (9,6); o focinho largo nas colunas 0 a 6 com as rugas do rosnado; o nariz grande nas linhas 7 a 9 (cinza escuro com
+  o brilho: o negro da referência sumia na caixa escura); a gengiva do lábio levantado; a goela acesa nas linhas 10 e
+  11, cortada pela presa negra grande (coluna 5, linhas 10 a 12) e a da frente com o reflexo; a mandíbula e o queixo; a
+  orelha de trás à direita com o vermelho dentro; o pescoço escuro com a rachadura em poucos pontos, da nuca até
+  embaixo. A boca não vira faixa de dentes nem sorriso: a presa atravessa a goela na vertical.
+- **Simplificado de propósito:** as rugas e as rachaduras da imagem viram três faixas de luz (a testa, o focinho, o
+  lábio de baixo) e sete pontos de brasa.
+- **Na bancada:** a primeira separava o rosto marrom e o pescoço de carvão como dois objetos, e o nariz negro sumia; o
+  marrom virou luz em faixas horizontais sobre uma massa escura só, o nariz clareou para o cinza com o brilho, e a
+  rachadura pontilhada do pescoço caiu pela metade.
+
+## A minha leitura (quem escolhe é o Jean)
+
+- **Cria A2:** os cacos passam a ter espessura e a fissura lê como a abertura entre eles, sem a cria ficar clara ou
+  sólida demais. Prefiro a A2. **Limitação:** a 32 o ganho é discreto; a A continua disponível.
+- **Cão T:** a construção da referência aparece a 48 (o Bestiário): o focinho largo com o nariz, os olhos estreitos sob
+  a testa, a goela acesa com a presa negra, o pescoço com a brasa. **Limitação:** a 32 (a carta) a cabeça em três
+  quartos fica pesada e escura; lê como uma cabeça rosnando, mas o "cão" depende do nariz e da boca, e a orelha dobrada
+  lê como um tufo.
+
+## Processo
+
+- As grades em `auxiliares/grades.py` (`CRIA_A2`, `CAO_T`; as paletas `cria` com o `p` e `cao_t`); as fontes pelo
+  conector do Aseprite (0 diferentes na releitura; o composto 164 e 178 = as camadas visíveis; a guia oculta no Cão); a
+  exportação igual à grade, sem a guia, o @2x exato, o 32 e o 48 em blocos inteiros.
+- As fotos no modo `c` (`MODOS=c`), a 1920×945, com os mesmos dados, sem erro no console. As folhas (`python
+  auxiliares/prancha.py cria-a2 cao-t`): `cria-a2.png` (A × A2 na carta, como invocada, no Bestiário, a fileira e a
+  12×) e `cao-t.png` (a referência, a guia e a T a 12×; o jogo de hoje × a T na carta e no Bestiário; a fileira).

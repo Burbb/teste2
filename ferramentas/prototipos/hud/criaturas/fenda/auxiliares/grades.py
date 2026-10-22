@@ -32,6 +32,13 @@ PALETAS = {
     "cria": {
         "v": "0e0a16", "V": "2a1e40", "u": "5a4488",  # o Vazio (o miolo, o corpo, a borda)
         "m": "a83a98", "M": "e070d0", "w": "f4e4ff",  # a Fenda (funda, acesa, o mais claro)
+        "p": "46356e",  # o plano de luz dos cacos (a A2)
+    },
+    "cao_t": {  # medidas na referência "Cão infernal em pixel art.png" (o carvão, o couro marrom da luz, a brasa)
+        "k": "120c0c", "c": "342628", "C": "4a3836", "b": "5e3424", "B": "8a5236", "L": "b4744a",
+        "n": "2c2830", "N": "8a8494",  # o nariz (o negro clareado para não sumir na caixa escura; o brilho)
+        "r": "7a1a0a", "o": "d8501a", "O": "ff9a2a", "y": "ffe07a",  # a brasa funda (a gengiva, a orelha), viva, a goela
+        "t": "120e18", "T": "6a6488", "e": "ffb030",  # a obsidiana das presas e o reflexo dela; o olho
     },
 }
 
@@ -108,6 +115,57 @@ CRIA_B = [  # a primeira, de pernas finas e cabeça menor, virava um emaranhado 
     ".MMM.....MMM....",
 ]
 
+# A segunda passada (pedido do Jean; propostas, nada no jogo). As A e B anteriores ficam como estavam.
+# A2, a Cria A com volume nos cacos: a silhueta, os fragmentos, a fissura e a paleta da A; cada caco ganha um plano de luz
+# (`p`) junto da borda de fora, o da esquerda em cima e o da direita no meio, e o escuro fundo fica junto da fissura,
+# como a profundidade da abertura entre eles. Num plano mais escuro (34284f) a diferença quase não aparecia na carta.
+CRIA_A2 = [
+    "......V.........",
+    ".....VuV....V...",
+    "....VpuuV..VuV..",
+    "...VppmuuVVvuV..",
+    "...VppvMuuuvvuV.",
+    "..VpppvMMuuvpvuV",
+    ".VppvvvvwMuppvuV",
+    ".VpvvvvwMvppvuV.",
+    "VvpvvvMwvvppvuV.",
+    "VVpvvvMvvvpvuuV.",
+    ".VVpvvmMvvvuuV..",
+    "..VVvvvmvvuuVV..",
+    "...VVvvVvvuVuV..",
+    "....Vu.VvuV.Vu..",
+    "...Vu...Vu...Vu.",
+    "..Vu....Vu....V.",
+]
+# T, o Cão infernal pela referência gerada "Cão infernal em pixel art.png" (ferramentas/arte/referencias/icones/), a
+# principal desta tentativa; o A e o B ficam como histórico. Redesenhado à mão medindo na guia oculta
+# (guias/cao-infernal-t-guia-16.png: o recorte quadrado de 1200 px a partir de (50, 40), reduzido por média; cada pixel
+# vale 75 px) e na silhueta pelo alfa dela. Em três quartos para a esquerda: a orelha dobrada no alto, a testa pesada
+# (a faixa de luz) sobre o sobrolho escuro, o olho de trás e o da frente acesos e estreitos sob ele, o focinho largo com
+# as rugas do rosnado, o nariz grande (cinza escuro com o brilho: o negro sumia na caixa), o lábio levantado com a
+# gengiva, a goela acesa cortada pela presa negra grande e a da frente com o reflexo, a mandíbula e o queixo, a orelha de
+# trás à direita com o vermelho dentro e o pescoço escuro com a rachadura em poucos pontos. Na bancada: a primeira tinha a
+# metade marrom e a metade de carvão como dois objetos e o nariz sumido; o marrom virou luz em faixas sobre uma massa só;
+# a rachadura pontilhada do pescoço caiu pela metade.
+CAO_T = [
+    "....bk..........",
+    "..bbrBbcc.......",
+    "..cbBBcCccoc....",
+    "...cbbcCCcccCc..",
+    "..bLLLBBBCcocck.",
+    "..ceckkkkcccorrk",
+    "..LBLLbbeyccC..r",
+    ".NNcbLBbcccCoc..",
+    "nnNbLbbcccccCc..",
+    ".nnrrbBbcccccoc.",
+    ".TOOrtOrbcccccc.",
+    ".tyOOtObcccccCc.",
+    "..bBBtBBbccccocc",
+    "...bbBBbcccccCc.",
+    "......bBccccoc..",
+    "......kbcccc....",
+]
+
 # Histórico (fora da exportação): a primeira B, de pernas finas, que virava um emaranhado na carta.
 CRIA_B_FINA = [
     "................", "................", "...........m..m.", "..........uVu.u.",
@@ -126,6 +184,18 @@ def _camada_cao(x, y, ch):
     return "brasa" if ch in "ro" else "corpo"
 
 
+def _camada_cao_t(x, y, ch):
+    if ch in "tT":
+        return "dentes"
+    if ch in "nN":
+        return "nariz"
+    if ch == "e" or (ch == "y" and y < 8):
+        return "olhos"
+    if ch in "Oy" or (ch == "r" and y >= 9):
+        return "boca"
+    return "brasa" if ch == "o" else "corpo"
+
+
 def _camada_cria(x, y, ch):
     return "fenda" if ch in "mMw" else "corpo"
 
@@ -135,6 +205,8 @@ CAMADAS = {  # a grade, a paleta, as camadas de baixo para cima e a camada de ca
     "cao-infernal-b": (CAO_B, "cao", ["corpo", "brasa", "boca", "dentes", "olhos"], _camada_cao),
     "cria-vazio-a": (CRIA_A, "cria", ["corpo", "fenda"], _camada_cria),
     "cria-vazio-b": (CRIA_B, "cria", ["corpo", "fenda"], _camada_cria),
+    "cria-vazio-a2": (CRIA_A2, "cria", ["corpo", "fenda"], _camada_cria),
+    "cao-infernal-t": (CAO_T, "cao_t", ["corpo", "nariz", "brasa", "boca", "dentes", "olhos"], _camada_cao_t),
 }
 
 
