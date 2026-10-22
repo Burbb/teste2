@@ -87,4 +87,6 @@ entidade formada por pano vazio, rasgado e inflado: o corpo volumoso e arredonda
 um capuz pequeno com a cavidade escura e o olho único; os rasgos revelam escuridão, sem corpo sólido dentro. Vale para a
 anatomia e a relação entre a cabeça e o corpo; o acabamento segue a pixel art simples do jogo. Ampliada, não uma grade
 nativa: o retrato de 16×16 (a cabeça e o começo dos ombros) está em `ferramentas/prototipos/hud/criaturas/terceira_rodada/`
-(`espectro-m`; a guia em `guias/`).
+(`espectro-m`; a guia em `guias/`). **Depois da avaliação (22/10/2026):** o M não foi escolhido; a imagem fica como o
+conceito do corpo inteiro (para a arte de cenário), sem ditar as proporções do ícone, que volta ao Espectro A com o
+pano continuando até a borda (`espectro-ap`).

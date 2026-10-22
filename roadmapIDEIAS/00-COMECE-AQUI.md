@@ -5765,3 +5765,11 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   até a borda de baixo (no protótipo).
 - **Feito:** as fontes de produção, os PNGs idênticos aos aprovados, `RETRATO_FAMILIA` e o papel `CRIATURA`, o teste, o
   gabarito atualizado (só o valor do retrato); conferido na luta e no Bestiário.
+
+### 22/10/2026 (data do computador local) — O espectro AP (só no protótipo)
+
+- **Decisão de Jean:** o espectro M não foi escolhido; o A com o pano continuando até a borda de baixo, sem mudar a
+  cabeça; a referência do manto inflado fica como conceito do corpo.
+- **Feito:** `espectro-ap` numa cópia da fonte do A (só as linhas 11 a 15; conferido no editor e na exportação) e a
+  comparação `ferramentas/prototipos/hud/criaturas/terceira_rodada/espectro-ap.png`.
+- **Continua:** a avaliação do Jean; a versão continua 1.173.0.

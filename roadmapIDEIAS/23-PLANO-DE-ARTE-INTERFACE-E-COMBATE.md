@@ -1020,6 +1020,9 @@ foi escolhida.
   referência do manto inflado, a direção corporal escolhida); as folhas de antes × depois.
 - **No jogo desde a 1.173.0:** o Javali selvagem A3 e o Carniçal A3, pela família; o esqueleto, o cavaleiro sombrio, o
   Lich e as outras feras continuam pelos traços. O espectro M não foi escolhido.
+- **O espectro AP (22/10/2026, proposta; nada no jogo):** o A original com o pano continuando até a borda de baixo (só
+  as linhas 11 a 15); a referência do manto inflado fica como conceito do corpo para a arte de cenário; a comparação
+  `terceira_rodada/espectro-ap.png`. Em avaliação.
 
 O atalho **Mapa** da doca já foi concluído; esta frente trata dos símbolos internos de caminhos e mapas.
 Não afirmar que só restam talentos e habilidades após este bloco sem conferir os consumíveis, variantes e

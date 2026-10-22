@@ -167,3 +167,5 @@ A escolha do par e da direção é do Jean; nada foi começado.
   sanguessuga A.
 - **A terceira rodada (22/10/2026, em avaliação):** `terceira_rodada/`: o carniçal A3, o javali A3 e o espectro M (pela
   referência `Espectro do Manto Inflado.png`). Integrados na 1.172.0: o cultista A, a bruxa B3 e o rato r2.
+- **O espectro AP (22/10/2026, em avaliação):** `terceira_rodada/` (`espectro-ap`): o A com o pano até a borda de baixo.
+  Integrados na 1.173.0: o javali A3 e o carniçal A3.

@@ -46,3 +46,19 @@ Nada integrado. O Esqueleto E1r, o urso e o falcão do acampamento, o cajado e a
   `tests/test_retratos.py` confere as famílias e o esqueleto e o cavaleiro na caveira. O gabarito mudou de propósito só
   no valor do retrato dos inimigos nas transcrições -web.
 - Conferido nos usos reais com os arquivos do jogo (`capturas-1173/`): a luta e o Bestiário, sem erro no console.
+
+## O espectro AP: o A com o pano até a borda (22/10/2026, proposta; nada no jogo)
+
+- **Decisão de Jean:** o M não foi escolhido; voltar ao `espectro-a` (`../quatro_pares/`), preservando exatamente a
+  cabeça, o capuz, a cavidade, o olho, a paleta, a perspectiva e a posição; o único ajuste é o pano da parte de baixo
+  continuar até a borda inferior, saindo do quadro. O corpo enorme fica para a arte de cenário; a referência do manto
+  inflado fica como conceito do corpo, sem ditar as proporções do ícone.
+- **O ajuste** (`espectro-ap`; névoa, vazio): numa cópia da fonte do A, os vãos das linhas 11 a 15 fechados, o pano
+  abrindo um pouco até a largura toda embaixo, com as dobras em sombra. Pelo conector: 50 pixels escritos na camada da
+  névoa, 0 diferentes na releitura, e o composto do editor mudou só abaixo da linha 11 (0 pixels acima); as linhas 0 a
+  10 são idênticas às do A. O composto bate com o PNG exportado; o 32 e o 48 são ampliações inteiras exatas.
+- A comparação `espectro-ap.png` (`python auxiliares/espectro_ap.py`): o A × o AP na carta e no Bestiário em tamanho
+  real, na fileira e a 12×, com a referência do corpo ao lado. O A e o M ficam como histórico.
+- **A minha leitura:** o AP fecha o retrato como os outros bustos da fileira (o pano saindo do quadro, como os ombros do
+  afogado e do cultista), sem mudar a cabeça. Limite: embaixo o pano fica uma massa clara sem os rasgos, e a figura perde
+  um pouco do ar de coisa que flutua.

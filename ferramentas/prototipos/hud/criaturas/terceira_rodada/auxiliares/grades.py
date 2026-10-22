@@ -111,6 +111,28 @@ ESP_M = [
     "cccVcccccscccssS",
 ]
 
+# Espectro AP (22/10/2026, pedido do Jean; o M não foi escolhido): o espectro-a dos quatro pares, igual nas linhas 0 a
+# 10 (a cabeça, o capuz, a cavidade, o olho, a paleta, a posição), com o pano continuando até a borda de baixo: os vãos
+# das linhas 11 a 15 fechados, abrindo um pouco, com as dobras em sombra (o corpo grande fica para a arte de cenário)
+ESP_AP = [
+    "................",
+    "......cccc......",
+    ".....cCCCcs.....",
+    "....cCcSSccs....",
+    "...cCcSVVScss...",
+    "...cCSVEVVScs...",
+    "...cCSVVEVScs...",
+    "...cCSVVVVScss..",
+    "...cCcSVVScsss..",
+    "..ccCccSScccss..",
+    "..cCccccccccss..",
+    ".cCcccccccccss..",
+    ".cCccsccccccsss.",
+    "cCCccsccccscsss.",
+    "cCcccsccccscssss",
+    "cCcccsccccscssss",
+]
+
 
 CAMADAS = {
     "carnical-a3": (CARN_A3, ["corpo", "rosto", "boca"],
@@ -122,6 +144,7 @@ CAMADAS = {
     "espectro-m": (ESP_M, ["manto", "rasgos", "cavidade", "olho"],
                    lambda x, y, ch: "olho" if ch == "E" else "cavidade" if ch in "VS" and y <= 6 else "rasgos" if ch == "V" else "manto",
                    CORES_CARNE_NEVOA),
+    "espectro-ap": (ESP_AP, ["nevoa", "vazio"], lambda x, y, ch: "vazio" if ch in "VE" else "nevoa", CORES_CARNE_NEVOA),
 }
 
 
