@@ -144,6 +144,18 @@ class TestRetratos(unittest.TestCase):
         self.assertIn("Icones.figuraAnimal(f.tipo)", acampamento)
         self.assertIn('spr: d.fera.tipo === "falcao" ? "voador" : "fera", tipo: d.fera.tipo', acampamento)
 
+    def test_atacar_pela_classe_com_os_arquivos_aprovados(self):
+        # o Atacar da roda pelo icone_ataque da classe (com a Besta, o arco; com o Orbe, o cajado): a espada, o arco
+        # (1.169.0) e o cajado (1.177.0) dos equipamentos, no papel ACAO
+        from rpg.classes import CLASSES
+        icones = (ESTATICO / "icones.js").read_text(encoding="utf-8")
+        papel = re.search(r"const ACAO = \{([^}]*)\}", icones).group(1)
+        for classe, c in CLASSES.items():
+            desenho = c["icone_ataque"]
+            self.assertIn(f'{desenho}: "{desenho}"', papel, classe)
+            for sufixo in ("", "@2x"):
+                self.assertTrue((ESTATICO / f"hud/icones/{desenho}-32{sufixo}.png").exists(), (classe, sufixo))
+
 
 if __name__ == "__main__":
     unittest.main()

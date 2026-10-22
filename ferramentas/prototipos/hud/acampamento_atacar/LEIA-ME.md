@@ -240,3 +240,11 @@ real e 2×), a figura a 8× e o retrato aprovado; o Atacar do Mago, hoje × o ca
   `fontes/animal-falcao/`); os PNGs (16 e @2x) idênticos byte a byte aos de `proposta/`; `--conferir` igual ao jogo.
 - Na cena real a 1920×945 (`capturas-1176/`): a figura com o chão, a sombra e a luz da fogueira, pixel a pixel igual às
   capturas das propostas na área do animal (o resto muda só pelo fogo e pelo céu animados); sem erro no console.
+
+## O cajado no Atacar do Mago (1.177.0)
+
+- Aprovado pelo Jean, conforme o teste do `df24f9e5`: o Atacar do Mago na roda usa o arquivo do cajado de equipamento
+  (`cajado-32`, o mesmo dos Cajados), pelo papel `ACAO` e pela classe (`icone_ataque`), como a espada do Guerreiro e o
+  arco do Arqueiro; com o Orbe, o Grimório ou a Varinha na mão, continua o cajado. O traço Conjurador dos inimigos
+  segue com o sprite; a página do ataque básico no Grimório fica registrada para a etapa 8.
+- Na roda real a 1920×945 (`capturas-1177/roda-mago.png`): o `cajado-32.png` a 32×32, igual à captura do teste.

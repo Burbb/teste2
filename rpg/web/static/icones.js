@@ -73,8 +73,9 @@ const Icones = (() => {
   // únicos Lamento de Gharbad e O Açougueiro); o Redemoinho e a Fúria usam o mesmo sprite noutro papel e ficam com o
   // do jogo. O arco de teixo (1.101.0) vale para os três arcos e os únicos Ventre da Tempestade e Sussurro do Vazio;
   // desde a 1.169.0 também o Atacar do Arqueiro na roda (ACAO); o Tiro Duplo e o contrato de caça continuam com o
-  // sprite. O cajado de carvalho com o cristal cravado (1.106.0) vale para os Cajados e o único Cajado da Peste; o Atacar do Mago na roda e o traço
-  // Conjurador dos inimigos usam o mesmo sprite noutro papel e continuam com ele. O orbe de vidro violeta na taça de
+  // sprite. O cajado de carvalho com o cristal cravado (1.106.0) vale para os Cajados e o único Cajado da Peste;
+  // desde a 1.177.0 também o Atacar do Mago na roda (ACAO, pela classe, qualquer que seja a arma); o traço Conjurador
+  // dos inimigos usa o mesmo sprite noutro papel e continua com ele. O orbe de vidro violeta na taça de
   // latão (1.107.0) vale para a arma Orbe, o apoio Foco Arcano e o único Olho do Abismo (nenhum outro papel usa
   // o desenho "orbe": os orbes dos projéteis são outros sprites). O grimório fechado de couro violeta com latão
   // (1.108.0) vale para a arma Grimório, o apoio Tomo e o único Tomo do Nome Esquecido; o talento Mente Vasta (o
@@ -164,7 +165,7 @@ const Icones = (() => {
   // a roda da luta: o ataque da classe (a espada do Guerreiro, 1.145.0; o arco do Arqueiro, 1.169.0, o mesmo arquivo do
   // equipamento: o ícone é da classe, então com a Besta também), Habilidades (o grimório), Itens (a poção) e Fugir (a
   // bota com os riscos de movimento, a mesma da Agilidade: correr, não a porta do Sair)
-  const ACAO = { espada: "espada", arco: "arco", grimorio: "atalho-grimorio", pocao: "pocao", fuga: "attr-agilidade" };
+  const ACAO = { espada: "espada", arco: "arco", cajado: "cajado", grimorio: "atalho-grimorio", pocao: "pocao", fuga: "attr-agilidade" };
   // os ícones dos estados da luta (16, o chip da carta e o selo do estado que chega), pelo id do estado no motor
   // (rpg/estados.py): o Firme (1.155.0, a corrente rompida: dois elos com o vão da ruptura), o Em guarda (1.156.0, o
   // escudo de ferro em pé, o aro e a face em duas águas) e a Esquiva (1.157.0, a figura em movimento: a cabeça, o braço

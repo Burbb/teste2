@@ -565,7 +565,8 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
 - O escudo e o Unguento de Prata (1.94.0), o machado e a Bomba de Fumaça (1.99.0) o arco (1.101.0,
   `desenhar_arco_pixel.py`; desde a 1.169.0 também o Atacar do Arqueiro na roda, pela classe, com a Besta
   inclusive; o Tiro Duplo e o contrato continuam com o sprite) e o cajado (1.106.0,
-  `desenhar_cajado_pixel.py`; o Atacar do Mago na roda e o traço Conjurador continuam com o sprite) e o orbe (1.107.0,
+  `desenhar_cajado_pixel.py`; desde a 1.177.0 também o Atacar do Mago na roda, pela classe, qualquer que seja a
+  arma; o traço Conjurador continua com o sprite) e o orbe (1.107.0,
   `desenhar_orbe_pixel.py`; a arma Orbe, o Foco Arcano e o Olho do Abismo) e o grimório fechado (1.108.0,
   `desenhar_grimorio_fechado_pixel.py`; a arma Grimório, o apoio Tomo e o Tomo do Nome Esquecido; o talento Mente
   Vasta, os atalhos do Diário e do Grimório e o livro da capela continuam com os deles) e a varinha (1.109.0; a arma

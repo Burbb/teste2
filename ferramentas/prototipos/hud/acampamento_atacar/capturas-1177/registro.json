@@ -1,0 +1,22 @@
+{
+ "roda-mago": {
+  "erros": [],
+  "src": "/static/hud/icones/cajado-32.png",
+  "classe": "sprite desenho ",
+  "tela": [
+   32,
+   32
+  ],
+  "natural": [
+   32,
+   32
+  ],
+  "icone": [
+   281,
+   12,
+   313,
+   44
+  ],
+  "arma": null
+ }
+}
