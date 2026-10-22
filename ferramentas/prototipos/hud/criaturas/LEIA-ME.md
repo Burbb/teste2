@@ -138,7 +138,8 @@ A escolha do par e da direção é do Jean; nada foi começado.
   continua em proposta: o A2 (o A desenvolvido pela referência gerada, `esqueleto-a2.png`) e o A2n (o mesmo com o nariz refeito,
   `esqueleto-a2n.png`, a base aprovada); sobre ele, o sorriso contido (S1) e o marcado (S2),
   `esqueleto-sorriso.png`, não aprovados; o C, a nova direção pela segunda referência gerada, não aprovado (o sorriso de comercial);
-  o C2, com a boca de caveira (`esqueleto-c.png`), aguarda o Jean.
+  o C2, com a boca de caveira (`esqueleto-c.png`), também não; refeito do zero em
+  `esqueleto_novo/` (E1, o guarda morto; E2, o encapuzado; E3, a caveira nua; `esqueleto-novo.png`), aguarda o Jean.
 
 ## Reservado
 

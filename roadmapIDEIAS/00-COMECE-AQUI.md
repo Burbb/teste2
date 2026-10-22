@@ -5653,3 +5653,12 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   mandíbula claros, os cantos nas cavidades); `esqueleto-c2` com só a boca refeita (a C preservada), retocado pelo
   conector e conferido; a folha `esqueleto-c.png` com a referência × C × C2.
 - **Continua:** a avaliação do Jean; nada no jogo.
+
+### 21/10/2026 (data do computador local) — O Esqueleto do zero, três direções, só no protótipo
+
+- **Pedido de Jean:** o C2 não agradou; refazer do zero, combinando com a estética do jogo, sem relação com as
+  tentativas anteriores; três variações.
+- **Feito:** `ferramentas/prototipos/hud/criaturas/esqueleto_novo/`: E1 (o guarda morto, de elmo e malha), E2 (o
+  encapuzado) e E3 (a caveira nua em três quartos); as fontes pelo conector, a exportação conferida, a folha
+  `esqueleto-novo.png`. Minha preferência: a E1.
+- **Continua:** a escolha do Jean; nada no jogo (a versão continua 1.169.0).
