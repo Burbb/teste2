@@ -90,3 +90,11 @@ nativa: o retrato de 16×16 (a cabeça e o começo dos ombros) está em `ferrame
 (`espectro-m`; a guia em `guias/`). **Depois da avaliação (22/10/2026):** o M não foi escolhido; a imagem fica como o
 conceito do corpo inteiro (para a arte de cenário), sem ditar as proporções do ícone, que volta ao Espectro A com o
 pano continuando até a borda (`espectro-ap`).
+
+**`Harpia vulturina em pixel art.png`** (1254×1254, RGBA com fundo transparente, 22/10/2026, data do computador local): **a referência principal
+da Harpia**, uma imagem gerada na conversa com o Jean e deixada aqui por ele; sem outra origem ou autoria informada. Dela
+vem a construção: o rosto humano feminino anguloso em três quartos para a esquerda, a expressão cruel e os olhos âmbar
+atentos sob a sobrancelha pesada, o nariz curvo e a boca fechada, as penas escuras nascendo das têmporas e varrendo para
+trás, o pescoço entrando na gola clara de abutre e a plumagem dos ombros ligada ao resto. Ampliada, não uma grade
+nativa: a transposição para 16×16 está em `ferramentas/prototipos/hud/criaturas/rodada_23_10/` (`harpia-t`; a guia em
+`guias/`). As Harpias anteriores (HA, HB, H1 a H3) ficam como histórico.
