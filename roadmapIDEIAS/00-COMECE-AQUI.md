@@ -5808,3 +5808,49 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   texto com `cursor: help`; o cenário `fogueira` com `CONVERSA=1` quebra se houver alguém na `RESERVA` (`cm.membro` não
   acha quem está no acampamento).
 - **Continua:** o Esqueleto E1r, o urso e o falcão do acampamento e o cajado em avaliação; o próximo par fica com o Jean.
+
+### 22/10/2026 (tarde, data do computador local) — Integrações, correções, o Esgotado, o par novo e o nome do Ent (1.175.0 a 1.178.0)
+
+- **Retomada em outra conta:** a sessão anterior parou por limite de uso com três commits locais sem push (1.175.0 a
+  1.177.0); conferidos e mantidos, sem refazer.
+- **Integrados (aprovados pelo Jean, sem retoque):** o Esqueleto E1r pela família, com os invocados do Lich (1.175.0; o
+  servo aliado do Necromante, o servo esquelético, o cavaleiro sombrio e o Lich continuam na caveira); o urso r4 e o
+  falcão na fogueira, pelo tipo (1.176.0; o lobo c2 e os retratos da carta e do painel iguais); o cajado aprovado no
+  Atacar do Mago, pela classe (1.177.0; o Grimório fica para a etapa 8). O gabarito mudou só no valor do retrato
+  (caveira → esqueleto) na 1.175.0.
+- **Correções, um commit por assunto:** 1.177.1, a mochila e o mercado sem o "tudo é ganho" no espaço vazio (como o
+  saque; nos anéis, só a troca com o anel vestido); 1.177.2, a marca de contrato no texto com o cursor normal (é
+  informação com dica; a dica e o rótulo ficam); o cenário `fogueira` com `CONVERSA=1` e alguém na `RESERVA`: o defeito
+  era só da preparação do cenário (`cm.membro` não acha quem espera no acampamento), o fluxo do jogo estava certo
+  (conferido: as duas conversas, o "Levar", dormir), com regressão em `tests/test_cenarios.py`; 1.178.0, a curandeira
+  continua aberta depois de tratar (a tela se redesenha com vida, ouro e ferimentos de agora; sem nada para tratar, a
+  fala de quem atende e só o Voltar; o resultado numa confirmação curta, "Corte profundo: tratado", 2,4 s, com o "−N
+  ouro" de sempre; o clique triplo não trata nem cobra o ferimento seguinte, pela regra do Gesto). Preços, eficácia e
+  regras de cura iguais; entrar saudável continua no balcão fechado.
+- **Verificações sobre o código final:** `unittest` (647, a fumaça pulada no comando), o gabarito idêntico, o pyflakes só
+  com o aviso conhecido e a fumaça inteira (378 conferências, tudo certo), uma vez cada.
+- **Em avaliação (protótipo, nada no jogo):** o ícone do Esgotado do mercado (`itens-lote-noite/esgotado/`: não é
+  estado, é o motivo do suprimento sem estoque, a 16×16 no cartão, hoje no `cadeado` compartilhado; A, o caixote vazio;
+  B, o cesto vazio); o Mercenário (MA, o chapéu de ferro; MB, a coifa de malha) e o Lobo Gélido (LA, o lobo da geada;
+  LB, o lobo da nevasca), em `criaturas/mercenario_lobo_gelido/`. As fontes saíram do Aseprite em lote
+  (`montar_camadas.lua`): o conector desta sessão estava sem a porta 6515, presa pelo bridge da sessão anterior; só
+  aquele node foi encerrado, e o `aseprite-bridge` daqui precisa ser religado pelo `/mcp`.
+- **O Ent (só levantamento, nada renomeado):** no jogo são **árvores vivas**, não espíritos: o ent jovem é "árvores que
+  acordaram com raiva" (planta, blindado; Preparar Golpe e Regenerar; queima com fogo), da floresta, nível 3+; o Ent
+  Ancião é o guardião do covil da floresta, "uma árvore milenar" que abre os olhos e fala, com Agarrar e Varredura, e na
+  fase 2 a casca racha e solta uma luz verde. O Espantalho Possuído usa os números do ent jovem. **Três pares**
+  (recomendo o primeiro): **Árvore Desperta / Árvore Anciã** (o "acordaram" da descrição e o "milenar" do covil);
+  **Árvore Furiosa / Árvore Milenar** (a raiva da descrição e a idade da introdução); **Árvore Jovem / Árvore Anciã** (a
+  mesma relação de idade de hoje, a tradução mais conservadora). **Alcance da troca:** os ids `ent_jovem` e
+  `ent_anciao` ficam (família, Bestiário, contratos, `BIOMAS`, retrato, guardião); mudam o `nome`, o `plural` e o
+  gênero (`g` de "m" para "f": os afixos concordam, "Árvore Desperta Feroz") em `FAMILIAS`, o `base` e o `g` em
+  `GUARDIOES["floresta"]`, a fala da fase 2 ("A casca do Ent racha"), a chave de `sinais_do_guardiao`
+  (`eventos/comuns.py`, pelo `base`) e o `NOMES_ANTIGOS` de `tests/replay.py`. **Saves:** o guardião gravado guarda o
+  `nome` ("<Nome>, o Ent Ancião") e o `base` (os sinais do covil dependem dele), e os contratos guardam o texto
+  ("Eliminar 3 ents jovens em …", "Caçar <Nome>, o ent jovem enorme…"): a troca pede uma migração (`migracoes.py`) que
+  reescreva esses textos pelo id. O gabarito muda nos nomes, de propósito.
+- **Anotado, sem mexer:** o amanhecer de noite ruim ignora clique e tecla por 500 ms; nível, especialização e contratos
+  ignoram só o teclado por 600 ms; depois de tratar o último ferimento com a Pita, a fala dela ("Se precisar de
+  cuidados, sou eu que atendo") é a do prédio fechado, escrita para quem chega.
+- **Continua:** o Jean escolhe o Esgotado, o Mercenário, o Lobo Gélido e o nome do Ent; o próximo par e o mapa não foram
+  começados.
