@@ -3,7 +3,8 @@
 // invocadas pelo antagonista (cenario_vazio.py, ANTAGONISTA=1) e o Bestiário. Modos: "atual" (o jogo), "a" e "b" (as
 // propostas A e B das duas; "c", a segunda passada: a Cria A2 e o Cão T; "d", o Cão N, com a
 // Cria A2, que está no jogo desde a 1.185.0; "e", o Cão N2, o retoque do rosto; "f", "g" e "h", os
-// rosnados RA, RB e RC; "i", a RA2, a boca da RA refeita), trocados só na página, nas cartas inimigas e nos cartões do Bestiário, pelo nome.
+// rosnados RA, RB e RC; "i", a RA2, a boca da RA refeita; "j", a RA3, os
+// dentes da RA2 refeitos), trocados só na página, nas cartas inimigas e nos cartões do Bestiário, pelo nome.
 //   [MODOS=atual,a,b] PLAYWRIGHT_MODULO=<file:// do index.mjs> node fotografar.mjs <raiz> <pasta das fotos>
 import { spawn } from "child_process";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
@@ -19,11 +20,11 @@ const dados = (pasta, id) => "data:image/png;base64," + readFileSync(path.join(a
 const P = "../proposta";
 const BICHOS = [
   ["^Cão infernal", { a: [P, "cao-infernal-a"], b: [P, "cao-infernal-b"], c: [P, "cao-infernal-t"], d: [P, "cao-infernal-n"], e: [P, "cao-infernal-n2"], f: [P, "cao-infernal-ra"],
-    g: [P, "cao-infernal-rb"], h: [P, "cao-infernal-rc"], i: [P, "cao-infernal-ra2"] }],
+    g: [P, "cao-infernal-rb"], h: [P, "cao-infernal-rc"], i: [P, "cao-infernal-ra2"], j: [P, "cao-infernal-ra3"] }],
   ["^Cria do Vazio", { a: [P, "cria-vazio-a"], b: [P, "cria-vazio-b"], c: [P, "cria-vazio-a2"], d: [P, "cria-vazio-a2"], e: [P, "cria-vazio-a2"], f: [P, "cria-vazio-a2"],
-    g: [P, "cria-vazio-a2"], h: [P, "cria-vazio-a2"], i: [P, "cria-vazio-a2"] }],
+    g: [P, "cria-vazio-a2"], h: [P, "cria-vazio-a2"], i: [P, "cria-vazio-a2"], j: [P, "cria-vazio-a2"] }],
 ];
-const TROCAS = Object.fromEntries(["a", "b", "c", "d", "e", "f", "g", "h", "i"].map((m) => [m, BICHOS.map(([n, ms]) => [n, dados(...ms[m])])]));
+const TROCAS = Object.fromEntries(["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"].map((m) => [m, BICHOS.map(([n, ms]) => [n, dados(...ms[m])])]));
 const MODOS = (process.env.MODOS || "atual,a,b").split(",");
 const LUTA = { TUTORIAL: "0", CLASSE: "guerreiro", NIVEL_LUTA: "4" };
 const SITUACOES = [

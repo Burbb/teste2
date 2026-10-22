@@ -314,3 +314,35 @@ deixam de ser exigência. A RA, a RB e a RC continuam aqui como estavam.
 - As fotos no modo `i` (`MODOS=i`), a 1920×945, com os mesmos dados, sem erro no console. A folha `cao-ra2.png`
   (`python auxiliares/prancha.py cao-ra2`): RA × RA2 na carta e no Bestiário, a fileira com os aprovados, a 12× para o
   diagnóstico.
+
+# Os dentes da RA2 refeitos: a RA3 (22/10/2026, proposta; nada no jogo)
+
+**A avaliação do Jean:** na RA2 a boca parecia banguela; a presa quase negra sumia na cavidade. A cabeça fica; mudam só
+os dentes e o contraste dentro da boca. A RA2 continua aqui como estava.
+
+## O que mudou (`cao-infernal-ra3`; só as linhas 8 a 10)
+
+- **A presa de cima** sai do maxilar na frente: a face iluminada em dois pixels claros (a8a4b8) descendo, o corpo em
+  cinza de obsidiana (54505f) atrás, no alto.
+- **A presa de baixo**, menor e mais para trás, sobe da mandíbula: um pixel claro ligado ao lábio de baixo.
+- A gengiva, a cavidade escura, o calor discreto no fundo e a mandíbula pesada são os da RA2. Sem presas cruzadas nem
+  fileira de dentes.
+- Na bancada: a presa que afinava para o corpo escuro (a ponta em cinza escuro) perdia a ponta na carta.
+
+## A minha leitura (quem escolhe é o Jean)
+
+- **Na carta (32):** lê como mordida com dentes: a presa de cima clara saindo do maxilar e a de baixo menor, atrás, sem
+  ampliação. **Limitações que continuam:** a presa de baixo é um pixel e fica discreta; a frente da cavidade ainda encosta
+  no fundo escuro da caixa na borda esquerda; o carvão da luz continua perto do cinza do Lobo.
+- **No Bestiário (48):** as duas presas e a cavidade ficam claras.
+
+## Processo
+
+- A grade em `auxiliares/grades.py` (`CAO_RA3`, a paleta `cao_ra3`; os dentes cinza na camada dos dentes pela regra
+  `_camada_cao_r`). O retoque numa cópia da fonte da RA2 (`fontes/cao-infernal-ra3/`, copiada de
+  `fontes/cao-infernal-ra2/`, que não mudou), aberta pelo conector do Aseprite: cada camada esvaziada e repintada pelo
+  `pintar.lua` (0 diferentes na releitura; o composto 185 = as camadas). A exportação igual à grade, o @2x exato, o 32
+  e o 48 em blocos inteiros.
+- As fotos no modo `j` (`MODOS=j`), a 1920×945, com os mesmos dados, sem erro no console. A folha `cao-ra3.png`
+  (`python auxiliares/prancha.py cao-ra3`): RA2 × RA3 na carta e no Bestiário, a fileira com os aprovados, a 12× para o
+  diagnóstico.

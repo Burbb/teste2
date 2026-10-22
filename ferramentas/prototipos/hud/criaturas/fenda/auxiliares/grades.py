@@ -49,6 +49,8 @@ PALETAS = {
 PALETAS["cao_n2"] = {**PALETAS["cao_n"], "n": "3a3440"}  # a do N com o nariz num cinza escuro que aparece na caixa
 # a da RA2: a cavidade quase negra e o vermelho escuro do fundo dela; a obsidiana da presa um pouco acima da cavidade
 PALETAS["cao_ra2"] = {**PALETAS["cao_n2"], "v": "0c0809", "m": "4a120c", "t": "24202c"}
+# a da RA3: a obsidiana dos dentes em cinza, com a face iluminada (o quase negro da RA2 sumia na cavidade)
+PALETAS["cao_ra3"] = {**PALETAS["cao_ra2"], "g": "a8a4b8", "s": "54505f"}
 
 CAO_A = [
     ".........kk.....",
@@ -300,6 +302,17 @@ CAO_RA2[7:12] = [
     ".vvvmmOykcccddod",
     ".kCCCCCkkcccddod",
 ]
+# RA3, os dentes da RA2 refeitos (pedido do Jean: a boca da RA2 parecia banguela; a presa quase negra sumia na
+# cavidade). A cabeça, a gengiva, a cavidade e o calor da RA2 ficam; mudam só as linhas 8 a 10: a presa de cima sai do
+# maxilar com a face iluminada (dois pixels claros descendo) e o corpo em cinza de obsidiana atrás; a de baixo, menor e
+# mais para trás, sobe da mandíbula (um pixel claro); o calor discreto no fundo. Sem presas cruzadas nem fileira de
+# dentes. Na bancada, a presa que afinava para o corpo escuro perdia a ponta.
+CAO_RA3 = list(CAO_RA2)
+CAO_RA3[8:11] = [
+    ".rgsvvrrkcccccdd",
+    ".vgvvvrOkccccddd",
+    ".vvvgmrOkcccddod",
+]
 
 # Histórico (fora da exportação): a primeira B, de pernas finas, que virava um emaranhado na carta.
 CRIA_B_FINA = [
@@ -332,6 +345,8 @@ def _camada_cao_t(x, y, ch):
 
 
 def _camada_cao_r(x, y, ch):  # nas cabeças R, todo vermelho é a gengiva (as orelhas não têm), então é da boca, como a
+    if ch in "gs":  # os dentes de obsidiana em cinza (a RA3)
+        return "dentes"
     return "boca" if ch in "rvm" else _camada_cao_t(x, y, ch)  # cavidade e o fundo dela (a RA2)
 
 
@@ -352,6 +367,7 @@ CAMADAS = {  # a grade, a paleta, as camadas de baixo para cima e a camada de ca
     "cao-infernal-rb": (CAO_RB, "cao_n2", ["corpo", "nariz", "brasa", "boca", "dentes", "olhos"], _camada_cao_r),
     "cao-infernal-rc": (CAO_RC, "cao_n2", ["corpo", "nariz", "brasa", "boca", "dentes", "olhos"], _camada_cao_r),
     "cao-infernal-ra2": (CAO_RA2, "cao_ra2", ["corpo", "nariz", "brasa", "boca", "dentes", "olhos"], _camada_cao_r),
+    "cao-infernal-ra3": (CAO_RA3, "cao_ra3", ["corpo", "nariz", "brasa", "boca", "dentes", "olhos"], _camada_cao_r),
 }
 
 

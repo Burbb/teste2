@@ -2,7 +2,7 @@
 1920×945 em tamanho real e a 2× (a da cria também como invocada pelo antagonista), o cartão do Bestiário (48) em tamanho
 real, a fileira com os retratos aprovados pertinentes (na caixa da carta, real e 3×) e a 12× com a grade, sem
 suavização. Tudo trocado só na página (protótipo).
-    python prancha.py [cao|cria|cria-a2|cao-t|cao-n|cao-n2|cao-r|cao-ra2 ...]      (depois do fotografar.mjs)
+    python prancha.py [cao|cria|cria-a2|cao-t|cao-n|cao-n2|cao-r|cao-ra2|cao-ra3 ...]      (depois do fotografar.mjs)
 """
 import json
 import pathlib
@@ -54,6 +54,10 @@ CRIATURAS = {
     # a boca da RA refeita: RA × RA2, com os mesmos dados
     "cao-ra2": ("Cão infernal", [("RA (a bocarra aberta)", "f", "cao-infernal-ra"),
                                  ("RA2, a cavidade e a presa", "i", "cao-infernal-ra2")],
+                ("lobo", "lobo-gelido", "caido", "xama-caido", "cria-vazio"), ["luta-cao"]),
+    # os dentes da RA2 refeitos: RA2 × RA3, com os mesmos dados
+    "cao-ra3": ("Cão infernal", [("RA2 (a boca banguela)", "i", "cao-infernal-ra2"),
+                                 ("RA3, as presas de obsidiana em cinza", "j", "cao-infernal-ra3")],
                 ("lobo", "lobo-gelido", "caido", "xama-caido", "cria-vazio"), ["luta-cao"]),
 }
 REFERENCIAS = AQUI.parents[5] / "ferramentas/arte/referencias/icones"
