@@ -1015,6 +1015,9 @@ foi escolhida.
   a Bruxa do pântano B3 (o sorriso banguela) e o Rato gigante r2 (de frente, a cabeça baixa), pela família; o cultista
   também nos fiéis do Profeta e nos dois de capa escura da sacristia. O Profeta, o mercenário e as outras feras
   continuam pelos traços.
+- **A terceira rodada (22/10/2026, propostas; nada no jogo),** em `ferramentas/prototipos/hud/criaturas/terceira_rodada/`:
+  o carniçal A3 (a bochecha direita recolhida), o javali A3 (as presas em arco) e o espectro M (o retrato pela
+  referência do manto inflado, a direção corporal escolhida); as folhas de antes × depois. Em avaliação.
 
 O atalho **Mapa** da doca já foi concluído; esta frente trata dos símbolos internos de caminhos e mapas.
 Não afirmar que só restam talentos e habilidades após este bloco sem conferir os consumíveis, variantes e

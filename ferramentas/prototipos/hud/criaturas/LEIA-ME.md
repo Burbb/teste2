@@ -163,3 +163,5 @@ A escolha do par e da direção é do Jean; nada foi começado.
 - **A segunda rodada (22/10/2026, em avaliação):** `segunda_rodada/`: o cultista (três capuzes), a bruxa (três rostos), o
   carniçal A2, o espectro A2, o javali A2 e o rato (três reconstruções). Integrados na 1.171.0: o sapo A e a
   sanguessuga A.
+- **A terceira rodada (22/10/2026, em avaliação):** `terceira_rodada/`: o carniçal A3, o javali A3 e o espectro M (pela
+  referência `Espectro do Manto Inflado.png`). Integrados na 1.172.0: o cultista A, a bruxa B3 e o rato r2.

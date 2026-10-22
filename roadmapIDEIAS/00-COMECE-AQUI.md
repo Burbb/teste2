@@ -5750,3 +5750,11 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   javali A2 (a curva das presas) e o espectro (o retrato com os ombros, pela referência nova) seguem no protótipo.
 - **Feito:** as fontes de produção, os PNGs idênticos aos aprovados, `RETRATO_FAMILIA` e o papel `CRIATURA`, o teste;
   conferido na luta e no Bestiário.
+
+### 22/10/2026 (data do computador local) — A terceira rodada: o carniçal, o javali e o espectro (só no protótipo)
+
+- **Pedido de Jean:** a bochecha direita do carniçal A2; a curva das presas do javali A2; o espectro pela referência
+  nova do manto inflado (a direção corporal escolhida), no retrato com a cabeça e o começo dos ombros.
+- **Feito:** `ferramentas/prototipos/hud/criaturas/terceira_rodada/` (`carnical-a3`, `javali-a3`, `espectro-m`; as
+  fontes pelo conector, a guia oculta do espectro, as fotos e as folhas de antes × depois); a referência registrada.
+- **Continua:** a avaliação do Jean; nada novo no jogo (a versão continua 1.172.0).
