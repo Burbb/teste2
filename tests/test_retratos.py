@@ -24,6 +24,15 @@ class TestRetratos(unittest.TestCase):
         for fam, tr in (("lobo_gelido", "fera"), ("javali", "fera"), ("cultista", "humano"), ("mercenario", "humano")):
             self.assertEqual(retrato(FAMILIAS[fam]["tracos"], fam), tr, fam)
 
+    def test_sapo_e_sanguessuga_pela_familia(self):
+        # 1.171.0: o sapo-touro gigante e a sanguessuga gigante pela família; a Hidra do Brejo (guardiã) e as outras
+        # feras continuam pelos traços
+        self.assertEqual(retrato(FAMILIAS["sapo"]["tracos"], "sapo"), "sapo")
+        self.assertEqual(retrato(FAMILIAS["sanguessuga"]["tracos"], "sanguessuga"), "sanguessuga")
+        self.assertEqual(retrato(["fera"], "guardiao", "guardiao:3", "hidra_do_brejo"), "fera")
+        for fam in ("rato", "javali", "lobo_gelido"):
+            self.assertEqual(retrato(FAMILIAS[fam]["tracos"], fam), "fera", fam)
+
     def test_troll_pela_familia_e_o_rei_pelo_guardiao(self):
         # o troll da montanha pela família (1.166.0); o Rei Troll pelo id do guardião (1.167.0), em qualquer lugar
         self.assertEqual(retrato(FAMILIAS["troll"]["tracos"], "troll"), "troll")

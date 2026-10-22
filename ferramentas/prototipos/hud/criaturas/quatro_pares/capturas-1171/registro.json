@@ -1,0 +1,75 @@
+{
+ "par1/luta/atual": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Sapo-touro gigante",
+    "caixa": [
+     830,
+     38,
+     1040,
+     88
+    ]
+   },
+   {
+    "nome": "Sanguessuga gigante",
+    "caixa": [
+     830,
+     96,
+     1040,
+     146
+    ]
+   },
+   {
+    "nome": "Sanguessuga gigante",
+    "caixa": [
+     830,
+     154,
+     1040,
+     204
+    ]
+   }
+  ]
+ },
+ "par1/bestiario/atual": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Afogado",
+    "caixa": [
+     585,
+     248,
+     935,
+     403
+    ]
+   },
+   {
+    "nome": "Lobo",
+    "caixa": [
+     945,
+     248,
+     1295,
+     403
+    ]
+   },
+   {
+    "nome": "Sanguessuga gigante",
+    "caixa": [
+     585,
+     413,
+     935,
+     600
+    ]
+   },
+   {
+    "nome": "Sapo-touro gigante",
+    "caixa": [
+     945,
+     413,
+     1295,
+     600
+    ]
+   }
+  ]
+ }
+}

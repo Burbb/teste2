@@ -5725,3 +5725,10 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Minhas preferências:** sapo A, sanguessuga A, cultista A, bruxa B, carniçal A, espectro A, javali A, rato B (os
   pontos fortes e os limites no `LEIA-ME.md` de `quatro_pares/`).
 - **Continua:** a avaliação do Jean (o Esqueleto E1r, o urso r4, o falcão, o cajado e os 16 candidatos); depois, 1E.4.
+
+### 22/10/2026 (data do computador local) — O sapo e a sanguessuga no jogo (1.171.0)
+
+- **Decisão de Jean:** o Sapo-touro gigante A e a Sanguessuga gigante A, sem retoques; os outros candidatos continuam
+  em proposta (o cultista, a bruxa, o carniçal, o espectro, o javali e o rato com novas rodadas pedidas).
+- **Feito:** as fontes em `ferramentas/arte/aseprite/retrato-sapo/` e `retrato-sanguessuga/`, os PNGs idênticos aos
+  aprovados, `RETRATO_FAMILIA` e o papel `CRIATURA`, o teste; conferido na luta e no Bestiário.

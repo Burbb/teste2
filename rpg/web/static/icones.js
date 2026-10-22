@@ -42,7 +42,7 @@ const Icones = (() => {
     "retrato-afogado": [16, 32, 48], "retrato-ilse": [16, 32, 48], "retrato-lobo": [16, 32, 48], "retrato-bandido": [16, 32, 48],
     "retrato-urso": [16, 32], "retrato-falcao": [16, 32],
     "retrato-troll": [16, 32, 48], "retrato-rei-troll": [16, 32, 48], "retrato-aranha": [16, 32, 48],
-    "retrato-rainha-aracnidea": [16, 32]};
+    "retrato-rainha-aracnidea": [16, 32], "retrato-sapo": [16, 32, 48], "retrato-sanguessuga": [16, 32, 48]};
 
   // Cada desenho vai para o tipo de ferro que o jogo já tem (elmo, armadura, manopla, calca = perneira, bota_ferro, maca);
   // couro sem desenho (a calça de couro) e as outras peças sem desenho ficam com o do jogo. O anel (1.140.0, o aro de
@@ -194,7 +194,8 @@ const Icones = (() => {
   // frente com a coroa dourada) e a Aranha gigante (a família, com as que a Rainha invoca)
   const CRIATURA = { afogado: "retrato-afogado", ilse: "retrato-ilse", lobo: "retrato-lobo", bandido: "retrato-bandido",
                      troll: "retrato-troll", rei_troll: "retrato-rei-troll", aranha: "retrato-aranha",
-                     rainha_aracnidea: "retrato-rainha-aracnidea" };  // 1.168.0: a Rainha, pelo id da guardiã
+                     rainha_aracnidea: "retrato-rainha-aracnidea",  // 1.168.0: a Rainha, pelo id da guardiã
+                     sapo: "retrato-sapo", sanguessuga: "retrato-sanguessuga" };  // 1.171.0: o pântano, pela família
   // o animal do patrulheiro (1.164.0), pelo tipo dele (classes.COMPANHEIROS), na carta aliada da luta e no painel da
   // comitiva, a 2×: o Urso Pardo (de frente, severo) e o Falcão Peregrino (de perfil, a máscara escura); desde a 1.165.0,
   // o Lobo Cinzento com o mesmo arquivo do Lobo inimigo (o mesmo rosto de propósito: o lado, o nome e a borda separam os

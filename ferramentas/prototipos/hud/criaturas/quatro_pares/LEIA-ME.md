@@ -138,3 +138,15 @@ preferência em dourado; embaixo, os retratos integrados do jogo.
 | Rato gigante | `rato-a`, `rato-b` | B | proposta em avaliação |
 
 Nada integrado; nenhuma regra, atributo, habilidade nem desenho compartilhado foi mudado para as fotos.
+
+## No jogo desde a 1.171.0: o sapo A e a sanguessuga A
+
+- **Decisão de Jean:** o Sapo-touro gigante A e a Sanguessuga gigante A (`81281da3`), sem retoques; os outros
+  candidatos continuam no protótipo.
+- As fontes conferidas iguais às do commit aprovado e levadas para `ferramentas/arte/aseprite/retrato-sapo/` e
+  `retrato-sanguessuga/`; `exportar_aseprite.py retrato-sapo` e `retrato-sanguessuga` (`DERIVADOS`: o 32 e o 48) gravam
+  os doze PNGs, idênticos byte a byte aos da proposta.
+- No motor, `RETRATO_FAMILIA` ganhou `sapo` e `sanguessuga`; em `icones.js`, o papel `CRIATURA` e os tamanhos. O alcance
+  é o levantado: as duas famílias (com os afixos e a sanguessuga do Salão Alagado da campanha); a Hidra do Brejo e as
+  outras feras ficam pelos traços, e o sprite `fera` não muda. `tests/test_retratos.py` confere.
+- Conferido nos usos reais com os arquivos do jogo (`capturas-1171/`): a luta e o Bestiário, sem erro no console.

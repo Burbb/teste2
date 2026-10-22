@@ -13,8 +13,8 @@ Não iniciar todo o plano numa única tarefa. As etapas técnicas A–I e a vali
 
 ## Estado de referência — 21/10/2026
 
-- Produção: **1.170.0** na branch `claude/tender-einstein-tx3tjl` (o Lobo Cinzento deitado na fogueira, pelo tipo; antes,
-  o arco no Atacar do Arqueiro na 1.169.0 e a Rainha Aracnídea com retrato na 1.168.0).
+- Produção: **1.171.0** na branch `claude/tender-einstein-tx3tjl` (o Sapo-touro gigante e a Sanguessuga gigante com
+  retrato, pela família; antes, o Lobo Cinzento na fogueira na 1.170.0 e o arco no Atacar do Arqueiro na 1.169.0).
 - **Etapa 1D concluída:** os **31 equipamentos-base** estão finais desde a 1.150.0, com os acabamentos das luvas L7
   (1.151.0), das perneiras P7 (1.152.0), do capacete C1 (1.153.0) e das botas A1 (1.154.0). **Fora dessa contagem, e
   ainda abertos:** as variantes (os únicos e raros com desenho próprio) e os compartilhamentos provisórios (a Capa de
@@ -1005,6 +1005,8 @@ foi escolhida.
   22/10/2026:** integrado, o lobo na fogueira (1.170.0); em avaliação, o Esqueleto E1r, o urso r4, o falcão, o cajado do
   Mago e os 16 candidatos (`criaturas/pendencias/pendencias.png`); conceitos reservados, o Esqueleto E2 e o Bandido do
   chapéu.
+- **No jogo desde a 1.171.0:** o Sapo-touro gigante A e a Sanguessuga gigante A, pela família (`RETRATO_FAMILIA`), na
+  carta, no Bestiário, no mural e no rastro; a Hidra do Brejo (guardiã) e as outras feras continuam pelos traços.
 
 O atalho **Mapa** da doca já foi concluído; esta frente trata dos símbolos internos de caminhos e mapas.
 Não afirmar que só restam talentos e habilidades após este bloco sem conferir os consumíveis, variantes e
