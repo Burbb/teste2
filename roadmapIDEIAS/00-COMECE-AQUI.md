@@ -5732,3 +5732,14 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   em proposta (o cultista, a bruxa, o carniçal, o espectro, o javali e o rato com novas rodadas pedidas).
 - **Feito:** as fontes em `ferramentas/arte/aseprite/retrato-sapo/` e `retrato-sanguessuga/`, os PNGs idênticos aos
   aprovados, `RETRATO_FAMILIA` e o papel `CRIATURA`, o teste; conferido na luta e no Bestiário.
+
+### 22/10/2026 (data do computador local) — A segunda rodada das criaturas (só no protótipo)
+
+- **Pedido de Jean:** três capuzes do cultista, três rostos da bruxa, o carniçal com a boca refeita, o espectro de olho
+  único, o javali de presas grandes e três reconstruções do rato, sem parar entre os pares.
+- **Feito:** `ferramentas/prototipos/hud/criaturas/segunda_rodada/` (as fontes pelo conector, a exportação conferida,
+  as fotos com as seis criaturas, as folhas `cultista.png`, `bruxa.png`, `carnical.png`, `espectro.png`, `javali.png` e
+  `rato.png`). Minhas preferências: o cultista c1, a bruxa b1, o rato r1; o carniçal, o espectro e o javali com uma
+  proposta cada.
+- **Continua:** a avaliação do Jean; nada novo no jogo (a versão continua 1.171.0); o Esqueleto E1r, o urso, o falcão e
+  o cajado como estavam.

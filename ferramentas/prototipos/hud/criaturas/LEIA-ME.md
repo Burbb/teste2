@@ -158,3 +158,6 @@ A escolha do par e da direção é do Jean; nada foi começado.
   sanguessuga gigante; o cultista e a bruxa do pântano; o carniçal e o espectro; o javali selvagem e o rato gigante; a
   prancha `quatro_pares/geral.png`).
 - **Conceitos reservados:** o Esqueleto E2 (um possível mago esqueleto) e o Bandido do chapéu (um possível chefe).
+- **A segunda rodada (22/10/2026, em avaliação):** `segunda_rodada/`: o cultista (três capuzes), a bruxa (três rostos), o
+  carniçal A2, o espectro A2, o javali A2 e o rato (três reconstruções). Integrados na 1.171.0: o sapo A e a
+  sanguessuga A.

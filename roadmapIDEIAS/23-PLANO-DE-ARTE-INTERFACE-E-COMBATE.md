@@ -1007,6 +1007,10 @@ foi escolhida.
   chapéu.
 - **No jogo desde a 1.171.0:** o Sapo-touro gigante A e a Sanguessuga gigante A, pela família (`RETRATO_FAMILIA`), na
   carta, no Bestiário, no mural e no rastro; a Hidra do Brejo (guardiã) e as outras feras continuam pelos traços.
+- **A segunda rodada (22/10/2026, propostas; nada no jogo),** em `ferramentas/prototipos/hud/criaturas/segunda_rodada/`:
+  três capuzes do cultista, três rostos da bruxa, o carniçal com a boca refeita, o espectro de olho único, o javali de
+  presas grandes e três reconstruções do rato; as folhas por criatura e as minhas preferências (o cultista c1, a bruxa
+  b1, o rato r1) no `LEIA-ME.md` da pasta. Em avaliação, com o Esqueleto E1r, o urso, o falcão e o cajado.
 
 O atalho **Mapa** da doca já foi concluído; esta frente trata dos símbolos internos de caminhos e mapas.
 Não afirmar que só restam talentos e habilidades após este bloco sem conferir os consumíveis, variantes e
