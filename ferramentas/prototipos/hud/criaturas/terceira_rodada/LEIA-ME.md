@@ -77,3 +77,16 @@ Nada integrado. O Esqueleto E1r, o urso e o falcão do acampamento, o cajado e a
 - **A minha leitura:** a cavidade larga dá mais o vazio dentro do capuz da referência, e o pano sem as dobras deixa de
   sugerir braços. Limite: com a cavidade maior, a borda esquerda do capuz fica com dois pixels de tecido, e a 32 px a
   massa clara de baixo fica lisa.
+
+## No jogo desde a 1.174.0: o espectro AP
+
+- **Decisão de Jean:** o Espectro AP (`d4f34b5e`), sem retoques; não o AP2. O A, o M e o AP2 ficam como histórico.
+- A fonte conferida igual à do commit escolhido e levada para `ferramentas/arte/aseprite/retrato-espectro/`
+  (`exportar_aseprite.py retrato-espectro`, `DERIVADOS` 32 e 48); os seis PNGs idênticos byte a byte; `--conferir` igual
+  ao jogo.
+- No motor, `RETRATO_FAMILIA` ganhou `espectro`; em `icones.js`, o papel `CRIATURA` e os tamanhos; `tests/test_retratos.py`
+  confere a família, a cria do Vazio e o Lich no `etereo`. O gabarito mudou de propósito só no valor do retrato (uma
+  transcrição -web, 30 linhas).
+- Conferido na carta e no Bestiário com os arquivos do jogo (`capturas-1174/`), sem erro no console.
+- A referência `Espectro do Manto Inflado.png` continua registrada como o conceito do corpo inteiro, para a futura arte
+  de cenário.

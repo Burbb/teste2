@@ -107,6 +107,8 @@ DERIVADOS = {
     # 1.173.0: o javali selvagem e o carniçal (o javali-a3 e o carnical-a3 da terceira rodada), pela família
     "retrato-javali": {32: (16, 2), 48: (16, 3)},
     "retrato-carnical": {32: (16, 2), 48: (16, 3)},
+    # 1.174.0: o espectro (o espectro-ap da terceira rodada: o A com o pano até a borda de baixo), pela família
+    "retrato-espectro": {32: (16, 2), 48: (16, 3)},
 }
 # O martelo (1.149.0) só tem fontes do 40 e do 48 (aseprite/martelo/): o 32 e o 64 são a grade de desenhos.js, no
 # jogo, e não saem daqui.

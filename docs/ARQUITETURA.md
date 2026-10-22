@@ -450,12 +450,13 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   família (`RETRATO_FAMILIA`: o afogado, com o Afogado Inchado e os afogados que a Ilse invoca; desde a 1.163.0, o
   lobo e o bandido, com os líderes e os invocados; desde a 1.166.0, o troll da montanha; desde a 1.167.0, a aranha,
   com as que a Rainha Aracnídea invoca; desde a 1.171.0, o sapo-touro gigante e a sanguessuga gigante; desde a 1.172.0, o cultista, a bruxa do pântano e o
-  rato gigante; desde a 1.173.0, o javali selvagem e o carniçal), senão os traços. Um guardião pelo id do catálogo (`RETRATO_GUARDIAO`, 1.167.0:
+  rato gigante; desde a 1.173.0, o javali selvagem e o carniçal;
+  desde a 1.174.0, o espectro), senão os traços. Um guardião pelo id do catálogo (`RETRATO_GUARDIAO`, 1.167.0:
   o Rei Troll; 1.168.0: a Rainha Aracnídea; `instanciar_guardiao` guarda o id em `guardiao`, porque a chave do guardião
   muda com o lugar); os outros guardiões continuam pelos traços, como antes (a caveira dos outros mortos-vivos, o
   `fera` do animal do herói e das outras feras e o `humano` dos outros humanos continuam). A luta, o Bestiário, o mural e o rastro dos contratos e a
   faixa do mestre caçador pedem `Icones.criatura(retrato, lado)` (o papel `CRIATURA`) antes do sprite: o 16×16 a 2×
-  (32) e a 3× (48), em arquivos (`retrato-afogado`, `retrato-ilse`, `retrato-lobo`, `retrato-bandido`, `retrato-troll`, `retrato-rei-troll`, `retrato-aranha`, `retrato-sapo`, `retrato-sanguessuga`, `retrato-cultista`, `retrato-bruxa`, `retrato-rato`, `retrato-javali`, `retrato-carnical`; a Rainha Aracnídea, `retrato-rainha-aracnidea`, só o 32 da carta; fontes em
+  (32) e a 3× (48), em arquivos (`retrato-afogado`, `retrato-ilse`, `retrato-lobo`, `retrato-bandido`, `retrato-troll`, `retrato-rei-troll`, `retrato-aranha`, `retrato-sapo`, `retrato-sanguessuga`, `retrato-cultista`, `retrato-bruxa`, `retrato-rato`, `retrato-javali`, `retrato-carnical`, `retrato-espectro`; a Rainha Aracnídea, `retrato-rainha-aracnidea`, só o 32 da carta; fontes em
   `ferramentas/arte/aseprite/`). O animal do patrulheiro (1.164.0) tem o papel `ANIMAL` (`Icones.animal(tipo, 32)`,
   pelo `tipo` de `classes.COMPANHEIROS`): o Urso Pardo e o Falcão Peregrino na carta aliada e no painel da comitiva
   (`retrato-urso`, `retrato-falcao`); desde a 1.165.0, o Lobo Cinzento com o mesmo arquivo do Lobo inimigo

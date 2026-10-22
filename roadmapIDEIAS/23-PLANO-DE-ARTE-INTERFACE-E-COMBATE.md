@@ -13,8 +13,8 @@ Não iniciar todo o plano numa única tarefa. As etapas técnicas A–I e a vali
 
 ## Estado de referência — 21/10/2026
 
-- Produção: **1.173.0** na branch `claude/tender-einstein-tx3tjl` (o Javali selvagem e o Carniçal com retrato, pela
-  família; antes, o Cultista, a Bruxa do pântano e o Rato gigante na 1.172.0 e o Sapo e a Sanguessuga na 1.171.0).
+- Produção: **1.174.0** na branch `claude/tender-einstein-tx3tjl` (o Espectro com retrato, pela família; antes, o
+  Javali selvagem e o Carniçal na 1.173.0 e o Cultista, a Bruxa do pântano e o Rato gigante na 1.172.0).
 - **Etapa 1D concluída:** os **31 equipamentos-base** estão finais desde a 1.150.0, com os acabamentos das luvas L7
   (1.151.0), das perneiras P7 (1.152.0), do capacete C1 (1.153.0) e das botas A1 (1.154.0). **Fora dessa contagem, e
   ainda abertos:** as variantes (os únicos e raros com desenho próprio) e os compartilhamentos provisórios (a Capa de
@@ -1023,7 +1023,10 @@ foi escolhida.
 - **O espectro AP (22/10/2026, proposta; nada no jogo):** o A original com o pano continuando até a borda de baixo (só
   as linhas 11 a 15); a referência do manto inflado fica como conceito do corpo para a arte de cenário; a comparação
   `terceira_rodada/espectro-ap.png`. O AP2: sem as dobras escuras de baixo e com a cavidade mais larga
-  (`espectro-ap2.png`). Em avaliação.
+  (`espectro-ap2.png`).
+- **No jogo desde a 1.174.0:** o Espectro AP (o A com o pano até a borda de baixo, sem retoques), pela família; a cria
+  do Vazio e o Lich (na fase 2) continuam no `etereo`. O A, o M e o AP2 ficam como histórico; a referência do manto
+  inflado fica registrada para a futura arte de cenário.
 
 O atalho **Mapa** da doca já foi concluído; esta frente trata dos símbolos internos de caminhos e mapas.
 Não afirmar que só restam talentos e habilidades após este bloco sem conferir os consumíveis, variantes e

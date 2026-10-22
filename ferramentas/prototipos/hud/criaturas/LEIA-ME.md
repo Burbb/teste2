@@ -129,6 +129,8 @@ A escolha do par e da direção é do Jean; nada foi começado.
   `rato-r2` de `segunda_rodada/`, sem retoques): pela família; o Profeta e as outras feras continuam pelos traços.
 - **1.173.0: o Javali selvagem e o Carniçal** (o `javali-a3` e o `carnical-a3` de `terceira_rodada/`, sem retoques):
   pela família; os outros mortos-vivos e as outras feras continuam pelos traços.
+- **1.174.0: o Espectro** (o `espectro-ap` de `terceira_rodada/`, sem retoques): pela família; a cria do Vazio e o Lich
+  continuam no `etereo`; a referência do corpo inteiro fica para a arte de cenário.
 
 ## Em proposta
 

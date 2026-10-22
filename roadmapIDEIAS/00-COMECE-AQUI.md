@@ -5780,3 +5780,11 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Feito:** `espectro-ap2` numa cópia da fonte do AP (26 pixels, só na cavidade e nas dobras; conferido no editor e na
   exportação); a comparação `ferramentas/prototipos/hud/criaturas/terceira_rodada/espectro-ap2.png`.
 - **Continua:** a avaliação do Jean; a versão continua 1.173.0.
+
+### 22/10/2026 (data do computador local) — O espectro no jogo (1.174.0)
+
+- **Decisão de Jean:** o Espectro AP (`d4f34b5e`), sem retoques; não o AP2.
+- **Feito:** a fonte em `ferramentas/arte/aseprite/retrato-espectro/`, os PNGs idênticos ao escolhido,
+  `RETRATO_FAMILIA` e o papel `CRIATURA`, o teste, o gabarito (só o valor do retrato); conferido na carta e no Bestiário.
+- **Continua:** o Esqueleto E1r, o urso e o falcão do acampamento e o cajado em avaliação; a próxima criatura fica com o
+  Jean.

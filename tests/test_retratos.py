@@ -47,6 +47,13 @@ class TestRetratos(unittest.TestCase):
         for fam in ("esqueleto", "cavaleiro_sombrio"):
             self.assertEqual(retrato(FAMILIAS[fam]["tracos"], fam), "caveira", fam)
 
+    def test_espectro_pela_familia(self):
+        # 1.174.0: o espectro pela família; a cria do Vazio (etérea) e o Lich, que ganha o etéreo na fase 2, continuam
+        # pelos traços
+        self.assertEqual(retrato(FAMILIAS["espectro"]["tracos"], "espectro"), "espectro")
+        self.assertEqual(retrato(FAMILIAS["cria_vazio"]["tracos"], "cria_vazio"), "etereo")
+        self.assertEqual(retrato(["morto-vivo", "conjurador", "etereo"], "guardiao", "guardiao:6", "lich_menor"), "etereo")
+
     def test_troll_pela_familia_e_o_rei_pelo_guardiao(self):
         # o troll da montanha pela família (1.166.0); o Rei Troll pelo id do guardião (1.167.0), em qualquer lugar
         self.assertEqual(retrato(FAMILIAS["troll"]["tracos"], "troll"), "troll")
