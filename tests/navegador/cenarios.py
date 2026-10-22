@@ -785,12 +785,13 @@ def fogueira(ui):
         cm.recrutar(g, c)
     for c in reserva:
         cm.para_acampamento(g, c, silencioso=True)
-    for c in os.environ.get("FERIDO", "").split(","):
+    for c in os.environ.get("FERIDO", "").split(","):  # só quem anda junto: o acampamento cura (para_acampamento)
         if cm.membro(g, c):
             cm.membro(g, c)["ferido"] = True
     if os.environ.get("CONVERSA"):  # todos com a primeira conversa pronta (o ✉): dias e aprovação de sobra
-        for c in reserva + ativos:
-            cm.membro(g, c).update(dias=99, aprovacao=max(cm.membro(g, c)["aprovacao"], 60))
+        for c in reserva + ativos:  # quem espera no acampamento não está em cm.membro, só na reserva
+            m = cm.membro(g, c) or cm.na_reserva(g, c)
+            m.update(dias=99, aprovacao=max(m["aprovacao"], 60))
     if os.environ.get("FERA"):  # o animal do patrulheiro, como a especialização dá (FERA=urso ou falcao; 1: o lobo)
         from rpg import especializacao
         tipo = os.environ["FERA"] if os.environ["FERA"] in ("lobo", "urso", "falcao") else "lobo"
