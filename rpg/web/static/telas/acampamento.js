@@ -267,7 +267,7 @@ const Acampamento = (() => {
     const quem = [{ spr: heroi || "guerreiro", p: HEROI, sobre: "tronco" }];
     d.ativos.forEach((m, i) => quem.push({ id: m.id, spr: m.id, p: ATIVOS[i % 2], sobre: i % 2 ? "pedra" : "tronco" }));
     d.reserva.forEach((m, i) => quem.push({ id: m.id, spr: m.id, p: RESERVA[i % 3], sobre: i % 3 === 0 ? "manta" : "pedra", longe: true }));
-    if (d.fera) quem.push({ id: "fera", spr: d.fera.tipo === "falcao" ? "voador" : "fera", p: FERA, sobre: null });
+    if (d.fera) quem.push({ id: "fera", spr: d.fera.tipo === "falcao" ? "voador" : "fera", tipo: d.fera.tipo, p: FERA, sobre: null });
     return quem;
   }
   /** A área de um ponto na arte (o desenho e o assento): o contorno do destaque e o botão por cima. */
@@ -280,9 +280,12 @@ const Acampamento = (() => {
     const longe = ent ? ent.fundo(k) : fundoDaPaisagem(k), meio = camadaTeso(k, ent && ent.agua), perto = camadaPerto(k);
     const base = camada(), bc = base.getContext("2d");
     [longe, meio, perto].forEach((t) => bc.drawImage(t, 0, 0));
+    // o animal pela figura do tipo (Icones.figuraAnimal; o lobo desde a 1.170.0), senão o sprite; enquanto o arquivo
+    // carrega, a figura entra no primeiro quadro em que estiver pronta
     const quem = roda(d, heroi).map((f) => {
-      const spr = Icones.figura(f.spr);
-      return { ...f, spr: spr && aquecido(spr, f.p[0], k) };
+      const animal = f.tipo ? Icones.figuraAnimal(f.tipo) : "";
+      const spr = animal === "" ? Icones.figura(f.spr) : animal;
+      return { ...f, spr: spr && aquecido(spr, f.p[0], k), pendente: animal === null };
     });
     const atras = quem.filter((f) => f.p[1] < FOGO[1]).sort((a, z) => a.p[1] - z.p[1]);
     const frente = quem.filter((f) => f.p[1] >= FOGO[1]).sort((a, z) => a.p[1] - z.p[1]);
@@ -294,6 +297,10 @@ const Acampamento = (() => {
       bagagem(px);
       const figura = (f) => {
         const [x, y] = f.p;
+        if (f.pendente) {
+          const spr = Icones.figuraAnimal(f.tipo);
+          if (spr) { f.spr = aquecido(spr, x, k); f.pendente = false; }
+        }
         if (!f.sobre) { px(x - 7, y, 14, 1, "rgba(0,0,0,0.45)"); px(x - 5, y + 1, 10, 1, "rgba(0,0,0,0.3)"); }
         if (f.spr) c.drawImage(f.spr, x - 8, y - 16, 16, 16);
         if (f.longe) { c.save(); c.globalAlpha = 0.18; px(x - 8, y - 16, 16, 16, "#05060a"); c.restore(); }  // a penumbra, de leve

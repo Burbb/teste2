@@ -5704,3 +5704,11 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Feito:** `animal-lobo-c1` (perfil suave), `-c2` (três quartos para o jogador) e `-c3` (livre), pelo conector, na
   fogueira; a folha `ferramentas/prototipos/hud/acampamento_atacar/lobo-cabecas.png`. Minha escolha: a c2.
 - **Continua:** a escolha do Jean; nada no jogo (a versão continua 1.169.0).
+
+### 22/10/2026 (data do computador local) — O Lobo Cinzento na fogueira (1.170.0)
+
+- **Decisão de Jean:** o lobo c2 (`53425098`), sem retoques, pelo tipo do animal; o urso e o falcão em avaliação.
+- **Feito:** a fonte em `ferramentas/arte/aseprite/figura-lobo/`, os PNGs idênticos aos aprovados; o papel
+  `FIGURA_ANIMAL` e `Icones.figuraAnimal` em `icones.js`, pedidos por `acampamento.js`; o teste em
+  `tests/test_retratos.py`; conferido na cena real (`ferramentas/prototipos/hud/acampamento_atacar/capturas-1170/`).
+- **Continua:** o urso e o falcão do acampamento; as outras cabeças e rodadas do lobo como histórico.

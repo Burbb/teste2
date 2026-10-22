@@ -200,6 +200,16 @@ const Icones = (() => {
   // o Lobo Cinzento com o mesmo arquivo do Lobo inimigo (o mesmo rosto de propósito: o lado, o nome e a borda separam os
   // papéis). O "fera" e o "voador" dos inimigos e a figura do acampamento não mudam
   const ANIMAL = { urso: "retrato-urso", falcao: "retrato-falcao", lobo: "retrato-lobo" };
+  // a figura do animal na fogueira (1.170.0), pelo tipo, num papel próprio: o Lobo Cinzento deitado, voltado para o
+  // fogo, com a cabeça em três quartos para o jogador (16×16, a fonte em ferramentas/arte/aseprite/figura-lobo/). O urso
+  // e o falcão continuam com os sprites "fera" e "voador", que também são os dos traços, dos inimigos e da carta aliada
+  // sem retrato. Os arquivos carregam com o script: a cena monta as figuras de uma vez, num canvas
+  const FIGURA_ANIMAL = { lobo: "figura-lobo" };
+  const figurasAnimal = {};
+  for (const [tipo, peca] of Object.entries(FIGURA_ANIMAL)) {
+    figurasAnimal[tipo] = new Image();
+    figurasAnimal[tipo].src = `${DIR}${peca}-16.png`;
+  }
 
   /** O arquivo de `peca` para mostrar em `lado` px: o tamanho igual ou o mais perto; maior que o maior, o dobro dele. */
   function arquivos(peca, lado) {
@@ -300,6 +310,17 @@ const Icones = (() => {
      *  jogo. O mesmo lugar que escolhe o busto e a cabeça, para nenhuma tela ficar com o desenho antigo. */
     figura: (nome) => (Retratos.tem(nome) ? Retratos.canvas(nome, Retratos.temPapel(nome, "fogueira") ? "fogueira" : "figura")
       : Sprites.canvas(nome)),
+    /** A figura do animal do herói na fogueira pelo tipo (FIGURA_ANIMAL), num canvas de 16×16; null enquanto o arquivo
+     *  carrega; "" para o sprite de sempre (Icones.figura). */
+    figuraAnimal(tipo) {
+      const im = figurasAnimal[tipo];
+      if (!im) return "";
+      if (!im.complete || !im.naturalWidth) return null;
+      const t = document.createElement("canvas");
+      t.width = t.height = 16;
+      t.getContext("2d").drawImage(im, 0, 0);
+      return t;
+    },
     /** O busto da ficha (retratos.js): 80 px, e 64 em telas baixas (até 800 px de altura), o recorte na mesma escala. */
     retrato(nome, alt = "") {
       if (!Retratos.tem(nome)) return "";

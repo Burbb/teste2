@@ -264,7 +264,9 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   desenhado à mão pela chave que o motor manda nos dados (`lugar`; hoje só `capela_afogada`, a capela pequena no
   brejo, em `ENTORNOS`) ou, nos outros lugares, a própria paisagem (`Vista.paisagem`, o céu e as silhuetas do bioma,
   com nuvens e corvos; a chuva por cima, `Vista.chuva`). As vagas da roda são fixas (`HEROI`, `ATIVOS`, `RESERVA`,
-  `FERA`); quem fica no acampamento senta na beira da luz. O nome aparece só com o mouse, o foco do teclado ou o F4
+  `FERA`); quem fica no acampamento senta na beira da luz. O animal do patrulheiro entra pela figura do tipo
+  (`Icones.figuraAnimal`, o papel `FIGURA_ANIMAL`: desde a 1.170.0 o Lobo Cinzento deitado, `figura-lobo-16`), senão
+  pelo sprite (`fera`, `voador`), aquecido pela luz do fogo como os outros. O nome aparece só com o mouse, o foco do teclado ou o F4
   (o balão da HUD, junto do contorno dourado das salas da capela, `Cenas.cantos`), acomodado como se todos
   aparecessem juntos (`acomodarNomes`: sem cobrir rosto, fogo nem o Dormir). Com movimento reduzido, as chamas
   ficam paradas. A orientação do Dormir (D3) fica na faixa logo abaixo da cena, com a haste até o botão, como a dos

@@ -13,8 +13,8 @@ Não iniciar todo o plano numa única tarefa. As etapas técnicas A–I e a vali
 
 ## Estado de referência — 21/10/2026
 
-- Produção: **1.169.0** na branch `claude/tender-einstein-tx3tjl` (o arco aprovado no Atacar do Arqueiro; antes, a
-  Rainha Aracnídea com retrato na 1.168.0 e o Rei Troll e a Aranha gigante na 1.167.0).
+- Produção: **1.170.0** na branch `claude/tender-einstein-tx3tjl` (o Lobo Cinzento deitado na fogueira, pelo tipo; antes,
+  o arco no Atacar do Arqueiro na 1.169.0 e a Rainha Aracnídea com retrato na 1.168.0).
 - **Etapa 1D concluída:** os **31 equipamentos-base** estão finais desde a 1.150.0, com os acabamentos das luvas L7
   (1.151.0), das perneiras P7 (1.152.0), do capacete C1 (1.153.0) e das botas A1 (1.154.0). **Fora dessa contagem, e
   ainda abertos:** as variantes (os únicos e raros com desenho próprio) e os compartilhamentos provisórios (a Capa de
@@ -994,6 +994,8 @@ foi escolhida.
   cabeça larga, o focinho curto, o corcunda, as patas de base larga e a coxa num volume); a folha `rodada4.png`. O lobo r5, mais alto (a cabeça maior, o tronco grosso); a folha
   `lobo-r5.png`. A cabeça da r5 não foi aprovada: três cabeças de companheiro sobre o mesmo corpo (c1, perfil
   suave; c2, três quartos para o jogador; c3, livre); a folha `lobo-cabecas.png`.
+- **No jogo desde a 1.170.0:** o lobo c2 na fogueira, pelo tipo do animal (o papel `FIGURA_ANIMAL`, `figura-lobo-16`);
+  o urso e o falcão continuam nos sprites `fera` e `voador`, em avaliação.
 
 O atalho **Mapa** da doca já foi concluído; esta frente trata dos símbolos internos de caminhos e mapas.
 Não afirmar que só restam talentos e habilidades após este bloco sem conferir os consumíveis, variantes e

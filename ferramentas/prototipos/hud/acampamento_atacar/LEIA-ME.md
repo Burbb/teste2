@@ -214,3 +214,19 @@ real e 2×), a figura a 8× e o retrato aprovado; o Atacar do Mago, hoje × o ca
   formam um rosto que se lê de longe na fogueira, e o rosto aberto dá a simpatia do companheiro, enquanto o corpo segue
   voltado para o fogo. A c1 é a mais natural e tranquila, mas de perfil o olho é um pixel e a expressão quase não chega
   à cena; a c3 é o lobo mais atento, menos cativante.
+
+## No jogo desde a 1.170.0: o lobo c2 na fogueira
+
+- **Decisão de Jean:** o lobo c2 (`53425098`), sem novos retoques, escolhido pelo tipo do animal; o urso e o falcão
+  continuam em avaliação; as outras cabeças e rodadas ficam como histórico.
+- **A fonte de produção:** `ferramentas/arte/aseprite/figura-lobo/figura-lobo-16.aseprite` (a fonte da c2: guia oculta,
+  corpo, cabeca, detalhes); `exportar_aseprite.py figura-lobo` grava `rpg/web/static/hud/icones/figura-lobo-16.png` e o
+  @2x, idênticos byte a byte à proposta; `--conferir` igual ao jogo.
+- **No código:** `icones.js` ganhou o papel `FIGURA_ANIMAL` (`lobo: "figura-lobo"`), com o arquivo carregado junto do
+  script, e `Icones.figuraAnimal(tipo)` (um canvas de 16×16; `null` enquanto carrega; `""` para o sprite de sempre);
+  `acampamento.js` (`roda`, `montar`) pede a figura pelo `d.fera.tipo` e, se o arquivo ainda carrega, a aquece no
+  primeiro quadro pronto. Os retratos da carta e do painel (`ANIMAL`), os sprites `fera` e `voador` e as regras não
+  mudaram. `tests/test_retratos.py` confere o papel, os arquivos e a escolha pelo tipo.
+- **Conferido na cena real**, com os arquivos de produção, sem troca na página (`capturas-1170/`): o lobo com a figura,
+  aquecida pela luz do fogo e com a sombra, pixel a pixel igual à foto da proposta; o urso e o falcão com os sprites de
+  antes; sem erro no console.
