@@ -26,6 +26,10 @@ PARES = {
         [("Cultista", "cultista", "A, encapuzado (a marca da Fenda)", "B, sem capuz (a cicatriz ritual)"),
          ("Bruxa do pântano", "bruxa", "A, a velha do chapéu", "B, encapuzada com o frasco")],
         ("bandido", "ilse", "afogado", "troll")),
+    3: ("Par 3, os mortos-vivos: o carniçal e o espectro",
+        [("Carniçal", "carnical", "A, de frente (a mandíbula)", "B, de perfil (mordendo)"),
+         ("Espectro", "espectro", "A, o capuz de névoa", "B, o grito")],
+        ("afogado", "ilse", "lobo", "bandido")),
 }
 
 

@@ -77,3 +77,25 @@ os outros guardiões), o antagonista, os servos aliados e os aliados; nenhum her
   - **bruxa: a B.** Forte: o frasco verde conta o "cura e veneno" da descrição, e a figura não repete o capuz do
     Bandido nem o do cultista (a cor e o frasco). Limite: o rosto é pálido e redondo, mais sinistro pelo sorriso que
     pela forma. A A tem a silhueta mais clássica (o chapéu), mas o rosto e o cabelo ainda se misturam a 32 px.
+
+## Par 3, os mortos-vivos: o carniçal e o espectro (`par3.png`)
+
+- **Os dados:** o carniçal (morto-vivo; devorar, mordida sangrenta; "mortos famintos que devoram os caídos no meio da
+  luta para fechar as próprias feridas"); o espectro (morto-vivo, etéreo; drenar, grito de terror; "lâminas atravessam
+  seu corpo; magia arcana e fé o ferem de verdade"). **O alcance:** cada um pela família (com os afixos, como o espectro
+  flamejante de um evento); o Lich Menor (que ganha o etéreo na fase 2), a Bruxa Afogada, o cavaleiro sombrio e os
+  servos aliados ficam fora. As cores separam os dois do Afogado (verde-azulado) e da Ilse (o rosto azul).
+- **Carniçal A, de frente** (`carnical-a`; corpo, rosto, boca): a pele lívida cinza-violácea, o crânio sem pelo, os
+  olhos fundos e amarelo-doentes, a mandíbula comprida com os dentes tortos e o sangue, os ombros magros. **Carniçal B,
+  de perfil** (`carnical-b`): a cabeça baixa e comprida mordendo, os dentes e o sangue para a esquerda, o dorso curvado.
+- **Espectro A, o capuz de névoa** (`espectro-a`; névoa, vazio): o rosto vazio com um ponto de olho pálido, os farrapos
+  se desfazendo embaixo. **Espectro B, o grito** (`espectro-b`): o rosto comprido, os olhos em fenda, a boca esticada
+  do grito de terror, os braços em fiapos.
+- **Na bancada:** os dentes do primeiro carniçal de frente, alternados, viravam uma grade (passaram a grupos tortos);
+  o primeiro espectro do grito era um fantasminha de lençol, de desenho animado, e a névoa estava clara demais.
+- **A minha preferência:**
+  - **carniçal: o A.** Forte: a fome (a mandíbula com sangue) e o olho doente leem a 32 px; é um morto de carne, não
+    uma caveira. Limite: o rosto de frente é largo e lembra um pouco um macaco.
+  - **espectro: o A.** Forte: a silhueta do capuz que se desfaz é imediata e diferente de todo o resto da fileira; o
+    vazio do rosto é a ameaça. Limite: o ponto de olho único lê como um ciclope. O B tem a ação (o grito), mas ainda é
+    leve demais, mais assombração simpática que ameaça.

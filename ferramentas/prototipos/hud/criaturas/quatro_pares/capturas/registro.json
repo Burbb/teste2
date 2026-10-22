@@ -436,5 +436,224 @@
     ]
    }
   ]
+ },
+ "par3/luta/atual": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Carniçal",
+    "caixa": [
+     830,
+     38,
+     1040,
+     88
+    ]
+   },
+   {
+    "nome": "Carniçal",
+    "caixa": [
+     830,
+     96,
+     1040,
+     146
+    ]
+   },
+   {
+    "nome": "Espectro",
+    "caixa": [
+     830,
+     154,
+     1040,
+     204
+    ]
+   }
+  ]
+ },
+ "par3/luta/a": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Carniçal",
+    "caixa": [
+     830,
+     38,
+     1040,
+     88
+    ]
+   },
+   {
+    "nome": "Carniçal",
+    "caixa": [
+     830,
+     96,
+     1040,
+     146
+    ]
+   },
+   {
+    "nome": "Espectro",
+    "caixa": [
+     830,
+     154,
+     1040,
+     204
+    ]
+   }
+  ]
+ },
+ "par3/luta/b": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Carniçal",
+    "caixa": [
+     830,
+     38,
+     1040,
+     88
+    ]
+   },
+   {
+    "nome": "Carniçal",
+    "caixa": [
+     830,
+     96,
+     1040,
+     146
+    ]
+   },
+   {
+    "nome": "Espectro",
+    "caixa": [
+     830,
+     154,
+     1040,
+     204
+    ]
+   }
+  ]
+ },
+ "par3/bestiario/atual": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Afogado",
+    "caixa": [
+     585,
+     248,
+     935,
+     403
+    ]
+   },
+   {
+    "nome": "Carniçal",
+    "caixa": [
+     945,
+     248,
+     1295,
+     403
+    ]
+   },
+   {
+    "nome": "Espectro",
+    "caixa": [
+     585,
+     413,
+     935,
+     596
+    ]
+   },
+   {
+    "nome": "Lobo",
+    "caixa": [
+     945,
+     413,
+     1295,
+     596
+    ]
+   }
+  ]
+ },
+ "par3/bestiario/a": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Afogado",
+    "caixa": [
+     585,
+     248,
+     935,
+     403
+    ]
+   },
+   {
+    "nome": "Carniçal",
+    "caixa": [
+     945,
+     248,
+     1295,
+     403
+    ]
+   },
+   {
+    "nome": "Espectro",
+    "caixa": [
+     585,
+     413,
+     935,
+     596
+    ]
+   },
+   {
+    "nome": "Lobo",
+    "caixa": [
+     945,
+     413,
+     1295,
+     596
+    ]
+   }
+  ]
+ },
+ "par3/bestiario/b": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Afogado",
+    "caixa": [
+     585,
+     248,
+     935,
+     403
+    ]
+   },
+   {
+    "nome": "Carniçal",
+    "caixa": [
+     945,
+     248,
+     1295,
+     403
+    ]
+   },
+   {
+    "nome": "Espectro",
+    "caixa": [
+     585,
+     413,
+     935,
+     596
+    ]
+   },
+   {
+    "nome": "Lobo",
+    "caixa": [
+     945,
+     413,
+     1295,
+     596
+    ]
+   }
+  ]
  }
 }

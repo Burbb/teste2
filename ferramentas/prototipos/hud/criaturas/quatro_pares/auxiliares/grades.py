@@ -187,6 +187,92 @@ BRUXA_B = [
     "HHhhhhhhhhhhhhHH",
 ]
 
+# Par 3, os mortos-vivos: o carniçal e o espectro (hoje a "caveira" e o "etereo")
+CORES3 = {
+    # o carniçal: a pele lívida cinza-violácea (a luz, o meio, a sombra, a sombra funda), o olho doente, o sangue, os
+    # dentes, a boca, o trapo
+    "L": "a89a96", "l": "7a6c6c", "d": "4e4246", "D": "2e262a", "Y": "d0c060", "R": "8a1e1e", "T": "d8d0bc", "k": "120c0c", "t": "3a3226",
+    # o espectro: a névoa fria (do claro ao escuro), o vazio, o olho pálido
+    "C": "aeb6c4", "c": "7a8698", "s": "4c5468", "S": "343a4a", "V": "0c0e14", "E": "b8eef0",
+}
+# Carniçal A, de frente e curvado: o crânio sem pelo, os olhos fundos e doentes, a mandíbula comprida de dentes tortos
+# com o sangue, os ombros magros
+CARN_A = [
+    "................",
+    ".....dlllld.....",
+    "....dlLLLlld....",
+    "...dlLLLLllld...",
+    "...lLdkLLkdld...",
+    "...lLkYlLYkdd...",
+    "...dLlllllldD...",
+    "....dLlddlldD...",
+    "....kRTkTTkk....",
+    "....kTTkkTRk....",
+    "....dlkkkkld....",
+    ".....dllllD.....",
+    "..ddD.dlld.Ddd..",
+    ".dlLldDllDdlLld.",
+    "dlLlldttttdllLld",
+    "DlllddttttddlllD",
+]
+# Carniçal B, de perfil mordendo: a cabeça baixa e comprida, a boca aberta com os dentes e o sangue, o dorso curvado
+CARN_B = [
+    "................",
+    "................",
+    "......ddllld....",
+    ".....dlLLLlld...",
+    "....dlLLLLLlld..",
+    "...dlLdkLLLlld..",
+    "..dlLkYlLLlldD..",
+    ".dLLlllLLllddD..",
+    "kTkTkllLlldD....",
+    "kRkkkRdlldD.....",
+    ".kTkTkdldD......",
+    "..kkkddlddlld...",
+    "....DdlLdlLlLd..",
+    "...DdlddlddlLld.",
+    "..DdlLdlLdlLlld.",
+    ".DDDDDDDDDDDDDD.",
+]
+# Espectro A, o capuz de névoa: o rosto vazio com um ponto de olho pálido, os farrapos se desfazendo embaixo
+ESP_A = [
+    "................",
+    "......cccc......",
+    ".....cCCCcs.....",
+    "....cCcSSccs....",
+    "...cCcSVVScss...",
+    "...cCSVEVVScs...",
+    "...cCSVVEVScs...",
+    "...cCSVVVVScss..",
+    "...cCcSVVScsss..",
+    "..ccCccSScccss..",
+    "..cCccccccccss..",
+    ".cCcc.cccc.css..",
+    ".cCc..cc.c..cs..",
+    ".cc...c..c...s..",
+    "..c...s..c...s..",
+    "......s..s......",
+]
+# Espectro B, o grito: o rosto comprido, os olhos em fenda, a boca esticada do grito de terror, os braços em fiapos
+ESP_B = [
+    "................",
+    ".......ccc......",
+    "......cCCcs.....",
+    ".....cCCCccs....",
+    ".....cCVcVcs....",
+    ".....cEVcVEs....",
+    ".....cCcccsS....",
+    "..s..cCVVcsS..s.",
+    ".sc..cCVVcss.cs.",
+    ".cs.scCVVcsSscs.",
+    "..csscCVVcsssc..",
+    "...scCcccssss...",
+    "....sCcscsSs....",
+    "....s.cs.sS.....",
+    ".....s.s..s.....",
+    "......s...s.....",
+]
+
 CAMADAS = {
     "sapo-a": (SAPO_A, ["corpo", "barriga", "olhos", "manchas"],
                lambda x, y, ch: "olhos" if ch in "Yk" else "manchas" if ch == "O" else "barriga" if ch in "cCM" else "corpo"),
@@ -204,9 +290,16 @@ CAMADAS = {
                 lambda x, y, ch: "chapeu" if y <= 5 else "cabelo" if ch in "qQ" else "rosto" if ch in "Ppce" else "xale"),
     "bruxa-b": (BRUXA_B, ["capuz", "rosto", "frasco"],
                 lambda x, y, ch: "frasco" if ch in "GgcQq" or (x >= 12 and ch in "Pp") else "rosto" if ch in "Ppe" else "capuz"),
+    "carnical-a": (CARN_A, ["corpo", "rosto", "boca"],
+                   lambda x, y, ch: "boca" if ch in "RTk" else "rosto" if ch == "Y" or 1 <= y <= 11 else "corpo"),
+    "carnical-b": (CARN_B, ["corpo", "rosto", "boca"],
+                   lambda x, y, ch: "boca" if ch in "RTk" else "rosto" if ch == "Y" or y <= 10 else "corpo"),
+    "espectro-a": (ESP_A, ["nevoa", "vazio"], lambda x, y, ch: "vazio" if ch in "VE" else "nevoa"),
+    "espectro-b": (ESP_B, ["nevoa", "vazio"], lambda x, y, ch: "vazio" if ch in "VE" else "nevoa"),
 }
 # o mapa de cores de cada desenho (o par 1 usa CORES; os outros pares, o próprio)
-PALETA = {"cultista-a": CORES2, "cultista-b": CORES2, "bruxa-a": CORES2, "bruxa-b": CORES2}
+PALETA = {"cultista-a": CORES2, "cultista-b": CORES2, "bruxa-a": CORES2, "bruxa-b": CORES2,
+          **dict.fromkeys(("carnical-a", "carnical-b", "espectro-a", "espectro-b"), CORES3)}
 
 
 def imagem(ident):
