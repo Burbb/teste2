@@ -193,7 +193,7 @@ for (const tela of ["Inventário", "Bestiário"]) {
   await ate(p, () => !!document.querySelector('[data-conversar="odete"]') && !!pergunta && pergunta.tipo === "opcoes" && pergunta.opcoes.some(atalhoDe));
   await espera(600);
   await p.click(`#doca .atalho[data-rotulo="${tela}"]`);
-  let aberta = false;  // sem o ate(): ele clicaria no Continuar do Bestiário
+  let aberta = false;  // sem o ate(): ele clicaria nos Continuar da página
   for (let k = 0; k < 80 && !aberta; k++) { aberta = await p.evaluate((t) => docaTela === t && !!pergunta && !processando, tela); await espera(100); }
   await espera(300);
   const c = await p.$('[data-conversar="odete"]');

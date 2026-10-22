@@ -296,7 +296,10 @@ async function cenarioVila(browser) {
     await page.waitForTimeout(300);
     conferir(await page.evaluate(() => { const p = document.getElementById("predios"); return p.hidden || !p.querySelector(".predio"); }),
       "no bestiário, os balões dos prédios da vila não ficam na tela");
-    await (await esperar("#prompt .continuar", 3000))?.click();
+    // o Bestiário é um painel de consulta, como o Diário: o Voltar no topo, nenhum Continuar no pé
+    const voltarBest = await esperar("#barra-tela .voltar-seta", 3000);
+    conferir(!!voltarBest && !(await page.$("#prompt .continuar")), "o bestiário tem o Voltar no topo e nenhum Continuar no pé");
+    await voltarBest?.click();
     conferir(!!(await esperar('#predios:not(.focado) .predio[data-predio="mercado"]', 3000)), "saindo do bestiário, a vila volta com os prédios");
     await page.waitForTimeout(300);
     const vida = () => page.evaluate(() => App.estado.heroi.hp);

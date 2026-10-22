@@ -999,6 +999,13 @@ function mostrarContinuar(m) {
     return;
   }
   promptEl.innerHTML = "";
+  if (docaTela && emMenu()) {
+    // Uma tela de leitura aberta pela doca (o Bestiário) é um painel de consulta, como o Diário: ela termina no Voltar
+    // da barra do topo (e no Esc), que volta para onde se estava, sem um Continuar no pé da página.
+    pergunta = { id: m.id, tipo: "continuar", voltar: null };
+    porVoltar("Voltar", () => responder(m.id, null));
+    return;
+  }
   porVoltar(null);
   const b = el("button", "continuar", "Continuar <span>▸</span>");
   b.type = "button";
