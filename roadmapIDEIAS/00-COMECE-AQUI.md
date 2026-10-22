@@ -5788,3 +5788,23 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   `RETRATO_FAMILIA` e o papel `CRIATURA`, o teste, o gabarito (só o valor do retrato); conferido na carta e no Bestiário.
 - **Continua:** o Esqueleto E1r, o urso e o falcão do acampamento e o cajado em avaliação; a próxima criatura fica com o
   Jean.
+
+### 22/10/2026 (data do computador local) — Correções de interface, a fome e a frente de criaturas (1.174.1 a 1.174.6)
+
+- **Pedido do Jean:** sete itens (a conversa com o Inventário aberto, o "tudo é ganho" do saque, o Continuar dos
+  relatórios, o cursor dos Testes do d20, a fome e a vida bloqueada, o Voltar do Bestiário, a relação das criaturas).
+- **Feito, um commit por assunto:** 1.174.1, a carta ✉ numa tela da doca fecha a tela e abre a conversa na hora (antes
+  ficava guardada até fechar a tela; o mesmo caminho para todos os companheiros); 1.174.2, o saque sem a linha do espaço
+  vazio; 1.174.3, o espólio (relatório da luta e dos baús) fecha no primeiro gesto novo, sem os 900 ms de guarda, pela
+  regra do Gesto; 1.174.4, os Testes do d20 com o cursor normal; 1.174.5, **defeito** da fome: comprar ou achar comida
+  com fome não recalculava o herói (a vida máxima e os atributos seguiam reduzidos, o bloqueio sem causa, até dormir),
+  agora recalcula na hora, sem mudar número de balanceamento (o gabarito mudou só a partir da comida com fome);
+  1.174.6, o Bestiário com o Voltar no topo (só na tela; o motor e o gabarito iguais). Regressões em
+  `tests/navegador/cliques_seguidos.mjs` (seções 4 e 5), na fumaça (anéis, vila) e em `tests/test_vida_bloqueio.py`.
+- **A frente de criaturas** no plano 23 (item 1.12, "A frente de criaturas em 22/10/2026"): integrados, propostas
+  aguardando, genéricos, compartilhamentos, reservados e os pares recomendados.
+- **Anotado, sem mexer:** a linha "tudo é ganho" nas dicas da mochila e do mercado; o amanhecer de noite ruim ignora
+  clique e tecla por 500 ms; nível, especialização e contratos ignoram só o teclado por 600 ms; a marca de contrato no
+  texto com `cursor: help`; o cenário `fogueira` com `CONVERSA=1` quebra se houver alguém na `RESERVA` (`cm.membro` não
+  acha quem está no acampamento).
+- **Continua:** o Esqueleto E1r, o urso e o falcão do acampamento e o cajado em avaliação; o próximo par fica com o Jean.

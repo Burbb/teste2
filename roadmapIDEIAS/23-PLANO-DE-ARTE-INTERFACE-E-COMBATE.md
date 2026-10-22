@@ -13,8 +13,10 @@ Não iniciar todo o plano numa única tarefa. As etapas técnicas A–I e a vali
 
 ## Estado de referência — 21/10/2026
 
-- Produção: **1.174.0** na branch `claude/tender-einstein-tx3tjl` (o Espectro com retrato, pela família; antes, o
-  Javali selvagem e o Carniçal na 1.173.0 e o Cultista, a Bruxa do pântano e o Rato gigante na 1.172.0).
+- Produção: **1.174.6** na branch `claude/tender-einstein-tx3tjl` (o Espectro com retrato, pela família, na 1.174.0;
+  da 1.174.1 à 1.174.6, correções de interface e a da fome: a carta ✉ com uma tela da doca aberta, o saque sem o "tudo é
+  ganho", o Continuar do relatório no primeiro clique, o cursor dos Testes do d20, comer fora do amanhecer devolve a
+  vida máxima, o Voltar no topo do Bestiário).
 - **Etapa 1D concluída:** os **31 equipamentos-base** estão finais desde a 1.150.0, com os acabamentos das luvas L7
   (1.151.0), das perneiras P7 (1.152.0), do capacete C1 (1.153.0) e das botas A1 (1.154.0). **Fora dessa contagem, e
   ainda abertos:** as variantes (os únicos e raros com desenho próprio) e os compartilhamentos provisórios (a Capa de
@@ -25,7 +27,9 @@ Não iniciar todo o plano numa única tarefa. As etapas técnicas A–I e a vali
   Bandido** (1.163.0) e os **três animais do patrulheiro** (o Urso Pardo e o Falcão Peregrino na 1.164.0; o Lobo
   Cinzento, com o mesmo retrato do Lobo inimigo, na 1.165.0), o **Troll da montanha** (1.166.0, pela família), o
   **Rei Troll** (1.167.0, pelo id do guardião) e a **Aranha gigante** (1.167.0, pela família, com as invocadas) e a
-  **Rainha Aracnídea** (1.168.0, pelo id da guardiã). O Bandido do chapéu está reservado como conceito de um possível chefe, fora do jogo.
+  **Rainha Aracnídea** (1.168.0, pelo id da guardiã); depois, pela família, o Sapo e a Sanguessuga (1.171.0), o
+  Cultista, a Bruxa e o Rato (1.172.0), o Javali e o Carniçal (1.173.0) e o Espectro (1.174.0). A relação do que falta
+  está em "A frente de criaturas em 22/10/2026", no item 1.12. O Bandido do chapéu está reservado como conceito de um possível chefe, fora do jogo.
 - **Agora: 1E.3, as demais criaturas, os chefes e as invocações** (as outras ainda saem dos traços: o `fera`, o
   `humano`, a caveira e os outros sprites de 16×16; o levantamento em `ferramentas/prototipos/hud/criaturas/`).
   **Depois: 1E.4**, os caminhos e os símbolos internos do mapa e do minimapa. Em seguida, as **etapas 2–9** como estão
@@ -1028,6 +1032,35 @@ foi escolhida.
   do Vazio e o Lich (na fase 2) continuam no `etereo`. O A, o M e o AP2 ficam como histórico; a referência do manto
   inflado fica registrada para a futura arte de cenário.
 
+**A frente de criaturas em 22/10/2026 (na 1.174.6; conferido em `dados.retrato` com as 27 famílias e os 10 guardiões
+do catálogo):**
+- **Integrados (16):** pela família, o Afogado, o Lobo, o Bandido, o Troll da montanha, a Aranha gigante, o Sapo-touro,
+  a Sanguessuga, o Cultista, a Bruxa do pântano, o Rato, o Javali, o Carniçal e o Espectro (13); pela chave da capela,
+  a Ilse; pelo id do guardião, o Rei Troll e a Rainha Aracnídea. Os animais do patrulheiro (o Urso Pardo, o Falcão
+  Peregrino e o Lobo Cinzento) na carta aliada e no painel; o lobo também na fogueira.
+- **Propostas aguardando o Jean (não aprovadas, cada uma separada):** o **Esqueleto E1r** (a direção escolhida, o
+  guarda morto com a aba limpa; a integração pela família espera o aceite); o **urso e o falcão do acampamento**
+  (`acampamento_atacar/`; na fogueira continuam o `fera` e o `voador`); o **cajado do Mago** no Atacar (teste só na
+  página; o comando continua com o sprite `cajado`).
+- **Ainda nos desenhos genéricos dos traços:** 14 famílias, a harpia e o grifo (`voador`, o morcego), o lobo gélido
+  (`fera`), o mercenário (`humano`), o esqueleto, o cavaleiro sombrio e o servo esquelético (`caveira`), o ent jovem
+  (`planta`), o golem de pedra (`construto`), a abominação (`corrompido`), a cria do Vazio (`etereo`) e o caído, o xamã
+  caído e o cão infernal (`demonio`); 8 guardiões, o Ent Ancião, a Hidra do Brejo, a Bruxa Afogada, o Dragão de Gelo, o
+  Senhor da Guerra, o Profeta das Cinzas, o Lich Menor (o `etereo` na fase 2) e o Golem Primordial; e, fora do
+  catálogo, o antagonista (`humano`) e as crias dele (`etereo`).
+- **Compartilhamentos deliberados:** o Lobo Cinzento aliado com o retrato do Lobo (1.165.0; o lado, o nome e a borda
+  separam os papéis); os invocados com o retrato da família que os invoca ou a que pertencem (os afogados da Ilse, as
+  aranhas da Rainha, os lobos e bandidos líderes e invocados); os fiéis do Profeta e os dois de capa escura da sacristia
+  com o Cultista.
+- **Conceitos reservados (fora do jogo, sem espécie, regra nem mapeamento):** o Esqueleto E2 (um possível mago
+  esqueleto) e o Bandido do chapéu (um possível chefe).
+- **Próximos pares recomendados (a escolha é do Jean):** antes de tudo, decidir o Esqueleto E1r (o esqueleto comum ainda
+  na caveira, que também serve o cavaleiro sombrio, o servo, a Bruxa Afogada e o Lich). Depois: (1) o **mercenário e o lobo gélido**, os comuns sem nível mínimo que
+  ainda emprestam desenhos de outros (o `humano` dos chefes, o rosto antigo de lobo); (2) a **harpia e o grifo**, os dois
+  voadores comuns no morcego, que não lê nenhum dos dois (e liberam o `voador` para o Dragão de Gelo, depois); (3) o
+  **caído e o xamã caído**, dois dos três que dividem o `demonio` (o cão infernal pode vir junto ou ficar com eles por
+  família). Os guardiões genéricos ficam para pares próprios, um chefe por vez, depois dos comuns.
+
 O atalho **Mapa** da doca já foi concluído; esta frente trata dos símbolos internos de caminhos e mapas.
 Não afirmar que só restam talentos e habilidades após este bloco sem conferir os consumíveis, variantes e
 compartilhamentos provisórios ainda registrados. A Capa de Patrulha, o Chapéu de Couro e a Coroa dos Afogados continuam
@@ -1169,12 +1202,14 @@ volta à pauta quando essa expansão exigir; não é uma migração de engine.
 
 ## Próxima passagem de trabalho — atualizada em 21/10/2026
 
-1. **Concluídos:** os 31 equipamentos-base (1D); na 1E, o contador de flechas e os 17 estados; o Afogado, a Ilse, o Lobo,
-   o Bandido e os três animais do patrulheiro. As variantes e os compartilhamentos provisórios ficam abertos, separados.
+1. **Concluídos:** os 31 equipamentos-base (1D); na 1E, o contador de flechas e os 17 estados; 16 criaturas com retrato
+   (13 famílias, a Ilse, o Rei Troll e a Rainha Aracnídea) e os três animais do patrulheiro. As variantes e os
+   compartilhamentos provisórios ficam abertos, separados.
 2. **Agora, 1E.3:** as demais criaturas, os chefes e as invocações, em pares pequenos escolhidos pelo Jean, pelo mesmo
-   caminho (o retrato por família, por chave ou pelo tipo, sem trocar o sprite compartilhado). Pendências registradas no
-   levantamento: o rosto de lobo (`fera`) ainda em várias feras (e na Rainha Aracnídea), o `humano` dos chefes e
-   do antagonista (o troll e o Rei Troll resolvidos na 1.166.0 e na 1.167.0), o Lich que troca de desenho na fase 2, os servos invocados. O Bandido do chapéu está reservado.
+   caminho (o retrato por família, por chave ou pelo tipo, sem trocar o sprite compartilhado). A relação em "A frente de
+   criaturas em 22/10/2026" (item 1.12): o Esqueleto E1r, o urso e o falcão do acampamento e o cajado do Mago aguardando
+   o Jean; 14 famílias e 8 guardiões nos traços; os pares recomendados. O Esqueleto E2 e o Bandido do chapéu estão
+   reservados.
 3. **Depois, 1E.4:** os caminhos/destinos e os símbolos internos do mapa e do minimapa.
 4. **Retomar a etapa 2** e **seguir 3–7**, como na sequência abaixo; **etapa 8** com habilidades, talentos, Grimório e
    árvore no mesmo ciclo; **etapa 9**, a campanha; **depois do plano**, a avaliação de refatoração.
