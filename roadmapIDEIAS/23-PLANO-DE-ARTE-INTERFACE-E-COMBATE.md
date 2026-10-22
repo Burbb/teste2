@@ -953,6 +953,10 @@ olhos pequenos); as folhas `rei-aranha.png` e `rei-coroa.png`. O ajuste das pont
 folha `rei-pontas.png`).
 **No jogo desde a 1.167.0:** o Rei Troll (`rei-troll-ouro2`, pelo id do guardião) e a Aranha gigante (`aranha-2b`, pela
 família, com as que a Rainha invoca); a Rainha Aracnídea continua no `fera`.
+**O par seguinte (21/10/2026, proposta): a Rainha Aracnídea e o Esqueleto**, duas de cada em
+`ferramentas/prototipos/hud/criaturas/rainha_esqueleto/`; o alcance previsto: a Rainha pelo id do guardião, o Esqueleto
+pela família (o servo aliado do Necromante e os chefes mortos-vivos fora); as folhas `rainha.png` e `esqueleto.png`.
+Nada aprovado.
 
 O atalho **Mapa** da doca já foi concluído; esta frente trata dos símbolos internos de caminhos e mapas.
 Não afirmar que só restam talentos e habilidades após este bloco sem conferir os consumíveis, variantes e

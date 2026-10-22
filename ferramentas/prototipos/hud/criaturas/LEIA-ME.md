@@ -130,6 +130,10 @@ A escolha do par e da direção é do Jean; nada foi começado.
   e `troll`; a Rainha Aracnídea e o Rei Troll ficam fora). Segunda rodada: três de cada pelas referências geradas
   (a aranha de frente; o troll de carne). Nada integrado.
 
+- **A Rainha Aracnídea e o Esqueleto** (`rainha_esqueleto/`, 21/10/2026): duas propostas de cada (a Rainha de frente e
+  descendo pelo fio; o Esqueleto de frente e em três quartos), com o alcance previsto e os papéis do esqueleto
+  separados (o inimigo, os invocados pelo Lich, o servo aliado, os chefes). Nada integrado.
+
 ## Reservado
 
 - **O Bandido do chapéu** (`lobo_bandido/`, a segunda rodada): conceito guardado para um possível chefe futuro, fora

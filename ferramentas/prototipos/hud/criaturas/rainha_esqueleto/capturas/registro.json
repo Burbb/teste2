@@ -1,0 +1,782 @@
+{
+ "rainha/atual": {
+  "erros": [],
+  "avisos": [],
+  "caixas": [
+   {
+    "nome": "Rainha Aracnídea",
+    "caixa": [
+     830,
+     38,
+     1040,
+     88
+    ],
+    "retrato": [
+     840,
+     47,
+     872,
+     79
+    ]
+   },
+   {
+    "nome": "Aranha gigante A (invocado)",
+    "caixa": [
+     830,
+     96,
+     1040,
+     146
+    ],
+    "retrato": [
+     840,
+     105,
+     872,
+     137
+    ]
+   },
+   {
+    "nome": "Aranha gigante B (invocado)",
+    "caixa": [
+     830,
+     154,
+     1040,
+     204
+    ],
+    "retrato": [
+     840,
+     163,
+     872,
+     195
+    ]
+   }
+  ],
+  "cartas": [
+   "Jean: data:image/png;base64,iVBORw0KGgoAAAANSU 32/32",
+   "Rainha Aracnídea: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "Aranha gigante A (invocado): /static/hud/icones/retrato-aranha-32.png 32/32",
+   "Aranha gigante B (invocado): /static/hud/icones/retrato-aranha-32.png 32/32"
+  ]
+ },
+ "rainha/a": {
+  "erros": [],
+  "avisos": [],
+  "caixas": [
+   {
+    "nome": "Rainha Aracnídea",
+    "caixa": [
+     830,
+     38,
+     1040,
+     88
+    ],
+    "retrato": [
+     840,
+     47,
+     872,
+     79
+    ]
+   },
+   {
+    "nome": "Aranha gigante A (invocado)",
+    "caixa": [
+     830,
+     96,
+     1040,
+     146
+    ],
+    "retrato": [
+     840,
+     105,
+     872,
+     137
+    ]
+   },
+   {
+    "nome": "Aranha gigante B (invocado)",
+    "caixa": [
+     830,
+     154,
+     1040,
+     204
+    ],
+    "retrato": [
+     840,
+     163,
+     872,
+     195
+    ]
+   }
+  ],
+  "cartas": [
+   "Jean: data:image/png;base64,iVBORw0KGgoAAAANSU 32/32",
+   "Rainha Aracnídea: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "Aranha gigante A (invocado): /static/hud/icones/retrato-aranha-32.png 32/32",
+   "Aranha gigante B (invocado): /static/hud/icones/retrato-aranha-32.png 32/32"
+  ]
+ },
+ "rainha/b": {
+  "erros": [],
+  "avisos": [],
+  "caixas": [
+   {
+    "nome": "Rainha Aracnídea",
+    "caixa": [
+     830,
+     38,
+     1040,
+     88
+    ],
+    "retrato": [
+     840,
+     47,
+     872,
+     79
+    ]
+   },
+   {
+    "nome": "Aranha gigante A (invocado)",
+    "caixa": [
+     830,
+     96,
+     1040,
+     146
+    ],
+    "retrato": [
+     840,
+     105,
+     872,
+     137
+    ]
+   },
+   {
+    "nome": "Aranha gigante B (invocado)",
+    "caixa": [
+     830,
+     154,
+     1040,
+     204
+    ],
+    "retrato": [
+     840,
+     163,
+     872,
+     195
+    ]
+   }
+  ],
+  "cartas": [
+   "Jean: data:image/png;base64,iVBORw0KGgoAAAANSU 32/32",
+   "Rainha Aracnídea: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "Aranha gigante A (invocado): /static/hud/icones/retrato-aranha-32.png 32/32",
+   "Aranha gigante B (invocado): /static/hud/icones/retrato-aranha-32.png 32/32"
+  ]
+ },
+ "luta/atual": {
+  "erros": [],
+  "avisos": [],
+  "caixas": [
+   {
+    "nome": "Esqueleto",
+    "caixa": [
+     830,
+     67,
+     1040,
+     117
+    ],
+    "retrato": [
+     840,
+     76,
+     872,
+     108
+    ]
+   },
+   {
+    "nome": "Esqueleto",
+    "caixa": [
+     830,
+     125,
+     1040,
+     175
+    ],
+    "retrato": [
+     840,
+     134,
+     872,
+     166
+    ]
+   },
+   {
+    "nome": "Carniçal",
+    "caixa": [
+     612,
+     67,
+     822,
+     117
+    ],
+    "retrato": [
+     622,
+     76,
+     654,
+     108
+    ]
+   },
+   {
+    "nome": "Afogado",
+    "caixa": [
+     612,
+     125,
+     822,
+     175
+    ],
+    "retrato": [
+     622,
+     134,
+     654,
+     166
+    ]
+   }
+  ],
+  "cartas": [
+   "Jean: data:image/png;base64,iVBORw0KGgoAAAANSU 32/32",
+   "Esqueleto (Invocado): data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "Esqueleto: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "Esqueleto: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "Carniçal: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "Afogado: /static/hud/icones/retrato-afogado-32.pn 32/32"
+  ]
+ },
+ "luta/a": {
+  "erros": [],
+  "avisos": [],
+  "caixas": [
+   {
+    "nome": "Esqueleto",
+    "caixa": [
+     830,
+     67,
+     1040,
+     117
+    ],
+    "retrato": [
+     840,
+     76,
+     872,
+     108
+    ]
+   },
+   {
+    "nome": "Esqueleto",
+    "caixa": [
+     830,
+     125,
+     1040,
+     175
+    ],
+    "retrato": [
+     840,
+     134,
+     872,
+     166
+    ]
+   },
+   {
+    "nome": "Carniçal",
+    "caixa": [
+     612,
+     67,
+     822,
+     117
+    ],
+    "retrato": [
+     622,
+     76,
+     654,
+     108
+    ]
+   },
+   {
+    "nome": "Afogado",
+    "caixa": [
+     612,
+     125,
+     822,
+     175
+    ],
+    "retrato": [
+     622,
+     134,
+     654,
+     166
+    ]
+   }
+  ],
+  "cartas": [
+   "Jean: data:image/png;base64,iVBORw0KGgoAAAANSU 32/32",
+   "Esqueleto (Invocado): data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "Esqueleto: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "Esqueleto: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "Carniçal: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "Afogado: /static/hud/icones/retrato-afogado-32.pn 32/32"
+  ]
+ },
+ "luta/b": {
+  "erros": [],
+  "avisos": [],
+  "caixas": [
+   {
+    "nome": "Esqueleto",
+    "caixa": [
+     830,
+     67,
+     1040,
+     117
+    ],
+    "retrato": [
+     840,
+     76,
+     872,
+     108
+    ]
+   },
+   {
+    "nome": "Esqueleto",
+    "caixa": [
+     830,
+     125,
+     1040,
+     175
+    ],
+    "retrato": [
+     840,
+     134,
+     872,
+     166
+    ]
+   },
+   {
+    "nome": "Carniçal",
+    "caixa": [
+     612,
+     67,
+     822,
+     117
+    ],
+    "retrato": [
+     622,
+     76,
+     654,
+     108
+    ]
+   },
+   {
+    "nome": "Afogado",
+    "caixa": [
+     612,
+     125,
+     822,
+     175
+    ],
+    "retrato": [
+     622,
+     134,
+     654,
+     166
+    ]
+   }
+  ],
+  "cartas": [
+   "Jean: data:image/png;base64,iVBORw0KGgoAAAANSU 32/32",
+   "Esqueleto (Invocado): data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "Esqueleto: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "Esqueleto: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "Carniçal: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "Afogado: /static/hud/icones/retrato-afogado-32.pn 32/32"
+  ]
+ },
+ "lich/atual": {
+  "erros": [],
+  "avisos": [],
+  "caixas": [
+   {
+    "nome": "Lich Menor",
+    "caixa": [
+     830,
+     38,
+     1040,
+     88
+    ],
+    "retrato": [
+     840,
+     47,
+     872,
+     79
+    ]
+   },
+   {
+    "nome": "Esqueleto A (invocado)",
+    "caixa": [
+     830,
+     96,
+     1040,
+     146
+    ],
+    "retrato": [
+     840,
+     105,
+     872,
+     137
+    ]
+   },
+   {
+    "nome": "Esqueleto B (invocado)",
+    "caixa": [
+     830,
+     154,
+     1040,
+     204
+    ],
+    "retrato": [
+     840,
+     163,
+     872,
+     195
+    ]
+   }
+  ],
+  "cartas": [
+   "Jean: data:image/png;base64,iVBORw0KGgoAAAANSU 32/32",
+   "Lich Menor: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "Esqueleto A (invocado): data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "Esqueleto B (invocado): data:image/png;base64,iVBORw0KGgoAAAANSU 32/16"
+  ]
+ },
+ "lich/a": {
+  "erros": [],
+  "avisos": [],
+  "caixas": [
+   {
+    "nome": "Lich Menor",
+    "caixa": [
+     830,
+     38,
+     1040,
+     88
+    ],
+    "retrato": [
+     840,
+     47,
+     872,
+     79
+    ]
+   },
+   {
+    "nome": "Esqueleto A (invocado)",
+    "caixa": [
+     830,
+     96,
+     1040,
+     146
+    ],
+    "retrato": [
+     840,
+     105,
+     872,
+     137
+    ]
+   },
+   {
+    "nome": "Esqueleto B (invocado)",
+    "caixa": [
+     830,
+     154,
+     1040,
+     204
+    ],
+    "retrato": [
+     840,
+     163,
+     872,
+     195
+    ]
+   }
+  ],
+  "cartas": [
+   "Jean: data:image/png;base64,iVBORw0KGgoAAAANSU 32/32",
+   "Lich Menor: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "Esqueleto A (invocado): data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "Esqueleto B (invocado): data:image/png;base64,iVBORw0KGgoAAAANSU 32/16"
+  ]
+ },
+ "lich/b": {
+  "erros": [],
+  "avisos": [],
+  "caixas": [
+   {
+    "nome": "Lich Menor",
+    "caixa": [
+     830,
+     38,
+     1040,
+     88
+    ],
+    "retrato": [
+     840,
+     47,
+     872,
+     79
+    ]
+   },
+   {
+    "nome": "Esqueleto A (invocado)",
+    "caixa": [
+     830,
+     96,
+     1040,
+     146
+    ],
+    "retrato": [
+     840,
+     105,
+     872,
+     137
+    ]
+   },
+   {
+    "nome": "Esqueleto B (invocado)",
+    "caixa": [
+     830,
+     154,
+     1040,
+     204
+    ],
+    "retrato": [
+     840,
+     163,
+     872,
+     195
+    ]
+   }
+  ],
+  "cartas": [
+   "Jean: data:image/png;base64,iVBORw0KGgoAAAANSU 32/32",
+   "Lich Menor: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "Esqueleto A (invocado): data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "Esqueleto B (invocado): data:image/png;base64,iVBORw0KGgoAAAANSU 32/16"
+  ]
+ },
+ "bestiario/atual": {
+  "erros": [],
+  "avisos": [],
+  "caixas": [
+   {
+    "nome": "Afogado",
+    "caixa": [
+     585,
+     248,
+     935,
+     403
+    ],
+    "retrato": [
+     598,
+     262,
+     646,
+     310
+    ]
+   },
+   {
+    "nome": "Aranha gigante",
+    "caixa": [
+     945,
+     248,
+     1295,
+     403
+    ],
+    "retrato": [
+     958,
+     262,
+     1006,
+     310
+    ]
+   },
+   {
+    "nome": "Carniçal",
+    "caixa": [
+     585,
+     413,
+     935,
+     568
+    ],
+    "retrato": [
+     598,
+     427,
+     646,
+     475
+    ]
+   },
+   {
+    "nome": "Esqueleto",
+    "caixa": [
+     945,
+     413,
+     1295,
+     568
+    ],
+    "retrato": [
+     958,
+     427,
+     1006,
+     475
+    ]
+   }
+  ],
+  "cartas": [
+   "Afogado: /static/hud/icones/retrato-afogado-48.pn 48/48",
+   "Aranha gigante: /static/hud/icones/retrato-aranha-48.png 48/48",
+   "Carniçal: data:image/png;base64,iVBORw0KGgoAAAANSU 48/16",
+   "Esqueleto: data:image/png;base64,iVBORw0KGgoAAAANSU 48/16"
+  ]
+ },
+ "bestiario/a": {
+  "erros": [],
+  "avisos": [],
+  "caixas": [
+   {
+    "nome": "Afogado",
+    "caixa": [
+     585,
+     248,
+     935,
+     403
+    ],
+    "retrato": [
+     598,
+     262,
+     646,
+     310
+    ]
+   },
+   {
+    "nome": "Aranha gigante",
+    "caixa": [
+     945,
+     248,
+     1295,
+     403
+    ],
+    "retrato": [
+     958,
+     262,
+     1006,
+     310
+    ]
+   },
+   {
+    "nome": "Carniçal",
+    "caixa": [
+     585,
+     413,
+     935,
+     568
+    ],
+    "retrato": [
+     598,
+     427,
+     646,
+     475
+    ]
+   },
+   {
+    "nome": "Esqueleto",
+    "caixa": [
+     945,
+     413,
+     1295,
+     568
+    ],
+    "retrato": [
+     958,
+     427,
+     1006,
+     475
+    ]
+   }
+  ],
+  "cartas": [
+   "Afogado: /static/hud/icones/retrato-afogado-48.pn 48/48",
+   "Aranha gigante: /static/hud/icones/retrato-aranha-48.png 48/48",
+   "Carniçal: data:image/png;base64,iVBORw0KGgoAAAANSU 48/16",
+   "Esqueleto: data:image/png;base64,iVBORw0KGgoAAAANSU 48/16"
+  ]
+ },
+ "bestiario/b": {
+  "erros": [],
+  "avisos": [],
+  "caixas": [
+   {
+    "nome": "Afogado",
+    "caixa": [
+     585,
+     248,
+     935,
+     403
+    ],
+    "retrato": [
+     598,
+     262,
+     646,
+     310
+    ]
+   },
+   {
+    "nome": "Aranha gigante",
+    "caixa": [
+     945,
+     248,
+     1295,
+     403
+    ],
+    "retrato": [
+     958,
+     262,
+     1006,
+     310
+    ]
+   },
+   {
+    "nome": "Carniçal",
+    "caixa": [
+     585,
+     413,
+     935,
+     568
+    ],
+    "retrato": [
+     598,
+     427,
+     646,
+     475
+    ]
+   },
+   {
+    "nome": "Esqueleto",
+    "caixa": [
+     945,
+     413,
+     1295,
+     568
+    ],
+    "retrato": [
+     958,
+     427,
+     1006,
+     475
+    ]
+   }
+  ],
+  "cartas": [
+   "Afogado: /static/hud/icones/retrato-afogado-48.pn 48/48",
+   "Aranha gigante: /static/hud/icones/retrato-aranha-48.png 48/48",
+   "Carniçal: data:image/png;base64,iVBORw0KGgoAAAANSU 48/16",
+   "Esqueleto: data:image/png;base64,iVBORw0KGgoAAAANSU 48/16"
+  ]
+ }
+}

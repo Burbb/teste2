@@ -5558,3 +5558,13 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   Aranha pela família (com as invocadas); a Rainha Aracnídea no `fera`; `tests/test_retratos.py`; o cenário `tutorial`
   ganhou `INVOCADOS`. A folha `ferramentas/prototipos/hud/criaturas/aranha_troll/rei-aranha-final.png`.
 - **Continua:** a 1E.3 com as demais criaturas (o próximo par é decisão do Jean).
+
+### 21/10/2026 (data do computador local) — 1E.3: a Rainha Aracnídea e o Esqueleto (proposta)
+
+- **Pedido de Jean:** duas propostas de cada, só no protótipo; os papéis do esqueleto verificados separadamente.
+- **Feito:** em `ferramentas/prototipos/hud/criaturas/rainha_esqueleto/`: `rainha-a` (de frente e enorme), `rainha-b`
+  (descendo pelo fio), `esqueleto-a` (de frente) e `esqueleto-b` (em três quartos); fontes pelo MCP, exportação
+  conferida (a Rainha só o 32; o Esqueleto o 32 e o 48); as folhas `rainha.png` e `esqueleto.png` (a carta, o
+  Bestiário, a Rainha ao lado da Aranha, os papéis do esqueleto, a fileira, a 12×). O alcance e a avaliação no
+  `LEIA-ME.md` da pasta. Minha preferência: a Rainha A e o Esqueleto A.
+- **Continua:** nada aprovado; a versão continua 1.167.0.
