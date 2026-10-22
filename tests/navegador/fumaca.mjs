@@ -273,6 +273,9 @@ async function cenarioVila(browser) {
     await page.waitForTimeout(400);
     const depois = await page.evaluate(() => document.getElementById("pagina").scrollTop);
     conferir(Math.abs(depois - antes) < 4, `aceitar um contrato não pula a página (${antes} → ${depois})`);
+    // o "!" do mapa no cartaz aceito é informação com dica, não botão: o cursor normal, a dica e o rótulo ficam
+    const marca = await page.$eval(".contrato.ativo .marca-no-texto", (m) => ({ cursor: getComputedStyle(m).cursor, dica: m.title, rotulo: m.getAttribute("aria-label") }));
+    conferir(marca.cursor === "default" && marca.dica === "Marcado no mapa" && !!marca.rotulo, `a marca de contrato no texto: cursor normal, com a dica (${JSON.stringify(marca)})`);
     // Abandonar pergunta numa janela por cima (antes ficava no pé da página, esquecida); Esc é "não".
     const meus = () => page.$$eval("[data-abandonar]", (x) => x.length);
     const tinha = await meus();
