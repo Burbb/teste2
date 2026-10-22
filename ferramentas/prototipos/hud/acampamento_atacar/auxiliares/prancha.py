@@ -8,6 +8,7 @@ como está, com o arco aprovado trocado só na página e com a Besta equipada; o
     python auxiliares/prancha.py rodada3    # rodada3.png
     python auxiliares/prancha.py rodada4    # rodada4.png
     python auxiliares/prancha.py lobo-r5    # lobo-r5.png
+    python auxiliares/prancha.py lobo-cabecas    # lobo-cabecas.png
 """
 import json
 import pathlib
@@ -213,6 +214,34 @@ def folha_lobo_r5():
     print("lobo-r5.png", out.size)
 
 
+def folha_cabecas():
+    """As cabeças do lobo (lobo-cabecas.png): a r5 e as três (c1, c2, c3) na fogueira, tamanho real e 2×, e as figuras
+    a 8×, cada uma identificada. Sem suavização."""
+    import grades as gr
+    f, f2 = ImageFont.truetype("arial.ttf", 15), ImageFont.truetype("arial.ttf", 12)
+    out = Image.new("RGBA", (1600, 700), CARVAO)
+    d = ImageDraw.Draw(out)
+    d.text((20, 10), "As cabeças do lobo, o corpo da r5: r5 (900c7637) × c1 × c2 × c3, na fogueira a 1920×945; proposta, nada no jogo",
+           fill=TEXTO, font=f)
+    casos = (("r5", "r5 (não aprovada)"), ("c1", "c1, perfil suave"), ("c2", "c2, três quartos para o jogador"),
+             ("c3", "c3, livre: orelhas em pé"))
+    y = 38
+    for j, (k, rot) in enumerate(casos):
+        im = Image.open(CAP / f"fogueira-lobo-{k}.png").convert("RGBA").crop((340, 120, 520, 205))
+        d.text((20 + j * 390, y), rot, fill=TEXTO2, font=f2)
+        out.alpha_composite(im, (20 + j * 390, y + 18))
+        out.alpha_composite(amplia(im, 2), (20 + j * 390, y + 18 + 92))
+    y += 18 + 92 + 170 + 16
+    d.text((20, y), "as figuras a 8×", fill=TEXTO, font=f2)
+    for j, (k, _) in enumerate(casos):
+        fig = Image.new("RGBA", (16, 16), (24, 21, 19, 255)); fig.alpha_composite(gr.imagem(f"animal-lobo-{k}"))
+        out.alpha_composite(amplia(fig, 8), (20 + j * 390, y + 18))
+    y += 18 + 128 + 16
+    out = out.crop((0, 0, 1600, y))
+    out.save(PASTA / "lobo-cabecas.png")
+    print("lobo-cabecas.png", out.size)
+
+
 if __name__ == "__main__":
     import sys
     if sys.argv[1:] == ["animais"]:
@@ -222,6 +251,8 @@ if __name__ == "__main__":
     elif sys.argv[1:] == ["rodada3"]:
         folha_rodada("r2", "r3", "rodada3.png", "O lobo e o urso pelas referências geradas: antes (segunda rodada) × depois "
                      "(terceira); proposta, nada no jogo")
+    elif sys.argv[1:] == ["lobo-cabecas"]:
+        folha_cabecas()
     elif sys.argv[1:] == ["lobo-r5"]:
         folha_lobo_r5()
     elif sys.argv[1:] == ["rodada4"]:

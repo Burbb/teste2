@@ -193,3 +193,24 @@ real e 2×), a figura a 8× e o retrato aprovado; o Atacar do Mago, hoje × o ca
 - **A minha leitura em tamanho real:** um lobo adulto deitado e atento, a cabeça agora reconhecível (as orelhas, o olho,
   o focinho com o nariz); o urso continua mais pesado. O limite: o pescoço e o peito claros ainda se juntam numa faixa
   vertical, na sombra da luz do fogo.
+
+## As cabeças do lobo (22/10/2026, proposta; nada no jogo)
+
+- **Jean, sobre a r5:** a cabeça não foi aprovada (rígida, o focinho quadrado, pouca expressão); quer uma carinha mais
+  cativante, de companheiro. O corpo deitado da r5 fica; três cabeças, com liberdade na ligação com o pescoço.
+- **As três** (`animal-lobo-c1`, `-c2`, `-c3`; a mesma máscara cinza do retrato aprovado: o cinza escuro no alto da
+  cabeça e nas orelhas, o claro no focinho e nas bochechas, o olho âmbar):
+  - **c1, perfil suave:** a testa redonda, o focinho afinando até o nariz, o olho na luz, o queixo curto;
+  - **c2, leve três quartos olhando para o jogador:** os dois olhos âmbar, as bochechas claras, o nariz no meio, o
+    queixo claro; o corpo continua voltado para o fogo;
+  - **c3, livre:** as orelhas em pé e juntas, a cabeça um pouco baixa, o focinho comprido e claro, o olho no cinza.
+- **Na bancada, na fogueira:** na primeira passada as cabeças ficaram claras demais e perdiam o cinza do Lobo Cinzento
+  (o cinza médio quase some na luz do fogo): o cinza escuro entrou no alto da cabeça e nas orelhas. Na c2, o escuro
+  embaixo do nariz parecia uma boca aberta de susto e saiu.
+- **Processo:** as fontes pelo conector com a guia oculta (releitura, 0 diferentes; o composto 108, 113 e 105); os PNGs
+  exportados iguais às grades; a r5, o urso r4, o falcão e o resto reexportados iguais. As fotos
+  `capturas/fogueira-lobo-c<n>.png`; a folha `lobo-cabecas.png` (`python auxiliares/prancha.py lobo-cabecas`).
+- **A minha escolha para companheiro: a c2.** É a única que olha para o jogador: os dois olhos âmbar e o nariz no meio
+  formam um rosto que se lê de longe na fogueira, e o rosto aberto dá a simpatia do companheiro, enquanto o corpo segue
+  voltado para o fogo. A c1 é a mais natural e tranquila, mas de perfil o olho é um pixel e a expressão quase não chega
+  à cena; a c3 é o lobo mais atento, menos cativante.

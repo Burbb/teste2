@@ -992,7 +992,8 @@ foi escolhida.
   Terceira rodada, pelas duas referências geradas do Jean (o lobo deitado, o urso sentado), com as guias ocultas; a
   folha `rodada3.png`. Quarta rodada, o refinamento na cena (o lobo com os claros contínuos e o nariz; o urso com a
   cabeça larga, o focinho curto, o corcunda, as patas de base larga e a coxa num volume); a folha `rodada4.png`. O lobo r5, mais alto (a cabeça maior, o tronco grosso); a folha
-  `lobo-r5.png`.
+  `lobo-r5.png`. A cabeça da r5 não foi aprovada: três cabeças de companheiro sobre o mesmo corpo (c1, perfil
+  suave; c2, três quartos para o jogador; c3, livre); a folha `lobo-cabecas.png`.
 
 O atalho **Mapa** da doca já foi concluído; esta frente trata dos símbolos internos de caminhos e mapas.
 Não afirmar que só restam talentos e habilidades após este bloco sem conferir os consumíveis, variantes e

@@ -5697,3 +5697,10 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Feito:** `animal-lobo-r5` (onze linhas) pelo conector, com uma guia na nova escala; conferido na fogueira com o urso
   r4; a folha `ferramentas/prototipos/hud/acampamento_atacar/lobo-r5.png`. O urso r4, o falcão e o resto intactos.
 - **Continua:** a avaliação do Jean; nada no jogo (a versão continua 1.169.0).
+
+### 22/10/2026 (data do computador local) — As cabeças do lobo (só no protótipo)
+
+- **Jean:** a cabeça da r5 não aprovada; uma carinha de companheiro, três alternativas sobre o corpo da r5.
+- **Feito:** `animal-lobo-c1` (perfil suave), `-c2` (três quartos para o jogador) e `-c3` (livre), pelo conector, na
+  fogueira; a folha `ferramentas/prototipos/hud/acampamento_atacar/lobo-cabecas.png`. Minha escolha: a c2.
+- **Continua:** a escolha do Jean; nada no jogo (a versão continua 1.169.0).

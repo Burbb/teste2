@@ -188,6 +188,36 @@ LOBO_R5 = [V] * 5 + [
     "sMMMMmmMMMMmlLLl",
     "ssMMMssMMssMmmmL",
 ]
+# As cabeças do lobo (22/10/2026, pedido do Jean): a cabeça do r5 não foi aprovada (rígida, o focinho quadrado, pouca
+# expressão); o corpo deitado do r5 fica e a cabeça muda, mais cativante, de companheiro, com a máscara cinza do
+# retrato aprovado (o cinza escuro no alto da cabeça e nas orelhas, o claro no focinho e nas bochechas):
+#   - c1, perfil suave: a testa redonda, o focinho afinando até o nariz, o olho na luz, o queixo curto;
+#   - c2, leve três quartos olhando para o jogador: os dois olhos âmbar, as bochechas claras, o nariz no meio e o queixo
+#     claro (o corpo continua voltado para o fogo);
+#   - c3, livre: o lobo descansando com as orelhas em pé e juntas, a cabeça um pouco baixa e o focinho comprido e
+#     claro, o olho no cinza.
+LOBO_C1 = [V] * 5 + [
+    "..........MM.M..",
+    ".........MmmmmM.",
+    ".........lmlmLl.",
+    ".........lLeLLLn",
+    ".........llLLLm.",
+] + LOBO_R5[10:]
+LOBO_C2 = [V] * 4 + [
+    ".........M...M..",
+    ".........MMlMM..",
+    "........MmlllmM.",
+    "........mleLelm.",
+    "........lLLnLLl.",
+    ".........lLLLl..",
+] + LOBO_R5[10:]
+LOBO_C3 = [V] * 5 + [
+    "..........M.M...",
+    "..........MMMM..",
+    ".........Mmllmm.",
+    ".........melLLL.",
+    ".........llLLLLn",
+] + LOBO_R5[10:]
 CAMADAS = {
     "animal-lobo": (LOBO, ["corpo", "cabeca", "detalhes"],
                     lambda x, y, ch: "detalhes" if ch in "en" else "cabeca" if y <= 11 and x >= 9 else "corpo"),
@@ -207,6 +237,12 @@ CAMADAS = {
                        lambda x, y, ch: "detalhes" if ch == "N" else "cabeca" if y <= 8 and x >= 6 else "corpo"),
     "animal-lobo-r5": (LOBO_R5, ["corpo", "cabeca", "detalhes"],
                        lambda x, y, ch: "detalhes" if ch in "en" else "cabeca" if y <= 9 and x >= 9 else "corpo"),
+    "animal-lobo-c1": (LOBO_C1, ["corpo", "cabeca", "detalhes"],
+                       lambda x, y, ch: "detalhes" if ch in "en" else "cabeca" if y <= 9 and x >= 8 else "corpo"),
+    "animal-lobo-c2": (LOBO_C2, ["corpo", "cabeca", "detalhes"],
+                       lambda x, y, ch: "detalhes" if ch in "en" else "cabeca" if y <= 9 and x >= 8 else "corpo"),
+    "animal-lobo-c3": (LOBO_C3, ["corpo", "cabeca", "detalhes"],
+                       lambda x, y, ch: "detalhes" if ch in "en" else "cabeca" if y <= 9 and x >= 8 else "corpo"),
     "animal-falcao": (FALCAO, ["toco", "corpo", "cabeca", "detalhes"],
                       lambda x, y, ch: "toco" if ch in "TRr" else "detalhes" if ch == "y" else "cabeca" if y <= 7 else "corpo"),
 }
