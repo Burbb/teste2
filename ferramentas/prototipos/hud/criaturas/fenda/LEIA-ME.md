@@ -191,3 +191,41 @@ como histórico (nenhum serviu de anatomia).
 - As fotos no modo `d` (`MODOS=d`), a 1920×945, sem erro no console. A folha `cao-n.png` (`python auxiliares/prancha.py
   cao-n`): T × N na carta (real e 2×) e no Bestiário, a fileira com o Lobo, o Lobo Gélido e o Caído, a 12× para o
   diagnóstico.
+
+# O retoque do rosto do Cão: o N2 (22/10/2026, proposta; nada no jogo)
+
+**A avaliação do Jean:** o N melhorou bastante no formato da cabeça, mas o rosto precisa de retoque (não aprovado). A
+pose, as duas orelhas, o enquadramento, a forma da cabeça e o calor contido ficam. O N continua aqui intacto.
+
+## O que mudou (`cao-infernal-n2`; só as linhas 7 a 14)
+
+- **O risco na altura do nariz:** era o brilho do nariz, dois pixels cinza em (0,7) e (1,7), sobre o corpo negro do
+  nariz, que sumia contra a caixa escura; sobrava uma barra cinza saindo para a esquerda. Agora o nariz é uma ponta
+  sólida de 2×2, num cinza escuro que aparece (3a3440), com o brilho só no canto de cima, ligada à ponte do focinho.
+- **O focinho e a boca:** o focinho contraído (a ruga escura entre a ponte e o lado claro); o lábio de cima levantado na
+  frente, com a gengiva vermelha à mostra; a abertura estreita e irregular (dois pixels de altura na frente, fechando
+  para trás) no lugar do bloco laranja, com a goela acesa e as duas presas de obsidiana, a de cima com o reflexo frio e
+  a de baixo subindo. A boca saiu da borda: encostada nela, a presa escura sumia no fundo.
+- **A bochecha e o pescoço:** a mandíbula clara embaixo e, atrás dela, uma sombra que mostra onde ela termina e o
+  pescoço começa; a massa contínua que alongava o rosto para baixo foi quebrada.
+- Na bancada: a primeira passada (R1) tirou o risco e separou a mandíbula, mas a boca, encostada na borda, encolheu num
+  ponto laranja e o rosnado sumiu; a segunda trouxe a boca para dentro e o nariz sólido; a terceira pôs o reflexo na
+  presa de cima, que não lia na carta.
+
+## A minha leitura (quem escolhe é o Jean)
+
+- **Na carta (32):** o nariz lê como a ponta do focinho, sem a sobra; o lábio levantado com a gengiva e a abertura
+  estreita leem como rosnado; a mandíbula e o pescoço se separam. **Limitações que continuam:** a boca é pequena (três
+  pixels de goela acesa), então o rosnado é contido e depende do vermelho da gengiva; o focinho continua curto para um
+  cão de caça; o carvão da luz fica perto do cinza do Lobo.
+- **No Bestiário (48):** as mesmas partes ficam claras; a presa com o reflexo aparece.
+
+## Processo
+
+- A grade em `auxiliares/grades.py` (`CAO_N2`, a paleta `cao_n2`: a do N com o nariz em 3a3440). O retoque numa cópia
+  da fonte do N (`fontes/cao-infernal-n2/`, copiada de `fontes/cao-infernal-n/`, que não mudou), aberta pelo conector do
+  Aseprite: cada camada esvaziada e repintada pelo `pintar.lua` (0 diferentes na releitura; o composto 182 = as
+  camadas). A exportação igual à grade, o @2x exato, o 32 e o 48 em blocos inteiros.
+- As fotos no modo `e` (`MODOS=e`), a 1920×945, com os mesmos dados e o mesmo enquadramento do N, sem erro no console.
+  A folha `cao-n2.png` (`python auxiliares/prancha.py cao-n2`): N × N2 na carta e no Bestiário, a fileira com o Lobo, o
+  Lobo Gélido, o Caído, o Xamã e a Cria, a 12× para o diagnóstico.

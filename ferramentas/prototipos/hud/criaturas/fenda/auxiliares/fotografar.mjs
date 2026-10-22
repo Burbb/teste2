@@ -2,7 +2,7 @@
 // a luta do cão (com o lobo gélido, um caído e o xamã), a luta das crias (com o espectro e um cultista), as crias
 // invocadas pelo antagonista (cenario_vazio.py, ANTAGONISTA=1) e o Bestiário. Modos: "atual" (o jogo), "a" e "b" (as
 // propostas A e B das duas; "c", a segunda passada: a Cria A2 e o Cão T; "d", o Cão N, com a
-// Cria A2, que está no jogo desde a 1.185.0), trocados só na página, nas cartas inimigas e nos cartões do Bestiário, pelo nome.
+// Cria A2, que está no jogo desde a 1.185.0; "e", o Cão N2, o retoque do rosto), trocados só na página, nas cartas inimigas e nos cartões do Bestiário, pelo nome.
 //   [MODOS=atual,a,b] PLAYWRIGHT_MODULO=<file:// do index.mjs> node fotografar.mjs <raiz> <pasta das fotos>
 import { spawn } from "child_process";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
@@ -17,10 +17,10 @@ const dados = (pasta, id) => "data:image/png;base64," + readFileSync(path.join(a
 // cada criatura: o nome na carta (a cria invocada leva a letra e "(invocado)" depois) e o desenho de cada modo
 const P = "../proposta";
 const BICHOS = [
-  ["^Cão infernal", { a: [P, "cao-infernal-a"], b: [P, "cao-infernal-b"], c: [P, "cao-infernal-t"], d: [P, "cao-infernal-n"] }],
-  ["^Cria do Vazio", { a: [P, "cria-vazio-a"], b: [P, "cria-vazio-b"], c: [P, "cria-vazio-a2"], d: [P, "cria-vazio-a2"] }],
+  ["^Cão infernal", { a: [P, "cao-infernal-a"], b: [P, "cao-infernal-b"], c: [P, "cao-infernal-t"], d: [P, "cao-infernal-n"], e: [P, "cao-infernal-n2"] }],
+  ["^Cria do Vazio", { a: [P, "cria-vazio-a"], b: [P, "cria-vazio-b"], c: [P, "cria-vazio-a2"], d: [P, "cria-vazio-a2"], e: [P, "cria-vazio-a2"] }],
 ];
-const TROCAS = Object.fromEntries(["a", "b", "c", "d"].map((m) => [m, BICHOS.map(([n, ms]) => [n, dados(...ms[m])])]));
+const TROCAS = Object.fromEntries(["a", "b", "c", "d", "e"].map((m) => [m, BICHOS.map(([n, ms]) => [n, dados(...ms[m])])]));
 const MODOS = (process.env.MODOS || "atual,a,b").split(",");
 const LUTA = { TUTORIAL: "0", CLASSE: "guerreiro", NIVEL_LUTA: "4" };
 const SITUACOES = [

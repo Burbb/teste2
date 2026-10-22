@@ -45,8 +45,8 @@ PALETAS = {
         "n": "1a161c", "N": "8e8898",  # o nariz e o brilho dele
         "r": "8a2010", "O": "ff8a2a", "y": "ffd060", "o": "d8501a",  # a gengiva, a goela acesa, a brasa do pescoço
         "t": "16121c", "T": "7a7894", "e": "ffc040",  # a obsidiana das presas e o reflexo; o olho
-    },
-}
+    },}
+PALETAS["cao_n2"] = {**PALETAS["cao_n"], "n": "3a3440"}  # a do N com o nariz num cinza escuro que aparece na caixa
 
 CAO_A = [
     ".........kk.....",
@@ -200,6 +200,28 @@ CAO_N = [
     "....kkkcddddddd.",
     "......kddddddd..",
 ]
+# N2, o retoque do rosto do N (pedido do Jean: a forma da cabeça melhorou; o rosto não). A pose, as orelhas, o
+# enquadramento, a cabeça e o calor do N ficam; só as linhas 7 a 14, o rosto de baixo, mudam:
+# - o risco cinza na altura do nariz era o brilho dele, dois pixels (0,7)(1,7), sobre um nariz negro que sumia contra a
+#   caixa; o nariz vira uma ponta sólida de 2×2 num cinza escuro que aparece, com o brilho no canto de cima, ligada à
+#   ponte do focinho;
+# - o focinho contraído (a ruga escura entre a ponte e o lado claro); o lábio de cima levantado na frente, com a gengiva
+#   vermelha à mostra; a abertura estreita e irregular, dois pixels de altura na frente e fechando para trás, com a goela
+#   acesa e as presas de obsidiana (a de cima com o reflexo frio, a de baixo subindo), longe da borda para a presa escura
+#   ter o quente dos dois lados (encostada na borda, sumia no fundo);
+# - a mandíbula clara embaixo e, atrás dela, uma sombra que mostra onde ela termina e o pescoço começa (a bochecha
+#   descia contínua e alongava o rosto).
+CAO_N2 = list(CAO_N)
+CAO_N2[7:15] = [
+    "nNHHCkHkCcccccdd",
+    "nnCkHCcccccccdd.",
+    ".CrrrCccccccdddd",
+    ".kTOyOkccccddddd",
+    ".kOtkCcdcccddodd",
+    "..CCCCdkddddoddd",
+    "...kkkkddddddod.",
+    "....kkkdddddddd.",
+]
 
 # Histórico (fora da exportação): a primeira B, de pernas finas, que virava um emaranhado na carta.
 CRIA_B_FINA = [
@@ -243,6 +265,7 @@ CAMADAS = {  # a grade, a paleta, as camadas de baixo para cima e a camada de ca
     "cria-vazio-a2": (CRIA_A2, "cria", ["corpo", "fenda"], _camada_cria),
     "cao-infernal-t": (CAO_T, "cao_t", ["corpo", "nariz", "brasa", "boca", "dentes", "olhos"], _camada_cao_t),
     "cao-infernal-n": (CAO_N, "cao_n", ["corpo", "nariz", "brasa", "boca", "dentes", "olhos"], _camada_cao_t),
+    "cao-infernal-n2": (CAO_N2, "cao_n2", ["corpo", "nariz", "brasa", "boca", "dentes", "olhos"], _camada_cao_t),
 }
 
 
