@@ -5712,3 +5712,16 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   `FIGURA_ANIMAL` e `Icones.figuraAnimal` em `icones.js`, pedidos por `acampamento.js`; o teste em
   `tests/test_retratos.py`; conferido na cena real (`ferramentas/prototipos/hud/acampamento_atacar/capturas-1170/`).
 - **Continua:** o urso e o falcão do acampamento; as outras cabeças e rodadas do lobo como histórico.
+
+### 22/10/2026 (data do computador local) — A madrugada: o lobo integrado, as pendências e os quatro pares
+
+- **Pedido de Jean (autônomo, sem parar entre os lotes):** concluir a integração do lobo c2; reunir as propostas
+  pendentes; escolher e propor quatro pares de criaturas, duas direções de cada; não integrar candidatos novos nem
+  começar o mapa.
+- **Feito:** o lobo na fogueira (1.170.0, `ff3656b1`); a folha das pendências (`82fae140`); os quatro pares, um commit
+  por par (`81281da3` o sapo e a sanguessuga; `eb379a31` o cultista e a bruxa; `b2c82032` o carniçal e o espectro;
+  `3943634f` o javali e o rato), com as fontes pelo conector, as fotos a 1920×945 e as folhas; a prancha geral e os
+  registros.
+- **Minhas preferências:** sapo A, sanguessuga A, cultista A, bruxa B, carniçal A, espectro A, javali A, rato B (os
+  pontos fortes e os limites no `LEIA-ME.md` de `quatro_pares/`).
+- **Continua:** a avaliação do Jean (o Esqueleto E1r, o urso r4, o falcão, o cajado e os 16 candidatos); depois, 1E.4.

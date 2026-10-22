@@ -120,3 +120,21 @@ os outros guardiões), o antagonista, os servos aliados e os aliados; nenhum her
   - **rato: o B.** Forte: a silhueta de rato inteiro (o dorso, a cauda pelada) é a mais reconhecível e diferente dos
     outros retratos, e combina com o bando. Limite: pequeno na caixa e de perfil, perde o olho e os dentes; a ameaça
     vem do número. O A tem os dentes e o olhar, mas de frente lembra um morcego ou um gato.
+
+## A prancha geral e a situação (22/10/2026)
+
+`geral.png` (`python auxiliares/geral.py`): os 16 candidatos na caixa da carta e a 3×, com o nome, o id e a minha
+preferência em dourado; embaixo, os retratos integrados do jogo.
+
+| Criatura | Candidatos | Minha preferência | Situação |
+|---|---|---|---|
+| Sapo-touro gigante | `sapo-a`, `sapo-b` | A | proposta em avaliação |
+| Sanguessuga gigante | `sanguessuga-a`, `sanguessuga-b` | A | proposta em avaliação |
+| Cultista | `cultista-a`, `cultista-b` | A | proposta em avaliação |
+| Bruxa do pântano | `bruxa-a`, `bruxa-b` | B | proposta em avaliação |
+| Carniçal | `carnical-a`, `carnical-b` | A | proposta em avaliação |
+| Espectro | `espectro-a`, `espectro-b` | A | proposta em avaliação |
+| Javali selvagem | `javali-a`, `javali-b` | A | proposta em avaliação |
+| Rato gigante | `rato-a`, `rato-b` | B | proposta em avaliação |
+
+Nada integrado; nenhuma regra, atributo, habilidade nem desenho compartilhado foi mudado para as fotos.

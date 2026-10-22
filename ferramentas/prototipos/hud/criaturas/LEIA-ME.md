@@ -121,9 +121,8 @@ A escolha do par e da direção é do Jean; nada foi começado.
   guardião; a Aranha (a 2B) pela família, com as que a Rainha invoca. A Rainha Aracnídea continua no `fera`.
 - **1.168.0: a Rainha Aracnídea** (`rainha_esqueleto/`, a `rainha-a`, sem retoques): pelo id da guardiã; as aranhas
   que ela invoca continuam com o retrato da Aranha gigante. O Esqueleto segue no protótipo.
-
-## Em proposta
-
+- **1.170.0: o Lobo Cinzento na fogueira** (`../acampamento_atacar/`, a `animal-lobo-c2`): a figura de corpo inteiro do
+  animal no acampamento, pelo tipo (o papel `FIGURA_ANIMAL`); o urso e o falcão continuam nos sprites.
 
 ## Em proposta
 
@@ -148,3 +147,12 @@ A escolha do par e da direção é do Jean; nada foi começado.
   do jogo; os caminhos no `LEIA-ME.md` da pasta.
 - **O Esqueleto encapuzado (E2)** (`esqueleto_novo/`, `esqueleto-e2`): conceito guardado para um possível mago
   esqueleto (21/10/2026), com a fonte e os PNGs; sem espécie, habilidades nem mapeamento.
+
+## A madrugada de 22/10/2026
+
+- **Integrado:** o Lobo Cinzento na fogueira (1.170.0).
+- **Em avaliação:** o Esqueleto E1r, o urso r4 e o falcão do acampamento, o cajado no Atacar do Mago (a folha
+  `pendencias/pendencias.png`); os quatro pares novos, 16 candidatos (`quatro_pares/`: o sapo-touro gigante e a
+  sanguessuga gigante; o cultista e a bruxa do pântano; o carniçal e o espectro; o javali selvagem e o rato gigante; a
+  prancha `quatro_pares/geral.png`).
+- **Conceitos reservados:** o Esqueleto E2 (um possível mago esqueleto) e o Bandido do chapéu (um possível chefe).

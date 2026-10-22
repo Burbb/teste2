@@ -996,6 +996,15 @@ foi escolhida.
   suave; c2, três quartos para o jogador; c3, livre); a folha `lobo-cabecas.png`.
 - **No jogo desde a 1.170.0:** o lobo c2 na fogueira, pelo tipo do animal (o papel `FIGURA_ANIMAL`, `figura-lobo-16`);
   o urso e o falcão continuam nos sprites `fera` e `voador`, em avaliação.
+- **Os quatro pares seguintes (22/10/2026, propostas; nada no jogo),** escolhidos pela frequência e pelo desenho
+  genérico inadequado de hoje, duas direções de cada, em `ferramentas/prototipos/hud/criaturas/quatro_pares/`: o
+  sapo-touro gigante e a sanguessuga gigante (o pântano, hoje o `fera`); o cultista e a bruxa do pântano (os
+  conjuradores, hoje o `humano`); o carniçal e o espectro (os mortos-vivos, hoje a `caveira` e o `etereo`); o javali
+  selvagem e o rato gigante (as feras comuns, hoje o `fera`). As folhas `par1.png` a `par4.png` e a prancha `geral.png`;
+  o alcance (pela família; os chefes, o antagonista e os aliados fora) no `LEIA-ME.md` da pasta. **A situação em
+  22/10/2026:** integrado, o lobo na fogueira (1.170.0); em avaliação, o Esqueleto E1r, o urso r4, o falcão, o cajado do
+  Mago e os 16 candidatos (`criaturas/pendencias/pendencias.png`); conceitos reservados, o Esqueleto E2 e o Bandido do
+  chapéu.
 
 O atalho **Mapa** da doca já foi concluído; esta frente trata dos símbolos internos de caminhos e mapas.
 Não afirmar que só restam talentos e habilidades após este bloco sem conferir os consumíveis, variantes e
