@@ -92,15 +92,14 @@ class TestRetratos(unittest.TestCase):
 
     def test_caido_pela_familia(self):
         # 1.182.0: o caído pela família, com os que o xamã ergue (o Reviver levanta o mesmo caído morto); o xamã caído
-        # (família própria) e o cão infernal continuam no "demonio"
+        # (família própria) tem o retrato dele desde a 1.184.0; o cão infernal continua no "demonio"
         import random
         from rpg.inimigos import criar
         self.assertEqual(retrato(FAMILIAS["caido"]["tracos"], "caido"), "caido")
         self.assertEqual(FAMILIAS["xama_caido"]["revive"], "caido")
         caido = criar(random.Random(5), "caido", 3, "feroz")
         self.assertEqual(retrato(caido.tracos, caido.familia, caido.chave), "caido")
-        for fam in ("xama_caido", "cao_infernal"):
-            self.assertEqual(retrato(FAMILIAS[fam]["tracos"], fam), "demonio", fam)
+        self.assertEqual(retrato(FAMILIAS["cao_infernal"]["tracos"], "cao_infernal"), "demonio")
         # o reerguido: o Reviver do xamã levanta o mesmo caído morto, que continua com o retrato da família
         from rpg.inimigos import HABS_INIMIGO
         xama = criar(random.Random(6), "xama_caido", 3)
@@ -117,24 +116,38 @@ class TestRetratos(unittest.TestCase):
         self.assertEqual(retrato(caido.tracos, caido.familia, caido.chave), "caido")
         icones = (ESTATICO / "icones.js").read_text(encoding="utf-8")
         self.assertIn('caido: "retrato-caido"', icones)
-        self.assertNotIn("xama_caido:", icones)
 
     def test_grifo_pela_familia(self):
-        # 1.183.0: o grifo pela família, também o feroz do ninho; a harpia (família própria, ainda sem retrato) e o
-        # Dragão de Gelo (guardião) continuam no "voador"
+        # 1.183.0: o grifo pela família, também o feroz do ninho; o Dragão de Gelo (guardião) continua no "voador"
         import random
         from rpg.inimigos import criar
         self.assertEqual(retrato(FAMILIAS["grifo"]["tracos"], "grifo"), "grifo")
         grifo = criar(random.Random(4), "grifo", 4, "feroz")  # como o ninho de grifo faz
         self.assertEqual(retrato(grifo.tracos, grifo.familia, grifo.chave), "grifo")
-        self.assertEqual(retrato(FAMILIAS["harpia"]["tracos"], "harpia"), "voador")
         self.assertEqual(retrato(["voador"], "guardiao", "guardiao:4", "dragao_de_gelo"), "voador")
         icones = (ESTATICO / "icones.js").read_text(encoding="utf-8")
         self.assertIn('grifo: "retrato-grifo"', icones)
-        self.assertNotIn("harpia:", icones)
         for lado in (16, 32, 48):
             for sufixo in ("", "@2x"):
                 self.assertTrue((ESTATICO / f"hud/icones/retrato-grifo-{lado}{sufixo}.png").exists(), (lado, sufixo))
+
+    def test_harpia_e_xama_caido_pela_familia(self):
+        # 1.184.0: a harpia e o xamã caído pela família, com os afixos; o xamã que escolta o bando de caídos é da
+        # família dele (o retrato do xamã ao lado dos caídos); o Dragão de Gelo e o cão infernal continuam nos traços
+        import random
+        from rpg.inimigos import criar
+        self.assertEqual(FAMILIAS["caido"]["escolta"]["familia"], "xama_caido")
+        for fam, afixo in (("harpia", None), ("harpia", "flamejante"), ("xama_caido", None), ("xama_caido", "feroz")):
+            e = criar(random.Random(7), fam, 4, afixo)
+            self.assertEqual(retrato(e.tracos, e.familia, e.chave), fam, (fam, afixo))
+        self.assertEqual(retrato(["voador"], "guardiao", "guardiao:4", "dragao_de_gelo"), "voador")
+        self.assertEqual(retrato(FAMILIAS["cao_infernal"]["tracos"], "cao_infernal"), "demonio")
+        icones = (ESTATICO / "icones.js").read_text(encoding="utf-8")
+        for papel, arquivo in (("harpia", "retrato-harpia"), ("xama_caido", "retrato-xama-caido")):
+            self.assertIn(f'{papel}: "{arquivo}"', icones)
+            for lado in (16, 32, 48):
+                for sufixo in ("", "@2x"):
+                    self.assertTrue((ESTATICO / f"hud/icones/{arquivo}-{lado}{sufixo}.png").exists(), (arquivo, lado))
 
     def test_troll_pela_familia_e_o_rei_pelo_guardiao(self):
         # o troll da montanha pela família (1.166.0); o Rei Troll pelo id do guardião (1.167.0), em qualquer lugar

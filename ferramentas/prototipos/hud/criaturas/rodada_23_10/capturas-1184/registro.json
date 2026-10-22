@@ -1,0 +1,45 @@
+{
+ "luta-harpia": {
+  "arquivos": [
+   "Harpia: http://127.0.0.1:50104/static/hud/icones/retrato-harpia-32.png",
+   "Harpia: http://127.0.0.1:50104/static/hud/icones/retrato-harpia-32.png",
+   "Grifo: http://127.0.0.1:50104/static/hud/icones/retrato-grifo-32.png"
+  ],
+  "erros": [],
+  "ferramentas": []
+ },
+ "luta-xama": {
+  "arquivos": [
+   "Caído: http://127.0.0.1:50220/static/hud/icones/retrato-caido-32.png",
+   "Caído: http://127.0.0.1:50220/static/hud/icones/retrato-caido-32.png",
+   "Caído: http://127.0.0.1:50220/static/hud/icones/retrato-caido-32.png",
+   "Xamã caído: http://127.0.0.1:50220/static/hud/icones/retrato-xama-caido-32.png",
+   "Cão infernal: data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAMlJREFUOE9jZKAQMIL083Jz/QfRn79+A/MJAWT1cAOe3NzFIKPuRtAQkGZktXAb0SVgtsBcA3IduhqQHIqTYZqWSSti9UXU0/tgcWSvYhiASzPMRJAhWA0A2Q7T7HO2lIFPIosBxgdp+vRiGsMW426wOciGoIQBIduxuQKnAbufP0IJB1dJOTgfqwtg6QHkCpDm5uvbwdEKAqBoq9X0ZAAZgjMMkA0AsXG5AK8B6IagxyW6Zox0ANOAnoiQExO6oUSlfXx5Y+ANAADJsXwR9BnOrAAAAABJRU5ErkJggg=="
+  ],
+  "erros": [],
+  "ferramentas": []
+ },
+ "bestiario": {
+  "arquivos": [
+   "Caído: http://127.0.0.1:50342/static/hud/icones/retrato-caido-48.png",
+   "Cultista: http://127.0.0.1:50342/static/hud/icones/retrato-cultista-48.png",
+   "Cão infernal: data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAMlJREFUOE9jZKAQMIL083Jz/QfRn79+A/MJAWT1cAOe3NzFIKPuRtAQkGZktXAb0SVgtsBcA3IduhqQHIqTYZqWSSti9UXU0/tgcWSvYhiASzPMRJAhWA0A2Q7T7HO2lIFPIosBxgdp+vRiGsMW426wOciGoIQBIduxuQKnAbufP0IJB1dJOTgfqwtg6QHkCpDm5uvbwdEKAqBoq9X0ZAAZgjMMkA0AsXG5AK8B6IagxyW6Zox0ANOAnoiQExO6oUSlfXx5Y+ANAADJsXwR9BnOrAAAAABJRU5ErkJggg==",
+   "Grifo: http://127.0.0.1:50342/static/hud/icones/retrato-grifo-48.png",
+   "Harpia: http://127.0.0.1:50342/static/hud/icones/retrato-harpia-48.png",
+   "Xamã caído: http://127.0.0.1:50342/static/hud/icones/retrato-xama-caido-48.png"
+  ],
+  "erros": [],
+  "ferramentas": []
+ },
+ "contratos": {
+  "arquivos": [
+   "contrato tipo-caca: http://127.0.0.1:50464/static/hud/icones/retrato-carnical-48.png 48",
+   "contrato tipo-caca ativo: http://127.0.0.1:50464/static/hud/icones/retrato-harpia-48.png 48",
+   "contrato tipo-caca ativo: http://127.0.0.1:50464/static/hud/icones/retrato-xama-caido-48.png 48",
+   "painel m-painel: http://127.0.0.1:50464/static/hud/icones/retrato-harpia-32.png 32",
+   "painel m-painel: http://127.0.0.1:50464/static/hud/icones/retrato-xama-caido-32.png 32"
+  ],
+  "erros": [],
+  "ferramentas": []
+ }
+}

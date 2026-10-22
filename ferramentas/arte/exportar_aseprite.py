@@ -118,6 +118,10 @@ DERIVADOS = {
     "retrato-caido": {32: (16, 2), 48: (16, 3)},
     # 1.183.0: o grifo (o GA3: a águia-leão com o gancho do bico), pela família; a harpia continua no "voador"
     "retrato-grifo": {32: (16, 2), 48: (16, 3)},
+    # 1.184.0: a harpia (a T2: o rosto de mulher, as penas da cabeça e a gola de abutre; a guia oculta fica fora da
+    # exportação) e o xamã caído (o X1r2: o capuz, a pintura branca e o colar de osso), pela família
+    "retrato-harpia": {32: (16, 2), 48: (16, 3)},
+    "retrato-xama-caido": {32: (16, 2), 48: (16, 3)},
 }
 # O martelo (1.149.0) só tem fontes do 40 e do 48 (aseprite/martelo/): o 32 e o 64 são a grade de desenhos.js, no
 # jogo, e não saem daqui.

@@ -1,6 +1,7 @@
-// A conferência da integração do Grifo (1.183.0), com os arquivos de produção e nada trocado na página, a 1920×945: a
-// luta (o grifo com a harpia, que continua no sprite de voador, e outros de retrato próprio), o Bestiário e o contrato
-// de caça (o rastreador e o cartaz do mural).
+// A conferência da integração da Harpia e do Xamã Caído (1.184.0), com os arquivos de produção e nada trocado na
+// página, a 1920×945: a harpia junto do grifo e o xamã junto dos caídos (e do cão infernal, que continua no sprite de
+// demônio), o Bestiário e os contratos de caça (o rastreador e o cartaz do mural). Antes servia ao Grifo (1.183.0,
+// capturas-1183/); a 1.184.0 grava em capturas-1184/.
 // Registra o arquivo de cada retrato e de cada motivo e qualquer pedido à pasta ferramentas/ (não pode haver).
 //   PLAYWRIGHT_MODULO=<file:// do index.mjs> node fotografar_jogo.mjs <raiz> <pasta das fotos>
 import { spawn } from "child_process";
@@ -11,14 +12,17 @@ const [raiz, saida] = process.argv.slice(2);
 const PY = process.env.PYTHON || (process.platform === "win32" ? "python" : "python3");
 const espera = (ms) => new Promise((r) => setTimeout(r, ms));
 mkdirSync(saida, { recursive: true });
-const GRUPO = "grifo:1,harpia:2,lobo_gelido:1";
+const ler = () => [...document.querySelectorAll(".inimigos .carta")].map((c) => `${c.querySelector(".carta-nome span").textContent.trim()}: ${(c.querySelector(".icone img") || {}).src || "(sprite)"}`);
 const SITUACOES = [
-  { nome: "luta", cenario: "tutorial", amb: { TUTORIAL: "0", CLASSE: "guerreiro", NIVEL_LUTA: "4", GRUPO }, espera: '.carta[data-uid="j"]',
-    ler: () => [...document.querySelectorAll(".inimigos .carta")].map((c) => `${c.querySelector(".carta-nome span").textContent.trim()}: ${(c.querySelector(".icone img") || {}).src || "(sprite)"}`) },
-  { nome: "bestiario", cenario: "covil", amb: { CLASSE: "guerreiro", LUGAR: "vila", BESTIARIO: "grifo:3,harpia:2,lobo_gelido:2,troll:2" },
+  { nome: "luta-harpia", cenario: "tutorial", amb: { TUTORIAL: "0", CLASSE: "arqueiro", NIVEL_LUTA: "4", GRUPO: "harpia:2,grifo:1" },
+    espera: '.carta[data-uid="j"]', ler },
+  { nome: "luta-xama", cenario: "tutorial", amb: { TUTORIAL: "0", CLASSE: "guerreiro", NIVEL_LUTA: "4", GRUPO: "caido:3,xama_caido:1,cao_infernal:1" },
+    espera: '.carta[data-uid="j"]', ler },
+  { nome: "bestiario", cenario: "covil", amb: { CLASSE: "guerreiro", LUGAR: "vila",
+    BESTIARIO: "harpia:3,grifo:3,caido:5,xama_caido:2,cao_infernal:2,cultista:2" },
     passos: ["b"], espera: ".cartao .cab",
     ler: () => [...document.querySelectorAll(".cartao")].map((c) => `${c.querySelector("b").textContent.trim()}: ${(c.querySelector(".cab img") || {}).src}`) },
-  { nome: "contratos", cenario: "covil", amb: { CLASSE: "guerreiro", LUGAR: "vila", CONTRATOS: "grifo" },
+  { nome: "contratos", cenario: "covil", amb: { CLASSE: "guerreiro", LUGAR: "vila", CONTRATOS: "harpia,xama_caido" },
     espera: "#predios .predio", mural: true,
     ler: () => [...document.querySelectorAll("img")].filter((i) => /retrato-/.test(i.src)).map((i) => `${i.closest(".contrato, aside, section")?.className || i.parentElement.className}: ${i.src} ${i.width}`) },
 ];

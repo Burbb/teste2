@@ -183,3 +183,17 @@ outro; a T é a base da Harpia, com uma passada no olhar e nas penas. A T e o X1
   harpia-t2 xama-x1r2`): `harpia-t2.png` (a referência, a guia, a T e a T2 a 12×; T × T2 na carta e no Bestiário; a
   fileira com os retratos aprovados, já com o Grifo) e `xama-x1r2.png` (X1r × X1r2). A folha da Harpia agora mostra
   a 12× de cada proposta dela (a `harpia-t.png` refeita: o mesmo conteúdo, o rótulo no plural).
+
+## A Harpia e o Xamã Caído no jogo (1.184.0)
+
+- **Aprovados pelo Jean e integrados sem retoque:** a T2 (`harpia-t2`) e o X1r2 (`xama-caido-x1r2`), as fontes do
+  `b3f95e28`, pela família (`RETRATO_FAMILIA`, o papel `CRIATURA` e os `TAMANHOS` em `icones.js`), com os afixos; o
+  xamã que escolta o bando de caídos é da família dele. O Dragão de Gelo continua no `voador` e o Cão infernal no
+  `demonio`; o Grifo GA3 e o Caído CA não mudam. As outras Harpias e Xamãs ficam aqui como histórico.
+- As fontes em `ferramentas/arte/aseprite/retrato-harpia/` (com a guia oculta) e `retrato-xama-caido/`, cópias byte a
+  byte; o 32 e o 48 em `DERIVADOS`. Exportados primeiro numa pasta temporária e comparados com as propostas (os seis
+  de cada, byte a byte iguais) antes de gravar no jogo; depois, `--conferir`: tudo igual ao jogo.
+- Conferido a 1920×945 com os arquivos de produção (`capturas-1184/`, `auxiliares/fotografar_jogo.mjs`): a Harpia
+  junto do Grifo, o Xamã junto dos Caídos (o Cão infernal no sprite), o Bestiário, os cartazes do mural e o
+  rastreador; nenhum pedido a `ferramentas/`; sem erro no console. A folha:
+  `ferramentas/prototipos/hud/integracoes-22-10/integracoes-1184.png`.
