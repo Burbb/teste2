@@ -63,7 +63,8 @@ def no_vau(g):
 # está atrás do balcão e o que diz. Marta ajudou o herói no passado: a frase da primeira vez lembra isso.
 
 def atendente(g):
-    """{"quem", "fala", "fechado"} da curandeira do Vau, ou None (fora do Vau da campanha: a curandeira de sempre)."""
+    """{"quem", "fala", "fechado"} da curandeira do Vau, ou None (fora do Vau da campanha: a curandeira de sempre). A
+    Pita tem também "concluido", o que ela diz depois do último tratamento (o "fechado" é para quem chega sem nada)."""
     if not no_vau(g):
         return None
     m = _missao(g)
@@ -80,7 +81,8 @@ def atendente(g):
                      "Pita, uma menina de uns catorze anos, mói ervas no lugar de Marta, que está de cama. \"Eu sei o "
                      "que ela faria. Deixa eu ver isso.\""),
             "fechado": "Pita ergue os olhos das ervas. \"A Marta está de cama. Se precisar de cuidados, sou eu que "
-                       "atendo.\""}
+                       "atendo.\"",
+            "concluido": "\"Pronto. Por aqui, terminamos.\""}
 
 
 # ------------------------------------------------------------------ a frase da vila

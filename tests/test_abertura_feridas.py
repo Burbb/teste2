@@ -187,7 +187,7 @@ class TestCurandeiraGratis(unittest.TestCase):
                                    ["Tratar Costelas quebradas", "Voltar"], ["Voltar"]])
         self.assertEqual([len(d["ferimentos"]) for d in paineis], [2, 1, 0])
         self.assertEqual([d["ouro"] for d in paineis][1:], [200 - ab.custo_tratamento(g, {"id": "corte"}), 200 - preco])
-        self.assertEqual(paineis[-1]["fala"], g.fala_curandeira_sem_ferimento())
+        self.assertEqual(paineis[-1]["fala"], '"Pronto. Por aqui, terminamos."')  # a Pita, no Vau: tratou e terminou
         self.assertEqual((g.j.ferimentos, g.j.ouro), ([], 200 - preco))
         # o resultado de cada um numa confirmação curta, com o custo à parte (o "−N ouro" de sempre)
         self.assertEqual([e for e in efeitos if "tratado" in e], ["Corte profundo: tratado", "Costelas quebradas: tratado"])

@@ -85,14 +85,15 @@ class Servicos:
         j = self.j
         quem = consequencias.atendente(self)  # no Vau da campanha: Pita, ou Marta depois que a água limpa
         abertura.visto(self, "F3")  # a cabana aberta: o quadro que apontava o prédio não volta
+        tratou = False
         while True:
             self.ui.cena("A curandeira", self.loc["nome"], "menu")  # a cada volta: na tela gráfica, a cabana se redesenha
             gratis = abertura.curandeira_gratis(self)
             tratamentos = self.tratamentos()
             custos = [custo for _, custo, _ in tratamentos]
             fala = quem["fala"] if quem else None
-            if not j.ferimentos:
-                fala = self.fala_curandeira_sem_ferimento()
+            if not j.ferimentos:  # depois do último tratamento, quem tem fala para isso (a Pita) diz que terminou
+                fala = (quem.get("concluido") if quem and tratou else None) or self.fala_curandeira_sem_ferimento()
             dados = {"ouro": j.ouro, **({"quem": quem["quem"]} if quem else {}), **({"fala": fala} if fala else {}),
                      "ferimentos": [
                 {"id": f["id"], "nome": sobrevivencia.FERIMENTOS[f["id"]]["nome"], "custo": custo, "pode": not motivo,
@@ -128,6 +129,7 @@ class Servicos:
                 # Gasto só agora, com o tratamento feito. O cartão já dizia "grátis": sem outra fala por cima.
                 self.marcar("curandeira_gratis_usado")
             sobrevivencia.curar_ferimento(self, fid)
+            tratou = True
             # O resultado é uma confirmação curta, como a da compra no mercado (o custo já saiu no "−N ouro"): a tela
             # continua a mesma, sem o cartão tratado, com a vida e o ouro de agora.
             self.ui.efeito(f"{sobrevivencia.FERIMENTOS[fid]['nome']}: tratado", "cura")

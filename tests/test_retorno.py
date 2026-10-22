@@ -160,6 +160,13 @@ class TestFonteEMarta(unittest.TestCase):
             self.assertFalse(g.j.ferimentos)
             self.assertEqual(g.j.ouro, 200 - g.preco(12 + 3 * g.j.nivel))
             self.assertTrue(ui.perguntas[0].startswith(quem), ui.perguntas[0])
+            # depois do último tratamento, a fala dela (a Pita diz que terminou; a Marta, a de sempre sem ferimento)
+            fim = consequencias.atendente(g).get("concluido") or g.fala_curandeira_sem_ferimento()
+            self.assertEqual(ui.perguntas[1], fim)
+            if quem == "Pita":
+                self.assertEqual(fim, '"Pronto. Por aqui, terminamos."')
+            # quem chega já saudável vê a fala de chegada, no prédio fechado
+            self.assertEqual(estado(g)["local"]["predios_fechados"]["curandeiro"], consequencias.atendente(g)["fechado"])
 
     def test_procedural_sem_consequencias(self):
         g = Jogo(Roteiro(), seed=5, pasta_saves=tempfile.mkdtemp())

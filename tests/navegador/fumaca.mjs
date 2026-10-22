@@ -2348,8 +2348,8 @@ async function cenarioFeridas(browser) {
         await pronto();
       }
       const fim = await cabana();
-      conferir(fim.feridas === 0 && fim.cartoes === 0 && fim.tela && fim.voltar && fim.fala === fim.fechado,
-        `tratado o último, a cabana continua: quem atende diz que não há nada, e o Voltar (${JSON.stringify(fim)})`);
+      conferir(fim.feridas === 0 && fim.cartoes === 0 && fim.tela && fim.voltar && fim.fala === '"Pronto. Por aqui, terminamos."'
+        && /Pita/.test(fim.fechado), `tratado o último, a cabana continua: a Pita diz que terminou (a de chegada fica no prédio), e o Voltar (${JSON.stringify(fim)})`);
       await page.keyboard.press("Escape");
       await page.waitForSelector('#predios .predio[data-predio="curandeiro"]', { timeout: 10000 });
       conferir(!(await cabana()).tela, "Esc sai da cabana para a vila");
