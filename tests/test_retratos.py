@@ -132,13 +132,14 @@ class TestRetratos(unittest.TestCase):
                     self.assertTrue((ESTATICO / f"hud/icones/retrato-{tipo}-{lado}{sufixo}.png").exists(), (tipo, lado))
 
     def test_figura_do_lobo_na_fogueira_pelo_tipo(self):
-        # 1.170.0: o lobo do patrulheiro tem figura própria na fogueira (Icones.figuraAnimal, pelo tipo); o urso e o
-        # falcão continuam com os sprites "fera" e "voador"
+        # 1.170.0: o lobo do patrulheiro tem figura própria na fogueira (Icones.figuraAnimal, pelo tipo); 1.176.0: o urso e
+        # o falcão também (os sprites "fera" e "voador" continuam para os traços e a carta sem retrato)
         icones = (ESTATICO / "icones.js").read_text(encoding="utf-8")
         papel = re.search(r"const FIGURA_ANIMAL = \{([^}]*)\}", icones).group(1)
-        self.assertEqual(papel.strip(), 'lobo: "figura-lobo"')
-        for sufixo in ("", "@2x"):
-            self.assertTrue((ESTATICO / f"hud/icones/figura-lobo-16{sufixo}.png").exists(), sufixo)
+        self.assertEqual(papel.strip(), 'lobo: "figura-lobo", urso: "figura-urso", falcao: "figura-falcao"')
+        for tipo in ("lobo", "urso", "falcao"):
+            for sufixo in ("", "@2x"):
+                self.assertTrue((ESTATICO / f"hud/icones/figura-{tipo}-16{sufixo}.png").exists(), (tipo, sufixo))
         acampamento = (ESTATICO / "telas" / "acampamento.js").read_text(encoding="utf-8")
         self.assertIn("Icones.figuraAnimal(f.tipo)", acampamento)
         self.assertIn('spr: d.fera.tipo === "falcao" ? "voador" : "fera", tipo: d.fera.tipo', acampamento)

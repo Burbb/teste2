@@ -230,3 +230,13 @@ real e 2×), a figura a 8× e o retrato aprovado; o Atacar do Mago, hoje × o ca
 - **Conferido na cena real**, com os arquivos de produção, sem troca na página (`capturas-1170/`): o lobo com a figura,
   aquecida pela luz do fogo e com a sombra, pixel a pixel igual à foto da proposta; o urso e o falcão com os sprites de
   antes; sem erro no console.
+
+## O urso e o falcão na fogueira (1.176.0)
+
+- Aprovados pelo Jean, sem retoque: o **urso r4** (`bab7afba`) e o **falcão** da primeira proposta (`df24f9e5`), pelo
+  tipo do animal, só na figura do acampamento (`FIGURA_ANIMAL`: `figura-urso`, `figura-falcao`). O lobo c2, os retratos
+  da carta aliada e do painel (`ANIMAL`) e os sprites `fera` e `voador` não mudam.
+- As fontes em `ferramentas/arte/aseprite/figura-urso/` e `figura-falcao/` (cópias de `fontes/animal-urso-r4/` e
+  `fontes/animal-falcao/`); os PNGs (16 e @2x) idênticos byte a byte aos de `proposta/`; `--conferir` igual ao jogo.
+- Na cena real a 1920×945 (`capturas-1176/`): a figura com o chão, a sombra e a luz da fogueira, pixel a pixel igual às
+  capturas das propostas na área do animal (o resto muda só pelo fogo e pelo céu animados); sem erro no console.

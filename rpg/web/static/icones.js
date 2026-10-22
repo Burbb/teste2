@@ -209,10 +209,11 @@ const Icones = (() => {
   // papéis). O "fera" e o "voador" dos inimigos e a figura do acampamento não mudam
   const ANIMAL = { urso: "retrato-urso", falcao: "retrato-falcao", lobo: "retrato-lobo" };
   // a figura do animal na fogueira (1.170.0), pelo tipo, num papel próprio: o Lobo Cinzento deitado, voltado para o
-  // fogo, com a cabeça em três quartos para o jogador (16×16, a fonte em ferramentas/arte/aseprite/figura-lobo/). O urso
-  // e o falcão continuam com os sprites "fera" e "voador", que também são os dos traços, dos inimigos e da carta aliada
-  // sem retrato. Os arquivos carregam com o script: a cena monta as figuras de uma vez, num canvas
-  const FIGURA_ANIMAL = { lobo: "figura-lobo" };
+  // fogo, com a cabeça em três quartos para o jogador (16×16, a fonte em ferramentas/arte/aseprite/figura-lobo/); desde
+  // a 1.176.0, o Urso Pardo sentado e o Falcão Peregrino no toco (figura-urso, figura-falcao). Os sprites "fera" e
+  // "voador" (os dos traços, dos inimigos e da carta aliada sem retrato) não mudam. Os arquivos carregam com o script: a
+  // cena monta as figuras de uma vez, num canvas
+  const FIGURA_ANIMAL = { lobo: "figura-lobo", urso: "figura-urso", falcao: "figura-falcao" };
   const figurasAnimal = {};
   for (const [tipo, peca] of Object.entries(FIGURA_ANIMAL)) {
     figurasAnimal[tipo] = new Image();

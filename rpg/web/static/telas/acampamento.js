@@ -280,7 +280,7 @@ const Acampamento = (() => {
     const longe = ent ? ent.fundo(k) : fundoDaPaisagem(k), meio = camadaTeso(k, ent && ent.agua), perto = camadaPerto(k);
     const base = camada(), bc = base.getContext("2d");
     [longe, meio, perto].forEach((t) => bc.drawImage(t, 0, 0));
-    // o animal pela figura do tipo (Icones.figuraAnimal; o lobo desde a 1.170.0), senão o sprite; enquanto o arquivo
+    // o animal pela figura do tipo (Icones.figuraAnimal; o lobo desde a 1.170.0, o urso e o falcão desde a 1.176.0), senão o sprite; enquanto o arquivo
     // carrega, a figura entra no primeiro quadro em que estiver pronta
     const quem = roda(d, heroi).map((f) => {
       const animal = f.tipo ? Icones.figuraAnimal(f.tipo) : "";

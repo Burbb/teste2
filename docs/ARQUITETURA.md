@@ -265,7 +265,8 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   brejo, em `ENTORNOS`) ou, nos outros lugares, a própria paisagem (`Vista.paisagem`, o céu e as silhuetas do bioma,
   com nuvens e corvos; a chuva por cima, `Vista.chuva`). As vagas da roda são fixas (`HEROI`, `ATIVOS`, `RESERVA`,
   `FERA`); quem fica no acampamento senta na beira da luz. O animal do patrulheiro entra pela figura do tipo
-  (`Icones.figuraAnimal`, o papel `FIGURA_ANIMAL`: desde a 1.170.0 o Lobo Cinzento deitado, `figura-lobo-16`), senão
+  (`Icones.figuraAnimal`, o papel `FIGURA_ANIMAL`: desde a 1.170.0 o Lobo Cinzento deitado, `figura-lobo-16`;
+  desde a 1.176.0 o Urso Pardo sentado e o Falcão Peregrino no toco, `figura-urso-16` e `figura-falcao-16`), senão
   pelo sprite (`fera`, `voador`), aquecido pela luz do fogo como os outros. O nome aparece só com o mouse, o foco do teclado ou o F4
   (o balão da HUD, junto do contorno dourado das salas da capela, `Cenas.cantos`), acomodado como se todos
   aparecessem juntos (`acomodarNomes`: sem cobrir rosto, fogo nem o Dormir). Com movimento reduzido, as chamas
