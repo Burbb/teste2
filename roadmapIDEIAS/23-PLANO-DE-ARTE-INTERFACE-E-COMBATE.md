@@ -979,6 +979,9 @@ aguardam avaliação.
 - **No jogo desde a 1.169.0:** o arco aprovado (`arco-32`, o arquivo do equipamento) no Atacar do Arqueiro, pelo papel
   `ACAO` (o ícone continua o da classe: com a Besta, o mesmo arco); o Tiro Duplo e o contrato de caça continuam com o
   sprite. O cajado do Mago segue em teste no protótipo.
+- **Propostas (21/10/2026; nada no jogo):** os três animais do acampamento (o lobo deitado, o urso sentado, o falcão no
+  toco; 16×16 de corpo inteiro, conferidos na cena) e o teste do cajado aprovado no Atacar do Mago; a folha
+  `ferramentas/prototipos/hud/acampamento_atacar/animais-cajado.png`. A seleção futura pelo tipo, num papel próprio.
 
 O atalho **Mapa** da doca já foi concluído; esta frente trata dos símbolos internos de caminhos e mapas.
 Não afirmar que só restam talentos e habilidades após este bloco sem conferir os consumíveis, variantes e

@@ -2,7 +2,8 @@
 jogo desenha hoje), o recorte em tamanho real e a 4×; o comando Atacar das três classes na roda da luta (o Arqueiro
 como está, com o arco aprovado trocado só na página e com a Besta equipada; o Guerreiro e o Mago), em tamanho real e a
 4×, sem suavização; os retratos aprovados dos três animais, para a identidade.
-    python auxiliares/prancha.py
+    python auxiliares/prancha.py            # levantamento.png
+    python auxiliares/prancha.py animais    # animais-cajado.png
 """
 import json
 import pathlib
@@ -69,5 +70,45 @@ def folha():
     print("levantamento.png", out.size)
 
 
+def folha_animais():
+    """Os animais propostos e o cajado (animais-cajado.png): cada animal na fogueira, hoje × proposta (o recorte em
+    tamanho real e a 2×), a figura a 8× e o retrato aprovado (a identidade); o Atacar do Mago, hoje × o cajado aprovado,
+    em tamanho real e a 4×. Sem suavização."""
+    import grades as gr
+    f, f2 = ImageFont.truetype("arial.ttf", 15), ImageFont.truetype("arial.ttf", 12)
+    out = Image.new("RGBA", (1500, 1400), CARVAO)
+    d = ImageDraw.Draw(out)
+    d.text((20, 10), "Os animais do patrulheiro no acampamento (proposta) e o cajado no Atacar do Mago (teste); nada no jogo",
+           fill=TEXTO, font=f)
+    y = 38
+    for t, nome in (("lobo", "Lobo Cinzento, deitado"), ("urso", "Urso Pardo, sentado"), ("falcao", "Falcão Peregrino, no toco")):
+        d.text((20, y), f"{nome} — na fogueira: hoje | proposta (tamanho real), proposta a 2× | a figura a 8× | o retrato aprovado a 3×",
+               fill=TEXTO2, font=f2)
+        hoje = Image.open(CAP / f"fogueira-{t}.png").convert("RGBA").crop((340, 120, 520, 205))
+        nova = Image.open(CAP / f"fogueira-{t}-proposta.png").convert("RGBA").crop((340, 120, 520, 205))
+        out.alpha_composite(hoje, (20, y + 18)); out.alpha_composite(nova, (210, y + 18))
+        out.alpha_composite(amplia(nova, 2), (400, y + 18))
+        fig = Image.new("RGBA", (16, 16), (24, 21, 19, 255)); fig.alpha_composite(gr.imagem(f"animal-{t}"))
+        out.alpha_composite(amplia(fig, 8), (770, y + 18))
+        out.alpha_composite(amplia(Image.open(JOGO / f"retrato-{t}-16.png").convert("RGBA"), 3), (910, y + 18))
+        y += 18 + 170 + 14
+    d.text((20, y), "o Atacar do Mago: hoje (o sprite \"cajado\" 16×16 a 2×) | o cajado aprovado (cajado-32), trocado só na página — "
+                    "tamanho real e 4×", fill=TEXTO, font=f2)
+    y += 20
+    for j, n in enumerate(("roda-mago", "roda-mago-cajado")):
+        im = Image.open(CAP / f"{n}.png").convert("RGBA")
+        x0, y0, x1, y1 = REG[n]["icone"]
+        rec = im.crop((x0 - 8, y0 - 6, x1 + 80, y1 + 6))
+        out.alpha_composite(rec, (20 + j * 560, y)); out.alpha_composite(amplia(rec, 4), (20 + j * 560, y + rec.height + 8))
+    y += 44 + 8 + 4 * 44 + 20
+    out = out.crop((0, 0, 1500, y))
+    out.save(PASTA / "animais-cajado.png")
+    print("animais-cajado.png", out.size)
+
+
 if __name__ == "__main__":
-    folha()
+    import sys
+    if sys.argv[1:] == ["animais"]:
+        folha_animais()
+    else:
+        folha()

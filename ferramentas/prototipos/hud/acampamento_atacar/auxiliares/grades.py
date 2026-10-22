@@ -1,0 +1,108 @@
+"""Os animais do patrulheiro no acampamento (21/10/2026, proposta; nada no jogo): uma figura de 16×16 de corpo inteiro
+por animal, de perfil para a direita (o fogo), os pés na linha de baixo como as figuras da fogueira (retratos.js), sem
+contorno e com as cores agrupadas; a identidade e a paleta dos retratos aprovados (retrato-lobo, -urso, -falcao). A
+luz do fogo vem do jogo (acampamento.js, aquecido); a escala é a dos personagens sentados, sem encher o quadro:
+  - lobo: deitado, a cabeça erguida para o fogo, as orelhas em pé, o olho âmbar, o focinho e o peito claros, as patas
+    da frente estendidas; o corpo baixo e comprido, a cauda no chão;
+  - urso: sentado e pesado, a cabeça grande no alto com as orelhas pequenas e redondas, as costas descendo dela até a
+    garupa larga no chão, o focinho claro com o nariz escuro na ponta, a sombra do pescoço, a pata da frente no chão;
+    o maior dos três;
+  - falcão: pousado num toco, ereto, o capuz escuro, o olho com o anel amarelo, o bico curvo com a ponta para baixo, o
+    bigode escuro, a garganta e o peito claros, a asa cinza-azulada cobrindo o lado e as pontas passando da cauda.
+    python grades.py <pasta>           # grava grades/<id>.txt, listas/<id>/<camada>.lua e proposta/<id>-16.png
+"""
+import pathlib
+import sys
+
+from PIL import Image
+
+CORES = {
+    # o lobo (retrato-lobo): o claro do focinho e do peito, os cinzas, a sombra, o olho, o nariz
+    "L": "c8bfae", "l": "9a948a", "m": "78736a", "M": "57534c", "s": "3a3731", "e": "a07a3a", "n": "17140f",
+    # o urso (retrato-urso): o focinho, a luz, o pelo, a sombra, a sombra funda, o nariz e o olho
+    "B": "c49a6c", "b": "9a6a40", "u": "74502e", "U": "553820", "t": "36240f", "N": "1e1410",
+    # o falcão (retrato-falcao): o peito, a barra, a asa clara, a asa, o capuz, o escuro, o amarelo; o toco
+    "W": "efe6d2", "w": "c4b89e", "c": "8a9ab8", "C": "4a5674", "k": "2a3040", "K": "1e2230", "y": "d89a1c",
+    "T": "6a4a30", "R": "4a3220", "r": "2e1f14",
+}
+V = "................"
+LOBO = [V] * 6 + [
+    "...........M.M..",
+    "..........lMlM..",
+    "..........lmmml.",
+    "..........lmeLLn",
+    "..........lmmLL.",
+    ".........lmLLL..",
+    "...mmmmmmlmLL...",
+    "..mlllmmmMmLL...",
+    ".smMMMMMMMMlLl..",
+    "sssMMsssMMsLlLl.",
+]
+URSO = [V] * 4 + [
+    ".........U..U...",
+    "........Uubbbu..",
+    ".....UUUubbbbbu.",
+    "....UuuuUubNbbBB",
+    "...UuuuuuUubbBBN",
+    "..UuuuuuuuUbbb..",
+    "..UuuuuuuuUUU...",
+    ".tUuuuuuuuUbu...",
+    ".tUuuuuuuuUbu...",
+    "ttUuuuuuuUUbu...",
+    "ttUUuuuuUUUbuB..",
+    ".tttUUUUttUUbBB.",
+]
+FALCAO = [V] * 4 + [
+    "......kKk.......",
+    ".....kKKKk......",
+    ".....KKKyKc.....",
+    ".....CKWKcK.....",
+    "....CCCWWK......",
+    "....CCCCWw......",
+    "...kCCCCwW......",
+    "...kCCCcWw......",
+    "..kkCCCCw.......",
+    ".kk...yTTy......",
+    "......TTRR......",
+    ".....rTTRRr.....",
+]
+CAMADAS = {
+    "animal-lobo": (LOBO, ["corpo", "cabeca", "detalhes"],
+                    lambda x, y, ch: "detalhes" if ch in "en" else "cabeca" if y <= 11 and x >= 9 else "corpo"),
+    "animal-urso": (URSO, ["corpo", "cabeca", "detalhes"],
+                    lambda x, y, ch: "detalhes" if ch == "N" else "cabeca" if 4 <= y <= 9 and x >= 8 else "corpo"),
+    "animal-falcao": (FALCAO, ["toco", "corpo", "cabeca", "detalhes"],
+                      lambda x, y, ch: "toco" if ch in "TRr" else "detalhes" if ch == "y" else "cabeca" if y <= 7 else "corpo"),
+}
+
+
+def imagem(ident):
+    im = Image.new("RGBA", (16, 16))
+    for y, l in enumerate(CAMADAS[ident][0]):
+        for x, ch in enumerate(l):
+            if ch != ".":
+                im.putpixel((x, y), tuple(int(CORES[ch][i:i + 2], 16) for i in (0, 2, 4)) + (255,))
+    return im
+
+
+def gravar(base, ids=None):
+    for ident in ids or CAMADAS:
+        grade, ordem, camada = CAMADAS[ident]
+        assert len(grade) == 16 and all(len(l) == 16 for l in grade), (ident, [len(l) for l in grade])
+        (base / "grades").mkdir(parents=True, exist_ok=True)
+        (base / f"grades/{ident}.txt").write_text("\n".join(grade) + "\n", encoding="utf-8")
+        listas = {c: [] for c in ordem}
+        for y, l in enumerate(grade):
+            for x, ch in enumerate(l):
+                if ch != ".":
+                    listas[camada(x, y, ch)].append(f"{x},{y},{CORES[ch]}")
+        d = base / f"listas/{ident}"
+        d.mkdir(parents=True, exist_ok=True)
+        for k, v in listas.items():
+            (d / f"{k}.lua").write_text(f'return "{";".join(v)}"\n', encoding="utf-8")
+        (d / "ordem.txt").write_text(",".join(ordem) + "\n", encoding="utf-8")
+        print(ident, {k: len(v) for k, v in listas.items()})
+
+
+if __name__ == "__main__":
+    gravar(pathlib.Path(sys.argv[1]), sys.argv[2:])

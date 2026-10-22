@@ -69,3 +69,43 @@ e teste visual: nada desenhado para o acampamento, nada integrado.
   vindo de `icone_ataque` da classe; o Tiro Duplo e o contrato de caça continuam com o sprite.
 - Conferido no jogo, com os arquivos reais (`capturas-1169/`, o mesmo `fotografar.mjs`): o Arqueiro com o arco e com a
   Besta Leve mostram `arco-32` a 32 px; o Guerreiro a espada; o Mago continua com o sprite (o cajado está em teste).
+
+## Os animais no acampamento (proposta, 21/10/2026; nada no jogo)
+
+- **Pedido de Jean:** uma figura de corpo inteiro por animal, só no protótipo: o lobo deitado, de cabeça erguida,
+  voltado para o fogo; o urso sentado, pesado, com anatomia de urso; o falcão pousado num toco, com o bico curvo, a
+  máscara escura e o peito claro. A identidade e a paleta dos retratos aprovados, a linguagem das figuras da fogueira,
+  uma escala convincente com os personagens (sem encher igual os 16×16).
+- **As figuras** (`animal-lobo`, `animal-urso`, `animal-falcao`; 16×16, de perfil para a direita, os pés na linha de
+  baixo, sem contorno; as grades e as camadas em `auxiliares/grades.py`):
+  - **lobo** (corpo, cabeça, detalhes): deitado e comprido, a cabeça erguida com as orelhas em pé, o olho âmbar, o
+    focinho e o peito claros, as patas da frente estendidas, a cauda no chão; o mais baixo dos três;
+  - **urso** (corpo, cabeça, detalhes): sentado, a cabeça grande no alto com as orelhas pequenas e redondas, as costas
+    descendo até a garupa larga, o focinho claro com o nariz escuro, a sombra do pescoço, a pata da frente; o maior,
+    mas abaixo do arqueiro sentado;
+  - **falcão** (toco, corpo, cabeça, detalhes): ereto num toco, o capuz escuro, o olho com o anel amarelo, o bico curvo
+    com a ponta para baixo, o bigode escuro, a garganta e o peito claros, a asa cinza-azulada e as pontas passando da
+    cauda, os pés amarelos.
+- **Na bancada:** o urso começou como um castor (o focinho comprido como um bico) e depois parecia um esquilo (o
+  corcunda arredondado lia como uma cauda peluda): a cabeça cresceu e subiu, e as costas passaram a descer dela até a
+  garupa. O falcão começou como um pinguim (o peito branco largo): a asa passou a cobrir o lado, o peito estreitou e a
+  cauda cresceu.
+- **Na cena** (`capturas/fogueira-<tipo>-proposta.png`): a figura que a cena pede para o animal vira, só na página, a
+  proposta do tipo; a sombra no chão e a luz do fogo (`aquecido`) são as do jogo. Os três ficam menores que o arqueiro
+  sentado ao lado, o urso o maior e o falcão o menor.
+- **A seleção futura:** um papel próprio pelo tipo (por exemplo, um mapa `FIGURA_ANIMAL` em `icones.js` e
+  `Icones.figuraAnimal(tipo)`), pedido em `acampamento.js` (`roda()`, pelo `d.fera.tipo`), com os PNGs em
+  `rpg/web/static/hud/icones/` e as fontes em `ferramentas/arte/aseprite/`; os sprites `fera` e `voador` continuam nos
+  outros papéis.
+- **Processo:** as fontes no editor pelo conector (`pintar.lua`; releitura das camadas contra a grade, 0 diferentes; o
+  composto com a soma das camadas: 76, 131 e 69) em `fontes/animal-<tipo>/`; a exportação conferida
+  (`auxiliares/exportar.py`: igual à grade, @2x exato); o conector respondendo depois do lote.
+
+## O cajado no Atacar do Mago (teste, 21/10/2026; nada no jogo)
+
+- O `cajado-32` aprovado (o cajado de carvalho com o cristal, 1.106.0) trocado só na página no lugar do sprite
+  (`capturas/roda-mago-cajado.png`): cabe exato nos 32 px, na diagonal como o arco e a espada, e o cristal azul
+  continua a ler. A integração seria `ACAO.cajado = "cajado"`; o traço Conjurador dos inimigos continua com o sprite.
+
+A folha `animais-cajado.png` (`python auxiliares/prancha.py animais`): cada animal na fogueira, hoje × proposta (tamanho
+real e 2×), a figura a 8× e o retrato aprovado; o Atacar do Mago, hoje × o cajado, em tamanho real e 4×.

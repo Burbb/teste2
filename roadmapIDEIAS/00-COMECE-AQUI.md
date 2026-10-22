@@ -5629,3 +5629,11 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   acampamento_atacar/capturas-1169/`); a versão 1.169.0.
 - **Continua:** o cajado no Atacar do Mago (teste no protótipo), os animais do acampamento (proposta) e o Grimório na
   etapa 8.
+
+### 21/10/2026 (data do computador local) — Os animais do acampamento e o cajado do Mago, só no protótipo
+
+- **Pedido de Jean:** uma figura por animal (o lobo deitado, o urso sentado, o falcão no toco), conferida na cena; o
+  cajado aprovado testado no Atacar do Mago.
+- **Feito:** `animal-lobo`, `animal-urso`, `animal-falcao` em `ferramentas/prototipos/hud/acampamento_atacar/` (as
+  fontes pelo conector, a exportação conferida, as fotos na fogueira) e o teste do cajado; a folha `animais-cajado.png`.
+- **Continua:** a avaliação do Jean; a seleção futura pelo tipo num papel próprio; o Grimório na etapa 8.
