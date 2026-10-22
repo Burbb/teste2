@@ -123,6 +123,13 @@ function mostrarOpcoes(m) {
       const v = m.opcoes.findIndex(ehVoltar);
       if (alvo >= 0) { docaTela = p.valor; pergunta = { id: m.id, tipo: "opcoes", opcoes: m.opcoes }; responder(m.id, alvo); marcarDocaAtual(); return; }
       if (v >= 0 && p.saltos > 0) { pendente = { ...p, saltos: p.saltos - 1 }; pergunta = { id: m.id, tipo: "opcoes", opcoes: m.opcoes }; responder(m.id, v); return; }
+    } else if (p.chave === "_lugar") {
+      // A caminho do menu do lugar (a carta ✉ tocada numa tela da doca, controles.js): volta até ele, e lá a conversa
+      // guardada vale (abaixo).
+      const v = m.opcoes.findIndex(ehVoltar);
+      if (!m.opcoes.some(atalhoDe) && v >= 0 && p.saltos > 0) {
+        pendente = { ...p, saltos: p.saltos - 1 }; pergunta = { id: m.id, tipo: "opcoes", opcoes: m.opcoes }; responder(m.id, v); return;
+      }
     } else {
       const i = p.chave === "_voltar" ? m.opcoes.findIndex(ehVoltar) : m.opcoes.findIndex((o) => o.meta && o.meta[p.chave] === p.valor);
       if (i >= 0) { pergunta = { id: m.id, tipo: "opcoes", opcoes: m.opcoes }; responder(m.id, i); return; }
@@ -145,6 +152,7 @@ function mostrarOpcoes(m) {
   if (conversasGuardadas.length && m.opcoes.some(atalhoDe)) {
     const cid = conversasGuardadas.shift();
     if (podeConversar(m.opcoes, cid)) {
+      docaTela = null; marcarDocaAtual();  // de volta ao lugar: a tela da doca que estava aberta já fechou
       pergunta = { id: m.id, tipo: "opcoes", opcoes: m.opcoes };
       pedir("Comitiva", "conversar", cid);
       return;

@@ -5,7 +5,8 @@
 //   - o mercado: peças diferentes clicadas sem parar vendem cada uma; a grade fica parada durante a visita (o espaço
 //     vendido fica vazio, o clique nele não faz nada, o clique duplo vende uma, a troca de aba e a recompra não
 //     embaralham; equipar e arrastar até a banca também não) e volta à ordem de sempre na visita seguinte;
-//   - a comitiva: as cartas ✉ de dois companheiros clicadas uma logo depois da outra abrem as duas conversas, em ordem.
+//   - a comitiva: as cartas ✉ de dois companheiros clicadas uma logo depois da outra abrem as duas conversas, em ordem;
+//     a carta ✉ com o Inventário ou o Bestiário aberto fecha a tela e abre a conversa na hora.
 //   PLAYWRIGHT_MODULO=<caminho do playwright>/index.mjs node tests/navegador/cliques_seguidos.mjs
 import { spawn } from "child_process";
 import { fileURLToPath } from "url";
@@ -180,6 +181,30 @@ async function cliques(p, el, vezes, intervalo, depois) {
     await espera(150);
   }
   conferir(vistas.join(",") === "Morel,Odette", `as cartas ✉ de dois companheiros, uma logo depois da outra: ${vistas.join(", ") || "nenhuma"}`);
+  await p.close(); proc.kill();
+}
+
+// 4. a carta ✉ com uma tela da doca aberta: a tela fecha e a conversa abre na hora, sem outro clique (antes ela
+// ficava guardada até a pessoa fechar a tela)
+for (const tela of ["Inventário", "Bestiário"]) {
+  const { proc, url } = await subir("fogueira", { LUGAR: "vau", CONVERSA: "1", COMITIVA: "odete", RESERVA: "" });
+  const p = await pagina(url);
+  await ate(p, () => !!document.querySelector('[data-conversar="odete"]') && !!pergunta && pergunta.tipo === "opcoes" && pergunta.opcoes.some(atalhoDe));
+  await espera(600);
+  await p.click(`#doca .atalho[data-rotulo="${tela}"]`);
+  let aberta = false;  // sem o ate(): ele clicaria no Continuar do Bestiário
+  for (let k = 0; k < 80 && !aberta; k++) { aberta = await p.evaluate((t) => docaTela === t && !!pergunta && !processando, tela); await espera(100); }
+  await espera(300);
+  const c = await p.$('[data-conversar="odete"]');
+  await cliques(p, c, 2, 120);  // um clique duplo: a conversa abre uma vez
+  let conversa = false;
+  for (let k = 0; k < 60 && !conversa; k++) {
+    conversa = await p.evaluate(() => /Conversa com[^•]*Odette/.test((document.getElementById("cena-cab") || {}).textContent || ""));
+    await espera(100);
+  }
+  const fim = await p.evaluate(() => ({ docaTela, guardadas: conversasGuardadas.length, atual: !!document.querySelector("#doca .atalho.atual") }));
+  conferir(aberta && conversa && fim.docaTela === null && !fim.guardadas && !fim.atual,
+    `a carta ✉ com o ${tela} aberto: ele fecha e a conversa com a Odette abre na hora (${JSON.stringify({ aberta, conversa, ...fim })})`);
   await p.close(); proc.kill();
 }
 

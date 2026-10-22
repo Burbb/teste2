@@ -64,6 +64,15 @@ document.addEventListener("click", (ev) => {
   if (carta) {
     const cid = carta.dataset.conversar;
     if (pergunta && pergunta.tipo === "opcoes" && podeConversar(pergunta.opcoes, cid)) { pedir("Comitiva", "conversar", cid); return; }
+    // Numa tela aberta pela doca (Inventário, Diário...): ela fecha pelo Voltar (ou pelo Continuar, nas de leitura) e
+    // a conversa abre no menu do lugar, na hora. Antes ela ficava guardada até a pessoa fechar a tela sozinha.
+    const voltar = pergunta && pergunta.tipo === "opcoes" ? pergunta.opcoes.findIndex(ehVoltar) : -1;
+    if (docaTela && !processando && pergunta && (pergunta.tipo === "continuar" || voltar >= 0)) {
+      if (!conversasGuardadas.includes(cid)) conversasGuardadas.push(cid);
+      pendente = { chave: "_lugar", saltos: 4 };
+      responder(pergunta.id, pergunta.tipo === "continuar" ? null : voltar);
+      return;
+    }
     // No meio de outra coisa (a conversa anterior ainda na página, um Continuar, as respostas de uma conversa): o
     // pedido fica guardado e vale no próximo menu do lugar (escolhas.js). Antes, ele caía no aviso de "lugar seguro" e
     // se perdia, e conversar com dois companheiros pedia esperar a primeira conversa acabar de vez.
