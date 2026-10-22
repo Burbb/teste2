@@ -98,3 +98,12 @@ atentos sob a sobrancelha pesada, o nariz curvo e a boca fechada, as penas escur
 trás, o pescoço entrando na gola clara de abutre e a plumagem dos ombros ligada ao resto. Ampliada, não uma grade
 nativa: a transposição para 16×16 está em `ferramentas/prototipos/hud/criaturas/rodada_23_10/` (`harpia-t`; a guia em
 `guias/`). As Harpias anteriores (HA, HB, H1 a H3) ficam como histórico.
+
+**`Cão infernal em pixel art.png`** (1254×1254, RGBA com fundo transparente, 22/10/2026, data do computador local): **a
+referência principal do Cão infernal** na segunda tentativa (as propostas A e B de `criaturas/fenda/` não foram
+escolhidas). Imagem gerada na conversa com o Jean e deixada aqui por ele; sem outra origem ou autoria informada. Dela
+vem a construção: a cabeça robusta em três quartos para a esquerda, o focinho largo e contraído com o nariz grande, os
+olhos estreitos e acesos sob a testa pesada, os lábios levantados com as presas negras expostas sobre a goela acesa, a
+orelha dobrada no alto e a de trás à direita, e o corpo escuro com a brasa aparecendo em poucos pontos (as rachaduras do
+pescoço). Ampliada, não uma grade nativa: a transposição para 16×16 está em `ferramentas/prototipos/hud/criaturas/fenda/`
+(`cao-infernal-t`; a guia em `guias/`).
