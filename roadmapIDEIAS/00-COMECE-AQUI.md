@@ -5549,3 +5549,12 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Continua:** nada aprovado; o Rei e a Aranha fora de produção; a versão continua 1.166.0.
 - **Ajuste das pontas (pedido de Jean):** `rei-troll-ouro2`, só as três pontas da coroa dourada (as dos lados subindo,
   a do meio em triângulo, os vãos abertos), o resto igual; a folha `rei-pontas.png`. Nada aprovado.
+
+### 21/10/2026 (data do computador local) — O Rei Troll e a Aranha gigante no jogo (1.167.0)
+
+- **Decisão de Jean:** o Rei Troll com a coroa `rei-troll-ouro2` e a Aranha 2B, sem retoques.
+- **Feito:** fontes em `ferramentas/arte/aseprite/retrato-rei-troll/` e `retrato-aranha/` (conferidas contra as
+  propostas antes de gravar); o Rei pelo id do guardião (`RETRATO_GUARDIAO`, o `guardiao` em `instanciar_guardiao`), a
+  Aranha pela família (com as invocadas); a Rainha Aracnídea no `fera`; `tests/test_retratos.py`; o cenário `tutorial`
+  ganhou `INVOCADOS`. A folha `ferramentas/prototipos/hud/criaturas/aranha_troll/rei-aranha-final.png`.
+- **Continua:** a 1E.3 com as demais criaturas (o próximo par é decisão do Jean).

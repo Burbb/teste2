@@ -117,6 +117,8 @@ A escolha do par e da direção é do Jean; nada foi começado.
   animal: os três animais do patrulheiro concluídos. O mesmo rosto dos dois lados é de propósito.
 - **1.166.0: o Troll da montanha** (`aranha_troll/`, o `troll-1`, de carne, pela referência gerada): pela família. O
   Rei Troll (guardião) continua na caveira; a Aranha segue no protótipo.
+- **1.167.0: o Rei Troll e a Aranha gigante** (`aranha_troll/`): o Rei (o Troll 2 com a coroa dourada) pelo id do
+  guardião; a Aranha (a 2B) pela família, com as que a Rainha invoca. A Rainha Aracnídea continua no `fera`.
 
 ## Em proposta
 

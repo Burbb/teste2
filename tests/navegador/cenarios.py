@@ -17,7 +17,7 @@
     python -m tests.navegador.cenarios resgate       # a recuperação: fome ou infecção no Charco, à noite (CLASSE, CAUSA, COMITIVA, CONTRATOS)
     python -m tests.navegador.cenarios abertura      # campanha nova no Vau: a despensa e as orientações (CLASSE, TUTORIAL, MOREL, DESPENSA, VIDA_RATOS)
     python -m tests.navegador.cenarios fogueira      # a comitiva na fogueira e a fome (LUGAR, SALA, CLASSE, COMITIVA, RESERVA, FERIDO, FERA, FOME, PROVISOES, TOCHAS, PERIODO, CLIMA, EXAUSTO)
-    python -m tests.navegador.cenarios tutorial      # a segunda parte da abertura guiada (LUGAR, PERIODO, VIDA, REC, OURO, PROVISOES, COMITIVA, PONTOS, ITEM, BAUS, CONTRATO, CONTRATO_FAMILIA, LUTA, CHEFE, VISTAS, BOLSA, TROCA)
+    python -m tests.navegador.cenarios tutorial      # a segunda parte da abertura guiada (LUGAR, PERIODO, VIDA, REC, OURO, PROVISOES, COMITIVA, PONTOS, ITEM, BAUS, CONTRATO, CONTRATO_FAMILIA, LUTA, CHEFE, INVOCADOS, VISTAS, BOLSA, TROCA)
     python -m tests.navegador.cenarios gelo          # Mago com a iniciativa contra um lobo: duas Lanças antes de ele agir (PRISAO, NIVEL, SEMENTE)
     python -m tests.navegador.cenarios aneis         # acha um anel com os dois espaços ocupados (ANEIS=1: um vazio; CHEIA, OURO)
     python -m tests.navegador.cenarios reacoes       # Contra-ataque, espinhos, roubo de vida e o Revide juntos (CONTRA, ESPINHOS, ROUBO, LUTA)
@@ -952,6 +952,9 @@ def tutorial(ui):
                 chefe = instanciar_guardiao(spec, nv)
                 chefe.chave = f"guardiao:{os.environ['CHEFE']}"
                 grupo.insert(0, chefe)
+                if os.environ.get("INVOCADOS"):  # os outros com o nome que o Invocar do chefe dá ("Aranha gigante A (invocado)")
+                    for k, e in enumerate(grupo[1:]):
+                        e.nome = f"{e.nome} {'ABCDEFGHIJ'[k]} (invocado)"
             if os.environ.get("LONGOS"):  # os nomes mais longos que o jogo dá: um único e os reforços invocados
                 grupo[0].nome = "Morion, o Troll da montanha Corrompido Flamejante"
                 for k, e in enumerate(grupo[1:]):

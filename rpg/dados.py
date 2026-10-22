@@ -158,15 +158,18 @@ RETRATOS = ("demonio", "etereo", "corrompido", "morto-vivo", "construto", "voado
 # As cabeças próprias (1.162.0), antes dos traços: a da criatura única pela chave dela (a Ilse da capela, missoes.py) e a
 # da espécie pela família (a variante, o líder de nome próprio e o invocado da mesma família também; 1.163.0: o lobo e
 # o bandido; 1.166.0: o troll da montanha). Quem não está aqui segue pelos traços: o lobo gélido e o animal do herói
-# continuam no "fera", o cultista e os outros humanos no "humano", o Rei Troll (um guardião) na caveira.
+# continuam no "fera", o cultista e os outros humanos no "humano". O guardião pelo id do catálogo (1.167.0: o Rei
+# Troll; a chave de um guardião muda com o lugar), depois da chave; a Rainha Aracnídea e os outros continuam pelos traços,
+# e as aranhas que a Rainha invoca têm a família "aranha".
 RETRATO_CHAVE = {"ilse": "ilse"}
-RETRATO_FAMILIA = {"afogado": "afogado", "lobo": "lobo", "bandido": "bandido", "troll": "troll"}
+RETRATO_GUARDIAO = {"rei_troll": "rei_troll"}
+RETRATO_FAMILIA = {"afogado": "afogado", "lobo": "lobo", "bandido": "bandido", "troll": "troll", "aranha": "aranha"}
 
 
-def retrato(tracos, familia=None, chave=None):
-    """O desenho de uma criatura: o próprio dela (pela chave ou pela família), senão pelos traços (o primeiro de
-    RETRATOS que ela tem; sem nenhum, uma caveira)."""
-    return (RETRATO_CHAVE.get(chave) or RETRATO_FAMILIA.get(familia)
+def retrato(tracos, familia=None, chave=None, guardiao=None):
+    """O desenho de uma criatura: o próprio dela (pela chave, pelo id do guardião ou pela família), senão pelos traços
+    (o primeiro de RETRATOS que ela tem; sem nenhum, uma caveira)."""
+    return (RETRATO_CHAVE.get(chave) or RETRATO_GUARDIAO.get(guardiao) or RETRATO_FAMILIA.get(familia)
             or next((TRACOS_FICHA[t]["retrato"] for t in RETRATOS if t in tracos), "caveira"))
 
 # nome, plural, gênero, atributos base (nível 1), traços, habilidades, xp, ouro, tamanho de grupo e, quando há:

@@ -206,3 +206,24 @@ Troll abaixo da coroa iguais.
 
 **Leitura a 32 px:** as três pontas leem separadas, a do meio mais alta e em ponta, como na referência; a coroa fica
 menos "ondulada" e mais coroa. Limite: com duas linhas para as pontas, a do meio sobe só um pixel acima das outras.
+
+## Integração do Rei Troll e da Aranha (1.167.0)
+
+**Escolha de Jean:** o Rei Troll com a coroa `rei-troll-ouro2` (do `7b1e7222`) e a Aranha 2B (do `a95ad503`), sem
+retoques. As outras propostas ficam aqui como histórico (as aranhas A, B, 1, 2 e 3; os trolls A, B, 2 e 3; o Rei de
+sucata e o da primeira coroa dourada).
+
+- **As fontes de produção:** `ferramentas/arte/aseprite/retrato-rei-troll/` e `retrato-aranha/` (16×16 em camadas, a guia
+  oculta), abertas das fontes aprovadas pelo MCP. Antes de gravar no jogo, a exportação numa pasta temporária foi
+  comparada com as propostas aprovadas (o 16, o 32, o 48 e os @2x iguais); depois `exportar_aseprite.py` (`DERIVADOS`: o
+  32 é o 16 ×2 e o 48 o 16 ×3) e `--conferir`: tudo igual ao jogo.
+- **No jogo:** o Rei pelo **id do guardião** no catálogo (`RETRATO_GUARDIAO` em `dados.py`; `instanciar_guardiao` guarda
+  o id em `guardiao`, porque a chave muda com o lugar), em qualquer covil; o Troll comum continua pela família. A Aranha
+  pela família (`RETRATO_FAMILIA`), com os afixos, os líderes e as **aranhas que a Rainha Aracnídea invoca** (o Invocar
+  cria pela família). A **Rainha** (um guardião) continua no `fera`, como os outros guardiões fora do mapa. Traços,
+  regras, atributos, habilidades, medidas e áreas de clique iguais. `tests/test_retratos.py`: o Rei pelo id em qualquer
+  lugar, todos os guardiões do catálogo instanciados (só o Rei muda), a aranha pela família e a invocada.
+- **Fotos a 1920×945** (o modo `final`, sem troca): o Rei ao lado do Troll comum; a aranha na carta (32 de 32), no
+  Bestiário (48 de 48) e no rastro do contrato de caça (32 de 32); a Rainha no `fera` com duas aranhas invocadas (o
+  cenário `tutorial` ganhou `INVOCADOS`, que dá aos outros do grupo o nome do Invocar). Sem erro nem aviso no console. A
+  folha: `rei-aranha-final.png` (`python auxiliares/prancha.py final`).

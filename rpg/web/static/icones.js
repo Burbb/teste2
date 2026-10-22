@@ -41,7 +41,7 @@ const Icones = (() => {
     "vital-foco": [20], "vital-mana": [20], "vital-vida": [20], "vital-vigor": [20],
     "retrato-afogado": [16, 32, 48], "retrato-ilse": [16, 32, 48], "retrato-lobo": [16, 32, 48], "retrato-bandido": [16, 32, 48],
     "retrato-urso": [16, 32], "retrato-falcao": [16, 32],
-    "retrato-troll": [16, 32, 48]};
+    "retrato-troll": [16, 32, 48], "retrato-rei-troll": [16, 32, 48], "retrato-aranha": [16, 32, 48]};
 
   // Cada desenho vai para o tipo de ferro que o jogo já tem (elmo, armadura, manopla, calca = perneira, bota_ferro, maca);
   // couro sem desenho (a calça de couro) e as outras peças sem desenho ficam com o do jogo. O anel (1.140.0, o aro de
@@ -188,9 +188,10 @@ const Icones = (() => {
   // retratos de carta da comitiva; o 32 (a carta da luta, o rastro dos contratos) e o 48 (o Bestiário, o mural, a faixa
   // do mestre caçador) são o 16 ampliado 2× e 3×. Os outros retratos ("caveira", "fera", "humano"...) continuam os
   // sprites do jogo, também noutros papéis
-  // 1.166.0: o Troll da montanha (de carne, em três quartos); o Rei Troll fica de fora (um guardião, na caveira)
+  // 1.166.0: o Troll da montanha (de carne, em três quartos); 1.167.0: o Rei Troll (pelo id do guardião: o Troll de
+  // frente com a coroa dourada) e a Aranha gigante (a família, com as que a Rainha invoca; a Rainha continua no "fera")
   const CRIATURA = { afogado: "retrato-afogado", ilse: "retrato-ilse", lobo: "retrato-lobo", bandido: "retrato-bandido",
-                     troll: "retrato-troll" };
+                     troll: "retrato-troll", rei_troll: "retrato-rei-troll", aranha: "retrato-aranha" };
   // o animal do patrulheiro (1.164.0), pelo tipo dele (classes.COMPANHEIROS), na carta aliada da luta e no painel da
   // comitiva, a 2×: o Urso Pardo (de frente, severo) e o Falcão Peregrino (de perfil, a máscara escura); desde a 1.165.0,
   // o Lobo Cinzento com o mesmo arquivo do Lobo inimigo (o mesmo rosto de propósito: o lado, o nome e a borda separam os

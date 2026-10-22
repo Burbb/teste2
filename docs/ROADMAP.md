@@ -62,7 +62,7 @@ A sequência aprovada por Jean está detalhada em
 Consultar esse documento antes de escolher a próxima entrega. Aprovar a ordem não aprova automaticamente
 protótipos, desenhos ou regras e não autoriza executar todo o plano de uma vez.
 
-**Estado confirmado nesta atualização (21/10/2026):** produção **1.166.0** (o Troll da montanha com retrato). A 1D está concluída: **31
+**Estado confirmado nesta atualização (21/10/2026):** produção **1.167.0** (o Rei Troll e a Aranha gigante com retrato; o Troll da montanha na 1.166.0). A 1D está concluída: **31
 equipamentos-base** finais (as variantes e os compartilhamentos provisórios ficam separados, ainda abertos). Na 1E, o
 **contador de flechas** e os **17 estados** estão concluídos; o **Afogado, a Ilse, o Lobo e o Bandido** estão integrados,
 e os **três animais do patrulheiro** (Urso, Falcão e Lobo Cinzento) concluídos. **Agora: 1E.3**, as demais criaturas,
@@ -83,7 +83,7 @@ A migração das artes e seus usos específicos consta no plano 23; não contar 
 | **1B** | Custo no início da ação e vida máxima bloqueada | **Concluída**, 1.114.1 e 1.115.0 |
 | **1C** | Iniciativa/turnos, rolagem no centro e testes na ficha | **Concluída**, 1.116.0–1.118.0 |
 | **1D** | Equipamentos, objetos da bolsa e ícones gerais | **Concluída**: 31 equipamentos-base finais (1.150.0; acabamentos até a 1.154.0); variantes e compartilhamentos provisórios separados, ainda abertos |
-| **1E** | Desvio visual depois dos itens | **Agora**: contador de flechas (1.155.0) e 17 estados (1.155.0–1.161.0) concluídos; Afogado, Ilse, Lobo e Bandido integrados (1.162.0–1.163.0); os três animais do patrulheiro concluídos (1.164.0–1.165.0); o Troll da montanha (1.166.0); em andamento as demais criaturas, os chefes e as invocações (1E.3); depois caminhos e símbolos do mapa/minimapa (1E.4) |
+| **1E** | Desvio visual depois dos itens | **Agora**: contador de flechas (1.155.0) e 17 estados (1.155.0–1.161.0) concluídos; Afogado, Ilse, Lobo e Bandido integrados (1.162.0–1.163.0); os três animais do patrulheiro concluídos (1.164.0–1.165.0); o Troll da montanha (1.166.0), o Rei Troll e a Aranha (1.167.0); em andamento as demais criaturas, os chefes e as invocações (1E.3); depois caminhos e símbolos do mapa/minimapa (1E.4) |
 | **2** | Menu de carregar e fichas dos saves, criação, livro da capela, dado, subida de nível, celebrações e raridade | Pendente; Grimório e árvore passam ao mesmo ciclo dos sistemas na etapa 8 |
 | **3** | Interior da forja e ferreiro | Pendente; começar com as regras atuais |
 | **4** | Protótipo de reforço e encantamento | Hipóteses; chances, custos, riscos e limites não aprovados |

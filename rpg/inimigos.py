@@ -128,6 +128,7 @@ def instanciar_guardiao(spec, nivel):
     e.desc = spec["nome"]
     e.plural = spec["nome"]
     e.familia = "guardiao"
+    e.guardiao = t["id"]
     return e
 
 

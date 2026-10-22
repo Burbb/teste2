@@ -33,6 +33,12 @@ const SITUACOES = [
   // troca) mostra o jogo como está: o troll com o retrato integrado e o Rei na caveira
   { nome: "rei", cenario: "tutorial", amb: { TUTORIAL: "0", CLASSE: "guerreiro", NIVEL_LUTA: "4", CHEFE: "rei_troll",
     GRUPO: "troll:1,aranha:1" }, espera: '.carta[data-uid="j"]', fotos: [["#palco", "palco"]], so: ["final", "rei", "rei2"] },
+  // 1.167.0 (só no modo final): o rastro do contrato de caça de aranhas, e a Rainha Aracnídea (o guardião, no "fera") com
+  // duas aranhas invocadas (o retrato da família)
+  { nome: "contrato", cenario: "tutorial", amb: { TUTORIAL: "0", CLASSE: "guerreiro", CONTRATO: "aceito",
+    CONTRATO_EM: "bosque", CONTRATO_FAMILIA: "aranha" }, espera: ".rastro-contrato", fotos: [["body", "pagina"]], so: ["final"] },
+  { nome: "rainha", cenario: "tutorial", amb: { TUTORIAL: "0", CLASSE: "guerreiro", NIVEL_LUTA: "4", CHEFE: "rainha_aracnidea",
+    INVOCADOS: "1", GRUPO: "aranha:2" }, espera: '.carta[data-uid="j"]', fotos: [["#palco", "palco"]], so: ["final"] },
 ];
 mkdirSync(saida, { recursive: true });
 const b = await chromium.launch();

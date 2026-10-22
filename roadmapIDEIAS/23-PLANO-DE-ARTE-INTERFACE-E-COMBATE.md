@@ -13,8 +13,8 @@ Não iniciar todo o plano numa única tarefa. As etapas técnicas A–I e a vali
 
 ## Estado de referência — 21/10/2026
 
-- Produção: **1.166.0** na branch `claude/tender-einstein-tx3tjl` (o Troll da montanha com retrato; antes, na 1.165.0,
-  os três animais do patrulheiro).
+- Produção: **1.167.0** na branch `claude/tender-einstein-tx3tjl` (o Rei Troll e a Aranha gigante com retrato; antes,
+  o Troll da montanha na 1.166.0 e os três animais do patrulheiro na 1.165.0).
 - **Etapa 1D concluída:** os **31 equipamentos-base** estão finais desde a 1.150.0, com os acabamentos das luvas L7
   (1.151.0), das perneiras P7 (1.152.0), do capacete C1 (1.153.0) e das botas A1 (1.154.0). **Fora dessa contagem, e
   ainda abertos:** as variantes (os únicos e raros com desenho próprio) e os compartilhamentos provisórios (a Capa de
@@ -23,8 +23,9 @@ Não iniciar todo o plano numa única tarefa. As etapas técnicas A–I e a vali
 - **Etapa 1E em andamento.** Concluídos: o **contador de flechas** da carta do Arqueiro (1.155.0) e os **17 estados**
   do catálogo (1.155.0 a 1.161.0). Criaturas com retrato próprio: o **Afogado e a Ilse** (1.162.0), o **Lobo e o
   Bandido** (1.163.0) e os **três animais do patrulheiro** (o Urso Pardo e o Falcão Peregrino na 1.164.0; o Lobo
-  Cinzento, com o mesmo retrato do Lobo inimigo, na 1.165.0) e o **Troll da montanha** (1.166.0, pela família; o Rei
-  Troll fora). O Bandido do chapéu está reservado como conceito de um possível chefe, fora do jogo.
+  Cinzento, com o mesmo retrato do Lobo inimigo, na 1.165.0), o **Troll da montanha** (1.166.0, pela família), o
+  **Rei Troll** (1.167.0, pelo id do guardião) e a **Aranha gigante** (1.167.0, pela família, com as invocadas; a
+  Rainha Aracnídea fora). O Bandido do chapéu está reservado como conceito de um possível chefe, fora do jogo.
 - **Agora: 1E.3, as demais criaturas, os chefes e as invocações** (as outras ainda saem dos traços: o `fera`, o
   `humano`, a caveira e os outros sprites de 16×16; o levantamento em `ferramentas/prototipos/hud/criaturas/`).
   **Depois: 1E.4**, os caminhos e os símbolos internos do mapa e do minimapa. Em seguida, as **etapas 2–9** como estão
@@ -949,7 +950,9 @@ caveira e a Aranha no protótipo.
 **Propostas (21/10/2026):** o Rei Troll a partir do Troll 2 (a coroa de sucata, não escolhida; a coroa dourada pela
 referência gerada, `rei-troll-ouro`, sem mexer no rosto) e a Aranha 2B (as quelíceras e as presas reconstruídas, os
 olhos pequenos); as folhas `rei-aranha.png` e `rei-coroa.png`. O ajuste das pontas da coroa (`rei-troll-ouro2`, a
-folha `rei-pontas.png`). Nada aprovado.
+folha `rei-pontas.png`).
+**No jogo desde a 1.167.0:** o Rei Troll (`rei-troll-ouro2`, pelo id do guardião) e a Aranha gigante (`aranha-2b`, pela
+família, com as que a Rainha invoca); a Rainha Aracnídea continua no `fera`.
 
 O atalho **Mapa** da doca já foi concluído; esta frente trata dos símbolos internos de caminhos e mapas.
 Não afirmar que só restam talentos e habilidades após este bloco sem conferir os consumíveis, variantes e
@@ -1096,8 +1099,8 @@ volta à pauta quando essa expansão exigir; não é uma migração de engine.
    o Bandido e os três animais do patrulheiro. As variantes e os compartilhamentos provisórios ficam abertos, separados.
 2. **Agora, 1E.3:** as demais criaturas, os chefes e as invocações, em pares pequenos escolhidos pelo Jean, pelo mesmo
    caminho (o retrato por família, por chave ou pelo tipo, sem trocar o sprite compartilhado). Pendências registradas no
-   levantamento: o rosto de lobo (`fera`) ainda em várias feras, o troll e o Rei Troll na caveira, o `humano` dos chefes e
-   do antagonista, o Lich que troca de desenho na fase 2, os servos invocados. O Bandido do chapéu está reservado.
+   levantamento: o rosto de lobo (`fera`) ainda em várias feras (e na Rainha Aracnídea), o `humano` dos chefes e
+   do antagonista (o troll e o Rei Troll resolvidos na 1.166.0 e na 1.167.0), o Lich que troca de desenho na fase 2, os servos invocados. O Bandido do chapéu está reservado.
 3. **Depois, 1E.4:** os caminhos/destinos e os símbolos internos do mapa e do minimapa.
 4. **Retomar a etapa 2** e **seguir 3–7**, como na sequência abaixo; **etapa 8** com habilidades, talentos, Grimório e
    árvore no mesmo ciclo; **etapa 9**, a campanha; **depois do plano**, a avaliação de refatoração.

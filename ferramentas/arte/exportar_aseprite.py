@@ -90,6 +90,10 @@ DERIVADOS = {
     # 1.166.0: o Troll da montanha (o troll-1 da segunda rodada, de carne, com a guia oculta): a carta e o rastro (32,
     # o 16 ×2) e o Bestiário, o mural e a faixa do mestre caçador (48, o 16 ×3)
     "retrato-troll": {32: (16, 2), 48: (16, 3)},
+    # 1.167.0: o Rei Troll (o rei-troll-ouro2: o Troll 2 com a coroa dourada; só a carta, pelo id do guardião) e a Aranha
+    # gigante (a aranha-2b; a carta, o Bestiário, o mural e o rastro, pela família)
+    "retrato-rei-troll": {32: (16, 2), 48: (16, 3)},
+    "retrato-aranha": {32: (16, 2), 48: (16, 3)},
 }
 # O martelo (1.149.0) só tem fontes do 40 e do 48 (aseprite/martelo/): o 32 e o 64 são a grade de desenhos.js, no
 # jogo, e não saem daqui.

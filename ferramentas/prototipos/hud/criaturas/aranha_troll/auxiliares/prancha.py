@@ -366,9 +366,67 @@ def folha_pontas(ref):
     print("rei-pontas.png", out.size)
 
 
+def folha_final_rei_aranha():
+    """O Rei Troll e a Aranha no jogo (1.167.0, rei-aranha-final.png): os aprovados × os PNGs de produção; o Rei ao lado
+    do Troll comum; a aranha na carta, no Bestiário e no rastro do contrato; a Rainha (no "fera") com as aranhas
+    invocadas. Tudo com os arquivos reais (o modo "final", sem troca)."""
+    f, f2 = ImageFont.truetype("arial.ttf", 15), ImageFont.truetype("arial.ttf", 12)
+    out = Image.new("RGBA", (1800, 1500), CARVAO)
+    d = ImageDraw.Draw(out)
+    d.text((20, 10), "O Rei Troll e a Aranha gigante no jogo (1.167.0): o rei-troll-ouro2 e a aranha-2b, sem retoques",
+           fill=TEXTO, font=f)
+    y = 36
+    for j, (aprovado, arq) in enumerate((("rei-troll-ouro2", "retrato-rei-troll"), ("aranha-2b", "retrato-aranha"))):
+        a, b = imagem(aprovado), Image.open(JOGO / f"{arq}-16.png").convert("RGBA")
+        x = 20 + j * 620
+        d.text((x, y), f"{aprovado} (aprovado) | {arq}-16 (no jogo): {'idênticos' if a.tobytes() == b.tobytes() else 'DIFERENTES'}",
+               fill=TEXTO2, font=f2)
+        out.alpha_composite(grade12(a), (x, y + 18)); out.alpha_composite(grade12(b), (x + 210, y + 18))
+    y += 18 + 192 + 20
+    rei = abre("rei-final-palco.png")
+    d.text((20, y), "o Rei Troll ao lado do Troll comum (a carta a 32 px, tamanho real e 2×)", fill=TEXTO, font=f2)
+    y += 20
+    for k, nome in enumerate(("Rei Troll", "Troll da montanha")):
+        cx = rei.crop(caixa_de("rei", "final", nome))
+        out.alpha_composite(cx, (20 + k * 460, y)); out.alpha_composite(amplia(cx, 2), (20 + k * 460, y + cx.height + 6))
+    y += 3 * 50 + 20
+    d.text((20, y), "a Aranha: a carta (32 px, real e 2×) | o Bestiário (48 px) | o rastro do contrato de caça (32 px, real e 2×)",
+           fill=TEXTO, font=f2)
+    y += 20
+    cx = abre("luta-final-palco.png").crop(caixa_de("luta", "final", "Aranha gigante"))
+    cartao = abre("bestiario-final-pagina.png").crop(caixa_de("bestiario", "final", "Aranha gigante"))
+    rastro = abre("contrato-final-pagina.png").crop((1505, 480, 1800, 610))
+    out.alpha_composite(cx, (20, y)); out.alpha_composite(amplia(cx, 2), (20, y + cx.height + 6))
+    out.alpha_composite(cartao, (470, y)); out.alpha_composite(rastro, (840, y)); out.alpha_composite(amplia(rastro, 2), (1150, y))
+    y += max(3 * 50 + 6, cartao.height, 2 * rastro.height) + 20
+    luta = abre("rainha-final-palco.png").crop((30, 30, 1060, 210))
+    d.text((20, y), "a Rainha Aracnídea (o guardião, continua no \"fera\") com duas aranhas invocadas (o retrato da família) — "
+                    "tamanho real", fill=TEXTO, font=f2)
+    out.alpha_composite(luta, (20, y + 18))
+    y += 18 + luta.height + 16
+    ali = Image.open(PASTA.parent / "capturas/aliados-palco.png").convert("RGBA")
+    linha = [("Morel", ali.crop((46, 176, 84, 214))), ("Odette", ali.crop((46, 234, 84, 272)))] + \
+        [(n.replace("-", " ").capitalize(), caixa(Image.open(JOGO / f"retrato-{n}-16.png").convert("RGBA")))
+         for n in ("afogado", "ilse", "lobo", "bandido", "urso", "falcao", "troll", "rei-troll", "aranha")]
+    d.text((20, y), "a fileira dos retratos do jogo, na caixa da carta — tamanho real e 3×", fill=TEXTO, font=f2)
+    y += 20
+    for j, (_, c2) in enumerate(linha):
+        out.alpha_composite(c2, (20 + j * 46, y))
+    y += 50
+    for j, (rot, c2) in enumerate(linha):
+        out.alpha_composite(amplia(c2, 3), (20 + j * 124, y))
+        d.text((20 + j * 124, y + 118), rot, fill=TEXTO2, font=f2)
+    y += 3 * 38 + 40
+    out = out.crop((0, 0, 1800, y))
+    out.save(PASTA / "rei-aranha-final.png")
+    print("rei-aranha-final.png", out.size)
+
+
 if __name__ == "__main__":
     import sys
-    if sys.argv[1:2] == ["pontas"]:
+    if sys.argv[1:] == ["final"]:
+        folha_final_rei_aranha()
+    elif sys.argv[1:2] == ["pontas"]:
         folha_pontas(sys.argv[2])
     elif sys.argv[1:2] == ["coroa"]:
         folha_coroa(sys.argv[2])
