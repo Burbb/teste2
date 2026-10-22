@@ -60,3 +60,12 @@ e teste visual: nada desenhado para o acampamento, nada integrado.
   `auxiliares/prancha.py`: a folha `levantamento.png` (a fogueira com os três animais em tamanho real e 2×, os
   retratos aprovados, o Atacar das três classes em tamanho real e 4×, sem suavização, e a roda inteira com e sem o arco
   aprovado).
+
+## No jogo desde a 1.169.0: o arco no Atacar do Arqueiro
+
+- **Decisão de Jean:** o teste do arco ficou bom; integrar reutilizando o arquivo existente, com a escolha pela classe
+  (com a Besta também).
+- `rpg/web/static/icones.js`: `ACAO.arco = "arco"` (o `arco-32` do equipamento, sem arquivo novo). O ícone continua
+  vindo de `icone_ataque` da classe; o Tiro Duplo e o contrato de caça continuam com o sprite.
+- Conferido no jogo, com os arquivos reais (`capturas-1169/`, o mesmo `fotografar.mjs`): o Arqueiro com o arco e com a
+  Besta Leve mostram `arco-32` a 32 px; o Guerreiro a espada; o Mago continua com o sprite (o cajado está em teste).

@@ -5620,3 +5620,12 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Achados:** o urso aparece como o lobo (o mesmo `fera`) e o falcão como o morcego (`voador`); o Atacar do Arqueiro e
   o do Mago usam os sprites antigos; com a Besta, o Atacar continua o `arco`.
 - **Continua:** a avaliação do Jean (a proposta dos animais, o arco no Atacar, o cajado do Mago).
+
+### 21/10/2026 (data do computador local) — O arco no Atacar do Arqueiro (1.169.0)
+
+- **Decisão de Jean:** o teste do arco aprovado; integrar com o arquivo existente, preservando a escolha pela classe
+  (com a Besta também).
+- **Feito:** `ACAO.arco` em `icones.js`; conferido no jogo com o arco e com a Besta (`ferramentas/prototipos/hud/
+  acampamento_atacar/capturas-1169/`); a versão 1.169.0.
+- **Continua:** o cajado no Atacar do Mago (teste no protótipo), os animais do acampamento (proposta) e o Grimório na
+  etapa 8.

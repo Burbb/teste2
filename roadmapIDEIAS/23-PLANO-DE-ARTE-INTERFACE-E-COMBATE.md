@@ -13,8 +13,8 @@ Não iniciar todo o plano numa única tarefa. As etapas técnicas A–I e a vali
 
 ## Estado de referência — 21/10/2026
 
-- Produção: **1.168.0** na branch `claude/tender-einstein-tx3tjl` (a Rainha Aracnídea com retrato; antes, o Rei Troll
-  e a Aranha gigante na 1.167.0 e o Troll da montanha na 1.166.0).
+- Produção: **1.169.0** na branch `claude/tender-einstein-tx3tjl` (o arco aprovado no Atacar do Arqueiro; antes, a
+  Rainha Aracnídea com retrato na 1.168.0 e o Rei Troll e a Aranha gigante na 1.167.0).
 - **Etapa 1D concluída:** os **31 equipamentos-base** estão finais desde a 1.150.0, com os acabamentos das luvas L7
   (1.151.0), das perneiras P7 (1.152.0), do capacete C1 (1.153.0) e das botas A1 (1.154.0). **Fora dessa contagem, e
   ainda abertos:** as variantes (os únicos e raros com desenho próprio) e os compartilhamentos provisórios (a Capa de
@@ -976,6 +976,9 @@ aguardam avaliação.
   (`arco-32`) cabe exato no comando e lê melhor que o sprite (teste só na página). Na conferência, o **Atacar do Mago**
   também usa o sprite antigo (`cajado`); a página do ataque básico no Grimório fica com os ícones de habilidade (etapa
   8). Nada desenhado nem integrado.
+- **No jogo desde a 1.169.0:** o arco aprovado (`arco-32`, o arquivo do equipamento) no Atacar do Arqueiro, pelo papel
+  `ACAO` (o ícone continua o da classe: com a Besta, o mesmo arco); o Tiro Duplo e o contrato de caça continuam com o
+  sprite. O cajado do Mago segue em teste no protótipo.
 
 O atalho **Mapa** da doca já foi concluído; esta frente trata dos símbolos internos de caminhos e mapas.
 Não afirmar que só restam talentos e habilidades após este bloco sem conferir os consumíveis, variantes e
