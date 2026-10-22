@@ -331,12 +331,12 @@ def folha_sorriso():
 
 
 def folha_c():
-    """A nova direção (esqueleto-c.png): a referência gerada (reduzida) × A2n × C, na carta (32) e no Bestiário (48) em
+    """A nova direção (esqueleto-c.png): a referência gerada (reduzida) × C (o U claro, não aprovado) × C2 (a boca refeita), na carta (32) e no Bestiário (48) em
     tamanho real, as mesmas caixas a 4× e a 12× com a grade (a referência: a guia de 16), sem suavização."""
     f, f2 = ImageFont.truetype("arial.ttf", 15), ImageFont.truetype("arial.ttf", 12)
     out = Image.new("RGBA", (1000, 900), CARVAO)
     d = ImageDraw.Draw(out)
-    d.text((20, 10), "O Esqueleto C, pela nova referência: referência × A2n (ee82b54a) × C; proposta, nada no jogo", fill=TEXTO, font=f)
+    d.text((20, 10), "O Esqueleto pela nova referência: referência × C (9f0ca087, o sorriso de comercial) × C2 (a boca de caveira); proposta", fill=TEXTO, font=f)
     ref = Image.open(AQUI.parents[5] / "ferramentas/arte/referencias/icones/Caveira esquelética sombria em pixel art.png").convert("RGBA")
     fundo = Image.new("RGBA", ref.size, (13, 11, 10, 255)); fundo.alpha_composite(ref)
 
@@ -344,8 +344,8 @@ def folha_c():
         cx = Image.new("RGBA", (lado + 6, lado + 6), (42, 36, 32, 255)); cx.paste((13, 11, 10, 255), (2, 2, lado + 4, lado + 4))
         cx.alpha_composite(im, (3, 3)); return cx
     colunas = [("referência (reduzida)", lambda lado: fundo.resize((lado, lado), Image.LANCZOS), None),
-               ("A2n", lambda lado: amplia(imagem("esqueleto-a2n"), lado // 16), "esqueleto-a2n"),
-               ("C, a nova direção", lambda lado: amplia(imagem("esqueleto-c"), lado // 16), "esqueleto-c")]
+               ("C (não aprovada)", lambda lado: amplia(imagem("esqueleto-c"), lado // 16), "esqueleto-c"),
+               ("C2, a boca refeita", lambda lado: amplia(imagem("esqueleto-c2"), lado // 16), "esqueleto-c2")]
     y = 40
     for j, (rot, _, _) in enumerate(colunas):
         d.text((20 + j * 320, y), rot, fill=TEXTO2, font=f2)

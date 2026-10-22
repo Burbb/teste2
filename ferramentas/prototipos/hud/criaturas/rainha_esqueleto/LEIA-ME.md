@@ -173,6 +173,24 @@ Cabeças de 16×16 no formato dos retratos de carta aprovados (sem contorno, cor
   e lê a 32 px; limites: os dentes de baixo se juntam ao queixo, e o crânio, mais largo, fica mais pesado na carta que o
   A2n.
 
+### C2: a boca de caveira (21/10/2026, proposta)
+
+- **Jean, sobre a C:** o sorriso ficou de propaganda de TV, não de caveira; pesquisar referências.
+- **A pesquisa** (OpenGameArt, CC0, só para estudar a construção; nada copiado):
+  [pixel art skull](https://opengameart.org/content/pixel-art-skull) (FancySnacks, 16×16) e
+  [Skull Rework](https://opengameart.org/content/skull-rework) (AntumDeluge, com as versões de 9×13 e 10×13). Nas
+  caveiras pequenas, a boca fica fechada: os dentes num **tom médio**, com as costuras escuras, presos entre o maxilar e
+  a mandíbula, que são o osso claro; os cantos se perdem nas cavidades. Na C, o bloco dos dentes era o tom mais claro do
+  rosto dentro de um U escuro: a leitura de dentes brancos num sorriso.
+- **O ajuste** (`esqueleto-c2`, só as linhas 9 a 13; o crânio, as órbitas, o nariz e as maçãs da C iguais; a C
+  preservada): os cantos pretos subindo nas cavidades sob as maçãs; a fileira de cima de uma cavidade à outra, os dentes
+  alternando o claro e o médio; a costura escura com os vãos; os dentes de baixo em tom médio; a mandíbula clara
+  embaixo, envolvendo a boca. Na bancada, as duas fileiras encaixadas (D2) embaralhavam o nariz e a boca, e a fileira
+  curta (D1) ficava contida demais.
+- **Processo:** uma cópia da fonte da C retocada no editor pelo conector (`pintar.lua`; releitura das três camadas, 0
+  diferentes; a guia oculta intacta; o composto 144); a exportação igual à grade, @2x exato, 32 e 48 em blocos inteiros.
+  A folha `esqueleto-c.png` passou a mostrar a referência × C × C2.
+
 ## Avaliação (a minha leitura a 32 px; quem aprova é o Jean)
 
 - **Rainha A (minha preferência):** é claramente a mesma espécie da Aranha gigante, maior e mais pesada; a ampulheta

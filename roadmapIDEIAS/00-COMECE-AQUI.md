@@ -5645,3 +5645,11 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Feito:** `esqueleto-c` (a guia oculta, a fonte pelo conector, a exportação e os derivados conferidos) e a folha
   `esqueleto-c.png`, em `ferramentas/prototipos/hud/criaturas/rainha_esqueleto/`.
 - **Continua:** a avaliação do Jean; nada no jogo.
+
+### 21/10/2026 (data do computador local) — O Esqueleto C2: a boca de caveira, só no protótipo
+
+- **Jean, sobre a C:** sorriso de propaganda de TV, não de caveira; pesquisar referências.
+- **Feito:** pesquisadas as caveiras pequenas do OpenGameArt (CC0; os dentes em tom médio entre o maxilar e a
+  mandíbula claros, os cantos nas cavidades); `esqueleto-c2` com só a boca refeita (a C preservada), retocado pelo
+  conector e conferido; a folha `esqueleto-c.png` com a referência × C × C2.
+- **Continua:** a avaliação do Jean; nada no jogo.

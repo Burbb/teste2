@@ -960,7 +960,8 @@ pela família (o servo aliado do Necromante e os chefes mortos-vivos fora); as f
 invoca continuam com o retrato da Aranha gigante); a folha `rainha-final.png`. O Esqueleto segue no protótipo: o
 A2 (o A desenvolvido pela referência gerada do Jean; a folha `esqueleto-a2.png`) e o A2n (o nariz refeito;
 `esqueleto-a2n.png`, a base aprovada); sobre ele, o sorriso contido e o marcado (S1 e S2, `esqueleto-sorriso.png`),
-não aprovados; o C, a nova direção pela segunda referência gerada (`esqueleto-c.png`), aguarda avaliação.
+não aprovados; o C, a nova direção pela segunda referência gerada, não aprovado (o sorriso de comercial); o C2, com a boca refeita pelas
+caveiras pequenas de referência (`esqueleto-c.png`), aguarda avaliação.
 
 **Pendências registradas (21/10/2026, pedido do Jean; levantamento antes de desenhar):**
 - **A figura do animal no acampamento, por tipo de animal** (o lobo, o urso e o falcão do patrulheiro): conferir se

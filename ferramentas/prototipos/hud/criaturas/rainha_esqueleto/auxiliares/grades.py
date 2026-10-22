@@ -181,6 +181,15 @@ ESQUELETO_C = [
 ]
 
 
+# C2 (21/10/2026, pedido do Jean): a boca da C (o U claro) lia como um sorriso de comercial; refeita pelas caveiras
+# pequenas de referência (OpenGameArt, "pixel art skull" de FancySnacks e "Skull Rework" de AntumDeluge, CC0): os dentes
+# num tom médio com as costuras, presos entre o maxilar e a mandíbula claros, não o tom mais claro do rosto. A fileira
+# de cima vai de uma cavidade à outra (os cantos subindo nelas), a costura escura com os vãos, os dentes de baixo e a
+# mandíbula clara em volta. O crânio, as órbitas, o nariz e as maçãs da C não mudam.
+ESQUELETO_C2 = list(ESQUELETO_C)
+ESQUELETO_C2[9:14] = ["....kDokkmDk....", "....DmOmOmmD....", "....nkDkDkkn....", ".....dmomdD.....", ".....nOOodn....."]
+
+
 def _rainha(patas, marca_ate):
     return lambda x, y, ch: ("olhos" if ch in "Pu" else "marca" if ch in "Gg" and y <= marca_ate else "presas" if ch in "Gg"
                              else "patas" if patas(x, y, ch) else "corpo")
@@ -206,6 +215,8 @@ CAMADAS = {
                      lambda x, y, ch: "cavidades" if ch == "k" else "pescoco" if y >= 13 else "cranio"),
     "esqueleto-c": (ESQUELETO_C, ["pescoco", "cranio", "cavidades"],
                     lambda x, y, ch: "cavidades" if ch == "k" else "pescoco" if y >= 14 else "cranio"),
+    "esqueleto-c2": (ESQUELETO_C2, ["pescoco", "cranio", "cavidades"],
+                     lambda x, y, ch: "cavidades" if ch == "k" else "pescoco" if y >= 14 else "cranio"),
     "esqueleto-b": (ESQUELETO_B, ["pescoco", "cranio", "orbitas"], _esqueleto(lambda x, y: y >= 13 or (y == 12 and x >= 11))),
 }
 
