@@ -13,8 +13,8 @@ Não iniciar todo o plano numa única tarefa. As etapas técnicas A–I e a vali
 
 ## Estado de referência — 21/10/2026
 
-- Produção: **1.172.0** na branch `claude/tender-einstein-tx3tjl` (o Cultista, a Bruxa do pântano e o Rato gigante com
-  retrato, pela família; antes, o Sapo e a Sanguessuga na 1.171.0 e o Lobo Cinzento na fogueira na 1.170.0).
+- Produção: **1.173.0** na branch `claude/tender-einstein-tx3tjl` (o Javali selvagem e o Carniçal com retrato, pela
+  família; antes, o Cultista, a Bruxa do pântano e o Rato gigante na 1.172.0 e o Sapo e a Sanguessuga na 1.171.0).
 - **Etapa 1D concluída:** os **31 equipamentos-base** estão finais desde a 1.150.0, com os acabamentos das luvas L7
   (1.151.0), das perneiras P7 (1.152.0), do capacete C1 (1.153.0) e das botas A1 (1.154.0). **Fora dessa contagem, e
   ainda abertos:** as variantes (os únicos e raros com desenho próprio) e os compartilhamentos provisórios (a Capa de
@@ -1017,7 +1017,9 @@ foi escolhida.
   continuam pelos traços.
 - **A terceira rodada (22/10/2026, propostas; nada no jogo),** em `ferramentas/prototipos/hud/criaturas/terceira_rodada/`:
   o carniçal A3 (a bochecha direita recolhida), o javali A3 (as presas em arco) e o espectro M (o retrato pela
-  referência do manto inflado, a direção corporal escolhida); as folhas de antes × depois. Em avaliação.
+  referência do manto inflado, a direção corporal escolhida); as folhas de antes × depois.
+- **No jogo desde a 1.173.0:** o Javali selvagem A3 e o Carniçal A3, pela família; o esqueleto, o cavaleiro sombrio, o
+  Lich e as outras feras continuam pelos traços. O espectro M não foi escolhido.
 
 O atalho **Mapa** da doca já foi concluído; esta frente trata dos símbolos internos de caminhos e mapas.
 Não afirmar que só restam talentos e habilidades após este bloco sem conferir os consumíveis, variantes e

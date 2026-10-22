@@ -1,0 +1,120 @@
+{
+ "luta/atual": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Carniçal",
+    "caixa": [
+     830,
+     38,
+     1040,
+     88
+    ]
+   },
+   {
+    "nome": "Espectro",
+    "caixa": [
+     830,
+     96,
+     1040,
+     146
+    ]
+   },
+   {
+    "nome": "Javali selvagem",
+    "caixa": [
+     830,
+     154,
+     1040,
+     204
+    ]
+   },
+   {
+    "nome": "Troll da montanha",
+    "caixa": [
+     612,
+     38,
+     822,
+     88
+    ]
+   },
+   {
+    "nome": "Cultista",
+    "caixa": [
+     612,
+     96,
+     822,
+     146
+    ]
+   },
+   {
+    "nome": "Rato gigante",
+    "caixa": [
+     612,
+     154,
+     822,
+     204
+    ]
+   }
+  ]
+ },
+ "bestiario/atual": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Afogado",
+    "caixa": [
+     585,
+     248,
+     935,
+     403
+    ]
+   },
+   {
+    "nome": "Carniçal",
+    "caixa": [
+     945,
+     248,
+     1295,
+     403
+    ]
+   },
+   {
+    "nome": "Espectro",
+    "caixa": [
+     585,
+     413,
+     935,
+     596
+    ]
+   },
+   {
+    "nome": "Javali selvagem",
+    "caixa": [
+     945,
+     413,
+     1295,
+     596
+    ]
+   },
+   {
+    "nome": "Rato gigante",
+    "caixa": [
+     585,
+     606,
+     935,
+     793
+    ]
+   },
+   {
+    "nome": "Troll da montanha",
+    "caixa": [
+     945,
+     606,
+     1295,
+     793
+    ]
+   }
+  ]
+ }
+}

@@ -21,7 +21,7 @@ class TestRetratos(unittest.TestCase):
         self.assertEqual(retrato(FAMILIAS["lobo"]["tracos"], "lobo"), "lobo")
         self.assertEqual(retrato(FAMILIAS["bandido"]["tracos"], "bandido"), "bandido")
         # as outras feras e os outros humanos continuam no desenho do traço
-        for fam, tr in (("lobo_gelido", "fera"), ("javali", "fera"), ("mercenario", "humano")):
+        for fam, tr in (("lobo_gelido", "fera"), ("mercenario", "humano")):
             self.assertEqual(retrato(FAMILIAS[fam]["tracos"], fam), tr, fam)
 
     def test_sapo_e_sanguessuga_pela_familia(self):
@@ -30,8 +30,7 @@ class TestRetratos(unittest.TestCase):
         self.assertEqual(retrato(FAMILIAS["sapo"]["tracos"], "sapo"), "sapo")
         self.assertEqual(retrato(FAMILIAS["sanguessuga"]["tracos"], "sanguessuga"), "sanguessuga")
         self.assertEqual(retrato(["fera"], "guardiao", "guardiao:3", "hidra_do_brejo"), "fera")
-        for fam in ("javali", "lobo_gelido"):
-            self.assertEqual(retrato(FAMILIAS[fam]["tracos"], fam), "fera", fam)
+        self.assertEqual(retrato(FAMILIAS["lobo_gelido"]["tracos"], "lobo_gelido"), "fera")
 
     def test_cultista_bruxa_e_rato_pela_familia(self):
         # 1.172.0: pela família (o cultista também nos fiéis do Profeta e nos da sacristia, que são cultistas); o Profeta
@@ -40,6 +39,13 @@ class TestRetratos(unittest.TestCase):
         self.assertEqual(retrato(FAMILIAS["bruxa_brejo"]["tracos"], "bruxa_brejo"), "bruxa")
         self.assertEqual(retrato(FAMILIAS["rato"]["tracos"], "rato"), "rato")
         self.assertEqual(retrato(["humano", "conjurador"], "guardiao", "guardiao:4", "profeta_das_cinzas"), "humano")
+
+    def test_javali_e_carnical_pela_familia(self):
+        # 1.173.0: pela família; o esqueleto, o cavaleiro sombrio e o Lich (mortos-vivos) continuam na caveira
+        self.assertEqual(retrato(FAMILIAS["javali"]["tracos"], "javali"), "javali")
+        self.assertEqual(retrato(FAMILIAS["carnical"]["tracos"], "carnical"), "carnical")
+        for fam in ("esqueleto", "cavaleiro_sombrio"):
+            self.assertEqual(retrato(FAMILIAS[fam]["tracos"], fam), "caveira", fam)
 
     def test_troll_pela_familia_e_o_rei_pelo_guardiao(self):
         # o troll da montanha pela família (1.166.0); o Rei Troll pelo id do guardião (1.167.0), em qualquer lugar

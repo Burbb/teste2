@@ -127,6 +127,8 @@ A escolha do par e da direção é do Jean; nada foi começado.
   retoques): pela família; a Hidra do Brejo e as outras feras continuam pelos traços.
 - **1.172.0: o Cultista, a Bruxa do pântano e o Rato gigante** (o `cultista-a` de `quatro_pares/`, a `bruxa-b3` e o
   `rato-r2` de `segunda_rodada/`, sem retoques): pela família; o Profeta e as outras feras continuam pelos traços.
+- **1.173.0: o Javali selvagem e o Carniçal** (o `javali-a3` e o `carnical-a3` de `terceira_rodada/`, sem retoques):
+  pela família; os outros mortos-vivos e as outras feras continuam pelos traços.
 
 ## Em proposta
 

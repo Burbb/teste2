@@ -36,3 +36,13 @@ ombros. Uma proposta de cada.
 - As folhas: `carnical.png`, `javali.png`, `espectro.png` (`python auxiliares/prancha.py`).
 
 Nada integrado. O Esqueleto E1r, o urso e o falcão do acampamento, o cajado e as propostas anteriores ficam como estão.
+
+## No jogo desde a 1.173.0: o javali A3 e o carniçal A3
+
+- **Decisão de Jean:** o Javali A3 e o Carniçal A3, sem retoques; o espectro M não foi escolhido.
+- As fontes conferidas iguais às do commit da proposta e levadas para `ferramentas/arte/aseprite/retrato-javali/` e
+  `retrato-carnical/`; os doze PNGs idênticos byte a byte; `--conferir` igual ao jogo.
+- No motor, `RETRATO_FAMILIA` ganhou `javali` e `carnical`; em `icones.js`, o papel `CRIATURA` e os tamanhos;
+  `tests/test_retratos.py` confere as famílias e o esqueleto e o cavaleiro na caveira. O gabarito mudou de propósito só
+  no valor do retrato dos inimigos nas transcrições -web.
+- Conferido nos usos reais com os arquivos do jogo (`capturas-1173/`): a luta e o Bestiário, sem erro no console.
