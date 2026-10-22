@@ -135,7 +135,8 @@ A escolha do par e da direção é do Jean; nada foi começado.
 - **A Rainha Aracnídea e o Esqueleto** (`rainha_esqueleto/`, 21/10/2026): duas propostas de cada (a Rainha de frente e
   descendo pelo fio; o Esqueleto de frente e em três quartos), com o alcance previsto e os papéis do esqueleto
   separados (o inimigo, os invocados pelo Lich, o servo aliado, os chefes). A Rainha A entrou na 1.168.0; o Esqueleto
-  continua em proposta: o A2 (o A desenvolvido pela referência gerada, `esqueleto-a2.png`) aguarda o Jean.
+  continua em proposta: o A2 (o A desenvolvido pela referência gerada, `esqueleto-a2.png`) e o A2n (o mesmo com o nariz refeito,
+  `esqueleto-a2n.png`) aguardam o Jean.
 
 ## Reservado
 

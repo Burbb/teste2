@@ -106,6 +106,24 @@ Cabeças de 16×16 no formato dos retratos de carta aprovados (sem contorno, cor
 - **Continua fora do jogo:** o Esqueleto segue na caveira; o servo aliado do Necromante, o Lich e os outros
   mortos-vivos não mudam.
 
+### O nariz refeito: A2n (21/10/2026, proposta)
+
+- **Pedido de Jean:** no A2 a cavidade nasal ficou um risco estreito e comprido; refazer só essa região, com a abertura
+  compacta e mais ou menos triangular da referência, separada das órbitas e da boca, sem parecer um nariz saliente; a
+  ponte, as maçãs, o crânio, as órbitas, a mandíbula, o pescoço, as clavículas e a paleta como estão.
+- **O ajuste** (`esqueleto-a2n`, seis pixels nas linhas 8 e 9; o A2 continua como estava): o preto do alto à direita,
+  que encostava na diagonal da órbita direita, virou sombra (D); a base tem dois pretos; as paredes, n à esquerda e D à
+  direita; o osso dos dois lados no alto ficou claro (O, o), separando a abertura das órbitas; a maçã esquerda (O)
+  passou da coluna 6 para a 5. Julgado a 32 px na carta e depois a 48 no Bestiário: lê como a abertura de um crânio,
+  compacta e mais larga embaixo, com a fileira dos dentes entre ela e a boca. Nas variantes descartadas, o topo preto
+  virava um buraco grande (V2) ou uma mancha sem forma (V3).
+- **Processo:** uma cópia da fonte do A2 em `fontes/esqueleto-a2n/`, retocada no editor pelo conector (`pintar.lua`:
+  o pixel tirado das cavidades e os seis do crânio; releitura das três camadas contra a grade, 0 diferentes; a guia
+  oculta intacta; o composto 122); a exportação conferida (igual à grade, @2x exato, 32 e 48 em blocos inteiros); o A2
+  reexportado saiu idêntico ao do commit.
+- A folha `esqueleto-a2n.png` (`python auxiliares/prancha.py esqueleto-a2n`): a referência × A2 × A2n na carta e no
+  Bestiário em tamanho real, a 4× e a 12×, sem suavização. Sem novas fotos de luta (só a cabeça mudou).
+
 ## Avaliação (a minha leitura a 32 px; quem aprova é o Jean)
 
 - **Rainha A (minha preferência):** é claramente a mesma espécie da Aranha gigante, maior e mais pesada; a ampulheta

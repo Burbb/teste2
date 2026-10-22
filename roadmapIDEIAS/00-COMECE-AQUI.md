@@ -5589,3 +5589,13 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   pelo Jean.
 - **Continua:** a avaliação do A2 pelo Jean; a versão continua 1.168.0; o servo aliado, o Lich e os outros
   mortos-vivos fora.
+
+### 21/10/2026 (data do computador local) — O nariz do Esqueleto A2 (A2n), só no protótipo
+
+- **Pedido de Jean:** a cavidade nasal do A2 (`2d7cacb3`) virou um risco estreito; refazer só essa região, compacta e
+  mais ou menos triangular como na referência, separada das órbitas e da boca.
+- **Feito:** `esqueleto-a2n` (seis pixels nas linhas 8 e 9, retocados na cópia da fonte pelo conector; releitura,
+  exportação e ampliações conferidas; o A2 intacto) e a folha compacta `esqueleto-a2n.png`, em
+  `ferramentas/prototipos/hud/criaturas/rainha_esqueleto/`.
+- **Continua:** a avaliação do Jean; nada no jogo (a versão continua 1.168.0; a Rainha integrada, os outros retratos
+  intactos).

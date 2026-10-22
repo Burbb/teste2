@@ -127,6 +127,15 @@ ESQUELETO_A2 = [
 ]
 
 
+# A2n (21/10/2026, pedido do Jean): o A2 com a cavidade nasal refeita (nas linhas 8 e 9; o resto igual). No A2 o nariz
+# era um risco diagonal ligado à órbita direita; aqui é a abertura compacta da referência, mais larga embaixo: o topo
+# em tom médio (n, D), a base preta, as paredes em sombra (n à esquerda, D à direita) e o osso claro dos dois lados no
+# alto, separando-a das órbitas; a maçã esquerda (O) passa para a coluna 5.
+ESQUELETO_A2N = list(ESQUELETO_A2)
+ESQUELETO_A2N[8] = "....oOOnDodd...."
+ESQUELETO_A2N[9] = "....oOnkkDnn...."
+
+
 def _rainha(patas, marca_ate):
     return lambda x, y, ch: ("olhos" if ch in "Pu" else "marca" if ch in "Gg" and y <= marca_ate else "presas" if ch in "Gg"
                              else "patas" if patas(x, y, ch) else "corpo")
@@ -144,6 +153,8 @@ CAMADAS = {
     "esqueleto-a": (ESQUELETO_A, ["pescoco", "cranio", "orbitas"], _esqueleto(lambda x, y: y >= 14)),
     "esqueleto-a2": (ESQUELETO_A2, ["pescoco", "cranio", "cavidades"],
                      lambda x, y, ch: "cavidades" if ch == "k" else "pescoco" if y >= 13 else "cranio"),
+    "esqueleto-a2n": (ESQUELETO_A2N, ["pescoco", "cranio", "cavidades"],
+                      lambda x, y, ch: "cavidades" if ch == "k" else "pescoco" if y >= 13 else "cranio"),
     "esqueleto-b": (ESQUELETO_B, ["pescoco", "cranio", "orbitas"], _esqueleto(lambda x, y: y >= 13 or (y == 12 and x >= 11))),
 }
 

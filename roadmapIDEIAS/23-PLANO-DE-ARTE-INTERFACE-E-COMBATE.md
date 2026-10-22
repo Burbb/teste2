@@ -958,7 +958,8 @@ família, com as que a Rainha invoca); a Rainha Aracnídea continua no `fera`.
 pela família (o servo aliado do Necromante e os chefes mortos-vivos fora); as folhas `rainha.png` e `esqueleto.png`.
 **No jogo desde a 1.168.0:** a Rainha Aracnídea (`rainha-a`, sem retoques, pelo id da guardiã; as aranhas que ela
 invoca continuam com o retrato da Aranha gigante); a folha `rainha-final.png`. O Esqueleto segue no protótipo: o
-A2 (o A desenvolvido pela referência gerada do Jean; a folha `esqueleto-a2.png`) aguarda avaliação.
+A2 (o A desenvolvido pela referência gerada do Jean; a folha `esqueleto-a2.png`) e o A2n (o nariz refeito;
+`esqueleto-a2n.png`) aguardam avaliação.
 
 O atalho **Mapa** da doca já foi concluído; esta frente trata dos símbolos internos de caminhos e mapas.
 Não afirmar que só restam talentos e habilidades após este bloco sem conferir os consumíveis, variantes e
