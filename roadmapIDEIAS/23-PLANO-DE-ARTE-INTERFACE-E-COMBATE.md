@@ -1051,9 +1051,10 @@ do catálogo):**
   aprovado no Atacar do Mago (1.177.0).
 - **Fora das criaturas, na 1.180.0:** o ícone do **Esgotado** do mercado (o caixote, papel próprio `MOTIVO`; o cesto
   guardado como não escolhido; o cadeado continua nos outros motivos e usos).
-- **Propostas aguardando o Jean (22/10/2026, na 1.184.0; nenhuma autorizada):** o **Cão infernal** (A, o que rosna de
-  perfil; B, o mastim de cabeça baixa) e a **Cria do Vazio** (A, o caco da Fenda; B, a fera que anda), em
-  `criaturas/fenda/` (as folhas `cao.png` e `cria.png`; a minha preferência, o A e a A). A cria que o antagonista
+- **Propostas aguardando o Jean (22/10/2026, na 1.184.0; nenhuma autorizada):** a **Cria do Vazio A2** (a A, a direção
+  escolhida, com volume nos cacos; a A continua disponível) e o **Cão infernal T** (a transposição da referência gerada
+  `Cão infernal em pixel art.png`), em `criaturas/fenda/` (as folhas `cria-a2.png` e `cao-t.png`). Não escolhidos: o
+  Cão A e B, a Cria B. A cria que o antagonista
   invoca é da família `cria_vazio` e usará o mesmo retrato. Histórico, não escolhidos: as Harpias HA, HB, H1 a H3 e a
   T, o GB, o GA e o GA2 (`criaturas/harpia_grifo/`, `criaturas/rodada_23_10/`), o CB, o XA e o XB
   (`criaturas/caidos/`), os Xamãs X1, X2, X3 e o X1r. Uso previsto de cada um: pela própria família (a carta, o
@@ -1233,8 +1234,8 @@ volta à pauta quando essa expansão exigir; não é uma migração de engine.
 2. **Agora, 1E.3:** as demais criaturas, os chefes e as invocações, em pares pequenos escolhidos pelo Jean, pelo mesmo
    caminho (o retrato por família, por chave ou pelo tipo, sem trocar o sprite compartilhado). O Mercenário, o Lobo
    Gélido e o Esgotado integrados (1.179.0, 1.180.0); o Caído CA (1.182.0); o Grifo GA3 (1.183.0); a Harpia T2 e o Xamã
-   Caído X1r2 (1.184.0). **Aguardando o Jean:** o Cão infernal (A, B) e a Cria do Vazio (A, B)
-   (`criaturas/fenda/`); depois, os
+   Caído X1r2 (1.184.0). **Aguardando o Jean:** a Cria do Vazio A2 (× A) e o Cão infernal T
+   (`criaturas/fenda/`, a segunda passada); depois, os
    outros comuns e os chefes, sem começar antes do pedido. A relação em "A frente de criaturas em 22/10/2026" (item 1.12). O Esqueleto E2 e o Bandido do
    chapéu estão reservados.
 3. **Depois, 1E.4:** os caminhos/destinos e os símbolos internos do mapa e do minimapa.

@@ -5996,3 +5996,15 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   igual à grade, @2x exato, 32 e 48 em blocos inteiros. Fotos a 1920×945 nos modos atual, a e b (inclusive as crias
   invocadas pelo antagonista, num cenário só do protótipo), sem erro no console.
 - **Continua:** a escolha do Jean; outras criaturas, chefes e o mapa não foram começados.
+
+### 22/10/2026 (data do computador local) — A Cria A2 e o Cão T (nada no jogo)
+
+- **Estado conferido:** a branch em `b3780adf`; a única alteração local era a referência nova do Cão, sem rastreio
+  (agora registrada no LEIA-ME das referências). Produção na 1.184.0.
+- **No protótipo, aguardando o Jean (`criaturas/fenda/`, a segunda seção do LEIA-ME):** a **Cria A2** (a A com um plano
+  de luz em cada caco e o escuro fundo junto da fissura) e o **Cão T** (a transposição da referência gerada pela guia
+  proporcional oculta). As folhas `cria-a2.png` e `cao-t.png`. Minha leitura: a A2 ganha volume sem perder o ar
+  etéreo; o T lê bem a 48, mas a 32 fica pesado e o "cão" depende do nariz e da boca.
+- **Processo:** fontes pelo conector do Aseprite (0 diferentes; o composto = as camadas visíveis; a guia oculta);
+  exportação igual à grade, @2x exato, 32 e 48 em blocos inteiros; fotos no modo `c`, sem erro no console.
+- **Continua:** a escolha do Jean; outras criaturas, chefes e o mapa não foram começados.
