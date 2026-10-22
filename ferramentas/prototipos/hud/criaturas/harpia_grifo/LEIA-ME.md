@@ -63,3 +63,9 @@ e no Bestiário com os mesmos dados, a Harpia e o Grifo junto do Falcão Peregri
   página pelo nome; sem erro no console (`capturas/registro.json`).
 - As folhas `harpia.png` e `grifo.png` (`python auxiliares/prancha.py`).
 - **Anotado, sem mexer:** na luta, "Falcão Peregrino rosna ao seu lado." (o verbo do lobo para o falcão).
+
+## Depois da avaliação (23/10/2026)
+
+- **A HA e a HB não foram escolhidas e ficam como histórico** (a HA parecia uma máscara sorridente numa mulher
+  fantasiada; a asa da HB, uma peça rígida atrás da cabeça). Três Harpias novas, do zero, em `../rodada_23_10/`.
+- **O GA agradou**; a limpeza da ponta do bico (o GA2) está em `../rodada_23_10/`, aguardando a avaliação.

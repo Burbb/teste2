@@ -1,0 +1,547 @@
+{
+ "luta/atual": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Harpia",
+    "caixa": [
+     830,
+     38,
+     1040,
+     88
+    ]
+   },
+   {
+    "nome": "Grifo",
+    "caixa": [
+     830,
+     96,
+     1040,
+     146
+    ]
+   },
+   {
+    "nome": "Caído",
+    "caixa": [
+     830,
+     154,
+     1040,
+     204
+    ]
+   },
+   {
+    "nome": "Caído",
+    "caixa": [
+     612,
+     38,
+     822,
+     88
+    ]
+   },
+   {
+    "nome": "Xamã caído",
+    "caixa": [
+     612,
+     96,
+     822,
+     146
+    ]
+   }
+  ]
+ },
+ "luta/antes": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Harpia",
+    "caixa": [
+     830,
+     38,
+     1040,
+     88
+    ]
+   },
+   {
+    "nome": "Grifo",
+    "caixa": [
+     830,
+     96,
+     1040,
+     146
+    ]
+   },
+   {
+    "nome": "Caído",
+    "caixa": [
+     830,
+     154,
+     1040,
+     204
+    ]
+   },
+   {
+    "nome": "Caído",
+    "caixa": [
+     612,
+     38,
+     822,
+     88
+    ]
+   },
+   {
+    "nome": "Xamã caído",
+    "caixa": [
+     612,
+     96,
+     822,
+     146
+    ]
+   }
+  ]
+ },
+ "luta/a": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Harpia",
+    "caixa": [
+     830,
+     38,
+     1040,
+     88
+    ]
+   },
+   {
+    "nome": "Grifo",
+    "caixa": [
+     830,
+     96,
+     1040,
+     146
+    ]
+   },
+   {
+    "nome": "Caído",
+    "caixa": [
+     830,
+     154,
+     1040,
+     204
+    ]
+   },
+   {
+    "nome": "Caído",
+    "caixa": [
+     612,
+     38,
+     822,
+     88
+    ]
+   },
+   {
+    "nome": "Xamã caído",
+    "caixa": [
+     612,
+     96,
+     822,
+     146
+    ]
+   }
+  ]
+ },
+ "luta/b": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Harpia",
+    "caixa": [
+     830,
+     38,
+     1040,
+     88
+    ]
+   },
+   {
+    "nome": "Grifo",
+    "caixa": [
+     830,
+     96,
+     1040,
+     146
+    ]
+   },
+   {
+    "nome": "Caído",
+    "caixa": [
+     830,
+     154,
+     1040,
+     204
+    ]
+   },
+   {
+    "nome": "Caído",
+    "caixa": [
+     612,
+     38,
+     822,
+     88
+    ]
+   },
+   {
+    "nome": "Xamã caído",
+    "caixa": [
+     612,
+     96,
+     822,
+     146
+    ]
+   }
+  ]
+ },
+ "luta/c": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Harpia",
+    "caixa": [
+     830,
+     38,
+     1040,
+     88
+    ]
+   },
+   {
+    "nome": "Grifo",
+    "caixa": [
+     830,
+     96,
+     1040,
+     146
+    ]
+   },
+   {
+    "nome": "Caído",
+    "caixa": [
+     830,
+     154,
+     1040,
+     204
+    ]
+   },
+   {
+    "nome": "Caído",
+    "caixa": [
+     612,
+     38,
+     822,
+     88
+    ]
+   },
+   {
+    "nome": "Xamã caído",
+    "caixa": [
+     612,
+     96,
+     822,
+     146
+    ]
+   }
+  ]
+ },
+ "bestiario/atual": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Bruxa do pântano",
+    "caixa": [
+     585,
+     248,
+     935,
+     403
+    ]
+   },
+   {
+    "nome": "Caído",
+    "caixa": [
+     945,
+     248,
+     1295,
+     403
+    ]
+   },
+   {
+    "nome": "Cultista",
+    "caixa": [
+     585,
+     413,
+     935,
+     568
+    ]
+   },
+   {
+    "nome": "Grifo",
+    "caixa": [
+     945,
+     413,
+     1295,
+     568
+    ]
+   },
+   {
+    "nome": "Harpia",
+    "caixa": [
+     585,
+     578,
+     935,
+     733
+    ]
+   },
+   {
+    "nome": "Xamã caído",
+    "caixa": [
+     945,
+     578,
+     1295,
+     733
+    ]
+   }
+  ]
+ },
+ "bestiario/antes": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Bruxa do pântano",
+    "caixa": [
+     585,
+     248,
+     935,
+     403
+    ]
+   },
+   {
+    "nome": "Caído",
+    "caixa": [
+     945,
+     248,
+     1295,
+     403
+    ]
+   },
+   {
+    "nome": "Cultista",
+    "caixa": [
+     585,
+     413,
+     935,
+     568
+    ]
+   },
+   {
+    "nome": "Grifo",
+    "caixa": [
+     945,
+     413,
+     1295,
+     568
+    ]
+   },
+   {
+    "nome": "Harpia",
+    "caixa": [
+     585,
+     578,
+     935,
+     733
+    ]
+   },
+   {
+    "nome": "Xamã caído",
+    "caixa": [
+     945,
+     578,
+     1295,
+     733
+    ]
+   }
+  ]
+ },
+ "bestiario/a": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Bruxa do pântano",
+    "caixa": [
+     585,
+     248,
+     935,
+     403
+    ]
+   },
+   {
+    "nome": "Caído",
+    "caixa": [
+     945,
+     248,
+     1295,
+     403
+    ]
+   },
+   {
+    "nome": "Cultista",
+    "caixa": [
+     585,
+     413,
+     935,
+     568
+    ]
+   },
+   {
+    "nome": "Grifo",
+    "caixa": [
+     945,
+     413,
+     1295,
+     568
+    ]
+   },
+   {
+    "nome": "Harpia",
+    "caixa": [
+     585,
+     578,
+     935,
+     733
+    ]
+   },
+   {
+    "nome": "Xamã caído",
+    "caixa": [
+     945,
+     578,
+     1295,
+     733
+    ]
+   }
+  ]
+ },
+ "bestiario/b": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Bruxa do pântano",
+    "caixa": [
+     585,
+     248,
+     935,
+     403
+    ]
+   },
+   {
+    "nome": "Caído",
+    "caixa": [
+     945,
+     248,
+     1295,
+     403
+    ]
+   },
+   {
+    "nome": "Cultista",
+    "caixa": [
+     585,
+     413,
+     935,
+     568
+    ]
+   },
+   {
+    "nome": "Grifo",
+    "caixa": [
+     945,
+     413,
+     1295,
+     568
+    ]
+   },
+   {
+    "nome": "Harpia",
+    "caixa": [
+     585,
+     578,
+     935,
+     733
+    ]
+   },
+   {
+    "nome": "Xamã caído",
+    "caixa": [
+     945,
+     578,
+     1295,
+     733
+    ]
+   }
+  ]
+ },
+ "bestiario/c": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Bruxa do pântano",
+    "caixa": [
+     585,
+     248,
+     935,
+     403
+    ]
+   },
+   {
+    "nome": "Caído",
+    "caixa": [
+     945,
+     248,
+     1295,
+     403
+    ]
+   },
+   {
+    "nome": "Cultista",
+    "caixa": [
+     585,
+     413,
+     935,
+     568
+    ]
+   },
+   {
+    "nome": "Grifo",
+    "caixa": [
+     945,
+     413,
+     1295,
+     568
+    ]
+   },
+   {
+    "nome": "Harpia",
+    "caixa": [
+     585,
+     578,
+     935,
+     733
+    ]
+   },
+   {
+    "nome": "Xamã caído",
+    "caixa": [
+     945,
+     578,
+     1295,
+     733
+    ]
+   }
+  ]
+ }
+}
