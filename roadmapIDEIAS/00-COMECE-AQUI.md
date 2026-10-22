@@ -5947,3 +5947,19 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   Aseprite, conectou. Fontes pelo conector (`pintar.lua`, 0 diferentes), a exportação igual à grade. Fotos a 1920×945
   no modo `d`, sem erro no console.
 - **Continua:** a escolha do Jean; outras criaturas, chefes e o mapa não foram começados.
+
+### 22/10/2026 (data do computador local) — O Grifo no jogo (1.183.0) e a terceira passada do Xamã e da Harpia
+
+- **Integrado (aprovado pelo Jean, sem retoque):** o Grifo GA3, pela família, também o feroz do ninho; a Harpia e o
+  Dragão de Gelo continuam no `voador`. A fonte em `ferramentas/arte/aseprite/retrato-grifo/` e os seis PNGs
+  idênticos byte a byte à proposta; conferido no jogo na carta, no Bestiário, no cartaz e no rastreador
+  (`criaturas/rodada_23_10/capturas-1183/`), sem pedido a `ferramentas/`. Folha:
+  `ferramentas/prototipos/hud/integracoes-22-10/integracoes-1183.png`. O GA e o GA2 ficam como histórico.
+- **O gabarito** saiu idêntico (nenhuma das 24 partidas encontra um grifo); não foi atualizado.
+- **Verificações sobre o código final:** `unittest` (654; a fumaça pulada no comando), o gabarito, o pyflakes e uma
+  fumaça inteira (378 ok).
+- **No protótipo, aguardando o Jean (`criaturas/rodada_23_10/`, a terceira seção do LEIA-ME):** o **Xamã X1r2** (a
+  pintura branca dos olhos, em diagonal de um lado e reta do outro, agora reta dos dois; dois pixels) e a **Harpia
+  T2** (o olhar severo sem a mancha escura no olho; as penas em três tufos longos). As folhas `xama-x1r2.png` e
+  `harpia-t2.png`.
+- **Continua:** a avaliação do Xamã e da Harpia; outras criaturas, chefes e o mapa não foram começados.
