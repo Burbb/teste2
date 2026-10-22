@@ -1052,7 +1052,9 @@ do catálogo):**
   aprovado no Atacar do Mago (1.177.0).
 - **Fora das criaturas, na 1.180.0:** o ícone do **Esgotado** do mercado (o caixote, papel próprio `MOTIVO`; o cesto
   guardado como não escolhido; o cadeado continua nos outros motivos e usos).
-- **Nenhuma proposta aguardando o Jean** (22/10/2026, na 1.186.0). Histórico, não escolhidos, em
+- **Propostas aguardando o Jean (22/10/2026, na 1.186.0; nenhuma autorizada):** a **Abominação** (A, a boca
+  costurada; B, o brutamontes curvado) e o **Cavaleiro Sombrio** (A, o elmo fechado; B, a espada e a crista), em
+  `criaturas/cidadela/` (as folhas `abominacao.png` e `cavaleiro.png`; a minha preferência, a A e o B). Histórico, não escolhidos, em
   `criaturas/fenda/`: o Cão A, B, T, N, N2, RA, RB, RC, RA2, RA3, P2 e P3 (a P1 foi a escolhida), a Cria A e B. A cria que o antagonista
   invoca é da família `cria_vazio` e usará o mesmo retrato. Histórico, não escolhidos: as Harpias HA, HB, H1 a H3 e a
   T, o GB, o GA e o GA2 (`criaturas/harpia_grifo/`, `criaturas/rodada_23_10/`), o CB, o XA e o XB
@@ -1230,9 +1232,9 @@ volta à pauta quando essa expansão exigir; não é uma migração de engine.
 2. **Agora, 1E.3:** as demais criaturas, os chefes e as invocações, em pares pequenos escolhidos pelo Jean, pelo mesmo
    caminho (o retrato por família, por chave ou pelo tipo, sem trocar o sprite compartilhado). O Mercenário, o Lobo
    Gélido e o Esgotado integrados (1.179.0, 1.180.0); o Caído CA (1.182.0); o Grifo GA3 (1.183.0); a Harpia T2 e o Xamã
-   Caído X1r2 (1.184.0); a Cria do Vazio A2 (1.185.0); o Cão infernal P1 (1.186.0). **A seguir, quando o Jean
-   pedir:** a abominação e o cavaleiro sombrio (recomendado); depois, os outros comuns e os chefes, sem começar antes do
-   pedido. A relação em "A frente de criaturas em 22/10/2026" (item 1.12). O Esqueleto E2 e o Bandido do
+   Caído X1r2 (1.184.0); a Cria do Vazio A2 (1.185.0); o Cão infernal P1 (1.186.0). **Aguardando o Jean:** a
+   Abominação (A, B) e o Cavaleiro Sombrio (A, B) (`criaturas/cidadela/`); depois, a Árvore Desperta com o golem de
+   pedra e os chefes, sem começar antes do pedido. A relação em "A frente de criaturas em 22/10/2026" (item 1.12). O Esqueleto E2 e o Bandido do
    chapéu estão reservados.
 3. **Depois, 1E.4:** os caminhos/destinos e os símbolos internos do mapa e do minimapa.
 4. **Retomar a etapa 2** e **seguir 3–7**, como na sequência abaixo; **etapa 8** com habilidades, talentos, Grimório e

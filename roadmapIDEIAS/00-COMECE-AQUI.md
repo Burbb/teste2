@@ -6090,3 +6090,16 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **O gabarito** saiu idêntico (nenhuma partida encontra um cão infernal); não foi atualizado.
 - **Verificações sobre o código final:** `unittest`, o gabarito, o pyflakes e uma fumaça inteira.
 - **Continua:** o próximo par recomendado é a abominação com o cavaleiro sombrio; nada começado antes do pedido.
+
+### 22/10/2026 (data do computador local) — A Abominação e o Cavaleiro Sombrio: duas propostas de cada (nada no jogo)
+
+- **Estado conferido:** a branch em `78398623`, sem alterações locais; produção na 1.186.0.
+- **Levantado antes de desenhar (`ferramentas/prototipos/hud/criaturas/cidadela/LEIA-ME.md`):** os textos, os traços,
+  as habilidades e os encontros das duas; o Cavaleiro também é o Último Guarda antes do antagonista (a mesma família).
+  O que vem do jogo e o que é interpretação estão separados no LEIA-ME.
+- **No protótipo, aguardando o Jean:** a Abominação A (a boca costurada) e B (o brutamontes curvado); o Cavaleiro
+  Sombrio A (o elmo fechado) e B (a espada e a crista). As folhas `abominacao.png` e `cavaleiro.png`. Minha
+  preferência: a A e o B.
+- **Processo:** grades à mão; fontes pelo conector do Aseprite (0 diferentes; o composto = as camadas); a exportação
+  igual à grade, @2x exato, 32 e 48 em blocos inteiros; fotos a 1920×945 nos modos atual, a e b, sem erro no console.
+- **Continua:** a escolha do Jean; outras criaturas, chefes e o mapa não foram começados.
