@@ -1,0 +1,16 @@
+................
+.ab..........ba.
+.deb........bea.
+..debcaccacebc..
+..ddbbhbbhbbbc..
+.cddhbabbabhbaa.
+.cddfgbbbbgfbca.
+.cdddbbhhbbbbca.
+.cddbhchhchbbca.
+..cdhhhgghhhca..
+..cdrmtmmtmrca..
+..cdbtmmmmtbca..
+...cdbhhhhbca...
+....ccbhbbcca...
+....cdhbbccaac..
+...cdbbhccccaaac

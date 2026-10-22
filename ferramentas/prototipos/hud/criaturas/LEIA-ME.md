@@ -171,3 +171,11 @@ A escolha do par e da direção é do Jean; nada foi começado.
   referência `Espectro do Manto Inflado.png`). Integrados na 1.172.0: o cultista A, a bruxa B3 e o rato r2.
 - **O espectro AP (22/10/2026, em avaliação):** `terceira_rodada/` (`espectro-ap`): o A com o pano até a borda de baixo.
   Integrados na 1.173.0: o javali A3 e o carniçal A3.
+
+## A tarde de 22/10/2026
+
+- **Integrados, sem retoque:** o Esqueleto E1r pela família, com os invocados do Lich (1.175.0, `esqueleto_novo/`); o
+  urso r4 e o falcão na fogueira, pelo tipo (1.176.0, `../acampamento_atacar/`); o cajado no Atacar do Mago (1.177.0).
+- **Em avaliação:** o Mercenário (MA, o chapéu de ferro; MB, a coifa de malha) e o Lobo Gélido (LA, o lobo da geada;
+  LB, o lobo da nevasca), em `mercenario_lobo_gelido/` (as folhas `mercenario.png` e `lobo_gelido.png`).
+- **Conceitos reservados:** o Esqueleto E2 e o Bandido do chapéu, como antes.

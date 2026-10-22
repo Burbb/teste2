@@ -1,0 +1,356 @@
+{
+ "luta/atual": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Mercenário",
+    "caixa": [
+     830,
+     38,
+     1040,
+     88
+    ]
+   },
+   {
+    "nome": "Lobo gélido",
+    "caixa": [
+     830,
+     96,
+     1040,
+     146
+    ]
+   },
+   {
+    "nome": "Lobo",
+    "caixa": [
+     830,
+     154,
+     1040,
+     204
+    ]
+   },
+   {
+    "nome": "Bandido",
+    "caixa": [
+     612,
+     38,
+     822,
+     88
+    ]
+   },
+   {
+    "nome": "Cultista",
+    "caixa": [
+     612,
+     96,
+     822,
+     146
+    ]
+   },
+   {
+    "nome": "Esqueleto",
+    "caixa": [
+     612,
+     154,
+     822,
+     204
+    ]
+   }
+  ]
+ },
+ "luta/a": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Mercenário",
+    "caixa": [
+     830,
+     38,
+     1040,
+     88
+    ]
+   },
+   {
+    "nome": "Lobo gélido",
+    "caixa": [
+     830,
+     96,
+     1040,
+     146
+    ]
+   },
+   {
+    "nome": "Lobo",
+    "caixa": [
+     830,
+     154,
+     1040,
+     204
+    ]
+   },
+   {
+    "nome": "Bandido",
+    "caixa": [
+     612,
+     38,
+     822,
+     88
+    ]
+   },
+   {
+    "nome": "Cultista",
+    "caixa": [
+     612,
+     96,
+     822,
+     146
+    ]
+   },
+   {
+    "nome": "Esqueleto",
+    "caixa": [
+     612,
+     154,
+     822,
+     204
+    ]
+   }
+  ]
+ },
+ "luta/b": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Mercenário",
+    "caixa": [
+     830,
+     38,
+     1040,
+     88
+    ]
+   },
+   {
+    "nome": "Lobo gélido",
+    "caixa": [
+     830,
+     96,
+     1040,
+     146
+    ]
+   },
+   {
+    "nome": "Lobo",
+    "caixa": [
+     830,
+     154,
+     1040,
+     204
+    ]
+   },
+   {
+    "nome": "Bandido",
+    "caixa": [
+     612,
+     38,
+     822,
+     88
+    ]
+   },
+   {
+    "nome": "Cultista",
+    "caixa": [
+     612,
+     96,
+     822,
+     146
+    ]
+   },
+   {
+    "nome": "Esqueleto",
+    "caixa": [
+     612,
+     154,
+     822,
+     204
+    ]
+   }
+  ]
+ },
+ "bestiario/atual": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Bandido",
+    "caixa": [
+     585,
+     248,
+     935,
+     403
+    ]
+   },
+   {
+    "nome": "Cultista",
+    "caixa": [
+     945,
+     248,
+     1295,
+     403
+    ]
+   },
+   {
+    "nome": "Esqueleto",
+    "caixa": [
+     585,
+     413,
+     935,
+     568
+    ]
+   },
+   {
+    "nome": "Lobo",
+    "caixa": [
+     945,
+     413,
+     1295,
+     568
+    ]
+   },
+   {
+    "nome": "Lobo gélido",
+    "caixa": [
+     585,
+     578,
+     935,
+     767
+    ]
+   },
+   {
+    "nome": "Mercenário",
+    "caixa": [
+     945,
+     578,
+     1295,
+     767
+    ]
+   }
+  ]
+ },
+ "bestiario/a": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Bandido",
+    "caixa": [
+     585,
+     248,
+     935,
+     403
+    ]
+   },
+   {
+    "nome": "Cultista",
+    "caixa": [
+     945,
+     248,
+     1295,
+     403
+    ]
+   },
+   {
+    "nome": "Esqueleto",
+    "caixa": [
+     585,
+     413,
+     935,
+     568
+    ]
+   },
+   {
+    "nome": "Lobo",
+    "caixa": [
+     945,
+     413,
+     1295,
+     568
+    ]
+   },
+   {
+    "nome": "Lobo gélido",
+    "caixa": [
+     585,
+     578,
+     935,
+     767
+    ]
+   },
+   {
+    "nome": "Mercenário",
+    "caixa": [
+     945,
+     578,
+     1295,
+     767
+    ]
+   }
+  ]
+ },
+ "bestiario/b": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Bandido",
+    "caixa": [
+     585,
+     248,
+     935,
+     403
+    ]
+   },
+   {
+    "nome": "Cultista",
+    "caixa": [
+     945,
+     248,
+     1295,
+     403
+    ]
+   },
+   {
+    "nome": "Esqueleto",
+    "caixa": [
+     585,
+     413,
+     935,
+     568
+    ]
+   },
+   {
+    "nome": "Lobo",
+    "caixa": [
+     945,
+     413,
+     1295,
+     568
+    ]
+   },
+   {
+    "nome": "Lobo gélido",
+    "caixa": [
+     585,
+     578,
+     935,
+     767
+    ]
+   },
+   {
+    "nome": "Mercenário",
+    "caixa": [
+     945,
+     578,
+     1295,
+     767
+    ]
+   }
+  ]
+ }
+}
