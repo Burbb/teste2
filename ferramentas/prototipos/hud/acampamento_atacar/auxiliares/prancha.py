@@ -4,6 +4,7 @@ como está, com o arco aprovado trocado só na página e com a Besta equipada; o
 4×, sem suavização; os retratos aprovados dos três animais, para a identidade.
     python auxiliares/prancha.py            # levantamento.png
     python auxiliares/prancha.py animais    # animais-cajado.png
+    python auxiliares/prancha.py rodada2    # rodada2.png
 """
 import json
 import pathlib
@@ -106,9 +107,53 @@ def folha_animais():
     print("animais-cajado.png", out.size)
 
 
+def folha_rodada2():
+    """A segunda rodada (rodada2.png): antes × depois do Esqueleto E1 (o elmo limpo; a carta e o Bestiário em tamanho
+    real, a 4× e a 12×) e do lobo e do urso na fogueira (o recorte em tamanho real e a 2×, ao lado do arqueiro sentado,
+    e a figura a 8×). Sem suavização."""
+    import grades as gr
+    esq = AQUI.parents[1] / "criaturas/esqueleto_novo/proposta"
+    f, f2 = ImageFont.truetype("arial.ttf", 15), ImageFont.truetype("arial.ttf", 12)
+    out = Image.new("RGBA", (1500, 1500), CARVAO)
+    d = ImageDraw.Draw(out)
+    d.text((20, 10), "Antes × depois (proposta; nada no jogo): o Esqueleto E1 e o lobo e o urso do acampamento", fill=TEXTO, font=f)
+
+    def nicho(im16, lado):
+        cx = Image.new("RGBA", (lado + 6, lado + 6), (42, 36, 32, 255)); cx.paste((13, 11, 10, 255), (2, 2, lado + 4, lado + 4))
+        cx.alpha_composite(amplia(im16, lado // 16), (3, 3)); return cx
+    y = 38
+    d.text((20, y), "E1 (o guarda morto) × E1r (a ponta direita da aba limpa: o pixel da coluna 14 sai) — 32 e 48 em tamanho real, "
+                    "a 4× e a 12×", fill=TEXTO2, font=f2)
+    y += 18
+    for j, n in enumerate(("esqueleto-e1", "esqueleto-e1r")):
+        im = Image.open(esq / f"{n}-16.png").convert("RGBA")
+        x = 20 + j * 600
+        out.alpha_composite(nicho(im, 32), (x, y)); out.alpha_composite(nicho(im, 48), (x + 44, y))
+        out.alpha_composite(amplia(nicho(im, 48), 4), (x, y + 60))
+        g = Image.new("RGBA", (16, 16), (24, 21, 19, 255)); g.alpha_composite(im)
+        out.alpha_composite(amplia(g, 12), (x + 230, y + 60))
+    y += 60 + 216 + 20
+    for t, nome in (("lobo", "Lobo Cinzento"), ("urso", "Urso Pardo")):
+        d.text((20, y), f"{nome} — na fogueira: a primeira rodada | a segunda (tamanho real), a segunda a 2× | as figuras a 8×: "
+                        "primeira | segunda", fill=TEXTO2, font=f2)
+        antes = Image.open(CAP / f"fogueira-{t}-proposta.png").convert("RGBA").crop((340, 120, 520, 205))
+        depois = Image.open(CAP / f"fogueira-{t}-r2.png").convert("RGBA").crop((340, 120, 520, 205))
+        out.alpha_composite(antes, (20, y + 18)); out.alpha_composite(depois, (210, y + 18))
+        out.alpha_composite(amplia(depois, 2), (400, y + 18))
+        for k, ident in enumerate((f"animal-{t}", f"animal-{t}-r2")):
+            fig = Image.new("RGBA", (16, 16), (24, 21, 19, 255)); fig.alpha_composite(gr.imagem(ident))
+            out.alpha_composite(amplia(fig, 8), (770 + k * 140, y + 18))
+        y += 18 + 170 + 16
+    out = out.crop((0, 0, 1500, y))
+    out.save(PASTA / "rodada2.png")
+    print("rodada2.png", out.size)
+
+
 if __name__ == "__main__":
     import sys
     if sys.argv[1:] == ["animais"]:
         folha_animais()
+    elif sys.argv[1:] == ["rodada2"]:
+        folha_rodada2()
     else:
         folha()

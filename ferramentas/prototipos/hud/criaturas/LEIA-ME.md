@@ -139,9 +139,12 @@ A escolha do par e da direção é do Jean; nada foi começado.
   `esqueleto-a2n.png`, a base aprovada); sobre ele, o sorriso contido (S1) e o marcado (S2),
   `esqueleto-sorriso.png`, não aprovados; o C, a nova direção pela segunda referência gerada, não aprovado (o sorriso de comercial);
   o C2, com a boca de caveira (`esqueleto-c.png`), também não; refeito do zero em
-  `esqueleto_novo/` (E1, o guarda morto; E2, o encapuzado; E3, a caveira nua; `esqueleto-novo.png`), aguarda o Jean.
+  `esqueleto_novo/` (E1, o guarda morto; E2, o encapuzado; E3, a caveira nua; `esqueleto-novo.png`), aguarda o Jean. **Escolhida a E1** (o guarda morto) para o
+  esqueleto básico, com a aba do elmo limpa (`esqueleto-e1r`); a E2 reservada; a E3 não escolhida.
 
 ## Reservado
 
 - **O Bandido do chapéu** (`lobo_bandido/`, a segunda rodada): conceito guardado para um possível chefe futuro, fora
   do jogo; os caminhos no `LEIA-ME.md` da pasta.
+- **O Esqueleto encapuzado (E2)** (`esqueleto_novo/`, `esqueleto-e2`): conceito guardado para um possível mago
+  esqueleto (21/10/2026), com a fonte e os PNGs; sem espécie, habilidades nem mapeamento.

@@ -963,7 +963,10 @@ A2 (o A desenvolvido pela referência gerada do Jean; a folha `esqueleto-a2.png`
 não aprovados; o C, a nova direção pela segunda referência gerada, não aprovado (o sorriso de comercial); o C2, com a boca refeita pelas
 caveiras pequenas de referência (`esqueleto-c.png`), também não; **refeito do zero** em
 `ferramentas/prototipos/hud/criaturas/esqueleto_novo/` (três direções: o guarda morto de elmo, o encapuzado, a caveira
-nua em três quartos; a folha `esqueleto-novo.png`), aguarda avaliação.
+nua em três quartos; a folha `esqueleto-novo.png`). **Escolhida a E1** (o guarda morto) para o esqueleto básico, com
+a aba do elmo limpa (`esqueleto-e1r`); continua no protótipo. **Conceito reservado:** a E2 (o encapuzado), para um
+possível mago esqueleto, com a fonte e os PNGs em `esqueleto_novo/`; sem espécie, habilidades nem mapeamento. A E3 não
+foi escolhida.
 
 **Pendências registradas (21/10/2026, pedido do Jean; levantamento antes de desenhar):**
 - **A figura do animal no acampamento, por tipo de animal** (o lobo, o urso e o falcão do patrulheiro): conferir se
@@ -985,6 +988,7 @@ nua em três quartos; a folha `esqueleto-novo.png`), aguarda avaliação.
 - **Propostas (21/10/2026; nada no jogo):** os três animais do acampamento (o lobo deitado, o urso sentado, o falcão no
   toco; 16×16 de corpo inteiro, conferidos na cena) e o teste do cajado aprovado no Atacar do Mago; a folha
   `ferramentas/prototipos/hud/acampamento_atacar/animais-cajado.png`. A seleção futura pelo tipo, num papel próprio.
+  Segunda rodada do lobo (a anatomia e a pose) e do urso (refeito como urso pardo sentado); a folha `rodada2.png`.
 
 O atalho **Mapa** da doca já foi concluído; esta frente trata dos símbolos internos de caminhos e mapas.
 Não afirmar que só restam talentos e habilidades após este bloco sem conferir os consumíveis, variantes e

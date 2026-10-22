@@ -5662,3 +5662,13 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   encapuzado) e E3 (a caveira nua em três quartos); as fontes pelo conector, a exportação conferida, a folha
   `esqueleto-novo.png`. Minha preferência: a E1.
 - **Continua:** a escolha do Jean; nada no jogo (a versão continua 1.169.0).
+
+### 21/10/2026 (data do computador local) — E1 escolhida; o lobo e o urso, segunda rodada (só no protótipo)
+
+- **Decisões de Jean:** a E1 (o guarda morto) é a direção do esqueleto básico, com a ponta direita da aba do elmo
+  limpa; a E2 guardada como conceito reservado para um possível mago esqueleto (sem espécie, habilidades nem
+  mapeamento); a E3 não escolhida. O lobo refinado (o pescoço, o volume do corpo, as patas, a cauda); o urso refeito
+  como urso pardo sentado. O falcão e o cajado como estão.
+- **Feito:** `esqueleto-e1r` (um pixel), `animal-lobo-r2` e `animal-urso-r2` pelo conector, conferidos na cena; a
+  folha `ferramentas/prototipos/hud/acampamento_atacar/rodada2.png`.
+- **Continua:** a avaliação do Jean; nada no jogo (a versão continua 1.169.0).

@@ -41,7 +41,13 @@ E1 = [
  ".iIijjJddJjjiIj.",
  "iIiijjjJJjjjiiIj",
 ]
-# E2, o encapuzado
+# E1r (21/10/2026, a direção escolhida pelo Jean para o esqueleto básico): a E1 com a ponta direita da aba do elmo
+# limpa (a aba ia um pixel além do domo à esquerda e dois à direita: o da coluna 14 sai, e a aba fica simétrica). O
+# resto igual.
+E1R = list(E1)
+E1R[4] = "..JjjjjiijjRjJ.."
+
+# E2, o encapuzado (21/10/2026: guardado como conceito reservado para um possível mago esqueleto; nada no jogo)
 E2 = [
  ".....hhHHhh.....",
  "....hHHHhhhg....",
@@ -85,6 +91,9 @@ CAMADAS = {
     "esqueleto-e1": (E1, ["ombros", "cranio", "elmo", "cavidades"],
                      lambda x, y, ch: "cavidades" if ch == "k" else "ombros" if y >= 13
                      else "elmo" if ch in "IijJRr" else "cranio"),
+    "esqueleto-e1r": (E1R, ["ombros", "cranio", "elmo", "cavidades"],
+                      lambda x, y, ch: "cavidades" if ch == "k" else "ombros" if y >= 13
+                      else "elmo" if ch in "IijJRr" else "cranio"),
     "esqueleto-e2": (E2, ["capuz", "cranio", "cavidades"],
                      lambda x, y, ch: "cavidades" if ch == "k" else "capuz" if ch in "HhgG" else "cranio"),
     "esqueleto-e3": (E3, ["ombros", "cranio", "cavidades"],

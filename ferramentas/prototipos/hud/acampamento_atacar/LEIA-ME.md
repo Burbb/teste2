@@ -109,3 +109,22 @@ e teste visual: nada desenhado para o acampamento, nada integrado.
 
 A folha `animais-cajado.png` (`python auxiliares/prancha.py animais`): cada animal na fogueira, hoje × proposta (tamanho
 real e 2×), a figura a 8× e o retrato aprovado; o Atacar do Mago, hoje × o cajado, em tamanho real e 4×.
+
+## A segunda rodada do lobo e do urso (21/10/2026, proposta; nada no jogo)
+
+- **Jean:** o lobo na direção certa (deitado, atento, voltado para o fogo), mas o pescoço muito vertical e o corpo uma
+  faixa achatada; o urso parecia um roedor sentado (as costas muito arredondadas, o focinho estreito, a pata pequena).
+  O falcão e o teste do cajado ficam como estão.
+- **Lobo r2** (`animal-lobo-r2`): o pescoço desce na diagonal da cabeça até as costas, a cabeça à frente do peito, o
+  corpo deitado com seis linhas de volume, as patas da frente estendidas no chão para o fogo, a cauda atrás; a garganta
+  clara só embaixo do focinho (numa passada, a coluna clara do focinho ao peito lia como uma figura sentada).
+- **Urso r2** (`animal-urso-r2`), pelas fotos de urso pardo sentado (Wikimedia Commons, só para a anatomia) e pelo
+  retrato aprovado: a forma de sino (as costas descendo do corcunda até a garupa larga no chão; a lateral reta dava uma
+  caixa), a cabeça larga em leve três quartos, as orelhas pequenas e redondas, o focinho curto e robusto com o nariz na
+  ponta, o pescoço curto, as patas da frente em duas colunas grossas, a coxa de trás como um plano com o pé à frente; a
+  cabeça no marrom do retrato (clara demais, virava um bicho de pelúcia).
+- **Na bancada, na cena:** cada passada fotografada na fogueira (`ANIMAIS=<pasta>` no `fotografar.mjs`), ao lado do
+  arqueiro sentado e com a luz do fogo, antes de ir ao editor.
+- **Processo:** as fontes pelo conector (`pintar.lua`; releitura, 0 diferentes; o composto 95 e 140); a exportação
+  igual à grade, @2x exato; a primeira rodada preservada (reexportada igual). As fotos `capturas/fogueira-<tipo>-r2.png`.
+- A folha `rodada2.png` (`python auxiliares/prancha.py rodada2`): antes × depois do E1, do lobo e do urso.

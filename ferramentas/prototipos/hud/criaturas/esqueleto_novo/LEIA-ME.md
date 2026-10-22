@@ -40,3 +40,15 @@ aliado do Necromante, o Lich e os outros mortos-vivos ficam fora.
 - **E1:** a mais própria do jogo: o elmo e a malha contam um soldado morto, e separam bem do carniçal e do Lich.
 - **E2:** a mais sombria; o risco é ler como um cultista ou a Morte, mais que como um esqueleto comum.
 - **E3:** a caveira mais pura e viva (o três quartos); a mais genérica das três.
+
+## A escolha (21/10/2026)
+
+- **E1, o guarda morto: a direção escolhida pelo Jean para o esqueleto básico.** O retoque pedido, só local: a ponta
+  direita da aba do elmo sobrava (a aba ia um pixel além do domo à esquerda e dois à direita); o pixel da coluna 14,
+  linha 4, saiu e a aba ficou simétrica (`esqueleto-e1r`; a E1 preservada). A caveira, a expressão, o elmo, a malha e a
+  paleta iguais. Retocado numa cópia da fonte pelo conector (`pintar.lua`; releitura das quatro camadas, 0 diferentes;
+  o composto 154); a exportação igual à grade, 32 e 48 em blocos inteiros. O antes × depois na folha
+  `../../acampamento_atacar/rodada2.png`. Continua no protótipo.
+- **E2, o encapuzado: guardado como conceito reservado para um possível mago esqueleto**, com a fonte
+  (`fontes/esqueleto-e2/`) e os PNGs (`proposta/esqueleto-e2-*`); sem espécie, habilidades nem mapeamento.
+- **E3, a caveira nua: alternativa não escolhida.**

@@ -17,7 +17,9 @@ const [raiz, saida] = process.argv.slice(2);
 const PY = process.env.PYTHON || (process.platform === "win32" ? "python" : "python3");
 const espera = (ms) => new Promise((r) => setTimeout(r, ms));
 const aqui = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
-const animal = (t) => { const a = ["proposta", "bancada"].map((d) => path.join(aqui, d, `animal-${t}-16.png`)).find(existsSync);
+// ANIMAIS=<pasta>: as figuras de outra pasta (uma rodada na bancada), no lugar da proposta
+const animal = (t) => { const a = (process.env.ANIMAIS ? [process.env.ANIMAIS] : ["proposta", "bancada"].map((d) => path.join(aqui, d)))
+  .map((d) => path.join(d, `animal-${t}-16.png`)).find(existsSync);
   return a && "data:image/png;base64," + readFileSync(a).toString("base64"); };
 const SO = process.env.SO ? process.env.SO.split(",") : null;
 const LUTA = { TUTORIAL: "0", NIVEL_LUTA: "2", GRUPO: "lobo:1" };
@@ -26,6 +28,8 @@ const SITUACOES = [
     amb: { CLASSE: "arqueiro", COMITIVA: "morel", RESERVA: "", FERA: t }, acampar: true })),
   ...["lobo", "urso", "falcao"].map((t) => ({ nome: `fogueira-${t}-proposta`, cenario: "fogueira",
     amb: { CLASSE: "arqueiro", COMITIVA: "morel", RESERVA: "", FERA: t }, acampar: true, animal: t })),
+  ...["lobo", "urso"].map((t) => ({ nome: `fogueira-${t}-r2`, cenario: "fogueira",   // a segunda rodada
+    amb: { CLASSE: "arqueiro", COMITIVA: "morel", RESERVA: "", FERA: t }, acampar: true, animal: `${t}-r2` })),
   { nome: "roda-arqueiro", cenario: "tutorial", amb: { ...LUTA, CLASSE: "arqueiro" } },
   { nome: "roda-arqueiro-arco", cenario: "tutorial", amb: { ...LUTA, CLASSE: "arqueiro" }, troca: "arco" },
   { nome: "roda-arqueiro-besta", cenario: "tutorial", amb: { ...LUTA, CLASSE: "arqueiro", ARMA: "besta" } },
