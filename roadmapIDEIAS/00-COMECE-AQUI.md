@@ -6008,3 +6008,18 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Processo:** fontes pelo conector do Aseprite (0 diferentes; o composto = as camadas visíveis; a guia oculta);
   exportação igual à grade, @2x exato, 32 e 48 em blocos inteiros; fotos no modo `c`, sem erro no console.
 - **Continua:** a escolha do Jean; outras criaturas, chefes e o mapa não foram começados.
+
+### 22/10/2026 (data do computador local) — A Cria do Vazio no jogo (1.185.0) e o Cão N (nada no jogo)
+
+- **Estado conferido:** a branch em `265a9820`, sem alterações locais.
+- **Integrada (aprovada pelo Jean, sem retoque):** a Cria do Vazio A2, a fonte do `71e2c80d`, pela família, com os
+  afixos, o "Gato do Vazio" e as crias que o antagonista invoca; o antagonista continua no `humano` e o etéreo sozinho
+  no `etereo`. Fonte em `ferramentas/arte/aseprite/retrato-cria-vazio/`; exportada numa pasta temporária e comparada
+  byte a byte com a proposta antes de gravar. Conferida no jogo (`criaturas/fenda/capturas-1185/`): a luta, a
+  invocação, o Bestiário, o cartaz e o rastreador; nenhum pedido a `ferramentas/`. Folha:
+  `ferramentas/prototipos/hud/integracoes-22-10/integracoes-1185.png`.
+- **O gabarito** saiu idêntico (nenhuma partida encontra uma cria); não foi atualizado.
+- **Verificações sobre o código final:** `unittest`, o gabarito, o pyflakes e uma fumaça inteira (378 ok).
+- **No protótipo, aguardando o Jean:** o **Cão N** (`criaturas/fenda/`, a terceira seção do LEIA-ME), a construção nova
+  depois da recusa do T, resolvida a 32 px; a folha `cao-n.png` (T × N com o Lobo, o Lobo Gélido e o Caído).
+- **Continua:** a avaliação do Cão; outras criaturas, chefes e o mapa não foram começados.
