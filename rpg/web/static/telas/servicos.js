@@ -46,9 +46,10 @@
       motivo: f.motivo || "", attrs: `data-tratar="${h(f.id)}"`,
       dicaAttr: dica(`<b>${h(f.nome)}</b>${(f.explica || []).map((l, i) => `<div class="${i ? "" : "bonus pior"}">${h(l)}</div>`).join("")}<div class="rodape">${f.motivo ? h(f.motivo) : "Clique para tratar na hora."}</div>`),
     }));
-    // Quem atende e o que diz vêm do motor quando não é a curandeira de sempre (no Vau da campanha: Pita ou Marta).
+    // Quem atende e o que diz vêm do motor quando não é a curandeira de sempre (no Vau da campanha: Pita ou Marta) e
+    // quando não há mais nada para tratar (a fala diz isso; fica só o Voltar).
     return `<div class="tela balcao-servico curandeira">${topoBalcao("unguento", d.quem || "A curandeira", d.fala || "Uma velha de mãos manchadas de sangue seco examina você. \"O que vai ser?\"", d.ouro)}
-      <h4>Tratar</h4><div class="servicos">${cartoes.join("")}</div></div>`;
+      ${cartoes.length ? `<h4>Tratar</h4><div class="servicos">${cartoes.join("")}</div>` : ""}</div>`;
   }
   /** Clique (ou Enter) num cartão: a ação, ou o "não" com o motivo do motor, no próprio cartão. */
   function ligarServicos(raiz, chave, som) {

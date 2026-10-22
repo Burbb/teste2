@@ -314,9 +314,7 @@ def predios_fechados(g):
     if not g.opcoes_templo():
         fechados["templo"] = "O templo está em silêncio. Ninguém aqui precisa de cuidados agora."
     if not g.j.ferimentos:
-        quem = consequencias.atendente(g)  # no Vau da campanha: Pita, ou Marta de pé
-        fechados["curandeiro"] = (quem["fechado"] if quem else
-                                  "A curandeira ergue os olhos e volta às ervas. \"Nada para tratar em você.\"")
+        fechados["curandeiro"] = g.fala_curandeira_sem_ferimento()
     return fechados
 
 

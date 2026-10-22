@@ -2318,6 +2318,48 @@ async function cenarioFeridas(browser) {
     }
   }
   {
+    // Tratar não tira da cabana (1.178.0): o clique triplo trata um só (o cartão seguinte sobe para debaixo do mouse);
+    // tratado o último, a tela fica com a fala de quem atende e o Voltar, e é quem joga que sai.
+    const { proc, url } = await subir("tutorial", { VISTAS: "A1,A0,F1,F2,F3,F4,V2,N1,D1", FERIMENTOS: "corte,costelas,perna", OURO: "100", GRATIS_USADO: "templo,curandeira" });
+    const { page, erros } = await abrir(browser, url);
+    const pronto = () => page.waitForFunction(() => pergunta && pergunta.tipo === "opcoes" && !processando, null, { timeout: 15000 }).catch(() => {});
+    const cabana = () => page.evaluate(() => ({ feridas: estado.heroi.ferimentos.length, ouro: estado.heroi.ouro,
+      cartoes: document.querySelectorAll("#texto .curandeira [data-tratar]").length, tela: !!document.querySelector("#texto .curandeira"),
+      fala: (document.querySelector("#texto .curandeira .lore") || {}).textContent, voltar: !!document.querySelector("#barra-tela .voltar-seta"),
+      fechado: estado.local.predios_fechados.curandeiro }));
+    try {
+      await page.waitForSelector('#predios .predio[data-predio="curandeiro"]', { timeout: 20000 });
+      await pronto();
+      await page.waitForTimeout(600);
+      await page.click('#predios .predio[data-predio="curandeiro"]');
+      const c = await page.waitForSelector("#texto .curandeira [data-tratar]", { timeout: 10000 });
+      await pronto();
+      const b = await c.boundingBox();
+      await page.mouse.move(b.x + 30, b.y + 20);
+      for (let k = 1; k <= 3; k++) { await page.mouse.down({ clickCount: k }); await page.mouse.up({ clickCount: k }); await page.waitForTimeout(90); }
+      await page.waitForTimeout(600);
+      await pronto();
+      const um = await cabana();
+      conferir(um.feridas === 2 && um.ouro === 85 && um.cartoes === 2 && um.tela, `o clique triplo trata um ferimento só, e a cabana fica (${JSON.stringify(um)})`);
+      for (let k = 0; k < 2; k++) {
+        await page.waitForTimeout(700);  // outro gesto: vale
+        await page.click("#texto .curandeira [data-tratar] >> nth=0");
+        await page.waitForTimeout(300);
+        await pronto();
+      }
+      const fim = await cabana();
+      conferir(fim.feridas === 0 && fim.cartoes === 0 && fim.tela && fim.voltar && fim.fala === fim.fechado,
+        `tratado o último, a cabana continua: quem atende diz que não há nada, e o Voltar (${JSON.stringify(fim)})`);
+      await page.keyboard.press("Escape");
+      await page.waitForSelector('#predios .predio[data-predio="curandeiro"]', { timeout: 10000 });
+      conferir(!(await cabana()).tela, "Esc sai da cabana para a vila");
+    } finally {
+      conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
+      await page.close();
+      proc.kill();
+    }
+  }
+  {
     const { proc, url } = await subir("tutorial", { VIDA: "0.5", REC: "0.2", VISTAS: "A1,A0,AL", OURO: "40" });
     const { page, erros } = await abrir(browser, url);
     try {

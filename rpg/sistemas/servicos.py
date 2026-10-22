@@ -71,19 +71,30 @@ class Servicos:
             registrar(self, "ferreiro", item=item["nome"], stat=stat, ganho=ganho, custo=custo)
             self.dizer(f"Faíscas, marteladas, água fervendo. {item['nome']}: +{ganho} {nome_stat(stat, self.j.nome_recurso)}.", "verde")
 
+    def fala_curandeira_sem_ferimento(self):
+        """O que quem atende na cabana diz quando não há nada para tratar no herói (no prédio da vila e na cabana)."""
+        quem = consequencias.atendente(self)  # no Vau da campanha: Pita, ou Marta de pé
+        return quem["fechado"] if quem else "A curandeira ergue os olhos e volta às ervas. \"Nada para tratar em você.\""
+
     def curandeiro(self):
         """A cabana da curandeira: um cartão por ferimento, com o preço de cada um. O primeiro tratamento do herói na
         campanha é grátis (abertura.curandeira_gratis): todos os cartões dizem isso enquanto ele vale, e só um é de
-        graça; tratado esse, os outros voltam ao preço de sempre na mesma tela."""
+        graça; tratado esse, os outros voltam ao preço de sempre na mesma tela. Depois de tratar, a cabana continua
+        aberta, já com a vida, o ouro e os ferimentos de agora; sem nada para tratar, quem atende diz isso e fica só o
+        Voltar: quem joga decide quando sair."""
         j = self.j
         quem = consequencias.atendente(self)  # no Vau da campanha: Pita, ou Marta depois que a água limpa
         abertura.visto(self, "F3")  # a cabana aberta: o quadro que apontava o prédio não volta
-        while j.ferimentos:
+        while True:
             self.ui.cena("A curandeira", self.loc["nome"], "menu")  # a cada volta: na tela gráfica, a cabana se redesenha
             gratis = abertura.curandeira_gratis(self)
             tratamentos = self.tratamentos()
             custos = [custo for _, custo, _ in tratamentos]
-            dados = {"ouro": j.ouro, **({"quem": quem["quem"], "fala": quem["fala"]} if quem else {}), "ferimentos": [
+            fala = quem["fala"] if quem else None
+            if not j.ferimentos:
+                fala = self.fala_curandeira_sem_ferimento()
+            dados = {"ouro": j.ouro, **({"quem": quem["quem"]} if quem else {}), **({"fala": fala} if fala else {}),
+                     "ferimentos": [
                 {"id": f["id"], "nome": sobrevivencia.FERIMENTOS[f["id"]]["nome"], "custo": custo, "pode": not motivo,
                  "motivo": motivo, **({"gratis": "Primeiro tratamento — grátis"} if gratis else {}),
                  "explica": sobrevivencia.explicar(f, j.nome_recurso, j)} for f, custo, motivo in tratamentos]}
@@ -99,7 +110,7 @@ class Servicos:
                     opcoes = [(f"{sobrevivencia.FERIMENTOS[f['id']]['nome']} — "
                                + ("primeiro tratamento, grátis" if gratis else f"{custo} ouro"), (f["id"], custo))
                               for f, custo in zip(j.ferimentos, custos)]
-                    esc = self.menu(quem["fala"] if quem else "A curandeira, uma velha de mãos manchadas de sangue seco, "
+                    esc = self.menu(fala or "A curandeira, uma velha de mãos manchadas de sangue seco, "
                                     "examina você. \"O que vai ser?\"", opcoes + [("Voltar", None)])
             finally:
                 abertura.contexto(self, None)
@@ -117,8 +128,9 @@ class Servicos:
                 # Gasto só agora, com o tratamento feito. O cartão já dizia "grátis": sem outra fala por cima.
                 self.marcar("curandeira_gratis_usado")
             sobrevivencia.curar_ferimento(self, fid)
-            self.dizer(f"Ela costura, cauteriza e enfaixa sem anestesia. Você grita. "
-                       f"{sobrevivencia.FERIMENTOS[fid]['nome']}: tratado.", "verde")
+            # O resultado é uma confirmação curta, como a da compra no mercado (o custo já saiu no "−N ouro"): a tela
+            # continua a mesma, sem o cartão tratado, com a vida e o ouro de agora.
+            self.ui.efeito(f"{sobrevivencia.FERIMENTOS[fid]['nome']}: tratado", "cura")
 
     def motivo_pagar(self, preco):
         """A meta de um serviço pago diante do balcão: sem ouro bastante, o motivo que a tela mostra no cartão e no

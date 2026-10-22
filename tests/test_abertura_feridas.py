@@ -165,6 +165,44 @@ class TestCurandeiraGratis(unittest.TestCase):
         self.assertFalse(ab.curandeira_gratis(h))
         self.assertEqual([f["id"] for f in h.j.ferimentos], ["perna"])
 
+    def test_tratar_nao_tira_da_cabana(self):
+        """Depois de cada tratamento a cabana continua aberta, com o ouro e os ferimentos de agora; tratado o último,
+        quem atende diz que não há mais nada, fica só o Voltar, e é quem joga que sai. Nenhuma cobrança a mais."""
+        g = depois_da_despensa(roteiro=[])
+        g.marcar("curandeira_gratis_usado")
+        ferir(g, "corte", "costelas")
+        g.j.ouro = 200
+        preco = sum(ab.custo_tratamento(g, {"id": f}) for f in ("corte", "costelas"))
+        paineis, efeitos = [], []
+        g.ui.painel = lambda tipo, dados: paineis.append(dados) or True
+        g.ui.efeito = lambda texto, tipo="info", item=None: efeitos.append(texto)
+        ofertas = []
+
+        def menu(_, opcoes):
+            ofertas.append([o[0] for o in opcoes])
+            return next((o[1] for o in opcoes if o[0].startswith("Tratar")), None)  # trata o que houver; senão, Voltar
+        g.menu = menu
+        g.curandeiro()
+        self.assertEqual(ofertas, [["Tratar Corte profundo", "Tratar Costelas quebradas", "Voltar"],
+                                   ["Tratar Costelas quebradas", "Voltar"], ["Voltar"]])
+        self.assertEqual([len(d["ferimentos"]) for d in paineis], [2, 1, 0])
+        self.assertEqual([d["ouro"] for d in paineis][1:], [200 - ab.custo_tratamento(g, {"id": "corte"}), 200 - preco])
+        self.assertEqual(paineis[-1]["fala"], g.fala_curandeira_sem_ferimento())
+        self.assertEqual((g.j.ferimentos, g.j.ouro), ([], 200 - preco))
+        # o resultado de cada um numa confirmação curta, com o custo à parte (o "−N ouro" de sempre)
+        self.assertEqual([e for e in efeitos if "tratado" in e], ["Corte profundo: tratado", "Costelas quebradas: tratado"])
+        self.assertEqual(len([e for e in efeitos if e.endswith(" ouro")]), 2)
+
+    def test_sem_ouro_nao_trata_nem_sai(self):
+        g = depois_da_despensa(roteiro=[])
+        g.marcar("curandeira_gratis_usado")
+        ferir(g, "corte")
+        g.j.ouro = 0
+        respostas = iter([("corte", ab.custo_tratamento(g, {"id": "corte"})), None])
+        g.menu = lambda _, opcoes: next(respostas)
+        g.curandeiro()
+        self.assertEqual(([f["id"] for f in g.j.ferimentos], g.j.ouro), (["corte"], 0))
+
     def test_so_na_campanha(self):
         g = Jogo(Jogador([]), seed=3, pasta_saves=tempfile.mkdtemp(), hardcore=False)
         g.iniciar("Teste", "mago")
