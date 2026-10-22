@@ -52,3 +52,12 @@ aliado do Necromante, o Lich e os outros mortos-vivos ficam fora.
 - **E2, o encapuzado: guardado como conceito reservado para um possível mago esqueleto**, com a fonte
   (`fontes/esqueleto-e2/`) e os PNGs (`proposta/esqueleto-e2-*`); sem espécie, habilidades nem mapeamento.
 - **E3, a caveira nua: alternativa não escolhida.**
+
+## No jogo (1.175.0)
+
+- **O E1r, sem retoque, pela família `esqueleto`** (`RETRATO_FAMILIA`, o papel `CRIATURA`): os esqueletos comuns, os do
+  ossuário da capela e os que o Lich Menor invoca (o Invocar cria a família `esqueleto`). Continuam na caveira: o servo
+  aliado do Necromante (sem família), o servo esquelético, o cavaleiro sombrio e o próprio Lich.
+- A fonte em `ferramentas/arte/aseprite/retrato-esqueleto/` (a cópia da `fontes/esqueleto-e1r/`); os seis PNGs do jogo
+  idênticos byte a byte aos de `proposta/esqueleto-e1r-*`. As capturas a 1920×945 em `capturas-1175/` (a luta do
+  Necromante com o servo de pé, o Lich com dois invocados, o Bestiário).

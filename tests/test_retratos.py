@@ -41,11 +41,10 @@ class TestRetratos(unittest.TestCase):
         self.assertEqual(retrato(["humano", "conjurador"], "guardiao", "guardiao:4", "profeta_das_cinzas"), "humano")
 
     def test_javali_e_carnical_pela_familia(self):
-        # 1.173.0: pela família; o esqueleto, o cavaleiro sombrio e o Lich (mortos-vivos) continuam na caveira
+        # 1.173.0: pela família; o cavaleiro sombrio e o Lich (mortos-vivos) continuam na caveira
         self.assertEqual(retrato(FAMILIAS["javali"]["tracos"], "javali"), "javali")
         self.assertEqual(retrato(FAMILIAS["carnical"]["tracos"], "carnical"), "carnical")
-        for fam in ("esqueleto", "cavaleiro_sombrio"):
-            self.assertEqual(retrato(FAMILIAS[fam]["tracos"], fam), "caveira", fam)
+        self.assertEqual(retrato(FAMILIAS["cavaleiro_sombrio"]["tracos"], "cavaleiro_sombrio"), "caveira")
 
     def test_espectro_pela_familia(self):
         # 1.174.0: o espectro pela família; a cria do Vazio (etérea) e o Lich, que ganha o etéreo na fase 2, continuam
@@ -53,6 +52,25 @@ class TestRetratos(unittest.TestCase):
         self.assertEqual(retrato(FAMILIAS["espectro"]["tracos"], "espectro"), "espectro")
         self.assertEqual(retrato(FAMILIAS["cria_vazio"]["tracos"], "cria_vazio"), "etereo")
         self.assertEqual(retrato(["morto-vivo", "conjurador", "etereo"], "guardiao", "guardiao:6", "lich_menor"), "etereo")
+
+    def test_esqueleto_pela_familia(self):
+        # 1.175.0: o esqueleto pela família (os do ossuário e os que o Lich invoca, que são da família); o servo
+        # esquelético, o servo aliado do Necromante (sem família), o cavaleiro sombrio e o Lich continuam na caveira
+        self.assertEqual(retrato(FAMILIAS["esqueleto"]["tracos"], "esqueleto"), "esqueleto")
+        import random
+        from rpg.inimigos import GUARDIOES, criar
+        lich = next(x for lista in GUARDIOES.values() for x in lista if x["id"] == "lich_menor")
+        self.assertEqual(lich["invoca"], "esqueleto")  # os invocados do Lich são da família
+        invocado = criar(random.Random(3), lich["invoca"], 4)  # como o Invocar do Lich faz
+        self.assertEqual(retrato(invocado.tracos, invocado.familia, invocado.chave), "esqueleto")
+        self.assertEqual(retrato(FAMILIAS["esqueleto_servo"]["tracos"], "esqueleto_servo"), "caveira")
+        self.assertEqual(retrato(["morto-vivo"], None), "caveira")
+        self.assertEqual(retrato(["morto-vivo", "conjurador"], "guardiao", "guardiao:6", "lich_menor"), "caveira")
+        icones = (ESTATICO / "icones.js").read_text(encoding="utf-8")
+        self.assertIn('esqueleto: "retrato-esqueleto"', icones)
+        for lado in (16, 32, 48):
+            for sufixo in ("", "@2x"):
+                self.assertTrue((ESTATICO / f"hud/icones/retrato-esqueleto-{lado}{sufixo}.png").exists(), (lado, sufixo))
 
     def test_troll_pela_familia_e_o_rei_pelo_guardiao(self):
         # o troll da montanha pela família (1.166.0); o Rei Troll pelo id do guardião (1.167.0), em qualquer lugar
@@ -79,8 +97,9 @@ class TestRetratos(unittest.TestCase):
         self.assertEqual(retrato(invocada.tracos, invocada.familia, invocada.chave), "aranha")
 
     def test_os_outros_continuam_pelos_tracos(self):
-        # o esqueleto e os outros mortos-vivos seguem com a caveira; o guardião genérico da Bruxa Afogada também
-        self.assertEqual(retrato(FAMILIAS["esqueleto"]["tracos"], "esqueleto"), "caveira")
+        # os outros mortos-vivos seguem com a caveira (o esqueleto tem a dele desde a 1.175.0); o guardião genérico da
+        # Bruxa Afogada também
+        self.assertEqual(retrato(FAMILIAS["cavaleiro_sombrio"]["tracos"], "cavaleiro_sombrio"), "caveira")
         self.assertEqual(retrato(["morto-vivo", "conjurador"], "guardiao", "guardiao:3"), "caveira")
         self.assertEqual(retrato(["fera"]), "fera")
         self.assertEqual(retrato([]), "caveira")
