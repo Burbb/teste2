@@ -6035,3 +6035,14 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Processo:** o retoque numa cópia da fonte em camadas pelo conector do Aseprite (0 diferentes; o composto = as
   camadas); exportação igual à grade, @2x exato, 32 e 48 em blocos inteiros; fotos no modo `e`, sem erro no console.
 - **Continua:** a avaliação do Cão; outras criaturas, chefes e o mapa não foram começados.
+
+### 22/10/2026 (data do computador local) — Três rosnados do Cão: RA, RB e RC (nada no jogo)
+
+- **Estado conferido:** a branch em `b63a6d73`, sem alterações locais; produção na 1.185.0.
+- **No protótipo, aguardando o Jean (`criaturas/fenda/`, a quinta seção do LEIA-ME):** uma cabeça nova (o crânio sobe e
+  recua, o focinho ganha 7 a 8 pixels; era o crânio herdado que espremia o focinho) com três rosnados: **RA**, a bocarra
+  aberta; **RB**, o lábio repuxado; **RC**, a cabeça baixa. A folha `cao-r.png` (N2 × as três). Minha preferência: a RB;
+  a limitação a 32 é a gengiva lida como faixa reta e os dentes pequenos.
+- **Processo:** fontes pelo conector do Aseprite (0 diferentes; o composto = as camadas); exportação igual à grade, @2x
+  exato, 32 e 48 em blocos inteiros; fotos nos modos `f`, `g` e `h`, sem erro no console.
+- **Continua:** a escolha do Jean; outras criaturas, chefes e o mapa não foram começados.
