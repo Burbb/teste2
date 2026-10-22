@@ -6,7 +6,8 @@
 //     vendido fica vazio, o clique nele não faz nada, o clique duplo vende uma, a troca de aba e a recompra não
 //     embaralham; equipar e arrastar até a banca também não) e volta à ordem de sempre na visita seguinte;
 //   - a comitiva: as cartas ✉ de dois companheiros clicadas uma logo depois da outra abrem as duas conversas, em ordem;
-//     a carta ✉ com o Inventário ou o Bestiário aberto fecha a tela e abre a conversa na hora.
+//     a carta ✉ com o Inventário ou o Bestiário aberto fecha a tela e abre a conversa na hora;
+//   - o relatório da luta: o primeiro clique no Continuar fecha; a rajada de antes do botão não fecha sozinha.
 //   PLAYWRIGHT_MODULO=<caminho do playwright>/index.mjs node tests/navegador/cliques_seguidos.mjs
 import { spawn } from "child_process";
 import { fileURLToPath } from "url";
@@ -205,6 +206,53 @@ for (const tela of ["Inventário", "Bestiário"]) {
   const fim = await p.evaluate(() => ({ docaTela, guardadas: conversasGuardadas.length, atual: !!document.querySelector("#doca .atalho.atual") }));
   conferir(aberta && conversa && fim.docaTela === null && !fim.guardadas && !fim.atual,
     `a carta ✉ com o ${tela} aberto: ele fecha e a conversa com a Odette abre na hora (${JSON.stringify({ aberta, conversa, ...fim })})`);
+  await p.close(); proc.kill();
+}
+
+// 5. o Continuar do relatório da luta (o espólio): o primeiro clique logo que ele aparece fecha; a rajada que vinha
+// adiantando os números não fecha sozinha, e o clique novo depois dela fecha uma vez
+{
+  const { proc, url } = await subir("relatorio", { VEZES: "3" });
+  const p = await pagina(url);
+  let respostas = 0;
+  p.on("request", (r) => { if (r.url().includes("/responder")) respostas++; });
+  const luta = async () => {
+    await ate(p, () => !processando && !!pergunta && pergunta.tipo === "opcoes" && pergunta.opcoes.some((o) => /^Explorar/.test(o.texto)));
+    await espera(500);
+    await p.click("#prompt .escolha");
+    for (let k = 0; k < 3000 && !(await p.$(".festa-espolio")); k++) {
+      await p.evaluate(() => {
+        if (processando || !pergunta || pergunta.tipo !== "opcoes") return;
+        const i = pergunta.opcoes.findIndex((o) => !(o.meta && o.meta.indisponivel) && !/^Explorar/.test(o.texto));
+        if (i >= 0 && !pergunta.opcoes.some((o) => /^Explorar/.test(o.texto))) responder(pergunta.id, i);
+      });
+      await espera(30);
+    }
+  };
+  const aberto = () => p.$(".festa-espolio .continuar").then(Boolean);
+  const fechou = async (ms) => { for (let t = 0; t < ms; t += 20) { if (!(await p.$(".festa-espolio"))) return true; await espera(20); } return false; };
+  const fecharNivel = async () => { for (let k = 0; k < 5; k++) { const c = await p.$("#celebracao button.continuar"); if (!c) return; await c.click(); await espera(600); } };
+  await luta();
+  for (let k = 0; k < 400 && !(await aberto()); k++) await espera(20);
+  const bt = await (await p.$(".festa-espolio .continuar")).boundingBox();
+  respostas = 0;
+  await p.mouse.click(bt.x + bt.width / 2, bt.y + bt.height / 2);
+  conferir(await fechou(600) && respostas === 0, `um clique no Continuar logo que ele aparece fecha o relatório (${respostas} respostas)`);
+  await espera(800); await fecharNivel();
+  await luta();
+  const q = await (await p.$(".festa-espolio")).boundingBox(), x = q.x + q.width / 2, y = q.y + q.height / 2;
+  await p.mouse.move(x, y);
+  let n = 1, depois = 0;
+  while (depois < 4) {  // cliques no mesmo ponto a cada 150 ms (detail 1, 2, 3...), até 600 ms depois de o botão aparecer
+    await p.mouse.down({ clickCount: n }); await p.mouse.up({ clickCount: n }); n++;
+    await espera(150);
+    if (await aberto()) depois++;
+  }
+  conferir(await aberto(), "a rajada que adiantava os números não fecha o relatório sozinha");
+  await espera(700);
+  respostas = 0;
+  await p.mouse.click(x, y);
+  conferir(await fechou(600) && respostas === 0, `depois da rajada, um clique novo fecha (uma vez: ${respostas} respostas)`);
   await p.close(); proc.kill();
 }
 

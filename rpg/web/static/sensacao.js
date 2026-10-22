@@ -19,10 +19,9 @@ const Sensacao = (() => {
     final: { lento: 0.3, entradaMs: 220, seguraMs: 380, saidaMs: 450, zoom: 1.08, zoomMs: 520 },
     // Números que contam subindo (ouro do espólio): duração e o máximo de tiques de som.
     contarMs: 650, tiquesMax: 10, espolioOuroMs: 500,
-    // A barra de XP enchendo (por trecho de nível) e os respiros do espólio, que fica até o Continuar: o clique não
-    // conta por `espolioGuardaMs` depois de tudo aparecer, e cada clique da rajada estende a espera em `espolioRajadaMs`.
-    // O ouro do espólio conta mais depressa (`espolioOuroMs`), e a experiência vem logo depois (`espolioEntreMs`).
-    barraMs: 700, espolioEsperaMs: 450, espolioEntreMs: 100, espolioGuardaMs: 900, espolioRajadaMs: 350,
+    // A barra de XP enchendo (por trecho de nível) e os respiros do espólio, que fica até o Continuar. O ouro do
+    // espólio conta mais depressa (`espolioOuroMs`), e a experiência vem logo depois (`espolioEntreMs`).
+    barraMs: 700, espolioEsperaMs: 450, espolioEntreMs: 100,
     // Vida por um fio: o compasso do pulso (ms entre batidas), mais rápido quanto mais perto do fim, e quantas
     // vezes o coração soa ao entrar na faixa (depois só a tela pulsa: som contínuo cansa e angustia).
     batimentoLentoMs: 1150, batimentoRapidoMs: 700, batidasAoEntrar: 3,
@@ -439,9 +438,10 @@ const Sensacao = (() => {
       mostrar(caixa.querySelector(".espolio-extras"));
       Som.tocar("item");
     }
-    // Tudo à vista: o quadro espera o Continuar (qualquer clique, Espaço, Enter ou Esc). Quem clica rápido para
-    // adiantar não fecha o espólio sem ver: logo depois de tudo aparecer o clique não conta, e enquanto os cliques
-    // seguem em rajada a espera se estende. Fecha o clique dado depois de uma pausa.
+    // Tudo à vista: o quadro espera o Continuar (qualquer clique, Espaço, Enter ou Esc), sem relógio, pela regra dos
+    // gestos das telas (Gesto, em nucleo.js): o primeiro gesto novo fecha na hora. Não fecham o toque que começou
+    // antes de o botão aparecer (o que adiantava os números), o 2º clique de um clique duplo nem a tecla segurada.
+    // Antes, todo clique no primeiro 0,9 s era ignorado (e cada um estendia a espera): o primeiro Continuar se perdia.
     festa.insertAdjacentHTML("beforeend", '<button class="continuar" type="button">Continuar <span>▸</span></button>');
     // O quadro é uma janela: o foco vai para o Continuar dele (o Tab não precisa atravessar a página escondida atrás) e,
     // fechado o quadro, volta para onde estava. O anel só aparece se o último gesto foi do teclado (:focus-visible).
@@ -449,18 +449,22 @@ const Sensacao = (() => {
     const prender = (ev) => { if (ev.key === "Tab") { ev.preventDefault(); botao.focus({ preventScroll: true }); } };  // um botão só: o Tab fica nele
     document.addEventListener("keydown", prender, true);
     botao.focus({ preventScroll: true });
-    pular = false;
-    let guarda = performance.now() + AJUSTES.espolioGuardaMs;
+    const nasceu = performance.now();
+    let toque = 0, fechar = null;
+    const tocou = () => { toque = performance.now(); };
+    document.addEventListener("pointerdown", tocou, true);
     await new Promise((r) => {
-      const t = setInterval(() => {
-        if (!pular) return;
-        pular = false;
-        const agora = performance.now();
-        if (agora < guarda) { guarda = Math.max(guarda, agora + AJUSTES.espolioRajadaMs); return; }
-        clearInterval(t);
+      fechar = (ev) => {
+        if (ev.type === "keydown" ? ev.repeat || ![" ", "Enter", "Escape"].includes(ev.key) : ev.detail !== 1 || toque < nasceu) return;
+        ev.preventDefault(); ev.stopPropagation();  // o gesto que fecha não atravessa para a página
         r();
-      }, 40);
+      };
+      document.addEventListener("click", fechar, true);
+      document.addEventListener("keydown", fechar, true);
     });
+    document.removeEventListener("pointerdown", tocou, true);
+    document.removeEventListener("click", fechar, true);
+    document.removeEventListener("keydown", fechar, true);
     document.removeEventListener("pointerdown", adiantar, true);
     document.removeEventListener("keydown", adiantar, true);
     document.removeEventListener("keydown", prender, true);
