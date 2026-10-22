@@ -601,7 +601,7 @@ def sinais_do_guardiao(g):
     gu = g.loc["guardiao"]
     sinais = {
         "Rainha Aracnídea": "Casulos do tamanho de homens pendem das árvores. Alguns ainda se mexem.",
-        "Ent Ancião": "As árvores aqui têm rostos. Todos virados na mesma direção.",
+        "Árvore Anciã": "As árvores aqui têm rostos. Todos virados na mesma direção.",
         "Hidra do Brejo": "Escamas do tamanho de escudos boiam na água. E três trilhas paralelas de lodo.",
         "Bruxa Afogada": "Uma canção de ninar ecoa sobre a água. Ninguém à vista.",
         "Rei Troll": "Ossos roídos empilhados formando uma espécie de... muralha.",

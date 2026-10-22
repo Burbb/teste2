@@ -5,7 +5,7 @@ acrescenta-se uma função `_vN_para_vN1` em MIGRACOES. Um save antigo passa por
 chegar à versão atual; assim nenhum código do jogo precisa se defender de saves velhos.
 """
 
-VERSAO_SAVE = 5
+VERSAO_SAVE = 6
 
 # Tudo o que o estado da partida guarda além do jogador, da semente e do gerador aleatório.
 CAMPOS_SAVE = ("mundo", "dia", "periodo", "clima", "passos", "flags", "historico", "contagem",
@@ -79,7 +79,54 @@ def _v4_para_v5(d):
     return d
 
 
-MIGRACOES = {1: _v1_para_v2, 2: _v2_para_v3, 3: _v3_para_v4, 4: _v4_para_v5}
+# As famílias que mudaram de nome (1.181.0: o ent jovem virou a árvore desperta): o texto dos contratos delas é refeito.
+FAMILIAS_RENOMEADAS = ("ent_jovem",)
+
+
+def _v5_para_v6(d):
+    """As árvores vivas com o nome novo (1.181.0): o ent jovem é a árvore desperta; o Ent Ancião, a Árvore Anciã. Os ids
+    (`ent_jovem`, `ent_anciao`) ficam, e o progresso também; só o que o save guardou como texto é refeito pelo catálogo:
+    o guardião de cada covil (o `base`, o gênero e o nome com o artigo, "Thorn, a Árvore Anciã"; os rumores que citam o
+    nome antigo dele) e o texto dos contratos das famílias renomeadas, os aceitos e os do mural. Refazer de novo não
+    muda nada: rodar duas vezes dá o mesmo save."""
+    import re
+    from .inimigos import ficha_guardiao
+    from .sistemas.contratos import desc_alvo, desc_caca
+    mundo = d.get("mundo") or {}
+    locais = {l["id"]: l for l in mundo.get("locais", [])}
+    nomes = {}
+    for l in locais.values():
+        gu = l.get("guardiao")
+        if not gu or "bioma" not in gu:
+            continue
+        t = ficha_guardiao(gu)
+        if gu.get("base") == t["base"] and gu.get("g") == t["g"]:
+            continue
+        proprio = re.split(r", (?:the|o|a) ", gu["nome"], maxsplit=1)[0]
+        novo = f"{proprio}, {'o' if t['g'] == 'm' else 'a'} {t['base']}"
+        nomes[gu["nome"]] = novo
+        gu.update(nome=novo, base=t["base"], g=t["g"])
+    for r in d.get("rumores") or []:
+        for velho, novo in nomes.items():
+            if velho in r.get("texto", ""):
+                r["texto"] = r["texto"].replace(velho, novo)
+    contratos = list(d.get("contratos") or [])
+    ofertas = d.get("ofertas") or {}
+    for oferta in ofertas.values() if isinstance(ofertas, dict) else ofertas:  # o mural: {vila: {"dia", "lista"}}
+        if isinstance(oferta, dict):
+            contratos += oferta.get("lista", [])
+    for c in contratos:
+        lugar = locais.get(c.get("local"))
+        if c.get("familia") not in FAMILIAS_RENOMEADAS or not lugar:
+            continue
+        if c.get("tipo") == "caca":
+            c["desc"] = desc_caca(c["total"], c["familia"], lugar["nome"])
+        elif c.get("tipo") == "alvo":
+            c["desc"] = desc_alvo(c["nome"], c["familia"], lugar["nome"])
+    return d
+
+
+MIGRACOES = {1: _v1_para_v2, 2: _v2_para_v3, 3: _v3_para_v4, 4: _v4_para_v5, 5: _v5_para_v6}
 
 
 def migrar(dados):

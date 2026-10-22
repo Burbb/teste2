@@ -199,7 +199,8 @@ FAMILIAS = {
     "javali": dict(nome="javali selvagem", plural="javalis selvagens", g="m", hp=28, atk=7, defesa=4, agi=3, poder=0,
                    tracos=["fera"], habs=["investida"], xp=13, ouro=(0, 1), grupo=(1, 2),
                    lore="Teimosos e brutais. A investida de um javali derruba até cavaleiros."),
-    "ent_jovem": dict(nome="ent jovem", plural="ents jovens", g="m", hp=40, atk=8, defesa=7, agi=1, poder=0,
+    # o id `ent_jovem` fica (saves, contratos, Bestiário); o nome mudou na 1.181.0 (antes, "ent jovem")
+    "ent_jovem": dict(nome="árvore desperta", plural="árvores despertas", g="f", hp=40, atk=8, defesa=7, agi=1, poder=0,
                       tracos=["planta", "blindado"], habs=["esmagar", "regenerar"], xp=22, ouro=(0, 3), grupo=(1, 1),
                       nivel_min=3,
                       lore="Árvores que acordaram com raiva. Madeira verde queima mal — mas queima."),
@@ -365,11 +366,11 @@ GUARDIOES = {
              intro="Teias grossas como cordas cobrem as árvores. Algo enorme desce do alto, com olhos demais para contar.",
              fases=[dict(limiar=0.5, texto="A rainha guincha e seus filhotes despencam das copas!",
                          atk=1.2, habs=["mordida_sangrenta"])]),
-        dict(id="ent_anciao",
-             base="Ent Ancião", g="m", hp=160, atk=12, defesa=8, agi=1, poder=4, tracos=["planta", "blindado"],
+        dict(id="ent_anciao",  # o id fica; o nome mudou na 1.181.0 (antes, "Ent Ancião"; migracoes._v5_para_v6)
+             base="Árvore Anciã", g="f", hp=160, atk=12, defesa=8, agi=1, poder=4, tracos=["planta", "blindado"],
              habs=["esmagar", "regenerar", "agarrar", "varredura"], resist={"fogo": 1.6},
              intro="A floresta inteira parece se mover. Uma árvore milenar abre olhos de seiva âmbar e fala com voz de terremoto.",
-             fases=[dict(limiar=0.4, texto="A casca do Ent racha e uma luz verde e furiosa escapa das fendas!",
+             fases=[dict(limiar=0.4, texto="A casca da árvore racha e uma luz verde e furiosa escapa das fendas!",
                          atk=1.3, defesa=0.7, habs=["investida"])]),
     ],
     "pantano": [

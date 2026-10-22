@@ -59,7 +59,7 @@ def ajustar_item(bonus, nivel):
 
 
 # Runs de antes da tradução dos nomes (1.20) registraram o guardião em inglês ("Kalra, the Troll King").
-NOMES_ANTIGOS = {"Arachnid Queen": "Rainha Aracnídea", "Elder Ent": "Ent Ancião", "Bog Hydra": "Hidra do Brejo",
+NOMES_ANTIGOS = {"Arachnid Queen": "Rainha Aracnídea", "Elder Ent": "Árvore Anciã", "Ent Ancião": "Árvore Anciã", "Bog Hydra": "Hidra do Brejo",
                  "Drowned Witch": "Bruxa Afogada", "Troll King": "Rei Troll", "Ice Wyrm": "Dragão de Gelo",
                  "Warlord": "Senhor da Guerra", "Ash Prophet": "Profeta das Cinzas", "Lesser Lich": "Lich Menor",
                  "Primordial Golem": "Golem Primordial"}

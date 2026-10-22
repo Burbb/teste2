@@ -178,6 +178,7 @@ def espantalho(g):
         e = g.inimigo("ent_jovem", afixo="corrompido" if g.loc["perigo"] >= 4 else "feroz")
         e.nome = "Espantalho Possuído"
         e.desc = "um espantalho possuído"
+        e.g = "m"  # os números da árvore desperta, mas é o espantalho (o masculino nas frases da luta)
         if op == "fogo":
             e.hp = int(e.hp * 0.7)
         g.combate([e], emboscada=None if op == "fogo" else "inimigo")

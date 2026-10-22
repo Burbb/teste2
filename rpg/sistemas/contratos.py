@@ -8,6 +8,17 @@ from ..mundo import distancias, nivel_regiao
 from .. import balanceamento as bal
 
 
+def desc_alvo(nome, familia, lugar):
+    """O texto do contrato de caçar um único: o nome, o artigo e o nome da espécie pelo catálogo, o lugar."""
+    f = FAMILIAS[familia]
+    return f"Caçar {nome}, {tx.artigo(f['g'], False)} {f['nome']} enorme que aterroriza {lugar}."
+
+
+def desc_caca(total, familia, lugar):
+    """O texto do contrato de caça: quantos, o plural da espécie pelo catálogo, o lugar."""
+    return f"Eliminar {total} {FAMILIAS[familia]['plural']} em {lugar}."
+
+
 class Contratos:
     # Peso de cada lugar no mural conforme a diferença entre o nível dele e o seu:
     # quase sempre algo do seu tamanho, às vezes um desafio, raramente algo fácil.
@@ -48,18 +59,16 @@ class Contratos:
         nv = nivel_regiao(loc)  # só bichos que de fato aparecem por lá
         fam = self.sortear([f for f in BIOMAS[loc["bioma"]]["familias"] if FAMILIAS[f].get("nivel_min", 1) <= nv]
                            or BIOMAS[loc["bioma"]]["familias"])
-        f = FAMILIAS[fam]
         if tipo == "alvo":
             nome = tx.nome_proprio(self.rng)
             ouro, xp = self.recompensa_contrato(nv, 1.4)
             return {"id": cid, "tipo": "alvo", "local": loc["id"], "familia": fam, "nome": nome,
                     "chave": f"alvo:{cid}", "ouro": ouro, "xp": xp,
-                    "desc": f"Caçar {nome}, {tx.artigo(f['g'], False)} {f['nome']} enorme que aterroriza "
-                            f"{loc['nome']}."}
+                    "desc": desc_alvo(nome, fam, loc["nome"])}
         total = self.rng.randint(2, 4)
         ouro, xp = self.recompensa_contrato(nv, 0.7 + 0.15 * total)
         return {"id": cid, "tipo": "caca", "local": loc["id"], "familia": fam, "total": total, "feito": 0,
-                "ouro": ouro, "xp": xp, "desc": f"Eliminar {total} {f['plural']} em {loc['nome']}."}
+                "ouro": ouro, "xp": xp, "desc": desc_caca(total, fam, loc["nome"])}
 
     def mural(self):
         abertura.visto(self, "V1")  # o Mural aberto: o quadro que apontava para ele (V1) não volta
