@@ -5608,3 +5608,15 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   (releitura, composto, exportação e ampliações conferidos; o A2n intacto), e a folha `esqueleto-sorriso.png`, em
   `ferramentas/prototipos/hud/criaturas/rainha_esqueleto/`.
 - **Continua:** a escolha do Jean; nada no jogo (a versão continua 1.168.0).
+
+### 21/10/2026 (data do computador local) — O animal no acampamento e o comando Atacar: levantamento
+
+- **Pedido de Jean:** registrar as duas pendências no plano 23 e levantar os caminhos, tamanhos e compartilhamentos; o
+  teste do arco aprovado no Atacar do Arqueiro; o desenho com a Besta, sem mudar a regra; a conferência dos três
+  ataques básicos. Nada desenhado nem integrado.
+- **Feito:** `ferramentas/prototipos/hud/acampamento_atacar/` (o `LEIA-ME.md` com o resultado e a proposta dos três
+  animais; a folha `levantamento.png`); as pendências e o resultado no plano 23; o cenário `fogueira` aceita
+  `FERA=urso` e `FERA=falcao`.
+- **Achados:** o urso aparece como o lobo (o mesmo `fera`) e o falcão como o morcego (`voador`); o Atacar do Arqueiro e
+  o do Mago usam os sprites antigos; com a Besta, o Atacar continua o `arco`.
+- **Continua:** a avaliação do Jean (a proposta dos animais, o arco no Atacar, o cajado do Mago).

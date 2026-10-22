@@ -1,0 +1,156 @@
+{
+ "fogueira-lobo": {
+  "erros": [],
+  "id": "vista",
+  "arte": [
+   1064,
+   208
+  ],
+  "tela": [
+   1064,
+   232
+  ],
+  "caixa": [
+   408,
+   139,
+   1472,
+   371
+  ]
+ },
+ "fogueira-urso": {
+  "erros": [],
+  "id": "vista",
+  "arte": [
+   1064,
+   208
+  ],
+  "tela": [
+   1064,
+   232
+  ],
+  "caixa": [
+   408,
+   139,
+   1472,
+   371
+  ]
+ },
+ "fogueira-falcao": {
+  "erros": [],
+  "id": "vista",
+  "arte": [
+   1064,
+   208
+  ],
+  "tela": [
+   1064,
+   232
+  ],
+  "caixa": [
+   408,
+   139,
+   1472,
+   371
+  ]
+ },
+ "roda-arqueiro": {
+  "erros": [],
+  "src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAA",
+  "classe": "sprite ",
+  "tela": [
+   32,
+   32
+  ],
+  "natural": [
+   16,
+   16
+  ],
+  "icone": [
+   281,
+   13,
+   313,
+   45
+  ],
+  "arma": null
+ },
+ "roda-arqueiro-arco": {
+  "erros": [],
+  "src": "/static/hud/icones/arco-32.png",
+  "classe": "sprite desenho",
+  "tela": [
+   32,
+   32
+  ],
+  "natural": [
+   32,
+   32
+  ],
+  "icone": [
+   281,
+   13,
+   313,
+   45
+  ],
+  "arma": null
+ },
+ "roda-arqueiro-besta": {
+  "erros": [],
+  "src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAA",
+  "classe": "sprite ",
+  "tela": [
+   32,
+   32
+  ],
+  "natural": [
+   16,
+   16
+  ],
+  "icone": [
+   281,
+   12,
+   313,
+   44
+  ],
+  "arma": null
+ },
+ "roda-guerreiro": {
+  "erros": [],
+  "src": "/static/hud/icones/espada-32.png",
+  "classe": "sprite desenho ",
+  "tela": [
+   32,
+   32
+  ],
+  "natural": [
+   32,
+   32
+  ],
+  "icone": [
+   281,
+   12,
+   313,
+   44
+  ],
+  "arma": null
+ },
+ "roda-mago": {
+  "erros": [],
+  "src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAA",
+  "classe": "sprite ",
+  "tela": [
+   32,
+   32
+  ],
+  "natural": [
+   16,
+   16
+  ],
+  "icone": [
+   281,
+   12,
+   313,
+   44
+  ],
+  "arma": null
+ }
+}

@@ -761,7 +761,7 @@ def fogueira(ui):
     do Moinho; capela: do lado de fora da Capela Afogada, ou na SALA dela, com a nave vencida), CLASSE (padrão
     arqueiro). COMITIVA: quem anda junto, separado por vírgula (padrão "morel,odete"); RESERVA: quem espera no
     acampamento (padrão "yara"); FERIDO: quem está ferido. CONVERSA=1: todos com a primeira conversa pronta (o ✉). FOME=n: n dias sem comer (PROVISOES, padrão 3); TOCHAS=n.
-    FERA=1: o lobo do patrulheiro. PERIODO e CLIMA: a hora e o tempo (padrão: noite e limpo fora da vila). EXAUSTO=1: a
+    FERA=1: o lobo do patrulheiro (FERA=urso, FERA=falcao: os outros). PERIODO e CLIMA: a hora e o tempo (padrão: noite e limpo fora da vila). EXAUSTO=1: a
     noite passou sem dormir (abre já na entrada por exaustão). Sair leva ao título, com o save (para conferir que a
     fome volta igual)."""
     from rpg.__main__ import menu_principal
@@ -791,9 +791,10 @@ def fogueira(ui):
     if os.environ.get("CONVERSA"):  # todos com a primeira conversa pronta (o ✉): dias e aprovação de sobra
         for c in reserva + ativos:
             cm.membro(g, c).update(dias=99, aprovacao=max(cm.membro(g, c)["aprovacao"], 60))
-    if os.environ.get("FERA"):  # o animal do patrulheiro, como a especialização dá
+    if os.environ.get("FERA"):  # o animal do patrulheiro, como a especialização dá (FERA=urso ou falcao; 1: o lobo)
         from rpg import especializacao
-        g.j.companheiro = {"nome": "Cinza", **especializacao.animal("lobo", g.j.nivel)}
+        tipo = os.environ["FERA"] if os.environ["FERA"] in ("lobo", "urso", "falcao") else "lobo"
+        g.j.companheiro = {"nome": "Cinza", **especializacao.animal(tipo, g.j.nivel)}
     j = g.j
     j.provisoes, j.fome = int(os.environ.get("PROVISOES", "3")), int(os.environ.get("FOME", "0"))
     if os.environ.get("TOCHAS"):

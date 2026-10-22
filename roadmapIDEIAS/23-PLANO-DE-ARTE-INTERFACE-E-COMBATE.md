@@ -962,6 +962,21 @@ A2 (o A desenvolvido pela referência gerada do Jean; a folha `esqueleto-a2.png`
 `esqueleto-a2n.png`, a base aprovada); sobre ele, o sorriso contido e o marcado (S1 e S2, `esqueleto-sorriso.png`)
 aguardam avaliação.
 
+**Pendências registradas (21/10/2026, pedido do Jean; levantamento antes de desenhar):**
+- **A figura do animal no acampamento, por tipo de animal** (o lobo, o urso e o falcão do patrulheiro): conferir se
+  cada um já escolhe uma figura própria, os caminhos, os tamanhos e os compartilhamentos, e propor a atualização de cada
+  uma na linguagem da cena, com a identidade dos retratos aprovados. Não desenhar nem integrar antes da avaliação.
+- **O ícone do comando Atacar do Arqueiro:** testar o arco de equipamento aprovado no tamanho real do comando; conferir
+  o desenho que o comando usa com uma Besta equipada, sem mudar essa regra; uma conferência rápida dos ataques básicos
+  das três classes para achar outros desenhos antigos que ficaram fora da revisão (só registrar, sem ampliar o lote).
+- **O levantamento (21/10/2026; `ferramentas/prototipos/hud/acampamento_atacar/`, a folha `levantamento.png`):** na
+  fogueira, o lobo e o urso recebem o mesmo sprite `fera` (a cabeça de lobo do traço) e o falcão o `voador` (o
+  morcego); a proposta é uma figura de 16×16 de corpo inteiro por animal, num papel próprio pelo tipo (os sprites dos
+  traços não mudam). No Atacar, o ícone é da classe (`icone_ataque`), e com a Besta continua o `arco`; o arco aprovado
+  (`arco-32`) cabe exato no comando e lê melhor que o sprite (teste só na página). Na conferência, o **Atacar do Mago**
+  também usa o sprite antigo (`cajado`); a página do ataque básico no Grimório fica com os ícones de habilidade (etapa
+  8). Nada desenhado nem integrado.
+
 O atalho **Mapa** da doca já foi concluído; esta frente trata dos símbolos internos de caminhos e mapas.
 Não afirmar que só restam talentos e habilidades após este bloco sem conferir os consumíveis, variantes e
 compartilhamentos provisórios ainda registrados. A Capa de Patrulha, o Chapéu de Couro e a Coroa dos Afogados continuam
