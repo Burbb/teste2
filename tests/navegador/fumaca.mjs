@@ -1865,6 +1865,17 @@ async function cenarioAneis(browser) {
         conferir(info.botoes[1] === "Equipar no Anel 2 (vazio)" && info.selos[1] === "Anel 2 · vazio"
           && info.trocas.length === 1 && info.trocas[0].startsWith("Anel 1 · no lugar de") && !/tudo é ganho/.test(info.novo),
           "um espaço vazio: o botão e o cartão dizem que ele está vazio; a comparação, só com o anel do Anel 1");
+        // a dica da mochila e do mercado (o mesmo htmlItem) também sem a linha do espaço vazio, no anel e num espaço único
+        const dica = await page.evaluate(() => {
+          const equip = App.estado.heroi.equip;
+          const anel = Telas.htmlItem({ ...equip.anel1, slot: "anel" });
+          const espaco = Object.keys(equip).find((k) => !equip[k] && !k.startsWith("anel"));
+          const unico = espaco ? Telas.htmlItem({ ...equip.anel1, slot: espaco }) : "";
+          return { anel, unico, espaco };
+        });
+        conferir(!/tudo é ganho|vazio:/.test(dica.anel) && /Anel 1 · no lugar de/.test(dica.anel)
+          && !!dica.espaco && !/tudo é ganho|comparacao/.test(dica.unico),
+          `a dica de um item para espaço vazio: os atributos, sem "tudo é ganho" (anel e ${dica.espaco})`);
       }
       conferir(info.cabe, `a janela do anel cabe na tela de 1280×${altura}`);
       await page.keyboard.press("2");  // o segundo espaço, pelo teclado

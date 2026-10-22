@@ -40,22 +40,21 @@
     }
     return linhas.join("") || "<span>igual</span>";
   }
-  /** `vazio` falso: o espaço vazio não ganha linha (o saque já mostra o espaço vazio ao lado, ou nada para comparar). */
-  function comparar(it, vazio = true) {
+  /** O espaço vazio não ganha linha: os atributos do item já dizem o que ele traz, sem nada para comparar. */
+  function comparar(it) {
     const heroi = App.estado && App.estado.heroi;
     if (!heroi || !it.bonus_bruto) return "";
     const espacos = ESPACOS[it.slot] || [it.slot];
     // O anel tem dois espaços: a troca com cada um, separada, pelo nome do espaço e do anel que está nele (ou vazio).
     // Qual sai é escolha de quem joga: um efeito pode valer mais para a build do que a soma dos números.
     if (espacos.length > 1 && espacos.some((s) => heroi.equip[s])) {
-      return `<div class="comparacao por-espaco">${espacos.filter((s) => vazio || heroi.equip[s]).map((s) => {
+      return `<div class="comparacao por-espaco">${espacos.filter((s) => heroi.equip[s]).map((s) => {
         const alvo = heroi.equip[s];
-        return alvo ? `<div class="troca"><small>${NOME_ESPACO[s]} · no lugar de ${h(alvo.nome)}:</small>${linhasTroca(it, alvo)}</div>`
-          : `<div class="troca"><small>${NOME_ESPACO[s]} · vazio:</small><span class="melhor">▲ tudo é ganho</span></div>`;
+        return `<div class="troca"><small>${NOME_ESPACO[s]} · no lugar de ${h(alvo.nome)}:</small>${linhasTroca(it, alvo)}</div>`;
       }).join("")}</div>`;
     }
     const alvo = heroi.equip[espacos[0]];
-    if (!alvo) return vazio ? '<div class="comparacao"><span class="melhor">▲ espaço vazio: tudo é ganho</span></div>' : "";
+    if (!alvo) return "";
     return `<div class="comparacao"><small>contra ${h(alvo.nome)}:</small>${linhasTroca(it, alvo)}</div>`;
   }
 
@@ -65,11 +64,11 @@
     if (!heroi || !it || !it.slot) return [];
     return (ESPACOS[it.slot] || [it.slot]).filter((s) => heroi.equip[s]).map((s) => ({ ...heroi.equip[s], espaco: s }));
   }
-  function htmlItem(it, rodape = "", comparando = true, vazio = true) {
+  function htmlItem(it, rodape = "", comparando = true) {
     const heroi = App.estado && App.estado.heroi;
     const naoUsa = it.classe && heroi && it.classe !== heroi.classe ? `<div class="pior">Só ${CLASSE_NOME[it.classe] || it.classe} sabem usar isto.</div>` : "";
     return `<b class="r-${h(it.raridade)}">${h(it.nome)}</b><div class="tipo">${NOME_ESPACO[it.slot] || ""} · ${RARIDADE[it.raridade] || ""}</div>
-      <div class="bonus">${h(it.bonus).split(", ").join("<br>")}</div>${it.efeito ? `<div class="efeito-item">${h(it.efeito)}</div>` : ""}${comparando ? comparar(it, vazio) : ""}${naoUsa}
+      <div class="bonus">${h(it.bonus).split(", ").join("<br>")}</div>${it.efeito ? `<div class="efeito-item">${h(it.efeito)}</div>` : ""}${comparando ? comparar(it) : ""}${naoUsa}
       ${it.lore ? `<div class="lore">"${h(it.lore)}"</div>` : ""}${rodape ? `<div class="rodape">${rodape}</div>` : ""}
       ${comparando && equipadosPara(it).length ? '<div class="atalho-shift">Segure <kbd>Shift</kbd> para ver o seu.</div>' : ""}`;
   }
