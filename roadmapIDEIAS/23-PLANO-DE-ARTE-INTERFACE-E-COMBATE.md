@@ -38,7 +38,8 @@ Não iniciar todo o plano numa única tarefa. As etapas técnicas A–I e a vali
   está em "A frente de criaturas em 22/10/2026", no item 1.12. O Bandido do chapéu está reservado como conceito de um possível chefe, fora do jogo.
 - **Agora: 1E.3, as demais criaturas, os chefes e as invocações** (as outras ainda saem dos traços: o `fera`, o
   `humano`, a caveira e os outros sprites de 16×16; o levantamento em `ferramentas/prototipos/hud/criaturas/`).
-  **Depois: 1E.4**, os caminhos e os símbolos internos do mapa e do minimapa. Em seguida, as **etapas 2–9** como estão
+  **1E.4 começada (23/10/2026, a direção agora é só a campanha):** o levantamento e o primeiro lote de protótipos em
+  `ferramentas/prototipos/hud/mapa/` (nada no jogo; aguardando o Jean). Em seguida, as **etapas 2–9** como estão
   abaixo, com as habilidades, os talentos, o Grimório e a árvore juntos na etapa 8.
 - A HUD principal de ferro e carvão e os menus de pincelada continuam aprovados; o estudo da HUD com pintura permanente
   (1.11) não foi escolhido.
@@ -82,7 +83,7 @@ os usos dos sprites estejam migrados. Conferir `Icones` e os catálogos antes de
 | 1B | Corrigir a sequência visual do consumo de recurso e mostrar o bloqueio de vida máxima por ferimentos | Feito: 1.114.1 (o custo) e 1.115.0 (a vida bloqueada) |
 | 1C | Prototipar dado mais visível, iniciativa e indicação dos turnos; facilitar consulta aos testes de atributos | Feito: 1.116.0/1.116.1 (iniciativa e turnos), 1.117.0 (a rolagem no centro), 1.118.0 (os testes na ficha) |
 | 1D | Fechar equipamentos e objetos da bolsa; concluir ícones gerais já trabalhados | **Concluída** (31 equipamentos-base finais na 1.150.0; acabamentos até a 1.154.0; variantes e compartilhamentos provisórios separados, ainda abertos). Histórico: atributos, nove atalhos da doca e principais recursos/consumíveis integrados. Espada e maça integradas (1.145.0), a cota (1.146.0), a manopla (1.147.0), o elmo e as perneiras (1.148.0), o 40/48 do martelo (1.149.0) e as botas de ferro (1.150.0): os 31 equipamentos-base concluídos. Conferir usos residuais antes de fechar o lote |
-| 1E | Desvio visual após os itens: flechas, buffs/estados, inimigos, pets, caminhos e minimapa | **Agora (21/10).** Contador de flechas (1.155.0) e 17 estados (1.155.0–1.161.0) concluídos; Afogado, Ilse, Lobo e Bandido (1.162.0–1.163.0) e os três animais do patrulheiro (1.164.0–1.165.0) integrados; em andamento, 1E.3: as demais criaturas, os chefes e as invocações; depois 1E.4: caminhos e símbolos do mapa/minimapa. Histórico: aprovado como sequência em 19/10. Começar pela contagem de flechas do Arqueiro e por Firme; critérios no item 1.12. **A flecha da carta (F2) e o Firme (R2) no jogo desde a 1.155.0.** Talentos e habilidades ficam para a etapa 8 |
+| 1E | Desvio visual após os itens: flechas, buffs/estados, inimigos, pets, caminhos e minimapa | **Agora (21/10).** Contador de flechas (1.155.0) e 17 estados (1.155.0–1.161.0) concluídos; Afogado, Ilse, Lobo e Bandido (1.162.0–1.163.0) e os três animais do patrulheiro (1.164.0–1.165.0) integrados; em andamento, 1E.3: as demais criaturas, os chefes e as invocações; 1E.4 (caminhos e símbolos do mapa/minimapa) levantada em 23/10, com o primeiro lote em avaliação (`ferramentas/prototipos/hud/mapa/`). Histórico: aprovado como sequência em 19/10. Começar pela contagem de flechas do Arqueiro e por Firme; critérios no item 1.12. **A flecha da carta (F2) e o Firme (R2) no jogo desde a 1.155.0.** Talentos e habilidades ficam para a etapa 8 |
 | 2–9 | Telas, serviços, cenários, habilidades e campanha | Sequência detalhada abaixo |
 
 A etapa 1 não precisa terminar todo o catálogo antes de tratar um defeito de compreensão no combate.
@@ -853,7 +854,7 @@ agora têm prioridade independente dos ícones de habilidades. Esta seção orga
 | 1E.1 | **Contagem de flechas do Arqueiro — prioridade** | **Concluída na 1.155.0** (a F2). Ícone próprio legível junto do número, principalmente na carta de combate; conferir também custos e outros contadores para decidir os usos. Preservar quantidade, avisos de poucas/zero, dicas e áreas de clique |
 | 1E.2 | **Buffs e estados, começando por Firme — prioridade** | **Concluída: os 17 estados, 1.155.0–1.161.0.** Auditar o catálogo e os usos reais, trabalhar em pequenos grupos por função; símbolos reconhecíveis em tamanho real e distintos entre si, sem depender só da cor |
 | 1E.3 | **Inimigos e pets/animais** | **Em andamento:** Afogado e Ilse (1.162.0), Lobo e Bandido (1.163.0), os três animais do patrulheiro (1.164.0–1.165.0); faltam as demais criaturas, os chefes e as invocações. Ícones/retratos usados em cartas, painéis e Bestiário, conforme os usos de cada criatura. Mobs, chefes e pets em lotes pequenos; preservar identidade e silhueta reconhecíveis. Não refazer os retratos aprovados do herói e da comitiva por extensão |
-| 1E.4 | **Caminhos/destinos e ícones do minimapa/mapa** | **Depois da 1E.3.** Auditar os dois contextos; linguagem coerente para lugares, serviços, perigos e marcadores que realmente existam. Conferir estados visitado/atual/bloqueado quando aplicáveis, sem alterar geografia, regras ou navegação |
+| 1E.4 | **Caminhos/destinos e ícones do minimapa/mapa** | **Levantada em 23/10/2026; o primeiro lote em avaliação** (`ferramentas/prototipos/hud/mapa/`, ver abaixo). Auditar os dois contextos; linguagem coerente para lugares, serviços, perigos e marcadores que realmente existam. Conferir estados visitado/atual/bloqueado quando aplicáveis, sem alterar geografia, regras ou navegação |
 
 **Flechas — distinguir os papéis antes de desenhar:** na produção consultada, a aljava de equipamento e do recurso
 do topo já é a arte aprovada da 1.122.0. A contagem na carta ainda usa `S("flecha", 1)` em `batalha.js`
@@ -1102,6 +1103,30 @@ compartilhamentos provisórios ainda registrados. A Capa de Patrulha, o Chapéu 
 com a pendência de arte própria; Sandália e Diadema, com a de nomenclatura. Esses registros não autorizam variantes
 ou mudanças de dados por iniciativa do agente.
 
+**A 1E.4 em 23/10/2026 (levantamento e primeiro lote; nada no jogo; aguardando o Jean).** Tudo em
+`ferramentas/prototipos/hud/mapa/` (o LEIA-ME, as folhas `levantamento.png`, `pecas.png` e `comparacao.png`, as capturas a 1920×945).
+- **O levantamento (produção 1.199.3, a campanha primeiro):** um desenho só (`mapa.js`, `MapaPx`) para o minimapa, o
+  mapa grande e o mapa na página, igual nos dois modos; os símbolos são os sprites 16 antigos do jogo (provisórios),
+  enquanto a lista de Caminhos já usa os ícones de lugar aprovados da HUD (`lugar-*-32/40`): o mesmo lugar com dois
+  desenhos. **Defeitos de leitura:** a posição do jogador sem marca permanente (o anel some; só o nome em ouro); a
+  escala fracionária (×1,27 no minimapa, ×2,64 no mapa grande); os símbolos do minimapa borrados (o 16 desenhado em
+  14 com suavização); as estradas cortando os símbolos, a só conhecida quase invisível e **a saída fechada com cara de
+  destino aberto**; missão e contrato com a mesma marca "!" de texto. **Estados que existem:** atual, clicável,
+  destacado, conhecido não visitado, perigo (no nome), as três estradas, o covil ativo e vencido (só procedural); não
+  existem a missão concluída no mapa nem o bloqueado (só no texto).
+- **A ordem sugerida:** 1) a posição do jogador; 2) os caminhos (a escala, os estados, a saída fechada); 3) os
+  símbolos dos lugares pela família aprovada; 4) as marcas de missão e contrato. Depois: o Diário e as opções de
+  viagem com o mesmo desenho, a legenda, a missão concluída e o perigo no símbolo.
+- **Os candidatos em avaliação (o primeiro lote):** a escala inteira (×2 e ×3, o mesmo espaço); os caminhos por estado
+  com a cancela na saída fechada; os ícones aprovados de lugar 1:1 nos dois mapas (o 40 no grande e o 32 no minimapa,
+  sem desenho novo: o 32 coube e o 24 previsto não foi feito); as marcas desenhadas à mão (a plaqueta de ouro com "!"
+  da missão e o cartaz do mural do contrato, um tamanho para cada mapa); o "você está aqui" permanente em duas
+  direções, **A** (a seta de ouro; a recomendada) e **B** (a figura 16 do herói numa plaqueta); a legenda só com o que
+  existe. Áreas de clique, destinos, rótulos, regras e o procedural conferidos iguais; sem erro no console.
+- **Dependências do procedural** (para o levantamento da retirada): o covil, o vencido, a cidadela e a "selada" só
+  existem lá; a legenda fixa dos nove desenhos; `MapaPx.sprite` cai no bioma para a `saida` da campanha; os glifos de
+  `rpg/mapa.py`; o `fechado` da campanha não chega à tela como campo.
+
 **Fluxo:** levantamento dos usos reais → proposta em pequenos lotes → avaliação de Jean → tamanhos e integração.
 Usar os tamanhos de cada contexto, sem aplicar automaticamente a grade de equipamento a rostos, estados ou minimapa.
 Reaproveitar bancadas e capturas; a janela principal é 1920×945. Não reabrir a matriz de resoluções em cada desenho.
@@ -1264,7 +1289,8 @@ volta à pauta quando essa expansão exigir; não é uma migração de engine.
    Afogada, pendente de identidade: o substituto dela nos covis; o Lich Menor entrou na 1.199.0; o Senhor da Guerra entrou na 1.194.0, a Hidra do Brejo na 1.197.0 e o Profeta das Cinzas na 1.198.0), o
    antagonista, (o Espantalho Possuído entrou na 1.195.0 e o servo do Necromante na 1.196.0); nada começado antes do pedido. A relação em "A frente de criaturas em 22/10/2026" (item 1.12). O Esqueleto E2 e o Bandido do
    chapéu estão reservados.
-3. **Depois, 1E.4:** os caminhos/destinos e os símbolos internos do mapa e do minimapa.
+3. **1E.4, em avaliação (23/10/2026):** o levantamento e o primeiro lote de protótipos (a posição, os caminhos, os
+   símbolos e as marcas; detalhes em "A 1E.4 em 23/10/2026", no item 1.12). Aguardando o Jean escolher; nada no jogo.
 4. **Retomar a etapa 2** e **seguir 3–7**, como na sequência abaixo; **etapa 8** com habilidades, talentos, Grimório e
    árvore no mesmo ciclo; **etapa 9**, a campanha; **depois do plano**, a avaliação de refatoração.
 

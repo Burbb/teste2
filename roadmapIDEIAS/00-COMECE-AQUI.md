@@ -6847,3 +6847,25 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Mudança de direção (Jean, 23/10/2026):** o modo "Novo jogo" procedural deve sair no futuro, ficando só a campanha. A retirada não entra agora: pede um levantamento próprio, porque o modo pode compartilhar código com a campanha. **Suspensos** (o que ainda não tinha começado): a adaptação para 16 e a integração do Barqueiro e do antagonista, o retrato do Barqueiro na branch e a junção da branch `claude/barqueiro-do-charco` (com a migração v6→v7 dos covis) à produção. Os estudos e a branch ficam preservados como estão. Os retratos exclusivos do modo procedural não bloqueiam o plano.
 - **Útil à campanha:** a Ilse com a ficha dela (1.199.3) e a remoção do `esqueleto_servo` (1.199.1). **Só do procedural:** o gênero do antagonista (1.199.2), a branch do Barqueiro com a migração dos covis e os dois estudos.
 - **Parado:** nenhuma criatura nova, o mapa não começado; a retirada do procedural fica para um levantamento próprio.
+
+### 23/10/2026 (data do computador local) — A 1E.4: o levantamento do mapa e do minimapa e o primeiro lote (nada no jogo)
+
+- **Estado conferido:** a branch em `9a296675`, igual ao remoto; o `caido-avatar-512.png` continua fora dos commits; a
+  branch `claude/barqueiro-do-charco` e os estudos suspensos não foram tocados. Produção: **1.199.3** (não mudou).
+- **O levantamento** (`ferramentas/prototipos/hud/mapa/`, o LEIA-ME e `levantamento.png`, capturas da campanha a
+  1920×945): o mapa é um desenho só (`mapa.js`) para o minimapa, o mapa grande e o mapa na página, nos dois modos; os
+  símbolos são os sprites 16 antigos, enquanto a lista de Caminhos já usa os ícones de lugar aprovados. Defeitos: a
+  posição do jogador sem marca permanente, a escala fracionária (×1,27 e ×2,64), os símbolos do minimapa borrados, as
+  estradas cortando os símbolos e a só conhecida quase invisível, a saída fechada com cara de destino aberto, a mesma
+  marca "!" para missão e contrato. A ordem sugerida, os estados e as dependências do procedural no item 1.12 do
+  plano 23 ("A 1E.4 em 23/10/2026").
+- **O primeiro lote, em avaliação** (`pecas.png`, `comparacao.png`, atual × A × B com os mesmos dados): a escala
+  inteira, os caminhos por estado com a cancela, os ícones aprovados de lugar no mapa (40 e 32; sem desenho novo), as
+  marcas de missão e de contrato desenhadas à mão e o "você está aqui" em duas direções (A, a seta, recomendada; B, o
+  herói na plaqueta). O protótipo é uma cópia do `mapa.js` servida só nas fotos; o jogo não mudou.
+- **O Aseprite:** o conector desta sessão não subiu (nada escutava a 6515; o editor aberto com um documento do Jean
+  respondia "editor not connected"); a janela não foi tocada e as fontes saíram em lote (`auxiliares/montar.lua`).
+- **Verificações:** só arquivos de protótipo e de registro mudaram (nenhum do jogo); mesmo assim, `unittest` (685, 1 pulado: a fumaça, rodada à parte), o gabarito idêntico, o pyflakes (só o aviso conhecido) e a fumaça inteira ("tudo certo"). Nas fotos do protótipo, nenhum erro nem aviso no console.
+- **Aguardando o Jean:** escolher entre A e B e aprovar (ou não) cada elemento do lote; a integração e o Diário/as
+  opções de viagem com o mesmo desenho ficam para depois da escolha.
+
