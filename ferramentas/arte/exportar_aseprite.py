@@ -134,6 +134,9 @@ DERIVADOS = {
     # rochedo), pelas famílias; o Espantalho Possuído e o Mímico continuam nos traços
     "retrato-arvore-desperta": {32: (16, 2), 48: (16, 3)},
     "retrato-golem": {32: (16, 2), 48: (16, 3)},
+    # 1.190.0: a Árvore Anciã (a R2b, o rosto em close com o olhar pesado, com a guia oculta), pelo id da guardiã; só a
+    # carta da luta (o guardião não entra no Bestiário), como a Rainha
+    "retrato-arvore-ancia": {32: (16, 2)},
 }
 # O martelo (1.149.0) só tem fontes do 40 e do 48 (aseprite/martelo/): o 32 e o 64 são a grade de desenhos.js, no
 # jogo, e não saem daqui.

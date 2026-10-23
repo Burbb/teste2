@@ -6315,3 +6315,22 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   fotos e as grades regravadas iguais às gravadas.
 - **Continua:** a escolha do Jean; nada integrado; os outros chefes, o antagonista, o servo, o Espantalho, o Mímico e o
   mapa não foram começados.
+
+### 23/10/2026 (data do computador local) — A Árvore Anciã no jogo (1.190.0): a R2b, pelo id da guardiã
+
+- **Estado conferido:** a branch em `2af22748`, igual ao remoto, sem alterações locais (uma worktree de outra sessão,
+  `interesting-curran-366911`, não foi tocada); produção na 1.189.0.
+- **Decisão do Jean:** a `anciaa-r2b` aprovada, sem retoques (o lote da noite: a Árvore, o Golem R1 refinado, os seis
+  chefes restantes e os três especiais; só a Árvore entra no jogo).
+- **No jogo (1.190.0):** `retrato-arvore-ancia` (16 e 32, com os @2x; sem 48, que o guardião não usa) pelo id
+  `ent_anciao` (`RETRATO_GUARDIAO`). A Árvore Desperta T1 e o Espantalho Possuído como estavam; nenhuma regra mudou.
+- **A fonte:** a da R2b, copiada byte a byte (a guia oculta, conferida); exportada numa pasta temporária e igual byte a
+  byte à proposta antes de gravar; `--conferir`: tudo igual.
+- **Conferido com os arquivos de produção** (`criaturas/chefes_arvore_golem/capturas-1190/`): a guardiã na luta com a
+  Árvore Desperta e o lobo; o Espantalho pelo evento real. A folha
+  `ferramentas/prototipos/hud/integracoes-22-10/integracoes-1190.png`.
+- **Testes:** a Árvore Anciã pelo id, em qualquer nome próprio; a comum e o Espantalho como estavam; o teste dos
+  guardiões passa a ler o `RETRATO_GUARDIAO` (o id `ent_anciao` não é o nome do retrato).
+- **Verificações sobre o código final:** `unittest` (662, 1 pulado: a fumaça, rodada à parte), o gabarito (idêntico, sem
+  atualizar: nenhuma das 24 partidas encontra a Árvore Anciã), o pyflakes (só o aviso conhecido) e a fumaça inteira
+  (378 ok, tudo certo).

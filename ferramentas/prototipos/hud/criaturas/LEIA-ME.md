@@ -245,3 +245,4 @@ A escolha do par e da direção é do Jean; nada foi começado.
 - **Segunda rodada dos dois guardiões (23/10/2026), em avaliação:** pelas referências novas em close, três tentativas
   de copiar cada uma (R1, pela guia limpa; R2, por volumes; R3, pelas linhas) e três variações da R2 (R2a a R2c), em
   `chefes_arvore_golem/` (as folhas `anciaa-r.png`, `primordial-r.png`, `anciaa-r2.png` e `primordial-r2.png`).
+- **Integrada na 1.190.0:** a Árvore Anciã R2b, pelo id da guardiã (só o 16 e o 32 da carta).

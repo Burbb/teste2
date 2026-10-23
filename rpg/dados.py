@@ -172,7 +172,8 @@ RETRATOS = ("demonio", "etereo", "corrompido", "morto-vivo", "construto", "voado
 # Troll; 1.168.0: a Rainha Aracnídea; a chave de um guardião muda com o lugar), depois da chave; os outros guardiões
 # continuam pelos traços, e as aranhas que a Rainha invoca têm a família "aranha" (o retrato da Aranha gigante).
 RETRATO_CHAVE = {"ilse": "ilse"}
-RETRATO_GUARDIAO = {"rei_troll": "rei_troll", "rainha_aracnidea": "rainha_aracnidea"}  # 1.168.0: a Rainha
+RETRATO_GUARDIAO = {"rei_troll": "rei_troll", "rainha_aracnidea": "rainha_aracnidea",  # 1.168.0: a Rainha
+                    "ent_anciao": "arvore_ancia"}  # 1.190.0: a Árvore Anciã (o id ficou o do Ent Ancião)
 RETRATO_FAMILIA = {"afogado": "afogado", "lobo": "lobo", "bandido": "bandido", "troll": "troll", "aranha": "aranha",
                    "sapo": "sapo", "sanguessuga": "sanguessuga", "cultista": "cultista", "bruxa_brejo": "bruxa", "rato": "rato",
                    "javali": "javali", "carnical": "carnical", "espectro": "espectro",

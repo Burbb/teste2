@@ -129,3 +129,22 @@ GP1 e o GP2 ficam como histórico. A Árvore mantém a casca e a paleta da T1; o
 - As folhas `anciaa-r.png` e `primordial-r.png` (a referência, a guia e as três tentativas a 12×; R1 × R2 × R3 na luta, o
   grupo em tamanho real e a carta a 2×; a fileira com o comum e os chefes aprovados) e `anciaa-r2.png` e
   `primordial-r2.png` (a R2 e as três variações).
+
+# A integração da Árvore Anciã (1.190.0): a R2b
+
+**Decisão do Jean:** a `anciaa-r2b` (o olhar mais pesado) aprovada, sem retoques; as outras Árvores Anciãs ficam como
+histórico. O Golem Primordial continua em avaliação.
+
+- **A fonte:** `fontes/anciaa-r2b/anciaa-r2b-16.aseprite` (sem alteração desde o `4580db68`, a rodada encerrada no
+  `2af22748`), copiada byte a byte para `ferramentas/arte/aseprite/retrato-arvore-ancia/retrato-arvore-ancia-16.aseprite`
+  (guia oculta, casca, musgo, rosto; conferido na fonte de produção: `guia=false`); só o 32 em `DERIVADOS`, com os @2x
+  (o guardião só aparece na carta da luta; nenhum 48).
+- **Antes de gravar no jogo:** exportados numa pasta temporária e comparados com a proposta (`proposta/anciaa-r2b-*`): os
+  quatro iguais byte a byte. Depois, o `--conferir`: tudo igual ao jogo.
+- **No jogo:** pelo id estável da guardiã (`RETRATO_GUARDIAO`: `ent_anciao` → `arvore_ancia`; o papel `CRIATURA` em
+  `icones.js`), como o Rei Troll e a Rainha Aracnídea, em qualquer nome próprio do covil. A Árvore Desperta T1 (pela
+  família) e o Espantalho Possuído (pela origem, no sprite da planta) continuam como estavam; nenhuma regra mudou.
+- **Conferido com os arquivos de produção** (`auxiliares/fotografar_jogo.mjs`, `capturas-1190/`, a 1920×945, nada
+  trocado na página): a guardiã na luta (`CHEFE=ent_anciao`) com a Árvore Desperta e o lobo, e o Espantalho pelo evento
+  real (`auxiliares/cenario_excecoes.py`). Nenhum pedido a `ferramentas/`, sem erro no console. A folha
+  `../integracoes-22-10/integracoes-1190.png`.
