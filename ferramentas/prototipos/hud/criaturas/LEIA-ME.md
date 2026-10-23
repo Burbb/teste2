@@ -223,3 +223,10 @@ A escolha do par e da direção é do Jean; nada foi começado.
 - **Integrado na 1.187.0:** o Cavaleiro Sombrio P3, pela família, com o Último Guarda (os outros Cavaleiros como
   histórico). A Abominação C3, aceita visualmente, continua fora do jogo.
 - **Integrada na 1.188.0:** a Abominação C3, pela família, com os afixos (as outras como histórico).
+
+## A Árvore Desperta e o golem de pedra (22/10/2026, na 1.188.0)
+
+- **Em avaliação, nenhum aprovado:** a Árvore Desperta (A1, os galhos nus; A2, a copa pesada) e o golem de pedra (G1, a
+  cantaria; G2, o rochedo), em `arvore_golem/` (as folhas `arvore.png` e `golem.png`). A Árvore Anciã e o Golem
+  Primordial ficam para uma rodada própria. Na integração, decidir o Espantalho Possuído e o Mímico, que são dessas
+  famílias.
