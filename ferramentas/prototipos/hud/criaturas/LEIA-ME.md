@@ -276,3 +276,7 @@ A escolha do par e da direção é do Jean; nada foi começado.
 - **O refino do Espantalho (23/10/2026), aguardando o Jean:** o `espantalho-n32r` e o `espantalho-n16r`, em cópias (a T, o
   N32 e o N16 intactos), no quadro mais perto sugerido pelo Jean (a ponta da copa fora, o rosto maior) e sem a aba caída
   (o chapéu reto, dispensada pelo Jean); a folha `espantalho_32/refino.png`. Nada integrado.
+- **O Senhor da Guerra construído em 32 e adaptado para 16 (23/10/2026), aguardando o Jean:** `senhor_32/` (o estudo
+  nativo `senhor-n32` e a proposta `senhor-n16`; a folha `comparacao.png`). A S2, a T recusada e as outras propostas ficam.
+  A primeira construção lia como "um bebê de barba e tapa-olho" (o Jean): a correção veio da anatomia de adulto (o alto da
+  cabeça fora do quadro, a testa e a sobrancelha pesadas, o olho fundo, o nariz largo, a pele curtida). Nada integrado.

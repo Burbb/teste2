@@ -1251,7 +1251,7 @@ volta à pauta quando essa expansão exigir; não é uma migração de engine.
    `par1-hidra-dragao.png`, `par2-senhor-profeta.png`, `par3-bruxa-lich.png`, `especiais.png` e `candidatos.png`; as
    preferências e as limitações no LEIA-ME). **A segunda rodada, decidida pelo Jean (23/10/2026):** a Hidra (`hidra-t`) e
    o Senhor da Guerra (`senhor-t`) recusados (a próxima Hidra com as três cabeças olhando para o mesmo lado, de réptil
-   convincente; o Senhor ainda sem um rosto compreensível); o visual do Profeta (`profeta-t`) aceito, preservado e sem
+   convincente; o Senhor ainda sem um rosto compreensível, depois construído em 32 nativos e adaptado à mão para 16, aguardando o Jean: `criaturas/senhor_32/`, a folha `comparacao.png`); o visual do Profeta (`profeta-t`) aceito, preservado e sem
    integrar; o Espantalho (`espantalho-t`, uma base conceitual) refeito em 32 nativos e adaptado para 16 (`criaturas/espantalho_32/`, a folha `comparacao.png`) e, depois, refinado em cópias (o N32R e o N16R: o quadro mais perto, o chapéu reto, a expressão pela testa, pelas órbitas e pela costura), aguardando o Jean (a folha `refino.png`); o próximo servo sem elmo nem armadura, com crânio e ossos
    próprios; o Lich sem nova aprovação; o Mímico M1 integrado (1.192.0). **O teste do Dragão de Gelo em 32×32 nativos**
    (`criaturas/dragao_32/`, a folha `comparacao.png`): **a direção aprovada pelo Jean.** Antes da integração, o N32R (um

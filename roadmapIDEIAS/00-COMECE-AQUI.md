@@ -6499,3 +6499,23 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   exportações iguais ao composto (as antigas reexportadas byte a byte iguais), os derivados em blocos inteiros e as fotos
   sem erro no console. O conector do Aseprite estava sem editor; as fontes saíram pelo Aseprite em lote, sem tocar na
   janela aberta.
+
+### 23/10/2026 (data do computador local) — O Senhor da Guerra em 32 nativos, adaptado à mão para 16 (nada no jogo)
+
+- **Estado:** depois do refino do Espantalho (`93c6c2b1`); só protótipo.
+- **Pedido do Jean:** o caminho do Dragão e do Espantalho para o Senhor da Guerra (a S2 deu a direção; a T foi recusada
+  por não ter um rosto compreensível): o estudo de 32 pela referência guardada (`Senhor da guerra caolho-3.png`), com a
+  cabeça dominando o quadro, e a adaptação à mão para 16 com olho, venda, nariz, boca e barba legíveis.
+- **No protótipo, aguardando o Jean** (`ferramentas/prototipos/hud/criaturas/senhor_32/LEIA-ME.md`, a folha
+  `comparacao.png`): o `senhor-n32` e o `senhor-n16`. A S2 e a T ficam como estão.
+- **Durante o trabalho:** a primeira construção lia, nas palavras do Jean, como "um bebê de barba e tapa-olho"; a correção
+  veio da anatomia de adulto (o alto da cabeça fora do quadro, rugas, a sobrancelha pesada sobre o olho fundo, o nariz
+  largo, a pele curtida, a barba em tufos). O machado, com 4–5 px na borda, saiu; fica o manto de pele.
+- **A minha leitura:** a venda com a tira, a cicatriz, o olho semicerrado, o nariz, a boca e a barba sobreviveram ao 16; as
+  rugas, a maçã do rosto e os sulcos se perderam, e a venda é a mancha mais forte do rosto.
+- **Verificações proporcionais (nenhum código do jogo mudou):** o pyflakes dos auxiliares, a sintaxe do roteiro das fotos,
+  as fontes reabertas (o lado, as camadas na ordem, a guia oculta), 0 diferentes na releitura, as exportações iguais ao
+  composto, os derivados em blocos inteiros e as fotos sem erro no console. As fontes pelo Aseprite em lote (o conector
+  sem editor; a janela aberta do Jean não foi tocada).
+- **Parado para a avaliação dos dois:** nada integrado, a Bruxa Afogada intocada, nenhuma criatura nova, o mapa não
+  começado.

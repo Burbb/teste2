@@ -1,0 +1,232 @@
+{
+ "atual/100": {
+  "dpr": 1,
+  "cartas": [
+   {
+    "nome": "Senhor da Guerra",
+    "caixa": [
+     830,
+     67,
+     1040,
+     117
+    ],
+    "retrato": {
+     "css": [
+      32,
+      32
+     ],
+     "aparelho": [
+      32,
+      32
+     ],
+     "arquivo": "data:322"
+    }
+   },
+   {
+    "nome": "Bandido",
+    "caixa": [
+     830,
+     125,
+     1040,
+     175
+    ],
+    "retrato": {
+     "css": [
+      32,
+      32
+     ],
+     "aparelho": [
+      32,
+      32
+     ],
+     "arquivo": "http://127.0.0.1:55181/static/hud/icones/retrato-bandido-32.png"
+    }
+   }
+  ],
+  "erros": []
+ },
+ "s2/100": {
+  "dpr": 1,
+  "cartas": [
+   {
+    "nome": "Senhor da Guerra",
+    "caixa": [
+     830,
+     67,
+     1040,
+     117
+    ],
+    "retrato": {
+     "css": [
+      32,
+      32
+     ],
+     "aparelho": [
+      32,
+      32
+     ],
+     "arquivo": "data:782"
+    }
+   },
+   {
+    "nome": "Bandido",
+    "caixa": [
+     830,
+     125,
+     1040,
+     175
+    ],
+    "retrato": {
+     "css": [
+      32,
+      32
+     ],
+     "aparelho": [
+      32,
+      32
+     ],
+     "arquivo": "http://127.0.0.1:55293/static/hud/icones/retrato-bandido-32.png"
+    }
+   }
+  ],
+  "erros": []
+ },
+ "t/100": {
+  "dpr": 1,
+  "cartas": [
+   {
+    "nome": "Senhor da Guerra",
+    "caixa": [
+     830,
+     67,
+     1040,
+     117
+    ],
+    "retrato": {
+     "css": [
+      32,
+      32
+     ],
+     "aparelho": [
+      32,
+      32
+     ],
+     "arquivo": "data:794"
+    }
+   },
+   {
+    "nome": "Bandido",
+    "caixa": [
+     830,
+     125,
+     1040,
+     175
+    ],
+    "retrato": {
+     "css": [
+      32,
+      32
+     ],
+     "aparelho": [
+      32,
+      32
+     ],
+     "arquivo": "http://127.0.0.1:55406/static/hud/icones/retrato-bandido-32.png"
+    }
+   }
+  ],
+  "erros": []
+ },
+ "n32/100": {
+  "dpr": 1,
+  "cartas": [
+   {
+    "nome": "Senhor da Guerra",
+    "caixa": [
+     830,
+     67,
+     1040,
+     117
+    ],
+    "retrato": {
+     "css": [
+      32,
+      32
+     ],
+     "aparelho": [
+      32,
+      32
+     ],
+     "arquivo": "data:1658"
+    }
+   },
+   {
+    "nome": "Bandido",
+    "caixa": [
+     830,
+     125,
+     1040,
+     175
+    ],
+    "retrato": {
+     "css": [
+      32,
+      32
+     ],
+     "aparelho": [
+      32,
+      32
+     ],
+     "arquivo": "http://127.0.0.1:55516/static/hud/icones/retrato-bandido-32.png"
+    }
+   }
+  ],
+  "erros": []
+ },
+ "n16/100": {
+  "dpr": 1,
+  "cartas": [
+   {
+    "nome": "Senhor da Guerra",
+    "caixa": [
+     830,
+     67,
+     1040,
+     117
+    ],
+    "retrato": {
+     "css": [
+      32,
+      32
+     ],
+     "aparelho": [
+      32,
+      32
+     ],
+     "arquivo": "data:970"
+    }
+   },
+   {
+    "nome": "Bandido",
+    "caixa": [
+     830,
+     125,
+     1040,
+     175
+    ],
+    "retrato": {
+     "css": [
+      32,
+      32
+     ],
+     "aparelho": [
+      32,
+      32
+     ],
+     "arquivo": "http://127.0.0.1:55626/static/hud/icones/retrato-bandido-32.png"
+    }
+   }
+  ],
+  "erros": []
+ }
+}
