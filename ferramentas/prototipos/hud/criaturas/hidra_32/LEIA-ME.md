@@ -191,3 +191,21 @@ mandíbula dela; a separação das menores e a continuidade dos pescoços.
   sobrancelha, a boca aberta e a mandíbula; as de trás com olho e presa; os pescoços contínuos, o da principal com o ventre.
 - **Perdeu:** o crânio arredondado da principal vira um degrau; a narina e a língua são de um pixel; as cabeças de trás têm o
   focinho curto, e a da direita é a que menos se destaca do fundo; a 1× o conjunto é uma massa oliva com três olhos e a boca.
+
+# O ajuste da presa de cima: N16D2 (23/10/2026, protótipo; em avaliação, nada no jogo)
+
+**Pedido do Jean:** o N16D agradou; só a presa de cima da principal ficou na ponta do focinho, uma barra branca vertical.
+Recuar para dentro da boca, reduzir a altura se preciso, nascendo sob o maxilar com um espaço escuro até a ponta; sem
+acrescentar dentes, numa cópia (o N16D fica).
+
+- **O que mudou** (`hidra-n16d2`, `GRADE_16D2` em `grade.py`): só as linhas 10 e 11. A presa ocupava a coluna da ponta
+  (x1) nas duas linhas; agora a linha 10 é só o lábio, e a presa tem um pixel, na linha 11, recuada uma coluna (x2), com o
+  vermelho escuro da boca em x1, entre ela e a ponta. A cabeça, a expressão, a mandíbula, a presa de baixo, as outras duas
+  cabeças e os pescoços como no N16D.
+- **A fonte, pelo Aseprite em lote** (`python auxiliares/exportar.py --montar hidra-n16d2`): 0 diferentes na releitura;
+  reaberta com a guia oculta e as camadas na ordem; a exportação igual ao composto, o 32 da carta e os @2x em blocos
+  inteiros. O N16D reexportado saiu igual.
+- **A foto** (`MODOS=n16d2`), na mesma luta e na mesma caixa da carta, sem erro no console. **A folha:** `presa.png`
+  (`python auxiliares/prancha.py --f`: o N16D × o N16D2, a carta a 2×, a fileira e o diagnóstico).
+- **A minha leitura:** na carta a 32 px, a barra branca da ponta some; a presa fica como um ponto claro dentro da boca, e a
+  ponta do focinho volta a ler como focinho.

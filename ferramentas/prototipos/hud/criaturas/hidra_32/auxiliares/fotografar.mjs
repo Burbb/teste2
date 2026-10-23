@@ -2,11 +2,11 @@
 // com um sapo), a 1920×945, com os mesmos dados em cada modo. Modos: "atual" (o jogo: o sprite da fera), "t" (a
 // transposição recusada, no arquivo de 32 que teria: o 16 ×2), "n32" (o estudo nativo de 32) e "n16" (a proposta de 16,
 // no 32 da carta); depois, "n32b" (a segunda construção de 32) "n32c" (a correção da
-// cabeça principal) "n32d" (a reconstrução pela nova referência) e "n16d" (a adaptação dela para 16, no 32
-// da carta). Os desenhos entram na carta com o mesmo elemento que o
+// cabeça principal) "n32d" (a reconstrução pela nova referência) "n16d" (a adaptação dela para 16, no 32
+// da carta) e "n16d2" (o ajuste da presa de cima). Os desenhos entram na carta com o mesmo elemento que o
 // Icones.criatura(…, 32) monta, trocados só na página. Registra a caixa de cada carta, o tamanho do retrato na tela e no
 // aparelho, e os erros do console.
-//   [MODOS=atual,t,n32,n16,n32b,n32c,n32d,n16d] PLAYWRIGHT_MODULO=<file:// do index.mjs> node fotografar.mjs <raiz> <pasta das fotos>
+//   [MODOS=atual,t,n32,n16,n32b,n32c,n32d,n16d,n16d2] PLAYWRIGHT_MODULO=<file:// do index.mjs> node fotografar.mjs <raiz> <pasta das fotos>
 import { spawn } from "child_process";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import path from "path";
@@ -25,10 +25,11 @@ const PARES = {
   n32c: ["../proposta/hidra-n32c-32.png", "../proposta/hidra-n32c-32@2x.png"],
   n32d: ["../proposta/hidra-n32d-32.png", "../proposta/hidra-n32d-32@2x.png"],
   n16d: ["../proposta/hidra-n16d-32.png", "../proposta/hidra-n16d-32@2x.png"],
+  n16d2: ["../proposta/hidra-n16d2-32.png", "../proposta/hidra-n16d2-32@2x.png"],
 };
 const TROCA = Object.fromEntries(Object.entries(PARES).map(([m, [a, b]]) => [m, [url64(a), url64(b)]]));
 const TELAS = [{ nome: "100", width: 1920, height: 945, dpr: 1 }];
-const MODOS = (process.env.MODOS || "atual,t,n32,n16,n32b,n32c,n32d,n16d").split(",");
+const MODOS = (process.env.MODOS || "atual,t,n32,n16,n32b,n32c,n32d,n16d,n16d2").split(",");
 const AMB = { TUTORIAL: "0", CLASSE: "guerreiro", NIVEL_LUTA: "5", GRUPO: "sapo:1", CHEFE: "hidra_do_brejo" };
 mkdirSync(saida, { recursive: true });
 const b = await chromium.launch();

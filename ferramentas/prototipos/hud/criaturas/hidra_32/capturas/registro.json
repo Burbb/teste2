@@ -366,5 +366,51 @@
    }
   ],
   "erros": []
+ },
+ "n16d2/100": {
+  "dpr": 1,
+  "cartas": [
+   {
+    "nome": "Hidra do Brejo",
+    "caixa": [
+     830,
+     67,
+     1040,
+     117
+    ],
+    "retrato": {
+     "css": [
+      32,
+      32
+     ],
+     "aparelho": [
+      32,
+      32
+     ],
+     "arquivo": "data:862"
+    }
+   },
+   {
+    "nome": "Sapo-touro gigante",
+    "caixa": [
+     830,
+     125,
+     1040,
+     175
+    ],
+    "retrato": {
+     "css": [
+      32,
+      32
+     ],
+     "aparelho": [
+      32,
+      32
+     ],
+     "arquivo": "http://127.0.0.1:52089/static/hud/icones/retrato-sapo-32.png"
+    }
+   }
+  ],
+  "erros": []
  }
 }

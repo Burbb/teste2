@@ -347,15 +347,22 @@ A16D = [
     (14, 2, "osssmmso"),
 ]
 GRADE_16D = pintar([B16D, NB16D, C16D, NC16D, NA16D, A16D], 16)
-# a paleta de cada desenho (a da nova referência só no N32D e no N16D)
-PALETAS = {"hidra-n32d": PALETA_D, "hidra-n16d": PALETA_D}
+# O ajuste da presa de cima (23/10/2026, o N16D preservado): no N16D ela ocupava a ponta do focinho nas linhas 10 e 11,
+# uma barra branca vertical. Na cópia, a linha 10 é só o lábio, e a presa tem um pixel, na linha 11, recuada uma coluna
+# (nasce sob o maxilar), com o escuro da boca entre ela e a ponta. O resto como no N16D.
+GRADE_16D2 = list(GRADE_16D)
+GRADE_16D2[10] = GRADE_16D[10][:1] + "o" + GRADE_16D[10][2:]
+GRADE_16D2[11] = GRADE_16D[11][:1] + "Rd" + GRADE_16D[11][3:]
+# a paleta de cada desenho (a da nova referência só no N32D, no N16D e na cópia)
+PALETAS = {"hidra-n32d": PALETA_D, "hidra-n16d": PALETA_D, "hidra-n16d2": PALETA_D}
 # cada desenho: a grade, o lado e a guia
 DESENHOS = {"hidra-n32": (GRADE_32, 32, "guias/hidra-guia-32.png"),
             "hidra-n16": (GRADE_16, 16, "guias/hidra-guia-16.png"),
             "hidra-n32b": (GRADE_32B, 32, "guias/hidra-guia-32.png"),
             "hidra-n32c": (GRADE_32C, 32, "guias/hidra-guia-32.png"),
             "hidra-n32d": (GRADE_32D, 32, "guias/hidra-d-guia-32.png"),
-            "hidra-n16d": (GRADE_16D, 16, "guias/hidra-d-guia-16.png")}
+            "hidra-n16d": (GRADE_16D, 16, "guias/hidra-d-guia-16.png"),
+            "hidra-n16d2": (GRADE_16D2, 16, "guias/hidra-d-guia-16.png")}
 # as camadas, de baixo para cima (a guia por baixo de tudo)
 ORDEM = ["guia", "escamas", "boca", "olhos", "contorno"]
 

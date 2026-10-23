@@ -6698,3 +6698,15 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   a grade igual ao rascunho, a fonte reaberta (o lado, as camadas na ordem, a guia oculta), 0 diferentes na releitura, a
   exportação igual ao composto, os derivados em blocos inteiros, o N32D reexportado igual e a foto sem erro no console.
 - **Parado para a avaliação:** nada integrado além do servo; nenhuma criatura nova, o mapa não começado.
+
+### 23/10/2026 (data do computador local) — A Hidra: o ajuste da presa de cima, N16D2 (em avaliação)
+
+- **Estado conferido:** a branch em `158699f4`, igual ao remoto; o `caido-avatar-512.png` continua fora dos commits.
+- **Pedido do Jean:** o N16D agradou; recuar a presa de cima da principal, que fazia uma barra branca na ponta do focinho,
+  numa cópia.
+- **No protótipo, em avaliação** (`ferramentas/prototipos/hud/criaturas/hidra_32/LEIA-ME.md`, a folha `presa.png`): o
+  `hidra-n16d2`, só as linhas 10 e 11 mudadas (a presa com um pixel, uma coluna para dentro, sob o maxilar, com o escuro
+  da boca até a ponta). O N16D intacto; o servo integrado como estava.
+- **Verificações proporcionais:** o pyflakes dos auxiliares, a sintaxe do roteiro das fotos, a fonte reaberta (o lado, as
+  camadas na ordem, a guia oculta), 0 diferentes na releitura, a exportação igual ao composto, os derivados em blocos
+  inteiros, o N16D reexportado igual e a foto sem erro no console.

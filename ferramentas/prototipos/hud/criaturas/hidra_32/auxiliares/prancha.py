@@ -7,8 +7,8 @@ Com --b, a da segunda construção de 32 (construcao-32.png): o N32 anterior × 
 fileira e o diagnóstico (sem nova adaptação para 16). Com --c, a da correção da cabeça principal (cabeca-principal.png):
 o N32B × o N32C, com a cabeça da referência ao lado. Com --d, a da reconstrução pela nova referência (reconstrucao.png):
 a referência nova × o N32C × o N32D. Com --e, a da adaptação para 16 (adaptacao-16.png): o N32D × o N16D (no 32 da
-carta), a fileira e o diagnóstico.
-    python prancha.py [--b | --c | --d | --e]      (depois do fotografar.mjs)
+carta), a fileira e o diagnóstico. Com --f, a do ajuste da presa (presa.png): o N16D × o N16D2.
+    python prancha.py [--b | --c | --d | --e | --f]      (depois do fotografar.mjs)
 """
 import json
 import pathlib
@@ -167,7 +167,12 @@ def segunda(antes=("n32", "N32 (anterior)"), depois=("n32b", "N32B (a construç�
 
 
 if __name__ == "__main__":
-    if "--e" in sys.argv:
+    if "--f" in sys.argv:
+        segunda(("n16d", "N16D (antes)"), ("n16d2", "N16D2 (a presa)"), "presa.png",
+                "o ajuste da presa de cima: N16D × N16D2 (só as linhas 10 e 11)", (0, 0, 1254, 1254),
+                "a referência nova (reduzida só para olhar)",
+                RAIZ / "ferramentas/arte/referencias/icones/Hidra tríplice do pântano em pixel art.png")
+    elif "--e" in sys.argv:
         segunda(("n32d", "N32D (aprovado)"), ("n16d", "N16D (16 ×2)"), "adaptacao-16.png",
                 "a adaptação para 16: N32D × N16D", (0, 0, 1254, 1254),
                 "a referência nova (Hidra tríplice do pântano em pixel art.png; reduzida só para olhar)",
