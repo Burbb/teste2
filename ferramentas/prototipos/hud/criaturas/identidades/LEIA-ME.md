@@ -185,9 +185,25 @@ guardar os números do servo seria criar uma abstração que o Erguer Servo não
 herói). **O impacto:** apagar a entrada; o `test_esqueleto_pela_familia` perde a asserção dela (as do esqueleto inimigo
 continuam); o gabarito deve sair idêntico sem atualizar; nenhuma migração.
 
-## As decisões abertas (do Jean)
+## As decisões do Jean e o que entrou (23/10/2026)
 
-1. Aprovar o Barqueiro do Charco (o conceito e os textos) e autorizar a separação da Ilse com a migração v6→v7.
-2. A direção do antagonista (a recomendação: A), e se o retrato é único e neutro ou se um dia é por título.
-3. Autorizar a remoção do `esqueleto_servo` numa correção.
-4. Os achados de texto do antagonista (o gênero que não acompanha o título) para outra entrega.
+1. **O `esqueleto_servo` removido** na 1.199.1 (nenhum uso real apareceu; o servo do Necromante e o Rei dos Mortos não
+   dependiam dele).
+2. **O gênero do antagonista** na 1.199.2: as origens nas duas formas, escolhidas pelo gênero do título (o sorteio igual);
+   "ajoelhada", "sua inimiga", "ela", "uma velha conhecida" quando o título é feminino. Os saves antigos guardam a origem
+   como texto e ficam como estavam.
+3. **A Ilse separada** na 1.199.3: a ficha dela em `dados.GUARDIOES_UNICOS` (id `ilse`), sem o `idx`, fora do sorteio;
+   o covil não mudou.
+4. **O Barqueiro, preparado fora da produção,** na branch `claude/barqueiro-do-charco` (1.200.0 lá): a ficha no lugar da
+   Bruxa, os textos (com a fase reescrita: "O barqueiro abre a lanterna. A luz verde se derrama sobre o charco, e os
+   afogados respondem com um lamento!", sem prometer afogados que a fase não traz) e a migração v6→v7. Falta o retrato
+   aprovado; até lá não entra no jogo.
+5. **Os estudos em 32 nativos,** aguardando o Jean: o Barqueiro em `../barqueiro_32/` (o conceito aprovado, com a rede no
+   pescoço e nos ombros, sem cobrir o rosto) e o antagonista em `../antagonista_32/` (a direção A, sem diadema).
+
+**Mudança de direção (Jean, 23/10/2026):** o modo "Novo jogo" procedural deve sair no futuro, ficando só a campanha. A retirada não entra agora: pede um levantamento próprio, porque o modo pode compartilhar código com a campanha. **Suspensos** (o que ainda não tinha começado): a adaptação para 16 e a integração do Barqueiro e do antagonista, o retrato do Barqueiro na branch e a junção da branch `claude/barqueiro-do-charco` (com a migração v6→v7 dos covis) à produção. Os estudos e a branch ficam preservados como estão. Os retratos exclusivos do modo procedural não bloqueiam o plano.
+
+**O que serve à campanha e o que é só do procedural:**
+
+- **À campanha:** a Ilse com a ficha dela, pelo id (1.199.3: a guardiã da capela não depende mais do catálogo dos covis); a remoção do `esqueleto_servo` (limpeza do catálogo comum).
+- **Só ao procedural:** o antagonista no gênero do título (1.199.2; a campanha não tem antagonista), o Barqueiro e a migração dos covis (a branch), e os dois estudos em 32 (o guardião do covil e o antagonista do mundo gerado).

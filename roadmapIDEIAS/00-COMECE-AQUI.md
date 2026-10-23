@@ -6817,3 +6817,33 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Verificações:** só documentos; nenhum código, save, arte ou mapa mudou.
 - **As decisões abertas (do Jean):** o Barqueiro e a separação com migração; a direção do antagonista; a remoção do
   `esqueleto_servo`; os textos de gênero do antagonista. Reservados: o Esqueleto E2 e o Bandido do chapéu.
+
+### 23/10/2026 (data do computador local) — As decisões das identidades: três correções no jogo, o Barqueiro preparado à parte, dois estudos em 32
+
+- **Estado conferido:** a branch em `ec2d12b2`, igual ao remoto; o `caido-avatar-512.png` continua fora dos commits.
+- **No jogo:**
+  - **1.199.1:** a família `esqueleto_servo` removida (nenhum uso real: o servo do Necromante é um aliado sem família, e
+    o Rei dos Mortos não a usa); o gabarito idêntico.
+  - **1.199.2:** o antagonista no gênero do título sorteado: as origens nas duas formas (o mesmo sorteio, as mesmas
+    chamadas ao `rng`), e o eco do Vazio, a história da taverna e a fala do veterano concordando só no que se refere a
+    ele. `tests/test_antagonista.py` confere os 8 títulos com as 5 origens. **O gabarito mudou de propósito:** 12 partidas,
+    só nas palavras ("uma heroína", "nascida", "ela"), conferido linha a linha. Saves antigos ficam com o texto que
+    gravaram.
+  - **1.199.3:** a Ilse com a ficha dela (`dados.GUARDIOES_UNICOS`, id `ilse`), sem o `idx=1`, fora do sorteio; as regras,
+    o texto da fase, o rito e o retrato iguais; o covil não mudou; o gabarito idêntico.
+- **Preparado fora da produção:** a branch `claude/barqueiro-do-charco` (1.200.0 lá, `2311a9ef`): a ficha
+  `barqueiro_do_charco` na posição da Bruxa, com as mesmas regras e os textos novos; o save formato 7 (os covis com a
+  Bruxa, pelo id ou pela posição, e os rumores passam ao Barqueiro com o mesmo nome próprio; o progresso fica; refazer não
+  muda nada; a campanha carrega igual). `tests/test_barqueiro.py`. O gabarito dela atualizado: o save em formato 7 e a
+  guardiã da semente 42 ("Jorra, o Barqueiro do Charco"), conferido campo a campo. **Falta o retrato aprovado** para
+  juntar à produção.
+- **Os estudos em 32 nativos, aguardando o Jean** (sem 16, sem integração): `criaturas/barqueiro_32/` e
+  `criaturas/antagonista_32/`, com as fontes em camadas, as fotos na luta a 1920×945 e as folhas `comparacao.png`. As
+  limitações visuais estão em cada LEIA-ME (o Barqueiro perto do Afogado na cor e a rede como pontilhado a 1×; o
+  antagonista com a moldura de cabelo que lembra o capuz do Profeta e o rasgo que pode ler como corte).
+- **Verificações sobre o código final da produção (1.199.3):** `unittest` (685, 1 pulado: a fumaça, rodada à parte), o
+  gabarito idêntico, o pyflakes (só o aviso conhecido) e a fumaça inteira, uma vez (378 ok, "tudo certo"). Na branch do
+  Barqueiro: `unittest`, o gabarito atualizado e o pyflakes.
+- **Mudança de direção (Jean, 23/10/2026):** o modo "Novo jogo" procedural deve sair no futuro, ficando só a campanha. A retirada não entra agora: pede um levantamento próprio, porque o modo pode compartilhar código com a campanha. **Suspensos** (o que ainda não tinha começado): a adaptação para 16 e a integração do Barqueiro e do antagonista, o retrato do Barqueiro na branch e a junção da branch `claude/barqueiro-do-charco` (com a migração v6→v7 dos covis) à produção. Os estudos e a branch ficam preservados como estão. Os retratos exclusivos do modo procedural não bloqueiam o plano.
+- **Útil à campanha:** a Ilse com a ficha dela (1.199.3) e a remoção do `esqueleto_servo` (1.199.1). **Só do procedural:** o gênero do antagonista (1.199.2), a branch do Barqueiro com a migração dos covis e os dois estudos.
+- **Parado:** nenhuma criatura nova, o mapa não começado; a retirada do procedural fica para um levantamento próprio.
