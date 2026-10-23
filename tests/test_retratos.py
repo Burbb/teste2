@@ -251,10 +251,10 @@ class TestRetratos(unittest.TestCase):
                 for sufixo in ("", "@2x"):
                     self.assertTrue((ESTATICO / f"hud/icones/{arquivo}-{lado}{sufixo}.png").exists(), (arquivo, lado))
 
-    def test_espantalho_e_mimico_ficam_nos_tracos(self):
-        # 1.189.0: o Espantalho Possuído (os números da árvore desperta) conserva o desenho de antes, pelos traços: a
-        # origem que o evento marca (não o nome exibido) tira o retrato da família; a família e os números continuam os
-        # dela. 1.192.0: o Mímico (os números do golem) tem o dele, pela mesma origem
+    def test_espantalho_e_mimico_pela_origem(self):
+        # 1.189.0: a origem que o evento marca (não o nome exibido) tira o retrato da família do Espantalho Possuído (os
+        # números da árvore desperta) e do Mímico (os do golem); a família e os números continuam os dela. 1.192.0: o
+        # Mímico tem o dele, pela origem; 1.195.0: o Espantalho também (antes, pelos traços)
         import random
         from rpg.eventos.biomas import espantalho
         from rpg.eventos.comuns import bau_abandonado
@@ -283,12 +283,12 @@ class TestRetratos(unittest.TestCase):
             def combate(self, inimigos, **k):
                 self.lutas.append(inimigos[0])
 
-        for perigo, traco in ((2, "planta"), (5, "corrompido")):  # feroz longe da Fenda, corrompido perto
+        for perigo in (2, 5):  # feroz longe da Fenda, corrompido perto: o mesmo retrato
             g = Jogo("fogo", perigo)
             espantalho(g)
             e = g.lutas[0]
             self.assertEqual((e.familia, e.origem, e.nome), ("ent_jovem", "espantalho", "Espantalho Possuído"))
-            self.assertEqual(retrato(e.tracos, e.familia, e.chave, e.guardiao, e.origem), traco)
+            self.assertEqual(retrato(e.tracos, e.familia, e.chave, e.guardiao, e.origem), "espantalho")
         g = Jogo("cuidado")
         bau_abandonado(g)
         m = g.lutas[0]
@@ -313,7 +313,7 @@ class TestRetratos(unittest.TestCase):
         self.assertEqual((g.familia, g.guardiao), ("guardiao", "ent_anciao"))
         self.assertEqual(retrato(g.tracos, g.familia, g.chave, g.guardiao, g.origem), "arvore_ancia")
         self.assertEqual(retrato(["planta", "blindado"], "ent_jovem"), "arvore_desperta")
-        self.assertEqual(retrato(["planta", "blindado"], "ent_jovem", origem="espantalho"), "planta")
+        self.assertEqual(retrato(["planta", "blindado"], "ent_jovem", origem="espantalho"), "espantalho")
         icones = (ESTATICO / "icones.js").read_text(encoding="utf-8")
         self.assertIn('arvore_ancia: "retrato-arvore-ancia"', icones)
         for lado in (16, 32):
@@ -344,7 +344,8 @@ class TestRetratos(unittest.TestCase):
         # contratos e o Bestiário dele); outra origem sem retrato próprio continua nos traços
         self.assertEqual(retrato(["construto", "blindado"], "golem", origem="mimico"), "mimico")
         self.assertEqual(retrato(["construto", "blindado"], "golem"), "golem")
-        self.assertEqual(retrato(["planta"], "ent_jovem", origem="espantalho"), "planta")
+        self.assertEqual(retrato(["planta"], "ent_jovem", origem="espantalho"), "espantalho")
+        self.assertEqual(retrato(["planta"], "ent_jovem", origem="outra"), "planta")  # origem sem retrato: os traços
         icones = (ESTATICO / "icones.js").read_text(encoding="utf-8")
         self.assertIn('mimico: "retrato-mimico"', icones)
         for lado in (16, 32):
@@ -389,6 +390,19 @@ class TestRetratos(unittest.TestCase):
             for sufixo in ("", "@2x"):
                 self.assertTrue((ESTATICO / f"hud/icones/retrato-senhor-da-guerra-{lado}{sufixo}.png").exists(), lado)
         self.assertFalse((ESTATICO / "hud/icones/retrato-senhor-da-guerra-48.png").exists())  # sem derivado sem uso
+
+    def test_espantalho_pela_origem(self):
+        # 1.195.0: o Espantalho Possuído pela origem que o evento do milharal marca, não pelo nome nem pela família (que
+        # continua a da árvore desperta, com os números dela); a árvore desperta comum continua com o retrato da família
+        self.assertEqual(retrato(["planta", "blindado"], "ent_jovem", origem="espantalho"), "espantalho")
+        self.assertEqual(retrato(["corrompido", "planta"], "ent_jovem", origem="espantalho"), "espantalho")
+        self.assertEqual(retrato(["planta", "blindado"], "ent_jovem"), "arvore_desperta")
+        icones = (ESTATICO / "icones.js").read_text(encoding="utf-8")
+        self.assertIn('espantalho: "retrato-espantalho"', icones)
+        for lado in (16, 32):
+            for sufixo in ("", "@2x"):
+                self.assertTrue((ESTATICO / f"hud/icones/retrato-espantalho-{lado}{sufixo}.png").exists(), (lado, sufixo))
+        self.assertFalse((ESTATICO / "hud/icones/retrato-espantalho-48.png").exists())  # sem derivado sem uso
 
     def test_troll_pela_familia_e_o_rei_pelo_guardiao(self):
         # o troll da montanha pela família (1.166.0); o Rei Troll pelo id do guardião (1.167.0), em qualquer lugar

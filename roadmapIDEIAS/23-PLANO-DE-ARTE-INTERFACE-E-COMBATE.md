@@ -13,7 +13,7 @@ Não iniciar todo o plano numa única tarefa. As etapas técnicas A–I e a vali
 
 ## Estado de referência — 21/10/2026
 
-- Produção: **1.194.0** na branch `claude/tender-einstein-tx3tjl` (23/10/2026: o Senhor da Guerra N16 pelo id do guardião na 1.194.0; o Dragão de Gelo N16 pelo id do guardião na 1.193.0; o Mímico M1 pela origem na 1.192.0; o Golem Primordial R1b pelo id do guardião na 1.191.0; a Árvore Anciã R2b pelo id da guardiã na 1.190.0; a Árvore Desperta T1 e o Golem G2 pelas famílias na 1.189.0; 22/10/2026: a Abominação C3 pela família na 1.188.0; o Cavaleiro Sombrio P3 pela família, com o Último Guarda, na 1.187.0; o Cão infernal P1 pela família na 1.186.0; a Cria do Vazio A2 pela família na 1.185.0; a Harpia T2 e o Xamã Caído X1r2 pela família na 1.184.0; o Grifo GA3 pela família na 1.183.0; 23/10/2026: o Caído CA pela família, com os que o
+- Produção: **1.195.0** na branch `claude/tender-einstein-tx3tjl` (23/10/2026: o Espantalho Possuído N16R2 pela origem na 1.195.0; o Senhor da Guerra N16 pelo id do guardião na 1.194.0; o Dragão de Gelo N16 pelo id do guardião na 1.193.0; o Mímico M1 pela origem na 1.192.0; o Golem Primordial R1b pelo id do guardião na 1.191.0; a Árvore Anciã R2b pelo id da guardiã na 1.190.0; a Árvore Desperta T1 e o Golem G2 pelas famílias na 1.189.0; 22/10/2026: a Abominação C3 pela família na 1.188.0; o Cavaleiro Sombrio P3 pela família, com o Último Guarda, na 1.187.0; o Cão infernal P1 pela família na 1.186.0; a Cria do Vazio A2 pela família na 1.185.0; a Harpia T2 e o Xamã Caído X1r2 pela família na 1.184.0; o Grifo GA3 pela família na 1.183.0; 23/10/2026: o Caído CA pela família, com os que o
   xamã ergue; 22/10/2026: o Mercenário MA e o Lobo Gélido LA pela
   família na 1.179.0; o caixote no motivo "Esgotado" do mercado na 1.180.0; o ent jovem e o Ent Ancião renomeados para
   Árvore Desperta e Árvore Anciã, com a migração dos saves, na 1.181.0; a fala da Pita depois do último tratamento na
@@ -1252,7 +1252,7 @@ volta à pauta quando essa expansão exigir; não é uma migração de engine.
    preferências e as limitações no LEIA-ME). **A segunda rodada, decidida pelo Jean (23/10/2026):** a Hidra (`hidra-t`) e
    o Senhor da Guerra (`senhor-t`) recusados (a próxima Hidra com as três cabeças olhando para o mesmo lado, de réptil
    convincente; o Senhor ainda sem um rosto compreensível, depois construído em 32 nativos e adaptado à mão para 16 em `criaturas/senhor_32/`: **o N16 integrado na 1.194.0**, pelo id do guardião); o visual do Profeta (`profeta-t`) aceito, preservado e sem
-   integrar; o Espantalho (`espantalho-t`, uma base conceitual) refeito em 32 nativos e adaptado para 16 (`criaturas/espantalho_32/`, a folha `comparacao.png`) e, depois, refinado em cópias (o N32R e o N16R: o quadro mais perto, o chapéu reto, a expressão pela testa, pelas órbitas e pela costura), e, numa última passagem só no rosto do N16R, o N16R2 (os olhos alinhados sob a carranca, as brasas contidas, a costura com o esgar), aguardando o Jean (as folhas `refino.png` e `ajuste.png`); o próximo servo sem elmo nem armadura, com crânio e ossos
+   integrar; o Espantalho (`espantalho-t`, uma base conceitual) refeito em 32 nativos e adaptado para 16 (`criaturas/espantalho_32/`, a folha `comparacao.png`) e, depois, refinado em cópias (o N32R e o N16R: o quadro mais perto, o chapéu reto, a expressão pela testa, pelas órbitas e pela costura), e, numa última passagem só no rosto do N16R, o N16R2 (os olhos alinhados sob a carranca, as brasas contidas, a costura com o esgar): **o N16R2 integrado na 1.195.0**, pela origem; o próximo servo sem elmo nem armadura, com crânio e ossos
    próprios; o Lich sem nova aprovação; o Mímico M1 integrado (1.192.0). **O teste do Dragão de Gelo em 32×32 nativos**
    (`criaturas/dragao_32/`, a folha `comparacao.png`): **a direção aprovada pelo Jean.** Antes da integração, o N32R (um
    refino leve numa cópia, o N32 preservado) e o N16 (um teste: o mesmo dragão em 16 a partir do 32), decidido pelo Jean: **o
@@ -1263,7 +1263,7 @@ volta à pauta quando essa expansão exigir; não é uma migração de engine.
    levantamento e três conceitos de substituição em `criaturas/chefes_e_especiais/LEIA-ME.md` (na campanha, a ficha
    `bruxa_afogada` é a Ilse: trocar o guardião do covil pede um id próprio; nada mudou). **Falta depois:** os outros 4 guardiões (a
    Hidra do Brejo, a Bruxa Afogada, o Profeta das Cinzas e o Lich Menor; o Senhor da Guerra entrou na 1.194.0), o
-   antagonista, o servo do Necromante e a decisão do Espantalho Possuído; nada começado antes do pedido. A relação em "A frente de criaturas em 22/10/2026" (item 1.12). O Esqueleto E2 e o Bandido do
+   antagonista, o servo do Necromante (o Espantalho Possuído entrou na 1.195.0); nada começado antes do pedido. A relação em "A frente de criaturas em 22/10/2026" (item 1.12). O Esqueleto E2 e o Bandido do
    chapéu estão reservados.
 3. **Depois, 1E.4:** os caminhos/destinos e os símbolos internos do mapa e do minimapa.
 4. **Retomar a etapa 2** e **seguir 3–7**, como na sequência abaixo; **etapa 8** com habilidades, talentos, Grimório e

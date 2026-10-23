@@ -131,3 +131,16 @@ malícia do N32R. Uma cópia (`espantalho-n16r2`), só no rosto; o N16R fica com
   sobe num esgar; o rosto tem bochechas, não uma placa lisa.
 - **Ainda é limite do 16:** os pontos cruzados da costura do N32R não cabem (a boca é uma linha quebrada), e a brasa do
   lado aceso, mesmo dentro da fenda, continua o pixel mais forte do rosto a 3×.
+
+## No jogo (1.195.0): o N16R2, pela origem
+
+- **Decisão do Jean:** o N16R2 aprovado para integrar, sem retoques; a E1, a E2, a T, o N32, o N16, o N32R e o N16R ficam
+  como estudos.
+- **A fonte de produção:** `ferramentas/arte/aseprite/retrato-espantalho/retrato-espantalho-16.aseprite`, copiada byte a
+  byte da fonte do N16R2 em `bdef5a8a`; o 32 da carta é o 16 ×2 (`DERIVADOS`). A exportação saiu igual byte a byte à
+  proposta (o 16, o 32 e os @2x), e o `--conferir`, tudo igual.
+- **No jogo:** `retrato-espantalho` pela origem `espantalho` (`RETRATO_ORIGEM`), como o Mímico; a família `ent_jovem`, os
+  números e as regras continuam os da árvore desperta, e a árvore desperta comum continua com o retrato dela.
+- **Conferido com os arquivos de produção** (`capturas-1195/`, `auxiliares/fotografar_jogo_espantalho.mjs`): o Espantalho
+  pelo evento real do milharal e uma árvore desperta comum na luta, cada um com o seu arquivo, sem erro no console e sem
+  pedido ao protótipo. A folha `../../integracoes-22-10/integracoes-1195.png`.

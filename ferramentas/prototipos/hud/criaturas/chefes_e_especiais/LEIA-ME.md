@@ -256,9 +256,9 @@ Nada redesenhado nesta rodada; os arquivos de todas as propostas ficam como est�
 | Criatura | Decisão | Para a próxima rodada |
 |---|---|---|
 | Hidra (`hidra-t`) | **recusada** | as três cabeças olhando para o mesmo lado, com anatomia de réptil convincente |
-| Senhor da Guerra (`senhor-t`) | **recusado** | o rosto ainda precisa ser compreensível; refeito em 32 nativos e adaptado para 16 em `../senhor_32/` (aguardando o Jean) |
+| Senhor da Guerra (`senhor-t`) | **recusado** | o rosto ainda precisa ser compreensível; refeito em 32 nativos e adaptado para 16 em `../senhor_32/`; **o N16 integrado na 1.194.0** |
 | Profeta das Cinzas (`profeta-t`) | **visual aceito**; preservar a versão atual; não integrar neste lote | — |
-| Espantalho Possuído (`espantalho-t`) | boa base, **ainda em avaliação** | refeito em 32 nativos e adaptado para 16 em `../espantalho_32/`, depois refinado (N32R e N16R; aguardando o Jean) |
+| Espantalho Possuído (`espantalho-t`) | boa base, **ainda em avaliação** | refeito em 32 nativos e adaptado para 16 em `../espantalho_32/`, depois refinado; **o N16R2 integrado na 1.195.0**, pela origem |
 | Servo (`servo-sv2b`) | não seguir por este caminho | **sem elmo e sem armadura**, com identidade própria: o crânio e os ossos visíveis, não o esqueleto inimigo com os olhos recoloridos |
 | Lich (`lich-l1`, `lich-l1b`, `lich-l2`) | preservar a base e as alternativas; **sem nova aprovação** | — |
 | Mímico | **o M1 integrado na 1.192.0**, pela origem; a M1b e a M2 ficam como alternativas | — |

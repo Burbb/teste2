@@ -1,0 +1,16 @@
+{
+ "espantalho": {
+  "arquivos": [
+   "Espantalho Possuído: http://127.0.0.1:52343/static/hud/icones/retrato-espantalho-32.png"
+  ],
+  "erros": [],
+  "ferramentas": []
+ },
+ "luta-arvore": {
+  "arquivos": [
+   "Árvore desperta: http://127.0.0.1:52495/static/hud/icones/retrato-arvore-desperta-32.png"
+  ],
+  "erros": [],
+  "ferramentas": []
+ }
+}

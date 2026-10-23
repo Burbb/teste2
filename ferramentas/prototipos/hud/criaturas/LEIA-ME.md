@@ -284,3 +284,4 @@ A escolha do par e da direção é do Jean; nada foi começado.
 - **A passagem no rosto do Espantalho (23/10/2026), aguardando o Jean:** o `espantalho-n16r2`, cópia do N16R com só as
   linhas 7 a 10 mudadas (os olhos alinhados sob a carranca, as brasas contidas, a costura com o esgar); a folha
   `espantalho_32/ajuste.png`. Nada integrado.
+- **Integrado na 1.195.0:** o Espantalho Possuído N16R2, pela origem (só o 16 e o 32 da carta).

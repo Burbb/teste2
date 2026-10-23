@@ -168,7 +168,8 @@ RETRATOS = ("demonio", "etereo", "corrompido", "morto-vivo", "construto", "voado
 # próprio; 1.189.0: a árvore desperta e o golem de pedra; o Dragão de Gelo continuou no "voador" até a 1.193.0, e o antagonista continua no
 # "humano"). Quem só reaproveita os números de uma família (a `origem` do inimigo: o Espantalho Possuído da árvore
 # desperta; o Mímico do golem) não leva o retrato dela e segue pelos traços, como antes; desde a 1.192.0, o Mímico tem o
-# dele pela origem (RETRATO_ORIGEM), e o golem de pedra comum continua no da família. Quem não está aqui segue pelos traços: o animal do herói e as outras feras continuam
+# dele pela origem (RETRATO_ORIGEM), e o golem de pedra comum continua no da família; desde a 1.195.0, o Espantalho
+# também, e a árvore desperta comum continua no da família. Quem não está aqui segue pelos traços: o animal do herói e as outras feras continuam
 # no "fera", os outros humanos (o antagonista; o Senhor da Guerra até a 1.193.0) no "humano". O guardião pelo id do catálogo (1.167.0: o Rei
 # Troll; 1.168.0: a Rainha Aracnídea; a chave de um guardião muda com o lugar), depois da chave; os outros guardiões
 # continuam pelos traços, e as aranhas que a Rainha invoca têm a família "aranha" (o retrato da Aranha gigante).
@@ -178,7 +179,8 @@ RETRATO_GUARDIAO = {"rei_troll": "rei_troll", "rainha_aracnidea": "rainha_aracni
                     "golem_primordial": "golem_primordial",  # 1.191.0: o Golem Primordial
                     "dragao_de_gelo": "dragao_de_gelo",  # 1.193.0: o Dragão de Gelo (o N16, construído a partir do estudo de 32)
                     "senhor_da_guerra": "senhor_da_guerra"}  # 1.194.0: o Senhor da Guerra (o N16, o mesmo caminho)
-RETRATO_ORIGEM = {"mimico": "mimico"}  # 1.192.0: o Mímico (os números do golem), pela origem que o evento marca
+RETRATO_ORIGEM = {"mimico": "mimico",  # 1.192.0: o Mímico (os números do golem), pela origem que o evento marca
+                  "espantalho": "espantalho"}  # 1.195.0: o Espantalho Possuído (os números da árvore desperta)
 RETRATO_FAMILIA = {"afogado": "afogado", "lobo": "lobo", "bandido": "bandido", "troll": "troll", "aranha": "aranha",
                    "sapo": "sapo", "sanguessuga": "sanguessuga", "cultista": "cultista", "bruxa_brejo": "bruxa", "rato": "rato",
                    "javali": "javali", "carnical": "carnical", "espectro": "espectro",

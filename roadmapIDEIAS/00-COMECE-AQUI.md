@@ -6554,3 +6554,20 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   diferentes na releitura, a exportação igual ao composto (o N16R reexportado igual), os derivados em blocos inteiros e a
   foto sem erro no console, com a mesma caixa da carta. As fontes pelo Aseprite em lote.
 - **Parado para a avaliação do Espantalho:** nada integrado, nenhuma criatura nova, o mapa não começado.
+
+### 23/10/2026 (data do computador local) — O Espantalho Possuído no jogo (1.195.0): o N16R2, pela origem
+
+- **Estado conferido:** a branch em `bdef5a8a`, igual ao remoto; a única alteração local era o
+  `ferramentas/arte/referencias/icones/caido-avatar-512.png` que não é desta sessão, preservado e fora do commit.
+- **Decisão do Jean:** o N16R2 aprovado, sem retoques; as outras versões ficam como estudos.
+- **No jogo (1.195.0):** `retrato-espantalho` (16 e 32, com os @2x) pela origem `espantalho` (`RETRATO_ORIGEM`), como o
+  Mímico; a família, os números e as regras continuam os da árvore desperta, e a árvore desperta comum continua com o
+  retrato dela.
+- **A fonte:** a de 16 do N16R2 (`bdef5a8a`), copiada byte a byte; a exportação igual byte a byte à proposta;
+  `--conferir`: tudo igual.
+- **Conferido com os arquivos de produção** (`criaturas/espantalho_32/capturas-1195/`): o Espantalho pelo evento real e a
+  árvore desperta comum na luta. A folha `ferramentas/prototipos/hud/integracoes-22-10/integracoes-1195.png`.
+- **Testes:** o Espantalho pela origem (perto e longe da Fenda, o mesmo retrato); os que esperavam o Espantalho nos traços
+  passam a esperar o retrato dele; uma origem sem retrato continua nos traços.
+- **Verificações sobre o código final:** `unittest` (667, 1 pulado: a fumaça, rodada à parte), o gabarito (idêntico, sem
+  atualizar), o pyflakes (só o aviso conhecido) e a fumaça inteira (378 ok, tudo certo).
