@@ -6297,3 +6297,21 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   fotos e as grades regravadas iguais às gravadas.
 - **Continua:** a escolha do Jean; os outros chefes, o antagonista, o servo, o Espantalho, o Mímico e o mapa não foram
   começados.
+
+### 23/10/2026 (data do computador local) — Os dois guardiões pelas referências em close (nada no jogo)
+
+- **Estado conferido:** a branch em `256480d7`, igual ao remoto; as únicas alterações locais eram as duas referências
+  deixadas pelo Jean em `ferramentas/arte/referencias/icones/` (guardadas sem alteração; a origem no LEIA-ME de lá).
+- **Pedido do Jean:** refazer a Árvore Anciã e o Golem Primordial em close, pelas referências; no meio da rodada, três
+  tentativas de copiar cada uma e, depois, mais três a partir da tentativa 2.
+- **No protótipo, aguardando o Jean** (`ferramentas/prototipos/hud/criaturas/chefes_arvore_golem/LEIA-ME.md`, "A
+  segunda rodada"): R1 (pela guia limpa), R2 (por volumes) e R3 (pelas linhas) de cada; R2a, R2b e R2c de cada. As
+  folhas `anciaa-r.png`, `primordial-r.png`, `anciaa-r2.png` e `primordial-r2.png`. Minha preferência: a R2b de cada um;
+  as limitações no LEIA-ME. A AA1, a AA2, o GP1 e o GP2 ficam como histórico.
+- **Processo:** grades à mão medidas nas guias (ocultas nas fontes); as fontes pelo Aseprite em lote (o conector sem
+  editor), 0 diferentes na releitura; a exportação igual à grade, @2x exato, o 32 em blocos inteiros; fotos a 1920×945,
+  sem erro no console.
+- **Verificações proporcionais (nenhum código do jogo mudou):** o pyflakes dos auxiliares, a sintaxe do roteiro das
+  fotos e as grades regravadas iguais às gravadas.
+- **Continua:** a escolha do Jean; nada integrado; os outros chefes, o antagonista, o servo, o Espantalho, o Mímico e o
+  mapa não foram começados.
