@@ -173,7 +173,8 @@ RETRATOS = ("demonio", "etereo", "corrompido", "morto-vivo", "construto", "voado
 # continuam pelos traços, e as aranhas que a Rainha invoca têm a família "aranha" (o retrato da Aranha gigante).
 RETRATO_CHAVE = {"ilse": "ilse"}
 RETRATO_GUARDIAO = {"rei_troll": "rei_troll", "rainha_aracnidea": "rainha_aracnidea",  # 1.168.0: a Rainha
-                    "ent_anciao": "arvore_ancia"}  # 1.190.0: a Árvore Anciã (o id ficou o do Ent Ancião)
+                    "ent_anciao": "arvore_ancia",  # 1.190.0: a Árvore Anciã (o id ficou o do Ent Ancião)
+                    "golem_primordial": "golem_primordial"}  # 1.191.0: o Golem Primordial
 RETRATO_FAMILIA = {"afogado": "afogado", "lobo": "lobo", "bandido": "bandido", "troll": "troll", "aranha": "aranha",
                    "sapo": "sapo", "sanguessuga": "sanguessuga", "cultista": "cultista", "bruxa_brejo": "bruxa", "rato": "rato",
                    "javali": "javali", "carnical": "carnical", "espectro": "espectro",

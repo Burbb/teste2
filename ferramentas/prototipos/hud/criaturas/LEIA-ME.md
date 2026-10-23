@@ -250,3 +250,4 @@ A escolha do par e da direção é do Jean; nada foi começado.
   cada um dos seis chefes restantes (Hidra, Dragão de Gelo, Senhor da Guerra, Profeta das Cinzas, Bruxa Afogada, Lich
   Menor) e dos três especiais (Espantalho Possuído, Mímico, servo esquelético), em `chefes_e_especiais/` (as folhas dos
   pares, `especiais.png` e a prancha geral `candidatos.png`).
+- **Integrado na 1.191.0:** o Golem Primordial R1b, pelo id do guardião (só o 16 e o 32 da carta).

@@ -233,7 +233,7 @@ class TestRetratos(unittest.TestCase):
 
     def test_arvore_desperta_e_golem_pela_familia(self):
         # 1.189.0: a árvore desperta e o golem de pedra pela família, com os afixos e o líder de nome próprio; a Árvore
-        # Anciã tem o dela desde a 1.190.0 (pelo id); o Golem Primordial continua nos traços
+        # Anciã tem o dela desde a 1.190.0 e o Golem Primordial desde a 1.191.0 (pelo id)
         import random
         from rpg.inimigos import criar
         for fam, desenho in (("ent_jovem", "arvore_desperta"), ("golem", "golem")):
@@ -243,7 +243,7 @@ class TestRetratos(unittest.TestCase):
             lider = criar(random.Random(16), fam, 6, "feroz", "Varn")
             self.assertEqual(retrato(lider.tracos, lider.familia, lider.chave, lider.guardiao, lider.origem), desenho)
         self.assertEqual(retrato(["planta", "blindado"], "guardiao", "guardiao:2", "ent_anciao"), "arvore_ancia")
-        self.assertEqual(retrato(["construto", "blindado"], "guardiao", "guardiao:5", "golem_primordial"), "construto")
+        self.assertEqual(retrato(["construto", "blindado"], "guardiao", "guardiao:5", "golem_primordial"), "golem_primordial")
         icones = (ESTATICO / "icones.js").read_text(encoding="utf-8")
         for papel, arquivo in (("arvore_desperta", "retrato-arvore-desperta"), ("golem", "retrato-golem")):
             self.assertIn(f'{papel}: "{arquivo}"', icones)
@@ -321,6 +321,24 @@ class TestRetratos(unittest.TestCase):
                 self.assertTrue((ESTATICO / f"hud/icones/retrato-arvore-ancia-{lado}{sufixo}.png").exists(), (lado, sufixo))
         self.assertFalse((ESTATICO / "hud/icones/retrato-arvore-ancia-48.png").exists())  # sem derivado sem uso
 
+    def test_golem_primordial_pelo_guardiao(self):
+        # 1.191.0: o Golem Primordial pelo id do guardião, em qualquer nome próprio; o golem de pedra comum e o Mímico
+        # continuam como estavam
+        from rpg.dados import GUARDIOES
+        from rpg.inimigos import instanciar_guardiao
+        spec = next(dict(s, nome="Morn, o Golem Primordial", bioma=b) for b, ls in GUARDIOES.items() for s in ls
+                    if s["id"] == "golem_primordial")
+        g = instanciar_guardiao(spec, 6)
+        self.assertEqual(retrato(g.tracos, g.familia, g.chave, g.guardiao, g.origem), "golem_primordial")
+        self.assertEqual(retrato(["construto", "blindado"], "golem"), "golem")
+        self.assertEqual(retrato(["construto"], "golem", origem="mimico"), "construto")
+        icones = (ESTATICO / "icones.js").read_text(encoding="utf-8")
+        self.assertIn('golem_primordial: "retrato-golem-primordial"', icones)
+        for lado in (16, 32):
+            for sufixo in ("", "@2x"):
+                self.assertTrue((ESTATICO / f"hud/icones/retrato-golem-primordial-{lado}{sufixo}.png").exists(), lado)
+        self.assertFalse((ESTATICO / "hud/icones/retrato-golem-primordial-48.png").exists())  # sem derivado sem uso
+
     def test_troll_pela_familia_e_o_rei_pelo_guardiao(self):
         # o troll da montanha pela família (1.166.0); o Rei Troll pelo id do guardião (1.167.0), em qualquer lugar
         self.assertEqual(retrato(FAMILIAS["troll"]["tracos"], "troll"), "troll")
@@ -330,12 +348,13 @@ class TestRetratos(unittest.TestCase):
     def test_guardioes_instanciados_guardam_o_id(self):
         from rpg.dados import GUARDIOES, RETRATO_GUARDIAO
         from rpg.inimigos import instanciar_guardiao
-        self.assertEqual(set(RETRATO_GUARDIAO), {"rei_troll", "rainha_aracnidea", "ent_anciao"})
+        self.assertEqual(set(RETRATO_GUARDIAO), {"rei_troll", "rainha_aracnidea", "ent_anciao", "golem_primordial"})
         for bioma, lista in GUARDIOES.items():
             for t in lista:
                 e = instanciar_guardiao({"bioma": bioma, "id": t["id"], "idx": 0, "nome": t["base"], "g": t["g"]}, 3)
                 ret = retrato(e.tracos, e.familia, e.chave, e.guardiao)
-                # o Rei, a Rainha Aracnídea e a Árvore Anciã (1.190.0) têm o retrato deles, pelo id; os outros guardiões
+                # o Rei, a Rainha Aracnídea, a Árvore Anciã (1.190.0) e o Golem Primordial (1.191.0) têm o retrato deles,
+                # pelo id; os outros guardiões
                 # continuam pelos traços
                 self.assertEqual(ret, RETRATO_GUARDIAO.get(t["id"]) or retrato(e.tracos), t["id"])
 

@@ -137,6 +137,9 @@ DERIVADOS = {
     # 1.190.0: a Árvore Anciã (a R2b, o rosto em close com o olhar pesado, com a guia oculta), pelo id da guardiã; só a
     # carta da luta (o guardião não entra no Bestiário), como a Rainha
     "retrato-arvore-ancia": {32: (16, 2)},
+    # 1.191.0: o Golem Primordial (a R1b: o rosto de pedras em close com o olhar pesado, com a guia oculta), pelo id do
+    # guardião; só a carta da luta
+    "retrato-golem-primordial": {32: (16, 2)},
 }
 # O martelo (1.149.0) só tem fontes do 40 e do 48 (aseprite/martelo/): o 32 e o 64 são a grade de desenhos.js, no
 # jogo, e não saem daqui.

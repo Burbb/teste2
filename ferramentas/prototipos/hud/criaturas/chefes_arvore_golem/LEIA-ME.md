@@ -165,3 +165,19 @@ ajuste da Árvore Anciã aprovada.
   inteiros; a foto a 1920×945 no modo `r1b` (a mesma luta da R1, com o golem comum e o esqueleto), sem erro no console. A
   folha `primordial-r1b.png` (a R1 × a R1b na carta, real e 2×; a fileira com o comum, a Árvore Anciã e os chefes
   aprovados; a 12×).
+
+# A integração do Golem Primordial (1.191.0): a R1b
+
+**Decisão do Jean:** a `primordial-r1b` aprovada, sem retoques; as outras propostas do Golem Primordial ficam como
+histórico.
+
+- **A fonte:** `fontes/primordial-r1b/primordial-r1b-16.aseprite` (sem alteração desde o `a35b469a`), copiada byte a byte
+  para `ferramentas/arte/aseprite/retrato-golem-primordial/retrato-golem-primordial-16.aseprite` (guia oculta, pedra,
+  musgo, juntas; conferido na fonte de produção: `guia=false`); só o 32 em `DERIVADOS`, com os @2x.
+- **Antes de gravar no jogo:** exportados numa pasta temporária e comparados com a proposta (`proposta/primordial-r1b-*`):
+  os quatro iguais byte a byte. Depois, o `--conferir`: tudo igual ao jogo.
+- **No jogo:** pelo id estável do guardião (`RETRATO_GUARDIAO`: `golem_primordial`), como a Árvore Anciã; o golem de pedra
+  comum (pela família) e o Mímico (pela origem, no sprite do construto) continuam como estavam; nenhuma regra mudou.
+- **Conferido com os arquivos de produção** (`auxiliares/fotografar_jogo_primordial.mjs`, `capturas-1191/`, a 1920×945):
+  o guardião na luta com o golem de pedra e o esqueleto, e o Mímico pelo evento real. Nenhum pedido a `ferramentas/`, sem
+  erro no console. A folha `../integracoes-22-10/integracoes-1191.png`.

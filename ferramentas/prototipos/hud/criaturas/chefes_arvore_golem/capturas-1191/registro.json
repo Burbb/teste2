@@ -1,0 +1,18 @@
+{
+ "luta-primordial": {
+  "arquivos": [
+   "Golem Primordial: http://127.0.0.1:55167/static/hud/icones/retrato-golem-primordial-32.png",
+   "Golem de pedra: http://127.0.0.1:55167/static/hud/icones/retrato-golem-32.png",
+   "Esqueleto: http://127.0.0.1:55167/static/hud/icones/retrato-esqueleto-32.png"
+  ],
+  "erros": [],
+  "ferramentas": []
+ },
+ "mimico": {
+  "arquivos": [
+   "Mímico: data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAALFJREFUOE9jZKAQMKLr5+Xm+o/PzM9fv6HoQeGANNeWpjGYWVhgNePUiRMMzd2zGJANwTBg89p5DCCFuABOA2BOB7ngq0E/Q180NwOIDQMgjUVLvzJwXygEuwIEQC6BuwDmfGLDFOYSDAMOHDjB4OCAPQxAhsPkcRoAUgRzIjbXwLxF0ACQf9EBcrgQNABXWBB0AdlhALKRlJjA8ALMyYSSMkwdLDVi5AVi0wFM3cAbAACrWnUR0eOSXgAAAABJRU5ErkJggg=="
+  ],
+  "erros": [],
+  "ferramentas": []
+ }
+}

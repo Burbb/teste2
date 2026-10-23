@@ -6355,3 +6355,19 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Verificações proporcionais (nenhum código do jogo mudou depois da 1.190.0):** o pyflakes dos auxiliares, a sintaxe
   dos roteiros das fotos e as grades regravadas iguais às gravadas.
 - **Continua:** a avaliação do Jean; nada integrado além da Árvore Anciã; o antagonista e o mapa não foram começados.
+
+### 23/10/2026 (data do computador local) — O Golem Primordial no jogo (1.191.0): a R1b, pelo id do guardião
+
+- **Estado conferido:** a branch em `81238296`, igual ao remoto; as únicas alterações locais eram sete referências novas
+  deixadas pelo Jean em `ferramentas/arte/referencias/icones/` (guardadas no commit das transposições).
+- **Decisão do Jean:** a `primordial-r1b` aprovada, sem retoques (a única integração desta rodada).
+- **No jogo (1.191.0):** `retrato-golem-primordial` (16 e 32, com os @2x) pelo id `golem_primordial`. O golem de pedra
+  comum e o Mímico como estavam; nenhuma regra mudou.
+- **A fonte:** a da R1b, copiada byte a byte (a guia oculta, conferida); exportada numa pasta temporária e igual byte a
+  byte à proposta antes de gravar; `--conferir`: tudo igual.
+- **Conferido com os arquivos de produção** (`criaturas/chefes_arvore_golem/capturas-1191/`): o guardião na luta com o
+  golem comum e o esqueleto; o Mímico pelo evento real. A folha
+  `ferramentas/prototipos/hud/integracoes-22-10/integracoes-1191.png`.
+- **Verificações sobre o código final:** `unittest` (663, 1 pulado: a fumaça, rodada à parte), o gabarito (idêntico, sem
+  atualizar: nenhuma das 24 partidas encontra o Golem Primordial), o pyflakes (só o aviso conhecido) e a fumaça inteira
+  (378 ok, tudo certo).
