@@ -6605,3 +6605,17 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   composto, alfa 0/255, os derivados em blocos inteiros e as fotos sem erro no console. As fontes pelo Aseprite em lote.
 - **Parado para a avaliação da Hidra e do servo:** só o Espantalho entrou no jogo (1.195.0); nenhuma criatura nova, a
   substituição da Bruxa Afogada e o mapa não começados.
+
+### 23/10/2026 (data do computador local) — A Hidra: a segunda construção de 32, N32B (nada no jogo)
+
+- **Estado conferido:** a branch em `84b42070`, igual ao remoto; o `caido-avatar-512.png` que não é desta sessão continua
+  fora dos commits.
+- **Decisão do Jean:** a Hidra e o servo não aprovados. Na Hidra, as cabeças ainda parecem barras horizontais já no 32;
+  refazer só a construção de 32, numa cópia, sem adaptar para 16.
+- **No protótipo, aguardando o Jean** (`ferramentas/prototipos/hud/criaturas/hidra_32/LEIA-ME.md`, a folha
+  `construcao-32.png`): o `hidra-n32b`, as três cabeças em cunha (o crânio chato atrás, o calombo da testa sobre o olho, o
+  focinho projetado, a boca aberta em cunha com o canto descendo, a mandíbula baixa), as duas de trás menores e mais
+  escuras, separadas por sobreposição e contorno, e os pescoços grossos. O N32 e o N16 intactos.
+- **Verificações proporcionais:** o pyflakes dos auxiliares, a sintaxe do roteiro das fotos, a grade igual ao rascunho, a
+  fonte reaberta (o lado, as camadas na ordem, a guia oculta), 0 diferentes na releitura, a exportação igual ao composto,
+  o @2x em blocos inteiros, as anteriores reexportadas iguais e a foto sem erro no console.

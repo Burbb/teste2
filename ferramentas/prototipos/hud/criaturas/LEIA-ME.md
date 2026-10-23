@@ -292,3 +292,6 @@ A escolha do par e da direção é do Jean; nada foi começado.
   `servo-n32` e a proposta `servo-n16`, sem elmo; a folha `comparacao.png`), com a seleção que a integração vai precisar
   (o retrato só no servo do Erguer Servo; a criatura erguida pelo Rei dos Mortos com o retrato da espécie) documentada e
   demonstrada só no protótipo. A SV1, a SV2 e a SV2b ficam; o Esqueleto E2 continua reservado. Nada integrado.
+- **A segunda construção de 32 da Hidra (23/10/2026), aguardando o Jean:** o `hidra-n32b` em `hidra_32/` (a folha
+  `construcao-32.png`): as cabeças em cunha, com testa, focinho e mandíbula, em vez de barras; sem nova adaptação para 16.
+  O N32 e o N16 ficam. Nada integrado.

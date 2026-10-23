@@ -50,3 +50,38 @@ sprite `fera`. **Para uma integração futura:** um papel pelo id da guardiã (`
   a forma da mandíbula da principal; o conjunto fica mais apertado e a 1× é uma massa verde com três olhos. Não é fiel ao
   N32 só por ter três cabeças: as de trás leem como cabeças de réptil só a 2× e a 3×.
 - **Na fileira:** o N16 tem o grão dos vizinhos; o N32 destoa, como os outros estudos de 32.
+
+# A segunda construção de 32: N32B (23/10/2026, protótipo; nada no jogo)
+
+**Pedido do Jean:** nenhum dos dois aprovado. As três cabeças estão na direção certa, mas continuam parecendo barras
+horizontais sobre pescoços, e o problema já está no 32 (não é só perda na redução). Refazer a construção das cabeças, só
+em 32, numa cópia (o N32 e o N16 ficam); **sem nova adaptação para 16**, para avaliar a anatomia antes.
+
+- **O diagnóstico:** no N32, cada cabeça era um empilhamento de faixas de cor (o topo aceso, o meio, a linha do lábio, a
+  faixa vermelha da boca), com a mesma altura da nuca à ponta do focinho: uma barra.
+- **O N32B** (`hidra-n32b`, `GRADE_32B` em `grade.py`), à mão, em passadas:
+  1. cada cabeça como uma cunha: o crânio alto atrás e a ponta do focinho baixa, a cabeça principal maior e um pouco
+     inclinada para baixo. **O que não funcionou:** a testa em rampa lisa fez da principal uma cúpula (cara de tartaruga);
+  2. a anatomia de réptil: o alto do crânio mais baixo e chato, o calombo da testa pesando sobre um olho maior e mais à
+     frente, o degrau entre a testa e o focinho, a narina na ponta;
+  3. o volume sem escamas: a mandíbula baixa (a abertura da boca é uma cunha alta na frente, com o canto descendo, sem
+     sorriso), o fundo da boca escuro, a sombra sob o lábio, uma linha de contorno marcando o músculo da mandíbula, e o
+     pescoço da principal como uma peça própria, saindo de trás da mandíbula;
+  4. as duas de trás refeitas com a mesma anatomia (o calombo sobre o olho, o focinho afinando, a linha da boca), menores e
+     um tom mais escuras, separadas da principal por sobreposição, contorno e sombra. A de cima encosta no alto do crânio
+     da principal; a da direita espia por trás da nuca dela. Os pescoços continuam cortados na borda de baixo.
+- **A fonte, pelo Aseprite em lote** (`python auxiliares/exportar.py --montar hidra-n32b`; o conector sem editor, a janela
+  aberta do Jean não foi tocada): 0 diferentes na releitura; reaberta com a guia oculta e as camadas na ordem; a
+  exportação igual ao composto, alfa 0/255, o @2x em blocos inteiros. O N32 e o N16 reexportados saíram iguais.
+- **A foto** (`MODOS=n32b`), pela guardiã na luta, a 1920×945, com os mesmos dados, sem erro no console. **A folha:**
+  `construcao-32.png` (`python auxiliares/prancha.py --b`: a referência, o N32 × o N32B na mesma carta, a carta a 2×, a
+  fileira e o diagnóstico).
+
+## A minha leitura do N32B (quem decide é o Jean)
+
+- **Melhorou:** a principal domina e tem crânio, testa pesada sobre o olho, focinho projetado e mandíbula; a boca aberta lê
+  como mordida, não como sorriso; as de trás leem como cabeças (testa, olho, focinho), não como faixas; os pescoços são
+  grossos e da mesma criatura.
+- **Ainda falta:** as de trás são pequenas e a da direita aparece pouco (o olho, a testa e a linha da boca); os planos
+  ainda são poucos (um verde médio grande na bochecha da principal); a 1× é uma massa de três cabeças com a boca vermelha.
+  A adaptação para 16 espera a avaliação desta anatomia.

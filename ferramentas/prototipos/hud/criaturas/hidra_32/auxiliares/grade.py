@@ -132,9 +132,89 @@ A16 = [
     (15, 5, "olhlmmmssso"),
 ]
 GRADE_16 = pintar([B16, C16, A16], 16)
+# A segunda construção de 32 (23/10/2026, o N32 preservado): as cabeças eram faixas horizontais de cor sobre os pescoços
+# (o topo aceso, o meio, o lábio, a boca), da mesma altura da nuca à ponta. Cada cabeça virou uma cunha: o alto do crânio
+# chato atrás, o calombo da testa pesando sobre o olho, o degrau até o focinho, a ponta baixa com a narina, o lábio com as
+# presas, a boca em cunha (aberta na frente, o canto descendo) e a mandíbula baixa; o pescoço da principal é uma peça
+# própria, saindo de trás da mandíbula. As de trás com a mesma anatomia, menores e um tom mais escuras.
+
+
+def rows(lista):
+    return [(y, 0, s) for y, s in lista]
+
+
+# B2: a cabeça de cima, atrás
+B2 = [
+    (0, 21, "oooo"),
+    (1, 20, "ollllooooooo"),
+    (2, 17, "oolllllllmmmmmm"),
+    (3, 16, "ollmsssslmmmmmm"),
+    (4, 15, "olmmseeksmmsmmm"),
+    (5, 14, "olkmmmmssmmmsmmm"),
+    (6, 14, "ommmmmmmmmmmsmmm"),
+    (7, 14, "oooooooooommsmms"),
+    (8, 15, "osssssssssmsmss"),
+    (9, 16, "ooooooossmsss"),
+    (10, 23, "ossmsss"),
+]
+# C: a cabeça da direita, atrás, espiando por trás do crânio da principal
+C2 = [
+    (10, 26, "oooo"),
+    (11, 25, "ollloooo"),
+    (12, 23, "oolllllmmm"),
+    (13, 23, "olmsseksmm"),
+    (14, 22, "olkmmmmmsm"),
+    (15, 22, "ommmmmmmsm"),
+    (16, 22, "oooooooomm"),
+    (17, 23, "osssssssm"),
+    (18, 24, "oooossmm"),
+] + [(y, x, s) for y, x, s in rows([
+    (19, "........................osmmlmmm"),
+    (20, "........................osmmlmmm"),
+    (21, "........................osmllmmm"),
+    (22, "........................osmllmmm"),
+    (23, ".......................osmmllmmm"),
+    (24, ".......................osmmllmmm"),
+    (25, ".......................osmmllmmm"),
+    (26, "......................ossmmllmmm"),
+    (27, "......................ossmmllmmm"),
+    (28, "......................ossmmllmmm"),
+    (29, "......................ossmmllmmm"),
+    (30, ".....................osssmmllmmm"),
+    (31, ".....................osssmmllmmm"),
+])]
+# A: a principal, na frente: a cunha (o crânio alto atrás, a testa caindo até a ponta baixa do focinho), a crista sobre o
+# olho, a narina, o lábio com as presas, a boca em cunha (aberta na frente, o canto descendo), a mandíbula pesada, a
+# papada e o pescoço grosso
+A2 = rows([
+    (8,  "...........oooo........."),
+    (9,  "..........ohhhhoooooooo."),
+    (10, "........oohhhhhhhhllllmo"),
+    (11, ".......ohhlsssslllmmmmmo"),
+    (12, "......ohhlseekslmmmmmmso"),
+    (13, ".....ohllllssssmlmsmmmso"),
+    (14, "....oohhllllllmmmmsmmmso"),
+    (15, "...ohhllllllmmmmmsommmso"),
+    (16, "..ohkllllllmmmmmmsommsso"),
+    (17, ".ohllllmmmmmmmmmsommmsso"),
+    (18, ".olmmmmmmmmmmmmsommmsso."),
+    (19, ".odsssssssssssssommmsso."),
+    (20, "..dkRRRdRRRRRkommmsso..."),
+    (21, "...kRrrRRRRkoommsso....."),
+    (22, "...dkRRRRkoommmsso......"),
+    (23, "..oolllllooommsso......."),
+    (24, "..ohllllllmmmmsso......."),
+    (25, "...ossssmmmmmsso........"),
+    (26, ".....oooosssmmsso......."),
+])
+FAIXAS = {17: (16, 23), 18: (15, 23), 19: (14, 23), 20: (14, 23), 21: (13, 23), 22: (12, 23), 23: (11, 23),
+          24: (10, 23), 25: (9, 23), 26: (8, 23), 27: (8, 23), 28: (9, 24), 29: (9, 24), 30: (10, 25), 31: (10, 25)}
+PESCOCO2 = [(y, a, "o" + "lhll" + "m" * (b - a - 8) + "sss" + ("o" if b < 24 else "s")) for y, (a, b) in FAIXAS.items()]
+GRADE_32B = pintar([B2, C2, PESCOCO2, A2], 32)
 # cada desenho: a grade, o lado e a guia
 DESENHOS = {"hidra-n32": (GRADE_32, 32, "guias/hidra-guia-32.png"),
-            "hidra-n16": (GRADE_16, 16, "guias/hidra-guia-16.png")}
+            "hidra-n16": (GRADE_16, 16, "guias/hidra-guia-16.png"),
+            "hidra-n32b": (GRADE_32B, 32, "guias/hidra-guia-32.png")}
 # as camadas, de baixo para cima (a guia por baixo de tudo)
 ORDEM = ["guia", "escamas", "boca", "olhos", "contorno"]
 
