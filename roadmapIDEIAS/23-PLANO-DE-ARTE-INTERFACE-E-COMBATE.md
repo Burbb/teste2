@@ -1053,10 +1053,11 @@ do catálogo):**
 - **Fora das criaturas, na 1.180.0:** o ícone do **Esgotado** do mercado (o caixote, papel próprio `MOTIVO`; o cesto
   guardado como não escolhido; o cadeado continua nos outros motivos e usos).
 - **Propostas aguardando o Jean (22/10/2026, na 1.186.0; nenhuma autorizada), a quinta rodada da Cidadela:** a
-  **Abominação C3** aceita visualmente pelo Jean (preservada sem retoques; a integração ainda não autorizada) e três
-  **Cavaleiros Sombrios** novos sobre a capa e as ombreiras do T2: P1, o grande elmo; P2, o bico; P3, a cabeça baixa
-  (`criaturas/cidadela/`, a folha `cavaleiro-p.png`; a minha preferência, o P2). Histórico, não escolhidos: a
-  Abominação A, B, C, C2, D e E e o Cavaleiro A, A2, B, T e T2. Histórico, não escolhidos, em
+  **Abominação C3** aceita visualmente pelo Jean (preservada sem retoques; a integração ainda não autorizada) e o
+  **Cavaleiro Sombrio P4**, o P3 refinado pela construção da carta do Guerreiro (o elmo maior, a viseira em V, a base
+  escura separando do gorjal) (`criaturas/cidadela/`, a folha `cavaleiro-p4.png`). O P3 e o T2 são as direções
+  preferidas do Jean, nenhum aprovado. Histórico, não escolhidos: a Abominação A, B, C, C2, D e E e o Cavaleiro A, A2,
+  B, T, P1 e P2. Histórico, não escolhidos, em
   `criaturas/fenda/`: o Cão A, B, T, N, N2, RA, RB, RC, RA2, RA3, P2 e P3 (a P1 foi a escolhida), a Cria A e B. A cria que o antagonista
   invoca é da família `cria_vazio` e usará o mesmo retrato. Histórico, não escolhidos: as Harpias HA, HB, H1 a H3 e a
   T, o GB, o GA e o GA2 (`criaturas/harpia_grifo/`, `criaturas/rodada_23_10/`), o CB, o XA e o XB
@@ -1235,7 +1236,7 @@ volta à pauta quando essa expansão exigir; não é uma migração de engine.
    caminho (o retrato por família, por chave ou pelo tipo, sem trocar o sprite compartilhado). O Mercenário, o Lobo
    Gélido e o Esgotado integrados (1.179.0, 1.180.0); o Caído CA (1.182.0); o Grifo GA3 (1.183.0); a Harpia T2 e o Xamã
    Caído X1r2 (1.184.0); a Cria do Vazio A2 (1.185.0); o Cão infernal P1 (1.186.0). **Aguardando o Jean:** a
-   escolha entre os Cavaleiros P1, P2 e P3 (a Abominação C3 aceita visualmente), a quinta rodada
+   avaliação do Cavaleiro P4 (a Abominação C3 aceita visualmente), a sexta rodada
    (`criaturas/cidadela/`); depois, a Árvore Desperta com o golem de
    pedra e os chefes, sem começar antes do pedido. A relação em "A frente de criaturas em 22/10/2026" (item 1.12). O Esqueleto E2 e o Bandido do
    chapéu estão reservados.

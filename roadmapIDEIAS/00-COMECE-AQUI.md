@@ -6169,3 +6169,18 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Verificações:** só o protótipo mudou: o pyflakes e a sintaxe do roteiro das fotos; a suíte, o gabarito e a fumaça
   não foram rodados, porque o jogo não mudou.
 - **Continua:** a escolha do Jean entre os três; nada integrado; nenhuma outra criatura começada.
+
+### 22/10/2026 (data do computador local) — A sexta rodada da Cidadela: o Cavaleiro P4 (nada no jogo)
+
+- **Estado conferido:** a branch em `85ae4571`, igual ao remoto, sem alterações locais.
+- **Pedido do Jean:** o P3 e o T2 como direções preferidas (nenhum aprovado); refinar o P3 pela construção do retrato
+  aprovado do Guerreiro (`GUERREIRO_CARTA`, `rpg/web/static/retratos.js`), com o capacete mais presente e separado do
+  gorjal.
+- **No protótipo, aguardando o Jean** (`ferramentas/prototipos/hud/criaturas/cidadela/LEIA-ME.md`, "A sexta rodada"):
+  o P4, com o elmo maior (a cúpula e a crista do P3, dois planos), a viseira em V, a base escura, o gorjal estreito em
+  meio-tom, as ombreiras e o peito do P3; sem brilho. A folha `cavaleiro-p4.png`, com o Guerreiro, o T2, o P3 e o P4.
+- **Processo:** grade à mão; a fonte pelo Aseprite em lote (o conector sem editor), 0 diferentes na releitura; a
+  exportação igual à grade, @2x exato, 32 e 48 em blocos inteiros; fotos a 1920×945 no modo `p4`, sem erro no console.
+- **Verificações:** só o protótipo mudou: o pyflakes e a sintaxe do roteiro das fotos; a suíte, o gabarito e a fumaça
+  não foram rodados, porque o jogo não mudou.
+- **Continua:** a avaliação do Jean; nada integrado; nenhuma outra criatura começada.
