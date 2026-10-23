@@ -6153,3 +6153,19 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Verificações:** só o protótipo mudou: o pyflakes e a sintaxe do roteiro das fotos; a suíte, o gabarito e a fumaça
   não foram rodados, porque o jogo não mudou.
 - **Continua:** a escolha do Jean; nada integrado; nenhuma outra criatura começada.
+
+### 22/10/2026 (data do computador local) — A quinta rodada da Cidadela: três Cavaleiros novos (nada no jogo)
+
+- **Estado conferido:** a branch em `9464b59e`, igual ao remoto, sem alterações locais.
+- **Avaliação do Jean:** a Abominação C3 aceita visualmente, preservada sem retoques (a integração não foi autorizada);
+  do Cavaleiro T2 ficam a capa e as ombreiras; o elmo, o gorjal e o peito refeitos em três propostas diferentes, a
+  referência gerada só como apoio do material.
+- **No protótipo, aguardando o Jean** (`ferramentas/prototipos/hud/criaturas/cidadela/LEIA-ME.md`, "A quinta rodada"):
+  P1, o grande elmo de frente; P2, o bico de perfil, olhando para a esquerda (a minha preferência); P3, a cabeça baixa
+  afundada no gorjal alto. A capa e as ombreiras iguais às do T2 nas três. A folha `cavaleiro-p.png`.
+- **Processo:** grades à mão; as fontes pelo Aseprite em lote (o conector sem editor), 0 diferentes na releitura; a
+  exportação igual à grade, @2x exato, 32 e 48 em blocos inteiros; fotos a 1920×945 nos modos `p1`, `p2` e `p3`, sem
+  erro no console.
+- **Verificações:** só o protótipo mudou: o pyflakes e a sintaxe do roteiro das fotos; a suíte, o gabarito e a fumaça
+  não foram rodados, porque o jogo não mudou.
+- **Continua:** a escolha do Jean entre os três; nada integrado; nenhuma outra criatura começada.
