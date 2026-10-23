@@ -280,3 +280,4 @@ A escolha do par e da direção é do Jean; nada foi começado.
   nativo `senhor-n32` e a proposta `senhor-n16`; a folha `comparacao.png`). A S2, a T recusada e as outras propostas ficam.
   A primeira construção lia como "um bebê de barba e tapa-olho" (o Jean): a correção veio da anatomia de adulto (o alto da
   cabeça fora do quadro, a testa e a sobrancelha pesadas, o olho fundo, o nariz largo, a pele curtida). Nada integrado.
+- **Integrado na 1.194.0:** o Senhor da Guerra N16, pelo id do guardião (só o 16 e o 32 da carta).

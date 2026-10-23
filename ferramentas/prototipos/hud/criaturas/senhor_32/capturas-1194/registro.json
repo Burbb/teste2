@@ -1,0 +1,31 @@
+{
+ "luta-senhor": {
+  "arquivos": [
+   "Senhor da Guerra: http://127.0.0.1:56328/static/hud/icones/retrato-senhor-da-guerra-32.png",
+   "Mercenário: http://127.0.0.1:56328/static/hud/icones/retrato-mercenario-32.png",
+   "Bandido: http://127.0.0.1:56328/static/hud/icones/retrato-bandido-32.png"
+  ],
+  "caixas": [
+   [
+    1226,
+    92,
+    1436,
+    142
+   ],
+   [
+    1226,
+    150,
+    1436,
+    200
+   ],
+   [
+    1226,
+    208,
+    1436,
+    258
+   ]
+  ],
+  "erros": [],
+  "ferramentas": []
+ }
+}

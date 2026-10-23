@@ -56,3 +56,15 @@ de Gelo (`RETRATO_GUARDIAO`).
   rosto e os sulcos do nariz; a venda, por proporção, é a mancha mais forte do rosto, e o rosto lê mais duro que severo.
   Lê melhor que a T: os traços estão no lugar e a venda se encaixa na cabeça.
 - **Na fileira:** o N16 tem o grão dos vizinhos; o N32 destoa, como os outros estudos de 32.
+
+## No jogo (1.194.0): o N16, pelo id do guardião
+
+- **Decisão do Jean:** o N16 aprovado para integrar, sem retoques; o N32, a S1, a S2 e a `senhor-t` ficam como estudos.
+- **A fonte de produção:** `ferramentas/arte/aseprite/retrato-senhor-da-guerra/retrato-senhor-da-guerra-16.aseprite`,
+  copiada byte a byte da fonte do N16 em `f105fd10`; o 32 da carta é o 16 ×2 (`DERIVADOS`). A exportação saiu igual byte a
+  byte à proposta (o 16, o 32 e os @2x), e o `--conferir`, tudo igual.
+- **No jogo:** `retrato-senhor-da-guerra` pelo id `senhor_da_guerra` (`RETRATO_GUARDIAO`); o mercenário, o bandido e os
+  outros humanos com os deles; o Profeta das Cinzas e o antagonista no sprite `humano`. Nenhuma regra mudou.
+- **Conferido com os arquivos de produção** (`capturas-1194/`, `auxiliares/fotografar_jogo_senhor.mjs`): o guardião na
+  luta com o Mercenário e o Bandido, cada um com o seu arquivo, sem erro no console e sem pedido ao protótipo. A folha
+  `../../integracoes-22-10/integracoes-1194.png`.

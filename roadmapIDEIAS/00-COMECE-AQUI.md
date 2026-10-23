@@ -6519,3 +6519,20 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   sem editor; a janela aberta do Jean não foi tocada).
 - **Parado para a avaliação dos dois:** nada integrado, a Bruxa Afogada intocada, nenhuma criatura nova, o mapa não
   começado.
+
+### 23/10/2026 (data do computador local) — O Senhor da Guerra no jogo (1.194.0): o N16, pelo id do guardião
+
+- **Estado conferido:** a branch em `f105fd10`, igual ao remoto; a única alteração local era um
+  `ferramentas/arte/referencias/icones/caido-avatar-512.png` que não é desta sessão, preservado e fora do commit.
+- **Decisão do Jean:** o N16 aprovado, sem retoques; o N32 e as propostas anteriores ficam como estudos.
+- **No jogo (1.194.0):** `retrato-senhor-da-guerra` (16 e 32, com os @2x) pelo id `senhor_da_guerra`
+  (`RETRATO_GUARDIAO`). O mercenário, o bandido e os outros humanos como estavam; o Profeta das Cinzas e o antagonista no
+  `humano`; nenhuma regra mudou.
+- **A fonte:** a de 16 do N16 (`f105fd10`), copiada byte a byte; a exportação igual byte a byte à proposta; `--conferir`:
+  tudo igual.
+- **Conferido com os arquivos de produção** (`criaturas/senhor_32/capturas-1194/`): o guardião na luta com o Mercenário e
+  o Bandido. A folha `ferramentas/prototipos/hud/integracoes-22-10/integracoes-1194.png`.
+- **Testes:** o Senhor pelo id (e o mercenário, o bandido, o Profeta e o humano genérico como estavam); os testes que
+  esperavam o Senhor no `humano` passam a esperar o retrato dele; o teste dos guardiões inclui o Senhor.
+- **Verificações sobre o código final:** `unittest` (666, 1 pulado: a fumaça, rodada à parte), o gabarito (idêntico, sem
+  atualizar), o pyflakes (só o aviso conhecido) e a fumaça inteira (378 ok, tudo certo).
