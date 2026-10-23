@@ -40,10 +40,9 @@ class TestRetratos(unittest.TestCase):
         self.assertEqual(retrato(["humano", "conjurador"], "guardiao", "guardiao:4", "profeta_das_cinzas"), "humano")
 
     def test_javali_e_carnical_pela_familia(self):
-        # 1.173.0: pela família; o cavaleiro sombrio e o Lich (mortos-vivos) continuam na caveira
+        # 1.173.0: pela família (o cavaleiro sombrio tem o dele desde a 1.187.0; o Lich continua na caveira)
         self.assertEqual(retrato(FAMILIAS["javali"]["tracos"], "javali"), "javali")
         self.assertEqual(retrato(FAMILIAS["carnical"]["tracos"], "carnical"), "carnical")
-        self.assertEqual(retrato(FAMILIAS["cavaleiro_sombrio"]["tracos"], "cavaleiro_sombrio"), "caveira")
 
     def test_espectro_pela_familia(self):
         # 1.174.0: o espectro pela família; o Lich, que ganha o etéreo na fase 2, continua pelos traços (a cria do Vazio,
@@ -54,7 +53,7 @@ class TestRetratos(unittest.TestCase):
 
     def test_esqueleto_pela_familia(self):
         # 1.175.0: o esqueleto pela família (os do ossuário e os que o Lich invoca, que são da família); o servo
-        # esquelético, o servo aliado do Necromante (sem família), o cavaleiro sombrio e o Lich continuam na caveira
+        # esquelético, o servo aliado do Necromante (sem família) e o Lich continuam na caveira
         self.assertEqual(retrato(FAMILIAS["esqueleto"]["tracos"], "esqueleto"), "esqueleto")
         import random
         from rpg.inimigos import GUARDIOES, criar
@@ -199,6 +198,24 @@ class TestRetratos(unittest.TestCase):
             for sufixo in ("", "@2x"):
                 self.assertTrue((ESTATICO / f"hud/icones/retrato-cao-infernal-{lado}{sufixo}.png").exists(), (lado, sufixo))
 
+    def test_cavaleiro_sombrio_pela_familia(self):
+        # 1.187.0: o cavaleiro sombrio pela família, com os afixos e o Último Guarda (chefes.py: o cavaleiro de nome
+        # próprio da mesma família); os outros mortos-vivos sem retrato próprio continuam na caveira
+        import random
+        from rpg.inimigos import criar
+        for afixo in (None, "feroz"):
+            e = criar(random.Random(11), "cavaleiro_sombrio", 6, afixo)
+            self.assertEqual(retrato(e.tracos, e.familia, e.chave), "cavaleiro_sombrio", afixo)
+        guarda = criar(random.Random(12), "cavaleiro_sombrio", 9, None, "Varn")  # como o Último Guarda é criado
+        self.assertEqual(retrato(guarda.tracos, guarda.familia, guarda.chave), "cavaleiro_sombrio")
+        self.assertEqual(retrato(["morto-vivo"], None), "caveira")
+        icones = (ESTATICO / "icones.js").read_text(encoding="utf-8")
+        self.assertIn('cavaleiro_sombrio: "retrato-cavaleiro-sombrio"', icones)
+        for lado in (16, 32, 48):
+            for sufixo in ("", "@2x"):
+                self.assertTrue((ESTATICO / f"hud/icones/retrato-cavaleiro-sombrio-{lado}{sufixo}.png").exists(),
+                                (lado, sufixo))
+
     def test_troll_pela_familia_e_o_rei_pelo_guardiao(self):
         # o troll da montanha pela família (1.166.0); o Rei Troll pelo id do guardião (1.167.0), em qualquer lugar
         self.assertEqual(retrato(FAMILIAS["troll"]["tracos"], "troll"), "troll")
@@ -224,9 +241,9 @@ class TestRetratos(unittest.TestCase):
         self.assertEqual(retrato(invocada.tracos, invocada.familia, invocada.chave), "aranha")
 
     def test_os_outros_continuam_pelos_tracos(self):
-        # os outros mortos-vivos seguem com a caveira (o esqueleto tem a dele desde a 1.175.0); o guardião genérico da
-        # Bruxa Afogada também
-        self.assertEqual(retrato(FAMILIAS["cavaleiro_sombrio"]["tracos"], "cavaleiro_sombrio"), "caveira")
+        # os outros mortos-vivos seguem com a caveira (o esqueleto tem a dele desde a 1.175.0 e o cavaleiro sombrio desde
+        # a 1.187.0); o guardião genérico da Bruxa Afogada também
+        self.assertEqual(retrato(["morto-vivo", "blindado"], None), "caveira")
         self.assertEqual(retrato(["morto-vivo", "conjurador"], "guardiao", "guardiao:3"), "caveira")
         self.assertEqual(retrato(["fera"]), "fera")
         self.assertEqual(retrato([]), "caveira")

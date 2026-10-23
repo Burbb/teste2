@@ -1,0 +1,40 @@
+{
+ "luta-cavaleiro": {
+  "arquivos": [
+   "Cavaleiro sombrio: http://127.0.0.1:57370/static/hud/icones/retrato-cavaleiro-sombrio-32.png",
+   "Esqueleto: http://127.0.0.1:57370/static/hud/icones/retrato-esqueleto-32.png",
+   "Mercenário: http://127.0.0.1:57370/static/hud/icones/retrato-mercenario-32.png"
+  ],
+  "erros": [],
+  "ferramentas": []
+ },
+ "luta-guarda": {
+  "arquivos": [
+   "Jorros, o Cavaleiro sombrio: http://127.0.0.1:57651/static/hud/icones/retrato-cavaleiro-sombrio-32.png"
+  ],
+  "erros": [],
+  "ferramentas": []
+ },
+ "bestiario": {
+  "arquivos": [
+   "Abominação: data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAALFJREFUOE9jZKAQMOLSz8vN9R9Z7vPXb1jVYgjCNPrKp6CYvfnhHDAf3SAUA0CaYRpNXLNQDDizexqYDzII2RC4ATDNMI1WjuooBhzbfxPMBxmEbAhWA0CaXaO5UQzYvfQrA8gQrAYg2w7TfNXHCcUA7S37GLAZAnYBLgNAmkAAZBhZBiA7Aa8BuFyBbADeMEA3AMQnORaQDQGxSU4HMOdSlBKR/Ux2XiA1c+LMjcQaBAD7JaARCVML+AAAAABJRU5ErkJggg==",
+   "Cavaleiro sombrio: http://127.0.0.1:57926/static/hud/icones/retrato-cavaleiro-sombrio-48.png",
+   "Cria do Vazio: http://127.0.0.1:57926/static/hud/icones/retrato-cria-vazio-48.png",
+   "Espectro: http://127.0.0.1:57926/static/hud/icones/retrato-espectro-48.png",
+   "Esqueleto: http://127.0.0.1:57926/static/hud/icones/retrato-esqueleto-48.png",
+   "Mercenário: http://127.0.0.1:57926/static/hud/icones/retrato-mercenario-48.png"
+  ],
+  "erros": [],
+  "ferramentas": []
+ },
+ "contratos": {
+  "arquivos": [
+   "contrato tipo-caca: http://127.0.0.1:58309/static/hud/icones/retrato-cao-infernal-48.png 48",
+   "contrato tipo-caca: http://127.0.0.1:58309/static/hud/icones/retrato-carnical-48.png 48",
+   "contrato tipo-caca ativo: http://127.0.0.1:58309/static/hud/icones/retrato-cavaleiro-sombrio-48.png 48",
+   "painel m-painel: http://127.0.0.1:58309/static/hud/icones/retrato-cavaleiro-sombrio-32.png 32"
+  ],
+  "erros": [],
+  "ferramentas": []
+ }
+}

@@ -13,7 +13,7 @@ Não iniciar todo o plano numa única tarefa. As etapas técnicas A–I e a vali
 
 ## Estado de referência — 21/10/2026
 
-- Produção: **1.186.0** na branch `claude/tender-einstein-tx3tjl` (22/10/2026: o Cão infernal P1 pela família na 1.186.0; a Cria do Vazio A2 pela família na 1.185.0; a Harpia T2 e o Xamã Caído X1r2 pela família na 1.184.0; o Grifo GA3 pela família na 1.183.0; 23/10/2026: o Caído CA pela família, com os que o
+- Produção: **1.187.0** na branch `claude/tender-einstein-tx3tjl` (22/10/2026: o Cavaleiro Sombrio P3 pela família, com o Último Guarda, na 1.187.0; o Cão infernal P1 pela família na 1.186.0; a Cria do Vazio A2 pela família na 1.185.0; a Harpia T2 e o Xamã Caído X1r2 pela família na 1.184.0; o Grifo GA3 pela família na 1.183.0; 23/10/2026: o Caído CA pela família, com os que o
   xamã ergue; 22/10/2026: o Mercenário MA e o Lobo Gélido LA pela
   família na 1.179.0; o caixote no motivo "Esgotado" do mercado na 1.180.0; o ent jovem e o Ent Ancião renomeados para
   Árvore Desperta e Árvore Anciã, com a migração dos saves, na 1.181.0; a fala da Pita depois do último tratamento na
@@ -1040,24 +1040,22 @@ foi escolhida.
 
 **A frente de criaturas em 22/10/2026 (na 1.174.6; conferido em `dados.retrato` com as 27 famílias e os 10 guardiões
 do catálogo):**
-- **Integrados (25):** pela família, o Afogado, o Lobo, o Bandido, o Troll da montanha, a Aranha gigante, o Sapo-touro,
+- **Integrados (26):** pela família, o Afogado, o Lobo, o Bandido, o Troll da montanha, a Aranha gigante, o Sapo-touro,
   a Sanguessuga, o Cultista, a Bruxa do pântano, o Rato, o Javali, o Carniçal, o Espectro, o Esqueleto, o Mercenário e
-  o Lobo Gélido, o Caído, o Grifo, a Harpia, o Xamã Caído, a Cria do Vazio e o Cão infernal (22; o Esqueleto E1r na 1.175.0, com os que o Lich invoca; o Mercenário MA e o Lobo Gélido LA
+  o Lobo Gélido, o Caído, o Grifo, a Harpia, o Xamã Caído, a Cria do Vazio, o Cão infernal e o Cavaleiro Sombrio (23; o Esqueleto E1r na 1.175.0, com os que o Lich invoca; o Mercenário MA e o Lobo Gélido LA
   na 1.179.0, com o Invicto da ponte e o Theodore; o MB e o LB guardados como não escolhidos; o Caído CA na 1.182.0, com
   os que o xamã ergue; o Grifo GA3 na 1.183.0, com o feroz do ninho; o GA e o GA2 como histórico; a Harpia T2 e o Xamã
   Caído X1r2 na 1.184.0, com os afixos e o xamã que escolta o bando de caídos; a Cria do Vazio A2 na 1.185.0, com as
-  que o antagonista invoca; o Cão infernal P1 na 1.186.0, com os afixos); pela chave da capela, a Ilse; pelo id do guardião, o Rei Troll e
+  que o antagonista invoca; o Cão infernal P1 na 1.186.0, com os afixos; o Cavaleiro Sombrio P3 na 1.187.0, com o Último Guarda); pela chave da capela, a Ilse; pelo id do guardião, o Rei Troll e
   a Rainha Aracnídea. Os animais do patrulheiro (o Urso Pardo, o Falcão Peregrino e o Lobo Cinzento) na carta aliada e
   no painel; os três também na fogueira, pelo tipo (o lobo c2 na 1.170.0, o urso r4 e o falcão na 1.176.0). O cajado
   aprovado no Atacar do Mago (1.177.0).
 - **Fora das criaturas, na 1.180.0:** o ícone do **Esgotado** do mercado (o caixote, papel próprio `MOTIVO`; o cesto
   guardado como não escolhido; o cadeado continua nos outros motivos e usos).
-- **Propostas aguardando o Jean (22/10/2026, na 1.186.0; nenhuma autorizada), a quinta rodada da Cidadela:** a
-  **Abominação C3** aceita visualmente pelo Jean (preservada sem retoques; a integração ainda não autorizada) e o
-  **Cavaleiro Sombrio P4**, o P3 refinado pela construção da carta do Guerreiro (o elmo maior, a viseira em V, a base
-  escura separando do gorjal) (`criaturas/cidadela/`, a folha `cavaleiro-p4.png`). O P3 e o T2 são as direções
-  preferidas do Jean, nenhum aprovado. Histórico, não escolhidos: a Abominação A, B, C, C2, D e E e o Cavaleiro A, A2,
-  B, T, P1 e P2. Histórico, não escolhidos, em
+- **Na 1.187.0, o Cavaleiro Sombrio P3** (a cúpula com a crista afundada no gorjal alto; entrou como o P3b, com os cantos
+  de baixo completados a pedido do Jean), pela família, com o Último
+  Guarda. **Aceita visualmente, fora do jogo:** a **Abominação C3** (`criaturas/cidadela/`; a integração ainda não
+  autorizada). Histórico, não escolhidos: a Abominação A, B, C, C2, D e E e o Cavaleiro A, A2, B, T, T2, P1, P2 e P4. Histórico, não escolhidos, em
   `criaturas/fenda/`: o Cão A, B, T, N, N2, RA, RB, RC, RA2, RA3, P2 e P3 (a P1 foi a escolhida), a Cria A e B. A cria que o antagonista
   invoca é da família `cria_vazio` e usará o mesmo retrato. Histórico, não escolhidos: as Harpias HA, HB, H1 a H3 e a
   T, o GB, o GA e o GA2 (`criaturas/harpia_grifo/`, `criaturas/rodada_23_10/`), o CB, o XA e o XB
@@ -1067,8 +1065,8 @@ do catálogo):**
   Anciã** (árvores vivas: "árvores que acordaram com raiva"; o guardião, "uma árvore milenar"). Os ids `ent_jovem` e
   `ent_anciao`, os números, as habilidades e as regras ficam; os saves antigos passam pela migração v5 → v6.
 - **Ainda nos desenhos genéricos dos traços (levantado em `dados.retrato` na 1.184.0):**
-  - **4 famílias inimigas:** a Árvore Desperta (`planta`), o golem de pedra (`construto`), o cavaleiro sombrio
-    (`caveira`) e a abominação (`corrompido`). A cria do Vazio tem o retrato dela desde a 1.185.0, com as que o
+  - **3 famílias inimigas:** a Árvore Desperta (`planta`), o golem de pedra (`construto`) e a abominação
+    (`corrompido`; a C3 aceita visualmente, fora do jogo). O cavaleiro sombrio tem o dele desde a 1.187.0. A cria do Vazio tem o retrato dela desde a 1.185.0, com as que o
     antagonista invoca; o cão infernal, desde a 1.186.0 (nenhuma família fica mais no `demonio`).
   - **8 guardiões:** a Árvore Anciã, a Hidra do Brejo, a Bruxa Afogada, o Dragão de Gelo, o Senhor da Guerra, o Profeta
     das Cinzas, o Lich Menor (o `etereo` na fase 2) e o Golem Primordial.
@@ -1229,15 +1227,14 @@ volta à pauta quando essa expansão exigir; não é uma migração de engine.
 
 ## Próxima passagem de trabalho — atualizada em 22/10/2026
 
-1. **Concluídos:** os 31 equipamentos-base (1D); na 1E, o contador de flechas e os 17 estados; 24 criaturas com retrato
-   (22 famílias, a Ilse, o Rei Troll e a Rainha Aracnídea); o ícone do Esgotado do mercado e os três animais do patrulheiro (na carta, no painel e na
+1. **Concluídos:** os 31 equipamentos-base (1D); na 1E, o contador de flechas e os 17 estados; 25 criaturas com retrato
+   (23 famílias, a Ilse, o Rei Troll e a Rainha Aracnídea); o ícone do Esgotado do mercado e os três animais do patrulheiro (na carta, no painel e na
    fogueira); o cajado no Atacar do Mago. As variantes e os compartilhamentos provisórios ficam abertos, separados.
 2. **Agora, 1E.3:** as demais criaturas, os chefes e as invocações, em pares pequenos escolhidos pelo Jean, pelo mesmo
    caminho (o retrato por família, por chave ou pelo tipo, sem trocar o sprite compartilhado). O Mercenário, o Lobo
    Gélido e o Esgotado integrados (1.179.0, 1.180.0); o Caído CA (1.182.0); o Grifo GA3 (1.183.0); a Harpia T2 e o Xamã
-   Caído X1r2 (1.184.0); a Cria do Vazio A2 (1.185.0); o Cão infernal P1 (1.186.0). **Aguardando o Jean:** a
-   avaliação do Cavaleiro P4 (a Abominação C3 aceita visualmente), a sexta rodada
-   (`criaturas/cidadela/`); depois, a Árvore Desperta com o golem de
+   Caído X1r2 (1.184.0); a Cria do Vazio A2 (1.185.0); o Cão infernal P1 (1.186.0); o Cavaleiro Sombrio P3 (1.187.0).
+   **Aguardando o Jean:** a integração da Abominação C3, aceita visualmente (`criaturas/cidadela/`); depois, a Árvore Desperta com o golem de
    pedra e os chefes, sem começar antes do pedido. A relação em "A frente de criaturas em 22/10/2026" (item 1.12). O Esqueleto E2 e o Bandido do
    chapéu estão reservados.
 3. **Depois, 1E.4:** os caminhos/destinos e os símbolos internos do mapa e do minimapa.

@@ -313,3 +313,30 @@ Camadas capa, armadura, viseira (a paleta `cavaleiro_t`). Adaptado ao inimigo, s
 - As fotos a 1920×945 no modo `p4`, em `capturas-2/` (os mesmos cenários e enquadramentos), sem erro no console; a folha
   compacta `cavaleiro-p4.png` (o T2 × o P3 × o P4 na carta, real e 2×, e no Bestiário; a fileira com os aprovados e o
   Guerreiro, real e 3×; a 12× do Guerreiro, do T2, do P3 e do P4).
+
+# A integração do Cavaleiro Sombrio (1.187.0): o P3
+
+**Decisão do Jean:** o P3 original aprovado para integração, sem retoques (não o P4). A leitura dele, segundo o Jean,
+é a de uma cabeça aparentemente exposta com a parte de baixo do rosto coberta por uma proteção; é uma interpretação do
+desenho, não um pedido para mudar o desenho nem a descrição no jogo. O A, o A2, o B, o T, o T2, o P1, o P2 e o P4 ficam
+como histórico; a Abominação C3 continua aceita visualmente e intacta, fora do jogo.
+
+- **A fonte:** primeiro a do P3 (`fontes/cavaleiro-p3/`, sem alteração desde o `6e255ec4`), copiada byte a byte e
+  conferida (os seis iguais à proposta). Na mesma entrega, vendo o cartaz do mural, o Jean pediu para completar os
+  pedaços que faltavam nos cantos de baixo: o **P3b** (`cavaleiro-p3b`) é o P3 com a linha 15 completa (a lâmina de baixo
+  da ombreira esquerda até a borda, colunas 0 a 2, e a coluna 15 da direita, nos tons das lâminas; 4 pixels, nada mais).
+  O P3 fica como histórico. A fonte do P3b (camadas capa, armadura, viseira; 0 diferentes na releitura) foi copiada byte a
+  byte para `ferramentas/arte/aseprite/retrato-cavaleiro-sombrio/retrato-cavaleiro-sombrio-16.aseprite`; o 32 e o 48
+  registrados em `DERIVADOS` (`exportar_aseprite.py`), com os @2x.
+- **Antes de gravar no jogo:** exportados numa pasta temporária e comparados com a proposta (`proposta/cavaleiro-p3b-*`):
+  os seis arquivos iguais byte a byte. Depois de gravar, o `--conferir`: tudo igual ao jogo, o 32 e o 48 em blocos
+  inteiros que reduzem ao 16.
+- **No jogo:** pela família (`RETRATO_FAMILIA` em `rpg/dados.py`; o papel `CRIATURA` e os tamanhos em
+  `rpg/web/static/icones.js`), com os afixos e o Último Guarda (`sistemas/chefes.py` o cria da família
+  `cavaleiro_sombrio`, com nome próprio). O sprite `caveira` continua compartilhado com a Bruxa Afogada, o Lich Menor
+  (pelos traços) e o servo do Necromante; nenhuma regra mudou.
+- **Conferido com os arquivos de produção** (`auxiliares/fotografar_jogo.mjs`, `capturas-1187/`, a 1920×945, nada
+  trocado na página): o cavaleiro na luta com o esqueleto e o mercenário; o Último Guarda (o cavaleiro de nome próprio,
+  pelo `auxiliares/cenario_guarda.py`, que o cria como `chefes.py`); o Bestiário com a faixa do mestre caçador; o cartaz
+  do mural e o rastreador do contrato. Todos com `retrato-cavaleiro-sombrio-32/48`, nenhum pedido a `ferramentas/`, sem
+  erro no console. A folha `../integracoes-22-10/integracoes-1187.png`.

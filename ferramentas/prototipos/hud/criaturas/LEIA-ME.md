@@ -220,3 +220,5 @@ A escolha do par e da direção é do Jean; nada foi começado.
 - **Sexta rodada (22/10/2026), em avaliação:** o Cavaleiro P4, o P3 refinado pela construção da carta do Guerreiro (o
   elmo maior, a viseira em V, a base escura separando do gorjal). A folha `cidadela/cavaleiro-p4.png`. Nenhum Cavaleiro
   autorizado para integração; a Abominação C3 aceita visualmente.
+- **Integrado na 1.187.0:** o Cavaleiro Sombrio P3, pela família, com o Último Guarda (os outros Cavaleiros como
+  histórico). A Abominação C3, aceita visualmente, continua fora do jogo.

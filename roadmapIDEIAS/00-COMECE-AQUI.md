@@ -6184,3 +6184,24 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Verificações:** só o protótipo mudou: o pyflakes e a sintaxe do roteiro das fotos; a suíte, o gabarito e a fumaça
   não foram rodados, porque o jogo não mudou.
 - **Continua:** a avaliação do Jean; nada integrado; nenhuma outra criatura começada.
+
+### 22/10/2026 (data do computador local) — O Cavaleiro Sombrio no jogo (1.187.0): o P3, pela família
+
+- **Estado conferido:** a branch em `468d4d6e`, igual ao remoto, sem alterações locais; produção na 1.186.0.
+- **Decisão do Jean:** o P3 original aprovado para integração, sem retoques (não o P4); a Abominação C3 fica intacta,
+  fora do jogo.
+- **No jogo (1.187.0):** `retrato-cavaleiro-sombrio` (16, 32, 48 e os @2x) pela família `cavaleiro_sombrio`
+  (`RETRATO_FAMILIA`; o papel `CRIATURA` em `icones.js`), com os afixos e o Último Guarda, que é da família. A `caveira`
+  continua com a Bruxa Afogada, o Lich Menor e o servo do Necromante; nenhuma regra mudou.
+- **A fonte:** a do P3, e depois, a pedido do Jean na mesma entrega, a do **P3b** (o P3 com os cantos de baixo
+  completados: 4 pixels na linha 15, que na caixa pareciam pedaços faltando), copiada byte a byte para
+  `ferramentas/arte/aseprite/retrato-cavaleiro-sombrio/`; o 32 e o 48 em `DERIVADOS`; o P3 fica como histórico. Exportados numa pasta temporária e iguais byte a byte à proposta antes de gravar; `--conferir`: tudo igual.
+- **Conferido com os arquivos de produção** (`criaturas/cidadela/capturas-1187/`): a luta, o Último Guarda, o
+  Bestiário com a faixa do mestre caçador, o cartaz e o rastreador; sem erro no console, nenhum pedido a `ferramentas/`.
+  A folha `ferramentas/prototipos/hud/integracoes-22-10/integracoes-1187.png`.
+- **Testes:** o cavaleiro pela família, com afixo e como o Último Guarda; os testes que diziam que ele ficava na caveira
+  foram ajustados (os outros mortos-vivos sem retrato continuam nela).
+- **Verificações sobre o código final:** `unittest` (658, 1 pulado: a fumaça, rodada à parte), o gabarito (idêntico,
+  sem atualizar), o pyflakes (só o aviso conhecido) e a fumaça inteira (378 ok, tudo certo; o código não mudou depois
+  dela, só os PNGs do retrato).
+- **Continua:** a integração da Abominação C3, quando o Jean pedir; outras criaturas, chefes e o mapa não foram começados.
