@@ -6586,3 +6586,22 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Verificações proporcionais (nenhum código do jogo mudou):** o pyflakes dos auxiliares, a sintaxe do roteiro das fotos,
   as fontes reabertas (o lado, as camadas na ordem, a guia oculta), 0 diferentes na releitura, as exportações iguais ao
   composto, alfa 0/255, os derivados em blocos inteiros e as fotos sem erro no console. As fontes pelo Aseprite em lote.
+
+### 23/10/2026 (data do computador local) — O servo esquelético em 32 nativos, adaptado à mão para 16 (nada no jogo)
+
+- **Estado:** depois da Hidra (`8b94eecb`); só protótipo.
+- **Pedido do Jean:** um desenho próprio para o servo, sem elmo, capuz ou armadura (não o Esqueleto inimigo com os olhos
+  recoloridos), primeiro em 32, depois à mão em 16; e conferir a distinção entre o servo do Erguer Servo e as criaturas
+  que o Rei dos Mortos ergue, documentando a seleção, sem mudar regras nem integrar mapeamentos.
+- **No protótipo, aguardando o Jean** (`ferramentas/prototipos/hud/criaturas/servo_32/LEIA-ME.md`, a folha
+  `comparacao.png`): o `servo-n32` e o `servo-n16`. A SV1, a SV2 e a SV2b ficam; o Esqueleto E2 continua reservado.
+- **A distinção, conferida no código:** os dois são aliados do tipo `"servo"` e hoje caem no sprite `caveira`; o erguido
+  não guarda a espécie. A integração vai precisar de uma origem própria para o Erguer Servo e de o Rei dos Mortos passar o
+  retrato da criatura que caiu (o LEIA-ME do servo detalha). Demonstrado só no protótipo, numa luta com os dois servos.
+- **A minha leitura:** o N32 lê como um crânio nu de servo, separado do inimigo de elmo; o N16 guarda o crânio, o violeta
+  escuro, os dentes e as clavículas, e perde as costelas, a inclinação das órbitas e a forma da mandíbula.
+- **Verificações proporcionais (nenhum código do jogo mudou):** o pyflakes dos auxiliares, a sintaxe do roteiro das fotos,
+  as fontes reabertas (o lado, as camadas na ordem, a guia oculta), 0 diferentes na releitura, as exportações iguais ao
+  composto, alfa 0/255, os derivados em blocos inteiros e as fotos sem erro no console. As fontes pelo Aseprite em lote.
+- **Parado para a avaliação da Hidra e do servo:** só o Espantalho entrou no jogo (1.195.0); nenhuma criatura nova, a
+  substituição da Bruxa Afogada e o mapa não começados.

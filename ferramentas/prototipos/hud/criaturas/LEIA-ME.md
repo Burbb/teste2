@@ -288,3 +288,7 @@ A escolha do par e da direção é do Jean; nada foi começado.
 - **A Hidra do Brejo construída em 32 e adaptada para 16 (23/10/2026), aguardando o Jean:** `hidra_32/` (o estudo
   `hidra-n32` e a proposta `hidra-n16`; a folha `comparacao.png`): as três cabeças de réptil olhando para a esquerda, com
   pescoços grossos (a H1, a H2 e a `hidra-t`, recusadas, ficam como histórico). Nada integrado.
+- **O servo esquelético construído em 32 e adaptado para 16 (23/10/2026), aguardando o Jean:** `servo_32/` (o estudo
+  `servo-n32` e a proposta `servo-n16`, sem elmo; a folha `comparacao.png`), com a seleção que a integração vai precisar
+  (o retrato só no servo do Erguer Servo; a criatura erguida pelo Rei dos Mortos com o retrato da espécie) documentada e
+  demonstrada só no protótipo. A SV1, a SV2 e a SV2b ficam; o Esqueleto E2 continua reservado. Nada integrado.
