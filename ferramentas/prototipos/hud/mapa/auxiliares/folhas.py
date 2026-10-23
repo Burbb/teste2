@@ -1,12 +1,14 @@
-"""As folhas da 1E.4 (23/10/2026), das capturas de fotografar.mjs (capturas/atual, capturas/proposta-a e
-capturas/proposta-b, a 1920×945) e das peças de proposta/. Ampliações sempre por vizinho mais próximo (sem suavizar);
+"""As folhas da 1E.4 (23/10/2026), das capturas de fotografar.mjs (capturas/atual, capturas/proposta-b, -b48 e -a,
+a 1920×945) e das peças de proposta/. Ampliações sempre por vizinho mais próximo (sem suavizar);
 uma redução só onde a legenda diz, para caber a página inteira.
 
   - levantamento.png: onde o mapa aparece na campanha, o minimapa e o mapa grande em tamanho real, as peças de hoje
     (os símbolos, as estradas, as marcas e os estados) em contexto e ampliadas, e o que é de cada modo;
-  - pecas.png: as peças novas a 1× e a 4×, ao lado dos ícones aprovados de 32 e 40 com que convivem;
-  - comparacao.png: atual × direção A × direção B, nas três situações da campanha, com os mesmos dados (o minimapa a
-    2× e o mapa grande a 1×).
+  - pecas.png: as peças da proposta revisada a 1× e a 4× (a cancela antes e agora, a plaqueta B, as marcas, a seta A);
+  - comparacao.png: atual × B (a escolhida) × A (a alternativa), nas quatro situações da campanha, com os mesmos
+    dados (o minimapa a 2× e o mapa grande a 1×);
+  - origem-lugares.png: de onde vêm os ícones de lugar de 32 e 40 (a folha de referência, o recorte, as reduções);
+  - presenca-lugares.png: o mapa grande com o 40 aprovado e com um 48 pelo mesmo processo (capturas/proposta-b48).
     python folhas.py
 """
 import json
@@ -195,61 +197,120 @@ def levantamento():
 
 def pecas():
     p = PASTA / "proposta"
-    f = Folha(1500)
-    f.texto("1E.4 — as peças novas do primeiro lote (proposta; nada no jogo)", 22, OURO, True)
+    f = Folha(1600)
+    f.texto("1E.4 — as peças da proposta revisada (protótipo; nada no jogo)", 22, OURO, True)
     f.texto("Desenhadas à mão em grade, montadas no Aseprite em lote (fontes/, camadas corpo, marca, contorno). "
             "1:1 na tela, sobre o carvão; a 4× por vizinho mais próximo.", 14, TEXTO2)
     f.espaco()
-    pares = [("posicao", "você está aqui (A)"), ("missao", "missão"), ("contrato", "contrato"), ("cancela", "saída fechada")]
-    viz40 = Image.open(ICONES / "lugar-vila-40.png").convert("RGBA")
-    viz32 = Image.open(ICONES / "lugar-vila-32.png").convert("RGBA")
-    f.texto("Mapa grande (ao lado do ícone de lugar de 40)", 17, TEXTO, True)
-    f.imagens([(nicho(viz40, 48, 1), "vila 40")] + [(nicho(Image.open(p / f"{n}.png").convert("RGBA"), 24, 1), t) for n, t in pares] +
-              [(nicho(viz40, 48, 4), "vila 40, 4×")] + [(nicho(Image.open(p / f"{n}.png").convert("RGBA"), 24, 4), f"{t}, 4×") for n, t in pares], gap=16)
-    f.texto("Minimapa (ao lado do ícone de lugar de 32)", 17, TEXTO, True)
-    f.imagens([(nicho(viz32, 40, 1), "vila 32")] + [(nicho(Image.open(p / f"{n}-mini.png").convert("RGBA"), 18, 1), t) for n, t in pares] +
-              [(nicho(viz32, 40, 4), "vila 32, 4×")] + [(nicho(Image.open(p / f"{n}-mini.png").convert("RGBA"), 18, 4), f"{t}, 4×") for n, t in pares], gap=16)
-    f.texto("Direção B do \"você está aqui\": a plaqueta com a figura 16 do herói (a aprovada, de retratos.js)", 17, TEXTO, True)
-    plaq = Image.open(p / "posicao-plaqueta.png").convert("RGBA")
-    figs = {}
-    for c in ["guerreiro", "mago", "arqueiro"]:
-        figs[c] = Image.open(CAP / f"sprites/figura-{c}.png").convert("RGBA")
+    um = lambda n: Image.open(p / f"{n}.png").convert("RGBA")  # noqa: E731
+    sp = lambda n: Image.open(CAP / f"sprites/{n}.png").convert("RGBA")  # noqa: E731
+    f.texto("A cancela: a barricada de madeira envelhecida (postes e tábuas em X), no lugar da faixa vermelha e branca", 17, TEXTO, True)
+    f.imagens([(nicho(sp("cancela-mini-r1"), 20, 4), "antes, minimapa, 4×"), (nicho(um("cancela-mini"), 20, 4), "agora, minimapa, 4×"),
+               (nicho(um("cancela-mini"), 20, 1), "agora, minimapa, 1×"),
+               (nicho(sp("cancela-r1"), 24, 4), "antes, mapa grande, 4×"), (nicho(um("cancela"), 24, 4), "agora, mapa grande, 4×"),
+               (nicho(um("cancela"), 24, 1), "agora, mapa grande, 1×")], gap=16)
+    f.texto("O \"você está aqui\", direção B (a escolhida): a plaqueta com a figura 16 da classe (a aprovada, de retratos.js)", 17, TEXTO, True)
+    plaq, lado = um("posicao-plaqueta"), um("posicao-plaqueta-lado")
     linha = []
-    for c, fig in figs.items():
+    for c in ["guerreiro", "mago", "arqueiro"]:
         t = plaq.copy()
-        t.alpha_composite(fig, (2, 2))
+        t.alpha_composite(sp(f"figura-{c}"), (2, 2))
         linha += [(nicho(t, 28, 1), f"{c}, 1×"), (nicho(t, 28, 4), f"{c}, 4× (no mapa grande vai a 2×)")]
-    f.imagens([(nicho(plaq, 28, 4), "a plaqueta vazia, 4×")] + linha, gap=16)
+    f.imagens(linha, gap=16)
+    t = lado.copy()
+    t.alpha_composite(sp("figura-arqueiro"), (2, 2))
+    d = lado.transpose(Image.FLIP_LEFT_RIGHT)
+    d.alpha_composite(sp("figura-arqueiro"), (4, 2))
+    f.imagens([(nicho(t, 28, 4), "de lado, à esquerda do lugar (sem espaço acima), 4×"),
+               (nicho(d, 28, 4), "espelhada, à direita (sem espaço à esquerda), 4×"), (nicho(t, 28, 1), "1×")], gap=16)
+    f.texto("As outras marcas (como na primeira rodada) e a alternativa A, a seta, preservada", 17, TEXTO, True)
+    f.imagens([(nicho(um(n), 24, 4), f"{t}, 4×") for n, t in
+               [("missao", "missão, mapa grande"), ("contrato", "contrato, mapa grande"), ("missao-mini", "missão, minimapa"),
+                ("contrato-mini", "contrato, minimapa"), ("posicao", "A: a seta, mapa grande"), ("posicao-mini", "A: a seta, minimapa")]], gap=16)
     f.gravar(PASTA / "pecas.png")
+
+
+SITUACOES_B = SITUACOES[:2] + [("capela-tarde", "Na Capela, à tarde, com o Arqueiro (o lugar atual perto da borda de cima do mapa)")] + SITUACOES[2:]
 
 
 def comparacao():
     f = Folha(2030)
-    f.texto("1E.4 — atual × proposta, com os mesmos dados (o minimapa a 2×; o mapa grande a 1×)", 22, OURO, True)
-    f.texto("Proposta: escala inteira (×2 no minimapa, ×3 no mapa grande), os ícones aprovados de lugar (32 no minimapa, 40 no grande) "
-            "em 1:1, as estradas por estado, a saída fechada, as marcas de missão e contrato e o \"você está aqui\" "
-            "(A: a seta; B: o herói na plaqueta). Clique, destinos e regras iguais.", 14, TEXTO2)
+    f.texto("1E.4 — atual × proposta B (a escolhida) × A (a alternativa), com os mesmos dados", 22, OURO, True)
+    f.texto("O minimapa a 2× e o mapa grande a 1× (vizinho mais próximo). Proposta: a escala inteira, os ícones de lugar (32 e 40) em 1:1, "
+            "as estradas por estado, a barricada na saída fechada, as marcas de missão e contrato e o herói na plaqueta. "
+            "Clique, destinos e regras iguais.", 14, TEXTO2)
     f.espaco()
-    for sit, desc in SITUACOES:
+    for sit, desc in SITUACOES_B:
         f.texto(desc, 18, TEXTO, True)
         f.imagens([(amplia(abrir(CAP / f"{v}/{sit}-mini.png"), 2), r) for v, r in
-                   [("atual", "atual (1.199.3)"), ("proposta-a", "proposta, direção A (a seta)"), ("proposta-b", "proposta, direção B (o herói)")]], gap=20)
-        ga, gb = abrir(CAP / f"atual/{sit}-grande.png"), abrir(CAP / f"proposta-a/{sit}-grande.png")
-        f.imagens([(ga, "atual, mapa grande"), (gb, "proposta A, mapa grande")], gap=20)
+                   [("atual", "atual (1.199.3)"), ("proposta-b", "proposta B (o herói na plaqueta)"), ("proposta-a", "alternativa A (a seta)")]], gap=20)
+        f.imagens([(abrir(CAP / f"atual/{sit}-grande.png"), "atual, mapa grande"), (abrir(CAP / f"proposta-b/{sit}-grande.png"), "proposta B, mapa grande")], gap=20)
         atual = next(l for l in registro("proposta-b")[sit]["medidas"][1]["lugares"] if "atual" in l["classes"].split())["centro"]
-        f.imagens([(amplia(recorte(abrir(CAP / f"proposta-a/{sit}-grande.png"), atual, 200, 130), 2), "A no lugar atual, 2×"),
-                   (amplia(recorte(abrir(CAP / f"proposta-b/{sit}-grande.png"), atual, 200, 130), 2), "B no lugar atual, 2×"),
-                   (amplia(recorte(abrir(CAP / f"atual/{sit}-grande.png"), atual, 200, 130), 2), "atual no lugar atual, 2×")], gap=20)
-    f.texto("A legenda do mapa grande na proposta (só o que o mapa conhecido mostra, e as marcas)", 18, TEXTO, True)
-    janela = abrir(CAP / "proposta-a/vau-manha-janela.png")
-    f.imagens([(janela.crop((0, janela.height - 70, janela.width, janela.height)), "proposta A"),
-               ], gap=20)
-    jat = abrir(CAP / "atual/vau-manha-janela.png")
-    f.imagens([(jat.crop((0, jat.height - 70, jat.width, jat.height)), "atual: os nove desenhos dos dois modos")], gap=20)
+        f.imagens([(amplia(recorte(abrir(CAP / f"{v}/{sit}-grande.png"), atual, 210, 140), 2), r) for v, r in
+                   [("proposta-b", "B no lugar atual, 2×"), ("proposta-a", "A no lugar atual, 2×"), ("atual", "atual no lugar atual, 2×")]], gap=20)
+    f.texto("A legenda do mapa grande (só o que o mapa conhecido mostra, e as marcas)", 18, TEXTO, True)
+    for v, r in [("proposta-b", "proposta B"), ("atual", "atual: os nove desenhos dos dois modos")]:
+        j = abrir(CAP / f"{v}/vau-manha-janela.png")
+        f.imagens([(j.crop((0, j.height - 70, j.width, j.height)), r)], gap=20)
     f.gravar(PASTA / "comparacao.png")
+
+
+def origem():
+    """De onde vêm os ícones de lugar de 32 e 40: a folha de referência, o recorte, as duas reduções."""
+    hud = AQUI.parents[1]
+    f = Folha(1700)
+    f.texto("1E.4 — a origem dos ícones de lugar de 32 e 40 (lugar-*, rpg/web/static/hud/icones/)", 22, OURO, True)
+    f.texto("Refeitos pelo script preparar_hud4p.py: os 16 arquivos (8 lugares × 32 e 40) saem idênticos, byte a byte, aos do jogo.", 14, TEXTO2)
+    f.espaco()
+    folha = Image.open(hud / "assets4p/original/lugares-atributos-recursos.webp").convert("RGBA")
+    fundo = Image.new("RGBA", folha.size, (*CARVAO, 255))
+    fundo.alpha_composite(folha)
+    peca = Image.open(hud / "assets4p/pecas/lugar-vila.png").convert("RGBA")
+    pc = Image.new("RGBA", peca.size, (*CARVAO, 255))
+    pc.alpha_composite(peca)
+    f.imagens([(reduz(fundo.convert("RGB"), 0.4), "1. a referência: lugares-atributos-recursos.webp, 1122×1402 (reduzida a 40% só aqui)"),
+               (pc.convert("RGB"), "2. o recorte da vila (assets4p/pecas), 265×203, 1×"),
+               (amplia(pc.convert("RGB").crop((60, 40, 150, 110)), 4), "o recorte a 4×: o \"pixel\" mede 6 a 9 px e não segue uma grade")], gap=20)
+    cel = []
+    for lado, fat in ((32, "÷8,28"), (40, "÷6,63")):
+        im = Image.open(ICONES / f"lugar-vila-{lado}.png").convert("RGBA")
+        cel += [(nicho(im, lado + 8, 1), f"{lado}, 1×"), (nicho(im, lado + 8, 6), f"{lado}, 6×: redução {fat} do recorte")]
+    f.imagens(cel, gap=20)
+    f.linhas([
+        "• A referência: uma das quatro folhas anexadas na rodada \"HUD 4 pixel\" (14/10/2026, commit 32e3823c), guardada intacta em",
+        "  ferramentas/prototipos/hud/assets4p/original/. Os registros a tratam como folha anexada que imita pixel art sem grade nativa exata;",
+        "  não dizem com que ferramenta foi feita. O aspecto (\"pixel\" irregular de 6 a 9 px, sem paleta fixa) é o de uma imagem gerada.",
+        "• O processo (preparar_hud4p.py): recorte por região conexa, limpeza do alfa (só a franja de até 5% e os pontos soltos), a escala",
+        "  do grupo dos lugares pela área visível (sem folga), e a redução \"paleta\": cada pixel é a média do bloco trocada pela cor mais",
+        "  próxima que o desenho tem, com o alfa duro. Nada foi redesenhado nem retocado; não há fonte .aseprite nem grade nativa.",
+        "• Cada tamanho é uma redução própria do mesmo recorte, por fator não inteiro (o 32 a ÷7,9–9,3; o 40 a ÷6,4–7,4). O 40 não é o 32",
+        "  com margem nem o 32 ampliado: os dois ocupam o quadrado inteiro (a vila: 32×25 em 32, 40×31 em 40) e têm 300 a 770 cores.",
+        "• O @2x de cada um também é outra redução (a 64 e a 80), não a duplicação exata.",
+        "• Pela skill de itens de hoje, redução por fator não inteiro não vale como acabamento; estes entraram com a HUD 4 pixel, antes",
+        "  dessa regra, e são os aprovados da família. Não redesenhei: o que fazer com eles é decisão do Jean.",
+    ], 14)
+    f.gravar(PASTA / "origem-lugares.png")
+
+
+def presenca():
+    """O tamanho dos ícones de lugar no mapa grande: o 40 (o aprovado) e o 48 (a mesma redução do mesmo recorte)."""
+    f = Folha(1940)
+    f.texto("1E.4 — a presença dos lugares no mapa grande: o 40 aprovado × um 48 pelo mesmo processo (proposta B)", 22, OURO, True)
+    f.texto("O 48 sai do mesmo recorte pela mesma redução \"paleta\" (auxiliares/lugares48.py); é mais uma redução, não um desenho. "
+            "O botão continua com 40 px; o tracejado de destino acompanha o símbolo maior.", 14, TEXTO2)
+    f.espaco()
+    for sit, desc in SITUACOES_B[:2]:
+        f.texto(desc, 17, TEXTO, True)
+        f.imagens([(abrir(CAP / f"proposta-b/{sit}-grande.png"), "40 (o aprovado)"), (abrir(CAP / f"proposta-b48/{sit}-grande.png"), "48")], gap=20)
+        cs = [centro("proposta-b", sit, "mapa grande", n) for n in ["Vau do Turvo", "Bosque do Moinho"]]
+        f.imagens([(amplia(recorte(abrir(CAP / f"{v}/{sit}-grande.png"), c, 120, 100), 2), f"{r}, 2×") for c in cs
+                   for v, r in [("atual", "atual (sprite 16 a ×2,64)"), ("proposta-b", "40"), ("proposta-b48", "48")]], gap=14)
+    f.gravar(PASTA / "presenca-lugares.png")
 
 
 if __name__ == "__main__":
     levantamento()
     pecas()
     comparacao()
+    origem()
+    presenca()

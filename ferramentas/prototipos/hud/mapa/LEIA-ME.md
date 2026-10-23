@@ -9,12 +9,101 @@ descoberta e progressão não mudam. Produção consultada: **1.199.3**.
 
 - **`levantamento.png`**: onde o mapa aparece (a página e o mapa grande a 1920×945), o minimapa e o mapa grande em
   tamanho real, as peças de hoje em contexto e ampliadas sem suavizar, e o resumo do que se achou.
-- **`pecas.png`**: as peças novas a 1× e a 4×, ao lado dos ícones de lugar aprovados com que convivem.
-- **`comparacao.png`**: atual × direção A × direção B, nas três situações da campanha, com os mesmos dados (o minimapa a
-  2×, o mapa grande a 1×, o lugar atual a 2×) e a legenda.
-- As capturas inteiras, a 1920×945: `capturas/atual/`, `capturas/proposta-a/` e `capturas/proposta-b/` (para cada
-  situação: `-pagina`, `-mundo`, `-mini`, `-mapa`, `-grande`, `-janela`), com o `registro.json` de cada bateria (o
-  canvas nativo e exibido, os símbolos, os botões, os centros, o console).
+- **`pecas.png`** (revisada): a cancela antes e agora, a plaqueta B com as três classes (em cima e de lado), as marcas
+  de missão e contrato e a seta A, a 1× e a 4×.
+- **`comparacao.png`** (revisada): atual × B (a escolhida) × A (a alternativa), nas quatro situações da campanha, com os
+  mesmos dados (o minimapa a 2×, o mapa grande a 1×, o lugar atual a 2×) e a legenda.
+- **`origem-lugares.png`**: de onde vêm os ícones de lugar de 32 e 40 (a referência, o recorte, as duas reduções).
+- **`presenca-lugares.png`**: o mapa grande com o 40 aprovado e com um 48 pelo mesmo processo.
+- As capturas inteiras, a 1920×945: `capturas/atual/`, `capturas/proposta-b/` (a escolhida, com o 40),
+  `capturas/proposta-b48/` (com o 48 no mapa grande) e `capturas/proposta-a/` (a alternativa); para cada situação:
+  `-pagina`, `-mundo`, `-mini`, `-mapa`, `-grande`, `-janela`, com o `registro.json` de cada bateria (o canvas nativo e
+  exibido, os símbolos, os botões, os centros, o console).
+
+## A revisão depois da escolha do Jean (23/10/2026): a direção B, a cancela, as fontes, o estado fechado
+
+**A escolha:** a direção **B** (o herói na plaqueta) é a principal; a **A** (a seta) fica preservada como alternativa
+(`POS=a` no roteiro de fotos; as peças `posicao` e `posicao-mini` continuam em `proposta/`). Tudo continua só no
+protótipo, aguardando a avaliação.
+
+### 1. A origem dos ícones de lugar de 32 e 40 (o que temos; nada foi redesenhado)
+
+- **Os arquivos reaproveitados:** os 16 `rpg/web/static/hud/icones/lugar-<vila|floresta|pantano|ruinas|planicie|
+  cidadela|caverna|montanha>-<32|40>.png` (o protótipo usa os da vila, do pântano, da floresta, das ruínas e da
+  planície; a caverna, no covil do procedural). São idênticos, byte a byte, aos de
+  `ferramentas/prototipos/hud/assets4p/exibicao/`, e o script `preparar_hud4p.py` os refaz idênticos hoje (conferido
+  pelo `auxiliares/lugares48.py`, que repete o processo antes de gravar o 48).
+- **A referência** (a origem do desenho): `assets4p/original/lugares-atributos-recursos.webp`, 1122×1402, uma das quatro
+  folhas anexadas na rodada "HUD 4 pixel" (14/10/2026, commit `32e3823c`; aprovada como direção na rodada seguinte e
+  levada ao jogo em `58c20d8d`). Os registros a chamam de folha anexada que **imita pixel art sem grade nativa exata**
+  (o "pixel" mede de 6 a 9 px da imagem e varia de peça para peça) e não dizem com que ferramenta foi feita; o aspecto
+  é o de uma imagem gerada. (Os quatro lugares da HUD 4 completa, da `assets4c/`, são outra folha e não estão no jogo.)
+- **O processo que gerou os arquivos finais** (`preparar_hud4p.py`): o recorte de cada lugar por região conexa (a vila
+  tem 265×203); a limpeza do alfa (só a franja de até 5% e os pontos soltos); a escala do grupo dos lugares pela área
+  visível, sem folga; e a **redução "paleta"**: cada pixel de destino é a média do bloco da imagem, trocada pela cor
+  mais próxima que o desenho tem, com o alfa duro. Nada foi redesenhado nem retocado; **não há fonte `.aseprite`, nem
+  grade-base**.
+- **Os tamanhos:** **cada um é uma redução própria do mesmo recorte, por fator não inteiro** (o 32 a ÷7,9 a ÷9,3; o 40
+  a ÷6,4 a ÷7,4, conforme a peça). **O 40 não é desenho próprio, nem o 32 com margem, nem o 32 ampliado:** os dois
+  enchem o quadrado (a vila: 32×25 dentro do 32 e 40×31 dentro do 40) e têm de 300 a 770 cores. O `@2x` de cada um
+  também é outra redução (a 64 e a 80), não a duplicação exata.
+- **O que isso quer dizer:** são os ícones aprovados da família, mas foram feitos antes da regra da skill de itens de
+  que redução por fator não inteiro não vale como acabamento. Para o mapa, funcionam e leem bem; se o Jean quiser a
+  família em grade nativa, seria um redesenho à mão (lugar por lugar, com a referência como mapa), uma entrega
+  própria. Não comecei nada disso.
+
+### 2. A cancela
+
+A primeira (a faixa vermelha e branca) lembrava sinalização de trânsito; uma segunda, só com dois postes e duas
+travessas, lia como um banco no minimapa (fica fora do repositório). **Agora: a barricada de madeira envelhecida**, os
+dois postes de pontas cortadas e as **tábuas cruzadas em X**, em quatro tons de madeira acinzentada, sem pintura e sem
+textura (13×11 no minimapa, 19×15 no mapa grande). O X é o que diz "fechado" de longe; no minimapa, a 1×, lê como
+`|X|` sobre a estrada pontilhada.
+
+### 3. A direção B e a composição
+
+- **A plaqueta com a figura 16 da classe** (a aprovada, de `retratos.js`: o elmo do Guerreiro, o capuz do Mago, o
+  capuz verde do Arqueiro), 1:1 no minimapa e a 2× no mapa grande (a moldura e a figura juntas, pixel a pixel).
+  Conferida com as três classes (Vau: Guerreiro; Bosque: Mago; Capela: Arqueiro).
+- **Onde ela vai:** acima do símbolo, com a ponta tocando a borda de cima dele; **sem espaço acima** (o lugar perto da
+  borda de cima do mapa, como a Capela no minimapa), **ao lado**, com a ponta virada para o lugar (à esquerda; sem
+  espaço à esquerda, espelhada à direita: a peça `posicao-plaqueta-lado`). Antes desta revisão, ela seria cortada pela
+  borda.
+- **O que ela não cobre:** o nome fica embaixo do símbolo; a missão e o contrato do lugar atual vão para o lado da
+  plaqueta (com ela à direita, para o canto de cima à esquerda); o símbolo fica inteiro (a ponta encosta só na borda de
+  cima). Conferido nas quatro situações, nos dois mapas.
+- **O que ficou:** no mapa grande, a plaqueta a 2× (40×44) é maior que o ícone de 40 do lugar: o lugar continua
+  reconhecível, mas ela domina; com o 48 (abaixo), a proporção melhora. No minimapa da Capela, o nome do lugar atual,
+  empurrado para dentro da borda, encosta no quadrado tracejado do Bosque (já era assim no jogo; o encaixe dos nomes só
+  evita outros nomes).
+- **A alternativa A** ficou como estava; a seta **é cortada pela borda** no minimapa quando o lugar atual está perto da
+  borda de cima (na Capela). Se o Jean voltar para A, ela precisa do mesmo recurso de ir para o lado.
+
+### 4. A presença dos lugares no mapa grande: o 40 × um 48
+
+O 48 sai **do mesmo recorte, pelo mesmo processo** (`auxiliares/lugares48.py`, só em `proposta/`): tão nítido quanto o
+40 (alfa duro, só cores do desenho), mas é mais uma redução, não um desenho nativo. O botão continua com 40 px (o
+clique igual); o tracejado de destino acompanha o símbolo. **Leitura:** com o 48, os lugares ganham peso diante do
+terreno e da plaqueta, sem amolecer; o 40 fica um pouco tímido, sobretudo a vila (mais larga que alta). **Minha
+recomendação: o 48 no mapa grande**, com uma condição: se o Jean decidir refazer a família em grade nativa (item 1), o
+tamanho do mapa grande se decide junto com esse redesenho. O minimapa fica com o 32.
+
+### 5. O estado fechado: de onde vem a condição real
+
+- **A regra que existe:** `campanha.py` guarda, por região, os `fechados` pela **chave** do lugar
+  (`"estrada_de_varn": "<o porquê>"`), e `montar_mundo` copia o texto para `loc["fechado"]` (vai no save). A viagem
+  (`rpg/sistemas/navegacao.py`, `_viajar`) oferece o destino e, escolhido, diz o texto e não sai do lugar. O
+  `mapa.descricao` troca a descrição por "saída, fechada por enquanto", e o `estado.py` tira o nível. **Nada depende do
+  nome "Estrada de Varn".** O protótipo lê o fechado pela descrição (a tela não recebe o campo).
+- **O outro bloqueio (só procedural):** a cidadela com menos de 3 Sigilos ("selada" na descrição; a viagem pergunta do
+  perigo e depois diz que a muralha bloqueia).
+- **O que não é bloqueio:** o lugar **só conhecido** (`visitado` falso; a viagem vai, "inexplorado"); o lugar **não
+  vizinho** (`distancia` vazia; não aparece entre os destinos, nem é clicável); o **perigoso** (o nível; a viagem pede
+  confirmação, não impede).
+- **Para a integração:** um campo próprio por lugar no `estado.py`, tirado da mesma regra da viagem, por exemplo
+  `"bloqueio": loc.get("fechado") or None` (e, enquanto o procedural existir, o texto da cidadela selada pelos
+  Sigilos), de preferência por uma função só em `rpg/mapa.py` que a viagem e a tela consultem, sem mudar a ordem das
+  perguntas da viagem. O mapa passa a ler `n.bloqueio` no lugar da descrição. Isso não muda partidas nem o gabarito.
 
 ## Como o mapa funciona (o que o levantamento conferiu no código)
 
@@ -73,7 +162,7 @@ com a "selada" da descrição; a legenda lista os nove desenhos dos dois modos; 
 retirar o procedural, isso sai ou muda junto; a campanha precisa de um desenho e de um estado próprios para a saída (o
 `fechado` existe no motor, `campanha.py`, mas não chega à tela como campo: o protótipo o reconhece pela descrição).
 
-## O primeiro lote (proposta; aguardando o Jean)
+## O primeiro lote (a primeira rodada, como foi apresentada; a escolha e a revisão estão acima)
 
 Quatro elementos, escolhidos pelos defeitos acima e pela frequência: **a posição, os caminhos, os símbolos dos
 lugares e as marcas de missão e contrato**. Uma proposta principal por elemento; uma segunda direção só na posição.
@@ -125,9 +214,11 @@ releitura, o exportado igual à grade, alfa só 0 ou 255, o @2x em blocos inteir
     python auxiliares/exportar.py --montar        # as fontes (Aseprite em lote) e proposta/*.png, conferidas
     # as fotos (PLAYWRIGHT_BROWSERS_PATH e PLAYWRIGHT_MODULO como na fumaça):
     node auxiliares/fotografar.mjs <raiz> capturas/atual
-    PROTOTIPO=1 POS=a node auxiliares/fotografar.mjs <raiz> capturas/proposta-a
-    PROTOTIPO=1 POS=b node auxiliares/fotografar.mjs <raiz> capturas/proposta-b
-    python auxiliares/folhas.py                   # levantamento.png, pecas.png, comparacao.png
+    python auxiliares/lugares48.py                # o 48 dos lugares (o mesmo processo do 32 e do 40), só em proposta/
+    PROTOTIPO=1 node auxiliares/fotografar.mjs <raiz> capturas/proposta-b              # B, a escolhida (POS=b é o padrão)
+    PROTOTIPO=1 GRANDE=48 node auxiliares/fotografar.mjs <raiz> capturas/proposta-b48 vau-manha,bosque-noite,capela-tarde,praca-tudo
+    PROTOTIPO=1 POS=a node auxiliares/fotografar.mjs <raiz> capturas/proposta-a vau-manha,bosque-noite,capela-tarde,praca-tudo
+    python auxiliares/folhas.py                   # levantamento, pecas, comparacao, origem-lugares, presenca-lugares
 
 O protótipo (`prototipo/mapa.js`) é uma cópia do `mapa.js` da 1.199.3 com a proposta, servida no lugar do do jogo só na
 página das fotos (`page.route`); a legenda da proposta entra por `MapaPx.legenda`. O jogo não lê nada daqui.

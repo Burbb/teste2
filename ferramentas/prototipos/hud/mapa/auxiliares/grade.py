@@ -6,7 +6,11 @@ minimapa, desenhadas à mão no tamanho em que aparecem (1:1 na tela; o mapa gra
     é a aprovada, de retratos.js, e não está aqui; no mapa grande, a plaqueta e a figura a 2×);
   - missao (11×14) e missao-mini (9×11): a plaqueta de ouro com o "!" (o objetivo da missão);
   - contrato (11×14) e contrato-mini (9×11): o cartaz do mural, com o lacre vermelho e as linhas (um contrato aceito);
-  - cancela (19×11) e cancela-mini (13×9): a barreira de madeira com a faixa vermelha (a saída fechada).
+  - cancela (19×15) e cancela-mini (13×11): a barricada de madeira envelhecida, dois postes e as tábuas cruzadas em X,
+    sem pintura (a saída fechada). A primeira, com a faixa vermelha e branca, lembrava sinalização de trânsito; a
+    segunda, com duas travessas, lia como um banco no minimapa;
+  - posicao-plaqueta-lado (22×20): a mesma plaqueta com a ponta à direita, para o lugar sem espaço acima (perto da
+    borda de cima do mapa): vai à esquerda do símbolo, ou espelhada à direita.
 A primeira passada (23/10) tinha as marcas do minimapa no mapa grande e outras ainda menores no minimapa: pequenas
 demais ao lado dos ícones de 40 e de 32. Ficaram as maiores no minimapa e as novas, desenhadas para o mapa grande.
 
@@ -24,7 +28,7 @@ PALETA = {"a": "08080a",
           "K": "1a1714",  # o fundo da plaqueta (o carvão)
           "w": "f1e4c4", "v": "cfc6b0", "u": "a89e88", "k": "8a8070",  # o papel e as linhas escritas
           "R": "ec5a4c", "r": "c42a2e", "q": "8a1418",  # o lacre e a faixa
-          "p": "b08a58", "P": "8a6a3e", "o": "5a4028"}  # a madeira
+          "h": "b4a484", "L": "9a8466", "M": "74604a", "D": "4e3e2e"}  # a madeira envelhecida, acinzentada
 DESENHOS = {
     # o mapa grande (a 1:1 ao lado do ícone de 40)
     "posicao": [
@@ -79,17 +83,21 @@ DESENHOS = {
         "aaaaaaaaaaa",
     ],
     "cancela": [
-        ".aaaa.........aaaa.",
-        ".appa.........appa.",
-        "aaaaaaaaaaaaaaaaaaa",
-        "awwwrrrwwwrrrwwwrra",
-        "awwwrrrwwwrrrwwwrra",
-        "aaaaaaaaaaaaaaaaaaa",
-        ".appa.........appa.",
-        ".aPPa.........aPPa.",
-        ".aPPa.........aPPa.",
-        ".aooa.........aooa.",
-        ".aaaa.........aaaa.",
+        ".aa.............aa.",
+        "ahLa...........ahLa",
+        "aLMaLL.......MMaLMa",
+        "aLMaaLL.....MMaaLMa",
+        "aLMa.aLL...MMa.aLMa",
+        "aLMa..aLL.MMa..aLMa",
+        "aLMa...aLLMa...aLMa",
+        "aLMa....MLL....aLMa",
+        "aLMa...MMaLL...aLMa",
+        "aLMa..MMa.aLL..aLMa",
+        "aMDa.MMa...aLL.aMDa",
+        "aMDaMMa.....aLLaMDa",
+        "aMDaMa.......aLaMDa",
+        "aMDaa.........aaMDa",
+        "aaaa...........aaaa",
     ],
     # o minimapa (a 1:1 ao lado do ícone de 32)
     "posicao-mini": [
@@ -133,15 +141,17 @@ DESENHOS = {
         "aaaaaaaaa",
     ],
     "cancela-mini": [
-        ".aaa.....aaa.",
-        ".apa.....apa.",
-        "aaaaaaaaaaaaa",
-        "awwrrwwrrwwra",
-        "aaaaaaaaaaaaa",
-        ".apa.....apa.",
-        ".aPa.....aPa.",
-        ".aoa.....aoa.",
-        ".aaa.....aaa.",
+        ".a.........a.",
+        "aha.......aha",
+        "aLaL.....MaLa",
+        "aLaaL...MaaLa",
+        "aLa.aL.Ma.aLa",
+        "aLa..aLa..aLa",
+        "aLa..MaL..aLa",
+        "aMa.Ma.aL.aMa",
+        "aMaMa...aLaMa",
+        "aDaa.....aaDa",
+        "aaa.......aaa",
     ],
     # a direção B do "você está aqui": a plaqueta (no minimapa a 1:1; no mapa grande a 2×, com a figura também a 2×)
     "posicao-plaqueta": [
@@ -152,6 +162,18 @@ DESENHOS = {
         "..aaaaaaadeaaaaaaa..",
         "........adea........",
         ".........aa.........",
+    ],
+    "posicao-plaqueta-lado": [
+        "..aaaaaaaaaaaaaaaa....",
+        ".abcccccccccccccdda...",
+    ] + ["ac" + "K" * 16 + "ea.."] * 6 + [
+        "ac" + "K" * 16 + "eda.",
+        "ac" + "K" * 16 + "edea",
+        "ac" + "K" * 16 + "edea",
+        "ac" + "K" * 16 + "eda.",
+    ] + ["ac" + "K" * 16 + "ea.."] * 6 + [
+        ".adeeeeeeeeeeeeeefa...",
+        "..aaaaaaaaaaaaaaaa....",
     ],
 }
 # as camadas, de baixo para cima

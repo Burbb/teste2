@@ -2,8 +2,8 @@
 // cenário de tests/navegador/cenarios.py, as variáveis e as fotos (a página, o painel do mundo, o minimapa e o mapa
 // grande, aberto com M). O registro mede o canvas (o nativo e o exibido), os botões dos lugares e o console.
 // PROTOTIPO=1: o mapa.js da proposta (../prototipo/mapa.js) no lugar do do jogo e as peças de ../proposta/ em
-// /proposta-mapa/, só nesta página (o jogo continua intacto); MINI (o lado do símbolo no minimapa, 32 ou 24) e POS
-// ("a", a seta; "b", o herói na plaqueta) escolhem a variante.
+// /proposta-mapa/, só nesta página (o jogo continua intacto); MINI (o lado do símbolo no minimapa), GRANDE (no mapa
+// grande, 40 ou 48) e POS ("b", o herói na plaqueta, a escolhida; "a", a seta, a alternativa) escolhem a variante.
 //   PLAYWRIGHT_MODULO=<file:// do index.mjs> node fotografar.mjs <raiz> <pasta das fotos> [<nome>,...]
 import { spawn } from "child_process";
 import { mkdirSync, readFileSync, writeFileSync } from "fs";
@@ -18,15 +18,17 @@ const BASE = { TUTORIAL: "0", CLASSE: "guerreiro" };
 const SITUACOES = [
   // no Vau, de manhã: o Charco e o Bosque visitados, a Capela e a Estrada de Varn só conhecidas; o contrato no Bosque
   { nome: "vau-manha", cenario: "tutorial", amb: { ...BASE, LUGAR: "vau", PERIODO: "0", CONTRATO: "aceito" } },
-  // no Bosque, à noite: a Capela a um trecho, a tinta da noite
-  { nome: "bosque-noite", cenario: "tutorial", amb: { ...BASE, LUGAR: "bosque", PERIODO: "3", ETAPA: "capela" } },
+  // no Bosque, à noite, com o Mago: a Capela a um trecho, a tinta da noite
+  { nome: "bosque-noite", cenario: "tutorial", amb: { ...BASE, CLASSE: "mago", LUGAR: "bosque", PERIODO: "3", ETAPA: "capela" } },
+  // na Capela, à tarde, com o Arqueiro: o lugar atual perto da borda de cima do mapa (a plaqueta sem espaço acima)
+  { nome: "capela-tarde", cenario: "tutorial", amb: { ...BASE, CLASSE: "arqueiro", LUGAR: "capela", PERIODO: "1", ETAPA: "capela" } },
   // depois da praça: tudo visitado menos a Estrada de Varn (fechada); as estradas percorridas
   { nome: "praca-tudo", cenario: "praca", amb: {} },
   // o procedural (fora da prioridade): só para ver o que ele compartilha com a campanha (o covil, a cidadela, a legenda)
   { nome: "procedural-covil", cenario: "covil", amb: { CLASSE: "guerreiro", PERIODO: "0" } },
 ].filter((s) => !so || so.split(",").includes(s.nome));
 const prototipo = process.env.PROTOTIPO ? readFileSync(path.join(AQUI, "../prototipo/mapa.js"), "utf8") : null;
-const variante = { mini: Number(process.env.MINI || 32), pos: process.env.POS || "a" };
+const variante = { mini: Number(process.env.MINI || 32), grande: Number(process.env.GRANDE || 40), pos: process.env.POS || "b" };
 mkdirSync(saida, { recursive: true });
 const b = await chromium.launch();
 const registro = {};

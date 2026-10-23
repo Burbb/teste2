@@ -3,10 +3,12 @@
    1. a escala inteira: o canvas na resolução do pixel do mapa (×2 no minimapa, ×3 no mapa grande), o tamanho exibido
       em pixels inteiros (antes ×1,27 e ×2,64: pixels de larguras diferentes e o símbolo de 16 reduzido a 14 borrado);
    2. os caminhos: a estrada sai da borda do símbolo (não cruza o desenho), a desconhecida visível, a saída fechada com
-      a cancela e sem o ouro de "dá para ir" (o clique e o destino iguais: a viagem continua dizendo que está fechada);
+      a barricada e sem o ouro de "dá para ir" (o clique e o destino iguais: a viagem continua dizendo que está fechada);
    3. os símbolos dos lugares: os ícones aprovados da família (os mesmos da lista de Caminhos) em 1:1, posicionados em
       pixel inteiro (o covil vencido, só do procedural, continua o sprite do jogo);
-   4. o "você está aqui" permanente (a seta, ou o herói na plaqueta: window.__MAPA.pos = "a" | "b");
+   4. o "você está aqui" permanente: o herói na plaqueta (a direção B, a escolhida pelo Jean; ao lado do lugar quando
+      não há espaço acima) ou a seta (a A, a alternativa): window.__MAPA.pos = "b" | "a"; window.__MAPA.grande, o lado
+      do símbolo no mapa grande (40, o aprovado, ou 48, pelo mesmo processo, em comparação);
    5. a missão e o contrato separados: a plaqueta de ouro com "!" e o cartaz do mural.
    As áreas de clique (28 e 40 px), os destinos, a dica, os rótulos e as regras não mudam. */
 "use strict";
@@ -24,7 +26,7 @@ const MapaPx = (() => {
   let ambiente = { periodo_n: 1, clima_id: "limpo" };
   const cache = {};
   const { BAYER4, rgb, misturar } = Sprites;
-  const P = Object.assign({ mini: 32, pos: "a" }, window.__MAPA || {});  // a variante em avaliação
+  const P = Object.assign({ mini: 32, grande: 40, pos: "b" }, window.__MAPA || {});  // a variante em avaliação
   const PECA = (nome) => `/proposta-mapa/${nome}.png`;
 
   function tons(n) {
@@ -187,11 +189,11 @@ const MapaPx = (() => {
     const alvo = document.querySelector(grande ? "#mapa-grande" : "#mapa-mini");
     const largura = alvo && alvo.clientWidth ? alvo.clientWidth - (grande ? 28 : 2) : (grande ? 928 : 284);
     const W = Math.floor(largura / K), H = Math.round(W / 1.75);
-    const SIM = grande ? 40 : P.mini;  // o lado do símbolo na tela
+    const SIM = grande ? P.grande : P.mini;  // o lado do símbolo na tela
     const vb = enquadrar(mapa.nos, grande);
     const conv = (n) => [Math.round((n.x * 100 - vb[0]) / vb[2] * W), Math.round((n.y * 50 - vb[1]) / vb[3] * H)];
     const caixa = document.createElement("div");
-    caixa.className = "mapa-px proposta" + (grande ? " grande" : "");
+    caixa.className = "mapa-px proposta" + (grande ? " grande" : "") + (SIM > (grande ? 40 : 28) ? " simbolo-maior" : "");
     caixa.style.width = W * K + "px";
     const c = document.createElement("canvas");
     c.width = W; c.height = H;
@@ -265,27 +267,40 @@ const MapaPx = (() => {
       if (opts.dicaDe) b.dataset.dica = Telas.guardarDica(opts.dicaDe(n));
       if (clic.has(n.id) && opts.aoClicar) b.addEventListener("click", (ev) => { ev.stopPropagation(); opts.aoClicar(n.id); });
       caixa.appendChild(b);
-      // as marcas no canto de cima à direita do símbolo (não do botão): a missão primeiro, o contrato ao lado
-      const canto = [sx + Math.round(SIM / 2) - (grande ? 6 : 5), sy - Math.round(SIM / 2) - (grande ? 5 : 4)];
-      // com o herói na plaqueta (a direção B), as marcas do lugar atual vão para o lado dela
-      if (n.atual && P.pos === "b") canto[0] = Math.max(canto[0], sx + (grande ? 22 : 12));
-      let dx = 0;
-      if (missao.has(n.id)) { caixa.appendChild(peca("missao" + mk, "marca", canto[0], canto[1])); dx = grande ? 12 : 10; }
-      if (contrato.has(n.id)) caixa.appendChild(peca("contrato" + mk, "marca", canto[0] + dx, canto[1]));
-      if (n.atual) {
-        if (P.pos === "b" && typeof Retratos !== "undefined" && estado && Retratos.tem(estado.heroi.classe)) {
-          // o herói na plaqueta (a figura de 16 da fogueira e do chip), com a ponta no símbolo: 1:1 no minimapa, a 2×
-          // no mapa grande (a plaqueta e a figura juntas, pixel a pixel)
-          const e2 = grande ? 2 : 1, t = document.createElement("span");
-          t.className = "pos-heroi" + (grande ? " x2" : "");
-          t.style.left = sx - 10 * e2 + "px"; t.style.top = sy - Math.round(SIM / 2) - 19 * e2 + "px";
-          t.innerHTML = `<img src="${PECA(grande ? "posicao-plaqueta@2x" : "posicao-plaqueta")}" alt="" draggable="false">` +
-            `<img class="fig" src="${Retratos.url(estado.heroi.classe, "figura", e2)}" alt="" draggable="false">`;
-          caixa.appendChild(t);
-        } else {
-          const w = grande ? 19 : 13, h = grande ? 17 : 12;
-          caixa.appendChild(peca("posicao" + mk, "pos-seta", sx - (w - 1) / 2, sy - Math.round(SIM / 2) - h - 1));
+      // a direção B: o herói na plaqueta, acima do símbolo; sem espaço acima (perto da borda de cima), ao lado, com a
+      // ponta virada para ele (à esquerda; sem espaço à esquerda, espelhada à direita)
+      const heroi = n.atual && P.pos === "b" && typeof Retratos !== "undefined" && estado && Retratos.tem(estado.heroi.classe);
+      let plaqueta = null;
+      if (heroi) {
+        const e2 = grande ? 2 : 1, cima = sy - Math.round(SIM / 2) - 19 * e2;
+        if (cima >= 2) plaqueta = { lado: "cima", x: sx - 10 * e2, y: cima, w: 20 * e2, h: 22 * e2, e2 };
+        else {
+          const esq = sx - Math.round(SIM / 2) - 21 * e2;
+          plaqueta = esq >= 2 ? { lado: "esq", x: esq, y: sy - 10 * e2, w: 22 * e2, h: 20 * e2, e2 }
+            : { lado: "dir", x: sx + Math.round(SIM / 2) - e2, y: sy - 10 * e2, w: 22 * e2, h: 20 * e2, e2 };
         }
+      }
+      // as marcas no canto de cima à direita do símbolo (não do botão): a missão primeiro, o contrato ao lado; com a
+      // plaqueta em cima, vão para o lado dela; com a plaqueta à direita, para o canto de cima à esquerda
+      const canto = [sx + Math.round(SIM / 2) - (grande ? 6 : 5), sy - Math.round(SIM / 2) - (grande ? 5 : 4)];
+      if (plaqueta && plaqueta.lado === "cima") canto[0] = Math.max(canto[0], plaqueta.x + plaqueta.w + 2);
+      const passo = grande ? 12 : 10;
+      const marcasAqui = [missao.has(n.id) && "missao", contrato.has(n.id) && "contrato"].filter(Boolean);
+      if (plaqueta && plaqueta.lado === "dir") canto[0] = sx - Math.round(SIM / 2) - (grande ? 5 : 4) - passo * (marcasAqui.length - 1);
+      marcasAqui.forEach((m, i) => caixa.appendChild(peca(m + mk, "marca", canto[0] + passo * i, canto[1])));
+      if (plaqueta) {
+        const { e2 } = plaqueta, t = document.createElement("span"), deLado = plaqueta.lado !== "cima";
+        t.className = "pos-heroi" + (deLado ? " lado" : "") + (plaqueta.lado === "dir" ? " dir" : "");
+        Object.assign(t.style, { left: plaqueta.x + "px", top: plaqueta.y + "px", width: plaqueta.w + "px", height: plaqueta.h + "px" });
+        const moldura = (deLado ? "posicao-plaqueta-lado" : "posicao-plaqueta") + (e2 === 2 ? "@2x" : "");
+        const fx = (plaqueta.lado === "dir" ? 4 : 2) * e2;
+        t.innerHTML = `<img class="moldura" src="${PECA(moldura)}" alt="" draggable="false">` +
+          `<img class="fig" src="${Retratos.url(estado.heroi.classe, "figura", e2)}" alt="" draggable="false" ` +
+          `style="left:${fx}px;top:${2 * e2}px;width:${16 * e2}px;height:${16 * e2}px">`;
+        caixa.appendChild(t);
+      } else if (n.atual) {
+        const w = grande ? 19 : 13, h = grande ? 17 : 12;
+        caixa.appendChild(peca("posicao" + mk, "pos-seta", sx - (w - 1) / 2, sy - Math.round(SIM / 2) - h - 1));
       }
       if (grande || n.atual) {
         const r = document.createElement("span");
@@ -298,7 +313,7 @@ const MapaPx = (() => {
       }
     });
     cancelas.forEach(([cx, cy]) => {
-      const w = grande ? 19 : 13, h = grande ? 11 : 9;
+      const w = grande ? 19 : 13, h = grande ? 15 : 11;
       caixa.appendChild(peca("cancela" + mk, "cancela", Math.round(cx * K - w / 2), Math.round(cy * K - h / 2)));
     });
     requestAnimationFrame(() => encaixarRotulos(caixa));
@@ -339,12 +354,14 @@ const MapaPx = (() => {
     .mapa-px.proposta .peca-mapa.marca, .mapa-px.proposta .pos-heroi, .mapa-px.proposta .pos-seta { z-index: 2; }
     .mapa-px.proposta .pos-seta { animation: seta-mapa 1.2s steps(1) infinite; }
     @keyframes seta-mapa { 50% { transform: translateY(-2px); } }
-    .mapa-px.proposta .pos-heroi { width: 20px; height: 22px; }
-    .mapa-px.proposta .pos-heroi img { position: absolute; left: 0; top: 0; image-rendering: pixelated; }
     #mapa-legenda .peca-legenda { image-rendering: pixelated; }
-    .mapa-px.proposta .pos-heroi img.fig { left: 2px; top: 2px; width: 16px; height: 16px; }
-    .mapa-px.proposta .pos-heroi.x2 { width: 40px; height: 44px; }
-    .mapa-px.proposta .pos-heroi.x2 img.fig { left: 4px; top: 4px; width: 32px; height: 32px; }
+    #mapa-legenda .leg-plaqueta { position: relative; display: inline-block; width: 20px; height: 22px; }
+    #mapa-legenda .leg-plaqueta img { position: absolute; left: 0; top: 0; image-rendering: pixelated; }
+    #mapa-legenda .leg-plaqueta img.fig { left: 2px; top: 2px; width: 16px; height: 16px; }
+    .mapa-px.proposta .pos-heroi img { position: absolute; left: 0; top: 0; image-rendering: pixelated; }
+    .mapa-px.proposta .pos-heroi.dir img.moldura { transform: scaleX(-1); }
+    /* o tracejado do destino acompanha o símbolo quando ele passa do botão (o 48 no mapa grande); o clique fica no botão */
+    .mapa-px.proposta.grande.simbolo-maior .no-btn.clicavel::before { inset: -6px; }
   `;
   document.head.appendChild(css);
 
@@ -360,7 +377,9 @@ const MapaPx = (() => {
     const im = (nome, cls = "") => `<img class="peca-legenda ${cls}" src="${PECA(nome)}" alt="">`;
     const { missao, contrato } = marcasPorTipo({});
     return vistos.map((s) => it(Icones.lugar(s, 32), NOMES[s] || s)).join("") +
-      it(im("posicao"), "você está aqui") +
+      (P.pos === "b" && Retratos.tem(e.heroi.classe)
+        ? it(`<span class="leg-plaqueta">${im("posicao-plaqueta")}<img class="fig" src="${Retratos.url(e.heroi.classe, "figura", 1)}" alt=""></span>`, "você está aqui")
+        : it(im("posicao"), "você está aqui")) +
       (missao.size ? it(im("missao"), "missão") : "") + (contrato.size ? it(im("contrato"), "contrato") : "") +
       (e.mapa.nos.some(fechado) ? it(im("cancela"), "saída fechada") : "");
   }
