@@ -6281,3 +6281,19 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Pendências à parte:** o Espantalho Possuído e o Mímico (um desenho próprio ou ficar nos traços).
 - **Falta na frente de criaturas:** os 8 guardiões, o antagonista, o servo do Necromante e as duas pendências; depois, a
   1E.4 (o mapa). Nada começado.
+
+### 23/10/2026 (data do computador local) — Os primeiros chefes: a Árvore Anciã e o Golem Primordial (nada no jogo)
+
+- **Estado conferido:** a branch em `d582eee9`, igual ao remoto, sem alterações locais; produção na 1.189.0.
+- **Levantado antes de desenhar (`ferramentas/prototipos/hud/criaturas/chefes_arvore_golem/LEIA-ME.md`):** os números,
+  as habilidades, as entradas, as fases e os rumores dos dois guardiões; o retrato de um guardião só aparece na carta da
+  luta (pelo id, como o Rei Troll e a Rainha), então os derivados são o 16 e o 32.
+- **No protótipo, aguardando o Jean:** a Árvore Anciã AA1 (o rosto-rei) e AA2 (a árvore imensa); o Golem Primordial GP1
+  (a parede que se levanta) e GP2 (o ídolo). As folhas `anciaa.png` e `primordial.png`, com a luta de cada guardião ao
+  lado do comum correspondente. Minha preferência: a AA1 e o GP2; as limitações no LEIA-ME.
+- **Processo:** grades à mão; as fontes pelo Aseprite em lote (o conector sem editor), 0 diferentes na releitura; a
+  exportação igual à grade, @2x exato, o 32 em blocos inteiros; fotos a 1920×945, sem erro no console.
+- **Verificações proporcionais (nenhum código do jogo mudou):** o pyflakes dos auxiliares, a sintaxe do roteiro das
+  fotos e as grades regravadas iguais às gravadas.
+- **Continua:** a escolha do Jean; os outros chefes, o antagonista, o servo, o Espantalho, o Mímico e o mapa não foram
+  começados.

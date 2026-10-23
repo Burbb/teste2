@@ -1057,7 +1057,10 @@ do catálogo):**
   Guarda. **Na 1.188.0, a Abominação C3** (a boca enorme sustentada pelas bochechas), pela família, com os afixos.
   **Na 1.189.0, a Árvore Desperta T1** (a transposição da referência 1) **e o Golem de pedra G2** original, pelas
   famílias, com os afixos e os líderes (`criaturas/arvore_golem/`). Histórico, não escolhidos: a A1, a A2, a T2, o G1 e o
-  G2r. **Pendências à parte:** o Espantalho Possuído (da família `ent_jovem`) e o Mímico (da família `golem`) conservam o
+  G2r. **Propostas aguardando o Jean (23/10/2026, nenhuma autorizada), os primeiros chefes:** a **Árvore Anciã** (AA1,
+  o rosto-rei; AA2, a árvore imensa) e o **Golem Primordial** (GP1, a parede que se levanta; GP2, o ídolo), em
+  `criaturas/chefes_arvore_golem/` (as folhas `anciaa.png` e `primordial.png`; a minha preferência, a AA1 e o GP2); só a
+  carta da luta, o 16 e o 32. **Pendências à parte:** o Espantalho Possuído (da família `ent_jovem`) e o Mímico (da família `golem`) conservam o
   desenho de antes pela `origem` do inimigo; falta a decisão própria de cada um (um desenho seu ou ficar nos traços).
   Histórico, não escolhidos: a Abominação A, B, C, C2, D e E e o Cavaleiro A, A2, B, T, T2, P1, P2 e P4. Histórico, não escolhidos, em
   `criaturas/fenda/`: o Cão A, B, T, N, N2, RA, RB, RC, RA2, RA3, P2 e P3 (a P1 foi a escolhida), a Cria A e B. A cria que o antagonista
@@ -1239,9 +1242,10 @@ volta à pauta quando essa expansão exigir; não é uma migração de engine.
    caminho (o retrato por família, por chave ou pelo tipo, sem trocar o sprite compartilhado). O Mercenário, o Lobo
    Gélido e o Esgotado integrados (1.179.0, 1.180.0); o Caído CA (1.182.0); o Grifo GA3 (1.183.0); a Harpia T2 e o Xamã
    Caído X1r2 (1.184.0); a Cria do Vazio A2 (1.185.0); o Cão infernal P1 (1.186.0); o Cavaleiro Sombrio P3 (1.187.0); a Abominação C3 (1.188.0); a Árvore Desperta T1 e o Golem G2 (1.189.0).
-   **Falta na 1E.3:** os 8 guardiões (a Árvore Anciã, a Hidra do Brejo, a Bruxa Afogada, o Dragão de Gelo, o Senhor da
-   Guerra, o Profeta das Cinzas, o Lich Menor e o Golem Primordial), o antagonista, o servo do Necromante e as decisões do
-   Espantalho Possuído e do Mímico; nada começado antes do pedido. A relação em "A frente de criaturas em 22/10/2026" (item 1.12). O Esqueleto E2 e o Bandido do
+   **Agora, os chefes:** a Árvore Anciã (AA1, AA2) e o Golem Primordial (GP1, GP2) aguardando o Jean
+   (`criaturas/chefes_arvore_golem/`; a minha preferência, a AA1 e o GP2). **Falta depois:** os outros 6 guardiões (a
+   Hidra do Brejo, a Bruxa Afogada, o Dragão de Gelo, o Senhor da Guerra, o Profeta das Cinzas e o Lich Menor), o
+   antagonista, o servo do Necromante e as decisões do Espantalho Possuído e do Mímico; nada começado antes do pedido. A relação em "A frente de criaturas em 22/10/2026" (item 1.12). O Esqueleto E2 e o Bandido do
    chapéu estão reservados.
 3. **Depois, 1E.4:** os caminhos/destinos e os símbolos internos do mapa e do minimapa.
 4. **Retomar a etapa 2** e **seguir 3–7**, como na sequência abaixo; **etapa 8** com habilidades, talentos, Grimório e
