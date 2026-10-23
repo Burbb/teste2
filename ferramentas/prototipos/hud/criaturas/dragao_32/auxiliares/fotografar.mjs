@@ -1,13 +1,14 @@
 // As fotos do teste do Dragão de Gelo em 32 nativos (protótipo; nada no jogo): o guardião na luta (CHEFE=dragao_de_gelo,
 // com um lobo gélido), com os mesmos dados em cada modo. Modos: "atual" (o jogo: o sprite do voador), "t16" (a
 // transposição de 16 da rodada anterior, `dragao-t`, no arquivo de 32 que ela teria: o 16 ×2) e "n32" (a proposta nativa
-// de 32). Os dois desenhos entram na carta com o mesmo elemento que o Icones.criatura(…, 32) monta (a classe
+// de 32); depois da aprovação da direção, "n32r" (a cópia refinada do N32) e "n16" (o teste do Jean: o mesmo dragão
+// redesenhado em 16 a partir do N32R, no arquivo de 32 que ele teria). Os desenhos entram na carta com o mesmo elemento que o Icones.criatura(…, 32) monta (a classe
 // "sprite desenho", o --s de 32, o src do 32 e o srcset do @2x), trocados só na página. Duas telas: 1920×945 a 100% (a
 // janela do Jean) e 1536×756 a 125% (o zoom do sistema; o --px da HUD põe o retrato em pixels inteiros do aparelho).
 // Registra a caixa de cada carta, o tamanho do retrato na tela e no aparelho, e os erros do console.
-//   PLAYWRIGHT_MODULO=<file:// do index.mjs> node fotografar.mjs <raiz> <pasta das fotos>
+//   [MODOS=atual,t16,n32,n32r,n16] PLAYWRIGHT_MODULO=<file:// do index.mjs> node fotografar.mjs <raiz> <pasta das fotos>
 import { spawn } from "child_process";
-import { mkdirSync, readFileSync, writeFileSync } from "fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULO || "playwright");
@@ -19,14 +20,17 @@ const url64 = (arq) => "data:image/png;base64," + readFileSync(path.join(aqui, a
 const PARES = {
   t16: ["../../chefes_e_especiais/proposta/dragao-t-32.png", "../../chefes_e_especiais/proposta/dragao-t-32@2x.png"],
   n32: ["../proposta/dragao-n32-32.png", "../proposta/dragao-n32-32@2x.png"],
+  n32r: ["../proposta/dragao-n32r-32.png", "../proposta/dragao-n32r-32@2x.png"],
+  n16: ["../proposta/dragao-n16-32.png", "../proposta/dragao-n16-32@2x.png"],
 };
 const TROCA = Object.fromEntries(Object.entries(PARES).map(([m, [a, b]]) => [m, [url64(a), url64(b)]]));
 const TELAS = [{ nome: "100", width: 1920, height: 945, dpr: 1 }, { nome: "125", width: 1536, height: 756, dpr: 1.25 }];
-const MODOS = ["atual", "t16", "n32"];
+const MODOS = (process.env.MODOS || "atual,t16,n32,n32r,n16").split(",");
 const AMB = { TUTORIAL: "0", CLASSE: "guerreiro", NIVEL_LUTA: "5", GRUPO: "lobo_gelido:1", CHEFE: "dragao_de_gelo" };
 mkdirSync(saida, { recursive: true });
 const b = await chromium.launch();
-const registro = {};
+const arqReg = path.join(saida, "registro.json");
+const registro = process.env.MODOS && existsSync(arqReg) ? JSON.parse(readFileSync(arqReg, "utf-8")) : {};  // só os modos pedidos mudam
 for (const tela of TELAS) {
   for (const modo of MODOS) {
     const proc = spawn(PY, ["-m", "tests.navegador.cenarios", "tutorial"], { cwd: raiz,

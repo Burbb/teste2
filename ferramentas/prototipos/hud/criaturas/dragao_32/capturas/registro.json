@@ -274,5 +274,189 @@
    }
   ],
   "erros": []
+ },
+ "n32r/100": {
+  "dpr": 1,
+  "cartas": [
+   {
+    "nome": "Dragão de Gelo",
+    "caixa": [
+     830,
+     67,
+     1040,
+     117
+    ],
+    "retrato": {
+     "css": [
+      32,
+      32
+     ],
+     "aparelho": [
+      32,
+      32
+     ],
+     "arquivo": "data:1490"
+    }
+   },
+   {
+    "nome": "Lobo gélido",
+    "caixa": [
+     830,
+     125,
+     1040,
+     175
+    ],
+    "retrato": {
+     "css": [
+      32,
+      32
+     ],
+     "aparelho": [
+      32,
+      32
+     ],
+     "arquivo": "http://127.0.0.1:55842/static/hud/icones/retrato-lobo-gelido-32.png"
+    }
+   }
+  ],
+  "erros": []
+ },
+ "n16/100": {
+  "dpr": 1,
+  "cartas": [
+   {
+    "nome": "Dragão de Gelo",
+    "caixa": [
+     830,
+     67,
+     1040,
+     117
+    ],
+    "retrato": {
+     "css": [
+      32,
+      32
+     ],
+     "aparelho": [
+      32,
+      32
+     ],
+     "arquivo": "data:938"
+    }
+   },
+   {
+    "nome": "Lobo gélido",
+    "caixa": [
+     830,
+     125,
+     1040,
+     175
+    ],
+    "retrato": {
+     "css": [
+      32,
+      32
+     ],
+     "aparelho": [
+      32,
+      32
+     ],
+     "arquivo": "http://127.0.0.1:55952/static/hud/icones/retrato-lobo-gelido-32.png"
+    }
+   }
+  ],
+  "erros": []
+ },
+ "n32r/125": {
+  "dpr": 1.25,
+  "cartas": [
+   {
+    "nome": "Dragão de Gelo",
+    "caixa": [
+     626,
+     67,
+     836,
+     117
+    ],
+    "retrato": {
+     "css": [
+      25.59,
+      25.59
+     ],
+     "aparelho": [
+      31.99,
+      31.99
+     ],
+     "arquivo": "data:1490"
+    }
+   },
+   {
+    "nome": "Lobo gélido",
+    "caixa": [
+     626,
+     125,
+     836,
+     175
+    ],
+    "retrato": {
+     "css": [
+      25.59,
+      25.59
+     ],
+     "aparelho": [
+      31.99,
+      31.99
+     ],
+     "arquivo": "http://127.0.0.1:56062/static/hud/icones/retrato-lobo-gelido-32.png"
+    }
+   }
+  ],
+  "erros": []
+ },
+ "n16/125": {
+  "dpr": 1.25,
+  "cartas": [
+   {
+    "nome": "Dragão de Gelo",
+    "caixa": [
+     626,
+     67,
+     836,
+     117
+    ],
+    "retrato": {
+     "css": [
+      25.59,
+      25.59
+     ],
+     "aparelho": [
+      31.99,
+      31.99
+     ],
+     "arquivo": "data:938"
+    }
+   },
+   {
+    "nome": "Lobo gélido",
+    "caixa": [
+     626,
+     125,
+     836,
+     175
+    ],
+    "retrato": {
+     "css": [
+      25.59,
+      25.59
+     ],
+     "aparelho": [
+      31.99,
+      31.99
+     ],
+     "arquivo": "http://127.0.0.1:56171/static/hud/icones/retrato-lobo-gelido-32.png"
+    }
+   }
+  ],
+  "erros": []
  }
 }

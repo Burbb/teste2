@@ -6426,3 +6426,20 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   erro no console.
 - **Parado para a avaliação do teste:** nenhuma criatura nova, nenhuma integração do Dragão, o mapa não começado; a
   PixelLab não foi instalada nem contratada (o Aseprite da máquina já tem uma extensão dela, que não foi usada).
+
+### 23/10/2026 (data do computador local) — O refino leve do Dragão N32 e o teste em 16 (nada no jogo)
+
+- **Estado conferido:** a branch em `cf8d9bfe`, igual ao remoto, sem alterações locais.
+- **Decisão do Jean:** o Dragão N32 muito bem recebido; a direção escolhida. Antes da integração, um refino leve numa
+  cópia, com o N32 preservado; e, a pedido dele, um teste do mesmo dragão em 16 a partir do 32.
+- **No protótipo, aguardando o Jean** (`ferramentas/prototipos/hud/criaturas/dragao_32/LEIA-ME.md`, a folha `refino.png`):
+  o N32R (a bochecha e o pescoço em planos agrupados, o claro concentrado no alto da testa, o olho mais estreito sob a
+  testa; 74 pixels diferentes do N32) e o N16 (redesenhado à mão, com o N32R como mapa). O N32 saiu idêntico (a fonte e o
+  PNG, byte a byte).
+- **A minha leitura:** o refino é discreto a 1× (menos granulado, o olhar mais severo); o N16 mantém o desenho bem mais que a
+  T antiga, mas perde a projeção do focinho e fica mais genérico.
+- **Verificações proporcionais (nenhum código do jogo mudou):** o pyflakes dos auxiliares, a sintaxe do roteiro das fotos,
+  as grades regravadas iguais às gravadas, as fontes reabertas (o lado, as camadas na ordem, a guia oculta), 0 diferentes
+  na releitura, as exportações iguais ao composto, os derivados em blocos inteiros e as fotos sem erro no console.
+- **Parado para a avaliação:** nenhuma criatura nova, nenhum retrato aprovado mexido, o Dragão não integrado, o mapa não
+  começado.

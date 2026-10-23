@@ -71,3 +71,42 @@ Julgado primeiro na carta, em tamanho real:
 
 **Conclusão do teste:** a grade de 16 é uma parte importante do problema. Em 32, a construção da referência coube sem
 deformar, e a 16 ela não coube. O custo é a densidade diferente dos vizinhos. Nada integrado; nenhuma rodada nova aberta.
+
+# O refino leve do N32 e o teste em 16 (23/10/2026, protótipo; nada no jogo)
+
+**Decisão do Jean:** o N32 foi muito bem recebido, e a direção é essa. Antes da integração, um refino leve numa cópia,
+com o N32 preservado. **O pedido extra do Jean:** um teste do mesmo dragão em 16, a partir do 32, para ver se o desenho se
+mantém minimamente.
+
+- **O N32 preservado:** a grade, a fonte e a proposta do N32 saem idênticas (a fonte e o PNG comparados byte a byte com os
+  de antes; a fonte não foi remontada).
+- **O N32R** (`dragao-n32r`, a cópia refinada; 74 pixels diferentes do N32, marcados na folha):
+  - a bochecha e o pescoço (as colunas 14 a 24, das linhas 15 a 31) em planos agrupados: a maçã do rosto clara inteira, a
+    junta da bochecha, a junta atrás da mandíbula e as duas placas ventrais da garganta; a crista não mudou;
+  - os brilhos: o claro da testa concentrado no plano de cima (as linhas 12 e 13), a frente da testa um tom abaixo; quatro
+    claros soltos do focinho e da mandíbula agrupados no plano deles; os chifres não mudaram;
+  - o olho: duas tentativas na carta. A **A** (4 px, a ponta de cima só atrás, o canto da frente coberto pela sombra da
+    testa) dá o olhar severo da referência e continua legível; a **B** (uma fenda de 3 px) virou um risco achatado. Ficou a
+    A;
+  - a silhueta, a pose, o enquadramento, o focinho, a mandíbula, os chifres, a crista, a paleta e a luz não mudaram.
+- **O N16** (`dragao-n16`, o teste do Jean): o mesmo dragão redesenhado à mão em 16, com o N32R reduzido a 2:1 como mapa
+  e a guia de 16 oculta (`guias/dragao-guia-16.png`): os dois chifres em lâminas diagonais de 2 px, a testa clara, o olho
+  de 2 px sob a sombra da testa, o focinho com a narina, a boca subindo para trás com a presa, a mandíbula com o fundo
+  embaixo e a crista. Os chifres em bloco da primeira passada foram afinados na segunda.
+- **As fontes, numa cópia, pelo Aseprite em lote** (`python auxiliares/exportar.py --montar dragao-n32r dragao-n16`; o
+  conector continua sem editor, a janela aberta não foi tocada): 0 diferentes na releitura de cada camada; reabertas, com
+  as camadas (guia oculta, cabeça, chifres, crista, boca, dentes, olho, contorno). A exportação é igual ao composto; o @2x
+  do N32R (64) e o 32 e o 64 do N16 em blocos inteiros que voltam ao original.
+- **As fotos** no mesmo cenário (os modos `n32r` e `n16`, a 100% e a 125%; as mesmas caixas), sem erro no console. A
+  folha `refino.png`: o N32, o N32R, o N16 e a T antiga na mesma luta em tamanho real e na carta a 2×, na fileira com os
+  mesmos aprovados, e a ampliação sem suavização com as mudanças do refino marcadas.
+
+## A minha leitura
+
+- **N32 × N32R, na carta:** a diferença a 1× é discreta, como pede um refino leve. A bochecha e o pescoço ficam menos
+  granulados, e o olho mais estreito deixa o olhar mais severo sem sumir. A testa continua a parte mais clara; o volume e as
+  juntas que separam a cabeça, a mandíbula e o pescoço ficaram. Onde o original já funcionava (os chifres, a crista, o
+  focinho), nada mudou.
+- **O N16:** o desenho se mantém, bem mais que na T antiga. A cabeça em cunha, os chifres para trás, a testa sobre o olho, a
+  presa e a crista continuam lá, e ele combina com o grão dos vizinhos. Perde a projeção do focinho, a mandíbula afinando e
+  a leitura das placas; a 1× fica um dragão mais genérico que o N32.

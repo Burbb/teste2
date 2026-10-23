@@ -3,10 +3,14 @@ jogo de hoje, na transposição de 16 (`dragao-t`, o 16 ×2) e na proposta nativ
 (125%, a foto no tamanho do aparelho); a fileira na caixa da carta com os retratos aprovados (o Grifo e o Lobo Gélido
 entre eles), real e a 3×; e o diagnóstico: a referência (o recorte da guia, reduzido só para olhar), a guia de 32
 (oculta na fonte) e os dois desenhos, ampliados por fator inteiro, sem suavização, com a grade.
-    python prancha.py      (depois do fotografar.mjs)
+Com --refino, a folha do refino (refino.png): o N32 × o N32R (a cópia refinada) e o N16 (o teste do Jean, o mesmo
+dragão em 16 a partir do N32R) ao lado da T antiga, na mesma luta em tamanho real e na carta a 2×, na fileira com os
+mesmos aprovados, e a ampliação sem suavização com as mudanças do refino marcadas.
+    python prancha.py [--refino]      (depois do fotografar.mjs)
 """
 import json
 import pathlib
+import sys
 
 from PIL import Image, ImageDraw, ImageFont
 
@@ -106,5 +110,71 @@ def main():
     print("comparacao.png", out.size)
 
 
+REFINO = [("N32, o original", "n32"), ("N32R, o refino leve", "n32r"), ("N16, o teste em 16 a partir do N32R", "n16"),
+          ("T, a transposição de 16 anterior", "t16")]
+
+
+def refino():
+    reg = json.loads((CAP / "registro.json").read_text(encoding="utf-8"))
+    f, f2 = ImageFont.truetype("arial.ttf", 15), ImageFont.truetype("arial.ttf", 12)
+    out = Image.new("RGBA", (1500, 1400), CARVAO)
+    d = ImageDraw.Draw(out)
+    d.text((20, 10), "Dragão de Gelo — o refino do N32 e o teste em 16 (protótipo; trocado só na página, nada no jogo)",
+           fill=TEXTO, font=f)
+    y = 38
+    d.text((20, y), "a luta, 1920×945 a 100%, tamanho real; os mesmos dados", fill=TEXTO, font=f2)
+    y += 18
+    alto = 0
+    for j, (rot, modo) in enumerate(REFINO):
+        r = reg[f"{modo}/100"]
+        foto = Image.open(CAP / f"luta-dragao-{modo}-100.png").convert("RGBA")
+        cs = [c["caixa"] for c in r["cartas"]]
+        grupo = foto.crop((min(c[0] for c in cs), min(c[1] for c in cs), max(c[2] for c in cs), max(c[3] for c in cs)))
+        d.text((20 + j * 370, y), rot, fill=TEXTO2, font=f2)
+        out.alpha_composite(grupo, (20 + j * 370, y + 16))
+        alto = max(alto, 16 + grupo.height)
+    y += alto + 20
+    d.text((20, y), "a carta do Dragão a 2× (a foto de 100%, por vizinho mais próximo, só para olhar)", fill=TEXTO, font=f2)
+    y += 18
+    for j, (_, modo) in enumerate(REFINO[:3]):
+        c = next(c["caixa"] for c in reg[f"{modo}/100"]["cartas"] if c["nome"].startswith("Dragão"))
+        cx = Image.open(CAP / f"luta-dragao-{modo}-100.png").convert("RGBA").crop(c)
+        out.alpha_composite(cx.resize((cx.width * 2, cx.height * 2), Image.NEAREST), (20 + j * 480, y))
+    y += 2 * (c[3] - c[1]) + 20
+    n32 = Image.open(N32).convert("RGBA")
+    n32r = Image.open(PASTA / "proposta/dragao-n32r-32.png").convert("RGBA")
+    n16 = Image.open(PASTA / "proposta/dragao-n16-16.png").convert("RGBA")
+    t16 = Image.open(T16).convert("RGBA")
+    linha = [(n, Image.open(JOGO / f"retrato-{n}-16.png").convert("RGBA").resize((32, 32), Image.NEAREST)) for n in FILEIRA]
+    linha += [("N32", n32), ("N32R", n32r), ("N16 (16 ×2)", n16.resize((32, 32), Image.NEAREST)),
+              ("T (16 ×2)", t16.resize((32, 32), Image.NEAREST))]
+    d.text((20, y), "a fileira na caixa da carta, com os mesmos retratos aprovados — tamanho real e 3×", fill=TEXTO, font=f2)
+    y += 18
+    for j, (_, im) in enumerate(linha):
+        out.alpha_composite(caixa(im), (20 + j * 44, y))
+    y += 46
+    for j, (rot, im) in enumerate(linha):
+        out.alpha_composite(caixa(im).resize((108, 108), Image.NEAREST), (20 + j * 122, y))
+        d.text((20 + j * 122, y + 112), rot, fill=TEXTO2, font=f2)
+    y += 136
+    d.text((20, y), "sem suavização: N32 | N32R | as mudanças do refino (em vermelho, sobre o N32R escurecido) | N16 (a 16×)",
+           fill=TEXTO, font=f2)
+    y += 18
+    marca = n32r.copy()
+    escuro = Image.new("RGBA", marca.size, (0, 0, 0, 150))
+    marca.alpha_composite(escuro)
+    for yy in range(32):
+        for xx in range(32):
+            if n32.getpixel((xx, yy)) != n32r.getpixel((xx, yy)):
+                marca.putpixel((xx, yy), (230, 60, 60, 255))
+    for k, im in enumerate((n32, n32r, marca)):
+        out.alpha_composite(grade(im, 8), (20 + k * 276, y))
+    out.alpha_composite(grade(n16, 16), (20 + 3 * 276, y))
+    y += 256 + 20
+    out = out.crop((0, 0, out.width, y))
+    out.save(PASTA / "refino.png")
+    print("refino.png", out.size)
+
+
 if __name__ == "__main__":
-    main()
+    refino() if "--refino" in sys.argv else main()

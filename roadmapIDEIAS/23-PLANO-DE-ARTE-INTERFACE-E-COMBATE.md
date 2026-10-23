@@ -1253,10 +1253,12 @@ volta à pauta quando essa expansão exigir; não é uma migração de engine.
    o Senhor da Guerra (`senhor-t`) recusados (a próxima Hidra com as três cabeças olhando para o mesmo lado, de réptil
    convincente; o Senhor ainda sem um rosto compreensível); o visual do Profeta (`profeta-t`) aceito, preservado e sem
    integrar; o Espantalho (`espantalho-t`) em avaliação; o próximo servo sem elmo nem armadura, com crânio e ossos
-   próprios; o Lich sem nova aprovação; o Mímico M1 integrado (1.192.0). **O teste do Dragão de Gelo em 32×32 nativos,
-   aguardando o Jean** (`criaturas/dragao_32/`, a folha `comparacao.png`): se a grade de 16 é parte do problema das
-   transposições; o exportador de produção e os outros retratos não mudaram. **O lote de criaturas está parado** até a
-   avaliação do teste (nenhuma criatura nova, nenhuma integração do Dragão, o mapa não começado). Falta depois: o antagonista e, na integração do servo, decidir o inimigo que
+   próprios; o Lich sem nova aprovação; o Mímico M1 integrado (1.192.0). **O teste do Dragão de Gelo em 32×32 nativos**
+   (`criaturas/dragao_32/`, a folha `comparacao.png`): **a direção aprovada pelo Jean.** Antes da integração, o N32R (um
+   refino leve numa cópia, o N32 preservado) e o N16 (um teste: o mesmo dragão em 16 a partir do 32), aguardando o Jean (a
+   folha `refino.png`); o exportador de produção e os outros retratos não mudaram, e o 32 nativo não virou regra para os
+   outros retratos. **O lote de criaturas continua parado** (nenhuma criatura nova, o Dragão não integrado, o mapa não
+   começado). Falta depois: o antagonista e, na integração do servo, decidir o inimigo que
    o Rei dos Mortos ergue (o mesmo tipo `servo`). **A Bruxa Afogada:** desenhos suspensos (perto demais da Ilse); o
    levantamento e três conceitos de substituição em `criaturas/chefes_e_especiais/LEIA-ME.md` (na campanha, a ficha
    `bruxa_afogada` é a Ilse: trocar o guardião do covil pede um id próprio; nada mudou). **Falta depois:** os outros 6 guardiões (a

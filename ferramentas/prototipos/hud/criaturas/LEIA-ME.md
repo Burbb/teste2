@@ -262,3 +262,6 @@ A escolha do par e da direção é do Jean; nada foi começado.
   aprovação; a Bruxa Afogada sem substituição autorizada (a tabela no LEIA-ME de `chefes_e_especiais/`).
 - **O teste do Dragão de Gelo em 32×32 nativos (23/10/2026), aguardando o Jean:** `dragao_32/` (a folha
   `comparacao.png`; a leitura no LEIA-ME de lá). Nada integrado.
+- **O Dragão de Gelo, depois da aprovação da direção do N32 (23/10/2026), aguardando o Jean:** o N32R (um refino leve
+  numa cópia; o N32 preservado) e o N16 (o teste do Jean: o mesmo dragão em 16 a partir do 32), em `dragao_32/` (a folha
+  `refino.png`). Nada integrado.
