@@ -1,0 +1,346 @@
+{
+ "atual/100": {
+  "dpr": 1,
+  "cartas": [
+   {
+    "nome": "Jean",
+    "caixa": [
+     35,
+     40,
+     271,
+     112
+    ],
+    "retrato": {
+     "css": [
+      32,
+      32
+     ],
+     "aparelho": [
+      32,
+      32
+     ],
+     "arquivo": "data:722"
+    }
+   },
+   {
+    "nome": "Esqueleto (Invocado)",
+    "caixa": [
+     48,
+     117,
+     258,
+     199
+    ],
+    "retrato": {
+     "css": [
+      32,
+      32
+     ],
+     "aparelho": [
+      32,
+      32
+     ],
+     "arquivo": "http://127.0.0.1:60326/static/hud/icones/retrato-servo-esqueletico-32.png"
+    }
+   },
+   {
+    "nome": "Lich Menor",
+    "caixa": [
+     830,
+     67,
+     1040,
+     117
+    ],
+    "retrato": {
+     "css": [
+      32,
+      32
+     ],
+     "aparelho": [
+      32,
+      32
+     ],
+     "arquivo": "data:330"
+    }
+   },
+   {
+    "nome": "Esqueleto",
+    "caixa": [
+     830,
+     125,
+     1040,
+     175
+    ],
+    "retrato": {
+     "css": [
+      32,
+      32
+     ],
+     "aparelho": [
+      32,
+      32
+     ],
+     "arquivo": "http://127.0.0.1:60326/static/hud/icones/retrato-esqueleto-32.png"
+    }
+   }
+  ],
+  "erros": []
+ },
+ "l1/100": {
+  "dpr": 1,
+  "cartas": [
+   {
+    "nome": "Jean",
+    "caixa": [
+     35,
+     40,
+     271,
+     112
+    ],
+    "retrato": {
+     "css": [
+      32,
+      32
+     ],
+     "aparelho": [
+      32,
+      32
+     ],
+     "arquivo": "data:722"
+    }
+   },
+   {
+    "nome": "Esqueleto (Invocado)",
+    "caixa": [
+     48,
+     117,
+     258,
+     199
+    ],
+    "retrato": {
+     "css": [
+      32,
+      32
+     ],
+     "aparelho": [
+      32,
+      32
+     ],
+     "arquivo": "http://127.0.0.1:60441/static/hud/icones/retrato-servo-esqueletico-32.png"
+    }
+   },
+   {
+    "nome": "Lich Menor",
+    "caixa": [
+     830,
+     67,
+     1040,
+     117
+    ],
+    "retrato": {
+     "css": [
+      32,
+      32
+     ],
+     "aparelho": [
+      32,
+      32
+     ],
+     "arquivo": "data:782"
+    }
+   },
+   {
+    "nome": "Esqueleto",
+    "caixa": [
+     830,
+     125,
+     1040,
+     175
+    ],
+    "retrato": {
+     "css": [
+      32,
+      32
+     ],
+     "aparelho": [
+      32,
+      32
+     ],
+     "arquivo": "http://127.0.0.1:60441/static/hud/icones/retrato-esqueleto-32.png"
+    }
+   }
+  ],
+  "erros": []
+ },
+ "l1b/100": {
+  "dpr": 1,
+  "cartas": [
+   {
+    "nome": "Jean",
+    "caixa": [
+     35,
+     40,
+     271,
+     112
+    ],
+    "retrato": {
+     "css": [
+      32,
+      32
+     ],
+     "aparelho": [
+      32,
+      32
+     ],
+     "arquivo": "data:722"
+    }
+   },
+   {
+    "nome": "Esqueleto (Invocado)",
+    "caixa": [
+     48,
+     117,
+     258,
+     199
+    ],
+    "retrato": {
+     "css": [
+      32,
+      32
+     ],
+     "aparelho": [
+      32,
+      32
+     ],
+     "arquivo": "http://127.0.0.1:60555/static/hud/icones/retrato-servo-esqueletico-32.png"
+    }
+   },
+   {
+    "nome": "Lich Menor",
+    "caixa": [
+     830,
+     67,
+     1040,
+     117
+    ],
+    "retrato": {
+     "css": [
+      32,
+      32
+     ],
+     "aparelho": [
+      32,
+      32
+     ],
+     "arquivo": "data:814"
+    }
+   },
+   {
+    "nome": "Esqueleto",
+    "caixa": [
+     830,
+     125,
+     1040,
+     175
+    ],
+    "retrato": {
+     "css": [
+      32,
+      32
+     ],
+     "aparelho": [
+      32,
+      32
+     ],
+     "arquivo": "http://127.0.0.1:60555/static/hud/icones/retrato-esqueleto-32.png"
+    }
+   }
+  ],
+  "erros": []
+ },
+ "l2/100": {
+  "dpr": 1,
+  "cartas": [
+   {
+    "nome": "Jean",
+    "caixa": [
+     35,
+     40,
+     271,
+     112
+    ],
+    "retrato": {
+     "css": [
+      32,
+      32
+     ],
+     "aparelho": [
+      32,
+      32
+     ],
+     "arquivo": "data:722"
+    }
+   },
+   {
+    "nome": "Esqueleto (Invocado)",
+    "caixa": [
+     48,
+     117,
+     258,
+     199
+    ],
+    "retrato": {
+     "css": [
+      32,
+      32
+     ],
+     "aparelho": [
+      32,
+      32
+     ],
+     "arquivo": "http://127.0.0.1:60668/static/hud/icones/retrato-servo-esqueletico-32.png"
+    }
+   },
+   {
+    "nome": "Lich Menor",
+    "caixa": [
+     830,
+     67,
+     1040,
+     117
+    ],
+    "retrato": {
+     "css": [
+      32,
+      32
+     ],
+     "aparelho": [
+      32,
+      32
+     ],
+     "arquivo": "data:818"
+    }
+   },
+   {
+    "nome": "Esqueleto",
+    "caixa": [
+     830,
+     125,
+     1040,
+     175
+    ],
+    "retrato": {
+     "css": [
+      32,
+      32
+     ],
+     "aparelho": [
+      32,
+      32
+     ],
+     "arquivo": "http://127.0.0.1:60668/static/hud/icones/retrato-esqueleto-32.png"
+    }
+   }
+  ],
+  "erros": []
+ }
+}

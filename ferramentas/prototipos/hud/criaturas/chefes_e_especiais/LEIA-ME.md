@@ -279,3 +279,30 @@ Nada redesenhado nesta rodada; os arquivos de todas as propostas ficam como est�
 - **Conferido com os arquivos de produção** (`capturas-1198/`, `auxiliares/fotografar_jogo_profeta.mjs`): o guardião na luta
   com um Cultista e um Bandido, cada um com o seu arquivo, sem erro no console e sem pedido ao protótipo. A folha
   `../../integracoes-22-10/integracoes-1198.png`.
+
+# O Lich Menor: a comparação para a decisão (23/10/2026, protótipo; nada redesenhado, nada no jogo)
+
+**Pedido do Jean:** a L1 agradou como base; rever o que o refinamento L1b mudou e escolher a final, com a L2, numa folha
+compacta, ao lado do Esqueleto inimigo e do servo aliado, antes de redesenhar qualquer coisa.
+
+| Proposta | O que é | Fonte (em camadas: manto, crânio, coroa, chamas) | Commit de origem |
+|---|---|---|---|
+| `lich-l1` | o rei-esqueleto de frente, a coroa fina, as chamas verdes nas órbitas, a gola alta do manto, o fecho de ouro; sem capuz | `fontes/lich-l1/lich-l1-16.aseprite` | `743ecfae` (a primeira rodada) |
+| `lich-l1b` | a L1 com só as linhas 7 a 10 mudadas: as maçãs do rosto com o oco embaixo, os dentes de cima em dois pares, a mordida fechada numa linha escura ligando os lados da mandíbula às maçãs, os dentes de baixo e o queixo; some o sorriso da L1 | `fontes/lich-l1b/lich-l1b-16.aseprite` | `6820bd3e` (a segunda rodada) |
+| `lich-l2` | o crânio coroado olhando para baixo, o livro aberto e a mão de osso embaixo, a luz verde do livro | `fontes/lich-l2/lich-l2-16.aseprite` | `743ecfae` (a primeira rodada) |
+
+As grades estão em `auxiliares/grades.py`; os PNG em `proposta/` (o 16, o 32 da carta, que é o 16 ×2, e os @2x). As três
+fontes não têm camada de guia: foram desenhadas sem referência (a L1b reaproveitou a referência 7 só como orientação da
+boca, sem guia na fonte).
+
+- **A folha:** `lich-decisao.png` (`auxiliares/prancha_lich.py`): as três na mesma luta, a 1920×945, em tamanho real, com
+  os mesmos dados (o jogo de hoje, a L1, a L1b e a L2), o Lich ao lado do Esqueleto inimigo e do servo aliado (os dois com
+  os retratos de produção; o servo pelo Erguer Servo de verdade, `auxiliares/cenario_lich.py`); a carta do Lich a 2×; a
+  fileira com os aprovados; e o diagnóstico a 12×, sem suavização, com o que a L1b mudou na L1 marcado: **11 pixels**, só
+  na boca, na mandíbula e no oco das maçãs.
+- **As fotos** (`auxiliares/fotografar_lich.mjs`, `capturas-lich/`), sem erro no console.
+- **A minha leitura (quem escolhe é o Jean):** na carta, a L1 e a L1b quase não se distinguem; a diferença é a boca: a L1
+  tem os dentes numa faixa clara que lê como sorriso, e a L1b fecha a mordida numa linha escura, o que dá o rosto mais
+  severo. Ao lado do servo (o crânio nu, osso claro, violeta) e do Esqueleto (o elmo), as duas se separam bem pela coroa,
+  pelas chamas verdes e pelo manto violeta. A L2 conta a história do grimório, mas o livro claro embaixo disputa com o rosto
+  e o crânio fica menor.

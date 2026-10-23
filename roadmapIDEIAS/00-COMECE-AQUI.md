@@ -6748,3 +6748,14 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   por começar), agora integrado; o Lich Menor tem propostas (L1, L1b, L2) aguardando decisão; a Bruxa Afogada e o
   antagonista continuam pendentes de identidade; a família `esqueleto_servo` (no catálogo, sem uso no código) fica como
   pendência técnica, sem remover nem criar conteúdo para ela; o Esqueleto E2 e o Bandido do chapéu continuam reservados.
+
+### 23/10/2026 (data do computador local) — O Lich Menor: a comparação da L1, da L1b e da L2 para a decisão
+
+- **Estado:** depois da integração do Profeta (1.198.0, `39a656e4`); só protótipo, nada redesenhado.
+- **Pedido do Jean:** a L1 agradou como base; rever o que a L1b mudou e escolher a final, com a L2, ao lado do Esqueleto
+  inimigo e do servo aliado.
+- **A folha** `ferramentas/prototipos/hud/criaturas/chefes_e_especiais/lich-decisao.png`: as três na mesma luta, a
+  1920×945, com os mesmos dados; a carta a 2×; a fileira; o diagnóstico a 12× e as 11 diferenças da L1b sobre a L1 (a
+  boca, a mandíbula e o oco das maçãs). As fontes: `fontes/lich-l1`, `fontes/lich-l1b` e `fontes/lich-l2` (a L1 e a L2 de
+  `743ecfae`; a L1b de `6820bd3e`).
+- **Aguardando o Jean:** a escolha entre a L1, a L1b e a L2. Nenhuma outra criatura e o mapa não começados.
