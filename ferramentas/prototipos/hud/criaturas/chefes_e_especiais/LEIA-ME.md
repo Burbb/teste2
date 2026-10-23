@@ -260,7 +260,7 @@ Nada redesenhado nesta rodada; os arquivos de todas as propostas ficam como est�
 | Profeta das Cinzas (`profeta-t`) | **visual aceito**; preservar a versão atual; não integrar neste lote | **integrado na 1.198.0**, sem retoques |
 | Espantalho Possuído (`espantalho-t`) | boa base, **ainda em avaliação** | refeito em 32 nativos e adaptado para 16 em `../espantalho_32/`, depois refinado; **o N16R2 integrado na 1.195.0**, pela origem |
 | Servo (`servo-sv2b`) | não seguir por este caminho | **sem elmo e sem armadura**, com identidade própria: o crânio e os ossos visíveis, não o esqueleto inimigo com os olhos recoloridos; construído em 32 nativos e adaptado para 16 em `../servo_32/`; **o N16B integrado na 1.196.0** |
-| Lich (`lich-l1`, `lich-l1b`, `lich-l2`) | preservar a base e as alternativas; **sem nova aprovação** | — |
+| Lich (`lich-l1`, `lich-l1b`, `lich-l2`) | preservar a base e as alternativas; **sem nova aprovação** | a L1b como base de identidade de um estudo em 32 nativos e de uma adaptação para 16, em `../lich_32/` (aguardando o Jean) |
 | Mímico | **o M1 integrado na 1.192.0**, pela origem; a M1b e a M2 ficam como alternativas | — |
 | Bruxa Afogada | a investigação preservada; **nenhuma remoção ou substituição autorizada** | — |
 | Dragão de Gelo | o teste em 32 nativos em `../dragao_32/` (aguardando o Jean) | — |

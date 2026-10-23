@@ -6759,3 +6759,18 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   boca, a mandíbula e o oco das maçãs). As fontes: `fontes/lich-l1`, `fontes/lich-l1b` e `fontes/lich-l2` (a L1 e a L2 de
   `743ecfae`; a L1b de `6820bd3e`).
 - **Aguardando o Jean:** a escolha entre a L1, a L1b e a L2. Nenhuma outra criatura e o mapa não começados.
+
+### 23/10/2026 (data do computador local) — O Lich Menor em 32 nativos, adaptado à mão para 16 (nada no jogo)
+
+- **Estado conferido:** a branch em `2188d001`, igual ao remoto; o `caido-avatar-512.png` continua fora dos commits.
+- **Pedido do Jean:** o Lich pelo caminho do Dragão, com a L1b como base de identidade (a coroa antiga, o crânio exposto,
+  os olhos verdes e o manto violeta): primeiro em 32 nativos, resolvendo o crânio (na L1b, uma placa), as órbitas, o nariz,
+  a boca, a coroa e o manto; depois à mão em 16. Sem livro nem acessórios.
+- **No protótipo, aguardando o Jean** (`ferramentas/prototipos/hud/criaturas/lich_32/LEIA-ME.md`, a folha
+  `comparacao.png`): o `lich-n32` e o `lich-n16`, com fontes separadas. A L1, a L1b e a L2 intactas.
+- **A minha leitura:** o N32 lê como um rei-morto severo em close, distinto do servo e do Esqueleto; o N16 guarda a coroa,
+  o crânio afunilado, o olhar contido e o manto, e perde as têmporas, o oco das maçãs e o halo das órbitas.
+- **Verificações proporcionais (nenhum código do jogo mudou):** o pyflakes dos auxiliares, a sintaxe do roteiro das fotos,
+  as grades iguais ao rascunho, as fontes reabertas (o lado, as camadas na ordem), 0 diferentes na releitura, as
+  exportações iguais ao composto, alfa 0/255, os derivados em blocos inteiros e as fotos sem erro no console.
+- **Parado para a avaliação das duas versões:** nada integrado, nenhuma outra criatura, o mapa não começado.
