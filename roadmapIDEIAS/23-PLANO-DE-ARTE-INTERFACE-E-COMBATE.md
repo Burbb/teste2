@@ -1081,10 +1081,11 @@ do catálogo):**
   - **5 guardiões** (a Árvore Anciã tem o dela desde a 1.190.0, o Golem Primordial desde a 1.191.0 e o Dragão de Gelo desde a 1.193.0): a Hidra do Brejo, a Bruxa Afogada, o Senhor da Guerra, o Profeta
     das Cinzas, o Lich Menor (o `etereo` na fase 2) e o Golem Primordial.
   - **O antagonista** (família `antagonista`, só no mundo gerado): sem retrato próprio, no `humano` pelo traço
-    `conjurador`.
+    `conjurador`. O levantamento e três direções em texto em `criaturas/identidades/LEIA-ME.md` (a recomendada: A, o humano que a Fenda está apagando, neutro de título e de gênero; aguardando o Jean).
   - **À parte, do lado do herói:** o servo do Necromante (o "Esqueleto (Invocado)" do Erguer Servo e o inimigo erguido
     pelo Rei dos Mortos) é um aliado de `tipo` servo, sem família, desenhado na `caveira` pela tela; a família
-    `esqueleto_servo` do catálogo não é criada por nenhum código.
+    `esqueleto_servo` do catálogo não é criada por nenhum código (desde o primeiro commit; a recomendação: remover numa
+    correção, com o ajuste do `test_retratos`; aguardando o Jean, em `criaturas/identidades/LEIA-ME.md`).
 - **Compartilhamentos deliberados:** o Lobo Cinzento aliado com o retrato do Lobo (1.165.0; o lado, o nome e a borda
   separam os papéis); os invocados com o retrato da família que os invoca ou a que pertencem (os afogados da Ilse, as
   aranhas da Rainha, os lobos e bandidos líderes e invocados); os fiéis do Profeta e os dois de capa escura da sacristia
@@ -1260,7 +1261,7 @@ volta à pauta quando essa expansão exigir; não é uma migração de engine.
    construção resolvida em 32 nativos pela referência e o redesenho à mão em 16 com o 32 como mapa. Falta depois: o antagonista e, na integração do servo, decidir o inimigo que
    o Rei dos Mortos ergue (o mesmo tipo `servo`). **A Bruxa Afogada:** desenhos suspensos (perto demais da Ilse); o
    levantamento e três conceitos de substituição em `criaturas/chefes_e_especiais/LEIA-ME.md` (na campanha, a ficha
-   `bruxa_afogada` é a Ilse: trocar o guardião do covil pede um id próprio; nada mudou). **Falta depois:** o último guardião (a Bruxa
+   `bruxa_afogada` é a Ilse: trocar o guardião do covil pede um id próprio; nada mudou). **O Barqueiro do Charco** desenvolvido em texto, com o escopo da separação (a ficha na mesma posição, a Ilse num catálogo de únicos, a migração v6→v7), em `criaturas/identidades/LEIA-ME.md`; aguardando o Jean. **Falta depois:** o último guardião (a Bruxa
    Afogada, pendente de identidade: o substituto dela nos covis; o Lich Menor entrou na 1.199.0; o Senhor da Guerra entrou na 1.194.0, a Hidra do Brejo na 1.197.0 e o Profeta das Cinzas na 1.198.0), o
    antagonista, (o Espantalho Possuído entrou na 1.195.0 e o servo do Necromante na 1.196.0); nada começado antes do pedido. A relação em "A frente de criaturas em 22/10/2026" (item 1.12). O Esqueleto E2 e o Bandido do
    chapéu estão reservados.

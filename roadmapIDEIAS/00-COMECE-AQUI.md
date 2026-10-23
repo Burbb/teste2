@@ -6793,3 +6793,27 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **As próximas decisões (do Jean, antes de qualquer desenho):** a identidade do substituto da Bruxa Afogada nos covis
   (hoje o id `bruxa_afogada` do covil do pântano é a Ilse) e a do antagonista do mundo gerado. Pendência técnica, sem
   mudança: a família `esqueleto_servo`, sem uso. Reservados: o Esqueleto E2 e o Bandido do chapéu.
+
+### 23/10/2026 (data do computador local) — As identidades pendentes, em texto: o Barqueiro, o antagonista e o `esqueleto_servo`
+
+- **Estado conferido:** a branch em `8d9a8bec` (1.199.0), igual ao remoto; o `caido-avatar-512.png` continua fora dos
+  commits.
+- **Pedido do Jean:** só investigação e propostas em texto, antes de qualquer desenho. O registro:
+  `ferramentas/prototipos/hud/criaturas/identidades/LEIA-ME.md`.
+- **O Barqueiro do Charco** (o substituto proposto da Bruxa Afogada nos covis): o barqueiro que afundou e continua
+  atravessando os afogados; velho, encharcado, o pano de rede até o nariz, os olhos claros à mostra, a lanterna verde
+  iluminando de baixo. As regras da ficha inteiras; mudam a `base`, o `g`, a `intro`, o texto da fase, o rumor e o
+  retrato. **A separação da Ilse:** a ficha nova na mesma posição da lista (o sorteio não muda), a Ilse num catálogo de
+  únicos (atenção ao `idx=1` do `spec` dela), o texto da fase dela preservado, a migração v6→v7 dos covis e dos rumores, os
+  testes da Ilse intactos.
+- **O antagonista:** só no mundo gerado; título (8, 3 femininos), nome e origem (5) sorteados à parte; o canon visual é
+  pouco (foi humano, deixou de ser; o trono de pedra rachada; a forma imensa no fim). Três direções: A, o humano que a
+  Fenda está apagando (recomendada); B, o rasgo; C, o soberano de pedra. Um retrato por título contradiria os outros sete;
+  o único tem de ser neutro de título e de gênero. **Achado independente:** o gênero do texto não acompanha o título
+  (o lore da taverna, o `eco_do_vazio`, duas origens).
+- **A família `esqueleto_servo`:** no catálogo desde o primeiro commit, nunca criada (o Erguer Servo sempre usou o aliado
+  com números próprios); fora dos saves e dos sorteios. Recomendação: remover numa correção, ajustando o
+  `test_retratos`.
+- **Verificações:** só documentos; nenhum código, save, arte ou mapa mudou.
+- **As decisões abertas (do Jean):** o Barqueiro e a separação com migração; a direção do antagonista; a remoção do
+  `esqueleto_servo`; os textos de gênero do antagonista. Reservados: o Esqueleto E2 e o Bandido do chapéu.

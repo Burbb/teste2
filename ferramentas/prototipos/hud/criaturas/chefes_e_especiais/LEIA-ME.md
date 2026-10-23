@@ -262,7 +262,7 @@ Nada redesenhado nesta rodada; os arquivos de todas as propostas ficam como est�
 | Servo (`servo-sv2b`) | não seguir por este caminho | **sem elmo e sem armadura**, com identidade própria: o crânio e os ossos visíveis, não o esqueleto inimigo com os olhos recoloridos; construído em 32 nativos e adaptado para 16 em `../servo_32/`; **o N16B integrado na 1.196.0** |
 | Lich (`lich-l1`, `lich-l1b`, `lich-l2`) | preservar a base e as alternativas; **sem nova aprovação** | a L1b como base de identidade de um estudo em 32 nativos e de uma adaptação para 16, em `../lich_32/`; **o N16 integrado na 1.199.0** |
 | Mímico | **o M1 integrado na 1.192.0**, pela origem; a M1b e a M2 ficam como alternativas | — |
-| Bruxa Afogada | a investigação preservada; **nenhuma remoção ou substituição autorizada** | — |
+| Bruxa Afogada | a investigação preservada; **nenhuma remoção ou substituição autorizada** | o Barqueiro do Charco desenvolvido em texto e o escopo da separação da Ilse em `../identidades/LEIA-ME.md` (aguardando o Jean) |
 | Dragão de Gelo | o teste em 32 nativos em `../dragao_32/` (aguardando o Jean) | — |
 
 # O Profeta das Cinzas no jogo (1.198.0): a profeta-t, pelo id do guardião
