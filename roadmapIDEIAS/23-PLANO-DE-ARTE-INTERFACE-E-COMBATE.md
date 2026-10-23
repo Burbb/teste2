@@ -1055,10 +1055,11 @@ do catálogo):**
 - **Na 1.187.0, o Cavaleiro Sombrio P3** (a cúpula com a crista afundada no gorjal alto; entrou como o P3b, com os cantos
   de baixo completados a pedido do Jean), pela família, com o Último
   Guarda. **Na 1.188.0, a Abominação C3** (a boca enorme sustentada pelas bochechas), pela família, com os afixos.
-  **Propostas aguardando o Jean (nenhuma autorizada):** a **Árvore Desperta** (A1, os galhos nus; A2, a copa pesada) e o
-  **golem de pedra** (G1, a cantaria; G2, o rochedo), em `criaturas/arvore_golem/` (as folhas `arvore.png` e `golem.png`;
-  a minha preferência, a A2 e o G2). Na integração, decidir o Espantalho Possuído (da família `ent_jovem`) e o Mímico (da
-  família `golem`), que herdariam o retrato pela família.
+  **Propostas aguardando o Jean (nenhuma autorizada), a segunda rodada:** a **Árvore Desperta** T1 e T2, pelas duas
+  referências geradas (a T2, a direção preferida), e o **golem de pedra** G2r (o G2 com a cabeça separada dos ombros), em
+  `criaturas/arvore_golem/` (as folhas `arvore-t.png` e `golem-g2r.png`). Histórico, não escolhidos: a A1, a A2 e o G1 (o
+  G2 é a base do G2r). **Antes de qualquer integração por família:** o Espantalho Possuído (da família `ent_jovem`) e o
+  Mímico (da família `golem`) precisam de uma decisão própria.
   Histórico, não escolhidos: a Abominação A, B, C, C2, D e E e o Cavaleiro A, A2, B, T, T2, P1, P2 e P4. Histórico, não escolhidos, em
   `criaturas/fenda/`: o Cão A, B, T, N, N2, RA, RB, RC, RA2, RA3, P2 e P3 (a P1 foi a escolhida), a Cria A e B. A cria que o antagonista
   invoca é da família `cria_vazio` e usará o mesmo retrato. Histórico, não escolhidos: as Harpias HA, HB, H1 a H3 e a
@@ -1238,7 +1239,8 @@ volta à pauta quando essa expansão exigir; não é uma migração de engine.
    caminho (o retrato por família, por chave ou pelo tipo, sem trocar o sprite compartilhado). O Mercenário, o Lobo
    Gélido e o Esgotado integrados (1.179.0, 1.180.0); o Caído CA (1.182.0); o Grifo GA3 (1.183.0); a Harpia T2 e o Xamã
    Caído X1r2 (1.184.0); a Cria do Vazio A2 (1.185.0); o Cão infernal P1 (1.186.0); o Cavaleiro Sombrio P3 (1.187.0); a Abominação C3 (1.188.0).
-   **Aguardando o Jean:** a Árvore Desperta (A1, A2) e o golem de pedra (G1, G2) (`criaturas/arvore_golem/`); depois,
+   **Aguardando o Jean:** a Árvore Desperta (T1, T2) e o golem de pedra (G2r) (`criaturas/arvore_golem/`; o Espantalho
+   Possuído e o Mímico a decidir antes da integração); depois,
    os chefes (a Árvore Anciã e o Golem Primordial numa rodada própria), sem começar antes do pedido. A relação em "A frente de criaturas em 22/10/2026" (item 1.12). O Esqueleto E2 e o Bandido do
    chapéu estão reservados.
 3. **Depois, 1E.4:** os caminhos/destinos e os símbolos internos do mapa e do minimapa.

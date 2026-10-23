@@ -6238,3 +6238,21 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Verificações proporcionais (nenhum código do jogo mudou):** o pyflakes dos auxiliares, a sintaxe do roteiro das
   fotos e as grades regravadas iguais às gravadas.
 - **Continua:** a escolha do Jean; nada integrado; os chefes e o mapa não foram começados.
+
+### 22/10/2026 (data do computador local) — A Árvore Desperta pelas referências e o Golem G2r (nada no jogo)
+
+- **Estado conferido:** a branch em `91c954d8`, igual ao remoto; as únicas alterações locais eram as duas referências
+  novas deixadas pelo Jean em `ferramentas/arte/referencias/icones/` (guardadas sem alteração; a origem no LEIA-ME de lá).
+- **Avaliação do Jean:** a A1 e a A2 recusadas; a Árvore pelas duas referências geradas (a 2, a "velha séria", é a
+  preferida); o G2 bem encaminhado, só a separação da cabeça.
+- **No protótipo, aguardando o Jean** (`ferramentas/prototipos/hud/criaturas/arvore_golem/LEIA-ME.md`, "A segunda
+  rodada"): a T1 (pela referência 1) e a T2 (pela referência 2), com as guias ocultas; o G2r ao lado do G2. As folhas
+  `arvore-t.png` e `golem-g2r.png`; as limitações no tamanho real no LEIA-ME.
+- **Registrado:** o Espantalho Possuído e o Mímico precisam de uma decisão própria antes de qualquer integração por
+  família.
+- **Processo:** grades à mão medidas nas guias; as fontes pelo Aseprite em lote (o conector sem editor), 0 diferentes na
+  releitura, a guia oculta; a exportação igual à grade, @2x exato, 32 e 48 em blocos inteiros; fotos a 1920×945, sem erro
+  no console.
+- **Verificações proporcionais (nenhum código do jogo mudou):** o pyflakes dos auxiliares, a sintaxe do roteiro das
+  fotos e as grades regravadas iguais às gravadas.
+- **Continua:** a escolha do Jean; nada integrado; os chefes e o mapa não foram começados.
