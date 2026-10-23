@@ -1244,8 +1244,12 @@ volta à pauta quando essa expansão exigir; não é uma migração de engine.
    caminho (o retrato por família, por chave ou pelo tipo, sem trocar o sprite compartilhado). O Mercenário, o Lobo
    Gélido e o Esgotado integrados (1.179.0, 1.180.0); o Caído CA (1.182.0); o Grifo GA3 (1.183.0); a Harpia T2 e o Xamã
    Caído X1r2 (1.184.0); a Cria do Vazio A2 (1.185.0); o Cão infernal P1 (1.186.0); o Cavaleiro Sombrio P3 (1.187.0); a Abominação C3 (1.188.0); a Árvore Desperta T1 e o Golem G2 (1.189.0).
-   **Os chefes:** a Árvore Anciã R2b integrada (1.190.0); o Golem Primordial em refinamento, a partir da R1
-   (`criaturas/chefes_arvore_golem/`). **Falta depois:** os outros 6 guardiões (a
+   **Os chefes:** a Árvore Anciã R2b integrada (1.190.0). **Aguardando o Jean (o lote da noite, nada no jogo):** o Golem
+   Primordial R1b (`criaturas/chefes_arvore_golem/`); duas propostas de cada um dos seis chefes restantes e dos três
+   especiais (o Espantalho Possuído, o Mímico e o servo esquelético), em `criaturas/chefes_e_especiais/` (as folhas
+   `par1-hidra-dragao.png`, `par2-senhor-profeta.png`, `par3-bruxa-lich.png`, `especiais.png` e `candidatos.png`; as
+   preferências e as limitações no LEIA-ME). Falta depois: o antagonista e, na integração do servo, decidir o inimigo que
+   o Rei dos Mortos ergue (o mesmo tipo `servo`). **Falta depois:** os outros 6 guardiões (a
    Hidra do Brejo, a Bruxa Afogada, o Dragão de Gelo, o Senhor da Guerra, o Profeta das Cinzas e o Lich Menor), o
    antagonista, o servo do Necromante e as decisões do Espantalho Possuído e do Mímico; nada começado antes do pedido. A relação em "A frente de criaturas em 22/10/2026" (item 1.12). O Esqueleto E2 e o Bandido do
    chapéu estão reservados.

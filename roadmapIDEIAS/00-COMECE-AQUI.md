@@ -6334,3 +6334,24 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Verificações sobre o código final:** `unittest` (662, 1 pulado: a fumaça, rodada à parte), o gabarito (idêntico, sem
   atualizar: nenhuma das 24 partidas encontra a Árvore Anciã), o pyflakes (só o aviso conhecido) e a fumaça inteira
   (378 ok, tudo certo).
+
+### 23/10/2026 (data do computador local) — O lote da noite: o Golem R1b, os seis chefes e os três especiais (nada no jogo)
+
+- **Depois da integração da Árvore Anciã (1.190.0, `3ae2613f`)**, em commits separados: o Golem Primordial R1b
+  (`a35b469a`) e as 18 propostas do lote.
+- **O Golem R1b** (`ferramentas/prototipos/hud/criaturas/chefes_arvore_golem/`, a folha `primordial-r1b.png`): a R1 com a
+  laje da sobrancelha mais pesada e as órbitas mais fundas; os pontos de luz e o resto do rosto da R1.
+- **Os seis chefes e os três especiais** (`ferramentas/prototipos/hud/criaturas/chefes_e_especiais/LEIA-ME.md`, com o
+  que vem do jogo, a interpretação, a preferência e a limitação de cada um): a Hidra (H1, H2), o Dragão de Gelo (D1, D2),
+  o Senhor da Guerra (S1, S2), o Profeta das Cinzas (P1, P2), a Bruxa Afogada (B1, B2), o Lich Menor (L1, L2), o
+  Espantalho Possuído (E1, E2), o Mímico (M1, M2) e o servo esquelético (SV1, SV2). As folhas dos pares, a dos especiais e
+  a prancha geral `candidatos.png`. Todos só na carta da luta: o 16 e o 32.
+- **Achado registrado:** o tipo `servo` também é o do inimigo que o talento Rei dos Mortos ergue ("Lobo (servo)"); uma
+  integração do retrato do servo precisa decidir se ele vale para os dois.
+- **Processo:** grades à mão; as fontes pelo Aseprite em lote (o conector sem editor; a janela aberta não foi tocada), 0
+  diferentes na releitura; a exportação igual à grade, @2x exato, o 32 em blocos inteiros; fotos a 1920×945 nos modos
+  atual, a e b (os chefes pelo `CHEFE=`, o Espantalho e o Mímico pelos eventos reais, o servo pelo `SERVOS=1`), sem erro
+  no console.
+- **Verificações proporcionais (nenhum código do jogo mudou depois da 1.190.0):** o pyflakes dos auxiliares, a sintaxe
+  dos roteiros das fotos e as grades regravadas iguais às gravadas.
+- **Continua:** a avaliação do Jean; nada integrado além da Árvore Anciã; o antagonista e o mapa não foram começados.
