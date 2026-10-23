@@ -236,3 +236,9 @@ A escolha do par e da direção é do Jean; nada foi começado.
   própria antes de qualquer integração por família.
 - **Integrados na 1.189.0:** a Árvore Desperta T1 e o Golem de pedra G2 original, pelas famílias, com os afixos e os
   líderes. O Espantalho Possuído e o Mímico conservam o desenho de antes (pela `origem`), com a decisão própria pendente.
+
+## Os chefes: a Árvore Anciã e o Golem Primordial (23/10/2026, na 1.189.0)
+
+- **Em avaliação, nenhum aprovado:** a Árvore Anciã (AA1, o rosto-rei; AA2, a árvore imensa) e o Golem Primordial (GP1,
+  a parede que se levanta; GP2, o ídolo), em `chefes_arvore_golem/` (as folhas `anciaa.png` e `primordial.png`). Os
+  guardiões só aparecem na carta da luta: o 16 e o 32.
