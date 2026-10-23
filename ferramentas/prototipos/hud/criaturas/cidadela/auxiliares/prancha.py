@@ -2,14 +2,15 @@
 a carta na luta a 1920×945 em tamanho real e a 2×, o cartão do Bestiário (48) em tamanho real, a fileira com os retratos
 aprovados pertinentes (na caixa da carta, real e 3×) e a 12× com a grade, sem suavização. Tudo trocado só na página
 (protótipo).
-Na quinta, cavaleiro-p.png (o T2 × P1 × P2 × P3). Na quarta, abominacao-c3.png (a C × a C2 × a C3) e cavaleiro-t2.png (a referência, também no tamanho do retrato, × o T ×
+Na sexta, cavaleiro-p4.png (o Guerreiro aprovado, o T2, o P3 e o P4). Na quinta, cavaleiro-p.png (o T2 × P1 × P2 × P3). Na quarta, abominacao-c3.png (a C × a C2 × a C3) e cavaleiro-t2.png (a referência, também no tamanho do retrato, × o T ×
 o T2). Na terceira, abominacao-c2.png (a C × a C2) e cavaleiro-t.png (a referência, a guia e o T; o jogo de hoje × o T).
 Na segunda rodada, abominacao-cde.png (o jogo de hoje × C × D × E) e cavaleiro-a2.png (o jogo de hoje × o A original ×
 o A2), das fotos em capturas-2/.
-    python prancha.py [abominacao|cavaleiro|abominacao-cde|cavaleiro-a2|abominacao-c2|cavaleiro-t|abominacao-c3|cavaleiro-t2|cavaleiro-p ...]      (depois do fotografar.mjs)
+    python prancha.py [abominacao|cavaleiro|abominacao-cde|cavaleiro-a2|abominacao-c2|cavaleiro-t|abominacao-c3|cavaleiro-t2|cavaleiro-p|cavaleiro-p4 ...]      (depois do fotografar.mjs)
 """
 import json
 import pathlib
+import re
 import sys
 
 from PIL import Image, ImageDraw, ImageFont
@@ -61,7 +62,12 @@ CRIATURAS["cavaleiro-p"] = ("Cavaleiro sombrio", [  # a quinta: o T2 × os três
     ("T2, o anterior", "t2", "cavaleiro-t2"), ("P1, o grande elmo", "p1", "cavaleiro-p1"),
     ("P2, o bico", "p2", "cavaleiro-p2"), ("P3, a cabeça baixa", "p3", "cavaleiro-p3")],
     ("esqueleto", "mercenario", "espectro", "bandido"), ["luta-cavaleiro"])
-FOTOS = {"cavaleiro-p": "capturas-2", "abominacao-cde": "capturas-2", "cavaleiro-a2": "capturas-2", "abominacao-c2": "capturas-2",
+CRIATURAS["cavaleiro-p4"] = ("Cavaleiro sombrio", [  # a sexta: o T2 × o P3 × o P4, com o Guerreiro aprovado ao lado
+    ("T2, a comparação de presença", "t2", "cavaleiro-t2"), ("P3, a direção", "p3", "cavaleiro-p3"),
+    ("P4, o P3 refinado", "p4", "cavaleiro-p4")],
+    ("esqueleto", "mercenario", "espectro", "bandido"), ["luta-cavaleiro"])
+EXTRAS = {"cavaleiro-p4": ["guerreiro"]}  # retratos do herói (retratos.js, a carta de 16) na fileira e na 12×
+FOTOS = {"cavaleiro-p4": "capturas-2", "cavaleiro-p": "capturas-2", "abominacao-cde": "capturas-2", "cavaleiro-a2": "capturas-2", "abominacao-c2": "capturas-2",
          "cavaleiro-t": "capturas-2", "abominacao-c3": "capturas-2", "cavaleiro-t2": "capturas-2"}
 ORIENTACAO = {"cavaleiro-t2"}  # a referência reduzida ao tamanho do retrato (32 e 48), ao lado dos desenhos  # a pasta das fotos, se não for a capturas/
 REFERENCIAS = AQUI.parents[5] / "ferramentas/arte/referencias/icones"
@@ -91,6 +97,20 @@ def grade12(im16):
 
 def desenho(ident):
     return gr.imagem(ident)
+
+
+def heroi(classe):
+    """A carta de 16 do herói (retratos.js: a grade <CLASSE>_CARTA e a paleta dela), como está no jogo."""
+    js = (AQUI.parents[5] / "rpg/web/static/retratos.js").read_text(encoding="utf-8")
+    nome = re.search(classe + r': \{ cores: (\w+)', js).group(1)
+    pal = dict(re.findall(r'(\w): "#(\w{6})"', re.search(r"const " + nome + r" = \{(.*?)\};", js, re.S).group(1)))
+    grade = re.findall(r'"([^"]{16})"', re.search(r"const " + classe.upper() + r"_CARTA = \[(.*?)\];", js, re.S).group(1))
+    im = Image.new("RGBA", (16, 16))
+    for y, linha in enumerate(grade):
+        for x, ch in enumerate(linha):
+            if ch != ".":
+                im.putpixel((x, y), tuple(int(pal[ch][i:i + 2], 16) for i in (0, 2, 4)) + (255,))
+    return im
 
 
 def folha(chave):
@@ -159,7 +179,8 @@ def folha(chave):
         out.alpha_composite(ct, (20 + j * larg, y))
         alto = max(alto, ct.height)
     y += alto + 20
-    novos = [(fonte, desenho(fonte)) for _, _, fonte in colunas if fonte]
+    novos = [(f"{c} (aprovado)", heroi(c)) for c in EXTRAS.get(chave, [])] + [
+        (fonte, desenho(fonte)) for _, _, fonte in colunas if fonte]
     linha = [(a, Image.open(JOGO / f"retrato-{a}-16.png").convert("RGBA")) for a in aprovados] + novos
     d.text((20, y), "a fileira, na caixa da carta, com retratos do jogo — tamanho real e 3×", fill=TEXTO, font=f2)
     y += 20

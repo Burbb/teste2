@@ -2,7 +2,7 @@
 // modo: a luta da abominação (com o carniçal e o troll), a do cavaleiro (com o esqueleto e o mercenário) e o Bestiário.
 // Modos: "atual" (o jogo), "a" e "b" (as propostas A e B das duas); na segunda rodada, "c", "d" e "e" (as Abominações
 // novas) e "a2" (o Cavaleiro refinado); na terceira, "c2" (a C refinada) e "t" (o Cavaleiro da referência); na quarta, "c3" e "t2"; na quinta, "p1", "p2" e
-// "p3" (os três elmos novos). Cada modo troca só as criaturas que têm aquele desenho, só na página, nas cartas
+// "p3" (os três elmos novos); na sexta, "p4" (o P3 refinado). Cada modo troca só as criaturas que têm aquele desenho, só na página, nas cartas
 // inimigas e nos cartões do Bestiário, pelo nome.
 //   [MODOS=atual,a,b] PLAYWRIGHT_MODULO=<file:// do index.mjs> node fotografar.mjs <raiz> <pasta das fotos>
 import { spawn } from "child_process";
@@ -23,9 +23,10 @@ const BICHOS = [
                    c3: [P, "abominacao-c3"] }],
   ["^Cavaleiro sombrio", { a: [P, "cavaleiro-a"], b: [P, "cavaleiro-b"], a2: [P, "cavaleiro-a2"],
                           t: [P, "cavaleiro-t"], t2: [P, "cavaleiro-t2"],
-                          p1: [P, "cavaleiro-p1"], p2: [P, "cavaleiro-p2"], p3: [P, "cavaleiro-p3"] }],
+                          p1: [P, "cavaleiro-p1"], p2: [P, "cavaleiro-p2"], p3: [P, "cavaleiro-p3"],
+                          p4: [P, "cavaleiro-p4"] }],
 ];
-const TROCAS = Object.fromEntries(["a", "b", "c", "d", "e", "a2", "c2", "t", "c3", "t2", "p1", "p2", "p3"].map((m) =>
+const TROCAS = Object.fromEntries(["a", "b", "c", "d", "e", "a2", "c2", "t", "c3", "t2", "p1", "p2", "p3", "p4"].map((m) =>
   [m, BICHOS.filter(([, ms]) => ms[m]).map(([n, ms]) => [n, dados(...ms[m])])]));
 const MODOS = (process.env.MODOS || "atual,a,b").split(",");
 const LUTA = { TUTORIAL: "0", CLASSE: "guerreiro", NIVEL_LUTA: "6" };

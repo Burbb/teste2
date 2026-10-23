@@ -49,6 +49,14 @@ são o 16 ×2 e ×3. Desenhados à mão, uma letra por pixel; silhueta e volumes
           (o corpo acompanha a cabeça);
       P3, a cabeça baixa: a cúpula pequena com a crista no meio, afundada num gorjal alto de borda acesa, a fenda
           baixa com dois pontos apagados (o olhar de baixo); o peito largo, liso, com a borda de cima e a fralda.
+  A sexta rodada (o P3 e o T2 como direções; o P3 refinado pela construção do retrato aprovado do Guerreiro,
+  GUERREIRO_CARTA de rpg/web/static/retratos.js: o elmo grande, dois planos separados por uma nervura, a fresta e a gola
+  escura embaixo):
+      P4, o P3 refinado: o elmo maior (10 colunas, das linhas 0 a 9) com a cúpula e a crista do P3, a frente acesa à
+          esquerda e a sombra à direita, a linha de reforço escura acima da viseira, a viseira em V (as pontas de
+          dentro mais baixas, o olhar bravo) cortada pela emenda dos planos, a base escura separando o elmo do gorjal
+          estreito e médio, o peito e as ombreiras do P3; a nervura clara só na crista (sem a cruz do Guerreiro); sem
+          brilho (os dois pontos nas pontas da fenda liam como olhos).
     python grades.py <pasta> [<id> ...]     # grava grades/<id>.txt e listas/<id>/<camada>.lua (a guia, do png dela)
 """
 import pathlib
@@ -334,6 +342,24 @@ CAVALEIRO_P3 = [
     "MLMAakMMMMAkaMLa",
     "...aakaAAAAaaAA.",
 ]
+CAVALEIRO_P4 = [
+    "......kkkk......",
+    ".....kLWAAk.....",
+    "....kLLWAAAk....",
+    "...kLLLWAAAAk...",
+    "...kMMMLAAAak...",
+    "...kkkLLAAkkk...",
+    "...kLLkLakAAk...",
+    "...kLLLLaAAAk...",
+    "..ckMLLLaAAAk...",
+    "..CckLLLaAAkakC.",
+    ".MLckkkkkkkkakCc",
+    "LWLLakAMMAAaLWLc",
+    "MLLMAkLLMMAaMLMA",
+    "aAAAakLMMAAaaAAa",
+    "MLMAakMMMMAkaMLa",
+    "...aakaAAAAaaAA.",
+]
 CAVALEIRO_A2 = [
     ".....aaaaaa.....",
     "....aALWWLMa....",
@@ -397,6 +423,7 @@ FENDAS = {  # o escuro de cada viseira da quinta rodada (x, y)
     "cavaleiro-p1": {(5, 4), (10, 4), (5, 5), (6, 5), (9, 5), (10, 5)},
     "cavaleiro-p2": {(4, 5), (6, 5), (7, 5), (8, 5)},
     "cavaleiro-p3": {(7, 6), (8, 6)},
+    "cavaleiro-p4": {(4, 5), (5, 5), (10, 5), (11, 5), (6, 6), (9, 6)},
 }
 
 
@@ -433,8 +460,9 @@ CAMADAS = {  # a grade, a paleta, as camadas de baixo para cima e a camada de ca
     "abominacao-c3": (ABOMINACAO_C3, "abominacao2", ["carne", "boca", "dentes", "olhos"], _camada_abominacao_c),
     "cavaleiro-t2": (CAVALEIRO_T2, "cavaleiro_t", ["guia", "capa", "armadura", "viseira"], _camada_cavaleiro_t2),
 }
-for _i in ("cavaleiro-p1", "cavaleiro-p2", "cavaleiro-p3"):
-    CAMADAS[_i] = ({"cavaleiro-p1": CAVALEIRO_P1, "cavaleiro-p2": CAVALEIRO_P2, "cavaleiro-p3": CAVALEIRO_P3}[_i],
+for _i in ("cavaleiro-p1", "cavaleiro-p2", "cavaleiro-p3", "cavaleiro-p4"):
+    CAMADAS[_i] = ({"cavaleiro-p1": CAVALEIRO_P1, "cavaleiro-p2": CAVALEIRO_P2, "cavaleiro-p3": CAVALEIRO_P3,
+                    "cavaleiro-p4": CAVALEIRO_P4}[_i],
                    "cavaleiro_t", ["capa", "armadura", "viseira"], _camada_fenda(_i))
 GUIAS = {"cavaleiro-t": "guias/cavaleiro-t-guia-16.png", "cavaleiro-t2": "guias/cavaleiro-t-guia-16.png"}  # a camada guia (oculta na fonte, fora da exportação)
 

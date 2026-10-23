@@ -217,3 +217,6 @@ A escolha do par e da direção é do Jean; nada foi começado.
 - **Quinta rodada (22/10/2026), em avaliação:** a Abominação C3 aceita visualmente (sem retoques; ainda não integrada);
   três Cavaleiros novos sobre a capa e as ombreiras do T2: P1, o grande elmo; P2, o bico; P3, a cabeça baixa. A folha
   `cidadela/cavaleiro-p.png`. Nenhum Cavaleiro autorizado para integração.
+- **Sexta rodada (22/10/2026), em avaliação:** o Cavaleiro P4, o P3 refinado pela construção da carta do Guerreiro (o
+  elmo maior, a viseira em V, a base escura separando do gorjal). A folha `cidadela/cavaleiro-p4.png`. Nenhum Cavaleiro
+  autorizado para integração; a Abominação C3 aceita visualmente.

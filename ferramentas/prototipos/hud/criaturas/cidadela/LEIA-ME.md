@@ -265,3 +265,51 @@ depois, só onde ajudou a expressão.
 - As fotos a 1920×945 nos modos `p1`, `p2` e `p3`, em `capturas-2/` (os mesmos cenários e enquadramentos), sem erro no
   console; a folha compacta `cavaleiro-p.png` (o T2 × P1 × P2 × P3 na carta, real e 2×, no Bestiário e na fileira com os
   aprovados; a 12×).
+
+# A sexta rodada (22/10/2026, proposta; nada no jogo)
+
+**Pedido do Jean:** o P3 e o T2 são as direções preferidas (nenhum aprovado). Refinar o P3 mantendo o peso do busto, a
+capa e as ombreiras, com o capacete mais definido, usando como referência de construção o retrato aprovado do Guerreiro
+protagonista (não o ícone de equipamento do elmo). O problema do P3: o capacete pequeno e afundado, e a faixa clara do
+gorjal dominando a cabeça. A Abominação C3 continua aceita visualmente, sem retoques.
+
+## A referência: a carta do Guerreiro
+
+`GUERREIRO_CARTA` em `rpg/web/static/retratos.js` (16×16, paleta `FERRO_LA`; aprovada no `retrato-teste.html`). O que
+se aproveita da construção: o elmo grande (12 colunas por 11 linhas), dois planos de metal (o aceso à esquerda e a
+sombra à direita) separados por uma nervura central, uma faixa de reforço acima da fresta, a fresta atravessando a
+frente e a gola escura embaixo, que separa a cabeça do corpo. Não foi feita pesquisa externa: a carta do Guerreiro
+bastou como solução legível no mesmo tamanho.
+
+## O Cavaleiro P4 (`cavaleiro-p4`), o P3 refinado
+
+Camadas capa, armadura, viseira (a paleta `cavaleiro_t`). Adaptado ao inimigo, sem recolorir o Guerreiro:
+- **O elmo** maior e mais presente: 10 colunas, das linhas 0 a 9, com a cúpula e a crista do P3 (a nervura clara só na
+  crista, para não formar a cruz de reforço do Guerreiro), a frente acesa à esquerda e a sombra à direita, uma linha de
+  reforço escura acima da viseira.
+- **A viseira em V:** as pontas de dentro mais baixas que as de fora, cortada pela emenda dos planos, dando o olhar
+  bravo e de frente.
+- **A separação:** a base do elmo é uma linha escura (linha 10); embaixo, o gorjal estreito em meio-tom (linha 11), sem a
+  faixa clara do P3; depois, o peito.
+- **O que ficou do P3:** as ombreiras e as linhas 12 a 15 (o peito) iguais pixel a pixel; a capa com um pixel movido de
+  (3,8) para (2,8), para abrir espaço ao elmo maior.
+- **Sem brilho:** os dois pontos violeta nas pontas da fenda leram como dois olhos (como no P3) e não melhoraram a
+  expressão.
+- **Na bancada:** o primeiro P4 tinha o rosto do elmo uma linha mais curto; o segundo cresceu, mas a nervura clara com a
+  faixa da testa formou uma cruz grande, parecida demais com a do Guerreiro; o terceiro (o escolhido) apagou a faixa e
+  deixou a nervura clara só na crista.
+
+## A minha leitura (quem escolhe é o Jean)
+
+- **P4:** a cabeça tem presença parecida com a do T2 e fica separada do gorjal e do peito; a viseira em V diz para onde
+  ele olha. **Limitação no tamanho real:** a 32 a metade direita da fenda some no metal escuro, e a viseira lê pela
+  metade acesa; o elmo continua menor que o do Guerreiro (10 colunas contra 12), para caber as ombreiras pesadas.
+
+## Processo da sexta rodada
+
+- A grade à mão em `auxiliares/grades.py` (as de antes saem idênticas); a fonte pelo Aseprite em lote (o conector
+  continuou sem editor; a janela aberta não foi tocada), 0 diferentes e 0 fora da tela na releitura de cada camada; a
+  exportação igual à grade, o @2x exato, o 32 e o 48 em blocos inteiros.
+- As fotos a 1920×945 no modo `p4`, em `capturas-2/` (os mesmos cenários e enquadramentos), sem erro no console; a folha
+  compacta `cavaleiro-p4.png` (o T2 × o P3 × o P4 na carta, real e 2×, e no Bestiário; a fileira com os aprovados e o
+  Guerreiro, real e 3×; a 12× do Guerreiro, do T2, do P3 e do P4).
