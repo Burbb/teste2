@@ -1,0 +1,31 @@
+{
+ "luta-profeta": {
+  "arquivos": [
+   "Profeta das Cinzas: http://127.0.0.1:64656/static/hud/icones/retrato-profeta-das-cinzas-32.png",
+   "Cultista: http://127.0.0.1:64656/static/hud/icones/retrato-cultista-32.png",
+   "Bandido: http://127.0.0.1:64656/static/hud/icones/retrato-bandido-32.png"
+  ],
+  "caixas": [
+   [
+    1226,
+    92,
+    1436,
+    142
+   ],
+   [
+    1226,
+    150,
+    1436,
+    200
+   ],
+   [
+    1226,
+    208,
+    1436,
+    258
+   ]
+  ],
+  "erros": [],
+  "ferramentas": []
+ }
+}

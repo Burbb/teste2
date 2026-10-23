@@ -257,10 +257,25 @@ Nada redesenhado nesta rodada; os arquivos de todas as propostas ficam como est�
 |---|---|---|
 | Hidra (`hidra-t`) | **recusada** | as três cabeças olhando para o mesmo lado, com anatomia de réptil convincente; construída em 32 nativos e adaptada para 16 em `../hidra_32/`; **o N16D2 integrado na 1.197.0** |
 | Senhor da Guerra (`senhor-t`) | **recusado** | o rosto ainda precisa ser compreensível; refeito em 32 nativos e adaptado para 16 em `../senhor_32/`; **o N16 integrado na 1.194.0** |
-| Profeta das Cinzas (`profeta-t`) | **visual aceito**; preservar a versão atual; não integrar neste lote | — |
+| Profeta das Cinzas (`profeta-t`) | **visual aceito**; preservar a versão atual; não integrar neste lote | **integrado na 1.198.0**, sem retoques |
 | Espantalho Possuído (`espantalho-t`) | boa base, **ainda em avaliação** | refeito em 32 nativos e adaptado para 16 em `../espantalho_32/`, depois refinado; **o N16R2 integrado na 1.195.0**, pela origem |
 | Servo (`servo-sv2b`) | não seguir por este caminho | **sem elmo e sem armadura**, com identidade própria: o crânio e os ossos visíveis, não o esqueleto inimigo com os olhos recoloridos; construído em 32 nativos e adaptado para 16 em `../servo_32/`; **o N16B integrado na 1.196.0** |
 | Lich (`lich-l1`, `lich-l1b`, `lich-l2`) | preservar a base e as alternativas; **sem nova aprovação** | — |
 | Mímico | **o M1 integrado na 1.192.0**, pela origem; a M1b e a M2 ficam como alternativas | — |
 | Bruxa Afogada | a investigação preservada; **nenhuma remoção ou substituição autorizada** | — |
 | Dragão de Gelo | o teste em 32 nativos em `../dragao_32/` (aguardando o Jean) | — |
+
+# O Profeta das Cinzas no jogo (1.198.0): a profeta-t, pelo id do guardião
+
+- **Decisão do Jean:** a `profeta-t`, com o visual aceito na segunda rodada e guardado aguardando integração, integrada sem
+  retoques; a P1 e a P2 ficam como histórico.
+- **A fonte de produção:** `ferramentas/arte/aseprite/retrato-profeta-das-cinzas/retrato-profeta-das-cinzas-16.aseprite`,
+  copiada byte a byte da fonte da `profeta-t` em `6820bd3e` (sem mudança depois), em camadas (guia oculta, manto, rosto,
+  venda, vazio; conferida reaberta); o 32 da carta é o 16 ×2 (`DERIVADOS`).
+- **Antes da cópia:** a exportação numa pasta temporária saiu igual byte a byte à proposta (o 16, o 32 e os @2x; alfa só 0
+  ou 255). **Depois:** os arquivos do jogo iguais à proposta, e o `--conferir`, tudo igual.
+- **No jogo:** `retrato-profeta-das-cinzas` pelo id `profeta_das_cinzas` (`RETRATO_GUARDIAO`); os cultistas que ele invoca
+  continuam com o retrato da família, e o antagonista no sprite `humano`. Nenhuma regra mudou.
+- **Conferido com os arquivos de produção** (`capturas-1198/`, `auxiliares/fotografar_jogo_profeta.mjs`): o guardião na luta
+  com um Cultista e um Bandido, cada um com o seu arquivo, sem erro no console e sem pedido ao protótipo. A folha
+  `../../integracoes-22-10/integracoes-1198.png`.

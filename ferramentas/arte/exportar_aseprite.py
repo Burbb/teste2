@@ -146,6 +146,7 @@ DERIVADOS = {
     "retrato-espantalho": {32: (16, 2)},
     "retrato-servo-esqueletico": {32: (16, 2)},
     "retrato-hidra-do-brejo": {32: (16, 2)},
+    "retrato-profeta-das-cinzas": {32: (16, 2)},
 }
 # O martelo (1.149.0) só tem fontes do 40 e do 48 (aseprite/martelo/): o 32 e o 64 são a grade de desenhos.js, no
 # jogo, e não saem daqui.

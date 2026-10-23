@@ -6729,3 +6729,22 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   identidade (a Bruxa Afogada do covil, o antagonista, a família `esqueleto_servo` sem uso no código); e os desenhos não
   começados (o Profeta das Cinzas, com o visual aceito e não integrado, o Lich Menor sem nova aprovação, a Bruxa Afogada
   e o antagonista). O mapa (1E.4) não começado.
+
+### 23/10/2026 (data do computador local) — O Profeta das Cinzas no jogo (1.198.0): a profeta-t, pelo id do guardião
+
+- **Estado conferido:** a branch em `ed52f453`, igual ao remoto; o `caido-avatar-512.png` continua fora dos commits.
+- **Decisão do Jean:** a `profeta-t` (o visual aceito, guardado aguardando integração) integrada sem retoques.
+- **No jogo (1.198.0):** `retrato-profeta-das-cinzas` (16 e 32, com os @2x) pelo id `profeta_das_cinzas`
+  (`RETRATO_GUARDIAO`). Os cultistas que ele invoca e o antagonista como estavam; nenhuma regra mudou.
+- **A fonte:** a de 16 da `profeta-t` (`6820bd3e`), copiada byte a byte, em camadas, com a guia oculta; a exportação numa
+  pasta temporária igual byte a byte à proposta antes da cópia; depois, `--conferir`: tudo igual.
+- **Conferido com os arquivos de produção** (`criaturas/chefes_e_especiais/capturas-1198/`): o Profeta com um Cultista e
+  um Bandido. A folha `ferramentas/prototipos/hud/integracoes-22-10/integracoes-1198.png`.
+- **Testes:** o Profeta pelo id; as duas asserções que usavam o Profeta como "humano sem retrato" passam a usar um guardião
+  humano sem id; o teste dos guardiões inclui o Profeta.
+- **Verificações sobre o código final:** `unittest` (673, 1 pulado: a fumaça, rodada à parte), o gabarito (idêntico, sem
+  atualizar), o pyflakes (só o aviso conhecido) e a fumaça inteira, uma vez (378 ok, tudo certo).
+- **A classificação das pendências, corrigida:** o Profeta tinha o visual aceito aguardando integração (não um desenho
+  por começar), agora integrado; o Lich Menor tem propostas (L1, L1b, L2) aguardando decisão; a Bruxa Afogada e o
+  antagonista continuam pendentes de identidade; a família `esqueleto_servo` (no catálogo, sem uso no código) fica como
+  pendência técnica, sem remover nem criar conteúdo para ela; o Esqueleto E2 e o Bandido do chapéu continuam reservados.

@@ -307,3 +307,4 @@ A escolha do par e da direção é do Jean; nada foi começado.
 - **A Hidra em 16 (23/10/2026), candidata em avaliação:** o `hidra-n16d` em `hidra_32/` (a folha `adaptacao-16.png`), adaptado à mão do N32D aprovado como base (preservado). Nada integrado.
 - **O ajuste da presa da Hidra (23/10/2026), em avaliação:** o `hidra-n16d2` em `hidra_32/` (a folha `presa.png`): a presa de cima recuada para dentro da boca, com um pixel; o N16D fica. Nada integrado.
 - **Integrado na 1.197.0:** a Hidra do Brejo N16D2, pelo id da guardiã (só o 16 e o 32 da carta).
+- **Integrado na 1.198.0:** o Profeta das Cinzas (a `profeta-t`, o visual aceito), pelo id do guardião (só o 16 e o 32 da carta).
