@@ -6222,3 +6222,19 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Verificações sobre o código final:** `unittest` (659, 1 pulado: a fumaça, rodada à parte), o gabarito (idêntico,
   sem atualizar), o pyflakes (só o aviso conhecido) e a fumaça inteira (378 ok, tudo certo).
 - **Continua:** as propostas da Árvore Desperta e do golem de pedra (em seguida, num commit separado).
+
+### 22/10/2026 (data do computador local) — A Árvore Desperta e o golem de pedra: duas propostas de cada (nada no jogo)
+
+- **Estado:** depois da integração da Abominação (1.188.0, `1975fdf9`), num commit separado.
+- **Levantado antes de desenhar (`ferramentas/prototipos/hud/criaturas/arvore_golem/LEIA-ME.md`):** os textos, os
+  traços, as habilidades, os biomas e os eventos das duas. O Espantalho Possuído é criado da família `ent_jovem` e o
+  Mímico da família `golem`: herdariam o retrato pela família (a decidir na integração). O `planta` e o `construto`
+  continuam com a Árvore Anciã e o Golem Primordial, que ficam para uma rodada própria.
+- **No protótipo, aguardando o Jean:** a Árvore A1 (os galhos nus) e A2 (a copa pesada); o golem G1 (a cantaria) e G2
+  (o rochedo). As folhas `arvore.png` e `golem.png`. Minha preferência: a A2 e o G2; as limitações no LEIA-ME.
+- **Processo:** grades à mão; as fontes pelo Aseprite em lote (o conector sem editor), 0 diferentes na releitura; a
+  exportação igual à grade, @2x exato, 32 e 48 em blocos inteiros; fotos a 1920×945 nos modos atual, a e b, sem erro no
+  console.
+- **Verificações proporcionais (nenhum código do jogo mudou):** o pyflakes dos auxiliares, a sintaxe do roteiro das
+  fotos e as grades regravadas iguais às gravadas.
+- **Continua:** a escolha do Jean; nada integrado; os chefes e o mapa não foram começados.
