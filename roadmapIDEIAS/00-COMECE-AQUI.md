@@ -6480,3 +6480,22 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   as grades regravadas iguais às gravadas, as fontes reabertas (o lado, as camadas na ordem, a guia oculta), 0 diferentes
   na releitura, as exportações iguais ao composto, os derivados em blocos inteiros e as fotos sem erro no console.
 - **Parado para a avaliação do Espantalho:** nada integrado, nenhuma criatura nova, o mapa não começado.
+
+### 23/10/2026 (data do computador local) — O refino do Espantalho: N32R e N16R (nada no jogo)
+
+- **Estado conferido:** a branch em `6796be1c`, igual ao remoto, sem alterações locais (retomada noutra conta).
+- **Pedido do Jean:** o N16 perdeu a expressão (a cabeça frontal e retangular, os olhos como pontos acesos, a boca sem a
+  costura, a palha numa faixa); refinar em cópias, com a referência guardada como autoridade de forma e expressão. Durante
+  o trabalho, o Jean sugeriu puxar a arte para cima (o rosto maior, parte do chapéu fora) e dispensou a aba caída (o
+  chapéu pode ser mais reto).
+- **No protótipo, aguardando o Jean** (`ferramentas/prototipos/hud/criaturas/espantalho_32/LEIA-ME.md`, a folha
+  `refino.png`): o `espantalho-n32r` (o estudo de 32 no quadro novo) e o `espantalho-n16r` (redesenhado à mão com ele como
+  mapa). A T, o N32 e o N16 intactos.
+- **A minha leitura:** o rosto afunilado, a testa e as órbitas oblíquas, a costura torta e os dois tufos de palha
+  sobreviveram ao 16; os pontos da costura e parte da inclinação se perderam, e as brasas ainda são o ponto mais forte a
+  3×.
+- **Verificações proporcionais (nenhum código do jogo mudou):** o pyflakes dos auxiliares, as grades e as listas antigas
+  regravadas iguais, as fontes novas reabertas (o lado, as camadas na ordem, a guia oculta), 0 diferentes na releitura, as
+  exportações iguais ao composto (as antigas reexportadas byte a byte iguais), os derivados em blocos inteiros e as fotos
+  sem erro no console. O conector do Aseprite estava sem editor; as fontes saíram pelo Aseprite em lote, sem tocar na
+  janela aberta.

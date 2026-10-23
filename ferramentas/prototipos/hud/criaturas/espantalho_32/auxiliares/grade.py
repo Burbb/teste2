@@ -13,7 +13,7 @@ from PIL import Image
 
 PALETA = {"o": "1a120a", "D": "241c14", "d": "3a3028", "t": "3a2a18", "h": "5a3a22", "H": "7a5232", "j": "9a6a40",
           "J": "b48452", "C": "46361f", "c": "5e4a2c", "B": "8a7044", "b": "b89860", "w": "d8c088", "k": "120c06",
-          "r": "c03020", "R": "f07830", "y": "d8b048", "Y": "a07c30"}
+          "r": "c03020", "R": "f07830", "y": "d8b048", "Y": "a07c30", "g": "5a4c42", "G": "75665a"}
 GRADE_32 = [
     "................ojhoo...........",
     "...............ojHHhhoo.........",
@@ -66,27 +66,91 @@ GRADE_16 = [
     "ddyYdydyDyDDDyYD",
     "yYddyddyDDyDDDDy",
 ]
+# O refino (23/10/2026, o N32 e o N16 preservados): o quadro mais perto, pela sugestão do Jean (a ponta da copa e as
+# pontas da aba saem pelas bordas, o rosto cresce de ~14 para ~17 px no 32); o chapéu reto, levemente inclinado, sem a aba
+# caída; o rosto afunilando para o queixo, a testa e as órbitas oblíquas fazendo a ameaça, as brasas contidas, a boca
+# numa costura torta sobre a estopa e a palha em dois tufos com o vão da corda no meio. O 16 redesenhado à mão com o 32R
+# como mapa (no 16, a brasa é o vermelho escuro: o laranja num pixel de 2×2 virava um ponto aceso).
+GRADE_32R = [
+    "...........ojHHHhhhhhto.........",
+    "..........ojJHHHhhhhthho........",
+    ".........ojJjHHHhhhhthhho.......",
+    "........ojJjHHHHhhhhhthho.......",
+    "........ojjHHHtHhhhhhhthho......",
+    ".......ojjHHHHthHhhhhhhhto......",
+    ".oohHjogGGggdgggdddgddgdto......",
+    "ohHjjJjttdtddtdttdtddtddthhoo...",
+    "hjJJjjjHHjHHHHHhHHHhHhhhhhhhhoo.",
+    "tHjjjjjHHHHHHHHHHHHHhhhhhhhhhhht",
+    "othHHHHHhhhhhhhhhhhhhhhhhhhhhhhh",
+    ".ottttttttottttttttttttthhhhhhht",
+    ".oo.occCCCCCCCCCCCCCCCottotttto.",
+    "....oBccCcCCCCCCCCCCCCo.........",
+    "....obbbBBBbBBcBBcccCCo.........",
+    "....obbCCtBBBcBBBcccCCo.........",
+    "....obCtttkBBcBBBcccCCo.........",
+    "....obCCkkRktBcccCttCCo.........",
+    "...obbbcCkkCtBcttkkcCCo.........",
+    "...obbwbbBcBtkRkCcccCCo.........",
+    "...obbwbbBBbBcCccBccCCo.........",
+    "....obbbBbBBBcCcBBcccCo.........",
+    ".....obbbBbBBBcBBBccCo..........",
+    "......obbbBcBBBcBBctCo..........",
+    ".......obbBcttbcBttCCo..........",
+    "........otttBbtttBcCCo..........",
+    "......oodoBcBBBcBcCCCodoo.......",
+    "..ooddddyYoBBBBccCCoyYdddooo....",
+    "odddddyYdyYocBcCCoyYddyYddddoo..",
+    "dddddyYdyYhHHtHHhtdyYdddyYdddddo",
+    "dddyYddyYDDDDhtDDDDdyYddddyYdddd",
+    "ddYdddyYDDDDDDhDDDDDDyYdddddYddd",
+]
+GRADE_16R = [
+    ".....ojHHhhto...",
+    "....ojJHHhhtho..",
+    "ohHgGgdggdgddto.",
+    "jJjjHjHHHHhhhhhh",
+    "otttttttthhhhhhh",
+    "..oBcCCCCCCCtttt",
+    "..obbBBBcBcCo...",
+    "..obCtBBccCCo...",
+    "..obkrtBcttCo...",
+    ".obwbcBkrkCCo...",
+    ".obwbcbcCctCo...",
+    "..obttBtttco....",
+    "...obBcBcCCo....",
+    "..yyoBccCoyyo...",
+    ".yYyhHtHhdYyyo..",
+    "yYdYDDhDDDdYdyYd",
+]
 # cada desenho: a grade, o lado e a guia
 DESENHOS = {"espantalho-n32": (GRADE_32, 32, "guias/espantalho-guia-32.png"),
-            "espantalho-n16": (GRADE_16, 16, "guias/espantalho-guia-16.png")}
+            "espantalho-n16": (GRADE_16, 16, "guias/espantalho-guia-16.png"),
+            "espantalho-n32r": (GRADE_32R, 32, "guias/espantalho-r-guia-32.png"),
+            "espantalho-n16r": (GRADE_16R, 16, "guias/espantalho-r-guia-16.png")}
+# onde cada desenho separa a aba, o pescoço e a aba caída (o "t" e os marrons mudam de camada por posição)
+CORTES = {"espantalho-n32": (12, 26, 23), "espantalho-n16": (6, 13, 13),
+          "espantalho-n32r": (12, 27, 99), "espantalho-n16r": (5, 13, 99)}
 # as camadas, de baixo para cima (a guia por baixo de tudo)
 ORDEM = ["guia", "casaco", "estopa", "chapeu", "palha", "costura", "olhos", "contorno"]
 
 
-def camada(x, y, ch, n=32):
-    aba, pescoco, lado = (12, 26, 23) if n == 32 else (6, 13, 13)
+def camada(x, y, ch, ident):
+    aba, pescoco, lado = CORTES[ident]
     if ch == "o":
         return "contorno"
     if ch in "kRr":
         return "olhos"
-    if ch in "hHjJ":
+    if ch in "hHjJ":  # o chapéu, ou a corda na gola
+        return "palha" if y >= pescoco else "chapeu"
+    if ch in "gG":  # a faixa do chapéu
         return "chapeu"
     if ch == "t":  # o escuro da faixa e da aba, a corda do pescoço, ou a costura (a boca e as sobrancelhas)
         return "chapeu" if y <= aba or x >= lado else ("palha" if y >= pescoco else "costura")
     if ch in "yY":
         return "palha"
-    if ch in "dD":
-        return "casaco"
+    if ch in "dD":  # o casaco, ou o escuro da faixa
+        return "chapeu" if y <= aba else "casaco"
     return "estopa"
 
 
@@ -112,7 +176,7 @@ def gravar(base, ident):
     for y, l in enumerate(grade):
         for x, ch in enumerate(l):
             if ch != ".":
-                listas[camada(x, y, ch, n)].append(f"{x},{y},{PALETA[ch]}")
+                listas[camada(x, y, ch, ident)].append(f"{x},{y},{PALETA[ch]}")
     d = base / f"listas/{ident}"
     d.mkdir(parents=True, exist_ok=True)
     for k, v in listas.items():

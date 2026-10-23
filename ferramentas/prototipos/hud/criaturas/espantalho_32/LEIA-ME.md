@@ -55,3 +55,49 @@ compartilhadas intactos.
   corda distinta; a expressão fica mais "olhar fixo que brilha" do que crueldade. Ainda assim lê melhor que a T: o olhar
   ameaça em vez de espantar, e a figura tem chapéu de espantalho, não um telhado.
 - **Na fileira:** o N16 tem o mesmo grão dos vizinhos; o N32 destoa, como o estudo do Dragão.
+
+# O refino: N32R e N16R (23/10/2026, protótipo; nada no jogo)
+
+**Pedido do Jean:** o processo trouxe melhora, mas o N16 perdeu a expressão: a cabeça frontal e retangular, os olhos como
+pontos acesos numa máscara, a boca sem a costura torta, a palha numa faixa de blocos. Refinar em cópias, com a referência
+como autoridade de forma e expressão; o N32 como base, ajustável onde ajudar o 16. **Durante o trabalho, o Jean sugeriu**
+puxar a arte para cima (parte do chapéu sai do quadro, o rosto ganha espaço) e **dispensou a aba caída** ("algo bem
+abstrato"; a linha marrom cortando e a parte caída ficavam feias): o chapéu pode ser mais reto. A T, o N32 e o N16 ficam
+como estavam (as fontes, as grades, as listas e os PNG conferidos iguais).
+
+- **O quadro novo:** o recorte de 980 px a partir de (170, 150) (antes, 1200 a partir de (27, 27)); a ponta da copa e as
+  pontas da aba saem pelas bordas e o rosto passa de ~14 para ~17 px de largura no 32. As guias novas
+  (`guias/espantalho-r-guia-32.png` e `-16.png`, reduzidas por média como as antigas) ficam ocultas nas fontes.
+- **O N32R** (`espantalho-n32r`), à mão, em passadas:
+  1. no quadro antigo, a cabeça afunilada e a aba em diagonal; o rosto ainda pequeno;
+  2. no quadro novo: o rosto largo na testa afunilando até o queixo, a borda esquerda acesa, o lado direito na sombra, as
+     órbitas oblíquas descendo para o centro sob as dobras da testa (o olho direito uma linha abaixo: a cabeça inclinada),
+     as brasas de um pixel, a boca numa costura torta (a linha sobe e desce, os pontos cruzando em tom mais claro, o canto
+     direito subindo num esgar);
+  3. **o que não funcionou:** a palha em fios paralelos repetidos voltou a ser uma fileira; virou dois tufos em leque com
+     o vão da corda no meio. A aba caída (uma faixa cortando e a parte caindo do nada) saiu, a pedido do Jean: o chapéu
+     ficou com a copa pontuda inclinada, a faixa e uma aba reta, um pouco mais baixa à direita, com a borda de baixo gasta;
+  4. a órbita esquerda, que lia como um buraco grande, virou uma fenda oblíqua.
+- **O N16R** (`espantalho-n16r`), redesenhado à mão com o N32R reduzido a 2:1 como mapa. Na primeira passada, as brasas
+  laranja de um pixel de 16 (2×2 na carta) voltaram a ser pontos acesos e a palha, um xadrez de blocos; a brasa passou ao
+  vermelho escuro dentro da órbita, a costura subiu uma linha (encostada no queixo, sumia no contorno) e a palha virou dois
+  tufos separados pela corda.
+- **As fontes, pelo Aseprite em lote** (`python auxiliares/exportar.py --montar espantalho-n32r espantalho-n16r`; o
+  conector continua sem editor, a janela aberta do Jean não foi tocada): 0 diferentes na releitura de cada camada; reabertas,
+  com a guia oculta e as camadas na ordem. As camadas por posição ficaram em `CORTES` (`grade.py`): a corda da gola na
+  palha, a faixa do chapéu no chapéu.
+- **As fotos** (`MODOS=atual,n16,n32r,n16r`), pelo evento real, a 1920×945, com os mesmos dados, sem erro no console (a
+  foto do jogo saiu igual pixel a pixel à anterior). **A folha:** `refino.png` (a referência no quadro novo e a guia, a luta
+  com as propostas anteriores e as novas, a carta a 2×, a fileira com os aprovados, o diagnóstico sem suavização).
+
+## A minha leitura do refino (quem decide é o Jean)
+
+- **Sobreviveu à adaptação:** o afunilamento do rosto até o queixo, a testa larga e acesa à esquerda com o lado direito na
+  sombra, as órbitas oblíquas com as brasas contidas (o olho direito mais baixo), a costura torta com o canto subindo, os
+  dois tufos de palha e o chapéu pontudo e gasto. Na carta, o N16R lê como um rosto de estopa com raiva, não como uma
+  máscara de olhos acesos; o N32R é o mais próximo da referência.
+- **Ainda se perde no 16:** os pontos da costura (no 16 a boca é uma linha torta com um degrau, sem os pontos
+  cruzados), a inclinação fica só na diferença de uma linha entre os olhos e na aba, e as brasas, mesmo escuras, ainda são
+  o ponto mais forte do rosto a 3×. O enquadramento mais perto deixou o chapéu menos alto que no N16: ele lê como chapéu
+  pela aba e pela faixa, a ponta da copa fica fora.
+- **Na fileira:** o N16R tem o grão dos vizinhos; o N32R, mais fino, destoa como os outros estudos de 32.

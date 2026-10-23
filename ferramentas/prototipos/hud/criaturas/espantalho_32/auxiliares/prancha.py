@@ -2,10 +2,13 @@
 dados, no jogo de hoje, na T anterior (o 16 ×2), no estudo nativo de 32 e na proposta de 16 (o 16 ×2); a carta a 2×; a
 fileira na caixa da carta com retratos aprovados, real e a 3×; e o diagnóstico: a referência (o recorte da guia,
 reduzido só para olhar), a guia de 32 (oculta na fonte) e os três desenhos ampliados por fator inteiro, sem suavização.
-    python prancha.py      (depois do fotografar.mjs)
+Com --refino, a folha do refino (refino.png): a referência no quadro novo, as propostas anteriores e o N32R e o N16R na
+mesma luta, a carta a 2×, a fileira e o diagnóstico.
+    python prancha.py [--refino]      (depois do fotografar.mjs)
 """
 import json
 import pathlib
+import sys
 
 from PIL import Image, ImageDraw, ImageFont
 
@@ -97,5 +100,72 @@ def main():
     print("comparacao.png", out.size)
 
 
+def foto(modo):
+    reg = json.loads((CAP / "registro.json").read_text(encoding="utf-8"))
+    return Image.open(CAP / f"espantalho-{modo}.png").convert("RGBA").crop(reg[f"{modo}/100"]["cartas"][0]["caixa"])
+
+
+def refino():
+    f, f2 = ImageFont.truetype("arial.ttf", 15), ImageFont.truetype("arial.ttf", 12)
+    out = Image.new("RGBA", (1500, 1400), CARVAO)
+    d = ImageDraw.Draw(out)
+    d.text((20, 10), "Espantalho Possuído — o refino: N32R e N16R (protótipo; trocado só na página, nada no jogo; "
+           "o N32 e o N16 preservados)", fill=TEXTO, font=f)
+    y = 38
+    d.text((20, y), "a referência no quadro novo (o recorte de 980 px a partir de (170, 150), reduzido só para olhar) e a "
+           "guia de 32 dele, oculta na fonte", fill=TEXTO, font=f2)
+    y += 18
+    ref = Image.open(REF).convert("RGBA")
+    fundo = Image.new("RGBA", ref.size, CARVAO)
+    fundo.alpha_composite(ref)
+    out.alpha_composite(fundo.crop((170, 150, 1150, 1130)).resize((192, 192), Image.LANCZOS), (20, y))
+    out.alpha_composite(grade(Image.open(PASTA / "guias/espantalho-r-guia-32.png").convert("RGBA"), 6), (232, y))
+    y += 212
+    d.text((20, y), "a luta pelo evento real, 1920×945 a 100%, tamanho real; os mesmos dados", fill=TEXTO, font=f2)
+    y += 18
+    linhas = [[("atual (o jogo)", "atual"), ("T (anterior)", "t"), ("N32 (anterior)", "n32"), ("N16 (anterior)", "n16")],
+              [("N32R, o novo estudo de 32", "n32r"), ("N16R, a nova proposta de 16 (o 16 ×2)", "n16r")]]
+    for grupo in linhas:
+        alto = 0
+        for j, (rot, modo) in enumerate(grupo):
+            cx = foto(modo)
+            d.text((20 + j * 370, y), rot, fill=TEXTO2, font=f2)
+            out.alpha_composite(cx, (20 + j * 370, y + 16))
+            alto = max(alto, 16 + cx.height)
+        y += alto + 12
+    y += 8
+    d.text((20, y), "a carta a 2× (a foto de 100%, por vizinho mais próximo, só para olhar): N16 anterior | N32R | N16R",
+           fill=TEXTO, font=f2)
+    y += 18
+    for j, modo in enumerate(("n16", "n32r", "n16r")):
+        cx = foto(modo)
+        out.alpha_composite(cx.resize((cx.width * 2, cx.height * 2), Image.NEAREST), (20 + j * 480, y))
+    y += 2 * cx.height + 20
+    n16 = Image.open(N16).convert("RGBA")
+    n32r = Image.open(PASTA / "proposta/espantalho-n32r-32.png").convert("RGBA")
+    n16r = Image.open(PASTA / "proposta/espantalho-n16r-16.png").convert("RGBA")
+    linha = [(n, Image.open(JOGO / f"retrato-{n}-16.png").convert("RGBA").resize((32, 32), Image.NEAREST)) for n in FILEIRA]
+    linha += [("N16 (anterior)", n16.resize((32, 32), Image.NEAREST)), ("N32R", n32r),
+              ("N16R (16 ×2)", n16r.resize((32, 32), Image.NEAREST))]
+    d.text((20, y), "a fileira na caixa da carta, com retratos aprovados — tamanho real e 3×", fill=TEXTO, font=f2)
+    y += 18
+    for j, (_, im) in enumerate(linha):
+        out.alpha_composite(caixa(im), (20 + j * 44, y))
+    y += 46
+    for j, (rot, im) in enumerate(linha):
+        out.alpha_composite(caixa(im).resize((108, 108), Image.NEAREST), (20 + j * 122, y))
+        d.text((20 + j * 122, y + 112), rot, fill=TEXTO2, font=f2)
+    y += 136
+    d.text((20, y), "o diagnóstico, sem suavização: N32 anterior (a 6×) | N16 anterior (a 12×) | N32R (a 6×) | "
+           "N16R (a 12×)", fill=TEXTO, font=f2)
+    y += 18
+    for j, (im, z) in enumerate(((Image.open(N32).convert("RGBA"), 6), (n16, 12), (n32r, 6), (n16r, 12))):
+        out.alpha_composite(grade(im, z), (20 + j * 212, y))
+    y += 192 + 20
+    out = out.crop((0, 0, out.width, y))
+    out.save(PASTA / "refino.png")
+    print("refino.png", out.size)
+
+
 if __name__ == "__main__":
-    main()
+    refino() if "--refino" in sys.argv else main()

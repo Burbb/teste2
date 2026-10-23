@@ -1,10 +1,11 @@
 // As fotos do Espantalho Possuído (protótipo; nada no jogo), a 1920×945, pelo código real do evento (o espantalho do
 // milharal, pelo cenario_excecoes.py de chefes_e_especiais, que força a sorte e põe o herói no nível 5), com os mesmos
 // dados em cada modo: "atual" (o jogo: o sprite da planta, pela origem), "t" (a transposição de 16 da rodada anterior,
-// no arquivo de 32 que ela teria), "n32" (o estudo nativo de 32) e "n16" (a proposta de 16, no 32 da carta). Os desenhos
+// no arquivo de 32 que ela teria), "n32" (o estudo nativo de 32) e "n16" (a proposta de 16, no 32 da carta); no refino,
+// "n32r" e "n16r" (o quadro mais perto, o chapéu reto e o rosto afunilado). Os desenhos
 // entram na carta com o mesmo elemento que o Icones.criatura(…, 32) monta, trocados só na página. Registra a caixa de
 // cada carta, o tamanho do retrato na tela e no aparelho, e os erros do console.
-//   [MODOS=atual,t,n32,n16] PLAYWRIGHT_MODULO=<file:// do index.mjs> node fotografar.mjs <raiz> <pasta das fotos>
+//   [MODOS=atual,t,n32,n16,n32r,n16r] PLAYWRIGHT_MODULO=<file:// do index.mjs> node fotografar.mjs <raiz> <pasta das fotos>
 import { spawn } from "child_process";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import path from "path";
@@ -19,10 +20,12 @@ const PARES = {
   t: ["../../chefes_e_especiais/proposta/espantalho-t-32.png", "../../chefes_e_especiais/proposta/espantalho-t-32@2x.png"],
   n32: ["../proposta/espantalho-n32-32.png", "../proposta/espantalho-n32-32@2x.png"],
   n16: ["../proposta/espantalho-n16-32.png", "../proposta/espantalho-n16-32@2x.png"],
+  n32r: ["../proposta/espantalho-n32r-32.png", "../proposta/espantalho-n32r-32@2x.png"],
+  n16r: ["../proposta/espantalho-n16r-32.png", "../proposta/espantalho-n16r-32@2x.png"],
 };
 const TROCA = Object.fromEntries(Object.entries(PARES).map(([m, [a, b]]) => [m, [url64(a), url64(b)]]));
 const TELAS = [{ nome: "100", width: 1920, height: 945, dpr: 1 }];
-const MODOS = (process.env.MODOS || "atual,t,n32,n16").split(",");
+const MODOS = (process.env.MODOS || "atual,t,n32,n16,n32r,n16r").split(",");
 const AMB = { EVENTO: "espantalho", VEZES: "1" };
 const EXCECOES = path.join(aqui, "../../chefes_e_especiais/auxiliares/cenario_excecoes.py");
 mkdirSync(saida, { recursive: true });

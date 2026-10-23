@@ -273,3 +273,6 @@ A escolha do par e da direção é do Jean; nada foi começado.
   construção numa grade nativa de 32 pela referência e depois redesenhar à mão em 16 com o 32 como mapa de anatomia e
   volumes (não uma redução automática). A fonte de produção continua a de 16, e a carta, o 16 ×2. Nos dois casos, a
   primeira passada em 16 perdeu algo da expressão, e a correção veio da distribuição das formas, não de textura.
+- **O refino do Espantalho (23/10/2026), aguardando o Jean:** o `espantalho-n32r` e o `espantalho-n16r`, em cópias (a T, o
+  N32 e o N16 intactos), no quadro mais perto sugerido pelo Jean (a ponta da copa fora, o rosto maior) e sem a aba caída
+  (o chapéu reto, dispensada pelo Jean); a folha `espantalho_32/refino.png`. Nada integrado.
