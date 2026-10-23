@@ -13,7 +13,7 @@ Não iniciar todo o plano numa única tarefa. As etapas técnicas A–I e a vali
 
 ## Estado de referência — 21/10/2026
 
-- Produção: **1.192.0** na branch `claude/tender-einstein-tx3tjl` (23/10/2026: o Mímico M1 pela origem na 1.192.0; o Golem Primordial R1b pelo id do guardião na 1.191.0; a Árvore Anciã R2b pelo id da guardiã na 1.190.0; a Árvore Desperta T1 e o Golem G2 pelas famílias na 1.189.0; 22/10/2026: a Abominação C3 pela família na 1.188.0; o Cavaleiro Sombrio P3 pela família, com o Último Guarda, na 1.187.0; o Cão infernal P1 pela família na 1.186.0; a Cria do Vazio A2 pela família na 1.185.0; a Harpia T2 e o Xamã Caído X1r2 pela família na 1.184.0; o Grifo GA3 pela família na 1.183.0; 23/10/2026: o Caído CA pela família, com os que o
+- Produção: **1.193.0** na branch `claude/tender-einstein-tx3tjl` (23/10/2026: o Dragão de Gelo N16 pelo id do guardião na 1.193.0; o Mímico M1 pela origem na 1.192.0; o Golem Primordial R1b pelo id do guardião na 1.191.0; a Árvore Anciã R2b pelo id da guardiã na 1.190.0; a Árvore Desperta T1 e o Golem G2 pelas famílias na 1.189.0; 22/10/2026: a Abominação C3 pela família na 1.188.0; o Cavaleiro Sombrio P3 pela família, com o Último Guarda, na 1.187.0; o Cão infernal P1 pela família na 1.186.0; a Cria do Vazio A2 pela família na 1.185.0; a Harpia T2 e o Xamã Caído X1r2 pela família na 1.184.0; o Grifo GA3 pela família na 1.183.0; 23/10/2026: o Caído CA pela família, com os que o
   xamã ergue; 22/10/2026: o Mercenário MA e o Lobo Gélido LA pela
   família na 1.179.0; o caixote no motivo "Esgotado" do mercado na 1.180.0; o ent jovem e o Ent Ancião renomeados para
   Árvore Desperta e Árvore Anciã, com a migração dos saves, na 1.181.0; a fala da Pita depois do último tratamento na
@@ -1069,7 +1069,7 @@ do catálogo):**
   invoca é da família `cria_vazio` e usará o mesmo retrato. Histórico, não escolhidos: as Harpias HA, HB, H1 a H3 e a
   T, o GB, o GA e o GA2 (`criaturas/harpia_grifo/`, `criaturas/rodada_23_10/`), o CB, o XA e o XB
   (`criaturas/caidos/`), os Xamãs X1, X2, X3 e o X1r. Uso previsto de cada um: pela própria família (a carta, o
-  Bestiário, o mural, o rastreador, a faixa do mestre caçador); o Dragão de Gelo continua no `voador`.
+  Bestiário, o mural, o rastreador, a faixa do mestre caçador); o Dragão de Gelo, no `voador` até a 1.193.0, tem o dele pelo id do guardião.
 - **Nomenclatura (1.181.0, aprovada pelo Jean):** o **ent jovem** é a **Árvore Desperta** e o **Ent Ancião**, a **Árvore
   Anciã** (árvores vivas: "árvores que acordaram com raiva"; o guardião, "uma árvore milenar"). Os ids `ent_jovem` e
   `ent_anciao`, os números, as habilidades e as regras ficam; os saves antigos passam pela migração v5 → v6.
@@ -1078,7 +1078,7 @@ do catálogo):**
     desde a 1.187.0 e a abominação desde a 1.188.0). Ficam nos traços, de propósito: o Espantalho Possuído
     (pela `origem`, a decidir; o Mímico tem o dele pela origem desde a 1.192.0) e a família `esqueleto_servo` (que nenhum código cria). A cria do Vazio tem o retrato dela desde a 1.185.0, com as que o
     antagonista invoca; o cão infernal, desde a 1.186.0 (nenhuma família fica mais no `demonio`).
-  - **6 guardiões** (a Árvore Anciã tem o dela desde a 1.190.0 e o Golem Primordial desde a 1.191.0): a Hidra do Brejo, a Bruxa Afogada, o Dragão de Gelo, o Senhor da Guerra, o Profeta
+  - **5 guardiões** (a Árvore Anciã tem o dela desde a 1.190.0, o Golem Primordial desde a 1.191.0 e o Dragão de Gelo desde a 1.193.0): a Hidra do Brejo, a Bruxa Afogada, o Senhor da Guerra, o Profeta
     das Cinzas, o Lich Menor (o `etereo` na fase 2) e o Golem Primordial.
   - **O antagonista** (família `antagonista`, só no mundo gerado): sem retrato próprio, no `humano` pelo traço
     `conjurador`.
@@ -1255,14 +1255,13 @@ volta à pauta quando essa expansão exigir; não é uma migração de engine.
    integrar; o Espantalho (`espantalho-t`) em avaliação; o próximo servo sem elmo nem armadura, com crânio e ossos
    próprios; o Lich sem nova aprovação; o Mímico M1 integrado (1.192.0). **O teste do Dragão de Gelo em 32×32 nativos**
    (`criaturas/dragao_32/`, a folha `comparacao.png`): **a direção aprovada pelo Jean.** Antes da integração, o N32R (um
-   refino leve numa cópia, o N32 preservado) e o N16 (um teste: o mesmo dragão em 16 a partir do 32), aguardando o Jean (a
-   folha `refino.png`); o exportador de produção e os outros retratos não mudaram, e o 32 nativo não virou regra para os
-   outros retratos. **O lote de criaturas continua parado** (nenhuma criatura nova, o Dragão não integrado, o mapa não
-   começado). Falta depois: o antagonista e, na integração do servo, decidir o inimigo que
+   refino leve numa cópia, o N32 preservado) e o N16 (um teste: o mesmo dragão em 16 a partir do 32), decidido pelo Jean: **o
+   N16 integrado na 1.193.0** (a fonte de produção de 16; o N32 e o N32R como estudos); o 32 nativo não virou regra para os
+   outros retratos. Falta depois: o antagonista e, na integração do servo, decidir o inimigo que
    o Rei dos Mortos ergue (o mesmo tipo `servo`). **A Bruxa Afogada:** desenhos suspensos (perto demais da Ilse); o
    levantamento e três conceitos de substituição em `criaturas/chefes_e_especiais/LEIA-ME.md` (na campanha, a ficha
-   `bruxa_afogada` é a Ilse: trocar o guardião do covil pede um id próprio; nada mudou). **Falta depois:** os outros 6 guardiões (a
-   Hidra do Brejo, a Bruxa Afogada, o Dragão de Gelo, o Senhor da Guerra, o Profeta das Cinzas e o Lich Menor), o
+   `bruxa_afogada` é a Ilse: trocar o guardião do covil pede um id próprio; nada mudou). **Falta depois:** os outros 5 guardiões (a
+   Hidra do Brejo, a Bruxa Afogada, o Senhor da Guerra, o Profeta das Cinzas e o Lich Menor), o
    antagonista, o servo do Necromante e a decisão do Espantalho Possuído; nada começado antes do pedido. A relação em "A frente de criaturas em 22/10/2026" (item 1.12). O Esqueleto E2 e o Bandido do
    chapéu estão reservados.
 3. **Depois, 1E.4:** os caminhos/destinos e os símbolos internos do mapa e do minimapa.

@@ -6443,3 +6443,19 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   na releitura, as exportações iguais ao composto, os derivados em blocos inteiros e as fotos sem erro no console.
 - **Parado para a avaliação:** nenhuma criatura nova, nenhum retrato aprovado mexido, o Dragão não integrado, o mapa não
   começado.
+
+### 23/10/2026 (data do computador local) — O Dragão de Gelo no jogo (1.193.0): o N16, pelo id do guardião
+
+- **Estado conferido:** a branch em `a9549b5b`, igual ao remoto, sem alterações locais.
+- **Decisão do Jean:** o N16 aprovado, sem retoques (o redesenho em 16 a partir do estudo nativo de 32); o N32 e o N32R
+  ficam como estudos no protótipo.
+- **No jogo (1.193.0):** `retrato-dragao-de-gelo` (16 e 32, com os @2x) pelo id `dragao_de_gelo` (`RETRATO_GUARDIAO`). O
+  grifo, a harpia e o sprite `voador` dos outros como estavam; nenhuma regra mudou.
+- **A fonte:** a de 16 do N16 (`a9549b5b`), copiada byte a byte; exportada numa pasta temporária e igual byte a byte à
+  proposta antes de gravar; `--conferir`: tudo igual.
+- **Conferido com os arquivos de produção** (`criaturas/dragao_32/capturas-1193/`): o guardião na luta com o lobo gélido e
+  o grifo. A folha `ferramentas/prototipos/hud/integracoes-22-10/integracoes-1193.png`.
+- **Testes:** o Dragão pelo id; os testes do grifo e da harpia passam a conferir o voador sem retrato próprio; o teste dos
+  guardiões inclui o dragão.
+- **Verificações sobre o código final:** `unittest` (665, 1 pulado: a fumaça, rodada à parte), o gabarito (idêntico, sem
+  atualizar), o pyflakes (só o aviso conhecido) e a fumaça inteira (378 ok, tudo certo).

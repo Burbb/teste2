@@ -117,13 +117,13 @@ class TestRetratos(unittest.TestCase):
         self.assertIn('caido: "retrato-caido"', icones)
 
     def test_grifo_pela_familia(self):
-        # 1.183.0: o grifo pela família, também o feroz do ninho; o Dragão de Gelo (guardião) continua no "voador"
+        # 1.183.0: o grifo pela família, também o feroz do ninho; o guardião voador sem retrato próprio continua no "voador"
         import random
         from rpg.inimigos import criar
         self.assertEqual(retrato(FAMILIAS["grifo"]["tracos"], "grifo"), "grifo")
         grifo = criar(random.Random(4), "grifo", 4, "feroz")  # como o ninho de grifo faz
         self.assertEqual(retrato(grifo.tracos, grifo.familia, grifo.chave), "grifo")
-        self.assertEqual(retrato(["voador"], "guardiao", "guardiao:4", "dragao_de_gelo"), "voador")
+        self.assertEqual(retrato(["voador"], "guardiao", "guardiao:4"), "voador")  # o voador sem retrato próprio
         icones = (ESTATICO / "icones.js").read_text(encoding="utf-8")
         self.assertIn('grifo: "retrato-grifo"', icones)
         for lado in (16, 32, 48):
@@ -132,14 +132,14 @@ class TestRetratos(unittest.TestCase):
 
     def test_harpia_e_xama_caido_pela_familia(self):
         # 1.184.0: a harpia e o xamã caído pela família, com os afixos; o xamã que escolta o bando de caídos é da
-        # família dele (o retrato do xamã ao lado dos caídos); o Dragão de Gelo continua nos traços
+        # família dele (o retrato do xamã ao lado dos caídos); o voador sem retrato próprio continua nos traços
         import random
         from rpg.inimigos import criar
         self.assertEqual(FAMILIAS["caido"]["escolta"]["familia"], "xama_caido")
         for fam, afixo in (("harpia", None), ("harpia", "flamejante"), ("xama_caido", None), ("xama_caido", "feroz")):
             e = criar(random.Random(7), fam, 4, afixo)
             self.assertEqual(retrato(e.tracos, e.familia, e.chave), fam, (fam, afixo))
-        self.assertEqual(retrato(["voador"], "guardiao", "guardiao:4", "dragao_de_gelo"), "voador")
+        self.assertEqual(retrato(["voador"], "guardiao", "guardiao:4"), "voador")  # o voador sem retrato próprio
         self.assertEqual(retrato(["demonio", "fera"], None), "demonio")  # o demônio sem família continua no sprite
         icones = (ESTATICO / "icones.js").read_text(encoding="utf-8")
         for papel, arquivo in (("harpia", "retrato-harpia"), ("xama_caido", "retrato-xama-caido")):
@@ -352,6 +352,24 @@ class TestRetratos(unittest.TestCase):
                 self.assertTrue((ESTATICO / f"hud/icones/retrato-mimico-{lado}{sufixo}.png").exists(), (lado, sufixo))
         self.assertFalse((ESTATICO / "hud/icones/retrato-mimico-48.png").exists())  # sem derivado sem uso
 
+    def test_dragao_de_gelo_pelo_guardiao(self):
+        # 1.193.0: o Dragão de Gelo pelo id do guardião, em qualquer nome próprio; o grifo e a harpia (os outros voadores)
+        # continuam com os deles, e o voador sem retrato próprio no sprite do traço
+        from rpg.dados import GUARDIOES
+        from rpg.inimigos import instanciar_guardiao
+        spec = next(dict(s, nome="Vyr, o Dragão de Gelo", bioma=b) for b, ls in GUARDIOES.items() for s in ls
+                    if s["id"] == "dragao_de_gelo")
+        g = instanciar_guardiao(spec, 6)
+        self.assertEqual(retrato(g.tracos, g.familia, g.chave, g.guardiao, g.origem), "dragao_de_gelo")
+        self.assertEqual(retrato(FAMILIAS["grifo"]["tracos"], "grifo"), "grifo")
+        self.assertEqual(retrato(["voador"]), "voador")
+        icones = (ESTATICO / "icones.js").read_text(encoding="utf-8")
+        self.assertIn('dragao_de_gelo: "retrato-dragao-de-gelo"', icones)
+        for lado in (16, 32):
+            for sufixo in ("", "@2x"):
+                self.assertTrue((ESTATICO / f"hud/icones/retrato-dragao-de-gelo-{lado}{sufixo}.png").exists(), lado)
+        self.assertFalse((ESTATICO / "hud/icones/retrato-dragao-de-gelo-48.png").exists())  # sem derivado sem uso
+
     def test_troll_pela_familia_e_o_rei_pelo_guardiao(self):
         # o troll da montanha pela família (1.166.0); o Rei Troll pelo id do guardião (1.167.0), em qualquer lugar
         self.assertEqual(retrato(FAMILIAS["troll"]["tracos"], "troll"), "troll")
@@ -361,12 +379,14 @@ class TestRetratos(unittest.TestCase):
     def test_guardioes_instanciados_guardam_o_id(self):
         from rpg.dados import GUARDIOES, RETRATO_GUARDIAO
         from rpg.inimigos import instanciar_guardiao
-        self.assertEqual(set(RETRATO_GUARDIAO), {"rei_troll", "rainha_aracnidea", "ent_anciao", "golem_primordial"})
+        self.assertEqual(set(RETRATO_GUARDIAO), {"rei_troll", "rainha_aracnidea", "ent_anciao", "golem_primordial",
+                                                 "dragao_de_gelo"})
         for bioma, lista in GUARDIOES.items():
             for t in lista:
                 e = instanciar_guardiao({"bioma": bioma, "id": t["id"], "idx": 0, "nome": t["base"], "g": t["g"]}, 3)
                 ret = retrato(e.tracos, e.familia, e.chave, e.guardiao)
-                # o Rei, a Rainha Aracnídea, a Árvore Anciã (1.190.0) e o Golem Primordial (1.191.0) têm o retrato deles,
+                # o Rei, a Rainha Aracnídea, a Árvore Anciã (1.190.0), o Golem Primordial (1.191.0) e o Dragão de Gelo (1.193.0)
+                # têm o retrato deles,
                 # pelo id; os outros guardiões
                 # continuam pelos traços
                 self.assertEqual(ret, RETRATO_GUARDIAO.get(t["id"]) or retrato(e.tracos), t["id"])

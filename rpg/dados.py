@@ -165,7 +165,7 @@ RETRATOS = ("demonio", "etereo", "corrompido", "morto-vivo", "construto", "voado
 # família própria, e o cão infernal continuam no "demonio"; 1.183.0: o grifo; 1.184.0: a harpia e o xamã caído; 1.185.0: a cria
 # do Vazio, com as que o antagonista invoca, que são da família; 1.186.0: o cão infernal; 1.187.0: o cavaleiro sombrio,
 # com o Último Guarda, que é da família; 1.188.0: a abominação; o "corrompido" fica para quem tiver o traço sem retrato
-# próprio; 1.189.0: a árvore desperta e o golem de pedra; o Dragão de Gelo continua no "voador" e o antagonista no
+# próprio; 1.189.0: a árvore desperta e o golem de pedra; o Dragão de Gelo continuou no "voador" até a 1.193.0, e o antagonista continua no
 # "humano"). Quem só reaproveita os números de uma família (a `origem` do inimigo: o Espantalho Possuído da árvore
 # desperta; o Mímico do golem) não leva o retrato dela e segue pelos traços, como antes; desde a 1.192.0, o Mímico tem o
 # dele pela origem (RETRATO_ORIGEM), e o golem de pedra comum continua no da família. Quem não está aqui segue pelos traços: o animal do herói e as outras feras continuam
@@ -175,7 +175,8 @@ RETRATOS = ("demonio", "etereo", "corrompido", "morto-vivo", "construto", "voado
 RETRATO_CHAVE = {"ilse": "ilse"}
 RETRATO_GUARDIAO = {"rei_troll": "rei_troll", "rainha_aracnidea": "rainha_aracnidea",  # 1.168.0: a Rainha
                     "ent_anciao": "arvore_ancia",  # 1.190.0: a Árvore Anciã (o id ficou o do Ent Ancião)
-                    "golem_primordial": "golem_primordial"}  # 1.191.0: o Golem Primordial
+                    "golem_primordial": "golem_primordial",  # 1.191.0: o Golem Primordial
+                    "dragao_de_gelo": "dragao_de_gelo"}  # 1.193.0: o Dragão de Gelo (o N16, construído a partir do estudo de 32)
 RETRATO_ORIGEM = {"mimico": "mimico"}  # 1.192.0: o Mímico (os números do golem), pela origem que o evento marca
 RETRATO_FAMILIA = {"afogado": "afogado", "lobo": "lobo", "bandido": "bandido", "troll": "troll", "aranha": "aranha",
                    "sapo": "sapo", "sanguessuga": "sanguessuga", "cultista": "cultista", "bruxa_brejo": "bruxa", "rato": "rato",

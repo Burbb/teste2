@@ -110,3 +110,21 @@ mantém minimamente.
 - **O N16:** o desenho se mantém, bem mais que na T antiga. A cabeça em cunha, os chifres para trás, a testa sobre o olho, a
   presa e a crista continuam lá, e ele combina com o grão dos vizinhos. Perde a projeção do focinho, a mandíbula afinando e
   a leitura das placas; a 1× fica um dragão mais genérico que o N32.
+
+# A integração do Dragão de Gelo (1.193.0): o N16
+
+**Decisão do Jean:** o N16 aprovado, sem retoques (não a `dragao-t`, o N32 nem o N32R, que ficam como estudos aqui).
+
+- **A escolha conferida no histórico:** a grade `grades/dragao-n16.txt`, a fonte `fontes/dragao-n16/dragao-n16-16.aseprite`
+  e a proposta `proposta/dragao-n16-*` são as do `a9549b5b`, sem alteração desde então.
+- **A fonte de produção, de 16:** copiada byte a byte para
+  `ferramentas/arte/aseprite/retrato-dragao-de-gelo/retrato-dragao-de-gelo-16.aseprite` (a guia oculta e as sete camadas);
+  só o 32 em `DERIVADOS` (o 16 ×2, com os @2x).
+- **Antes de gravar no jogo:** exportados numa pasta temporária e comparados com a proposta: os quatro iguais byte a byte.
+  Depois, o `--conferir`: tudo igual ao jogo.
+- **No jogo:** pelo id estável do guardião (`RETRATO_GUARDIAO`: `dragao_de_gelo`), como a Árvore Anciã e o Golem
+  Primordial. O grifo e a harpia continuam com os deles e o sprite `voador` continua para quem só tiver o traço; nenhuma
+  regra mudou.
+- **Conferido com os arquivos de produção** (`auxiliares/fotografar_jogo_dragao.mjs`, `capturas-1193/`, a 1920×945): o
+  guardião na luta com o lobo gélido e o grifo, cada um com o seu arquivo. Nenhum pedido a `ferramentas/`, sem erro no
+  console. A folha `../../integracoes-22-10/integracoes-1193.png`.

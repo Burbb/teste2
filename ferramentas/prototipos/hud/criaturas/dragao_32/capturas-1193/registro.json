@@ -1,0 +1,11 @@
+{
+ "luta-dragao": {
+  "arquivos": [
+   "Dragão de Gelo: http://127.0.0.1:56482/static/hud/icones/retrato-dragao-de-gelo-32.png",
+   "Lobo gélido: http://127.0.0.1:56482/static/hud/icones/retrato-lobo-gelido-32.png",
+   "Grifo: http://127.0.0.1:56482/static/hud/icones/retrato-grifo-32.png"
+  ],
+  "erros": [],
+  "ferramentas": []
+ }
+}

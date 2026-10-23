@@ -265,3 +265,4 @@ A escolha do par e da direção é do Jean; nada foi começado.
 - **O Dragão de Gelo, depois da aprovação da direção do N32 (23/10/2026), aguardando o Jean:** o N32R (um refino leve
   numa cópia; o N32 preservado) e o N16 (o teste do Jean: o mesmo dragão em 16 a partir do 32), em `dragao_32/` (a folha
   `refino.png`). Nada integrado.
+- **Integrado na 1.193.0:** o Dragão de Gelo N16, pelo id do guardião (só o 16 e o 32 da carta).

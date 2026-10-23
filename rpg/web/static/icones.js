@@ -51,7 +51,8 @@ const Icones = (() => {
     "retrato-cria-vazio": [16, 32, 48], "retrato-cao-infernal": [16, 32, 48],
     "retrato-cavaleiro-sombrio": [16, 32, 48], "retrato-abominacao": [16, 32, 48],
     "retrato-arvore-desperta": [16, 32, 48], "retrato-golem": [16, 32, 48], "retrato-arvore-ancia": [16, 32],
-    "retrato-golem-primordial": [16, 32], "retrato-mimico": [16, 32]};
+    "retrato-golem-primordial": [16, 32], "retrato-mimico": [16, 32],
+    "retrato-dragao-de-gelo": [16, 32]};
 
   // Cada desenho vai para o tipo de ferro que o jogo já tem (elmo, armadura, manopla, calca = perneira, bota_ferro, maca);
   // couro sem desenho (a calça de couro) e as outras peças sem desenho ficam com o do jogo. O anel (1.140.0, o aro de
@@ -226,7 +227,8 @@ const Icones = (() => {
                      golem: "retrato-golem",  // 1.189.0: o rochedo de cabeça pequena
                      arvore_ancia: "retrato-arvore-ancia",  // 1.190.0: a Árvore Anciã, pelo id da guardiã
                      golem_primordial: "retrato-golem-primordial",  // 1.191.0: o Golem Primordial, pelo id do guardião
-                     mimico: "retrato-mimico" };  // 1.192.0: o baú de frente com a boca, pela origem (os números do golem)
+                     mimico: "retrato-mimico",  // 1.192.0: o baú de frente com a boca, pela origem (os números do golem)
+                     dragao_de_gelo: "retrato-dragao-de-gelo" };  // 1.193.0: a cabeça em cunha de perfil, pelo id do guardião
   // o animal do patrulheiro (1.164.0), pelo tipo dele (classes.COMPANHEIROS), na carta aliada da luta e no painel da
   // comitiva, a 2×: o Urso Pardo (de frente, severo) e o Falcão Peregrino (de perfil, a máscara escura); desde a 1.165.0,
   // o Lobo Cinzento com o mesmo arquivo do Lobo inimigo (o mesmo rosto de propósito: o lado, o nome e a borda separam os
