@@ -1,0 +1,161 @@
+{
+ "atual": {
+  "cartas": [
+   {
+    "nome": "Jean",
+    "caixa": [
+     35,
+     85,
+     271,
+     157
+    ],
+    "retrato": {
+     "css": [
+      32,
+      32
+     ],
+     "arquivo": "data:910"
+    }
+   },
+   {
+    "nome": "Vharuk, Noiva da Peste",
+    "caixa": [
+     830,
+     67,
+     1040,
+     117
+    ],
+    "retrato": {
+     "css": [
+      32,
+      32
+     ],
+     "arquivo": "data:322"
+    }
+   },
+   {
+    "nome": "Cria do Vazio",
+    "caixa": [
+     830,
+     125,
+     1040,
+     175
+    ],
+    "retrato": {
+     "css": [
+      32,
+      32
+     ],
+     "arquivo": "http://127.0.0.1:60634/static/hud/icones/retrato-cria-vazio-32.png"
+    }
+   }
+  ],
+  "erros": []
+ },
+ "n32-f": {
+  "cartas": [
+   {
+    "nome": "Jean",
+    "caixa": [
+     35,
+     85,
+     271,
+     157
+    ],
+    "retrato": {
+     "css": [
+      32,
+      32
+     ],
+     "arquivo": "data:910"
+    }
+   },
+   {
+    "nome": "Vharuk, Noiva da Peste",
+    "caixa": [
+     830,
+     67,
+     1040,
+     117
+    ],
+    "retrato": {
+     "css": [
+      32,
+      32
+     ],
+     "arquivo": "data:1486"
+    }
+   },
+   {
+    "nome": "Cria do Vazio",
+    "caixa": [
+     830,
+     125,
+     1040,
+     175
+    ],
+    "retrato": {
+     "css": [
+      32,
+      32
+     ],
+     "arquivo": "http://127.0.0.1:60746/static/hud/icones/retrato-cria-vazio-32.png"
+    }
+   }
+  ],
+  "erros": []
+ },
+ "n32-m": {
+  "cartas": [
+   {
+    "nome": "Jean",
+    "caixa": [
+     35,
+     85,
+     271,
+     157
+    ],
+    "retrato": {
+     "css": [
+      32,
+      32
+     ],
+     "arquivo": "data:910"
+    }
+   },
+   {
+    "nome": "Vharuk, Rei Enforcado",
+    "caixa": [
+     830,
+     67,
+     1040,
+     117
+    ],
+    "retrato": {
+     "css": [
+      32,
+      32
+     ],
+     "arquivo": "data:1486"
+    }
+   },
+   {
+    "nome": "Cria do Vazio",
+    "caixa": [
+     830,
+     125,
+     1040,
+     175
+    ],
+    "retrato": {
+     "css": [
+      32,
+      32
+     ],
+     "arquivo": "http://127.0.0.1:60857/static/hud/icones/retrato-cria-vazio-32.png"
+    }
+   }
+  ],
+  "erros": []
+ }
+}
