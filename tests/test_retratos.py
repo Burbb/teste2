@@ -502,7 +502,7 @@ class TestRetratos(unittest.TestCase):
 
     def test_os_outros_continuam_pelos_tracos(self):
         # os outros mortos-vivos seguem com a caveira (o esqueleto tem a dele desde a 1.175.0 e o cavaleiro sombrio desde
-        # a 1.187.0); o guardião genérico da Bruxa Afogada também
+        # a 1.187.0); o guardião morto-vivo sem id também
         self.assertEqual(retrato(["morto-vivo", "blindado"], None), "caveira")
         self.assertEqual(retrato(["morto-vivo", "conjurador"], "guardiao", "guardiao:3"), "caveira")
         self.assertEqual(retrato(["fera"]), "fera")

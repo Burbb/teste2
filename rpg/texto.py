@@ -157,7 +157,7 @@ def estrelas(n, total=5):
 
 
 def aposto(nome):
-    """'Irdor, a Bruxa Afogada' vira 'Irdor, a Bruxa Afogada,' para continuar a frase corretamente."""
+    """'Irdor, o Barqueiro do Charco' vira 'Irdor, o Barqueiro do Charco,' para continuar a frase corretamente."""
     return f"{nome}," if "," in nome else nome
 
 

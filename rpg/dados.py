@@ -399,11 +399,15 @@ GUARDIOES = {
              habs=["regenerar", "veneno", "mordida_sangrenta", "varredura"],
              intro="A água ferve. Uma, duas, três cabeças de serpente emergem, sibilando em uníssono.",
              fases=[dict(limiar=0.5, texto="Onde uma cabeça foi cortada, duas novas brotam!", atk=1.35)]),
-        dict(id="bruxa_afogada",
-             base="Bruxa Afogada", g="f", hp=110, atk=6, defesa=3, agi=6, poder=12, tracos=["morto-vivo", "conjurador"],
+        # O Barqueiro do Charco (1.200.0) no lugar da Bruxa Afogada, na mesma posição e com as mesmas regras: a Bruxa era
+        # a Ilse da campanha, que tem a ficha dela em GUARDIOES_UNICOS. Os covis salvos com ela migram (migracoes.py).
+        dict(id="barqueiro_do_charco",
+             base="Barqueiro do Charco", g="m", hp=110, atk=6, defesa=3, agi=6, poder=12, tracos=["morto-vivo", "conjurador"],
              habs=["maldicao", "bola_sombra", "invocar", "drenar"], invoca="afogado", ataque="sombra",
-             intro="Uma mulher de pele azulada flutua sobre o charco, cabelos de algas escorrendo, cantando uma canção de ninar.",
-             fases=[dict(limiar=0.5, texto="O canto vira um grito. Mãos podres emergem da água ao seu redor!",
+             intro="Uma lanterna verde atravessa a névoa sobre o charco. De pé num barco de fundo chato, um velho "
+                   "encharcado apoia-se na vara e olha para você como quem espera o pagamento.",
+             fases=[dict(limiar=0.5, texto="O barqueiro abre a lanterna. A luz verde se derrama sobre o charco, e os "
+                                           "afogados respondem com um lamento!",
                          poder=1.3, habs=["grito_terror"])]),
     ],
     "montanha": [

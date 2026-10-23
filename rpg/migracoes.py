@@ -5,7 +5,7 @@ acrescenta-se uma função `_vN_para_vN1` em MIGRACOES. Um save antigo passa por
 chegar à versão atual; assim nenhum código do jogo precisa se defender de saves velhos.
 """
 
-VERSAO_SAVE = 6
+VERSAO_SAVE = 7
 
 # Tudo o que o estado da partida guarda além do jogador, da semente e do gerador aleatório.
 CAMPOS_SAVE = ("mundo", "dia", "periodo", "clima", "passos", "flags", "historico", "contagem",
@@ -126,7 +126,34 @@ def _v5_para_v6(d):
     return d
 
 
-MIGRACOES = {1: _v1_para_v2, 2: _v2_para_v3, 3: _v3_para_v4, 4: _v4_para_v5, 5: _v5_para_v6}
+def _v6_para_v7(d):
+    """O Barqueiro do Charco no lugar da Bruxa Afogada nos covis do pântano (1.200.0). A ficha da Bruxa era também a da
+    Ilse, que agora tem a dela (GUARDIOES_UNICOS) e não fica no save: a campanha monta a guardiã na hora. Um covil com a
+    Bruxa (pelo id, ou pela posição nos saves de antes do id) passa ao Barqueiro, com o mesmo nome próprio, o `base`,
+    o gênero e o artigo novos; os rumores guardados que citam o nome antigo, também. O progresso fica (o `derrotado`;
+    o Sigilo guarda o bioma). Refazer não muda nada."""
+    import re
+    mundo = d.get("mundo") or {}
+    nomes = {}
+    for l in mundo.get("locais", []):
+        gu = l.get("guardiao")
+        if not gu or gu.get("bioma") != "pantano":
+            continue
+        if gu.get("id") != "bruxa_afogada" and not ("id" not in gu and gu.get("idx") == 1):
+            continue
+        proprio = re.split(r", (?:the|o|a) ", gu["nome"], maxsplit=1)[0]
+        novo = f"{proprio}, o Barqueiro do Charco"
+        if gu["nome"] != novo:
+            nomes[gu["nome"]] = novo
+        gu.update(id="barqueiro_do_charco", nome=novo, base="Barqueiro do Charco", g="m")
+    for r in d.get("rumores") or []:
+        for velho, novo in nomes.items():
+            if velho in r.get("texto", ""):
+                r["texto"] = r["texto"].replace(velho, novo)
+    return d
+
+
+MIGRACOES = {1: _v1_para_v2, 2: _v2_para_v3, 3: _v3_para_v4, 4: _v4_para_v5, 5: _v5_para_v6, 6: _v6_para_v7}
 
 
 def migrar(dados):
