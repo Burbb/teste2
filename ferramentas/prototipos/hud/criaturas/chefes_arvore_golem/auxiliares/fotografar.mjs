@@ -1,7 +1,8 @@
 // As fotos da Árvore Anciã e do Golem Primordial (protótipo; nada no jogo), a 1920×945 e com os mesmos dados em cada
 // modo: a luta de cada guardião (CHEFE=, com o nome e a chave dele) junto do comum correspondente (a árvore desperta, o
 // golem de pedra) e de outro da região. Modos: "atual" (o jogo), "a" (AA1 e GP1) e "b" (AA2 e GP2), trocados só na
-// página, nas cartas inimigas, pelo nome. Os guardiões não entram no Bestiário.
+// página, nas cartas inimigas, pelo nome; na segunda rodada, "r1", "r2" e "r3" (as três tentativas de copiar cada
+// referência em close) e "r2a", "r2b" e "r2c" (as variações da R2). Os guardiões não entram no Bestiário.
 //   [MODOS=atual,a,b] PLAYWRIGHT_MODULO=<file:// do index.mjs> node fotografar.mjs <raiz> <pasta das fotos>
 import { spawn } from "child_process";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
@@ -16,10 +17,13 @@ const dados = (pasta, id) => "data:image/png;base64," + readFileSync(path.join(a
 // cada criatura: o nome na carta e o desenho de cada modo
 const P = "../proposta";
 const BICHOS = [
-  ["^Árvore Anciã", { a: [P, "anciaa-aa1"], b: [P, "anciaa-aa2"] }],
-  ["^Golem Primordial", { a: [P, "primordial-gp1"], b: [P, "primordial-gp2"] }],
+  ["^Árvore Anciã", { a: [P, "anciaa-aa1"], b: [P, "anciaa-aa2"], r1: [P, "anciaa-r1"], r2: [P, "anciaa-r2"],
+    r3: [P, "anciaa-r3"], r2a: [P, "anciaa-r2a"], r2b: [P, "anciaa-r2b"], r2c: [P, "anciaa-r2c"] }],
+  ["^Golem Primordial", { a: [P, "primordial-gp1"], b: [P, "primordial-gp2"], r1: [P, "primordial-r1"],
+    r2: [P, "primordial-r2"], r3: [P, "primordial-r3"],
+    r2a: [P, "primordial-r2a"], r2b: [P, "primordial-r2b"], r2c: [P, "primordial-r2c"] }],
 ];
-const TROCAS = Object.fromEntries(["a", "b"].map((m) =>
+const TROCAS = Object.fromEntries(["a", "b", "r1", "r2", "r3", "r2a", "r2b", "r2c"].map((m) =>
   [m, BICHOS.filter(([, ms]) => ms[m]).map(([n, ms]) => [n, dados(...ms[m])])]));
 const MODOS = (process.env.MODOS || "atual,a,b").split(",");
 const LUTA = { TUTORIAL: "0", CLASSE: "guerreiro", NIVEL_LUTA: "5" };

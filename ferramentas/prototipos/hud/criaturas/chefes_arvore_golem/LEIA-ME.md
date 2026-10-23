@@ -76,3 +76,56 @@ fases 2 (a luz verde nas fendas, o núcleo pulsante) não entram no retrato.
 - As folhas (`python auxiliares/prancha.py`): `anciaa.png` e `primordial.png`, com o jogo de hoje × 1 × 2 na luta (o grupo
   em tamanho real e a carta do guardião a 2×), a fileira com o comum, os chefes aprovados e um comum da região (real e 3×)
   e a 12×.
+
+# A segunda rodada (23/10/2026, propostas; nada no jogo)
+
+**Pedido do Jean:** refazer os dois pelas referências novas geradas na conversa, em **close** (o rosto ocupa quase todo
+o ícone; os galhos, o tronco e o corpo podem sair do quadro), uma transposição de cada. Durante a rodada, o Jean pediu
+**três tentativas de copiar** cada referência e, depois, **mais três a partir da tentativa 2** de cada. A AA1, a AA2, o
+GP1 e o GP2 ficam como histórico. A Árvore mantém a casca e a paleta da T1; o Golem, a pedra e a paleta do G2.
+
+- **As guias** (`guias/anciaa-r-guia-16.png` e `primordial-r-guia-16.png`, a camada `guia` oculta em todas as fontes,
+  fora da exportação): o recorte quadrado de 1200 px a partir de (27, 27) de cada referência (1254×1254, ampliadas; não
+  são grades nativas), reduzido a 16 por média, sem esticar (75 px por pixel). A redução sozinha vira papa (o marrom
+  escuro cai no verde do musgo): a guia mede as posições, e o desenho é à mão.
+- **As três tentativas de cópia** (camadas guia, casca, musgo, rosto na árvore; guia, pedra, musgo, juntas no golem):
+  - **R1, pela guia limpa** (`anciaa-r1`, `primordial-r1`): a cor de cada pixel parte da guia reduzida à paleta, e a
+    limpeza à mão põe os olhos, o nariz, a boca e as bordas no lugar; a mais perto da textura e da luz da referência.
+  - **R2, por volumes** (`anciaa-r2`, `primordial-r2`): os grandes planos à mão; na árvore, a testa acesa, as
+    sobrancelhas, o olho esquerdo grande e o direito menor, o nariz nodoso aceso com a sombra à direita, a boca fechada
+    em linha com os cantos caídos; no golem, a pedra da testa com a rachadura principal no alto, as duas órbitas fundas
+    com um ponto de luz, separadas pelo nariz de pedra aceso, o vinco da boca e a mandíbula, o musgo à direita.
+  - **R3, pelas linhas** (`anciaa-r3`, `primordial-r3`): os sulcos e as juntas escuras da referência desenhados (em
+    volta das sobrancelhas e do nariz na árvore; entre as placas no golem).
+- **As três variações da R2** (uma mudança por vez):
+  - Árvore: **R2a**, a luz lateral (a metade esquerda acesa, a direita na sombra); **R2b**, o olhar mais pesado (as
+    sobrancelhas mais baixas e escuras, os olhos mais fundos, o franzido da boca mais fundo); **R2c**, a silhueta dos
+    galhos (mais grossos e escuros contra o fundo).
+  - Golem: **R2a**, o close mais fechado (a cabeça até as bordas, cortada como na referência); **R2b**, os três quartos
+    para a esquerda (a testa saliente na borda, o rosto deslocado, a bochecha direita maior); **R2c**, as pedras mais
+    brutas (a silhueta em degraus, a mandíbula pesada).
+- **Na bancada:** a primeira árvore tinha a boca em duas linhas grossas e o nariz pouco nítido; o primeiro golem dividia
+  o rosto ao meio por uma junta vertical (uma máscara de robô), e o seguinte, com a faixa escura contínua dos olhos e o
+  lábio claro entre os cantos, virou uma caveira; as órbitas separadas pelo nariz e o vinco único resolveram.
+
+## A minha leitura (quem escolhe é o Jean)
+
+- **Árvore Anciã: prefiro a R2b.** O olhar pesado é o que mais se parece com a referência e o que mais lê a 32 como
+  autoridade e idade. **Limitação no tamanho real:** a faixa escura das sobrancelhas pode ler como uma máscara, e o olho
+  direito (menor) quase some. A R2a tem o melhor volume; a R1, a melhor textura, mas a 32 a textura vira ruído; a R3 pesa
+  nas linhas; a R2c muda pouco em relação à R2.
+- **Golem Primordial: prefiro a R2b.** Os três quartos para a esquerda são a construção da referência, e a testa
+  saliente na borda dá a massa. **Limitação:** a 32 o rosto ainda lembra uma máscara de pedra, e os pontos de luz dos
+  olhos são de 1 px. A R2a é a mais "close"; a R1 lê como pedra rugosa mas embaralhada; a R3, com as juntas, lembra um
+  muro.
+
+## Processo da segunda rodada
+
+- As grades à mão em `auxiliares/grades.py` (as de antes saem idênticas); as fontes pelo Aseprite em lote (o conector
+  continua sem editor; a janela aberta não foi tocada), 0 diferentes e 0 fora da tela na releitura de cada camada, a guia
+  escondida depois da montagem (o exportador confere); a exportação igual à grade, o @2x exato, o 32 em blocos inteiros.
+- As fotos a 1920×945 nos modos atual, r1, r2, r3, r2a, r2b e r2c (os mesmos cenários: cada guardião com o comum
+  correspondente e outro da região), sem erro no console.
+- As folhas `anciaa-r.png` e `primordial-r.png` (a referência, a guia e as três tentativas a 12×; R1 × R2 × R3 na luta, o
+  grupo em tamanho real e a carta a 2×; a fileira com o comum e os chefes aprovados) e `anciaa-r2.png` e
+  `primordial-r2.png` (a R2 e as três variações).

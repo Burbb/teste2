@@ -190,5 +190,389 @@
     ]
    }
   ]
+ },
+ "luta-anciaa/r1": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Árvore Anciã",
+    "caixa": [
+     830,
+     38,
+     1040,
+     88
+    ]
+   },
+   {
+    "nome": "Árvore desperta",
+    "caixa": [
+     830,
+     96,
+     1040,
+     146
+    ]
+   },
+   {
+    "nome": "Lobo",
+    "caixa": [
+     830,
+     154,
+     1040,
+     204
+    ]
+   }
+  ]
+ },
+ "luta-anciaa/r2": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Árvore Anciã",
+    "caixa": [
+     830,
+     38,
+     1040,
+     88
+    ]
+   },
+   {
+    "nome": "Árvore desperta",
+    "caixa": [
+     830,
+     96,
+     1040,
+     146
+    ]
+   },
+   {
+    "nome": "Lobo",
+    "caixa": [
+     830,
+     154,
+     1040,
+     204
+    ]
+   }
+  ]
+ },
+ "luta-anciaa/r3": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Árvore Anciã",
+    "caixa": [
+     830,
+     38,
+     1040,
+     88
+    ]
+   },
+   {
+    "nome": "Árvore desperta",
+    "caixa": [
+     830,
+     96,
+     1040,
+     146
+    ]
+   },
+   {
+    "nome": "Lobo",
+    "caixa": [
+     830,
+     154,
+     1040,
+     204
+    ]
+   }
+  ]
+ },
+ "luta-primordial/r1": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Golem Primordial",
+    "caixa": [
+     830,
+     38,
+     1040,
+     88
+    ]
+   },
+   {
+    "nome": "Golem de pedra",
+    "caixa": [
+     830,
+     96,
+     1040,
+     146
+    ]
+   },
+   {
+    "nome": "Esqueleto",
+    "caixa": [
+     830,
+     154,
+     1040,
+     204
+    ]
+   }
+  ]
+ },
+ "luta-primordial/r2": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Golem Primordial",
+    "caixa": [
+     830,
+     38,
+     1040,
+     88
+    ]
+   },
+   {
+    "nome": "Golem de pedra",
+    "caixa": [
+     830,
+     96,
+     1040,
+     146
+    ]
+   },
+   {
+    "nome": "Esqueleto",
+    "caixa": [
+     830,
+     154,
+     1040,
+     204
+    ]
+   }
+  ]
+ },
+ "luta-primordial/r3": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Golem Primordial",
+    "caixa": [
+     830,
+     38,
+     1040,
+     88
+    ]
+   },
+   {
+    "nome": "Golem de pedra",
+    "caixa": [
+     830,
+     96,
+     1040,
+     146
+    ]
+   },
+   {
+    "nome": "Esqueleto",
+    "caixa": [
+     830,
+     154,
+     1040,
+     204
+    ]
+   }
+  ]
+ },
+ "luta-anciaa/r2a": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Árvore Anciã",
+    "caixa": [
+     830,
+     38,
+     1040,
+     88
+    ]
+   },
+   {
+    "nome": "Árvore desperta",
+    "caixa": [
+     830,
+     96,
+     1040,
+     146
+    ]
+   },
+   {
+    "nome": "Lobo",
+    "caixa": [
+     830,
+     154,
+     1040,
+     204
+    ]
+   }
+  ]
+ },
+ "luta-anciaa/r2b": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Árvore Anciã",
+    "caixa": [
+     830,
+     38,
+     1040,
+     88
+    ]
+   },
+   {
+    "nome": "Árvore desperta",
+    "caixa": [
+     830,
+     96,
+     1040,
+     146
+    ]
+   },
+   {
+    "nome": "Lobo",
+    "caixa": [
+     830,
+     154,
+     1040,
+     204
+    ]
+   }
+  ]
+ },
+ "luta-anciaa/r2c": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Árvore Anciã",
+    "caixa": [
+     830,
+     38,
+     1040,
+     88
+    ]
+   },
+   {
+    "nome": "Árvore desperta",
+    "caixa": [
+     830,
+     96,
+     1040,
+     146
+    ]
+   },
+   {
+    "nome": "Lobo",
+    "caixa": [
+     830,
+     154,
+     1040,
+     204
+    ]
+   }
+  ]
+ },
+ "luta-primordial/r2a": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Golem Primordial",
+    "caixa": [
+     830,
+     38,
+     1040,
+     88
+    ]
+   },
+   {
+    "nome": "Golem de pedra",
+    "caixa": [
+     830,
+     96,
+     1040,
+     146
+    ]
+   },
+   {
+    "nome": "Esqueleto",
+    "caixa": [
+     830,
+     154,
+     1040,
+     204
+    ]
+   }
+  ]
+ },
+ "luta-primordial/r2b": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Golem Primordial",
+    "caixa": [
+     830,
+     38,
+     1040,
+     88
+    ]
+   },
+   {
+    "nome": "Golem de pedra",
+    "caixa": [
+     830,
+     96,
+     1040,
+     146
+    ]
+   },
+   {
+    "nome": "Esqueleto",
+    "caixa": [
+     830,
+     154,
+     1040,
+     204
+    ]
+   }
+  ]
+ },
+ "luta-primordial/r2c": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Golem Primordial",
+    "caixa": [
+     830,
+     38,
+     1040,
+     88
+    ]
+   },
+   {
+    "nome": "Golem de pedra",
+    "caixa": [
+     830,
+     96,
+     1040,
+     146
+    ]
+   },
+   {
+    "nome": "Esqueleto",
+    "caixa": [
+     830,
+     154,
+     1040,
+     204
+    ]
+   }
+  ]
  }
 }

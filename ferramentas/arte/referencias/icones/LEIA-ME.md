@@ -132,3 +132,20 @@ testa pesada, os olhos fundos, o nariz retorcido, a boca torta, o musgo caindo p
 em veios. Ampliada, não uma grade nativa: a transposição para 16×16 está em
 `ferramentas/prototipos/hud/criaturas/arvore_golem/` (`arvore-t2`; a guia em `guias/`). Apesar do nome do arquivo, é
 uma referência para a Árvore Desperta; a Árvore Anciã (guardiã) fica para uma rodada própria.
+
+**`Rosto da árvore ancestral-1.png`** (1254×1254, RGBA, 23/10/2026, data do computador local; SHA-256 começando por
+`44231b99a81faa42`): **a referência da Árvore Anciã** (a guardiã `ent_anciao`), uma imagem gerada na conversa com o Jean e
+deixada aqui por ele; sem outra origem ou autoria informada; o original guardado sem alteração. Em close, o rosto ocupando
+quase todo o quadro, em três quartos para a direita: as sobrancelhas grossas de casca, os olhos de seiva âmbar nas
+cavidades (o esquerdo maior, o direito menor e mais baixo), o nariz nodoso, a boca fechada com os cantos caídos, o rosto
+envelhecido em veios, um pouco de musgo à esquerda e os galhos saindo pelo alto. Ampliada, não uma grade nativa: as
+transposições para 16×16 estão em `ferramentas/prototipos/hud/criaturas/chefes_arvore_golem/` (`anciaa-r1` a `-r3` e
+as variações `-r2a` a `-r2c`; a guia em `guias/`).
+
+**`Rosto do Golem de Pedra Primordial-2.png`** (1254×1254, RGBA, 23/10/2026, data do computador local; SHA-256 começando
+por `a02685d497468b72`): **a referência do Golem Primordial** (o guardião `golem_primordial`), uma imagem gerada na
+conversa com o Jean e deixada aqui por ele; sem outra origem ou autoria informada; o original guardado sem alteração. Em
+close, em três quartos para a esquerda: a cabeça irregular de pedras brutas, a testa pesada, as cavidades dos olhos com
+um ponto de luz, a rachadura principal no alto, o nariz de pedra, o vinco da boca, a mandíbula de pedras e o musgo à
+direita. Ampliada, não uma grade nativa: as transposições estão em `ferramentas/prototipos/hud/criaturas/
+chefes_arvore_golem/` (`primordial-r1` a `-r3` e as variações `-r2a` a `-r2c`; a guia em `guias/`).

@@ -3,7 +3,9 @@ luta a 1920×945 em tamanho real (o grupo: o guardião com o comum correspondent
 a 2×, a fileira com o comum,
 os chefes aprovados e os comuns pertinentes (na caixa da carta, real e 3×) e a 12× com a grade, sem suavização. Os
 guardiões não entram no Bestiário. Tudo trocado só na página (protótipo).
-    python prancha.py [anciaa|primordial ...]      (depois do fotografar.mjs)
+Na segunda rodada, anciaa-r.png e primordial-r.png (a referência, a guia e as três tentativas a 12×; R1 × R2 × R3 na luta).
+E anciaa-r2.png e primordial-r2.png (a R2 e as três variações dela).
+    python prancha.py [anciaa|primordial|anciaa-r|primordial-r|anciaa-r2|primordial-r2 ...]      (depois do fotografar.mjs)
 """
 import json
 import pathlib
@@ -32,10 +34,34 @@ CRIATURAS = {
                                         ("GP2, o ídolo", "b", "primordial-gp2")],
                    ("golem", "rei-troll", "rainha-aracnidea", "esqueleto"), ["luta-primordial"]),
 }
+CRIATURAS["anciaa-r"] = ("Árvore Anciã", [  # a segunda rodada: as três tentativas de copiar a referência em close
+    ("R1, pela guia limpa", "r1", "anciaa-r1"), ("R2, por volumes", "r2", "anciaa-r2"),
+    ("R3, pelas linhas", "r3", "anciaa-r3")],
+    ("arvore-desperta", "rei-troll", "rainha-aracnidea", "lobo"), ["luta-anciaa"],
+    ("Rosto da árvore ancestral-1.png", (27, 27, 1227, 1227), "anciaa-r-guia-16.png",
+     ["anciaa-r1", "anciaa-r2", "anciaa-r3"]))
+CRIATURAS["primordial-r"] = ("Golem Primordial", [
+    ("R1, pela guia limpa", "r1", "primordial-r1"), ("R2, por volumes", "r2", "primordial-r2"),
+    ("R3, pelas linhas", "r3", "primordial-r3")],
+    ("golem", "rei-troll", "rainha-aracnidea", "esqueleto"), ["luta-primordial"],
+    ("Rosto do Golem de Pedra Primordial-2.png", (27, 27, 1227, 1227), "primordial-r-guia-16.png",
+     ["primordial-r1", "primordial-r2", "primordial-r3"]))
+CRIATURAS["anciaa-r2"] = ("Árvore Anciã", [  # as três variações da R2, ao lado dela
+    ("R2, por volumes", "r2", "anciaa-r2"), ("R2a, a luz lateral", "r2a", "anciaa-r2a"),
+    ("R2b, o olhar mais pesado", "r2b", "anciaa-r2b"), ("R2c, a silhueta dos galhos", "r2c", "anciaa-r2c")],
+    ("arvore-desperta", "rei-troll", "rainha-aracnidea", "lobo"), ["luta-anciaa"],
+    ("Rosto da árvore ancestral-1.png", (27, 27, 1227, 1227), "anciaa-r-guia-16.png",
+     ["anciaa-r2", "anciaa-r2a", "anciaa-r2b", "anciaa-r2c"]))
+CRIATURAS["primordial-r2"] = ("Golem Primordial", [
+    ("R2, por volumes", "r2", "primordial-r2"), ("R2a, o close mais fechado", "r2a", "primordial-r2a"),
+    ("R2b, os três quartos", "r2b", "primordial-r2b"), ("R2c, as pedras mais brutas", "r2c", "primordial-r2c")],
+    ("golem", "rei-troll", "rainha-aracnidea", "esqueleto"), ["luta-primordial"],
+    ("Rosto do Golem de Pedra Primordial-2.png", (27, 27, 1227, 1227), "primordial-r-guia-16.png",
+     ["primordial-r2", "primordial-r2a", "primordial-r2b", "primordial-r2c"]))
 FOTOS = {}  # todas em capturas/
 ORIENTACAO = set()  # sem referência neste par
 EXTRAS = {}  # sem retratos do herói na fileira
-SEM_BESTIARIO = {"anciaa", "primordial"}  # os guardiões não entram no Bestiário
+SEM_BESTIARIO = {"anciaa", "primordial", "anciaa-r", "primordial-r", "anciaa-r2", "primordial-r2"}  # os guardiões não entram no Bestiário
 REFERENCIAS = AQUI.parents[5] / "ferramentas/arte/referencias/icones"
 
 
@@ -101,7 +127,9 @@ def folha(chave):
         fundo.alpha_composite(im)
         out.alpha_composite(fundo.crop(corte).resize((192, 192), Image.LANCZOS), (20, y + 18))
         out.alpha_composite(grade12(Image.open(PASTA / "guias" / guia).convert("RGBA")), (232, y + 18))
-        out.alpha_composite(grade12(desenho(qual[0] if qual else colunas[-1][2])), (444, y + 18))
+        quais = qual[0] if qual and isinstance(qual[0], list) else [qual[0] if qual else colunas[-1][2]]
+        for i, q in enumerate(quais):  # uma ou várias transposições da mesma referência, lado a lado
+            out.alpha_composite(grade12(desenho(q)), (444 + i * 212, y + 18))
         y += 18 + 192 + 24
         if chave in ORIENTACAO:  # a orientação: a referência reduzida (só para olhar) e cada desenho, a 32 e a 48
             d.text((20, y), "a orientação no tamanho do retrato, na caixa da carta: a referência reduzida (LANCZOS, só "

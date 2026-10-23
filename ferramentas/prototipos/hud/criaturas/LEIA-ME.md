@@ -242,3 +242,6 @@ A escolha do par e da direção é do Jean; nada foi começado.
 - **Em avaliação, nenhum aprovado:** a Árvore Anciã (AA1, o rosto-rei; AA2, a árvore imensa) e o Golem Primordial (GP1,
   a parede que se levanta; GP2, o ídolo), em `chefes_arvore_golem/` (as folhas `anciaa.png` e `primordial.png`). Os
   guardiões só aparecem na carta da luta: o 16 e o 32.
+- **Segunda rodada dos dois guardiões (23/10/2026), em avaliação:** pelas referências novas em close, três tentativas
+  de copiar cada uma (R1, pela guia limpa; R2, por volumes; R3, pelas linhas) e três variações da R2 (R2a a R2c), em
+  `chefes_arvore_golem/` (as folhas `anciaa-r.png`, `primordial-r.png`, `anciaa-r2.png` e `primordial-r2.png`).
