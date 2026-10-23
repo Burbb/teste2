@@ -40,6 +40,16 @@ def montar(ident):
     pintura = [l for l in r.stdout.splitlines() if "escritos" in l]
     falhas = [c for l in pintura for c in l.split(" | ") if " 0 diferentes" not in c or " 0 fora" not in c]
     assert pintura and not falhas, (ident, r.stdout, r.stderr)
+    if "guia" in ordem:  # a guia fica na fonte, oculta: o --save-as só leva as camadas visíveis
+        with tempfile.TemporaryDirectory() as tmp:
+            script = pathlib.Path(tmp) / "ocultar.lua"
+            script.write_text('local s = app.open(app.params["fonte"]); for _, l in ipairs(s.layers) do '
+                              'if l.name == "guia" then l.isVisible = false end end; s:saveAs(s.filename); '
+                              'for _, l in ipairs(s.layers) do print(l.name .. "=" .. tostring(l.isVisible)) end',
+                              encoding="utf-8")
+            r = subprocess.run([aseprite(), "-b", "--script-param", f"fonte={fonte}", "--script", str(script)],
+                               capture_output=True, text=True)
+        assert "guia=false" in r.stdout, (ident, r.stdout, r.stderr)
     print(ident, "fonte:", " | ".join(pintura))
 
 

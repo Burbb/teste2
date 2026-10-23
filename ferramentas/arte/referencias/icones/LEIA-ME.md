@@ -107,3 +107,12 @@ olhos estreitos e acesos sob a testa pesada, os lábios levantados com as presas
 orelha dobrada no alto e a de trás à direita, e o corpo escuro com a brasa aparecendo em poucos pontos (as rachaduras do
 pescoço). Ampliada, não uma grade nativa: a transposição para 16×16 está em `ferramentas/prototipos/hud/criaturas/fenda/`
 (`cao-infernal-t`; a guia em `guias/`).
+
+**`Cavaleiro sombrio do Vazio.png`** (1254×1254, RGBA com fundo transparente, 22/10/2026, data do computador local;
+SHA-256 começando por `43ca0a809e81746c`): **a referência principal do Cavaleiro Sombrio**, uma imagem gerada na conversa
+com o Jean e deixada aqui por ele; sem outra origem ou autoria informada; o original guardado sem alteração. Dela vem a
+construção: o elmo fechado em leve três quartos, a ponta à esquerda do centro, a frente angular acesa e a lateral escura
+com as placas, a viseira estreita subindo para a direita com o pequeno brilho violeta dentro, a quina descendo até o
+queixo, o gorjal sustentando a cabeça e ligado à armadura, as ombreiras pesadas em placas e a capa vinho atrás. Ampliada,
+não uma grade nativa: a transposição para 16×16 está em `ferramentas/prototipos/hud/criaturas/cidadela/`
+(`cavaleiro-t`; a guia em `guias/`). As propostas A, A2 e B ficam como histórico.

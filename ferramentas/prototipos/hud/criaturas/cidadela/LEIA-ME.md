@@ -125,3 +125,56 @@ centro alongado; a metade de sombra do elmo um passo mais clara separou a cabeç
 - As fotos a 1920×945 em `capturas-2/` (`MODOS=atual,a,c,d,e,a2`; o A2 refotografado depois do ajuste do elmo), sem erro
   no console; as folhas `abominacao-cde.png` (o jogo de hoje × C × D × E) e `cavaleiro-a2.png` (o jogo de hoje × o A
   original × o A2), com a carta (real e 2×), o Bestiário (48), a fileira com os aprovados (real e 3×) e a 12×.
+
+# A terceira rodada (22/10/2026, propostas; nada no jogo)
+
+**Pedido do Jean:** a Abominação C escolhida como direção (sem aprovação para integração), para refinar a ligação da
+mandíbula com a cabeça e o volume das bochechas; o Cavaleiro passa a ter uma referência principal, a imagem gerada
+`ferramentas/arte/referencias/icones/Cavaleiro sombrio do Vazio.png` (a origem registrada no LEIA-ME de lá). A, A2 e B
+ficam como histórico; a segunda rodada e as fotos dela continuam como estavam.
+
+## A Abominação C2 (`abominacao-c2`), a C refinada
+
+Camadas carne, boca, dentes, olhos. A boca continua enorme e torta, mas sai da carne: a abertura fica dentro do rosto
+(colunas 4 a 13), com a bochecha acesa à esquerda e a da direita na sombra; o lábio de cima pesa sobre a abertura; o
+canto esquerdo fica alto (linha 8) e a mandíbula cai à direita até a linha 13, com o lábio de baixo aceso em diagonal.
+As presas desiguais (a de cima à esquerda, longa; uma pequena à direita; uma de baixo; a grande da direita); o brilho do
+Vazio só no fundo, do lado da garganta. Os dois pontos da costura saíram: a mandíbula agora se prende pela carne, e eles
+liam como lascas de dente. Na bancada: a primeira C2, com a boca reta, virou um sorriso largo; a segunda, inclinada,
+encolheu a boca; a terceira devolveu o tamanho (a abertura uma coluna antes e alta à direita).
+
+## O Cavaleiro T (`cavaleiro-t`), a transposição da referência
+
+- **A guia** (`guias/cavaleiro-t-guia-16.png`, a camada `guia` oculta na fonte, fora da exportação): o recorte quadrado
+  de 1200 px a partir de (27, 54) da referência (1254×1254, ampliada; não é grade nativa), reduzido a 16 por média (75 px
+  por pixel). A fonte é montada em lote e a guia é escondida em seguida (`exportar.py --montar`); a exportação igual à
+  grade confirma que ela ficou fora.
+- **Medido e redesenhado à mão:** a ponta do elmo nas colunas 7 e 8 (linha 0) e o elmo já na largura toda na linha 3
+  (colunas 4 a 12); a frente acesa à esquerda, com a borda clara descendo da ponta, e a lateral escura com a emenda das
+  placas (coluna 10); a viseira estreita subindo para a direita (linha 6 nas colunas 4 a 8, linha 5 nas 9 a 11), com a
+  borda acesa logo abaixo e o violeta em (7,6); a quina na coluna 5 descendo até o queixo (linha 10); o gorjal escuro
+  com a borda acesa em diagonal, subindo para a direita; as ombreiras em duas placas, a da esquerda maior e mais acesa; a
+  capa vinho atrás dos ombros; o peitoral com a borda de cima acesa.
+- **Simplificado de propósito:** as várias divisões do gorjal e do peito viram uma borda em diagonal de cada; os reflexos
+  ficam nas bordas de cima das placas.
+- A paleta (`cavaleiro_t`): a da referência, com seis valores de aço (do vão à borda clara), o violeta e dois vinhos.
+- **Na bancada:** a primeira deixava a quina como uma faixa clara do topo ao peito (o centro alongado de novo) e a
+  viseira sumia; a segunda afinava o alto como um cone; o elmo foi alargado na linha 3, a fenda ganhou a borda acesa e o
+  gorjal perdeu o ruído.
+
+## A minha leitura (quem escolhe é o Jean)
+
+- **C2:** a mandíbula parece presa ao rosto e a boca continua o traço da carta; **limitação no tamanho real:** a 32 a
+  bochecha da direita, na sombra, quase se funde com a borda, e o conjunto lê mais como uma cabeça só do que como cabeça
+  e ombros.
+- **T:** a pose, a ponta do elmo, a viseira inclinada e a capa vêm da referência; **limitação no tamanho real:** é o
+  retrato mais escuro da fileira, e a 32 a viseira lê sobretudo pelo ponto violeta, porque a fenda tem 1 px.
+
+## Processo da terceira rodada
+
+- As grades à mão em `auxiliares/grades.py` (as de antes saem idênticas); as fontes pelo Aseprite em lote (o conector
+  continuou sem editor; a janela aberta não foi tocada), 0 diferentes e 0 fora da tela na releitura de cada camada,
+  inclusive a guia; a exportação igual à grade, o @2x exato, o 32 e o 48 em blocos inteiros.
+- As fotos a 1920×945 nos modos `c2` e `t`, em `capturas-2/` (os mesmos cenários das anteriores), sem erro no console;
+  as folhas compactas `abominacao-c2.png` (a C × a C2) e `cavaleiro-t.png` (a referência, a guia e o T a 12×; o jogo de
+  hoje × o T na carta e no Bestiário; a fileira).

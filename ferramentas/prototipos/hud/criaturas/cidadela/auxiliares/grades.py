@@ -23,7 +23,16 @@ são o 16 ×2 e ×3. Desenhados à mão, uma letra por pixel; silhueta e volumes
           fundo com os olhos acesos.
       Cavaleiro A2: o elmo mais largo e mais curto (a fenda vertical só até a metade), a base abrindo num gorjal que
           liga às ombreiras em placas (a de cima e uma lâmina), o peitoral com a quina; o corpo mais escuro que o elmo (a metade de sombra do elmo um passo mais clara que o corpo).
-    python grades.py <pasta> [<id> ...]     # grava grades/<id>.txt e listas/<id>/<camada>.lua
+  A terceira rodada (o Jean escolheu a C como direção; o Cavaleiro passa a ter uma referência principal):
+      C2, a C refinada: a boca continua enorme e torta, mas sai da carne: mais estreita dentro do rosto, com a bochecha
+          acesa à esquerda, o lábio de cima pesando sobre a abertura, o de baixo aceso em diagonal e a mandíbula caindo
+          à direita; as presas desiguais, o brilho do Vazio só no fundo; sem os pontos da costura;
+      Cavaleiro T, a transposição de "Cavaleiro sombrio do Vazio.png" (ferramentas/arte/referencias/icones/), medida
+          na guia oculta (guias/cavaleiro-t-guia-16.png: o recorte de 1200 px a partir de (27, 54), reduzido por média,
+          75 px por pixel): o elmo em leve três quartos com a ponta à esquerda do centro, a frente acesa e a lateral
+          escura com a emenda, a viseira estreita subindo para a direita com a borda acesa embaixo e o violeta dentro,
+          a quina descendo até o queixo, o gorjal com a borda em diagonal, as ombreiras em duas placas e a capa vinho.
+    python grades.py <pasta> [<id> ...]     # grava grades/<id>.txt e listas/<id>/<camada>.lua (a guia, do png dela)
 """
 import pathlib
 import sys
@@ -42,6 +51,10 @@ PALETAS = {
         "v": "0e0a18", "V": "46346e", "u": "7a5aa8", "g": "d868c8",  # o Vazio (fundo, meio, borda, brilho)
         "k": "140a0e", "d": "dccca8", "t": "9a8670", "e": "d8c060", "E": "f4b8f0",  # a boca, os dentes, a linha, os olhos
         "p": "c4c4ac", "P": "868a72", "q": "e4e2cc", "x": "262820",  # a cabeça enxertada da D (outra pessoa)
+    },
+    "cavaleiro_t": {  # a paleta da referência, com os planos de luz separados
+        "k": "0c0a10", "a": "1c1a24", "A": "2e2c3c", "M": "464258", "L": "6e6880", "W": "9e98ae",  # o aço
+        "v": "9a62d8", "c": "3a1022", "C": "5e1c36",  # o brilho do Vazio; a capa vinho
     },
     "cavaleiro": {
         "a": "24242e", "A": "444452", "L": "6e6e80", "W": "aeaec0",  # o aço escuro (do fundo à borda clara)
@@ -178,6 +191,42 @@ ABOMINACAO_E = [
     "osso.smmmmmss.so",
     ".oo..osssssso.o.",
 ]
+ABOMINACAO_C2 = [
+    "................",
+    "....oooooo......",
+    "...olhhllmo.....",
+    "..olhllllmmo....",
+    "..ollsslsssmo...",
+    "..olsesmmsesmo..",
+    ".olhlmmhmmmmmso.",
+    "olhllskkkkkkkmso",
+    "olhlkdvvvvvvdkso",
+    "ollskdvvvVvvvkso",
+    "ollmlkdvvvgvvkso",
+    "olmmsllkvvvvdkso",
+    "osmmmmsllkvvdkso",
+    "oosmmmmmsllkkkoo",
+    "lmoossssssssssml",
+    "lmmooooooooooomm",
+]
+CAVALEIRO_T = [
+    ".......kk.......",
+    "......kWAk......",
+    ".....kWLMAAk....",
+    "....kWLLMAAAk...",
+    "....WLLLMAMAk...",
+    "....LLLMAkkkk...",
+    "....kkkvkMMAk...",
+    "....LWMMaaMAk...",
+    "...cLWAAaaaak...",
+    "..CcMLAakAMMakC.",
+    ".MLckLAkMMAaakCc",
+    "LWLLakkMAAaaLWLc",
+    "MLLMAkLMAAaaMLMA",
+    "aAAAakaLMAAaaAAa",
+    "MLMAakaALMAaaMLa",
+    "...aakaAAAAaaAA.",
+]
 CAVALEIRO_A2 = [
     ".....aaaaaa.....",
     "....aALWWLMa....",
@@ -225,6 +274,12 @@ def _camada_abominacao_e(x, y, ch):
     return "rosto" if ch in "kE" else "carne"
 
 
+def _camada_cavaleiro_t(x, y, ch):  # a fenda da viseira: o escuro das linhas 5 e 6 dentro do elmo
+    if ch == "v" or (ch == "k" and y in (5, 6) and 4 <= x <= 11):
+        return "viseira"
+    return "capa" if ch in "cC" else "armadura"
+
+
 def _camada_cavaleiro_b(x, y, ch):  # a espada da B fica nas colunas 0 a 2 (o pomo, o punho, a guarda e a lâmina)
     return "espada" if x <= 2 and ch in "grLW" else _camada_cavaleiro(x, y, ch)
 
@@ -245,7 +300,10 @@ CAMADAS = {  # a grade, a paleta, as camadas de baixo para cima e a camada de ca
     "abominacao-d": (ABOMINACAO_D, "abominacao2", ["carne", "cabeca", "enxerto", "rosto"], _camada_abominacao_d),
     "abominacao-e": (ABOMINACAO_E, "abominacao2", ["carne", "espinhos", "rosto"], _camada_abominacao_e),
     "cavaleiro-a2": (CAVALEIRO_A2, "cavaleiro", ["capa", "armadura", "viseira"], _camada_cavaleiro),
+    "abominacao-c2": (ABOMINACAO_C2, "abominacao2", ["carne", "boca", "dentes", "olhos"], _camada_abominacao_c),
+    "cavaleiro-t": (CAVALEIRO_T, "cavaleiro_t", ["guia", "capa", "armadura", "viseira"], _camada_cavaleiro_t),
 }
+GUIAS = {"cavaleiro-t": "guias/cavaleiro-t-guia-16.png"}  # a camada guia (oculta na fonte, fora da exportação)
 
 
 def cor(ident, ch):
@@ -268,6 +326,10 @@ def gravar(base, ids=None):
         (base / "grades").mkdir(parents=True, exist_ok=True)
         (base / f"grades/{ident}.txt").write_text("\n".join(grade) + "\n", encoding="utf-8")
         listas = {c: [] for c in ordem}
+        if ident in GUIAS:
+            g = Image.open(base / GUIAS[ident]).convert("RGBA")
+            listas["guia"] = [f"{x},{y},{''.join(f'{v:02x}' for v in g.getpixel((x, y)))}" for y in range(16)
+                              for x in range(16) if g.getpixel((x, y))[3]]
         for y, l in enumerate(grade):
             for x, ch in enumerate(l):
                 if ch != ".":

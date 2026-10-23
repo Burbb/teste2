@@ -2,9 +2,10 @@
 a carta na luta a 1920×945 em tamanho real e a 2×, o cartão do Bestiário (48) em tamanho real, a fileira com os retratos
 aprovados pertinentes (na caixa da carta, real e 3×) e a 12× com a grade, sem suavização. Tudo trocado só na página
 (protótipo).
+Na terceira, abominacao-c2.png (a C × a C2) e cavaleiro-t.png (a referência, a guia e o T; o jogo de hoje × o T).
 Na segunda rodada, abominacao-cde.png (o jogo de hoje × C × D × E) e cavaleiro-a2.png (o jogo de hoje × o A original ×
 o A2), das fotos em capturas-2/.
-    python prancha.py [abominacao|cavaleiro|abominacao-cde|cavaleiro-a2 ...]      (depois do fotografar.mjs)
+    python prancha.py [abominacao|cavaleiro|abominacao-cde|cavaleiro-a2|abominacao-c2|cavaleiro-t ...]      (depois do fotografar.mjs)
 """
 import json
 import pathlib
@@ -40,8 +41,16 @@ CRIATURAS = {
                                            ("A original (a direção escolhida)", "a", "cavaleiro-a"),
                                            ("A2, o A refinado", "a2", "cavaleiro-a2")],
                      ("esqueleto", "mercenario", "espectro", "bandido"), ["luta-cavaleiro"]),
+    # a terceira rodada, compacta: a C × a C2; o jogo de hoje × o T, com a referência, a guia e o T a 12×
+    "abominacao-c2": ("Abominação", [("C, a anterior", "c", "abominacao-c"), ("C2, a C refinada", "c2", "abominacao-c2")],
+                      ("carnical", "afogado", "troll", "cria-vazio"), ["luta-abominacao"]),
+    "cavaleiro-t": ("Cavaleiro sombrio", [("atual (o jogo: a caveira)", "atual", None),
+                                          ("T, a transposição da referência", "t", "cavaleiro-t")],
+                    ("esqueleto", "mercenario", "espectro", "bandido"), ["luta-cavaleiro"],
+                    ("Cavaleiro sombrio do Vazio.png", (27, 54, 1227, 1254), "cavaleiro-t-guia-16.png")),
 }
-FOTOS = {"abominacao-cde": "capturas-2", "cavaleiro-a2": "capturas-2"}  # a pasta das fotos, se não for a capturas/
+FOTOS = {"abominacao-cde": "capturas-2", "cavaleiro-a2": "capturas-2", "abominacao-c2": "capturas-2",
+         "cavaleiro-t": "capturas-2"}  # a pasta das fotos, se não for a capturas/
 REFERENCIAS = AQUI.parents[5] / "ferramentas/arte/referencias/icones"
 
 
