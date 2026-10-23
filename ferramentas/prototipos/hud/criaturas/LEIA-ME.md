@@ -306,3 +306,4 @@ A escolha do par e da direção é do Jean; nada foi começado.
 - **Integrado na 1.196.0:** o servo esquelético N16B, pelo retrato que o Erguer Servo dá ao invocado; a criatura erguida pelo Rei dos Mortos com o retrato dela (só o 16 e o 32 da carta).
 - **A Hidra em 16 (23/10/2026), candidata em avaliação:** o `hidra-n16d` em `hidra_32/` (a folha `adaptacao-16.png`), adaptado à mão do N32D aprovado como base (preservado). Nada integrado.
 - **O ajuste da presa da Hidra (23/10/2026), em avaliação:** o `hidra-n16d2` em `hidra_32/` (a folha `presa.png`): a presa de cima recuada para dentro da boca, com um pixel; o N16D fica. Nada integrado.
+- **Integrado na 1.197.0:** a Hidra do Brejo N16D2, pelo id da guardiã (só o 16 e o 32 da carta).

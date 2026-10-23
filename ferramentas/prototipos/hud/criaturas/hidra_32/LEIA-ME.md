@@ -209,3 +209,18 @@ acrescentar dentes, numa cópia (o N16D fica).
   (`python auxiliares/prancha.py --f`: o N16D × o N16D2, a carta a 2×, a fileira e o diagnóstico).
 - **A minha leitura:** na carta a 32 px, a barra branca da ponta some; a presa fica como um ponto claro dentro da boca, e a
   ponta do focinho volta a ler como focinho.
+
+## No jogo (1.197.0): o N16D2, pelo id da guardiã
+
+- **Decisão do Jean:** o N16D2 (`dc4d9b21`) aprovado, sem retoques; a H1, a H2, a `hidra-t`, o N32, o N16, o N32B, o N32C,
+  o N32D e o N16D ficam como estudos.
+- **A fonte de produção:** `ferramentas/arte/aseprite/retrato-hidra-do-brejo/retrato-hidra-do-brejo-16.aseprite`, copiada
+  byte a byte da fonte do N16D2 em `dc4d9b21`, com a guia oculta (conferida reaberta: 16×16, guia=false); o 32 da carta é
+  o 16 ×2 (`DERIVADOS`).
+- **Antes da cópia:** a exportação numa pasta temporária saiu igual byte a byte à proposta (o 16, o 32 e os @2x; alfa só 0
+  ou 255). **Depois:** os arquivos do jogo iguais à proposta, e o `--conferir`, tudo igual.
+- **No jogo:** `retrato-hidra-do-brejo` pelo id `hidra_do_brejo` (`RETRATO_GUARDIAO`); o sapo, a sanguessuga e as outras
+  feras como estavam. Nenhuma regra, atributo ou habilidade mudou.
+- **Conferido com os arquivos de produção** (`capturas-1197/`, `auxiliares/fotografar_jogo_hidra.mjs`): a guardiã na luta
+  com o Sapo-touro e a Sanguessuga, cada um com o seu arquivo, sem erro no console e sem pedido ao protótipo. A folha
+  `../../integracoes-22-10/integracoes-1197.png`.

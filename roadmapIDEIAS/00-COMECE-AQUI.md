@@ -6710,3 +6710,22 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Verificações proporcionais:** o pyflakes dos auxiliares, a sintaxe do roteiro das fotos, a fonte reaberta (o lado, as
   camadas na ordem, a guia oculta), 0 diferentes na releitura, a exportação igual ao composto, os derivados em blocos
   inteiros, o N16D reexportado igual e a foto sem erro no console.
+
+### 23/10/2026 (data do computador local) — A Hidra do Brejo no jogo (1.197.0): o N16D2, pelo id da guardiã
+
+- **Estado conferido:** a branch em `dc4d9b21`, igual ao remoto; o `caido-avatar-512.png` continua fora dos commits.
+- **Decisão do Jean:** o N16D2 aprovado, sem retoques; as outras versões ficam como estudos.
+- **No jogo (1.197.0):** `retrato-hidra-do-brejo` (16 e 32, com os @2x) pelo id `hidra_do_brejo` (`RETRATO_GUARDIAO`). O
+  sapo, a sanguessuga e as outras feras como estavam; nenhuma regra mudou.
+- **A fonte:** a de 16 do N16D2 (`dc4d9b21`), copiada byte a byte, com a guia oculta; a exportação numa pasta temporária
+  igual byte a byte à proposta antes da cópia; depois, `--conferir`: tudo igual.
+- **Conferido com os arquivos de produção** (`criaturas/hidra_32/capturas-1197/`): a guardiã na luta com o Sapo-touro e a
+  Sanguessuga. A folha `ferramentas/prototipos/hud/integracoes-22-10/integracoes-1197.png`.
+- **Testes:** a Hidra pelo id (o sapo e a fera genérica como estavam); os que esperavam a Hidra no `fera` passam a esperar o
+  retrato dela; o teste dos guardiões inclui a Hidra.
+- **Verificações sobre o código final:** `unittest` (672, 1 pulado: a fumaça, rodada à parte), o gabarito (idêntico, sem
+  atualizar), o pyflakes (só o aviso conhecido) e a fumaça inteira, uma vez (378 ok, tudo certo).
+- **O que falta na frente de criaturas** (a lista na mensagem desta entrega): sem propostas em avaliação; as decisões de
+  identidade (a Bruxa Afogada do covil, o antagonista, a família `esqueleto_servo` sem uso no código); e os desenhos não
+  começados (o Profeta das Cinzas, com o visual aceito e não integrado, o Lich Menor sem nova aprovação, a Bruxa Afogada
+  e o antagonista). O mapa (1E.4) não começado.

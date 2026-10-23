@@ -1,0 +1,31 @@
+{
+ "luta-hidra": {
+  "arquivos": [
+   "Hidra do Brejo: http://127.0.0.1:52484/static/hud/icones/retrato-hidra-do-brejo-32.png",
+   "Sapo-touro gigante: http://127.0.0.1:52484/static/hud/icones/retrato-sapo-32.png",
+   "Sanguessuga gigante: http://127.0.0.1:52484/static/hud/icones/retrato-sanguessuga-32.png"
+  ],
+  "caixas": [
+   [
+    1226,
+    92,
+    1436,
+    142
+   ],
+   [
+    1226,
+    150,
+    1436,
+    200
+   ],
+   [
+    1226,
+    208,
+    1436,
+    258
+   ]
+  ],
+  "erros": [],
+  "ferramentas": []
+ }
+}

@@ -178,7 +178,8 @@ RETRATO_GUARDIAO = {"rei_troll": "rei_troll", "rainha_aracnidea": "rainha_aracni
                     "ent_anciao": "arvore_ancia",  # 1.190.0: a Árvore Anciã (o id ficou o do Ent Ancião)
                     "golem_primordial": "golem_primordial",  # 1.191.0: o Golem Primordial
                     "dragao_de_gelo": "dragao_de_gelo",  # 1.193.0: o Dragão de Gelo (o N16, construído a partir do estudo de 32)
-                    "senhor_da_guerra": "senhor_da_guerra"}  # 1.194.0: o Senhor da Guerra (o N16, o mesmo caminho)
+                    "senhor_da_guerra": "senhor_da_guerra",  # 1.194.0: o Senhor da Guerra (o N16, o mesmo caminho)
+                    "hidra_do_brejo": "hidra_do_brejo"}  # 1.197.0: a Hidra do Brejo (o N16D2, o mesmo caminho)
 RETRATO_ORIGEM = {"mimico": "mimico",  # 1.192.0: o Mímico (os números do golem), pela origem que o evento marca
                   "espantalho": "espantalho"}  # 1.195.0: o Espantalho Possuído (os números da árvore desperta)
 RETRATO_FAMILIA = {"afogado": "afogado", "lobo": "lobo", "bandido": "bandido", "troll": "troll", "aranha": "aranha",
