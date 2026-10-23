@@ -313,8 +313,6 @@ FAMILIAS = {
     "carnical": dict(nome="carniçal", plural="carniçais", g="m", hp=30, atk=8, defesa=3, agi=4, poder=0,
                      tracos=["morto-vivo"], habs=["devorar", "mordida_sangrenta"], xp=17, ouro=(0, 4), grupo=(1, 2),
                      lore="Mortos famintos que devoram os caídos no meio da luta para fechar as próprias feridas."),
-    "esqueleto_servo": dict(nome="servo esquelético", plural="servos esqueléticos", g="m", hp=18, atk=6, defesa=3,
-                            agi=3, poder=0, tracos=["morto-vivo"], habs=[], xp=0, ouro=(0, 0), grupo=(1, 1)),
 }
 
 # Afixos dão variedade: o mesmo lobo pode ser feroz, ancião ou corrompido. `sorteio` diz onde cada um pode cair:

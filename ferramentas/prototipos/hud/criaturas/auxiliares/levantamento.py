@@ -71,8 +71,6 @@ def entidades():
         aten = []
         if not any(t in dados.RETRATOS for t in f["tracos"]):
             aten.append(f"nenhum traço com retrato ({', '.join(f['tracos'])}): cai na caveira")
-        if k == "esqueleto_servo":
-            aten.append("não aparece como inimigo (o servo do talento); fora do Bestiário")
         grupo = "inimigo comum" + (" (Vale)" if set(biomas) & vale else "")
         linhas.append((grupo, f["nome"], k, s, CONTEXTO_INIMIGO, TAM_INIMIGO, "sem desenho próprio (o retrato do traço)",
                        "; ".join(aten) or f"traços {', '.join(f['tracos'])}"))

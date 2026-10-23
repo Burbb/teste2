@@ -54,8 +54,9 @@ class TestRetratos(unittest.TestCase):
         self.assertEqual(retrato(["morto-vivo", "conjurador", "etereo"], "guardiao", "guardiao:6"), "etereo")
 
     def test_esqueleto_pela_familia(self):
-        # 1.175.0: o esqueleto pela família (os do ossuário e os que o Lich invoca, que são da família); o servo
-        # esquelético (a família sem uso) e o guardião morto-vivo sem id continuam na caveira; o Lich tem o dele desde a 1.199.0
+        # 1.175.0: o esqueleto pela família (os do ossuário e os que o Lich invoca, que são da família); o guardião
+        # morto-vivo sem id continua na caveira; o Lich tem o dele desde a 1.199.0 (a família `esqueleto_servo`, que nada
+        # criava, saiu do catálogo na 1.199.1)
         self.assertEqual(retrato(FAMILIAS["esqueleto"]["tracos"], "esqueleto"), "esqueleto")
         import random
         from rpg.inimigos import GUARDIOES, criar
@@ -63,7 +64,6 @@ class TestRetratos(unittest.TestCase):
         self.assertEqual(lich["invoca"], "esqueleto")  # os invocados do Lich são da família
         invocado = criar(random.Random(3), lich["invoca"], 4)  # como o Invocar do Lich faz
         self.assertEqual(retrato(invocado.tracos, invocado.familia, invocado.chave), "esqueleto")
-        self.assertEqual(retrato(FAMILIAS["esqueleto_servo"]["tracos"], "esqueleto_servo"), "caveira")
         self.assertEqual(retrato(["morto-vivo"], None), "caveira")
         self.assertEqual(retrato(["morto-vivo", "conjurador"], "guardiao", "guardiao:6", "lich_menor"), "lich_menor")
         self.assertEqual(retrato(["morto-vivo", "conjurador"], "guardiao", "guardiao:6"), "caveira")
