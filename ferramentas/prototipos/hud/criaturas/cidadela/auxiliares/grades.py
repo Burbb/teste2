@@ -39,6 +39,16 @@ são o 16 ×2 e ×3. Desenhados à mão, uma letra por pixel; silhueta e volumes
       Cavaleiro T2, o busto do T com o elmo refeito pela referência: a ponta à esquerda, a quina descendo da testa ao
           queixo (a frente estreita à esquerda dela), a lateral larga à direita com a emenda, a fenda subindo para a
           direita pela lateral e a borda acesa embaixo; o violeta mais apagado, dentro da fenda, fora do centro.
+  A quinta rodada (a C3 aceita visualmente, sem retoques; do T2 ficam a capa e as ombreiras): três elmos, gorjais e
+  peitos novos, a referência só como apoio do material; sem guia. A armadura resolvida antes do brilho.
+      P1, o grande elmo: de frente, o topo chato visto um pouco de cima, as duas fendas descendo para o centro (o olhar
+          severo) com a barra do nariz e a quina até a base; o gorjal em duas lâminas retas, o peito com a quilha no
+          meio e a fralda embaixo; sem brilho;
+      P2, o bico: de perfil, olhando para a esquerda, o bacinete com o bico da viseira projetado, a fenda ao longo do
+          bico com um ponto apagado na ponta, a nuca arredondada à direita; o gorjal e o peito em placas diagonais
+          (o corpo acompanha a cabeça);
+      P3, a cabeça baixa: a cúpula pequena com a crista no meio, afundada num gorjal alto de borda acesa, a fenda
+          baixa com dois pontos apagados (o olhar de baixo); o peito largo, liso, com a borda de cima e a fralda.
     python grades.py <pasta> [<id> ...]     # grava grades/<id>.txt e listas/<id>/<camada>.lua (a guia, do png dela)
 """
 import pathlib
@@ -270,6 +280,60 @@ CAVALEIRO_T2 = [
     "MLMAakaALMAaaMLa",
     "...aakaAAAAaaAA.",
 ]
+CAVALEIRO_P1 = [
+    "................",
+    "...kkkkkkkkkk...",
+    "...kWWWLLMAAk...",
+    "...kLLLLMMAak...",
+    "...kLkLLLMkAk...",
+    "...kLkkWLkkAk...",
+    "...kLLLWMAAak...",
+    "...kMLLWMAaak...",
+    "...ckkkkkkkkk...",
+    "..CcLLLLMMAaakC.",
+    ".MLckMMMMAAaakCc",
+    "LWLLakaLLMAaLWLc",
+    "MLLMAkaLWAAaMLMA",
+    "aAAAakaLWAAaaAAa",
+    "MLMAakkMMMMkaMLa",
+    "...aakaAAAAaaAA.",
+]
+CAVALEIRO_P2 = [
+    "................",
+    "......kkkk......",
+    ".....kWLLMk.....",
+    "....kWLLMMAk....",
+    "..kkLLLMMAAAk...",
+    ".kWLkukkkMAAAk..",
+    "..kLLLMMAAAAAk..",
+    "...kkLMMAAAAk...",
+    "...ckLMAAAaak...",
+    "..CcaLMMAAAaakC.",
+    ".MLckaLMMAAAakCc",
+    "LWLLakkaLMMALWLc",
+    "MLLMAkLMAAakMLMA",
+    "aAAAakaLMAAaaAAa",
+    "MLMAakaaLMAaaMLa",
+    "...aakaaAAAaaAA.",
+]
+CAVALEIRO_P3 = [
+    "................",
+    "................",
+    "......kkkk......",
+    ".....kLWMAk.....",
+    "....kLLWMAak....",
+    "....kLMWMAak....",
+    "....kLukkuak....",
+    "...kWWLLMMAAk...",
+    "...cLMMMAAAak...",
+    "..CckLLMMAAaakC.",
+    ".MLckMMAAAaaakCc",
+    "LWLLakaaaaaaLWLc",
+    "MLLMAkLLMMAaMLMA",
+    "aAAAakLMMAAaaAAa",
+    "MLMAakMMMMAkaMLa",
+    "...aakaAAAAaaAA.",
+]
 CAVALEIRO_A2 = [
     ".....aaaaaa.....",
     "....aALWWLMa....",
@@ -329,6 +393,21 @@ def _camada_cavaleiro_t2(x, y, ch):  # a fenda: o escuro da linha 5 (colunas 7 a
     return "capa" if ch in "cC" else "armadura"
 
 
+FENDAS = {  # o escuro de cada viseira da quinta rodada (x, y)
+    "cavaleiro-p1": {(5, 4), (10, 4), (5, 5), (6, 5), (9, 5), (10, 5)},
+    "cavaleiro-p2": {(4, 5), (6, 5), (7, 5), (8, 5)},
+    "cavaleiro-p3": {(7, 6), (8, 6)},
+}
+
+
+def _camada_fenda(ident):
+    def camada(x, y, ch):
+        if ch in "uv" or (x, y) in FENDAS[ident]:
+            return "viseira"
+        return "capa" if ch in "cC" else "armadura"
+    return camada
+
+
 def _camada_cavaleiro_b(x, y, ch):  # a espada da B fica nas colunas 0 a 2 (o pomo, o punho, a guarda e a lâmina)
     return "espada" if x <= 2 and ch in "grLW" else _camada_cavaleiro(x, y, ch)
 
@@ -354,6 +433,9 @@ CAMADAS = {  # a grade, a paleta, as camadas de baixo para cima e a camada de ca
     "abominacao-c3": (ABOMINACAO_C3, "abominacao2", ["carne", "boca", "dentes", "olhos"], _camada_abominacao_c),
     "cavaleiro-t2": (CAVALEIRO_T2, "cavaleiro_t", ["guia", "capa", "armadura", "viseira"], _camada_cavaleiro_t2),
 }
+for _i in ("cavaleiro-p1", "cavaleiro-p2", "cavaleiro-p3"):
+    CAMADAS[_i] = ({"cavaleiro-p1": CAVALEIRO_P1, "cavaleiro-p2": CAVALEIRO_P2, "cavaleiro-p3": CAVALEIRO_P3}[_i],
+                   "cavaleiro_t", ["capa", "armadura", "viseira"], _camada_fenda(_i))
 GUIAS = {"cavaleiro-t": "guias/cavaleiro-t-guia-16.png", "cavaleiro-t2": "guias/cavaleiro-t-guia-16.png"}  # a camada guia (oculta na fonte, fora da exportação)
 
 

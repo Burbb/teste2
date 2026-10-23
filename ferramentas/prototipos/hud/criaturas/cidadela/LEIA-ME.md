@@ -222,3 +222,46 @@ fenda, na lateral, fora do centro.
 - As folhas compactas `abominacao-c3.png` (a C × a C2 × a C3) e `cavaleiro-t2.png` (a referência, a guia e o T2 a 12×;
   a orientação no tamanho do retrato: a referência reduzida, o T e o T2 a 32 e 48; o T × o T2 na carta e no Bestiário; a
   fileira).
+
+# A quinta rodada (22/10/2026, propostas; nada no jogo)
+
+**Avaliação do Jean:** a Abominação C3 aceita visualmente, preservada sem retoques (ainda sem autorização para integrar).
+No Cavaleiro, a capa vinho e as ombreiras do T2 ficam; o elmo, o gorjal e o peito são refeitos em três propostas
+realmente diferentes, com liberdade de direção, perspectiva, proporção e tipo de elmo. A referência gerada deixa de ser
+molde e fica como apoio do material e da atmosfera (sem guia nesta rodada). T2 e as anteriores ficam como histórico.
+
+## Os três Cavaleiros (`cavaleiro-p1`, `-p2`, `-p3`)
+
+Camadas capa, armadura, viseira, na paleta do T (`cavaleiro_t`). A capa e as ombreiras são as do T2, pixel a pixel
+(conferido: 0 pixels diferentes nas ombreiras e na capa das três). A armadura foi resolvida sem o brilho; o violeta entrou
+depois, só onde ajudou a expressão.
+- **P1, o grande elmo** (sem brilho): de frente, o topo chato visto um pouco de cima, as duas fendas descendo para o
+  centro (o olhar severo) com a barra do nariz e a quina até a base, a metade direita na sombra; o elmo assentado numa
+  borda escura, o gorjal em duas lâminas retas, o peito com a quilha acesa no meio e a fralda embaixo.
+- **P2, o bico:** de perfil, olhando para a esquerda: o bacinete com o bico da viseira projetado, a fenda ao longo do
+  bico com um ponto violeta apagado perto da ponta, a nuca arredondada à direita descendo até o gorjal; o gorjal e o peito
+  em placas diagonais, acompanhando a cabeça.
+- **P3, a cabeça baixa:** a cúpula pequena com a crista acesa no meio (diz para onde a cabeça baixa aponta), a lateral
+  direita escura, afundada num gorjal alto de borda acesa; a fenda baixa com dois pontos violeta apagados (o olhar de
+  baixo); o peito largo e liso, com a borda de cima e a fralda.
+- **Na bancada:** o primeiro P1, com as fendas retas, lia como um rosto de robô; o primeiro P3 era um ovo liso sobre um
+  bloco (a crista, a lateral escura e as lâminas do gorjal resolveram), e uma versão dele tinha deslocado a borda da capa.
+
+## A minha leitura (quem escolhe é o Jean)
+
+- **Prefiro o P2.** É o que mais claramente olha para algum lugar, e o bico dá uma silhueta que não se confunde com o
+  Esqueleto de Guarda nem com o Mercenário. **Limitação no tamanho real:** a 32 o bico tem 2 a 3 px e a fenda é fina; o
+  ponto violeta quase não aparece.
+- **P1:** o mais pesado e frontal; **limitação:** a 32 as duas fendas com a barra podem ler como um rosto de máscara ou
+  de robô, e é o mais claro dos três.
+- **P3:** o mais ameaçador pela postura; **limitação:** a cabeça pequena afundada perde a presença do elmo na carta, e
+  os dois pontos violeta leem como olhos.
+
+## Processo da quinta rodada
+
+- As grades à mão em `auxiliares/grades.py` (as de antes saem idênticas); as fontes pelo Aseprite em lote (o conector
+  continuou sem editor; a janela aberta não foi tocada), 0 diferentes e 0 fora da tela na releitura de cada camada; a
+  exportação igual à grade, o @2x exato, o 32 e o 48 em blocos inteiros.
+- As fotos a 1920×945 nos modos `p1`, `p2` e `p3`, em `capturas-2/` (os mesmos cenários e enquadramentos), sem erro no
+  console; a folha compacta `cavaleiro-p.png` (o T2 × P1 × P2 × P3 na carta, real e 2×, no Bestiário e na fileira com os
+  aprovados; a 12×).

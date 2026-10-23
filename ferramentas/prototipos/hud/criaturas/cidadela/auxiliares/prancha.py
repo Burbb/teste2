@@ -2,11 +2,11 @@
 a carta na luta a 1920×945 em tamanho real e a 2×, o cartão do Bestiário (48) em tamanho real, a fileira com os retratos
 aprovados pertinentes (na caixa da carta, real e 3×) e a 12× com a grade, sem suavização. Tudo trocado só na página
 (protótipo).
-Na quarta, abominacao-c3.png (a C × a C2 × a C3) e cavaleiro-t2.png (a referência, também no tamanho do retrato, × o T ×
+Na quinta, cavaleiro-p.png (o T2 × P1 × P2 × P3). Na quarta, abominacao-c3.png (a C × a C2 × a C3) e cavaleiro-t2.png (a referência, também no tamanho do retrato, × o T ×
 o T2). Na terceira, abominacao-c2.png (a C × a C2) e cavaleiro-t.png (a referência, a guia e o T; o jogo de hoje × o T).
 Na segunda rodada, abominacao-cde.png (o jogo de hoje × C × D × E) e cavaleiro-a2.png (o jogo de hoje × o A original ×
 o A2), das fotos em capturas-2/.
-    python prancha.py [abominacao|cavaleiro|abominacao-cde|cavaleiro-a2|abominacao-c2|cavaleiro-t|abominacao-c3|cavaleiro-t2 ...]      (depois do fotografar.mjs)
+    python prancha.py [abominacao|cavaleiro|abominacao-cde|cavaleiro-a2|abominacao-c2|cavaleiro-t|abominacao-c3|cavaleiro-t2|cavaleiro-p ...]      (depois do fotografar.mjs)
 """
 import json
 import pathlib
@@ -57,7 +57,11 @@ CRIATURAS = {
                      ("esqueleto", "mercenario", "espectro", "bandido"), ["luta-cavaleiro"],
                      ("Cavaleiro sombrio do Vazio.png", (27, 54, 1227, 1254), "cavaleiro-t-guia-16.png")),
 }
-FOTOS = {"abominacao-cde": "capturas-2", "cavaleiro-a2": "capturas-2", "abominacao-c2": "capturas-2",
+CRIATURAS["cavaleiro-p"] = ("Cavaleiro sombrio", [  # a quinta: o T2 × os três elmos novos (P1, P2, P3)
+    ("T2, o anterior", "t2", "cavaleiro-t2"), ("P1, o grande elmo", "p1", "cavaleiro-p1"),
+    ("P2, o bico", "p2", "cavaleiro-p2"), ("P3, a cabeça baixa", "p3", "cavaleiro-p3")],
+    ("esqueleto", "mercenario", "espectro", "bandido"), ["luta-cavaleiro"])
+FOTOS = {"cavaleiro-p": "capturas-2", "abominacao-cde": "capturas-2", "cavaleiro-a2": "capturas-2", "abominacao-c2": "capturas-2",
          "cavaleiro-t": "capturas-2", "abominacao-c3": "capturas-2", "cavaleiro-t2": "capturas-2"}
 ORIENTACAO = {"cavaleiro-t2"}  # a referência reduzida ao tamanho do retrato (32 e 48), ao lado dos desenhos  # a pasta das fotos, se não for a capturas/
 REFERENCIAS = AQUI.parents[5] / "ferramentas/arte/referencias/icones"

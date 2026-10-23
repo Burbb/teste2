@@ -214,3 +214,6 @@ A escolha do par e da direção é do Jean; nada foi começado.
 - **Quarta rodada (22/10/2026), em avaliação:** a Abominação C3 (de novo a partir da C: a boca enorme centralizada e
   sustentada) e o Cavaleiro T2 (o busto do T com o elmo refeito pela referência); C, C2 e T como histórico. As folhas
   `cidadela/abominacao-c3.png` e `cidadela/cavaleiro-t2.png`. Nenhum autorizado para integração.
+- **Quinta rodada (22/10/2026), em avaliação:** a Abominação C3 aceita visualmente (sem retoques; ainda não integrada);
+  três Cavaleiros novos sobre a capa e as ombreiras do T2: P1, o grande elmo; P2, o bico; P3, a cabeça baixa. A folha
+  `cidadela/cavaleiro-p.png`. Nenhum Cavaleiro autorizado para integração.
