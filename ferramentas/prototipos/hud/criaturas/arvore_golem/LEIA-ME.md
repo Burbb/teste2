@@ -81,3 +81,58 @@ olhos são ocos escuros (sem brilho), e a textura fica em poucos sulcos e lascas
   árvore (com o lobo e o javali), a do golem (com o esqueleto e o carniçal) e o Bestiário; sem erro no console.
 - As folhas (`python auxiliares/prancha.py`): `arvore.png` e `golem.png`, com o jogo de hoje × A × B na carta (real e 2×)
   e no Bestiário (48), a fileira com os aprovados e a 12×.
+
+# A segunda rodada (22/10/2026, propostas; nada no jogo)
+
+**Avaliação do Jean:** a A1 e a A2 recusadas; a Árvore segue pelas duas referências geradas na conversa, com uma
+presença velha, séria e hostil, o rosto nascendo da própria casca (a referência 2 é a direção preferida). O G2 está bem
+encaminhado; só testar uma separação mais clara entre a cabeça e os ombros, sem aumentar os detalhes. A1, A2, G1 e G2
+ficam como histórico.
+
+## As Árvores das referências (`arvore-t1`, `arvore-t2`)
+
+- **As guias** (`guias/arvore-r1-guia-16.png` e `arvore-r2-guia-16.png`, a camada `guia` oculta na fonte, fora da
+  exportação): o recorte quadrado de 1200 px a partir de (27, 27) de cada referência (1254×1254, ampliadas; não são
+  grades nativas), reduzido a 16 por média (75 px por pixel). Mediram as posições; o desenho é à mão, com a limpeza.
+- **T1, pela referência 1** (camadas guia, casca, rosto; a paleta cinza-marrom da referência): o tronco alongado com os
+  galhos secos subindo (três à esquerda, as pontas do alto e dois à direita); as sobrancelhas pesadas de casca acesas sobre
+  a sombra dos olhos, os olhos fundos (1 px, um âmbar apagado), o nariz aceso entre eles, a boca fechada (uma linha de
+  1 px com o lábio de cima aceso e os cantos caídos); o lado esquerdo do tronco na sombra; os veios viram poucos sulcos.
+- **T2, pela referência 2** (camadas guia, casca, musgo, rosto; a casca marrom e o musgo da referência): em três quartos
+  para a esquerda, a testa pesada acesa, os olhos fundos e apagados, o nariz retorcido como um bulbo claro puxado para a
+  esquerda, a boca torta fechada com os cantos caídos, o musgo caindo pela esquerda do alto até a bochecha, o oco da casca
+  na lateral direita e os galhos (o da esquerda com musgo, dois à direita).
+- **Na bancada:** a primeira de cada tinha a boca como um bloco escuro e os olhos amarelos fortes (a expressão ficava
+  surpresa, não séria); o âmbar apagado, a boca em linha e o lábio aceso deram o ar velho e fechado.
+
+## O Golem G2r (`golem-g2r`), o G2 refinado
+
+Camadas pedra, musgo, juntas. O G2 com a cabeça separada dos ombros: um vão escuro dos dois lados da cabeça e sob o
+queixo, o queixo aceso, as órbitas fundas na sombra da testa. O peso, a pose, o punho e os grandes volumes são os do
+G2; nada acrescentado (14 pixels de junta contra 2).
+
+## A minha leitura (quem escolhe é o Jean)
+
+- **Árvore: prefiro a T2**, como o Jean. O nariz torto, a boca torta e o musgo dão a personalidade de velha séria, e a 32
+  a cabeça em três quartos não se confunde com nenhum retrato aprovado. **Limitação no tamanho real:** os olhos apagados
+  quase somem a 32 (o olhar lê pela testa e pela sombra), e o musgo é uma faixa fina.
+  - T1: a mais legível de frente, a sobrancelha e a boca leem bem; **limitação:** a 32 os galhos finos viram uma franja, e
+    o rosto cinza-marrom pode lembrar o Carniçal pela cor.
+- **Golem: o G2r ganhou.** A cabeça se destaca dos ombros e o rosto aparece a 32 e a 48. **Limitação:** a cabeça
+  continua pequena (é a construção do G2), e o vão escuro em volta do pescoço deixa o golem um pouco mais "montado".
+
+## Antes de qualquer integração por família
+
+O **Espantalho Possuído** (criado da família `ent_jovem`) e o **Mímico** (criado da família `golem`) herdariam o retrato
+pela família. Cada um precisa de uma decisão própria (manter o sprite de hoje pela chave ou pelo nome, ganhar um desenho
+próprio, ou aceitar o da família) antes de qualquer integração; nada foi decidido aqui.
+
+## Processo da segunda rodada
+
+- As grades à mão em `auxiliares/grades.py` (as de antes saem idênticas); as fontes pelo Aseprite em lote (o conector
+  continua sem editor; a janela aberta não foi tocada), 0 diferentes e 0 fora da tela na releitura de cada camada, a guia
+  das Árvores escondida depois da montagem (o exportador confere); a exportação igual à grade, o @2x exato, o 32 e o 48 em
+  blocos inteiros.
+- As fotos a 1920×945 nos modos atual, b, t1, t2 e g2r (os mesmos cenários e enquadramentos), sem erro no console.
+- As folhas `arvore-t.png` (as duas referências, as guias e as transposições a 12×; o jogo de hoje × T1 × T2 na carta e
+  no Bestiário; a fileira) e `golem-g2r.png` (o G2 × o G2r).

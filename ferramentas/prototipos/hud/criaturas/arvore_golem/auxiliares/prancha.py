@@ -2,7 +2,9 @@
 na luta a 1920×945 em tamanho real e a 2×, o cartão do Bestiário (48) em tamanho real, a fileira com os retratos
 aprovados pertinentes (na caixa da carta, real e 3×) e a 12× com a grade, sem suavização. Tudo trocado só na página
 (protótipo).
-    python prancha.py [arvore|golem ...]      (depois do fotografar.mjs)
+Na segunda rodada, arvore-t.png (as duas referências, as guias e as transposições; o jogo de hoje × T1 × T2) e
+golem-g2r.png (o G2 × o G2r).
+    python prancha.py [arvore|golem|arvore-t|golem-g2r ...]      (depois do fotografar.mjs)
 """
 import json
 import pathlib
@@ -31,6 +33,15 @@ CRIATURAS = {
                                  ("G2, o rochedo", "b", "golem-g2")],
               ("troll", "esqueleto", "mercenario", "cavaleiro-sombrio"), ["luta-golem"]),
 }
+CRIATURAS["arvore-t"] = ("Árvore desperta", [  # a segunda rodada: o jogo de hoje × T1 × T2, com as duas referências
+    ("atual (o jogo: a planta)", "atual", None), ("T1, a referência 1", "t1", "arvore-t1"),
+    ("T2, a referência 2 (a direção preferida)", "t2", "arvore-t2")],
+    ("lobo", "javali", "aranha", "troll"), ["luta-arvore"],
+    ("Retrato pixelado da árvore ancestral.png", (27, 27, 1227, 1227), "arvore-r1-guia-16.png", "arvore-t1"),
+    ("Árvore anciã severa em pixel art.png", (27, 27, 1227, 1227), "arvore-r2-guia-16.png", "arvore-t2"))
+CRIATURAS["golem-g2r"] = ("Golem de pedra", [  # a segunda rodada: o G2 × o G2r (antes e depois)
+    ("G2, o original", "b", "golem-g2"), ("G2r, a cabeça separada dos ombros", "g2r", "golem-g2r")],
+    ("troll", "esqueleto", "mercenario", "cavaleiro-sombrio"), ["luta-golem"])
 FOTOS = {}  # todas em capturas/
 ORIENTACAO = set()  # sem referência neste par
 EXTRAS = {}  # sem retratos do herói na fileira
@@ -90,8 +101,8 @@ def folha(chave):
     d = ImageDraw.Draw(out)
     d.text((20, 10), f"{nome} — trocados só na página (protótipo); nada no jogo", fill=TEXTO, font=f)
     y = 38
-    if ref:  # a referência (o recorte da guia, reduzido só para olhar), a guia de 16 (oculta na fonte) e a proposta, a 12×
-        arquivo, corte, guia = ref[0]
+    for r in ref:  # cada referência (o recorte da guia, reduzido só para olhar), a guia de 16 (oculta) e a proposta, a 12×
+        arquivo, corte, guia, *qual = r
         d.text((20, y), "a referência (imagem gerada; o recorte da guia, reduzido só para olhar) | a guia de 16, oculta na "
                "fonte (o recorte reduzido por média) | a transposição — a 12×", fill=TEXTO, font=f2)
         im = Image.open(REFERENCIAS / arquivo).convert("RGBA")
@@ -99,7 +110,7 @@ def folha(chave):
         fundo.alpha_composite(im)
         out.alpha_composite(fundo.crop(corte).resize((192, 192), Image.LANCZOS), (20, y + 18))
         out.alpha_composite(grade12(Image.open(PASTA / "guias" / guia).convert("RGBA")), (232, y + 18))
-        out.alpha_composite(grade12(desenho(colunas[-1][2])), (444, y + 18))
+        out.alpha_composite(grade12(desenho(qual[0] if qual else colunas[-1][2])), (444, y + 18))
         y += 18 + 192 + 24
         if chave in ORIENTACAO:  # a orientação: a referência reduzida (só para olhar) e cada desenho, a 32 e a 48
             d.text((20, y), "a orientação no tamanho do retrato, na caixa da carta: a referência reduzida (LANCZOS, só "

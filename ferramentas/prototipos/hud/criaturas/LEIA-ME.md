@@ -230,3 +230,7 @@ A escolha do par e da direção é do Jean; nada foi começado.
   cantaria; G2, o rochedo), em `arvore_golem/` (as folhas `arvore.png` e `golem.png`). A Árvore Anciã e o Golem
   Primordial ficam para uma rodada própria. Na integração, decidir o Espantalho Possuído e o Mímico, que são dessas
   famílias.
+- **Segunda rodada (22/10/2026), em avaliação:** a Árvore A1 e A2 recusadas; as Árvores T1 e T2, pelas duas
+  referências geradas (a T2, a direção preferida), e o Golem G2r (o G2 com a cabeça separada dos ombros), em
+  `arvore_golem/` (as folhas `arvore-t.png` e `golem-g2r.png`). O Espantalho Possuído e o Mímico precisam de uma decisão
+  própria antes de qualquer integração por família.

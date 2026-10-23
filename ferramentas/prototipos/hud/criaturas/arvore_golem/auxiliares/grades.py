@@ -13,7 +13,17 @@ Bestiário são o 16 ×2 e ×3. Desenhados à mão, uma letra por pixel; silhuet
           do pescoço, as ombreiras e o peito em blocos brutos, a rachadura descendo pelo peito;
       G2, o rochedo: pedras brutas e arredondadas, a cabeça pequena e baixa entre dois ombros enormes, a testa saliente
           sobre as órbitas, o musgo num ombro, o punho de pedra embaixo à esquerda.
-    python grades.py <pasta> [<id> ...]     # grava grades/<id>.txt e listas/<id>/<camada>.lua
+  A segunda rodada (o Jean recusou a A1 e a A2; o G2 bem encaminhado): as duas Árvores pelas referências geradas na
+  conversa com o Jean (ferramentas/arte/referencias/icones/), medidas na guia oculta (guias/: o recorte de 1200 px a
+  partir de (27, 27), reduzido por média, 75 px por pixel) e redesenhadas à mão; e o G2 refinado.
+      T1, pela "Retrato pixelado da árvore ancestral.png": o tronco alongado, as sobrancelhas pesadas de casca, o olhar
+          fundo, o nariz, a boca fechada com os cantos caídos, os galhos secos subindo e o lado esquerdo na sombra;
+      T2, pela "Árvore anciã severa em pixel art.png" (a direção preferida): a velha austera em três quartos, a testa
+          pesada, os olhos fundos, o nariz retorcido para a esquerda, a boca torta, o musgo caindo pela esquerda, o oco
+          da casca na lateral direita e os galhos;
+      G2r, o G2 com a cabeça separada dos ombros por um vão escuro dos lados e sob o queixo, o queixo aceso; o peso, a
+          pose e os grandes volumes do G2.
+    python grades.py <pasta> [<id> ...]     # grava grades/<id>.txt e listas/<id>/<camada>.lua (a guia, do png dela)
 """
 import pathlib
 import sys
@@ -25,6 +35,13 @@ PALETAS = {
         "o": "1a120c", "s": "3a2a1c", "m": "5e4630", "l": "86684a", "h": "a88a62",  # a casca (contorno à luz)
         "k": "0e0a08",  # os ocos: os olhos de nó, a boca
         "G": "2e4a22", "g": "4e7032", "y": "76984a",  # as folhas
+    },
+    "arvore_t1": {  # a casca cinza-marrom da referência 1
+        "o": "1e140e", "s": "3c2c24", "m": "5c4a3e", "l": "806a5a", "h": "a48c78", "k": "120c08", "e": "a07838",
+    },
+    "arvore_t2": {  # a casca marrom e o musgo da referência 2
+        "o": "1c120e", "s": "3a2a22", "m": "5c4436", "l": "7c5c48", "h": "9a7458", "k": "140c0a", "e": "a07838",
+        "G": "2e3220", "g": "4a5430", "y": "66703e",
     },
     "golem": {
         "o": "1a1816", "s": "3c3832", "m": "5e5950", "l": "847e72", "h": "a8a294",  # a pedra (contorno à luz)
@@ -106,11 +123,66 @@ GOLEM_G2 = [
     ".oooo.oommoo....",
 ]
 
+ARVORE_T1 = [
+    "...o............",
+    ".o.mo....o.o..o.",
+    ".ms.ml..omom.om.",
+    "..smlmo.mlmlmmo.",
+    "...smllmlhllmms.",
+    "...smmlhllllmmo.",
+    "...smlhhhhmhhho.",
+    "...smlskeshkeso.",
+    "...smllsmlhsmso.",
+    "...smlmmllhhsmo.",
+    "...smmlmlhhhmmo.",
+    "..osmmlmkkkksmo.",
+    "..osmlmkhllmkso.",
+    ".osmllmmlhmmlsso",
+    "osmlmmlmlhmmlmso",
+    "osmlsmlmmlmsmlmo",
+]
+ARVORE_T2 = [
+    "gG.os...........",
+    ".gGsml......om..",
+    "..gGsml....omlom",
+    "...gGgmllmmmlmo.",
+    "...Ggsmlllmmmmo.",
+    "..gGsmhhhllmmmso",
+    "..gGshhhhlmsmmso",
+    "..gskkksklmmkmso",
+    "..gsekmhesmmkkso",
+    "..gsmlhhlsmmmkso",
+    "..gsmhhhsmmmmmso",
+    "...smsslhmlmmmso",
+    "...smkkkkmlmmmso",
+    "..osklhhlkmmmmso",
+    ".osmllmmlmmlmmso",
+    "osmlmmlmmlmmlmmo",
+]
+GOLEM_G2R = [
+    "................",
+    "......oooo......",
+    ".....ohhllo.....",
+    "....ohhhhllo....",
+    "..ookskmksskoo..",
+    ".ohhklmmmlmkhgo.",
+    "ohllkolmmsokllgo",
+    "ohlllkkkkkkllmmo",
+    "olllllmmmmmlmmso",
+    "ollllmmlmmmmmmso",
+    "oolllmmmmmmmmsso",
+    "ohhhomllmmmmssso",
+    "ohlllommmmmssso.",
+    "ollllommmmmsso..",
+    "ollmmoommmsso...",
+    ".oooo.oommoo....",
+]
+
 
 def _camada_arvore(x, y, ch):
     if ch in "Ggy":
         return "folhas"
-    return "rosto" if ch == "k" else "casca"
+    return "rosto" if ch in "ke" else "casca"
 
 
 def _camada_golem(x, y, ch):
@@ -124,7 +196,11 @@ CAMADAS = {  # a grade, a paleta, as camadas de baixo para cima e a camada de ca
     "arvore-a2": (ARVORE_A2, "arvore", ["casca", "folhas", "rosto"], _camada_arvore),
     "golem-g1": (GOLEM_G1, "golem", ["pedra", "juntas"], _camada_golem),
     "golem-g2": (GOLEM_G2, "golem", ["pedra", "musgo", "juntas"], _camada_golem),
+    "arvore-t1": (ARVORE_T1, "arvore_t1", ["guia", "casca", "rosto"], _camada_arvore),
+    "arvore-t2": (ARVORE_T2, "arvore_t2", ["guia", "casca", "folhas", "rosto"], _camada_arvore),
+    "golem-g2r": (GOLEM_G2R, "golem", ["pedra", "musgo", "juntas"], _camada_golem),
 }
+GUIAS = {"arvore-t1": "guias/arvore-r1-guia-16.png", "arvore-t2": "guias/arvore-r2-guia-16.png"}  # ocultas na fonte
 
 
 def cor(ident, ch):
@@ -147,6 +223,10 @@ def gravar(base, ids=None):
         (base / "grades").mkdir(parents=True, exist_ok=True)
         (base / f"grades/{ident}.txt").write_text("\n".join(grade) + "\n", encoding="utf-8")
         listas = {c: [] for c in ordem}
+        if ident in GUIAS:
+            g = Image.open(base / GUIAS[ident]).convert("RGBA")
+            listas["guia"] = [f"{x},{y},{''.join(f'{v:02x}' for v in g.getpixel((x, y)))}" for y in range(16)
+                              for x in range(16) if g.getpixel((x, y))[3]]
         for y, l in enumerate(grade):
             for x, ch in enumerate(l):
                 if ch != ".":

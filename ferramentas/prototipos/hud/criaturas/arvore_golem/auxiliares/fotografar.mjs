@@ -1,7 +1,7 @@
 // As fotos da Árvore Desperta e do golem de pedra (protótipo; nada no jogo), a 1920×945 e com os mesmos dados em cada
 // modo: a luta da árvore (com o lobo e o javali, da floresta), a do golem (com o esqueleto e o carniçal, das ruínas) e o
-// Bestiário. Modos: "atual" (o jogo), "a" (A1 e G1) e "b" (A2 e G2), trocados só na página, nas cartas inimigas e nos
-// cartões do Bestiário, pelo nome.
+// Bestiário. Modos: "atual" (o jogo), "a" (A1 e G1) e "b" (A2 e G2); na segunda rodada, "t1" e "t2" (as Árvores das
+// referências) e "g2r" (o G2 refinado). Cada modo troca só quem tem aquele desenho, só na página, pelo nome.
 //   [MODOS=atual,a,b] PLAYWRIGHT_MODULO=<file:// do index.mjs> node fotografar.mjs <raiz> <pasta das fotos>
 import { spawn } from "child_process";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
@@ -16,10 +16,10 @@ const dados = (pasta, id) => "data:image/png;base64," + readFileSync(path.join(a
 // cada criatura: o nome na carta e o desenho de cada modo
 const P = "../proposta";
 const BICHOS = [
-  ["^Árvore desperta", { a: [P, "arvore-a1"], b: [P, "arvore-a2"] }],
-  ["^Golem de pedra", { a: [P, "golem-g1"], b: [P, "golem-g2"] }],
+  ["^Árvore desperta", { a: [P, "arvore-a1"], b: [P, "arvore-a2"], t1: [P, "arvore-t1"], t2: [P, "arvore-t2"] }],
+  ["^Golem de pedra", { a: [P, "golem-g1"], b: [P, "golem-g2"], g2r: [P, "golem-g2r"] }],
 ];
-const TROCAS = Object.fromEntries(["a", "b"].map((m) =>
+const TROCAS = Object.fromEntries(["a", "b", "t1", "t2", "g2r"].map((m) =>
   [m, BICHOS.filter(([, ms]) => ms[m]).map(([n, ms]) => [n, dados(...ms[m])])]));
 const MODOS = (process.env.MODOS || "atual,a,b").split(",");
 const LUTA = { TUTORIAL: "0", CLASSE: "guerreiro", NIVEL_LUTA: "5" };

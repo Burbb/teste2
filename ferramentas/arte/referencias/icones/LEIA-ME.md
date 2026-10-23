@@ -116,3 +116,19 @@ com as placas, a viseira estreita subindo para a direita com o pequeno brilho vi
 queixo, o gorjal sustentando a cabeça e ligado à armadura, as ombreiras pesadas em placas e a capa vinho atrás. Ampliada,
 não uma grade nativa: a transposição para 16×16 está em `ferramentas/prototipos/hud/criaturas/cidadela/`
 (`cavaleiro-t`; a guia em `guias/`). As propostas A, A2 e B ficam como histórico.
+
+**`Retrato pixelado da árvore ancestral.png`** (1254×1254, RGBA, 22/10/2026, data do computador local; SHA-256
+começando por `b3ab4b0914ed73d6`): **a referência 1 da Árvore Desperta**, uma imagem gerada na conversa com o Jean e
+deixada aqui por ele; sem outra origem ou autoria informada; o original guardado sem alteração. A mais austera e
+monumental: o tronco alongado cinza-marrom, as sobrancelhas pesadas de casca, o olhar fundo, o nariz, a boca fechada em
+arco para baixo e os galhos secos subindo. Ampliada, não uma grade nativa: a transposição para 16×16 está em
+`ferramentas/prototipos/hud/criaturas/arvore_golem/` (`arvore-t1`; a guia em `guias/`).
+
+**`Árvore anciã severa em pixel art.png`** (1254×1254, RGBA, 22/10/2026, data do computador local; SHA-256 começando
+por `6d5f5bf6a133e625`): **a referência 2 da Árvore Desperta, a direção preferida pelo Jean** ("a velha séria": o olhar
+pesado, o nariz torto e o musgo dão personalidade). Imagem gerada na conversa com o Jean e deixada aqui por ele; sem
+outra origem ou autoria informada; o original guardado sem alteração. A expressão de velha austera em três quartos, a
+testa pesada, os olhos fundos, o nariz retorcido, a boca torta, o musgo caindo pela esquerda, os galhos e a casca marrom
+em veios. Ampliada, não uma grade nativa: a transposição para 16×16 está em
+`ferramentas/prototipos/hud/criaturas/arvore_golem/` (`arvore-t2`; a guia em `guias/`). Apesar do nome do arquivo, é
+uma referência para a Árvore Desperta; a Árvore Anciã (guardiã) fica para uma rodada própria.
