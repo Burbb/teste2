@@ -85,7 +85,7 @@ def entidades():
                 aten.append("cai na caveira")
             linhas.append(("chefe (guardião)", g["base"], g["id"], s, "carta da luta; ficha (sem Bestiário: não é família)",
                            "16×16; carta 2× (32 px)", "sem desenho próprio (o retrato do traço)", "; ".join(aten)))
-    linhas.append(("chefe (campanha)", "Ilse, a Bruxa Afogada (guardiã da Capela)", "bruxa_afogada (missoes.py)",
+    linhas.append(("chefe (campanha)", "Ilse, a Bruxa Afogada (guardiã da Capela)", "ilse (GUARDIOES_UNICOS; missoes.py)",
                    dados.retrato(["morto-vivo", "conjurador"]), "carta da luta; a cena do fundo da capela (cenas.js, ilseDesenho)",
                    "carta 16×16 a 2× (32 px); a cena: figura em código na arte do lugar",
                    "a cena: arte integrada (1.84.0); a carta: sem desenho próprio",

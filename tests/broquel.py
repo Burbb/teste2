@@ -150,8 +150,7 @@ def cenarios(nivel):
 
     def ilse(rito):
         def f(g):
-            spec = {"bioma": "pantano", "id": "bruxa_afogada", "idx": 1, "nome": "Ilse, a Bruxa Afogada", "g": "f",
-                    "base": "Bruxa Afogada"}
+            spec = {"bioma": "pantano", "id": "ilse", "nome": "Ilse, a Bruxa Afogada", "g": "f", "base": "Bruxa Afogada"}
             chefe = instanciar_guardiao(spec, 4)
             if rito:
                 chefe.piso = max(1, int(chefe.max_hp * chefe.fases[0]["limiar"]))

@@ -18,8 +18,7 @@ from rpg.regras import Derrota
 from tests import arena
 from tests.test_missoes import CLASSES, MID, Roteiro, fazer, ir, lutas, na_capela, opcoes_febre
 
-ESPEC = {"bioma": "pantano", "id": "bruxa_afogada", "idx": 1, "nome": "Ilse, a Bruxa Afogada", "g": "f",
-         "base": "Bruxa Afogada"}
+ESPEC = {"bioma": "pantano", "id": "ilse", "nome": "Ilse, a Bruxa Afogada", "g": "f", "base": "Bruxa Afogada"}
 TUDO = ["agua_do_leste", "represa", "canal_da_capela", "agua_da_capela", "ilse", "sigilo_do_turvo", "marcados",
         "correntes"]
 
@@ -70,6 +69,53 @@ def no_fundo(classe="guerreiro", respostas=(), preparos=("corpo_solto",), berta=
 PRONTO = dict(preparos=("corpo_solto", "fita"), berta=True)
 DESCANSO = ["Chamar Ilse pelo nome", "Dizer o nome dela", "Guardar"]
 DESTRUIR = ["Lutar para destruí-la", "Guardar"]
+
+
+class TestFichaDaIlse(unittest.TestCase):
+    """A Ilse tem a ficha dela, pelo id (1.199.3): fora do sorteio dos covis e sem depender da posição na lista do
+    pântano, com as regras de sempre."""
+
+    def test_pelo_id_fora_dos_covis(self):
+        from rpg.dados import GUARDIOES, GUARDIOES_UNICOS
+        from rpg.inimigos import ficha_guardiao
+        self.assertNotIn("idx", ESPEC)
+        self.assertIs(ficha_guardiao(ESPEC), GUARDIOES_UNICOS["ilse"])
+        covis = {t["id"] for lista in GUARDIOES.values() for t in lista}
+        self.assertFalse(covis & set(GUARDIOES_UNICOS), "um id único também nos covis")
+
+    def test_nao_depende_da_posicao(self):
+        from unittest import mock
+        from rpg.dados import GUARDIOES
+        from rpg.inimigos import ficha_guardiao
+        with mock.patch.dict(GUARDIOES, {"pantano": list(reversed(GUARDIOES["pantano"]))}):
+            self.assertEqual(ficha_guardiao(ESPEC)["id"], "ilse")
+        with mock.patch.dict(GUARDIOES, {"pantano": []}):
+            self.assertEqual(ficha_guardiao(ESPEC)["id"], "ilse")
+
+    def test_as_regras_de_sempre(self):
+        from rpg.dados import RETRATO_CHAVE, retrato
+        e = instanciar_guardiao(ESPEC, 4)
+        e.chave = "ilse"
+        self.assertEqual((e.nome, e.g, e.guardiao, e.familia), ("Ilse, a Bruxa Afogada", "f", "ilse", "guardiao"))
+        self.assertEqual(e.tracos, ["morto-vivo", "conjurador"])
+        self.assertEqual(e.habilidades, ["maldicao", "bola_sombra", "invocar", "drenar"])
+        self.assertEqual((e.invoca, e.ataque), ("afogado", "sombra"))
+        self.assertEqual(e.fases, [dict(limiar=0.5, texto="O canto vira um grito. Mãos podres emergem da água ao seu "
+                                        "redor!", poder=1.3, habs=["grito_terror"])])
+        self.assertEqual(RETRATO_CHAVE["ilse"], "ilse")
+        self.assertEqual(retrato(e.tracos, e.familia, e.chave, e.guardiao), "ilse")
+
+    def test_o_catalogo_dela_existe(self):
+        from rpg.dados import GUARDIOES_UNICOS, LORE, TRACOS
+        from rpg.inimigos import HABS
+        for k, t in GUARDIOES_UNICOS.items():
+            self.assertEqual(t["id"], k)
+            for h in t["habs"] + [h for f in t.get("fases", []) for h in f.get("habs", [])]:
+                self.assertIn(h, HABS, k)
+            for tr in t["tracos"]:
+                self.assertIn(tr, TRACOS, k)
+            if t.get("invoca"):
+                self.assertIn(t["invoca"], LORE, k)
 
 
 class TestBerta(unittest.TestCase):

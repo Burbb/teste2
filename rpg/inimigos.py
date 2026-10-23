@@ -2,7 +2,7 @@
 
 from . import balanceamento as bal
 from . import texto as tx
-from .dados import AFIXOS, FAMILIAS, GUARDIOES
+from .dados import AFIXOS, FAMILIAS, GUARDIOES, GUARDIOES_UNICOS
 from .entidades import Inimigo
 from .modificadores import mod
 
@@ -110,7 +110,9 @@ def gerar_guardiao(rng, bioma):
 
 def ficha_guardiao(spec):
     """O guardião do catálogo de um covil: pelo id (que não muda se a lista ganhar guardiões novos), ou pela posição
-    na lista nos saves de antes do id."""
+    na lista nos saves de antes do id. Os únicos (a Ilse) só pelo id, fora das listas dos covis."""
+    if spec.get("id") in GUARDIOES_UNICOS:
+        return GUARDIOES_UNICOS[spec["id"]]
     lista = GUARDIOES[spec["bioma"]]
     return next((t for t in lista if t["id"] == spec.get("id")), None) or lista[spec["idx"]]
 

@@ -1079,8 +1079,7 @@ def _fundo(g, mid):
         g.narrar("Você sobe a escada de costas. O canto continua lá embaixo.")
         return
     nome = "Ilse, a Bruxa Afogada" if conhece_ilse(g, mid) else "A Bruxa Afogada"  # o nome que o personagem sabe
-    spec = {"bioma": "pantano", "id": "bruxa_afogada", "idx": 1, "nome": nome, "g": "f",
-            "base": "Bruxa Afogada"}
+    spec = {"bioma": "pantano", "id": "ilse", "nome": nome, "g": "f", "base": "Bruxa Afogada"}  # a ficha só dela
     chefe = instanciar_guardiao(spec, g.nivel_guardiao(g.loc))
     chefe.chave = "ilse"
     if op == "descanso":

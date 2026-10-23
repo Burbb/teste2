@@ -449,6 +449,17 @@ GUARDIOES = {
     ],
 }
 
+# Os guardiões únicos, fora do sorteio dos covis, pelo id (1.199.3). A Ilse da capela (missoes.py) usava a ficha da Bruxa
+# Afogada dos covis, pelo id e pela posição na lista do pântano; a ficha dela agora é só dela, com as mesmas regras, e o
+# covil pode mudar sem mexer na campanha. Sem `intro`: a capela narra a chegada à guardiã.
+GUARDIOES_UNICOS = {
+    "ilse": dict(id="ilse", base="Bruxa Afogada", g="f", hp=110, atk=6, defesa=3, agi=6, poder=12,
+                 tracos=["morto-vivo", "conjurador"], habs=["maldicao", "bola_sombra", "invocar", "drenar"],
+                 invoca="afogado", ataque="sombra",
+                 fases=[dict(limiar=0.5, texto="O canto vira um grito. Mãos podres emergem da água ao seu redor!",
+                             poder=1.3, habs=["grito_terror"])]),
+}
+
 ANTAGONISTAS = [
     ("Senhor do Terror", "m"), ("Rainha das Moscas", "f"), ("Devorador de Almas", "m"),
     ("Arcebispo Profanado", "m"), ("Mãe das Ninhadas", "f"), ("Arauto do Vazio", "m"),
