@@ -1,0 +1,108 @@
+{
+ "atual": {
+  "cartas": [
+   {
+    "nome": "Jean",
+    "caixa": [
+     35,
+     85,
+     271,
+     157
+    ],
+    "retrato": {
+     "css": [
+      32,
+      32
+     ],
+     "arquivo": "data:910"
+    }
+   },
+   {
+    "nome": "Barqueiro do Charco",
+    "caixa": [
+     830,
+     67,
+     1040,
+     117
+    ],
+    "retrato": {
+     "css": [
+      32,
+      32
+     ],
+     "arquivo": "data:330"
+    }
+   },
+   {
+    "nome": "Afogado",
+    "caixa": [
+     830,
+     125,
+     1040,
+     175
+    ],
+    "retrato": {
+     "css": [
+      32,
+      32
+     ],
+     "arquivo": "http://127.0.0.1:60990/static/hud/icones/retrato-afogado-32.png"
+    }
+   }
+  ],
+  "erros": []
+ },
+ "n32": {
+  "cartas": [
+   {
+    "nome": "Jean",
+    "caixa": [
+     35,
+     85,
+     271,
+     157
+    ],
+    "retrato": {
+     "css": [
+      32,
+      32
+     ],
+     "arquivo": "data:910"
+    }
+   },
+   {
+    "nome": "Barqueiro do Charco",
+    "caixa": [
+     830,
+     67,
+     1040,
+     117
+    ],
+    "retrato": {
+     "css": [
+      32,
+      32
+     ],
+     "arquivo": "data:1486"
+    }
+   },
+   {
+    "nome": "Afogado",
+    "caixa": [
+     830,
+     125,
+     1040,
+     175
+    ],
+    "retrato": {
+     "css": [
+      32,
+      32
+     ],
+     "arquivo": "http://127.0.0.1:61102/static/hud/icones/retrato-afogado-32.png"
+    }
+   }
+  ],
+  "erros": []
+ }
+}
