@@ -6406,3 +6406,23 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   do Golem Primordial passam a esperar o retrato do Mímico pela origem.
 - **Verificações sobre o código final:** `unittest` (664, 1 pulado: a fumaça, rodada à parte), o gabarito (idêntico, sem
   atualizar), o pyflakes (só o aviso conhecido) e a fumaça inteira (378 ok, tudo certo).
+
+### 23/10/2026 (data do computador local) — O Dragão de Gelo em 32×32 nativos (um teste; nada no jogo) e as decisões da segunda rodada
+
+- **Pedido do Jean:** depois do Mímico (1.192.0, `19d78a77`), um teste controlado: se a grade de 16 é parte do problema
+  das transposições, sem virar mudança geral. Uma proposta do Dragão de Gelo desenhada em 32 nativos, só no protótipo.
+- **No protótipo, aguardando o Jean** (`ferramentas/prototipos/hud/criaturas/dragao_32/LEIA-ME.md`, a folha
+  `comparacao.png`): a fonte de 32 à mão (a referência como guia oculta, só para medir), pelo Aseprite em lote
+  (`montar_camadas.lua` com `n=32`; 0 diferentes na releitura; a guia oculta conferida), o @2x de 64 exato. Na carta, os
+  mesmos 32 px: o `--px` da HUD põe o retrato em 32 px do aparelho a 100% e a 125%.
+- **A minha leitura:** ganho de forma e de fidelidade à referência (a cunha, os chifres, a testa, a mandíbula, a crista);
+  a expressão só em parte (o olho tem 5 px); o grão mais fino destoa dos vizinhos de 16 ×2, pouco a 1× e muito a 3×; parte
+  do miolo é textura que vira granulado.
+- **As decisões da segunda rodada** (registradas em `chefes_e_especiais/LEIA-ME.md`): a Hidra e o Senhor da Guerra
+  recusados; o Profeta aceito no visual, preservado, sem integrar; o Espantalho em avaliação; o próximo servo sem elmo nem
+  armadura; o Lich sem nova aprovação; a Bruxa Afogada sem substituição autorizada. Nada redesenhado.
+- **Verificações proporcionais (nenhum código do jogo mudou):** o pyflakes dos auxiliares, a sintaxe do roteiro das
+  fotos, a grade regravada igual à gravada, a fonte reaberta (32×32, as camadas na ordem, a guia oculta) e as fotos sem
+  erro no console.
+- **Parado para a avaliação do teste:** nenhuma criatura nova, nenhuma integração do Dragão, o mapa não começado; a
+  PixelLab não foi instalada nem contratada (o Aseprite da máquina já tem uma extensão dela, que não foi usada).

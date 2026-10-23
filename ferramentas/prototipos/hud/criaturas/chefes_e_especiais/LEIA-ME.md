@@ -248,3 +248,19 @@ mudar nenhuma, explica o Invocar afogados e não divide traço com a Ilse, a Hid
 - **Conferido com os arquivos de produção** (`auxiliares/fotografar_jogo_mimico.mjs`, `capturas-1192/`, a 1920×945): o
   Mímico pelo evento real (o baú abandonado) com `retrato-mimico-32`, e um golem de pedra na luta com `retrato-golem-32`.
   Nenhum pedido a `ferramentas/`, sem erro no console. A folha `../../integracoes-22-10/integracoes-1192.png`.
+
+# As decisões do Jean sobre a segunda rodada (23/10/2026)
+
+Nada redesenhado nesta rodada; os arquivos de todas as propostas ficam como estão.
+
+| Criatura | Decisão | Para a próxima rodada |
+|---|---|---|
+| Hidra (`hidra-t`) | **recusada** | as três cabeças olhando para o mesmo lado, com anatomia de réptil convincente |
+| Senhor da Guerra (`senhor-t`) | **recusado** | o rosto ainda precisa ser compreensível |
+| Profeta das Cinzas (`profeta-t`) | **visual aceito**; preservar a versão atual; não integrar neste lote | — |
+| Espantalho Possuído (`espantalho-t`) | boa base, **ainda em avaliação** | — |
+| Servo (`servo-sv2b`) | não seguir por este caminho | **sem elmo e sem armadura**, com identidade própria: o crânio e os ossos visíveis, não o esqueleto inimigo com os olhos recoloridos |
+| Lich (`lich-l1`, `lich-l1b`, `lich-l2`) | preservar a base e as alternativas; **sem nova aprovação** | — |
+| Mímico | **o M1 integrado na 1.192.0**, pela origem; a M1b e a M2 ficam como alternativas | — |
+| Bruxa Afogada | a investigação preservada; **nenhuma remoção ou substituição autorizada** | — |
+| Dragão de Gelo | o teste em 32 nativos em `../dragao_32/` (aguardando o Jean) | — |

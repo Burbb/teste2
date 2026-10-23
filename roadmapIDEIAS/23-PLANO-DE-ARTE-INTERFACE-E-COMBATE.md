@@ -1249,10 +1249,14 @@ volta à pauta quando essa expansão exigir; não é uma migração de engine.
    da noite, nada no jogo):** duas propostas de cada um dos seis chefes restantes e dos três
    especiais (o Espantalho Possuído, o Mímico e o servo esquelético), em `criaturas/chefes_e_especiais/` (as folhas
    `par1-hidra-dragao.png`, `par2-senhor-profeta.png`, `par3-bruxa-lich.png`, `especiais.png` e `candidatos.png`; as
-   preferências e as limitações no LEIA-ME). **Na segunda rodada (aguardando o Jean):** as transposições pelas
-   referências novas (`hidra-t`, `dragao-t`, `senhor-t`, `profeta-t`, `espantalho-t`), a boca do servo (`servo-sv2b`) e
-   os refinamentos locais (`lich-l1b`, `mimico-m1b`); as folhas `transposicoes1-hidra-dragao.png`,
-   `transposicoes2-senhor-profeta-espantalho.png` e `refinamentos-servo-lich-mimico.png`. Falta depois: o antagonista e, na integração do servo, decidir o inimigo que
+   preferências e as limitações no LEIA-ME). **A segunda rodada, decidida pelo Jean (23/10/2026):** a Hidra (`hidra-t`) e
+   o Senhor da Guerra (`senhor-t`) recusados (a próxima Hidra com as três cabeças olhando para o mesmo lado, de réptil
+   convincente; o Senhor ainda sem um rosto compreensível); o visual do Profeta (`profeta-t`) aceito, preservado e sem
+   integrar; o Espantalho (`espantalho-t`) em avaliação; o próximo servo sem elmo nem armadura, com crânio e ossos
+   próprios; o Lich sem nova aprovação; o Mímico M1 integrado (1.192.0). **O teste do Dragão de Gelo em 32×32 nativos,
+   aguardando o Jean** (`criaturas/dragao_32/`, a folha `comparacao.png`): se a grade de 16 é parte do problema das
+   transposições; o exportador de produção e os outros retratos não mudaram. **O lote de criaturas está parado** até a
+   avaliação do teste (nenhuma criatura nova, nenhuma integração do Dragão, o mapa não começado). Falta depois: o antagonista e, na integração do servo, decidir o inimigo que
    o Rei dos Mortos ergue (o mesmo tipo `servo`). **A Bruxa Afogada:** desenhos suspensos (perto demais da Ilse); o
    levantamento e três conceitos de substituição em `criaturas/chefes_e_especiais/LEIA-ME.md` (na campanha, a ficha
    `bruxa_afogada` é a Ilse: trocar o guardião do covil pede um id próprio; nada mudou). **Falta depois:** os outros 6 guardiões (a

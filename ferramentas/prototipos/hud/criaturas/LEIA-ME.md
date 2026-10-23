@@ -257,3 +257,8 @@ A escolha do par e da direção é do Jean; nada foi começado.
   `chefes_e_especiais/` (as folhas `transposicoes1-hidra-dragao.png`, `transposicoes2-senhor-profeta-espantalho.png` e
   `refinamentos-servo-lich-mimico.png`).
 - **Integrado na 1.192.0:** o Mímico M1, pela origem (só o 16 e o 32 da carta).
+- **As decisões da segunda rodada (23/10/2026):** a Hidra e o Senhor da Guerra recusados; o visual do Profeta aceito
+  (preservado, sem integrar); o Espantalho em avaliação; o próximo servo sem elmo nem armadura; o Lich sem nova
+  aprovação; a Bruxa Afogada sem substituição autorizada (a tabela no LEIA-ME de `chefes_e_especiais/`).
+- **O teste do Dragão de Gelo em 32×32 nativos (23/10/2026), aguardando o Jean:** `dragao_32/` (a folha
+  `comparacao.png`; a leitura no LEIA-ME de lá). Nada integrado.
