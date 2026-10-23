@@ -6459,3 +6459,24 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   guardiões inclui o dragão.
 - **Verificações sobre o código final:** `unittest` (665, 1 pulado: a fumaça, rodada à parte), o gabarito (idêntico, sem
   atualizar), o pyflakes (só o aviso conhecido) e a fumaça inteira (378 ok, tudo certo).
+
+### 23/10/2026 (data do computador local) — O Espantalho em 32 nativos, adaptado à mão para 16 (nada no jogo)
+
+- **Estado:** depois da integração do Dragão de Gelo (1.193.0, `247fc4f0`); só protótipo.
+- **Pedido do Jean:** o caminho do Dragão para o Espantalho: a construção nativa de 32 pela referência (o espantalho
+  diabólico guardado no projeto) e a adaptação à mão para 16, com o 32 como mapa. A T era uma base conceitual, não arte
+  aprovada; ela e as versões anteriores ficam.
+- **No protótipo, aguardando o Jean** (`ferramentas/prototipos/hud/criaturas/espantalho_32/LEIA-ME.md`, a folha
+  `comparacao.png`): o `espantalho-n32` (o chapéu velho com a ponta caída e a aba despencando à direita, a cabeça de estopa
+  inclinada, as brasas sob as dobras, a boca costurada torta, a palha em leque) e o `espantalho-n16`. Fontes separadas para
+  os dois, em camadas, com as guias ocultas.
+- **A minha leitura:** o N16 preservou o chapéu, a estopa contra a sombra da aba, as brasas nas órbitas, a boca costurada e
+  a palha; perdeu a inclinação da cabeça, o torto forte da boca e as dobras do saco. A primeira passada em 16 tinha
+  perdido a expressão (os olhos em quadrados laranja); foi corrigida na distribuição das formas.
+- **O processo** fica registrado como alternativa promissora para retratos difíceis, não como obrigação (o LEIA-ME das
+  criaturas e o plano 23). Na integração futura, o Espantalho terá um papel próprio pela origem já existente, com o
+  retrato da Árvore Desperta e as regras compartilhadas intactos.
+- **Verificações proporcionais (nenhum código do jogo mudou):** o pyflakes dos auxiliares, a sintaxe do roteiro das fotos,
+  as grades regravadas iguais às gravadas, as fontes reabertas (o lado, as camadas na ordem, a guia oculta), 0 diferentes
+  na releitura, as exportações iguais ao composto, os derivados em blocos inteiros e as fotos sem erro no console.
+- **Parado para a avaliação do Espantalho:** nada integrado, nenhuma criatura nova, o mapa não começado.

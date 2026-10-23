@@ -266,3 +266,10 @@ A escolha do par e da direção é do Jean; nada foi começado.
   numa cópia; o N32 preservado) e o N16 (o teste do Jean: o mesmo dragão em 16 a partir do 32), em `dragao_32/` (a folha
   `refino.png`). Nada integrado.
 - **Integrado na 1.193.0:** o Dragão de Gelo N16, pelo id do guardião (só o 16 e o 32 da carta).
+- **O Espantalho Possuído construído em 32 e adaptado para 16 (23/10/2026), aguardando o Jean:** `espantalho_32/` (o
+  estudo nativo `espantalho-n32` e a proposta `espantalho-n16`; a folha `comparacao.png`). A T e as versões anteriores
+  ficam. Nada integrado.
+- **O processo do Dragão e do Espantalho (um caminho promissor para retratos difíceis, não uma obrigação):** resolver a
+  construção numa grade nativa de 32 pela referência e depois redesenhar à mão em 16 com o 32 como mapa de anatomia e
+  volumes (não uma redução automática). A fonte de produção continua a de 16, e a carta, o 16 ×2. Nos dois casos, a
+  primeira passada em 16 perdeu algo da expressão, e a correção veio da distribuição das formas, não de textura.
