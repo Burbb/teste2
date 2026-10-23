@@ -256,3 +256,4 @@ A escolha do par e da direção é do Jean; nada foi começado.
   os refinamentos do Lich (L1b) e do Mímico (M1b); a Bruxa Afogada suspensa, com o levantamento da substituição; em
   `chefes_e_especiais/` (as folhas `transposicoes1-hidra-dragao.png`, `transposicoes2-senhor-profeta-espantalho.png` e
   `refinamentos-servo-lich-mimico.png`).
+- **Integrado na 1.192.0:** o Mímico M1, pela origem (só o 16 e o 32 da carta).

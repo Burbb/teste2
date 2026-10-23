@@ -13,7 +13,7 @@ Não iniciar todo o plano numa única tarefa. As etapas técnicas A–I e a vali
 
 ## Estado de referência — 21/10/2026
 
-- Produção: **1.191.0** na branch `claude/tender-einstein-tx3tjl` (23/10/2026: o Golem Primordial R1b pelo id do guardião na 1.191.0; a Árvore Anciã R2b pelo id da guardiã na 1.190.0; a Árvore Desperta T1 e o Golem G2 pelas famílias na 1.189.0; 22/10/2026: a Abominação C3 pela família na 1.188.0; o Cavaleiro Sombrio P3 pela família, com o Último Guarda, na 1.187.0; o Cão infernal P1 pela família na 1.186.0; a Cria do Vazio A2 pela família na 1.185.0; a Harpia T2 e o Xamã Caído X1r2 pela família na 1.184.0; o Grifo GA3 pela família na 1.183.0; 23/10/2026: o Caído CA pela família, com os que o
+- Produção: **1.192.0** na branch `claude/tender-einstein-tx3tjl` (23/10/2026: o Mímico M1 pela origem na 1.192.0; o Golem Primordial R1b pelo id do guardião na 1.191.0; a Árvore Anciã R2b pelo id da guardiã na 1.190.0; a Árvore Desperta T1 e o Golem G2 pelas famílias na 1.189.0; 22/10/2026: a Abominação C3 pela família na 1.188.0; o Cavaleiro Sombrio P3 pela família, com o Último Guarda, na 1.187.0; o Cão infernal P1 pela família na 1.186.0; a Cria do Vazio A2 pela família na 1.185.0; a Harpia T2 e o Xamã Caído X1r2 pela família na 1.184.0; o Grifo GA3 pela família na 1.183.0; 23/10/2026: o Caído CA pela família, com os que o
   xamã ergue; 22/10/2026: o Mercenário MA e o Lobo Gélido LA pela
   família na 1.179.0; o caixote no motivo "Esgotado" do mercado na 1.180.0; o ent jovem e o Ent Ancião renomeados para
   Árvore Desperta e Árvore Anciã, com a migração dos saves, na 1.181.0; a fala da Pita depois do último tratamento na
@@ -1062,8 +1062,8 @@ do catálogo):**
   `criaturas/chefes_arvore_golem/`; histórico); só a carta da luta, o 16 e o 32. **Na segunda rodada,** pelas
   referências novas em close (`Rosto da árvore ancestral-1.png`, `Rosto do Golem de Pedra Primordial-2.png`): três
   tentativas de copiar cada uma (R1 a R3) e três variações da R2 (R2a a R2c), aguardando o Jean (as folhas
-  `anciaa-r.png`, `primordial-r.png`, `anciaa-r2.png`, `primordial-r2.png`; a minha preferência, a R2b de cada um). **Pendências à parte:** o Espantalho Possuído (da família `ent_jovem`) e o Mímico (da família `golem`) conservam o
-  desenho de antes pela `origem` do inimigo; falta a decisão própria de cada um (um desenho seu ou ficar nos traços).
+  `anciaa-r.png`, `primordial-r.png`, `anciaa-r2.png`, `primordial-r2.png`; a minha preferência, a R2b de cada um). **Pendências à parte:** o Espantalho Possuído (da família `ent_jovem`) conserva o desenho de antes pela `origem` do
+  inimigo, ainda em avaliação; o Mímico (da família `golem`) tem o M1 pela origem desde a 1.192.0.
   Histórico, não escolhidos: a Abominação A, B, C, C2, D e E e o Cavaleiro A, A2, B, T, T2, P1, P2 e P4. Histórico, não escolhidos, em
   `criaturas/fenda/`: o Cão A, B, T, N, N2, RA, RB, RC, RA2, RA3, P2 e P3 (a P1 foi a escolhida), a Cria A e B. A cria que o antagonista
   invoca é da família `cria_vazio` e usará o mesmo retrato. Histórico, não escolhidos: as Harpias HA, HB, H1 a H3 e a
@@ -1075,8 +1075,8 @@ do catálogo):**
   `ent_anciao`, os números, as habilidades e as regras ficam; os saves antigos passam pela migração v5 → v6.
 - **Ainda nos desenhos genéricos dos traços (levantado em `dados.retrato` na 1.184.0):**
   - **Nenhuma família inimiga comum** (desde a 1.189.0, com a Árvore Desperta e o golem de pedra; o cavaleiro sombrio
-    desde a 1.187.0 e a abominação desde a 1.188.0). Ficam nos traços, de propósito: o Espantalho Possuído e o Mímico
-    (pela `origem`, a decidir) e a família `esqueleto_servo` (que nenhum código cria). A cria do Vazio tem o retrato dela desde a 1.185.0, com as que o
+    desde a 1.187.0 e a abominação desde a 1.188.0). Ficam nos traços, de propósito: o Espantalho Possuído
+    (pela `origem`, a decidir; o Mímico tem o dele pela origem desde a 1.192.0) e a família `esqueleto_servo` (que nenhum código cria). A cria do Vazio tem o retrato dela desde a 1.185.0, com as que o
     antagonista invoca; o cão infernal, desde a 1.186.0 (nenhuma família fica mais no `demonio`).
   - **6 guardiões** (a Árvore Anciã tem o dela desde a 1.190.0 e o Golem Primordial desde a 1.191.0): a Hidra do Brejo, a Bruxa Afogada, o Dragão de Gelo, o Senhor da Guerra, o Profeta
     das Cinzas, o Lich Menor (o `etereo` na fase 2) e o Golem Primordial.
@@ -1244,7 +1244,8 @@ volta à pauta quando essa expansão exigir; não é uma migração de engine.
    caminho (o retrato por família, por chave ou pelo tipo, sem trocar o sprite compartilhado). O Mercenário, o Lobo
    Gélido e o Esgotado integrados (1.179.0, 1.180.0); o Caído CA (1.182.0); o Grifo GA3 (1.183.0); a Harpia T2 e o Xamã
    Caído X1r2 (1.184.0); a Cria do Vazio A2 (1.185.0); o Cão infernal P1 (1.186.0); o Cavaleiro Sombrio P3 (1.187.0); a Abominação C3 (1.188.0); a Árvore Desperta T1 e o Golem G2 (1.189.0).
-   **Os chefes:** a Árvore Anciã R2b (1.190.0) e o Golem Primordial R1b (1.191.0) integrados. **Aguardando o Jean (o lote
+   **Os chefes:** a Árvore Anciã R2b (1.190.0) e o Golem Primordial R1b (1.191.0) integrados; o Mímico M1 (1.192.0),
+   pela origem. **Aguardando o Jean (o lote
    da noite, nada no jogo):** duas propostas de cada um dos seis chefes restantes e dos três
    especiais (o Espantalho Possuído, o Mímico e o servo esquelético), em `criaturas/chefes_e_especiais/` (as folhas
    `par1-hidra-dragao.png`, `par2-senhor-profeta.png`, `par3-bruxa-lich.png`, `especiais.png` e `candidatos.png`; as
@@ -1256,7 +1257,7 @@ volta à pauta quando essa expansão exigir; não é uma migração de engine.
    levantamento e três conceitos de substituição em `criaturas/chefes_e_especiais/LEIA-ME.md` (na campanha, a ficha
    `bruxa_afogada` é a Ilse: trocar o guardião do covil pede um id próprio; nada mudou). **Falta depois:** os outros 6 guardiões (a
    Hidra do Brejo, a Bruxa Afogada, o Dragão de Gelo, o Senhor da Guerra, o Profeta das Cinzas e o Lich Menor), o
-   antagonista, o servo do Necromante e as decisões do Espantalho Possuído e do Mímico; nada começado antes do pedido. A relação em "A frente de criaturas em 22/10/2026" (item 1.12). O Esqueleto E2 e o Bandido do
+   antagonista, o servo do Necromante e a decisão do Espantalho Possuído; nada começado antes do pedido. A relação em "A frente de criaturas em 22/10/2026" (item 1.12). O Esqueleto E2 e o Bandido do
    chapéu estão reservados.
 3. **Depois, 1E.4:** os caminhos/destinos e os símbolos internos do mapa e do minimapa.
 4. **Retomar a etapa 2** e **seguir 3–7**, como na sequência abaixo; **etapa 8** com habilidades, talentos, Grimório e

@@ -1,0 +1,16 @@
+{
+ "mimico": {
+  "arquivos": [
+   "Mímico: http://127.0.0.1:57709/static/hud/icones/retrato-mimico-32.png"
+  ],
+  "erros": [],
+  "ferramentas": []
+ },
+ "luta-golem": {
+  "arquivos": [
+   "Golem de pedra: http://127.0.0.1:57843/static/hud/icones/retrato-golem-32.png"
+  ],
+  "erros": [],
+  "ferramentas": []
+ }
+}

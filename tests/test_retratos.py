@@ -252,9 +252,9 @@ class TestRetratos(unittest.TestCase):
                     self.assertTrue((ESTATICO / f"hud/icones/{arquivo}-{lado}{sufixo}.png").exists(), (arquivo, lado))
 
     def test_espantalho_e_mimico_ficam_nos_tracos(self):
-        # 1.189.0: o Espantalho Possuído (os números da árvore desperta) e o Mímico (os do golem) conservam o desenho de
-        # antes, pelos traços: a origem que o evento marca (não o nome exibido) tira o retrato da família; a família e os
-        # números continuam os dela
+        # 1.189.0: o Espantalho Possuído (os números da árvore desperta) conserva o desenho de antes, pelos traços: a
+        # origem que o evento marca (não o nome exibido) tira o retrato da família; a família e os números continuam os
+        # dela. 1.192.0: o Mímico (os números do golem) tem o dele, pela mesma origem
         import random
         from rpg.eventos.biomas import espantalho
         from rpg.eventos.comuns import bau_abandonado
@@ -293,7 +293,7 @@ class TestRetratos(unittest.TestCase):
         bau_abandonado(g)
         m = g.lutas[0]
         self.assertEqual((m.familia, m.origem, m.nome), ("golem", "mimico", "Mímico"))
-        self.assertEqual(retrato(m.tracos, m.familia, m.chave, m.guardiao, m.origem), "construto")
+        self.assertEqual(retrato(m.tracos, m.familia, m.chave, m.guardiao, m.origem), "mimico")
         # o nome exibido não decide: um golem comum chamado "Mímico" continua com o retrato do golem; e a ficha da luta
         # (a carta) repassa a origem ao retrato
         golem = criar(random.Random(17), "golem", 5)
@@ -331,13 +331,26 @@ class TestRetratos(unittest.TestCase):
         g = instanciar_guardiao(spec, 6)
         self.assertEqual(retrato(g.tracos, g.familia, g.chave, g.guardiao, g.origem), "golem_primordial")
         self.assertEqual(retrato(["construto", "blindado"], "golem"), "golem")
-        self.assertEqual(retrato(["construto"], "golem", origem="mimico"), "construto")
+        self.assertEqual(retrato(["construto"], "golem", origem="mimico"), "mimico")
         icones = (ESTATICO / "icones.js").read_text(encoding="utf-8")
         self.assertIn('golem_primordial: "retrato-golem-primordial"', icones)
         for lado in (16, 32):
             for sufixo in ("", "@2x"):
                 self.assertTrue((ESTATICO / f"hud/icones/retrato-golem-primordial-{lado}{sufixo}.png").exists(), lado)
         self.assertFalse((ESTATICO / "hud/icones/retrato-golem-primordial-48.png").exists())  # sem derivado sem uso
+
+    def test_mimico_pela_origem(self):
+        # 1.192.0: o Mímico pela origem, não pelo nome nem pela família (que continua a do golem, com os números, os
+        # contratos e o Bestiário dele); outra origem sem retrato próprio continua nos traços
+        self.assertEqual(retrato(["construto", "blindado"], "golem", origem="mimico"), "mimico")
+        self.assertEqual(retrato(["construto", "blindado"], "golem"), "golem")
+        self.assertEqual(retrato(["planta"], "ent_jovem", origem="espantalho"), "planta")
+        icones = (ESTATICO / "icones.js").read_text(encoding="utf-8")
+        self.assertIn('mimico: "retrato-mimico"', icones)
+        for lado in (16, 32):
+            for sufixo in ("", "@2x"):
+                self.assertTrue((ESTATICO / f"hud/icones/retrato-mimico-{lado}{sufixo}.png").exists(), (lado, sufixo))
+        self.assertFalse((ESTATICO / "hud/icones/retrato-mimico-48.png").exists())  # sem derivado sem uso
 
     def test_troll_pela_familia_e_o_rei_pelo_guardiao(self):
         # o troll da montanha pela família (1.166.0); o Rei Troll pelo id do guardião (1.167.0), em qualquer lugar

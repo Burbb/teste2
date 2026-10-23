@@ -140,6 +140,7 @@ DERIVADOS = {
     # 1.191.0: o Golem Primordial (a R1b: o rosto de pedras em close com o olhar pesado, com a guia oculta), pelo id do
     # guardião; só a carta da luta
     "retrato-golem-primordial": {32: (16, 2)},
+    "retrato-mimico": {32: (16, 2)},
 }
 # O martelo (1.149.0) só tem fontes do 40 e do 48 (aseprite/martelo/): o 32 e o 64 são a grade de desenhos.js, no
 # jogo, e não saem daqui.

@@ -167,7 +167,8 @@ RETRATOS = ("demonio", "etereo", "corrompido", "morto-vivo", "construto", "voado
 # com o Último Guarda, que é da família; 1.188.0: a abominação; o "corrompido" fica para quem tiver o traço sem retrato
 # próprio; 1.189.0: a árvore desperta e o golem de pedra; o Dragão de Gelo continua no "voador" e o antagonista no
 # "humano"). Quem só reaproveita os números de uma família (a `origem` do inimigo: o Espantalho Possuído da árvore
-# desperta, o Mímico do golem) não leva o retrato dela e segue pelos traços, como antes. Quem não está aqui segue pelos traços: o animal do herói e as outras feras continuam
+# desperta; o Mímico do golem) não leva o retrato dela e segue pelos traços, como antes; desde a 1.192.0, o Mímico tem o
+# dele pela origem (RETRATO_ORIGEM), e o golem de pedra comum continua no da família. Quem não está aqui segue pelos traços: o animal do herói e as outras feras continuam
 # no "fera", os outros humanos (o Senhor da Guerra, o antagonista) no "humano". O guardião pelo id do catálogo (1.167.0: o Rei
 # Troll; 1.168.0: a Rainha Aracnídea; a chave de um guardião muda com o lugar), depois da chave; os outros guardiões
 # continuam pelos traços, e as aranhas que a Rainha invoca têm a família "aranha" (o retrato da Aranha gigante).
@@ -175,6 +176,7 @@ RETRATO_CHAVE = {"ilse": "ilse"}
 RETRATO_GUARDIAO = {"rei_troll": "rei_troll", "rainha_aracnidea": "rainha_aracnidea",  # 1.168.0: a Rainha
                     "ent_anciao": "arvore_ancia",  # 1.190.0: a Árvore Anciã (o id ficou o do Ent Ancião)
                     "golem_primordial": "golem_primordial"}  # 1.191.0: o Golem Primordial
+RETRATO_ORIGEM = {"mimico": "mimico"}  # 1.192.0: o Mímico (os números do golem), pela origem que o evento marca
 RETRATO_FAMILIA = {"afogado": "afogado", "lobo": "lobo", "bandido": "bandido", "troll": "troll", "aranha": "aranha",
                    "sapo": "sapo", "sanguessuga": "sanguessuga", "cultista": "cultista", "bruxa_brejo": "bruxa", "rato": "rato",
                    "javali": "javali", "carnical": "carnical", "espectro": "espectro",
@@ -186,9 +188,10 @@ RETRATO_FAMILIA = {"afogado": "afogado", "lobo": "lobo", "bandido": "bandido", "
 
 
 def retrato(tracos, familia=None, chave=None, guardiao=None, origem=None):
-    """O desenho de uma criatura: o próprio dela (pela chave, pelo id do guardião ou pela família, menos para quem tem
-    outra origem), senão pelos traços (o primeiro de RETRATOS que ela tem; sem nenhum, uma caveira)."""
-    return (RETRATO_CHAVE.get(chave) or RETRATO_GUARDIAO.get(guardiao) or (not origem and RETRATO_FAMILIA.get(familia))
+    """O desenho de uma criatura: o próprio dela (pela chave, pelo id do guardião, pela origem ou pela família, menos
+    para quem tem outra origem), senão pelos traços (o primeiro de RETRATOS que ela tem; sem nenhum, uma caveira)."""
+    return (RETRATO_CHAVE.get(chave) or RETRATO_GUARDIAO.get(guardiao) or RETRATO_ORIGEM.get(origem)
+            or (not origem and RETRATO_FAMILIA.get(familia))
             or next((TRACOS_FICHA[t]["retrato"] for t in RETRATOS if t in tracos), "caveira"))
 
 # nome, plural, gênero, atributos base (nível 1), traços, habilidades, xp, ouro, tamanho de grupo e, quando há:

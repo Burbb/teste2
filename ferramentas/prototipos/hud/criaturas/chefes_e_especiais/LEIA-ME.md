@@ -230,3 +230,21 @@ mudar nenhuma, explica o Invocar afogados e não divide traço com a Ilse, a Hid
 - **O retrato:** o guardião novo pelo id em `RETRATO_GUARDIAO`, como os outros; a Ilse continua pela chave. As fichas,
   as recompensas (o Sigilo e o espólio de chefe) e o equilíbrio não mudam.
 - **Os testes:** os da Ilse continuam; entram um da ficha nova no sorteio, um da Ilse fora do sorteio e um da migração.
+
+# A integração do Mímico (1.192.0): o M1
+
+**Decisão do Jean:** o M1 original aprovado, sem retoques (não o M1b); a M1b e a M2 ficam como alternativas.
+
+- **A escolha conferida no histórico:** a grade `grades/mimico-m1.txt`, a fonte `fontes/mimico-m1/mimico-m1-16.aseprite` e
+  a proposta `proposta/mimico-m1-*` são as do `743ecfae` (a primeira rodada), sem alteração desde então; a M1b é a da
+  segunda rodada (`6820bd3e`).
+- **A fonte:** copiada byte a byte para `ferramentas/arte/aseprite/retrato-mimico/retrato-mimico-16.aseprite` (madeira,
+  ferro, boca; sem guia); só o 32 em `DERIVADOS`, com os @2x (o Mímico só aparece na carta da luta).
+- **Antes de gravar no jogo:** exportados numa pasta temporária e comparados com a proposta: os quatro iguais byte a byte.
+  Depois, o `--conferir`: tudo igual ao jogo.
+- **No jogo:** pela origem que o evento marca (`RETRATO_ORIGEM`: `mimico`, em `dados.py`), não pelo nome nem pela família:
+  a família continua `golem`, com os números, os contratos, o Bestiário e a faixa do mestre caçador do golem; o golem de
+  pedra comum continua com o retrato dele. Nenhuma regra mudou.
+- **Conferido com os arquivos de produção** (`auxiliares/fotografar_jogo_mimico.mjs`, `capturas-1192/`, a 1920×945): o
+  Mímico pelo evento real (o baú abandonado) com `retrato-mimico-32`, e um golem de pedra na luta com `retrato-golem-32`.
+  Nenhum pedido a `ferramentas/`, sem erro no console. A folha `../../integracoes-22-10/integracoes-1192.png`.

@@ -6389,3 +6389,20 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   fontes, a guia oculta conferida, as fotos sem erro no console.
 - **Continua:** a escolha do Jean; a decisão da Bruxa Afogada; na integração do servo, separar pela origem o esqueleto
   do Erguer Servo do inimigo que o Rei dos Mortos ergue. O antagonista e o mapa não foram começados.
+
+### 23/10/2026 (data do computador local) — O Mímico no jogo (1.192.0): o M1, pela origem
+
+- **Estado conferido:** a branch em `52c758fd`, igual ao remoto, sem alterações locais (a worktree de outra sessão,
+  `interesting-curran-366911`, não foi tocada).
+- **Decisão do Jean:** o M1 original aprovado, sem retoques (não o M1b); a M1b e a M2 ficam como alternativas.
+- **No jogo (1.192.0):** `retrato-mimico` (16 e 32, com os @2x) pela origem que o evento marca (`RETRATO_ORIGEM` em
+  `dados.py`). A família, os números, os contratos e o Bestiário continuam os do golem; o golem de pedra comum continua
+  com o dele; nenhuma regra mudou.
+- **A fonte:** a do M1 (`743ecfae`), copiada byte a byte; exportada numa pasta temporária e igual byte a byte à proposta
+  antes de gravar; `--conferir`: tudo igual.
+- **Conferido com os arquivos de produção** (`criaturas/chefes_e_especiais/capturas-1192/`): o Mímico pelo evento real e o
+  golem de pedra na luta. A folha `ferramentas/prototipos/hud/integracoes-22-10/integracoes-1192.png`.
+- **Testes:** o Mímico pela origem (o nome exibido não decide; a família continua a do golem); os testes do Espantalho e
+  do Golem Primordial passam a esperar o retrato do Mímico pela origem.
+- **Verificações sobre o código final:** `unittest` (664, 1 pulado: a fumaça, rodada à parte), o gabarito (idêntico, sem
+  atualizar), o pyflakes (só o aviso conhecido) e a fumaça inteira (378 ok, tudo certo).
