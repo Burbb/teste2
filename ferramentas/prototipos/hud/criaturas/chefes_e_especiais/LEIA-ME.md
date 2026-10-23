@@ -154,3 +154,79 @@ integrado.
   `transposicoes2-senhor-profeta-espantalho.png` (a referência, a guia e a transposição a 12×; o jogo, a proposta
   anterior e a transposição na luta, em tamanho real e a carta a 2×; a fileira com os aprovados) e
   `refinamentos-servo-lich-mimico.png` (antes × depois nos mesmos cenários; no servo, a referência da boca).
+
+# A Bruxa Afogada: desenhos suspensos e o levantamento da substituição (23/10/2026; nada mudou no jogo)
+
+**Pedido do Jean:** o conceito ficou perto demais da Ilse; suspender os desenhos dela (a B1 e a B2 ficam como
+histórico, sem nova proposta), levantar o que depende da identidade e propor três conceitos de guardião do brejo, em
+texto. Nada removido, renomeado ou migrado nesta rodada.
+
+## O que o levantamento achou (conferido no código)
+
+**A Bruxa Afogada não é só o guardião genérico: na campanha, ela é a Ilse.** A mesma ficha do catálogo
+(`GUARDIOES["pantano"]`, id `bruxa_afogada`, em `rpg/dados.py`) serve a dois usos:
+
+| Uso | Onde | O que depende da identidade |
+|---|---|---|
+| **O covil do mundo gerado** (a guardiã do pântano, sorteada entre ela e a Hidra) | `inimigos.gerar_guardiao` (o nome "Irdor, a Bruxa Afogada" pelo `base` e pelo `g`), `sistemas/chefes.py` (a luta, o título "Guardião: ...", o Sigilo e a festa com o nome) | a `intro` e o texto da fase ("O canto vira um grito. Mãos podres emergem da água..."), o rumor de `eventos/comuns.py` (`sinais_do_guardiao`, pela chave "Bruxa Afogada": "Uma canção de ninar ecoa sobre a água..."), o artigo feminino (`g="f"`) |
+| **A guardiã da campanha, Ilse** (o fundo da Capela Afogada, A Febre do Turvo) | `missoes.py` (`spec` com `id="bruxa_afogada"`, `base="Bruxa Afogada"`, `chave="ilse"`; o nome "Ilse, a Bruxa Afogada" ou "A Bruxa Afogada", conforme o personagem conhece o nome), `capitulo.py` e `caspar.py` (o nome nos textos), o Sigilo do Turvo (`receber_sigilo("turvo", ...)`), o rito do descanso (o limiar da fase de 50% da ficha), o retrato `ilse` (pela chave) | os números, as habilidades, o `invoca="afogado"` e o limiar da fase saem da ficha; o texto da fase também |
+
+- **As decisões já tomadas:** `roadmapIDEIAS/10-DECISOES.md` (Ilse: "afogada, virou a Bruxa Afogada") e
+  `11-E1-REGIAO-INICIAL.md` ("a guardiã Bruxa Afogada, que invoca afogados"). A identidade da campanha é decisão do Jean;
+  a do covil genérico, não.
+- **Os saves:** o covil guarda `{"bioma", "id", "idx", "nome", "g", "base", "derrotado"}`; a ficha vem pelo `id`
+  (`ficha_guardiao`), com o `idx` só para saves de antes do id. Os rumores aceitos guardam o texto com o nome. A
+  campanha não guarda a ficha: monta o `spec` na hora (o desfecho fica em `mundo["missoes"]`). O Sigilo guarda o bioma
+  (`j.sigilos`), não o nome.
+- **Os testes:** `tests/test_guardia.py`, `tests/broquel.py` e `tests/test_cenas_capela.py` usam o `spec` da Ilse com o id
+  `bruxa_afogada` (o título "Guardiã: a Bruxa Afogada", a conclusão "A Bruxa Afogada foi destruída"); `tests/replay.py`
+  traduz "Drowned Witch" de runs antigas; `test_retratos.py` confere que o guardião genérico continua na caveira. O
+  gabarito não encontra a Bruxa Afogada em nenhuma das 24 partidas, mas o sorteio do guardião usa
+  `rng.randrange(len(GUARDIOES[bioma]))`: mudar o tamanho da lista do pântano muda os mundos gerados.
+- **Os textos soltos:** a lenda do Ventre da Tempestade ("cabelo de uma bruxa afogada") é genérica e pode ficar; a Coroa
+  dos Afogados ("Achada na cabeça de um rei no fundo do pântano. Ele não estava morto.") combina com o conceito 2
+  abaixo; o exemplo de `texto.py` ("Irdor, a Bruxa Afogada") é só um comentário.
+- **Na tela:** a carta da luta mostra a caveira (pelos traços) no covil e o retrato da Ilse na campanha. O Bestiário não
+  registra guardiões.
+
+## Três conceitos de guardião do brejo (as regras de hoje: morto-vivo, conjurador; Maldição, Bola de Sombra, Invocar afogados, Drenar; a fase a 50%)
+
+1. **O Barqueiro do Charco** (masculino). O homem que levava os vivos pelo brejo afundou com o barco e continua o
+   trabalho: agora leva os afogados. Na proa podre, a vara numa mão e uma lanterna de luz verde-pálida na outra.
+   Invocar: "os passageiros" sobem pela borda; Drenar: a lanterna puxa o calor. Fase: "O barqueiro bate a vara na água.
+   Os passageiros sobem a bordo." Rumor: "Uma lanterna verde atravessa o charco à noite, sem fazer barulho." **No
+   retrato:** o rosto inchado e cinzento iluminado de baixo pela lanterna, a gola encharcada, a luz verde como marca
+   (cor que nenhum retrato do pântano usa). Longe da Hidra (não é fera), da Ilse (homem, não canta, não é vítima da vila)
+   e do Profeta (sem capuz nem cântico).
+2. **O Rei dos Juncos** (masculino). Um senhor antigo que o brejo engoliu com a corte; senta num trono de raízes meio
+   submerso, coroado de juncos trançados com ouro verde, e a corte afogada obedece. Invocar: "a corte" sai da água;
+   Maldição: o decreto. Fase: "Ele ergue a mão e a corte afogada responde." Rumor: "Coroas de juncos trançados boiam pela
+   margem." Dá origem à Coroa dos Afogados, que já existe. **No retrato:** o rosto inchado de carne (não de osso), a barba
+   de lodo, a coroa de juncos. **Risco:** coroa e morto-vivo encostam no Lich Menor (o rei-esqueleto da L1) e o "rei" no
+   Rei Troll e no talento Rei dos Mortos; exigiria separar bem pela carne e pelos juncos.
+3. **A Mãe do Lodo** (feminino, sem rosto humano). O próprio brejo lembrando os que engoliu: um monte de lodo com um rosto
+   grande e, nele, rostos menores dos afogados presos. Invocar: o lodo devolve os que guardava; Drenar: puxa para baixo.
+   Fase: "O lodo se abre e devolve os que guardava." Rumor: "Pegadas que entram no lodo e não saem." **No retrato:** a
+   massa marrom-esverdeada e os rostos pálidos afundados. **Risco:** a 16 px a massa vira mancha (o mesmo problema da
+   H1 e da E2), e "Mãe" e o feminino podem voltar a lembrar a Ilse.
+
+**A minha recomendação: o Barqueiro do Charco.** Tem silhueta e marca próprias (a lanterna), encaixa nas habilidades sem
+mudar nenhuma, explica o Invocar afogados e não divide traço com a Ilse, a Hidra, o Lich ou o Profeta.
+
+## O impacto de trocar a identidade mantendo as regras (para quando o Jean decidir)
+
+- **Separar os dois usos é o primeiro passo.** Trocar a `base`, o `g`, a `intro` e a fase da ficha `bruxa_afogada`
+  mudaria também a luta da Ilse (o texto da fase sai da ficha, e o `spec` dela pede o id `bruxa_afogada`). O caminho
+  limpo: a Ilse fica com a ficha `bruxa_afogada` (só da campanha, fora do sorteio do covil), e o guardião novo ganha um
+  id próprio (`barqueiro_do_charco`, por exemplo) com os mesmos números, habilidades, `invoca` e `ataque`.
+- **O sorteio:** se a lista do pântano continuar com dois sorteáveis (a Hidra e o novo), o `randrange` não muda e os
+  mundos gerados saem iguais (o gabarito sem diferença, a conferir). Uma terceira opção sorteável muda os mundos e o
+  gabarito, de propósito. O `idx` dos saves de antes do id continua valendo se a Ilse ficar na mesma posição.
+- **Os saves com um covil da Bruxa Afogada:** uma migração como a `_v5_para_v6` das árvores (o id, o `base`, o `g`, o nome
+  com o artigo, os rumores que citam o nome antigo), só nos covis do mundo gerado e só nos não derrotados ou também nos
+  vencidos (o Sigilo guarda o bioma; nada a refazer nele). A campanha não precisa de migração.
+- **Os textos:** a `intro`, a fase e o rumor novos (`sinais_do_guardiao` pelo `base` novo); o artigo pelo `g`. A Ilse
+  mantém os dela. O `tests/replay.py` ganha o nome novo se as tabelas de equilíbrio agruparem por ele.
+- **O retrato:** o guardião novo pelo id em `RETRATO_GUARDIAO`, como os outros; a Ilse continua pela chave. As fichas,
+  as recompensas (o Sigilo e o espólio de chefe) e o equilíbrio não mudam.
+- **Os testes:** os da Ilse continuam; entram um da ficha nova no sorteio, um da Ilse fora do sorteio e um da migração.
