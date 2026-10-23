@@ -1,0 +1,16 @@
+....oooooooo....
+...oAAAAAAaao...
+..oAAAaaaaaazo..
+..oAAzzzzzzazo..
+.oAAzqppppqzazo.
+.oAAzwwwwwwzazo.
+.oAAzcwwwwczazo.
+.oAAzcpqqpczazo.
+.oAAzcpkkpczazo.
+.oAAzqpkkpqzazo.
+.oAAAzqttqzzazo.
+.oAAAAzzzzaaazo.
+oAAAAAAaaaaaaazo
+oAAAAvAaaavaaazo
+oAAAAAvaaavaaazo
+oAAAAAAaaaaaaazo

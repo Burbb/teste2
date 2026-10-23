@@ -246,3 +246,7 @@ A escolha do par e da direção é do Jean; nada foi começado.
   de copiar cada uma (R1, pela guia limpa; R2, por volumes; R3, pelas linhas) e três variações da R2 (R2a a R2c), em
   `chefes_arvore_golem/` (as folhas `anciaa-r.png`, `primordial-r.png`, `anciaa-r2.png` e `primordial-r2.png`).
 - **Integrada na 1.190.0:** a Árvore Anciã R2b, pelo id da guardiã (só o 16 e o 32 da carta).
+- **O lote da noite (23/10/2026), em avaliação:** o Golem Primordial R1b (`chefes_arvore_golem/`); duas propostas de
+  cada um dos seis chefes restantes (Hidra, Dragão de Gelo, Senhor da Guerra, Profeta das Cinzas, Bruxa Afogada, Lich
+  Menor) e dos três especiais (Espantalho Possuído, Mímico, servo esquelético), em `chefes_e_especiais/` (as folhas dos
+  pares, `especiais.png` e a prancha geral `candidatos.png`).

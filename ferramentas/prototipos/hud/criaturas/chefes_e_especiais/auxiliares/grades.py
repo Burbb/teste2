@@ -1,0 +1,408 @@
+"""Os seis chefes restantes e os três retratos especiais (o lote da noite pedido pelo Jean; propostas, nada no jogo),
+16×16; o 32 da carta é o 16 ×2 (os guardiões, o Espantalho, o Mímico e o servo só aparecem na carta da luta). Desenhados à
+mão, uma letra por pixel; o enquadramento em close quando a anatomia pede (partes saindo do quadro), a construção
+primeiro. O que vem do jogo e a interpretação estão no LEIA-ME.
+    python grades.py <pasta> [<id> ...]     # grava grades/<id>.txt e listas/<id>/<camada>.lua
+"""
+import pathlib
+import sys
+
+from PIL import Image
+
+PALETAS = {
+    "hidra": {"o": "101810", "s": "24382a", "m": "3a5a3e", "l": "5a7e52", "h": "82a06a", "k": "0a0c08", "e": "d8c040", "d": "e0d8b8", "r": "8a2e2e"},
+    "dragao": {"o": "0e1420", "s": "223450", "m": "3a5a80", "l": "6a90b8", "h": "a8cce0", "w": "e8f4ff", "k": "080a10", "d": "e0e8f0"},
+    "senhor": {"o": "1a120c", "a": "35383d", "b": "585c63", "c": "7f838b", "d": "a9adb4", "w": "d6d9dd", "p": "c09070", "q": "9a6c52", "g": "6e4a38", "k": "120c08", "n": "5a3a24", "N": "3a2418", "B": "d8ccb0", "F": "5a4030", "f": "7a5a40", "r": "8a2e2e"},
+    "profeta": {"o": "161414", "A": "6a6668", "a": "4a4648", "z": "2a2828", "p": "c8b8a8", "q": "a08c7c", "t": "6e5c50", "w": "e8e4dc", "k": "100c0c", "c": "3a3636", "v": "6a4a9a"},
+    "bruxa_afogada": {"o": "0e1418", "u": "a8c4cc", "U": "7a9aa8", "V": "4e6a7a", "k": "0a0e10", "G": "2a4430", "g": "46683e", "y": "6a8a4a", "w": "2a4a66", "W": "4a6e8a", "e": "dde8e8", "m": "1a2228"},
+    "lich": {"o": "100c0e", "b": "cbbf9c", "B": "a39776", "c": "776d54", "d": "4d4636", "R": "2a1e30", "r": "4a3450", "s": "6a4e7a", "y": "c8a040", "Y": "8a6a28", "f": "60e080", "F": "a0ffb0", "k": "0a0808", "w": "c8f0c8"},
+    "espantalho": {"o": "1a120a", "b": "c8a870", "B": "9a7c50", "c": "6e5634", "d": "3e3020", "y": "d8c068", "Y": "a89048", "h": "5a4028", "H": "7a5a38", "k": "120c06", "r": "6a2a18", "e": "e08a30"},
+    "mimico": {"o": "140c08", "W": "6a4428", "w": "8a5c34", "l": "b07c48", "i": "585c63", "I": "a9adb4", "t": "e0d8b8", "T": "b04050", "P": "d06878", "k": "1a0a0a"},
+    "servo": {"o": "15120f", "B": "cbbf9c", "b": "a39776", "d": "776d54", "D": "4d4636", "k": "15120f", "I": "a4a6a0", "i": "7b7e78", "j": "555853", "J": "363936", "R": "7c4a2a", "r": "a2663a", "v": "9a62d8"},
+}
+# as camadas de cada paleta, de baixo para cima, com as letras de cada uma (a primeira leva o resto)
+CAMADAS_PALETA = {
+    "hidra": [('escamas', ''), ('boca', 'krd'), ('olhos', 'e')],
+    "dragao": [('escamas', ''), ('olhos', 'wk'), ('presas', 'd')],
+    "senhor": [('armadura', 'abcdw'), ('rosto', 'pqgk'), ('barba', 'nN'), ('trofeus', 'BFfr')],
+    "profeta": [('manto', 'Aaz'), ('rosto', 'pqtk'), ('cinzas', 'cw'), ('vazio', 'v')],
+    "bruxa_afogada": [('pele', 'uUVmk'), ('algas', 'Ggy'), ('agua', 'wW'), ('olhos', 'e')],
+    "lich": [('manto', 'Rrs'), ('cranio', 'bBcdk'), ('coroa', 'yY'), ('chamas', 'fFw')],
+    "espantalho": [('saco', 'bBcdk'), ('palha', 'yY'), ('chapeu', 'hH'), ('costura', 're')],
+    "mimico": [('madeira', 'Wwl'), ('ferro', 'iI'), ('boca', 'ktTP')],
+    "servo": [('ossos', 'BbdDk'), ('elmo', 'IijJRr'), ('feitico', 'v')],
+}
+GRADES = {
+    "hidra-h1": [
+        "oo............oo",
+        "olo..........olo",
+        "oleo........oeko",
+        "olmo..oooo..omlo",
+        ".oso.ohhllo.oso.",
+        ".oso.ohlllo.oso.",
+        ".osooekllkeoomo.",
+        "..oslolllllmoso.",
+        "..osllhhllmmlso.",
+        "...ollllllmmso..",
+        "...oslllllmso...",
+        "....oskdkdso....",
+        "....osllllso....",
+        "....osllllso....",
+        "...osmllllmso...",
+        "..osmmlllmmmso..",
+    ],
+    "hidra-h2": [
+        "..........oolo..",
+        "....ooooo.olmlo.",
+        "..oohhhllmooslo.",
+        ".ohhllllllmooso.",
+        "ohllekllllmmooo.",
+        "olllkllllllmmo..",
+        "oskkkkkkllllmo..",
+        "odkrrrkkdlllmo..",
+        "rkoooookllllmo..",
+        "r...ollllllmmso.",
+        ".rr..ollllmmmso.",
+        "......olllmmmso.",
+        "......ollmmmsso.",
+        ".....ollmmmmsso.",
+        "....olllmmmsso..",
+        "...ollmmmmssso..",
+    ],
+    "dragao-d1": [
+        "..........oo....",
+        ".......oo.ohoo..",
+        "......ohho.olhoo",
+        "....ooohllo.ollo",
+        "..oohhhllllooll.",
+        ".ohhhlllllwkmmlo",
+        "ohhllllllllmmmso",
+        "okkkllllllmmmmso",
+        "olwkkkkkllmmsso.",
+        ".oooollkkkmmsso.",
+        "....oolllmmsso..",
+        ".....ollmmmsso..",
+        ".....olmmmssso..",
+        "....olmmmmssso..",
+        "...olmmmmsssso..",
+        "..olmmmmssssso..",
+    ],
+    "dragao-d2": [
+        "................",
+        ".oo..........oo.",
+        "ohlo........olmo",
+        "ohlo.oooooo.olmo",
+        ".ohoohhllllooso.",
+        "..ohhhlllllmmo..",
+        ".ohhlllllllmmmo.",
+        ".okwkkllllkwkmo.",
+        "..ohllllllllmo..",
+        "...ohhllllmmo...",
+        "...ohllllllmo...",
+        "...ohllllllmo...",
+        "..odhllllllmdo..",
+        "..okolkllklmko..",
+        "..oooookkooooo..",
+        "....osmmmmso....",
+    ],
+    "senhor-s1": [
+        "....oooooooo....",
+        "...obddddcbbo...",
+        "..obdwwddccbbo..",
+        "..obddddcccbbo..",
+        "..oabbbdbbbbao..",
+        "..oappadappqao..",
+        "..oapkpdpkpqao..",
+        "..oappqdqppqao..",
+        "..oaprppppqgao..",
+        "..oannqppqnnao..",
+        "...onnnkknnno...",
+        "..BBonnnnnnob...",
+        ".BkBkonnnnoobbo.",
+        "oBBBbaonnoabbbco",
+        "obbbbbaaaabbbcco",
+        "obbcbbbaaabbccco",
+    ],
+    "senhor-s2": [
+        "....d......oooo.",
+        "...dwd...opppqo.",
+        "...dwdd.oppppppo",
+        "....dwddopprpqqo",
+        "....bd.opprppqgo",
+        "....b..okkpppkgo",
+        "....b..okkpkpqgo",
+        "....b..opppqqqgo",
+        "...FFf.oprrqqgo.",
+        "..FffFonnnqqnno.",
+        "..fFfFonnnnnnno.",
+        ".fFFfFFonnnnnoF.",
+        "fFfFfFFFonnnoFfF",
+        "FfFFfFfFFoooFFfF",
+        "fFfFFfFfFfFfFfFf",
+        "FfFfFfFfFfFfFfFf",
+    ],
+    "profeta-p1": [
+        "....oooooooo....",
+        "...oAAAAAAaao...",
+        "..oAAAaaaaaazo..",
+        "..oAAzzzzzzazo..",
+        ".oAAzqppppqzazo.",
+        ".oAAzwwwwwwzazo.",
+        ".oAAzcwwwwczazo.",
+        ".oAAzcpqqpczazo.",
+        ".oAAzcpkkpczazo.",
+        ".oAAzqpkkpqzazo.",
+        ".oAAAzqttqzzazo.",
+        ".oAAAAzzzzaaazo.",
+        "oAAAAAAaaaaaaazo",
+        "oAAAAvAaaavaaazo",
+        "oAAAAAvaaavaaazo",
+        "oAAAAAAaaaaaaazo",
+    ],
+    "profeta-p2": [
+        "................",
+        "......oooo......",
+        ".....oppppo.....",
+        "....opppppqo....",
+        "...oppppppqqo...",
+        "...opwkppwkqo...",
+        "...opwwppwwqo...",
+        "...opcpqpcqqo...",
+        "...oqcpqqcqqo...",
+        "....oqpkkqqo....",
+        "....oqkkkkqo....",
+        "pq...oqppqo...qp",
+        "ppq.oaAAAaao.qpp",
+        "qpqoAAAAAaaaoqpq",
+        ".qoAAAvAAaaaaoq.",
+        "..oAAAAvAAaaaao.",
+    ],
+    "bruxa-afogada-b1": [
+        "....oGGGGGo.....",
+        "...oGggyggGGo...",
+        "..oGgGGGGGGgGo..",
+        "..oGGuuuuuUGGo..",
+        ".oGGuuuuuuUVGGo.",
+        ".oGguVVuuVVUVgGo",
+        ".oGguuuuuuUUVgGo",
+        ".oGGuuuUuuUUVGGo",
+        ".oGgGuumkuUVGgGo",
+        ".oGgGuummuUVGgGo",
+        "..oGgGUUUUVGgGo.",
+        "..oGgGGVVVGGgGo.",
+        "..oGgoGGGGGogGo.",
+        "..oGgoowwwoogGo.",
+        "..oGgowWWWwogGo.",
+        "..oGgowWWWwogGo.",
+    ],
+    "bruxa-afogada-b2": [
+        "......oooo......",
+        ".....oGGGGo.....",
+        "....oGuuuuGo....",
+        "...oGuuuuuUGo...",
+        "...oGueuuueGo...",
+        "...oGuuuuuUGo...",
+        "...oGuuUuUUGo...",
+        "...oGUummUVGo...",
+        "..oGGgUVVVGgGo..",
+        "GGGgGgGVVGgGgGGG",
+        "yggGgyggGgGyggGy",
+        "WWWWWwWWwWWWWwWW",
+        "wWWwwwWwwwWWwwww",
+        "wwwwWwwVVwwWwwww",
+        "wwWwwwwwwwwwwWww",
+        "wwwwwwwwwwwwwwww",
+    ],
+    "lich-l1": [
+        "....y..y..y.....",
+        "....yYyyyyYy....",
+        "....YbbbbbbY....",
+        "...obbbbbbbco...",
+        "...obkfbbkfco...",
+        "...obkkbbkkco...",
+        "...obbbBbbcco...",
+        "...obBkkBbcco...",
+        "....obbbbbco....",
+        "..roobkbkbcoor..",
+        ".rsroobbbcoorsr.",
+        ".rsrRoyyyyoRrsr.",
+        "orsrRRYyYRRrrsro",
+        "orsrRRRyRRRrrsro",
+        "orsrRRRRRRRrrsro",
+        "orssrRRRRRRrssro",
+    ],
+    "lich-l2": [
+        "......y.y.y.....",
+        ".....yYyyyY.....",
+        "....obbbbbbo....",
+        "...obbbbbbbco...",
+        "...obbbbbbcco...",
+        "...okfkbbkfco...",
+        "...obbbBbbcco...",
+        "...obBbbbBcdo...",
+        "....obkbkbco....",
+        "..rrrobbbcorrr..",
+        ".rsrrroooorrrsr.",
+        ".rssrRRRRRRrrsr.",
+        "orsrRoFkFFoRrsro",
+        "orsRobwwwwboRsro",
+        "orsRRowwkwoRRsro",
+        "orssRRooooRRssro",
+    ],
+    "espantalho-e1": [
+        "................",
+        "......hHHh......",
+        ".....hHyyHh.....",
+        "..hhHHYyYYHHhh..",
+        ".hHHHHHHHHHHHHh.",
+        "...obbbbbbbbo...",
+        "...orbrbbrbrBo..",
+        "...obrbbbbrbBo..",
+        "...orbrbbrbrBo..",
+        "...obbbbbbbbBo..",
+        "...obkrkrkrkBo..",
+        "....obbbbbbBo...",
+        "..yYoyYyyYyoYy..",
+        ".yYyyYYyYyyYYyy.",
+        ".....cdBBdc.....",
+        "......dccd......",
+    ],
+    "espantalho-e2": [
+        ".......yy.......",
+        "......yYYy......",
+        ".....oYccYo.....",
+        "....obbBcbbo....",
+        "...obbbbbbbbo...",
+        "..obbbbbbbbbBo..",
+        "..obkkbbbbkkBo..",
+        "..obkebbbbekBo..",
+        "..obbkbbbbkbBo..",
+        "..obbbbBbbbbBo..",
+        "..obbkkkkkkbBo..",
+        "..obbkekekkbBo..",
+        "...obbkkkkbBo...",
+        "..yyoBbbbBoyy...",
+        ".yYyyoccccoyYy..",
+        "y.Yy.occdco.yY.y",
+    ],
+    "mimico-m1": [
+        "................",
+        ".oooooooooooooo.",
+        ".owwlllllllwwwo.",
+        ".oiwwwwwwwwwwio.",
+        ".otktktktktktko.",
+        ".okkkkkkkkkkkko.",
+        ".okkkkTTkkkkkko.",
+        ".okkkTPPTkkkkko.",
+        ".otkTPPPPTktkto.",
+        ".oIIITPPTIIIIIo.",
+        ".owwwwTTwwwwwwo.",
+        ".olllwwiIwwlllo.",
+        ".owwwwwiiwwwwwo.",
+        ".oIIIIIIIIIIIIo.",
+        ".owwlllwwwwlllo.",
+        ".oooooooooooooo.",
+    ],
+    "mimico-m2": [
+        "..........oooo..",
+        "........oowwwlo.",
+        "......oowwwlllo.",
+        "....oowwwwlllo..",
+        "...otktktktoo...",
+        "..okkkkkkko.....",
+        "TPkkkkkkkkko....",
+        "PPTkkkkkkkkko...",
+        ".TPtktktktktko..",
+        "..oIIIIIIIIIIIo.",
+        "..owwwwwiwwwwlIo",
+        "..olllwiIiwwllIo",
+        "..owwwwwiwwwwlIo",
+        "..oIIIIIIIIIIIIo",
+        "..owwllwwwwlllio",
+        "..oooooooooooooo",
+    ],
+    "servo-sv1": [
+        "................",
+        ".....oBBBBo.....",
+        "....oBBBBbbo....",
+        "...oBBBBbbbdo...",
+        "...oBkkbbkkdo...",
+        "...oBkvbbkvdo...",
+        "...oBbbBbbbdo...",
+        "....obbkkbbdo...",
+        "....oBbbbbdo....",
+        ".....okBkBko....",
+        ".....obkbkbo....",
+        "......oddo......",
+        "..oooobddboooo..",
+        ".obBBkbBBbkBBbo.",
+        ".obkkbkkkkbkkbo.",
+        ".obBBkbBBbkBBbo.",
+    ],
+    "servo-sv2": [
+        "......iIIi......",
+        "....iIIIiiij....",
+        "...iIIiiiiijj...",
+        "...iIiiiRiijj...",
+        "..JjjjjiijjRjJ..",
+        "...DbbbijbbbD...",
+        "...bkvdijdvkb...",
+        "...bvkdijdkvd...",
+        "...dBbbkkbbdD...",
+        "....bBdkkdbD....",
+        "....DdbBbbdD....",
+        ".....DkkkkD.....",
+        ".....dbBbdD.....",
+        "..jjjJDddDJjjj..",
+        ".iIijjJddJjjiIj.",
+        "iIiijjjJJjjjiiIj",
+    ],
+}
+PALETA_DE = {"hidra-h1": "hidra", "hidra-h2": "hidra", "dragao-d1": "dragao", "dragao-d2": "dragao", "senhor-s1": "senhor", "senhor-s2": "senhor", "profeta-p1": "profeta", "profeta-p2": "profeta", "bruxa-afogada-b1": "bruxa_afogada", "bruxa-afogada-b2": "bruxa_afogada", "lich-l1": "lich", "lich-l2": "lich", "espantalho-e1": "espantalho", "espantalho-e2": "espantalho", "mimico-m1": "mimico", "mimico-m2": "mimico", "servo-sv1": "servo", "servo-sv2": "servo"}
+
+
+def _camada(paleta):
+    cams = CAMADAS_PALETA[paleta]
+
+    def camada(x, y, ch):
+        return next((c for c, letras in cams[1:] if ch in letras), cams[0][0])
+    return camada
+
+CAMADAS = {i: (GRADES[i], PALETA_DE[i], [c for c, _ in CAMADAS_PALETA[PALETA_DE[i]]], _camada(PALETA_DE[i])) for i in GRADES}
+
+
+def cor(ident, ch):
+    return PALETAS[CAMADAS[ident][1]][ch]
+
+
+def imagem(ident):
+    im = Image.new("RGBA", (16, 16))
+    for y, l in enumerate(CAMADAS[ident][0]):
+        for x, ch in enumerate(l):
+            if ch != ".":
+                im.putpixel((x, y), tuple(int(cor(ident, ch)[i:i + 2], 16) for i in (0, 2, 4)) + (255,))
+    return im
+
+
+def gravar(base, ids=None):
+    for ident in ids or CAMADAS:
+        grade, _, ordem, camada = CAMADAS[ident]
+        assert len(grade) == 16 and all(len(l) == 16 for l in grade), (ident, [len(l) for l in grade])
+        (base / "grades").mkdir(parents=True, exist_ok=True)
+        (base / f"grades/{ident}.txt").write_text("\n".join(grade) + "\n", encoding="utf-8")
+        listas = {c: [] for c in ordem}
+        for y, l in enumerate(grade):
+            for x, ch in enumerate(l):
+                if ch != ".":
+                    listas[camada(x, y, ch)].append(f"{x},{y},{cor(ident, ch)}")
+        listas = {k: v for k, v in listas.items() if v}  # uma camada vazia não vai para a fonte
+        d = base / f"listas/{ident}"
+        d.mkdir(parents=True, exist_ok=True)
+        for k, v in listas.items():
+            (d / f"{k}.lua").write_text(f'return "{";".join(v)}"\n', encoding="utf-8")
+        (d / "ordem.txt").write_text(",".join(listas) + "\n", encoding="utf-8")
+        print(ident, {k: len(v) for k, v in listas.items()})
+
+
+if __name__ == "__main__":
+    gravar(pathlib.Path(sys.argv[1]), sys.argv[2:])

@@ -1,0 +1,887 @@
+{
+ "luta-hidra/atual": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Jean",
+    "lado": "aliado",
+    "caixa": [
+     35,
+     85,
+     271,
+     157
+    ]
+   },
+   {
+    "nome": "Hidra do Brejo",
+    "lado": "inimigo",
+    "caixa": [
+     830,
+     67,
+     1040,
+     117
+    ]
+   },
+   {
+    "nome": "Sapo-touro gigante",
+    "lado": "inimigo",
+    "caixa": [
+     830,
+     125,
+     1040,
+     175
+    ]
+   }
+  ]
+ },
+ "luta-hidra/a": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Jean",
+    "lado": "aliado",
+    "caixa": [
+     35,
+     85,
+     271,
+     157
+    ]
+   },
+   {
+    "nome": "Hidra do Brejo",
+    "lado": "inimigo",
+    "caixa": [
+     830,
+     67,
+     1040,
+     117
+    ]
+   },
+   {
+    "nome": "Sapo-touro gigante",
+    "lado": "inimigo",
+    "caixa": [
+     830,
+     125,
+     1040,
+     175
+    ]
+   }
+  ]
+ },
+ "luta-hidra/b": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Jean",
+    "lado": "aliado",
+    "caixa": [
+     35,
+     85,
+     271,
+     157
+    ]
+   },
+   {
+    "nome": "Hidra do Brejo",
+    "lado": "inimigo",
+    "caixa": [
+     830,
+     67,
+     1040,
+     117
+    ]
+   },
+   {
+    "nome": "Sapo-touro gigante",
+    "lado": "inimigo",
+    "caixa": [
+     830,
+     125,
+     1040,
+     175
+    ]
+   }
+  ]
+ },
+ "luta-dragao/atual": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Jean",
+    "lado": "aliado",
+    "caixa": [
+     35,
+     85,
+     271,
+     157
+    ]
+   },
+   {
+    "nome": "Dragão de Gelo",
+    "lado": "inimigo",
+    "caixa": [
+     830,
+     67,
+     1040,
+     117
+    ]
+   },
+   {
+    "nome": "Lobo gélido",
+    "lado": "inimigo",
+    "caixa": [
+     830,
+     125,
+     1040,
+     175
+    ]
+   }
+  ]
+ },
+ "luta-dragao/a": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Jean",
+    "lado": "aliado",
+    "caixa": [
+     35,
+     85,
+     271,
+     157
+    ]
+   },
+   {
+    "nome": "Dragão de Gelo",
+    "lado": "inimigo",
+    "caixa": [
+     830,
+     67,
+     1040,
+     117
+    ]
+   },
+   {
+    "nome": "Lobo gélido",
+    "lado": "inimigo",
+    "caixa": [
+     830,
+     125,
+     1040,
+     175
+    ]
+   }
+  ]
+ },
+ "luta-dragao/b": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Jean",
+    "lado": "aliado",
+    "caixa": [
+     35,
+     85,
+     271,
+     157
+    ]
+   },
+   {
+    "nome": "Dragão de Gelo",
+    "lado": "inimigo",
+    "caixa": [
+     830,
+     67,
+     1040,
+     117
+    ]
+   },
+   {
+    "nome": "Lobo gélido",
+    "lado": "inimigo",
+    "caixa": [
+     830,
+     125,
+     1040,
+     175
+    ]
+   }
+  ]
+ },
+ "luta-senhor/atual": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Jean",
+    "lado": "aliado",
+    "caixa": [
+     35,
+     85,
+     271,
+     157
+    ]
+   },
+   {
+    "nome": "Senhor da Guerra",
+    "lado": "inimigo",
+    "caixa": [
+     830,
+     67,
+     1040,
+     117
+    ]
+   },
+   {
+    "nome": "Bandido",
+    "lado": "inimigo",
+    "caixa": [
+     830,
+     125,
+     1040,
+     175
+    ]
+   }
+  ]
+ },
+ "luta-senhor/a": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Jean",
+    "lado": "aliado",
+    "caixa": [
+     35,
+     85,
+     271,
+     157
+    ]
+   },
+   {
+    "nome": "Senhor da Guerra",
+    "lado": "inimigo",
+    "caixa": [
+     830,
+     67,
+     1040,
+     117
+    ]
+   },
+   {
+    "nome": "Bandido",
+    "lado": "inimigo",
+    "caixa": [
+     830,
+     125,
+     1040,
+     175
+    ]
+   }
+  ]
+ },
+ "luta-senhor/b": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Jean",
+    "lado": "aliado",
+    "caixa": [
+     35,
+     85,
+     271,
+     157
+    ]
+   },
+   {
+    "nome": "Senhor da Guerra",
+    "lado": "inimigo",
+    "caixa": [
+     830,
+     67,
+     1040,
+     117
+    ]
+   },
+   {
+    "nome": "Bandido",
+    "lado": "inimigo",
+    "caixa": [
+     830,
+     125,
+     1040,
+     175
+    ]
+   }
+  ]
+ },
+ "luta-profeta/atual": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Jean",
+    "lado": "aliado",
+    "caixa": [
+     35,
+     85,
+     271,
+     157
+    ]
+   },
+   {
+    "nome": "Profeta das Cinzas",
+    "lado": "inimigo",
+    "caixa": [
+     830,
+     67,
+     1040,
+     117
+    ]
+   },
+   {
+    "nome": "Cultista",
+    "lado": "inimigo",
+    "caixa": [
+     830,
+     125,
+     1040,
+     175
+    ]
+   }
+  ]
+ },
+ "luta-profeta/a": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Jean",
+    "lado": "aliado",
+    "caixa": [
+     35,
+     85,
+     271,
+     157
+    ]
+   },
+   {
+    "nome": "Profeta das Cinzas",
+    "lado": "inimigo",
+    "caixa": [
+     830,
+     67,
+     1040,
+     117
+    ]
+   },
+   {
+    "nome": "Cultista",
+    "lado": "inimigo",
+    "caixa": [
+     830,
+     125,
+     1040,
+     175
+    ]
+   }
+  ]
+ },
+ "luta-profeta/b": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Jean",
+    "lado": "aliado",
+    "caixa": [
+     35,
+     85,
+     271,
+     157
+    ]
+   },
+   {
+    "nome": "Profeta das Cinzas",
+    "lado": "inimigo",
+    "caixa": [
+     830,
+     67,
+     1040,
+     117
+    ]
+   },
+   {
+    "nome": "Cultista",
+    "lado": "inimigo",
+    "caixa": [
+     830,
+     125,
+     1040,
+     175
+    ]
+   }
+  ]
+ },
+ "luta-bruxa/atual": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Jean",
+    "lado": "aliado",
+    "caixa": [
+     35,
+     85,
+     271,
+     157
+    ]
+   },
+   {
+    "nome": "Bruxa Afogada",
+    "lado": "inimigo",
+    "caixa": [
+     830,
+     67,
+     1040,
+     117
+    ]
+   },
+   {
+    "nome": "Afogado",
+    "lado": "inimigo",
+    "caixa": [
+     830,
+     125,
+     1040,
+     175
+    ]
+   }
+  ]
+ },
+ "luta-bruxa/a": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Jean",
+    "lado": "aliado",
+    "caixa": [
+     35,
+     85,
+     271,
+     157
+    ]
+   },
+   {
+    "nome": "Bruxa Afogada",
+    "lado": "inimigo",
+    "caixa": [
+     830,
+     67,
+     1040,
+     117
+    ]
+   },
+   {
+    "nome": "Afogado",
+    "lado": "inimigo",
+    "caixa": [
+     830,
+     125,
+     1040,
+     175
+    ]
+   }
+  ]
+ },
+ "luta-bruxa/b": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Jean",
+    "lado": "aliado",
+    "caixa": [
+     35,
+     85,
+     271,
+     157
+    ]
+   },
+   {
+    "nome": "Bruxa Afogada",
+    "lado": "inimigo",
+    "caixa": [
+     830,
+     67,
+     1040,
+     117
+    ]
+   },
+   {
+    "nome": "Afogado",
+    "lado": "inimigo",
+    "caixa": [
+     830,
+     125,
+     1040,
+     175
+    ]
+   }
+  ]
+ },
+ "luta-lich/atual": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Jean",
+    "lado": "aliado",
+    "caixa": [
+     35,
+     85,
+     271,
+     157
+    ]
+   },
+   {
+    "nome": "Lich Menor",
+    "lado": "inimigo",
+    "caixa": [
+     830,
+     67,
+     1040,
+     117
+    ]
+   },
+   {
+    "nome": "Esqueleto",
+    "lado": "inimigo",
+    "caixa": [
+     830,
+     125,
+     1040,
+     175
+    ]
+   }
+  ]
+ },
+ "luta-lich/a": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Jean",
+    "lado": "aliado",
+    "caixa": [
+     35,
+     85,
+     271,
+     157
+    ]
+   },
+   {
+    "nome": "Lich Menor",
+    "lado": "inimigo",
+    "caixa": [
+     830,
+     67,
+     1040,
+     117
+    ]
+   },
+   {
+    "nome": "Esqueleto",
+    "lado": "inimigo",
+    "caixa": [
+     830,
+     125,
+     1040,
+     175
+    ]
+   }
+  ]
+ },
+ "luta-lich/b": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Jean",
+    "lado": "aliado",
+    "caixa": [
+     35,
+     85,
+     271,
+     157
+    ]
+   },
+   {
+    "nome": "Lich Menor",
+    "lado": "inimigo",
+    "caixa": [
+     830,
+     67,
+     1040,
+     117
+    ]
+   },
+   {
+    "nome": "Esqueleto",
+    "lado": "inimigo",
+    "caixa": [
+     830,
+     125,
+     1040,
+     175
+    ]
+   }
+  ]
+ },
+ "espantalho/atual": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Jean",
+    "lado": "aliado",
+    "caixa": [
+     35,
+     85,
+     271,
+     157
+    ]
+   },
+   {
+    "nome": "Espantalho Possuído",
+    "lado": "inimigo",
+    "caixa": [
+     830,
+     96,
+     1040,
+     146
+    ]
+   }
+  ]
+ },
+ "espantalho/a": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Jean",
+    "lado": "aliado",
+    "caixa": [
+     35,
+     85,
+     271,
+     157
+    ]
+   },
+   {
+    "nome": "Espantalho Possuído",
+    "lado": "inimigo",
+    "caixa": [
+     830,
+     96,
+     1040,
+     146
+    ]
+   }
+  ]
+ },
+ "espantalho/b": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Jean",
+    "lado": "aliado",
+    "caixa": [
+     35,
+     85,
+     271,
+     157
+    ]
+   },
+   {
+    "nome": "Espantalho Possuído",
+    "lado": "inimigo",
+    "caixa": [
+     830,
+     96,
+     1040,
+     146
+    ]
+   }
+  ]
+ },
+ "mimico/atual": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Jean",
+    "lado": "aliado",
+    "caixa": [
+     35,
+     85,
+     271,
+     157
+    ]
+   },
+   {
+    "nome": "Mímico",
+    "lado": "inimigo",
+    "caixa": [
+     830,
+     96,
+     1040,
+     146
+    ]
+   }
+  ]
+ },
+ "mimico/a": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Jean",
+    "lado": "aliado",
+    "caixa": [
+     35,
+     85,
+     271,
+     157
+    ]
+   },
+   {
+    "nome": "Mímico",
+    "lado": "inimigo",
+    "caixa": [
+     830,
+     96,
+     1040,
+     146
+    ]
+   }
+  ]
+ },
+ "mimico/b": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Jean",
+    "lado": "aliado",
+    "caixa": [
+     35,
+     85,
+     271,
+     157
+    ]
+   },
+   {
+    "nome": "Mímico",
+    "lado": "inimigo",
+    "caixa": [
+     830,
+     96,
+     1040,
+     146
+    ]
+   }
+  ]
+ },
+ "servo/atual": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Jean",
+    "lado": "aliado",
+    "caixa": [
+     35,
+     56,
+     271,
+     128
+    ]
+   },
+   {
+    "nome": "Esqueleto (Invocado)",
+    "lado": "aliado",
+    "caixa": [
+     48,
+     133,
+     258,
+     183
+    ]
+   },
+   {
+    "nome": "Esqueleto",
+    "lado": "inimigo",
+    "caixa": [
+     830,
+     96,
+     1040,
+     146
+    ]
+   }
+  ]
+ },
+ "servo/a": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Jean",
+    "lado": "aliado",
+    "caixa": [
+     35,
+     56,
+     271,
+     128
+    ]
+   },
+   {
+    "nome": "Esqueleto (Invocado)",
+    "lado": "aliado",
+    "caixa": [
+     48,
+     133,
+     258,
+     183
+    ]
+   },
+   {
+    "nome": "Esqueleto",
+    "lado": "inimigo",
+    "caixa": [
+     830,
+     96,
+     1040,
+     146
+    ]
+   }
+  ]
+ },
+ "servo/b": {
+  "erros": [],
+  "caixas": [
+   {
+    "nome": "Jean",
+    "lado": "aliado",
+    "caixa": [
+     35,
+     56,
+     271,
+     128
+    ]
+   },
+   {
+    "nome": "Esqueleto (Invocado)",
+    "lado": "aliado",
+    "caixa": [
+     48,
+     133,
+     258,
+     183
+    ]
+   },
+   {
+    "nome": "Esqueleto",
+    "lado": "inimigo",
+    "caixa": [
+     830,
+     96,
+     1040,
+     146
+    ]
+   }
+  ]
+ }
+}
