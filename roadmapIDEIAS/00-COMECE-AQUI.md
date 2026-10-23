@@ -6896,3 +6896,19 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Aguardando o Jean:** avaliar a revisão (a barricada, a plaqueta, o 40 ou o 48) e decidir o que fazer com a origem
   dos ícones de lugar antes da integração.
 
+### 23/10/2026 (data do computador local) — A 1E.4: a vila e a floresta em grade nativa (nada no jogo)
+
+- **Estado conferido:** a branch em `5ee3f7f7`, igual ao remoto; o `caido-avatar-512.png` fora dos commits; nenhum
+  arquivo do jogo mudou (produção **1.199.3**).
+- **Decisões do Jean:** a plaqueta B (o retrato da classe) fica; a cancela de madeira aprovada; os caminhos e as marcas
+  do protótipo como base; os símbolos de lugar serão reconstruídos em grade nativa, começando pela vila e pela
+  floresta, só no protótipo.
+- **Feito** (`ferramentas/prototipos/hud/mapa/`, o LEIA-ME e `nativos.png`): a vila e a floresta à mão em 32×32 (o
+  minimapa) e adaptadas à mão em 48×48 (o mapa grande; o 32 em 1:1 ficou pequeno diante da plaqueta), fontes em
+  camadas pelo Aseprite em lote, o @2x por duplicação exata; o nome do lugar perto da borda procura um lugar livre (a
+  Capela no minimapa: nome, plaqueta e ruínas na mesma linha). Recomendação: 32 no minimapa, 48 no mapa grande.
+- **Verificações:** o jogo não mudou desde a bateria completa (unittest, gabarito, pyflakes, fumaça "tudo certo"); nas
+  rodadas de fotos, cliques, destinos, estados e rótulos iguais ao jogo, sem erro no console; as quatro peças
+  conferidas pixel a pixel.
+- **Aguardando o Jean:** validar o acabamento da vila e da floresta; os outros lugares e a integração depois.
+

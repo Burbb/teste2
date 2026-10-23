@@ -1136,6 +1136,12 @@ ou mudanças de dados por iniciativa do agente.
   para por ele); a integração pede um campo de bloqueio no `estado.py` tirado da mesma regra (e a cidadela selada
   enquanto o procedural existir), separado do só conhecido e do não vizinho. Tudo em `ferramentas/prototipos/hud/mapa/` (o LEIA-ME,
   `origem-lugares.png`, `presenca-lugares.png`, `pecas.png`, `comparacao.png`).
+- **Os símbolos de lugar em grade nativa (23/10/2026, decisão do Jean; só no protótipo):** aprovados como base a
+  plaqueta B, a cancela de madeira, os caminhos e as marcas. Começo pela vila e pela floresta, refeitas à mão em 32×32
+  (o minimapa) e adaptadas à mão em 48×48 (o mapa grande, onde o 32 em 1:1 ficou pequeno diante da plaqueta), com
+  fontes em camadas e o @2x por duplicação exata; o nome do lugar perto da borda procura um lugar livre. Recomendação:
+  32 no minimapa e 48 no mapa grande. **Aguardando o Jean validar o acabamento** antes dos outros lugares e da
+  integração (a folha `nativos.png`).
 - **Dependências do procedural** (para o levantamento da retirada): o covil, o vencido, a cidadela e a "selada" só
   existem lá; a legenda fixa dos nove desenhos; `MapaPx.sprite` cai no bioma para a `saida` da campanha; os glifos de
   `rpg/mapa.py`; o `fechado` da campanha não chega à tela como campo.
@@ -1304,8 +1310,9 @@ volta à pauta quando essa expansão exigir; não é uma migração de engine.
    chapéu estão reservados.
 3. **1E.4, em avaliação (23/10/2026):** o levantamento e o primeiro lote de protótipos (a posição, os caminhos, os
    símbolos e as marcas; detalhes em "A 1E.4 em 23/10/2026", no item 1.12). O Jean escolheu a direção B (a A fica como
-   alternativa); a revisão (a barricada, a plaqueta, o 48, as fontes dos ícones de lugar e o estado fechado) aguarda a
-   avaliação antes da integração; nada no jogo.
+   alternativa); aprovados como base a plaqueta B, a cancela, os caminhos e as marcas; agora, a vila e a floresta em
+   grade nativa (32 no minimapa, 48 no mapa grande) aguardam a validação do acabamento antes dos outros lugares e da
+   integração; nada no jogo.
 4. **Retomar a etapa 2** e **seguir 3–7**, como na sequência abaixo; **etapa 8** com habilidades, talentos, Grimório e
    árvore no mesmo ciclo; **etapa 9**, a campanha; **depois do plano**, a avaliação de refatoração.
 
