@@ -6137,3 +6137,19 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Verificações:** só o protótipo mudou: o pyflakes e a sintaxe do roteiro das fotos; a suíte, o gabarito e a fumaça
   não foram rodados, porque o jogo não mudou.
 - **Continua:** a escolha do Jean; nada integrado; outras criaturas, chefes e o mapa não foram começados.
+
+### 22/10/2026 (data do computador local) — A quarta rodada da Cidadela: a Abominação C3 e o Cavaleiro T2 (nada no jogo)
+
+- **Estado conferido:** a branch em `3b719569`, igual ao remoto, sem alterações locais.
+- **Avaliação do Jean:** a C2 caída demais (a orientação de mandíbula muito torta substituída por "deformação monstruosa
+  com estrutura legível"); no T, o busto aprovado como base e o elmo sem a perspectiva da referência.
+- **No protótipo, aguardando o Jean** (`ferramentas/prototipos/hud/criaturas/cidadela/LEIA-ME.md`, "A quarta rodada"):
+  a C3 (a partir da C: a boca enorme centralizada, sustentada pelas bochechas, o lábio de cima com volume) e o T2 (o busto
+  do T, o elmo refeito: a ponta à esquerda, a quina da testa ao queixo, a lateral larga, a fenda subindo pela lateral, o
+  violeta apagado fora do centro). As folhas `abominacao-c3.png` e `cavaleiro-t2.png`; C, C2 e T como histórico.
+- **Processo:** grades à mão; as fontes pelo Aseprite em lote (o conector sem editor), 0 diferentes na releitura, a guia
+  do T2 oculta; a exportação igual à grade, @2x exato, 32 e 48 em blocos inteiros; fotos a 1920×945 nos modos `c3` e
+  `t2`, sem erro no console.
+- **Verificações:** só o protótipo mudou: o pyflakes e a sintaxe do roteiro das fotos; a suíte, o gabarito e a fumaça
+  não foram rodados, porque o jogo não mudou.
+- **Continua:** a escolha do Jean; nada integrado; nenhuma outra criatura começada.
