@@ -2,7 +2,9 @@
 16×16; o 32 da carta é o 16 ×2 (os guardiões, o Espantalho, o Mímico e o servo só aparecem na carta da luta). Desenhados à
 mão, uma letra por pixel; o enquadramento em close quando a anatomia pede (partes saindo do quadro), a construção
 primeiro. O que vem do jogo e a interpretação estão no LEIA-ME.
-    python grades.py <pasta> [<id> ...]     # grava grades/<id>.txt e listas/<id>/<camada>.lua
+A segunda rodada (pedido do Jean): as cinco transposições das referências novas (`-t`, a guia oculta), a boca do SV2
+(`servo-sv2b`, a mordida da referência só na boca e na mandíbula) e os refinamentos locais do L1 e do M1 (`-l1b`, `-m1b`).
+    python grades.py <pasta> [<id> ...]     # grava grades/<id>.txt e listas/<id>/<camada>.lua (a guia, do png dela)
 """
 import pathlib
 import sys
@@ -18,6 +20,9 @@ PALETAS = {
     "lich": {"o": "100c0e", "b": "cbbf9c", "B": "a39776", "c": "776d54", "d": "4d4636", "R": "2a1e30", "r": "4a3450", "s": "6a4e7a", "y": "c8a040", "Y": "8a6a28", "f": "60e080", "F": "a0ffb0", "k": "0a0808", "w": "c8f0c8"},
     "espantalho": {"o": "1a120a", "b": "c8a870", "B": "9a7c50", "c": "6e5634", "d": "3e3020", "y": "d8c068", "Y": "a89048", "h": "5a4028", "H": "7a5a38", "k": "120c06", "r": "6a2a18", "e": "e08a30"},
     "mimico": {"o": "140c08", "W": "6a4428", "w": "8a5c34", "l": "b07c48", "i": "585c63", "I": "a9adb4", "t": "e0d8b8", "T": "b04050", "P": "d06878", "k": "1a0a0a"},
+    "dragao_t": {"o": "0e1420", "s": "223450", "m": "3a5a80", "l": "6a90b8", "h": "a8cce0", "w": "e8f4ff", "k": "080a10", "d": "e0e8f0", "e": "e0a838"},
+    "profeta_t": {"o": "141212", "A": "3a3638", "a": "2a2628", "z": "1a1818", "L": "5a5658", "p": "c8bcb0", "q": "a09484", "t": "6e6258", "w": "e0dcd4", "W": "b8b4ac", "k": "2a2220", "v": "5a3a7a"},
+    "espantalho_t": {"o": "1a120a", "h": "5a3a22", "H": "7a5232", "j": "9a6a40", "b": "b89860", "B": "8a7044", "c": "5e4a2c", "k": "120c06", "r": "c03020", "y": "d8b048", "Y": "a07c30", "d": "3a3028", "t": "3a2a18"},
     "servo": {"o": "15120f", "B": "cbbf9c", "b": "a39776", "d": "776d54", "D": "4d4636", "k": "15120f", "I": "a4a6a0", "i": "7b7e78", "j": "555853", "J": "363936", "R": "7c4a2a", "r": "a2663a", "v": "9a62d8"},
 }
 # as camadas de cada paleta, de baixo para cima, com as letras de cada uma (a primeira leva o resto)
@@ -30,6 +35,9 @@ CAMADAS_PALETA = {
     "lich": [('manto', 'Rrs'), ('cranio', 'bBcdk'), ('coroa', 'yY'), ('chamas', 'fFw')],
     "espantalho": [('saco', 'bBcdk'), ('palha', 'yY'), ('chapeu', 'hH'), ('costura', 're')],
     "mimico": [('madeira', 'Wwl'), ('ferro', 'iI'), ('boca', 'ktTP')],
+    "dragao_t": [('escamas', ''), ('olhos', 'wke'), ('presas', 'd')],
+    "profeta_t": [('manto', ''), ('rosto', 'pqtk'), ('venda', 'wW'), ('vazio', 'v')],
+    "espantalho_t": [('saco', ''), ('palha', 'yY'), ('chapeu', 'hHj'), ('costura', 't'), ('olhos', 'r')],
     "servo": [('ossos', 'BbdDk'), ('elmo', 'IijJRr'), ('feitico', 'v')],
 }
 GRADES = {
@@ -357,8 +365,158 @@ GRADES = {
         ".iIijjJddJjjiIj.",
         "iIiijjjJJjjjiiIj",
     ],
+    "hidra-t": [
+        ".........ooooo..",
+        "........ohhhleo.",
+        ".......ohhllllmo",
+        "..oooo.ollllssmo",
+        ".ohhhho.olmmsso.",
+        "ohhllleo.olmso..",
+        "ohlllllo.olmso..",
+        "kdkkkllmoolmsooo",
+        "rrrkkllmoolhhleo",
+        "okdkllllmollllmo",
+        ".oolllllmosllsso",
+        "...ollmmso.osmo.",
+        "...ollmmso.osmmo",
+        "..ollmmsso.osmmo",
+        "..olmmmsso.osmmo",
+        ".olmmmsso..osmmo",
+    ],
+    "dragao-t": [
+        "......oo..oo....",
+        ".....ohlooohlo..",
+        "....ohhlo.ohllo.",
+        "...ohhhlooohhlo.",
+        "..ohhhhlllhhhmo.",
+        ".ohhllllllllmmso",
+        "ohhlkkhllllmmsso",
+        "ohllkellllmmssso",
+        "ohlllllllmmmssso",
+        "ohhhhllllmmmsso.",
+        "okkkkkdllmmmsso.",
+        "odkdkkklmmmssso.",
+        ".ooooollmmmsssso",
+        "....olllmmmsssso",
+        "...ollmmmsssssso",
+        "..ollmmmsssssso.",
+    ],
+    "senhor-t": [
+        "................",
+        ".....oooooo.....",
+        "....oppppqqo....",
+        "...opppppqrqo...",
+        "...ogggpqkkkko..",
+        "...oqwkpqkkkkgo.",
+        "...oppppqkkkrgo.",
+        "...oqppppgqrqgo.",
+        "...oqpqppgqqqgo.",
+        "...onqnnnnqnngo.",
+        "...onnNkkNnnnno.",
+        "..donnnqqnnnnno.",
+        ".dddonnnnnnnNNo.",
+        "dddbofnnnnnNfFo.",
+        ".ddbFFfnnnNfFFFo",
+        "..bFFfFffFfFFfFF",
+    ],
+    "profeta-t": [
+        "......oooo......",
+        "....ooLAAaoo....",
+        "...oLAAAAAaao...",
+        "..oLAAaaaaaAao..",
+        "..oLAazzzzzzaAo.",
+        ".oLAazwwwwwwzaAo",
+        ".oLAazWWWWWWzaAo",
+        ".oLAaztqptqtzaAo",
+        ".oLAaztqptqtzaAo",
+        ".oLAazttpqttzaAo",
+        ".oLAazqtqqtqzaAo",
+        ".oLAazqtkktqzaAo",
+        ".oLAAaztqqtzaAAo",
+        "oLAAAAazzzzaAAAo",
+        "oLAAAAAvvvAAAAAo",
+        "oLAAAAAAvAAAAAAo",
+    ],
+    "espantalho-t": [
+        "..........oo....",
+        ".........oHjo...",
+        "........ohHjho..",
+        ".......ohhHHhho.",
+        "....oohhhHHjhhho",
+        "..oohhhhhHHHHhho",
+        "oohhhhhhhhhhhhho",
+        ".oohhhooooooohhh",
+        "...oobBcBBcBcoo.",
+        "...obdrkBBkrdco.",
+        "...oBbkkBBkkbco.",
+        "...oBbtBtBtBcco.",
+        "...oBttttttBco..",
+        "..yYyobBBBBoyYy.",
+        ".yYyYyyYYyyYyYy.",
+        "..ddddddddddddd.",
+    ],
+    "servo-sv2b": [
+        "......iIIi......",
+        "....iIIIiiij....",
+        "...iIIiiiiijj...",
+        "...iIiiiRiijj...",
+        "..JjjjjiijjRjJ..",
+        "...DbbbijbbbD...",
+        "...bkvdijdvkb...",
+        "...bvkdijdkvd...",
+        "...dBbbkkbbdD...",
+        "....bBdkkdbD....",
+        "....DBBdBBbD....",
+        "....DbDDDDbD....",
+        ".....dBBdBD.....",
+        "..jjjJDddDJjjj..",
+        ".iIijjJddJjjiIj.",
+        "iIiijjjJJjjjiiIj",
+    ],
+    "lich-l1b": [
+        "....y..y..y.....",
+        "....yYyyyyYy....",
+        "....YbbbbbbY....",
+        "...obbbbbbbco...",
+        "...obkfbbkfco...",
+        "...obkkbbkkco...",
+        "...obbbBbbcco...",
+        "...ocbkkbbdco...",
+        "....obbcbbco....",
+        "..rooBdddBcoor..",
+        ".rsroobbdcoorsr.",
+        ".rsrRoyyyyoRrsr.",
+        "orsrRRYyYRRrrsro",
+        "orsrRRRyRRRrrsro",
+        "orsrRRRRRRRrrsro",
+        "orssrRRRRRRrssro",
+    ],
+    "mimico-m1b": [
+        "oooooooooooooooo",
+        "owwllllllllllwwo",
+        "oiwwwwwwwwwwwwio",
+        ".oWtttWttWtttWo.",
+        ".oWktkktkkktkWo.",
+        ".oWkkkkkkkkkkWo.",
+        ".oWkkktkkktkkWo.",
+        ".oWktttkPPttkWo.",
+        ".oIIIIIIPPTIIIo.",
+        ".owwwwwwwTPwwwo.",
+        ".olllwwiIwwlllo.",
+        ".owwwwwiiwwwwwo.",
+        ".oIIIIIIIIIIIIo.",
+        ".owwlllwwwwlllo.",
+        ".owwwwwwwwwwwwo.",
+        ".oooooooooooooo.",
+    ],
 }
-PALETA_DE = {"hidra-h1": "hidra", "hidra-h2": "hidra", "dragao-d1": "dragao", "dragao-d2": "dragao", "senhor-s1": "senhor", "senhor-s2": "senhor", "profeta-p1": "profeta", "profeta-p2": "profeta", "bruxa-afogada-b1": "bruxa_afogada", "bruxa-afogada-b2": "bruxa_afogada", "lich-l1": "lich", "lich-l2": "lich", "espantalho-e1": "espantalho", "espantalho-e2": "espantalho", "mimico-m1": "mimico", "mimico-m2": "mimico", "servo-sv1": "servo", "servo-sv2": "servo"}
+PALETA_DE = {"hidra-h1": "hidra", "hidra-h2": "hidra", "dragao-d1": "dragao", "dragao-d2": "dragao", "senhor-s1": "senhor", "senhor-s2": "senhor", "profeta-p1": "profeta", "profeta-p2": "profeta", "bruxa-afogada-b1": "bruxa_afogada", "bruxa-afogada-b2": "bruxa_afogada", "lich-l1": "lich", "lich-l2": "lich", "espantalho-e1": "espantalho", "espantalho-e2": "espantalho", "mimico-m1": "mimico", "mimico-m2": "mimico", "servo-sv1": "servo", "servo-sv2": "servo",
+             "hidra-t": "hidra", "dragao-t": "dragao_t", "senhor-t": "senhor", "profeta-t": "profeta_t",
+             "espantalho-t": "espantalho_t", "servo-sv2b": "servo", "lich-l1b": "lich", "mimico-m1b": "mimico"}
+# as guias (as referências novas reduzidas a 16, medidas à parte), ocultas na fonte: só nas transposições e no servo
+GUIAS = {"hidra-t": "guias/hidra-guia-16.png", "dragao-t": "guias/dragao-guia-16.png", "senhor-t": "guias/senhor-guia-16.png",
+         "profeta-t": "guias/profeta-guia-16.png", "espantalho-t": "guias/espantalho-guia-16.png",
+         "servo-sv2b": "guias/servo-guia-16.png"}
 
 
 def _camada(paleta):
@@ -391,6 +549,10 @@ def gravar(base, ids=None):
         (base / "grades").mkdir(parents=True, exist_ok=True)
         (base / f"grades/{ident}.txt").write_text("\n".join(grade) + "\n", encoding="utf-8")
         listas = {c: [] for c in ordem}
+        if ident in GUIAS:  # a guia por baixo de tudo, a primeira da ordem
+            g = Image.open(base / GUIAS[ident]).convert("RGBA")
+            listas = {"guia": [f"{x},{y},{''.join(f'{v:02x}' for v in g.getpixel((x, y)))}" for y in range(16)
+                               for x in range(16) if g.getpixel((x, y))[3]], **listas}
         for y, l in enumerate(grade):
             for x, ch in enumerate(l):
                 if ch != ".":

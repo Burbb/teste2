@@ -82,3 +82,75 @@ a armadura, o rosto, a barba, os troféus; o manto, o crânio, a coroa, as chama
 - As folhas (`python auxiliares/prancha.py`): `par1-hidra-dragao.png`, `par2-senhor-profeta.png`, `par3-bruxa-lich.png`,
   `especiais.png` (a luta em tamanho real e a carta a 2×, a fileira com os aprovados, a 12×) e `candidatos.png` (a
   prancha geral dos 18 e do Golem R1b, identificados).
+
+# A segunda rodada (23/10/2026, propostas; nada no jogo)
+
+**Decisões do Jean:** o Golem Primordial R1b integrado (1.191.0, `../chefes_arvore_golem/`); cinco transposições pelas
+referências novas (uma proposta por criatura); a boca do SV2; refinamentos locais do L1 e do M1 (a base escolhida, não
+o M2); a Bruxa Afogada suspensa (a seção seguinte). As propostas da primeira rodada ficam como histórico. Só o Golem foi
+integrado.
+
+- **As referências** (`ferramentas/arte/referencias/icones/`, a origem e o SHA-256 no LEIA-ME de lá) e **as guias**
+  (`guias/<criatura>-guia-16.png`): o recorte quadrado de 1200 px a partir de (27, 27), reduzido a 16 por média (75 px por
+  pixel), a camada `guia` oculta na fonte, fora da exportação. A guia mede as posições; o desenho é à mão, com a paleta e
+  o acabamento dos retratos aprovados.
+- **As cinco transposições (`-t`):**
+  - **Hidra** (`hidra-t`): a cabeça principal de perfil para a esquerda, a boca aberta (o vermelho e o dente), a segunda
+    cabeça alta à direita olhando para a esquerda e a terceira embaixo, à direita, cada uma no seu pescoço, com o vão
+    entre eles. Proporções ajustadas: a principal um pouco maior, as secundárias erguidas para os pescoços aparecerem.
+    **Limitação:** a terceira cabeça é a menor e a 32 lê como uma saliência com o olho.
+  - **Dragão de Gelo** (`dragao-t`): o crânio pesado em três quartos ocupando o quadro, a sobrancelha sobre o olho âmbar,
+    o focinho com a narina, a mandíbula com as presas, os chifres para trás no alto. **Limitação:** a 32 os chifres viram
+    pontas no topo e o focinho fica rombudo.
+  - **Senhor da Guerra** (`senhor-t`): o veterano da S2 pela referência; o olho visível sob a sobrancelha escura, a venda
+    com a cicatriz atravessando, o nariz aceso com a sombra ao lado, a boca curta de cantos caídos entre o bigode e a
+    barba, a barba cheia; a lâmina do machado embaixo à esquerda. **Limitação:** a cicatriz tem 3 px.
+  - **Profeta das Cinzas** (`profeta-t`): o P1 pela referência; o capuz escuro e fundo, a venda clara, o rosto abaixo
+    mais cinzento que a venda, o nariz longo com sombra, as bochechas fundas, a boca fechada de cantos caídos, o violeta
+    na gola. **Limitação:** a 32, a venda clara sobre o rosto pálido ainda pode ler como uma máscara.
+  - **Espantalho Possuído** (`espantalho-t`): o chapéu pontudo torto para a direita, a cabeça de estopa, os olhos fundos
+    de brasa com as sobrancelhas em ângulo (a expressão maligna), a boca costurada; a palha da gola simplificada numa
+    faixa. **Limitação:** o marrom do chapéu disputa com o da estopa.
+- **O servo: SV2 × SV2b** (`servo-sv2b`): o SV2 sem outra mudança além das linhas 10 a 12, a boca. A referência 7 só na
+  boca e na mandíbula (a guia dela oculta na fonte): os dentes de cima em dois grupos com a separação fora do centro, a
+  mordida fechada numa linha escura (não preta), os lados da mandíbula ligados às bochechas, os dentes de baixo em dois
+  grupos e o queixo. O elmo, os olhos violeta, o nariz e o enquadramento como estavam. **Para a integração futura:** o
+  "Esqueleto (Invocado)" do Erguer Servo e o inimigo erguido pelo Rei dos Mortos ("Lobo (servo)", `talentos.py`) têm o
+  mesmo tipo `servo`; o retrato precisa vir da origem (só o do Erguer Servo), e o lobo erguido continua com o do lobo.
+- **Os refinamentos locais:**
+  - **L1 × L1b** (`lich-l1b`): só as linhas 7 a 10; as maçãs do rosto com o oco embaixo, os dentes de cima em dois pares,
+    a mordida fechada numa linha escura que liga os lados da mandíbula às maçãs, os dentes de baixo e o queixo; some o
+    sorriso do L1. A coroa, o manto, as chamas e a composição como estavam.
+  - **M1 × M1b** (`mimico-m1b`): a tampa 1 px mais larga que o corpo de cada lado, com as quinas de ferro (as dobradiças)
+    e a borda escura embaixo; as paredes laterais em madeira escura ligam a tampa ao corpo, e o baú lê como um objeto
+    aberto. Os dentes de cima em três grupos (3, 2, 3) presos na tampa, os de baixo em dois grupos encaixando; a língua
+    reduzida a 2 px, saindo entre os grupos de baixo e passando pela borda, deixa ver a cavidade e os dentes. De frente,
+    como o M1.
+
+## A minha leitura da segunda rodada (quem escolhe é o Jean)
+
+| Criatura | A proposta | Comparada com a rodada anterior |
+|---|---|---|
+| Hidra | `hidra-t` | as três cabeças leem como três, com os pescoços; melhor que a H1 (a cabeça do meio como goblin) e que a H2 (as de trás como manchas) |
+| Dragão | `dragao-t` | o crânio pesado e o olho âmbar dão mais presença que a D1; a D1 tem o focinho mais longo |
+| Senhor | `senhor-t` | o rosto lê melhor que a S2 (olho, venda, nariz, boca e barba separados); perde o manto de pele |
+| Profeta | `profeta-t` | humano e envelhecido onde o P1 era um capuz com venda; ainda o risco da máscara |
+| Espantalho | `espantalho-t` | o chapéu torto e o olhar maligno são da referência; perde os X do E1, que viravam xadrez a 32 |
+| Servo | `servo-sv2b` | a boca fechada e ligada à mandíbula, sem a cavidade preta do SV2 |
+| Lich | `lich-l1b` | a caveira fecha sem sorrir; o resto igual |
+| Mímico | `mimico-m1b` | tampa e corpo articulados, os dentes organizados, a língua sem tampar a boca; a língua menos chamativa |
+
+## O processo da segunda rodada
+
+- As grades à mão em `auxiliares/grades.py` (as 18 da primeira rodada saem idênticas; a guia entra por `GUIAS`, a
+  primeira camada da ordem), julgadas a 32 na caixa da carta ao lado dos aprovados.
+- As fontes pelo Aseprite em lote (`python auxiliares/exportar.py --montar <id>`; o conector continua sem editor, a
+  janela aberta do Aseprite não foi tocada): 0 diferentes e 0 fora da tela na releitura de cada camada, a guia
+  escondida depois da montagem (`guia=false` conferido); a exportação igual à grade, o @2x exato, o 32 em blocos inteiros
+  (só o 32: o uso real).
+- As fotos a 1920×945 no modo `t` (`MODOS=t`, os mesmos cenários e as mesmas caixas dos modos atual, a e b; a Bruxa
+  Afogada fora), sem erro no console.
+- As folhas (`python auxiliares/prancha.py --rodada2`): `transposicoes1-hidra-dragao.png` e
+  `transposicoes2-senhor-profeta-espantalho.png` (a referência, a guia e a transposição a 12×; o jogo, a proposta
+  anterior e a transposição na luta, em tamanho real e a carta a 2×; a fileira com os aprovados) e
+  `refinamentos-servo-lich-mimico.png` (antes × depois nos mesmos cenários; no servo, a referência da boca).

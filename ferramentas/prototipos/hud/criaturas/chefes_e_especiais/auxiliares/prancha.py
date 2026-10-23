@@ -3,11 +3,14 @@ tamanho real (o grupo: o guardião com o comum da região; no servo, o lado alia
 retratos aprovados pertinentes (na caixa da carta, real e 3×) e a 12× com a grade, sem suavização. Uma folha por par
 (par1-hidra-dragao.png, par2-senhor-profeta.png, par3-bruxa-lich.png), a dos especiais (especiais.png) e a prancha geral
 dos candidatos novos (candidatos.png, com o Golem R1b). Tudo trocado só na página (protótipo).
-    python prancha.py      (depois do fotografar.mjs)
+Com --rodada2, as folhas da segunda rodada (transposicoes1-hidra-dragao.png, transposicoes2-senhor-profeta-espantalho.png,
+refinamentos-servo-lich-mimico.png: a referência, a guia e a transposição a 12×; antes × depois nos mesmos cenários).
+    python prancha.py [--rodada2]      (depois do fotografar.mjs)
 """
 import json
 import pathlib
 import re
+import sys
 
 from PIL import Image, ImageDraw, ImageFont
 
@@ -50,11 +53,46 @@ CRIATURAS = {
                                        ("SV2, o E1 sob o feitiço", "b", "servo-sv2")],
               ("esqueleto", "cultista", "espectro"), ["servo"]),
 }
+# a segunda rodada (pedido do Jean): cada transposição ao lado da referência e da guia, e os refinamentos antes × depois,
+# nos mesmos cenários (o modo "t" das fotos); a Bruxa Afogada suspensa
+RODADA2 = {
+    "hidra2": ("Hidra do Brejo", [("atual (o jogo: a fera)", "atual", None), ("H2 (a rodada anterior)", "b", "hidra-h2"),
+                                  ("T, a transposição", "t", "hidra-t")],
+               ("sapo", "sanguessuga", "rei-troll", "arvore-ancia"), ["luta-hidra"],
+               ("Hidra do pântano de três cabeças-1.png", (27, 27, 1227, 1227), "hidra-guia-16.png", "hidra-t")),
+    "dragao2": ("Dragão de Gelo", [("atual (o jogo: o voador)", "atual", None), ("D1 (a rodada anterior)", "a", "dragao-d1"),
+                                   ("T, a transposição", "t", "dragao-t")],
+                ("grifo", "lobo-gelido", "harpia", "rei-troll"), ["luta-dragao"],
+                ("Cabeça ancestral de dragão de gelo-2.png", (27, 27, 1227, 1227), "dragao-guia-16.png", "dragao-t")),
+    "senhor2": ("Senhor da Guerra", [("atual (o jogo: o humano)", "atual", None), ("S2 (a rodada anterior)", "b", "senhor-s2"),
+                                     ("T, a transposição", "t", "senhor-t")],
+                ("mercenario", "bandido", "rei-troll", "cavaleiro-sombrio"), ["luta-senhor"],
+                ("Senhor da guerra caolho-3.png", (27, 27, 1227, 1227), "senhor-guia-16.png", "senhor-t")),
+    "profeta2": ("Profeta das Cinzas", [("atual (o jogo: o humano)", "atual", None), ("P1 (a rodada anterior)", "a", "profeta-p1"),
+                                        ("T, a transposição", "t", "profeta-t")],
+                 ("cultista", "xama-caido", "espectro", "arvore-ancia"), ["luta-profeta"],
+                 ("Profeta das cinzas de olhos vendados-4.png", (27, 27, 1227, 1227), "profeta-guia-16.png", "profeta-t")),
+    "espantalho2": ("Espantalho Possuído", [("atual (o jogo: a planta)", "atual", None), ("E1 (a rodada anterior)", "a", "espantalho-e1"),
+                                            ("T, a transposição", "t", "espantalho-t")],
+                    ("arvore-desperta", "bandido", "caido"), ["espantalho"],
+                    ("Espantalho possuído em pixel art-5.png", (27, 27, 1227, 1227), "espantalho-guia-16.png", "espantalho-t")),
+    "servo2": ("Esqueleto (Invocado)", [("atual (o jogo: a caveira)", "atual", None), ("SV2, antes", "b", "servo-sv2"),
+                                        ("SV2b, a boca corrigida", "t", "servo-sv2b")],
+               ("esqueleto", "cultista", "espectro"), ["servo"],
+               ("Esqueleto pixelado com mordida cerrada-7.png", (27, 27, 1227, 1227), "servo-guia-16.png", ["servo-sv2", "servo-sv2b"])),
+    "lich2": ("Lich Menor", [("atual (o jogo: a caveira)", "atual", None), ("L1, antes", "a", "lich-l1"),
+                             ("L1b, a caveira refinada", "t", "lich-l1b")],
+              ("esqueleto", "cultista", "cavaleiro-sombrio", "rei-troll"), ["luta-lich"]),
+    "mimico2": ("Mímico", [("atual (o jogo: o construto)", "atual", None), ("M1, antes", "a", "mimico-m1"),
+                           ("M1b, a tampa e a mordida", "t", "mimico-m1b")],
+                ("golem", "sapo", "cao-infernal"), ["mimico"]),
+}
+TODAS = {**CRIATURAS, **RODADA2}
 FOTOS = {}  # todas em capturas/
 ORIENTACAO = set()  # sem referência neste lote
 EXTRAS = {}  # sem retratos do herói na fileira
-SEM_BESTIARIO = set(CRIATURAS)  # nenhum deles entra no Bestiário
-LADO = {"servo": "aliado"}  # o grupo da luta em tamanho real: o lado da carta (o servo, os aliados)
+SEM_BESTIARIO = set(TODAS)  # nenhum deles entra no Bestiário
+LADO = {"servo": "aliado", "servo2": "aliado"}  # o grupo da luta em tamanho real: o lado da carta (o servo, os aliados)
 REFERENCIAS = AQUI.parents[5] / "ferramentas/arte/referencias/icones"
 
 
@@ -99,7 +137,7 @@ def heroi(classe):
 
 
 def folha(chave):
-    nome, colunas, aprovados, lutas, *ref = CRIATURAS[chave]
+    nome, colunas, aprovados, lutas, *ref = TODAS[chave]
     cap = PASTA / FOTOS[chave] if chave in FOTOS else CAP
     reg = json.loads((cap / "registro.json").read_text(encoding="utf-8"))
 
@@ -197,6 +235,9 @@ def folha(chave):
 
 FOLHAS = {"par1-hidra-dragao": ("hidra", "dragao"), "par2-senhor-profeta": ("senhor", "profeta"),
           "par3-bruxa-lich": ("bruxa", "lich"), "especiais": ("espantalho", "mimico", "servo")}
+FOLHAS2 = {"transposicoes1-hidra-dragao": ("hidra2", "dragao2"),
+           "transposicoes2-senhor-profeta-espantalho": ("senhor2", "profeta2", "espantalho2"),
+           "refinamentos-servo-lich-mimico": ("servo2", "lich2", "mimico2")}
 
 
 def juntar(nome, chaves):
@@ -233,8 +274,9 @@ def candidatos():
 
 
 if __name__ == "__main__":
-    for nome, chaves in FOLHAS.items():
+    for nome, chaves in (FOLHAS2 if "--rodada2" in sys.argv else FOLHAS).items():
         for c in chaves:
             folha(c)
         juntar(nome, chaves)
-    candidatos()
+    if "--rodada2" not in sys.argv:
+        candidatos()

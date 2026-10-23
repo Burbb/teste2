@@ -149,3 +149,19 @@ close, em três quartos para a esquerda: a cabeça irregular de pedras brutas, a
 um ponto de luz, a rachadura principal no alto, o nariz de pedra, o vinco da boca, a mandíbula de pedras e o musgo à
 direita. Ampliada, não uma grade nativa: as transposições estão em `ferramentas/prototipos/hud/criaturas/
 chefes_arvore_golem/` (`primordial-r1` a `-r3` e as variações `-r2a` a `-r2c`; a guia em `guias/`).
+
+**As sete referências da segunda rodada dos chefes e especiais** (1254×1254, RGBA, 23/10/2026, data do computador local):
+imagens geradas na conversa com o Jean e deixadas aqui por ele; sem outra origem ou autoria informada; os originais
+guardados sem alteração. Ampliadas, não grades nativas: as transposições para 16×16 estão em
+`ferramentas/prototipos/hud/criaturas/chefes_e_especiais/` (as guias em `guias/`, o recorte de 1200 px a partir de
+(27, 27) reduzido por média).
+
+| Arquivo | SHA-256 (começo) | O que mostra | Uso |
+|---|---|---|---|
+| `Hidra do pântano de três cabeças-1.png` | `c49b9b599be48c2c` | a cabeça principal de perfil para a esquerda, a boca aberta; duas cabeças secundárias à direita, uma alta e uma baixa, os pescoços separados | `hidra-t` |
+| `Cabeça ancestral de dragão de gelo-2.png` | `61fcab38ddfe7df0` | a cabeça pesada em três quartos para a esquerda, a sobrancelha sobre o olho âmbar, o focinho, a mandíbula com presas, os chifres para trás | `dragao-t` |
+| `Senhor da guerra caolho-3.png` | `9b3cf762c288d3df` | o veterano de cabeça raspada, a venda no olho direito com a cicatriz, a barba cheia, a expressão severa, a lâmina do machado embaixo à esquerda | `senhor-t` |
+| `Profeta das cinzas de olhos vendados-4.png` | `f361e017b34cc5c2` | o capuz escuro e fundo, a venda clara, o rosto envelhecido e magro, o nariz longo, a boca fechada, o violeta na gola | `profeta-t` |
+| `Espantalho possuído em pixel art-5.png` | `4d3feefdde99fd1b` | o chapéu pontudo e torto, a cabeça de estopa, os olhos fundos de brasa, a boca costurada, a gola de palha | `espantalho-t` |
+| `Retrato pixelado de esqueleto com mandíbula-6.png` | `011b076d1743db1d` | um esqueleto de elmo com a mandíbula | guardada, sem uso (a 7 a substitui) |
+| `Esqueleto pixelado com mordida cerrada-7.png` | `60d05e514dee5fa3` | o esqueleto de elmo com os olhos violeta e a mordida fechada | só a boca e a mandíbula do `servo-sv2b` |

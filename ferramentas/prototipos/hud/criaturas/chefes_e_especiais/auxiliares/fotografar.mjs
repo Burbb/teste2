@@ -1,7 +1,8 @@
 // As fotos dos seis chefes restantes e dos três especiais (protótipo; nada no jogo), a 1920×945 e com os mesmos dados em
 // cada modo: cada guardião na luta (CHEFE=, com o nome e a chave dele) com um comum da região; o Espantalho Possuído e o
 // Mímico pelo código real dos eventos (cenario_excecoes.py); o servo esquelético na carta aliada (SERVOS=1). Modos:
-// "atual" (o jogo), "a" e "b" (as duas propostas de cada), trocados só na página, nas cartas (inimigas e aliadas), pelo
+// "atual" (o jogo), "a" e "b" (as duas propostas de cada) e "t" (a segunda rodada: as transposições das referências
+// novas, o SV2b, o L1b e o M1b; a Bruxa Afogada suspensa, sem "t"), trocados só na página, nas cartas (inimigas e aliadas), pelo
 // nome. Nenhum deles entra no Bestiário.
 //   [MODOS=atual,a,b] PLAYWRIGHT_MODULO=<file:// do index.mjs> node fotografar.mjs <raiz> <pasta das fotos>
 import { spawn } from "child_process";
@@ -17,17 +18,17 @@ const dados = (pasta, id) => "data:image/png;base64," + readFileSync(path.join(a
 // cada criatura: o nome na carta e o desenho de cada modo
 const P = "../proposta";
 const BICHOS = [
-  ["^Hidra do Brejo", { a: [P, "hidra-h1"], b: [P, "hidra-h2"] }],
-  ["^Dragão de Gelo", { a: [P, "dragao-d1"], b: [P, "dragao-d2"] }],
-  ["^Senhor da Guerra", { a: [P, "senhor-s1"], b: [P, "senhor-s2"] }],
-  ["^Profeta das Cinzas", { a: [P, "profeta-p1"], b: [P, "profeta-p2"] }],
+  ["^Hidra do Brejo", { a: [P, "hidra-h1"], b: [P, "hidra-h2"], t: [P, "hidra-t"] }],
+  ["^Dragão de Gelo", { a: [P, "dragao-d1"], b: [P, "dragao-d2"], t: [P, "dragao-t"] }],
+  ["^Senhor da Guerra", { a: [P, "senhor-s1"], b: [P, "senhor-s2"], t: [P, "senhor-t"] }],
+  ["^Profeta das Cinzas", { a: [P, "profeta-p1"], b: [P, "profeta-p2"], t: [P, "profeta-t"] }],
   ["^Bruxa Afogada", { a: [P, "bruxa-afogada-b1"], b: [P, "bruxa-afogada-b2"] }],
-  ["^Lich Menor", { a: [P, "lich-l1"], b: [P, "lich-l2"] }],
-  ["^Espantalho Possuído", { a: [P, "espantalho-e1"], b: [P, "espantalho-e2"] }],
-  ["^Mímico", { a: [P, "mimico-m1"], b: [P, "mimico-m2"] }],
-  ["^Esqueleto \\(Invocado\\)", { a: [P, "servo-sv1"], b: [P, "servo-sv2"] }],
+  ["^Lich Menor", { a: [P, "lich-l1"], b: [P, "lich-l2"], t: [P, "lich-l1b"] }],
+  ["^Espantalho Possuído", { a: [P, "espantalho-e1"], b: [P, "espantalho-e2"], t: [P, "espantalho-t"] }],
+  ["^Mímico", { a: [P, "mimico-m1"], b: [P, "mimico-m2"], t: [P, "mimico-m1b"] }],
+  ["^Esqueleto \\(Invocado\\)", { a: [P, "servo-sv1"], b: [P, "servo-sv2"], t: [P, "servo-sv2b"] }],
 ];
-const TROCAS = Object.fromEntries(["a", "b"].map((m) =>
+const TROCAS = Object.fromEntries(["a", "b", "t"].map((m) =>
   [m, BICHOS.filter(([, ms]) => ms[m]).map(([n, ms]) => [n, dados(...ms[m])])]));
 const MODOS = (process.env.MODOS || "atual,a,b").split(",");
 const LUTA = { TUTORIAL: "0", CLASSE: "guerreiro", NIVEL_LUTA: "5" };
