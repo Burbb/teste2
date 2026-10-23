@@ -17,6 +17,7 @@ A passiva de cada especialização (PASSIVAS) segue o mesmo formato.
 
 from . import balanceamento as bal
 from .classes import CLASSES, SPECS
+from .dados import retrato
 from .habilidades import HABILIDADES, VARIANTES, escolher_versao, ficha, resumo_versao, versao
 from .modificadores import Fixo, mod
 
@@ -89,7 +90,9 @@ def _senhor_mortos(cb, u, rank, d):
     c = d["alvo"]
     if not c.chefe:
         cb.dizer(f"{c.nome} se ergue de novo — agora sob o seu comando!", "magenta")
-        cb.invocar_aliado(f"{c.nome} (servo)", hp=int(c.max_hp * 0.4), atk=c.atk * 0.5)
+        # a carta continua com o retrato da criatura que caiu (1.196.0): um lobo erguido é um lobo, não o servo do Erguer Servo
+        desenho = retrato(c.tracos, c.familia, getattr(c, "chave", None), getattr(c, "guardiao", None), getattr(c, "origem", None))
+        cb.invocar_aliado(f"{c.nome} (servo)", hp=int(c.max_hp * 0.4), atk=c.atk * 0.5, retrato=desenho)
     return True
 
 

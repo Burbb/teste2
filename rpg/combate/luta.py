@@ -24,11 +24,14 @@ ORIGEM_PROTECAO = {
 }
 
 class Aliado(Combatente):
-    def __init__(self, nome, hp, atk, agi=4, tipo="servo", alcance="corpo", crit=0.0):
+    def __init__(self, nome, hp, atk, agi=4, tipo="servo", alcance="corpo", crit=0.0, retrato=None):
         super().__init__(nome, hp, atk, 3, agi, 0)
         self.tipo = tipo
         self.alcance = alcance
         self.crit = crit
+        # o desenho da carta, escolhido por quem invoca (1.196.0): o servo do Erguer Servo, o crânio nu; a criatura que o
+        # Rei dos Mortos ergue, o retrato dela. Só o desenho: as regras continuam pelo tipo. Sem ele, o de antes.
+        self.retrato = retrato
 
 
 _SERIE = [0]
@@ -192,8 +195,8 @@ class Combate(Golpes, AcoesDoHeroi, TurnosDosOutros):
                 letras[e.nome] = n + 1
                 e.nome = f"{e.nome} {'ABCDEFGHIJ'[min(n, 9)]}"
 
-    def invocar_aliado(self, nome, hp, atk, tipo="servo"):
-        a = Aliado(nome, hp, atk, 3, tipo)
+    def invocar_aliado(self, nome, hp, atk, tipo="servo", retrato=None):
+        a = Aliado(nome, hp, atk, 3, tipo, retrato=retrato)
         self.aliados.append(a)
         self.ui.atualizar()  # a carta entra na arena já, antes de o invocado agir (a tela a faz subir da terra)
         return a

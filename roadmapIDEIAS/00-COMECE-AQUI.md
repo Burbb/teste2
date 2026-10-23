@@ -6664,3 +6664,22 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   grades e as listas anteriores regravadas iguais, a fonte reaberta (o lado, as camadas na ordem, a guia oculta), 0
   diferentes na releitura, a exportação igual ao composto, o @2x em blocos inteiros e a foto sem erro no console.
 - **Parado para a avaliação do 32:** sem adaptação para 16; o servo N16B e a produção intactos; nada integrado.
+
+### 23/10/2026 (data do computador local) — O servo esquelético no jogo (1.196.0): o N16B, com a distinção dos servos
+
+- **Estado conferido:** a branch em `a7503ed9`, igual ao remoto; o `caido-avatar-512.png` continua fora dos commits.
+- **Decisão do Jean:** o N16B aprovado, sem retoques; o Esqueleto (Invocado) do Erguer Servo com o crânio nu, a criatura
+  erguida pelo Rei dos Mortos com o retrato da criatura que morreu, por identificação persistente (não pelo nome).
+- **No jogo (1.196.0):** `retrato-servo-esqueletico` (16 e 32, com os @2x). `Aliado.retrato`, dado por quem invoca: o Erguer
+  Servo dá `servo_esqueletico`; o Rei dos Mortos, o retrato da criatura que caiu. A ficha da carta repassa, a tela desenha.
+  O tipo, as regras, os atributos e o comportamento como antes; os aliados não são salvos (só existem na luta).
+- **A fonte:** a de 16 do N16B (`3dfa9293`), copiada byte a byte; a exportação igual byte a byte à proposta;
+  `--conferir`: tudo igual.
+- **Conferido no jogo com os arquivos de produção** (`criaturas/servo_32/capturas-1196/`): o Esqueleto (Invocado), o Lobo
+  (servo) e o esqueleto inimigo na mesma luta, cada um com o seu retrato. A folha
+  `ferramentas/prototipos/hud/integracoes-22-10/integracoes-1196.png`.
+- **Testes:** `tests/test_servos.py` (os dois caminhos reais, o nome que não decide, o aliado sem retrato e a tela).
+- **Verificações sobre o código final:** `unittest` (671, 1 pulado: a fumaça, rodada à parte), o gabarito (idêntico, sem
+  atualizar), o pyflakes (só o aviso conhecido) e a fumaça inteira, uma vez (378 ok, tudo certo). Durante a fumaça, só uma
+  quebra de linha mudou em `estado.py` (o teste que confere o texto da ficha repassando a origem); o comportamento é o
+  mesmo, e a suíte e o gabarito rodaram depois dela.

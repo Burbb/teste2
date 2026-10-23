@@ -303,3 +303,4 @@ A escolha do par e da direção é do Jean; nada foi começado.
 - **A reconstrução da Hidra pela nova referência (23/10/2026), aguardando o Jean:** o `hidra-n32d` em `hidra_32/` (a
   folha `reconstrucao.png`), pela `Hidra tríplice do pântano em pixel art.png`, com a paleta oliva dela; o N32C e as
   anteriores ficam. Sem adaptação para 16. Nada integrado.
+- **Integrado na 1.196.0:** o servo esquelético N16B, pelo retrato que o Erguer Servo dá ao invocado; a criatura erguida pelo Rei dos Mortos com o retrato dela (só o 16 e o 32 da carta).

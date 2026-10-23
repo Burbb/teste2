@@ -57,7 +57,9 @@ const Batalha = (() => {
 
   function icone(c) {
     if (c.uid === "j") return c.classe;
-    if (c.lado === "aliado") return c.cid || (c.tipo === "servo" ? "caveira" : c.tipo === "falcao" ? "voador" : "fera");
+    // o servo traz o retrato escolhido pelo motor (o do Erguer Servo, o crânio nu; o erguido pelo Rei dos Mortos, o da
+    // criatura que caiu); sem ele, a caveira de antes
+    if (c.lado === "aliado") return c.cid || (c.tipo === "servo" ? (c.retrato || "caveira") : c.tipo === "falcao" ? "voador" : "fera");
     return c.retrato || "caveira";  // o motor escolhe pela chave, pela família ou pelos traços (dados.py: retrato)
   }
 

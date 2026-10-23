@@ -100,3 +100,27 @@ paleta, o violeta contido, o pescoço e as clavículas como estavam.
   descem para o nariz e o olhar fica mais duro, perto do N32.
 - **Ainda é limite do 16:** os dentes de cima e de baixo são dois blocos claros curtos, e a forma da mandíbula (o ângulo e
   o ramo subindo até o crânio) continua só sugerida pelo contorno; as costelas do N32 não cabem.
+
+## No jogo (1.196.0): o N16B, pelo retrato que o Erguer Servo dá ao invocado
+
+- **Decisão do Jean:** o N16B aprovado para integrar, sem retoques; e a distinção resolvida: o "Esqueleto (Invocado)" do
+  Erguer Servo com o crânio nu; a criatura erguida pelo Rei dos Mortos com o retrato da criatura que morreu.
+- **A fonte de produção:** `ferramentas/arte/aseprite/retrato-servo-esqueletico/retrato-servo-esqueletico-16.aseprite`,
+  copiada byte a byte da fonte do N16B em `3dfa9293`; o 32 da carta é o 16 ×2 (`DERIVADOS`). A exportação saiu igual byte a
+  byte à proposta (o 16, o 32 e os @2x), e o `--conferir`, tudo igual.
+- **A seleção, por identificação no próprio aliado (não pelo nome):** `Aliado` ganhou o campo `retrato`, dado por quem
+  invoca (`Combate.invocar_aliado(..., retrato=)`): o Erguer Servo dá `servo_esqueletico`; o Rei dos Mortos dá o retrato da
+  criatura que caiu (o mesmo `dados.retrato` do inimigo, calculado no motor na hora). A ficha da carta repassa esse campo
+  (`estado.combate`), e a tela só desenha (`batalha.js`, `icone(c)`: o `retrato` do servo, senão a caveira de antes). O tipo
+  continua `servo` nos dois, com as mesmas regras, atributos e comportamento.
+- **Persistência:** os aliados só existem durante a luta; o save guarda o jogador e os campos do jogo, não a luta. Não há o
+  que migrar.
+- **Testes** (`tests/test_servos.py`): o Erguer Servo leva o crânio nu (as regras como antes, o provocando, o nome não
+  decide); o Rei dos Mortos mantém o lobo (40% da vida como antes) e um esqueleto inimigo erguido, mesmo chamado "Esqueleto
+  (Invocado)", continua com o retrato da família; um aliado sem retrato continua na caveira; a tela desenha o que o motor
+  manda.
+- **Conferido no jogo com os arquivos de produção** (`capturas-1196/`, `auxiliares/cenario_jogo_servos.py` e
+  `fotografar_jogo_servos.mjs`, pelo código real: o Erguer Servo e a morte do lobo com o talento): na mesma luta, o
+  Esqueleto (Invocado) com `retrato-servo-esqueletico-32.png`, o Lobo (servo) com `retrato-lobo-32.png` e o esqueleto inimigo
+  com `retrato-esqueleto-32.png`, sem erro no console e sem pedido ao protótipo. A folha
+  `../../integracoes-22-10/integracoes-1196.png`.

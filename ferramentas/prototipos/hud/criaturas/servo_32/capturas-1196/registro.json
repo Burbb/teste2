@@ -1,0 +1,45 @@
+{
+ "luta-servos": {
+  "arquivos": [
+   "Jean: data:510",
+   "Esqueleto (Invocado): http://127.0.0.1:51841/static/hud/icones/retrato-servo-esqueletico-32.png",
+   "Lobo (servo): http://127.0.0.1:51841/static/hud/icones/retrato-lobo-32.png",
+   "Esqueleto: http://127.0.0.1:51841/static/hud/icones/retrato-esqueleto-32.png",
+   "Lobo: http://127.0.0.1:51841/static/hud/icones/retrato-lobo-32.png"
+  ],
+  "caixas": [
+   [
+    431,
+    81,
+    667,
+    153
+   ],
+   [
+    444,
+    158,
+    654,
+    240
+   ],
+   [
+    444,
+    248,
+    654,
+    298
+   ],
+   [
+    1226,
+    137,
+    1436,
+    187
+   ],
+   [
+    1226,
+    195,
+    1436,
+    245
+   ]
+  ],
+  "erros": [],
+  "ferramentas": []
+ }
+}

@@ -53,7 +53,7 @@ const Icones = (() => {
     "retrato-arvore-desperta": [16, 32, 48], "retrato-golem": [16, 32, 48], "retrato-arvore-ancia": [16, 32],
     "retrato-golem-primordial": [16, 32], "retrato-mimico": [16, 32],
     "retrato-dragao-de-gelo": [16, 32], "retrato-senhor-da-guerra": [16, 32],
-    "retrato-espantalho": [16, 32]};
+    "retrato-espantalho": [16, 32], "retrato-servo-esqueletico": [16, 32]};
 
   // Cada desenho vai para o tipo de ferro que o jogo já tem (elmo, armadura, manopla, calca = perneira, bota_ferro, maca);
   // couro sem desenho (a calça de couro) e as outras peças sem desenho ficam com o do jogo. O anel (1.140.0, o aro de
@@ -231,7 +231,8 @@ const Icones = (() => {
                      mimico: "retrato-mimico",  // 1.192.0: o baú de frente com a boca, pela origem (os números do golem)
                      dragao_de_gelo: "retrato-dragao-de-gelo",  // 1.193.0: a cabeça em cunha de perfil, pelo id do guardião
                      senhor_da_guerra: "retrato-senhor-da-guerra",  // 1.194.0: o veterano caolho, pelo id do guardião
-                     espantalho: "retrato-espantalho" };  // 1.195.0: o saco de estopa com chapéu, pela origem (os números da árvore desperta)
+                     espantalho: "retrato-espantalho",  // 1.195.0: o saco de estopa com chapéu, pela origem (os números da árvore desperta)
+                     servo_esqueletico: "retrato-servo-esqueletico" };  // 1.196.0: o crânio nu do Erguer Servo, pelo retrato que o motor dá ao invocado
   // o animal do patrulheiro (1.164.0), pelo tipo dele (classes.COMPANHEIROS), na carta aliada da luta e no painel da
   // comitiva, a 2×: o Urso Pardo (de frente, severo) e o Falcão Peregrino (de perfil, a máscara escura); desde a 1.165.0,
   // o Lobo Cinzento com o mesmo arquivo do Lobo inimigo (o mesmo rosto de propósito: o lado, o nome e a borda separam os
