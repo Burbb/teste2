@@ -6774,3 +6774,22 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   as grades iguais ao rascunho, as fontes reabertas (o lado, as camadas na ordem), 0 diferentes na releitura, as
   exportações iguais ao composto, alfa 0/255, os derivados em blocos inteiros e as fotos sem erro no console.
 - **Parado para a avaliação das duas versões:** nada integrado, nenhuma outra criatura, o mapa não começado.
+
+### 23/10/2026 (data do computador local) — O Lich Menor no jogo (1.199.0): o N16, pelo id do guardião, nas duas fases
+
+- **Estado conferido:** a branch em `fcb20bfd`, igual ao remoto; o `caido-avatar-512.png` continua fora dos commits.
+- **Decisão do Jean:** o N16 aprovado, sem retoques; o N32 como estudo.
+- **No jogo (1.199.0):** `retrato-lich-menor` (16 e 32, com os @2x) pelo id `lich_menor` (`RETRATO_GUARDIAO`). Na fase 2 o
+  Lich ganha o traço etéreo e o retrato continua o dele (o id vem antes dos traços); os esqueletos que ele invoca, com o
+  da família. Nenhuma regra mudou.
+- **A fonte:** a de 16 do N16 (`fcb20bfd`), copiada byte a byte; a exportação numa pasta temporária igual byte a byte à
+  proposta antes da cópia; depois, `--conferir`: tudo igual.
+- **Conferido com os arquivos de produção** (`criaturas/lich_32/capturas-1199/`): as duas fases, com o Esqueleto, o
+  esqueleto invocado e o servo. A folha `ferramentas/prototipos/hud/integracoes-22-10/integracoes-1199.png`.
+- **Testes:** o Lich pelo id nas duas fases (pelo `checar_fase` de verdade) e os invocados pela família; as asserções que
+  esperavam o Lich no `etereo` e na `caveira` passam a esperar o retrato dele, e o guardião sem id continua no traço.
+- **Verificações sobre o código final:** `unittest` (674, 1 pulado: a fumaça, rodada à parte), o gabarito (idêntico, sem
+  atualizar), o pyflakes (só o aviso conhecido) e a fumaça inteira, uma vez (378 ok, tudo certo).
+- **As próximas decisões (do Jean, antes de qualquer desenho):** a identidade do substituto da Bruxa Afogada nos covis
+  (hoje o id `bruxa_afogada` do covil do pântano é a Ilse) e a do antagonista do mundo gerado. Pendência técnica, sem
+  mudança: a família `esqueleto_servo`, sem uso. Reservados: o Esqueleto E2 e o Bandido do chapéu.

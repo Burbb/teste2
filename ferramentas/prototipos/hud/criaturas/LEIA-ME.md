@@ -310,3 +310,4 @@ A escolha do par e da direção é do Jean; nada foi começado.
 - **Integrado na 1.198.0:** o Profeta das Cinzas (a `profeta-t`, o visual aceito), pelo id do guardião (só o 16 e o 32 da carta).
 - **O Lich Menor, aguardando a decisão do Jean (23/10/2026):** a L1, a L1b e a L2 numa folha só (`chefes_e_especiais/lich-decisao.png`), ao lado do Esqueleto inimigo e do servo aliado; nada redesenhado. As fontes e os commits na tabela do LEIA-ME de `chefes_e_especiais/`.
 - **O Lich Menor em 32 nativos e em 16 (23/10/2026), aguardando o Jean:** `lich_32/` (o estudo `lich-n32` e a adaptação `lich-n16`, pela identidade da L1b; a folha `comparacao.png`). A L1, a L1b e a L2 ficam. Nada integrado.
+- **Integrado na 1.199.0:** o Lich Menor N16, pelo id do guardião, também na fase etérea (só o 16 e o 32 da carta).

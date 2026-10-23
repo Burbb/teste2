@@ -41,20 +41,21 @@ class TestRetratos(unittest.TestCase):
         self.assertEqual(retrato(["humano", "conjurador"], "guardiao", "guardiao:4", "profeta_das_cinzas"), "profeta_das_cinzas")
 
     def test_javali_e_carnical_pela_familia(self):
-        # 1.173.0: pela família (o cavaleiro sombrio tem o dele desde a 1.187.0; o Lich continua na caveira)
+        # 1.173.0: pela família (o cavaleiro sombrio tem o dele desde a 1.187.0; o Lich, o dele pelo id desde a 1.199.0)
         self.assertEqual(retrato(FAMILIAS["javali"]["tracos"], "javali"), "javali")
         self.assertEqual(retrato(FAMILIAS["carnical"]["tracos"], "carnical"), "carnical")
 
     def test_espectro_pela_familia(self):
-        # 1.174.0: o espectro pela família; o Lich, que ganha o etéreo na fase 2, continua pelos traços (a cria do Vazio,
-        # também etérea, tem o retrato dela desde a 1.185.0)
+        # 1.174.0: o espectro pela família; a cria do Vazio, também etérea, tem o retrato dela desde a 1.185.0; o Lich, que
+        # ganha o etéreo na fase 2, tem o dele pelo id desde a 1.199.0, e o guardião etéreo sem id continua no traço
         self.assertEqual(retrato(FAMILIAS["espectro"]["tracos"], "espectro"), "espectro")
         self.assertEqual(retrato(FAMILIAS["cria_vazio"]["tracos"], "cria_vazio"), "cria_vazio")
-        self.assertEqual(retrato(["morto-vivo", "conjurador", "etereo"], "guardiao", "guardiao:6", "lich_menor"), "etereo")
+        self.assertEqual(retrato(["morto-vivo", "conjurador", "etereo"], "guardiao", "guardiao:6", "lich_menor"), "lich_menor")
+        self.assertEqual(retrato(["morto-vivo", "conjurador", "etereo"], "guardiao", "guardiao:6"), "etereo")
 
     def test_esqueleto_pela_familia(self):
         # 1.175.0: o esqueleto pela família (os do ossuário e os que o Lich invoca, que são da família); o servo
-        # esquelético, o servo aliado do Necromante (sem família) e o Lich continuam na caveira
+        # esquelético (a família sem uso) e o guardião morto-vivo sem id continuam na caveira; o Lich tem o dele desde a 1.199.0
         self.assertEqual(retrato(FAMILIAS["esqueleto"]["tracos"], "esqueleto"), "esqueleto")
         import random
         from rpg.inimigos import GUARDIOES, criar
@@ -64,7 +65,8 @@ class TestRetratos(unittest.TestCase):
         self.assertEqual(retrato(invocado.tracos, invocado.familia, invocado.chave), "esqueleto")
         self.assertEqual(retrato(FAMILIAS["esqueleto_servo"]["tracos"], "esqueleto_servo"), "caveira")
         self.assertEqual(retrato(["morto-vivo"], None), "caveira")
-        self.assertEqual(retrato(["morto-vivo", "conjurador"], "guardiao", "guardiao:6", "lich_menor"), "caveira")
+        self.assertEqual(retrato(["morto-vivo", "conjurador"], "guardiao", "guardiao:6", "lich_menor"), "lich_menor")
+        self.assertEqual(retrato(["morto-vivo", "conjurador"], "guardiao", "guardiao:6"), "caveira")
         icones = (ESTATICO / "icones.js").read_text(encoding="utf-8")
         self.assertIn('esqueleto: "retrato-esqueleto"', icones)
         for lado in (16, 32, 48):
@@ -441,6 +443,33 @@ class TestRetratos(unittest.TestCase):
                 self.assertTrue((ESTATICO / f"hud/icones/retrato-profeta-das-cinzas-{lado}{sufixo}.png").exists(), lado)
         self.assertFalse((ESTATICO / "hud/icones/retrato-profeta-das-cinzas-48.png").exists())  # sem derivado sem uso
 
+    def test_lich_menor_pelo_guardiao_nas_duas_fases(self):
+        # 1.199.0: o Lich Menor pelo id do guardião, em qualquer nome próprio; na fase 2 ele ganha o traço etéreo, e o
+        # retrato continua o dele (o id vem antes dos traços); os esqueletos que ele invoca continuam com o da família
+        import random
+        from rpg.combate import Combate
+        from rpg.dados import GUARDIOES
+        from rpg.inimigos import criar, instanciar_guardiao
+        from tests.test_rei_dos_mortos import necromante
+        spec = next(dict(s, nome="Morgath, o Lich Menor", bioma=b) for b, ls in GUARDIOES.items() for s in ls
+                    if s["id"] == "lich_menor")
+        g = instanciar_guardiao(spec, 6)
+        self.assertEqual(retrato(g.tracos, g.familia, g.chave, g.guardiao, g.origem), "lich_menor")
+        jogo = necromante()
+        cb = Combate(jogo, [g])
+        g.hp = int(g.max_hp * 0.4)  # abaixo do limiar da fase 2
+        cb.checar_fase(g)
+        self.assertIn("etereo", g.tracos)
+        self.assertEqual(retrato(g.tracos, g.familia, g.chave, g.guardiao, g.origem), "lich_menor")
+        invocado = criar(random.Random(3), spec["invoca"], 4)  # como o Invocar do Lich faz
+        self.assertEqual(retrato(invocado.tracos, invocado.familia, invocado.chave), "esqueleto")
+        icones = (ESTATICO / "icones.js").read_text(encoding="utf-8")
+        self.assertIn('lich_menor: "retrato-lich-menor"', icones)
+        for lado in (16, 32):
+            for sufixo in ("", "@2x"):
+                self.assertTrue((ESTATICO / f"hud/icones/retrato-lich-menor-{lado}{sufixo}.png").exists(), lado)
+        self.assertFalse((ESTATICO / "hud/icones/retrato-lich-menor-48.png").exists())  # sem derivado sem uso
+
     def test_troll_pela_familia_e_o_rei_pelo_guardiao(self):
         # o troll da montanha pela família (1.166.0); o Rei Troll pelo id do guardião (1.167.0), em qualquer lugar
         self.assertEqual(retrato(FAMILIAS["troll"]["tracos"], "troll"), "troll")
@@ -452,13 +481,14 @@ class TestRetratos(unittest.TestCase):
         from rpg.inimigos import instanciar_guardiao
         self.assertEqual(set(RETRATO_GUARDIAO), {"rei_troll", "rainha_aracnidea", "ent_anciao", "golem_primordial",
                                                  "dragao_de_gelo", "senhor_da_guerra", "hidra_do_brejo",
-                                                 "profeta_das_cinzas"})
+                                                 "profeta_das_cinzas", "lich_menor"})
         for bioma, lista in GUARDIOES.items():
             for t in lista:
                 e = instanciar_guardiao({"bioma": bioma, "id": t["id"], "idx": 0, "nome": t["base"], "g": t["g"]}, 3)
                 ret = retrato(e.tracos, e.familia, e.chave, e.guardiao)
                 # o Rei, a Rainha Aracnídea, a Árvore Anciã (1.190.0), o Golem Primordial (1.191.0), o Dragão de Gelo (1.193.0)
-                # o Senhor da Guerra (1.194.0), a Hidra do Brejo (1.197.0) e o Profeta das Cinzas (1.198.0) têm o retrato deles,
+                # o Senhor da Guerra (1.194.0), a Hidra do Brejo (1.197.0), o Profeta das Cinzas (1.198.0) e o Lich Menor
+                # (1.199.0) têm o retrato deles,
                 # pelo id; os outros guardiões
                 # continuam pelos traços
                 self.assertEqual(ret, RETRATO_GUARDIAO.get(t["id"]) or retrato(e.tracos), t["id"])

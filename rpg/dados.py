@@ -160,7 +160,7 @@ RETRATOS = ("demonio", "etereo", "corrompido", "morto-vivo", "construto", "voado
 # o bandido; 1.166.0: o troll da montanha; 1.171.0: o sapo-touro gigante e a sanguessuga gigante, do pântano; 1.172.0:
 # o cultista, com os fiéis do Profeta e os da sacristia, a bruxa do pântano e o rato gigante; 1.173.0: o javali
 # selvagem e o carniçal; 1.174.0: o espectro; 1.175.0: o esqueleto, com os do ossuário e os que o Lich invoca; o servo
-# aliado do Necromante não tem família e fica na caveira; 1.179.0: o mercenário, com o Invicto da ponte e o Theodore dos
+# aliado do Necromante não tem família (desde a 1.196.0, o retrato que o Erguer Servo dá a ele); 1.179.0: o mercenário, com o Invicto da ponte e o Theodore dos
 # Cães de Ferro, e o lobo gélido; 1.182.0: o caído, com os que o xamã ergue, que são o mesmo caído; o xamã caído, de
 # família própria, e o cão infernal continuam no "demonio"; 1.183.0: o grifo; 1.184.0: a harpia e o xamã caído; 1.185.0: a cria
 # do Vazio, com as que o antagonista invoca, que são da família; 1.186.0: o cão infernal; 1.187.0: o cavaleiro sombrio,
@@ -180,7 +180,8 @@ RETRATO_GUARDIAO = {"rei_troll": "rei_troll", "rainha_aracnidea": "rainha_aracni
                     "dragao_de_gelo": "dragao_de_gelo",  # 1.193.0: o Dragão de Gelo (o N16, construído a partir do estudo de 32)
                     "senhor_da_guerra": "senhor_da_guerra",  # 1.194.0: o Senhor da Guerra (o N16, o mesmo caminho)
                     "hidra_do_brejo": "hidra_do_brejo",  # 1.197.0: a Hidra do Brejo (o N16D2, o mesmo caminho)
-                    "profeta_das_cinzas": "profeta_das_cinzas"}  # 1.198.0: o Profeta das Cinzas (a profeta-t)
+                    "profeta_das_cinzas": "profeta_das_cinzas",  # 1.198.0: o Profeta das Cinzas (a profeta-t)
+                    "lich_menor": "lich_menor"}  # 1.199.0: o Lich Menor (o N16), também na fase etérea
 RETRATO_ORIGEM = {"mimico": "mimico",  # 1.192.0: o Mímico (os números do golem), pela origem que o evento marca
                   "espantalho": "espantalho"}  # 1.195.0: o Espantalho Possuído (os números da árvore desperta)
 RETRATO_FAMILIA = {"afogado": "afogado", "lobo": "lobo", "bandido": "bandido", "troll": "troll", "aranha": "aranha",

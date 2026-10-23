@@ -1,0 +1,116 @@
+{
+ "luta-lich-fase1": {
+  "arquivos": [
+   "Jean: data:510",
+   "Esqueleto (Invocado): http://127.0.0.1:62105/static/hud/icones/retrato-servo-esqueletico-32.png",
+   "Lich Menor: http://127.0.0.1:62105/static/hud/icones/retrato-lich-menor-32.png",
+   "Esqueleto: http://127.0.0.1:62105/static/hud/icones/retrato-esqueleto-32.png",
+   "Esqueleto (invocado): http://127.0.0.1:62105/static/hud/icones/retrato-esqueleto-32.png"
+  ],
+  "caixas": [
+   [
+    431,
+    94,
+    667,
+    166
+   ],
+   [
+    444,
+    171,
+    654,
+    253
+   ],
+   [
+    1226,
+    92,
+    1436,
+    142
+   ],
+   [
+    1226,
+    150,
+    1436,
+    200
+   ],
+   [
+    1226,
+    208,
+    1436,
+    258
+   ]
+  ],
+  "tracos": [
+   {
+    "nome": "Lich Menor",
+    "tracos": [
+     "morto-vivo",
+     "conjurador"
+    ],
+    "retrato": "lich_menor"
+   }
+  ],
+  "erros": [],
+  "ferramentas": []
+ },
+ "luta-lich-fase2": {
+  "arquivos": [
+   "Jean: data:510",
+   "Esqueleto (Invocado): http://127.0.0.1:62221/static/hud/icones/retrato-servo-esqueletico-32.png",
+   "Lich Menor: http://127.0.0.1:62221/static/hud/icones/retrato-lich-menor-32.png",
+   "Esqueleto: http://127.0.0.1:62221/static/hud/icones/retrato-esqueleto-32.png",
+   "Esqueleto (invocado): http://127.0.0.1:62221/static/hud/icones/retrato-esqueleto-32.png",
+   "Esqueleto (invocado): http://127.0.0.1:62221/static/hud/icones/retrato-esqueleto-32.png"
+  ],
+  "caixas": [
+   [
+    431,
+    94,
+    667,
+    166
+   ],
+   [
+    444,
+    171,
+    654,
+    253
+   ],
+   [
+    1226,
+    92,
+    1436,
+    142
+   ],
+   [
+    1226,
+    150,
+    1436,
+    200
+   ],
+   [
+    1226,
+    208,
+    1436,
+    258
+   ],
+   [
+    1008,
+    92,
+    1218,
+    142
+   ]
+  ],
+  "tracos": [
+   {
+    "nome": "Lich Menor",
+    "tracos": [
+     "morto-vivo",
+     "conjurador",
+     "etereo"
+    ],
+    "retrato": "lich_menor"
+   }
+  ],
+  "erros": [],
+  "ferramentas": []
+ }
+}

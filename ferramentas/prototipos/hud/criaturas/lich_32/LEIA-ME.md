@@ -51,3 +51,20 @@ aparece na carta da luta (32); hoje sai do sprite do traço. **Para uma integra�
   é um afunilamento simples), o oco das maçãs e o halo das órbitas; o olhar fica um ponto verde em cada órbita, menos
   intenso que no 32.
 - **Na fileira:** o N16 tem o grão dos vizinhos; o N32 destoa, como os outros estudos de 32.
+
+## No jogo (1.199.0): o N16, pelo id do guardião, nas duas fases
+
+- **Decisão do Jean:** o N16 (`fcb20bfd`) aprovado, sem retoques; o N32 fica como estudo, com a L1, a L1b e a L2.
+- **A fonte de produção:** `ferramentas/arte/aseprite/retrato-lich-menor/retrato-lich-menor-16.aseprite`, copiada byte a
+  byte da fonte do N16 em `fcb20bfd`, em camadas (sem guia); o 32 da carta é o 16 ×2 (`DERIVADOS`).
+- **Antes da cópia:** a exportação numa pasta temporária saiu igual byte a byte à proposta (o 16, o 32 e os @2x).
+  **Depois:** os arquivos do jogo iguais à proposta, e o `--conferir`, tudo igual.
+- **No jogo:** `retrato-lich-menor` pelo id `lich_menor` (`RETRATO_GUARDIAO`). **A segunda fase:** o Lich ganha o traço
+  `etereo` (`Combate.checar_fase`), e o retrato continua o dele, porque o id do guardião vem antes dos traços em
+  `dados.retrato` (antes, ele passava ao sprite etéreo). Os esqueletos que ele invoca (`inimigos._invocar`, família
+  `esqueleto`) continuam com o retrato da família. Nenhuma regra, atributo ou habilidade mudou.
+- **Conferido com os arquivos de produção** (`capturas-1199/`, `auxiliares/cenario_jogo_lich.py` e
+  `fotografar_jogo_lich.mjs`, pelo código real: o Erguer Servo, o Invocar do Lich e o `checar_fase`): nas duas fases, o
+  Lich com `retrato-lich-menor-32.png` (os traços registrados: `morto-vivo`, `conjurador` e, na fase 2, `etereo`), o
+  Esqueleto e os invocados com `retrato-esqueleto-32.png`, o servo com o dele, sem erro no console e sem pedido ao
+  protótipo. A folha `../../integracoes-22-10/integracoes-1199.png`.
