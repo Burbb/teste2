@@ -6103,3 +6103,19 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Processo:** grades à mão; fontes pelo conector do Aseprite (0 diferentes; o composto = as camadas); a exportação
   igual à grade, @2x exato, 32 e 48 em blocos inteiros; fotos a 1920×945 nos modos atual, a e b, sem erro no console.
 - **Continua:** a escolha do Jean; outras criaturas, chefes e o mapa não foram começados.
+
+### 22/10/2026 (data do computador local) — A segunda rodada da Cidadela: três Abominações e o Cavaleiro A2 (nada no jogo)
+
+- **Estado conferido:** a branch em `fe58c880`, igual ao remoto, sem alterações locais; produção na 1.186.0.
+- **Decisão do Jean sobre a primeira rodada:** a Abominação A e B e o Cavaleiro B recusados; o Cavaleiro A aceito só como
+  direção para refinar; nenhum retrato autorizado para integração.
+- **No protótipo, aguardando o Jean** (`ferramentas/prototipos/hud/criaturas/cidadela/LEIA-ME.md`, "A segunda rodada"):
+  a Abominação C (a mandíbula torta), D (as duas cabeças) e E (os espinhos de obsidiana) e o Cavaleiro A2 (o elmo mais
+  largo e curto, o gorjal ligando às ombreiras em placas). As folhas `abominacao-cde.png` e `cavaleiro-a2.png`. Minha
+  preferência: a C e o A2; as limitações no tamanho real estão no LEIA-ME.
+- **Processo:** grades à mão, rascunhadas a 32, 48 e 12×; as fontes pelo Aseprite em lote (o conector estava sem editor;
+  a janela aberta não foi tocada), 0 diferentes na releitura; a exportação igual à grade, @2x exato, 32 e 48 em blocos
+  inteiros; fotos a 1920×945 em `capturas-2/`, sem erro no console. A primeira rodada ficou como estava.
+- **Verificações:** só o protótipo mudou (nada em `rpg/` nem em `tests/`): o pyflakes e a sintaxe do roteiro das fotos;
+  a suíte, o gabarito e a fumaça não foram rodados, porque o jogo não mudou.
+- **Continua:** a escolha do Jean; outras criaturas, chefes e o mapa não foram começados.
