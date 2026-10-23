@@ -109,6 +109,7 @@ class Inimigo(Combatente):
         self.fugiu = False
         self.chave = None  # identificador para guardiões / alvos de contrato / nêmesis
         self.guardiao = None  # o id do guardião no catálogo (GUARDIOES), que não muda com o lugar; só o retrato lê
+        self.origem = None  # quem só reaproveita os números de uma família (o Espantalho, o Mímico); só o retrato lê
 
 
 class Jogador(Combatente):

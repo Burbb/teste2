@@ -218,19 +218,89 @@ class TestRetratos(unittest.TestCase):
 
     def test_abominacao_pela_familia(self):
         # 1.188.0: a abominação pela família, com os afixos; o sprite "corrompido" continua para quem tem o traço sem
-        # retrato próprio (o afixo corrompido numa família ainda sem retrato, como a Árvore Desperta)
+        # retrato próprio (desde a 1.189.0 a Árvore Desperta tem o dela; o Espantalho Possuído corrompido segue no sprite)
         import random
         from rpg.inimigos import criar
         for afixo in (None, "feroz", "corrompido"):
             e = criar(random.Random(13), "abominacao", 6, afixo)
             self.assertEqual(retrato(e.tracos, e.familia, e.chave), "abominacao", afixo)
-        arvore = criar(random.Random(14), "ent_jovem", 3, "corrompido")
-        self.assertEqual(retrato(arvore.tracos, arvore.familia, arvore.chave), "corrompido")
+        self.assertEqual(retrato(["planta", "blindado", "corrompido"], None), "corrompido")
         icones = (ESTATICO / "icones.js").read_text(encoding="utf-8")
         self.assertIn('abominacao: "retrato-abominacao"', icones)
         for lado in (16, 32, 48):
             for sufixo in ("", "@2x"):
                 self.assertTrue((ESTATICO / f"hud/icones/retrato-abominacao-{lado}{sufixo}.png").exists(), (lado, sufixo))
+
+    def test_arvore_desperta_e_golem_pela_familia(self):
+        # 1.189.0: a árvore desperta e o golem de pedra pela família, com os afixos e o líder de nome próprio; a Árvore
+        # Anciã e o Golem Primordial (guardiões) continuam nos traços
+        import random
+        from rpg.inimigos import criar
+        for fam, desenho in (("ent_jovem", "arvore_desperta"), ("golem", "golem")):
+            for afixo in (None, "feroz", "corrompido"):
+                e = criar(random.Random(15), fam, 5, afixo)
+                self.assertEqual(retrato(e.tracos, e.familia, e.chave, e.guardiao, e.origem), desenho, (fam, afixo))
+            lider = criar(random.Random(16), fam, 6, "feroz", "Varn")
+            self.assertEqual(retrato(lider.tracos, lider.familia, lider.chave, lider.guardiao, lider.origem), desenho)
+        self.assertEqual(retrato(["planta", "blindado"], "guardiao", "guardiao:2", "ent_anciao"), "planta")
+        self.assertEqual(retrato(["construto", "blindado"], "guardiao", "guardiao:5", "golem_primordial"), "construto")
+        icones = (ESTATICO / "icones.js").read_text(encoding="utf-8")
+        for papel, arquivo in (("arvore_desperta", "retrato-arvore-desperta"), ("golem", "retrato-golem")):
+            self.assertIn(f'{papel}: "{arquivo}"', icones)
+            for lado in (16, 32, 48):
+                for sufixo in ("", "@2x"):
+                    self.assertTrue((ESTATICO / f"hud/icones/{arquivo}-{lado}{sufixo}.png").exists(), (arquivo, lado))
+
+    def test_espantalho_e_mimico_ficam_nos_tracos(self):
+        # 1.189.0: o Espantalho Possuído (os números da árvore desperta) e o Mímico (os do golem) conservam o desenho de
+        # antes, pelos traços: a origem que o evento marca (não o nome exibido) tira o retrato da família; a família e os
+        # números continuam os dela
+        import random
+        from rpg.eventos.biomas import espantalho
+        from rpg.eventos.comuns import bau_abandonado
+        from rpg.inimigos import criar
+
+        class Jogo:  # o bastante dos dois eventos: as escolhas, a sorte e a luta, que só guarda o inimigo
+            def __init__(self, escolha, perigo=2):
+                self.rng, self.escolha, self.loc, self.lutas = random.Random(4), escolha, {"perigo": perigo}, []
+                self.j = type("J", (), {"nivel": 5, "classe": "guerreiro"})()
+
+            def dizer(self, *a, **k):
+                pass
+
+            def menu(self, texto, opcoes):
+                return self.escolha
+
+            def chance(self, p):
+                return True
+
+            def sortear(self, lista):
+                return lista[0]
+
+            def inimigo(self, familia, afixo=None):
+                return criar(self.rng, familia, 5, afixo)
+
+            def combate(self, inimigos, **k):
+                self.lutas.append(inimigos[0])
+
+        for perigo, traco in ((2, "planta"), (5, "corrompido")):  # feroz longe da Fenda, corrompido perto
+            g = Jogo("fogo", perigo)
+            espantalho(g)
+            e = g.lutas[0]
+            self.assertEqual((e.familia, e.origem, e.nome), ("ent_jovem", "espantalho", "Espantalho Possuído"))
+            self.assertEqual(retrato(e.tracos, e.familia, e.chave, e.guardiao, e.origem), traco)
+        g = Jogo("cuidado")
+        bau_abandonado(g)
+        m = g.lutas[0]
+        self.assertEqual((m.familia, m.origem, m.nome), ("golem", "mimico", "Mímico"))
+        self.assertEqual(retrato(m.tracos, m.familia, m.chave, m.guardiao, m.origem), "construto")
+        # o nome exibido não decide: um golem comum chamado "Mímico" continua com o retrato do golem; e a ficha da luta
+        # (a carta) repassa a origem ao retrato
+        golem = criar(random.Random(17), "golem", 5)
+        golem.nome = "Mímico"
+        self.assertEqual(retrato(golem.tracos, golem.familia, golem.chave, golem.guardiao, golem.origem), "golem")
+        estado = (ESTATICO.parent / "estado.py").read_text(encoding="utf-8")
+        self.assertIn('getattr(c, "guardiao", None), getattr(c, "origem", None))', estado)
 
     def test_troll_pela_familia_e_o_rei_pelo_guardiao(self):
         # o troll da montanha pela família (1.166.0); o Rei Troll pelo id do guardião (1.167.0), em qualquer lugar

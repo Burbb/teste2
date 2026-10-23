@@ -165,7 +165,9 @@ RETRATOS = ("demonio", "etereo", "corrompido", "morto-vivo", "construto", "voado
 # família própria, e o cão infernal continuam no "demonio"; 1.183.0: o grifo; 1.184.0: a harpia e o xamã caído; 1.185.0: a cria
 # do Vazio, com as que o antagonista invoca, que são da família; 1.186.0: o cão infernal; 1.187.0: o cavaleiro sombrio,
 # com o Último Guarda, que é da família; 1.188.0: a abominação; o "corrompido" fica para quem tiver o traço sem retrato
-# próprio; o Dragão de Gelo continua no "voador" e o antagonista no "humano"). Quem não está aqui segue pelos traços: o animal do herói e as outras feras continuam
+# próprio; 1.189.0: a árvore desperta e o golem de pedra; o Dragão de Gelo continua no "voador" e o antagonista no
+# "humano"). Quem só reaproveita os números de uma família (a `origem` do inimigo: o Espantalho Possuído da árvore
+# desperta, o Mímico do golem) não leva o retrato dela e segue pelos traços, como antes. Quem não está aqui segue pelos traços: o animal do herói e as outras feras continuam
 # no "fera", os outros humanos (o Senhor da Guerra, o antagonista) no "humano". O guardião pelo id do catálogo (1.167.0: o Rei
 # Troll; 1.168.0: a Rainha Aracnídea; a chave de um guardião muda com o lugar), depois da chave; os outros guardiões
 # continuam pelos traços, e as aranhas que a Rainha invoca têm a família "aranha" (o retrato da Aranha gigante).
@@ -177,13 +179,14 @@ RETRATO_FAMILIA = {"afogado": "afogado", "lobo": "lobo", "bandido": "bandido", "
                    "esqueleto": "esqueleto", "mercenario": "mercenario", "lobo_gelido": "lobo_gelido",
                    "caido": "caido", "grifo": "grifo", "harpia": "harpia", "xama_caido": "xama_caido",
                    "cria_vazio": "cria_vazio", "cao_infernal": "cao_infernal",
-                   "cavaleiro_sombrio": "cavaleiro_sombrio", "abominacao": "abominacao"}
+                   "cavaleiro_sombrio": "cavaleiro_sombrio", "abominacao": "abominacao",
+                   "ent_jovem": "arvore_desperta", "golem": "golem"}
 
 
-def retrato(tracos, familia=None, chave=None, guardiao=None):
-    """O desenho de uma criatura: o próprio dela (pela chave, pelo id do guardião ou pela família), senão pelos traços
-    (o primeiro de RETRATOS que ela tem; sem nenhum, uma caveira)."""
-    return (RETRATO_CHAVE.get(chave) or RETRATO_GUARDIAO.get(guardiao) or RETRATO_FAMILIA.get(familia)
+def retrato(tracos, familia=None, chave=None, guardiao=None, origem=None):
+    """O desenho de uma criatura: o próprio dela (pela chave, pelo id do guardião ou pela família, menos para quem tem
+    outra origem), senão pelos traços (o primeiro de RETRATOS que ela tem; sem nenhum, uma caveira)."""
+    return (RETRATO_CHAVE.get(chave) or RETRATO_GUARDIAO.get(guardiao) or (not origem and RETRATO_FAMILIA.get(familia))
             or next((TRACOS_FICHA[t]["retrato"] for t in RETRATOS if t in tracos), "caveira"))
 
 # nome, plural, gênero, atributos base (nível 1), traços, habilidades, xp, ouro, tamanho de grupo e, quando há:

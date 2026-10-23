@@ -6256,3 +6256,28 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Verificações proporcionais (nenhum código do jogo mudou):** o pyflakes dos auxiliares, a sintaxe do roteiro das
   fotos e as grades regravadas iguais às gravadas.
 - **Continua:** a escolha do Jean; nada integrado; os chefes e o mapa não foram começados.
+
+### 23/10/2026 (data do computador local) — A Árvore Desperta e o Golem de pedra no jogo (1.189.0)
+
+- **Estado conferido:** a branch em `95d135a6`, igual ao remoto, sem alterações locais; produção na 1.188.0.
+- **Decisão do Jean:** a Árvore T1 (a transposição da referência 1) e o Golem G2 original aprovados, sem retoques; o
+  Espantalho Possuído e o Mímico conservam a aparência de antes nesta entrega.
+- **No jogo (1.189.0):** `retrato-arvore-desperta` e `retrato-golem` (16, 32, 48 e os @2x) pelas famílias, com os afixos
+  e os líderes. O Espantalho e o Mímico ganham a `origem` do inimigo (marcada no evento, só o retrato lê) e seguem pelos
+  traços; a família, os números, o Bestiário, os contratos e o nêmesis deles ficam como antes. O `planta` e o `construto`
+  continuam com a Árvore Anciã e o Golem Primordial.
+- **As fontes:** cópias byte a byte (a da Árvore com a guia oculta, conferida); exportadas numa pasta temporária e
+  iguais byte a byte às propostas antes de gravar; `--conferir`: tudo igual.
+- **Conferido com os arquivos de produção** (`criaturas/arvore_golem/capturas-1189/`): a luta, o Bestiário com a faixa do
+  mestre caçador, o cartaz e o rastreador; o Espantalho e o Mímico pelos eventos reais, nos sprites de antes. A folha
+  `ferramentas/prototipos/hud/integracoes-22-10/integracoes-1189.png`.
+- **Gabarito:** uma partida mudou (`mago-42-web`), investigada antes de atualizar: só o campo `"retrato"` de um contrato
+  de alvo da família `golem` ("Serorthas"), de `"construto"` para `"golem"`, em 3 linhas (o estado dos contratos e dois
+  painéis); com as duas famílias tiradas do mapa, a transcrição volta ao hash antigo. As outras 23 idênticas. Atualizado.
+- **Testes:** a árvore e o golem pela família, com os afixos e o líder; os guardiões nos traços; o Espantalho e o Mímico
+  pelos eventos reais (com um jogo de mentira), nos traços; um golem comum com o nome "Mímico" continua no golem.
+- **Verificações sobre o código final:** `unittest` (661, 1 pulado: a fumaça, rodada à parte), o gabarito (atualizado
+  como acima), o pyflakes (só o aviso conhecido) e a fumaça inteira (378 ok, tudo certo).
+- **Pendências à parte:** o Espantalho Possuído e o Mímico (um desenho próprio ou ficar nos traços).
+- **Falta na frente de criaturas:** os 8 guardiões, o antagonista, o servo do Necromante e as duas pendências; depois, a
+  1E.4 (o mapa). Nada começado.

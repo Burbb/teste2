@@ -13,7 +13,7 @@ Não iniciar todo o plano numa única tarefa. As etapas técnicas A–I e a vali
 
 ## Estado de referência — 21/10/2026
 
-- Produção: **1.188.0** na branch `claude/tender-einstein-tx3tjl` (22/10/2026: a Abominação C3 pela família na 1.188.0; o Cavaleiro Sombrio P3 pela família, com o Último Guarda, na 1.187.0; o Cão infernal P1 pela família na 1.186.0; a Cria do Vazio A2 pela família na 1.185.0; a Harpia T2 e o Xamã Caído X1r2 pela família na 1.184.0; o Grifo GA3 pela família na 1.183.0; 23/10/2026: o Caído CA pela família, com os que o
+- Produção: **1.189.0** na branch `claude/tender-einstein-tx3tjl` (23/10/2026: a Árvore Desperta T1 e o Golem G2 pelas famílias na 1.189.0; 22/10/2026: a Abominação C3 pela família na 1.188.0; o Cavaleiro Sombrio P3 pela família, com o Último Guarda, na 1.187.0; o Cão infernal P1 pela família na 1.186.0; a Cria do Vazio A2 pela família na 1.185.0; a Harpia T2 e o Xamã Caído X1r2 pela família na 1.184.0; o Grifo GA3 pela família na 1.183.0; 23/10/2026: o Caído CA pela família, com os que o
   xamã ergue; 22/10/2026: o Mercenário MA e o Lobo Gélido LA pela
   família na 1.179.0; o caixote no motivo "Esgotado" do mercado na 1.180.0; o ent jovem e o Ent Ancião renomeados para
   Árvore Desperta e Árvore Anciã, com a migração dos saves, na 1.181.0; a fala da Pita depois do último tratamento na
@@ -1040,13 +1040,13 @@ foi escolhida.
 
 **A frente de criaturas em 22/10/2026 (na 1.174.6; conferido em `dados.retrato` com as 27 famílias e os 10 guardiões
 do catálogo):**
-- **Integrados (27):** pela família, o Afogado, o Lobo, o Bandido, o Troll da montanha, a Aranha gigante, o Sapo-touro,
+- **Integrados (29):** pela família, o Afogado, o Lobo, o Bandido, o Troll da montanha, a Aranha gigante, o Sapo-touro,
   a Sanguessuga, o Cultista, a Bruxa do pântano, o Rato, o Javali, o Carniçal, o Espectro, o Esqueleto, o Mercenário e
-  o Lobo Gélido, o Caído, o Grifo, a Harpia, o Xamã Caído, a Cria do Vazio, o Cão infernal, o Cavaleiro Sombrio e a Abominação (24; o Esqueleto E1r na 1.175.0, com os que o Lich invoca; o Mercenário MA e o Lobo Gélido LA
+  o Lobo Gélido, o Caído, o Grifo, a Harpia, o Xamã Caído, a Cria do Vazio, o Cão infernal, o Cavaleiro Sombrio, a Abominação, a Árvore Desperta e o Golem de pedra (26; o Esqueleto E1r na 1.175.0, com os que o Lich invoca; o Mercenário MA e o Lobo Gélido LA
   na 1.179.0, com o Invicto da ponte e o Theodore; o MB e o LB guardados como não escolhidos; o Caído CA na 1.182.0, com
   os que o xamã ergue; o Grifo GA3 na 1.183.0, com o feroz do ninho; o GA e o GA2 como histórico; a Harpia T2 e o Xamã
   Caído X1r2 na 1.184.0, com os afixos e o xamã que escolta o bando de caídos; a Cria do Vazio A2 na 1.185.0, com as
-  que o antagonista invoca; o Cão infernal P1 na 1.186.0, com os afixos; o Cavaleiro Sombrio P3 na 1.187.0, com o Último Guarda; a Abominação C3 na 1.188.0, com os afixos); pela chave da capela, a Ilse; pelo id do guardião, o Rei Troll e
+  que o antagonista invoca; o Cão infernal P1 na 1.186.0, com os afixos; o Cavaleiro Sombrio P3 na 1.187.0, com o Último Guarda; a Abominação C3 na 1.188.0, com os afixos; a Árvore Desperta T1 e o Golem G2 na 1.189.0, com os afixos e os líderes, sem o Espantalho Possuído e o Mímico); pela chave da capela, a Ilse; pelo id do guardião, o Rei Troll e
   a Rainha Aracnídea. Os animais do patrulheiro (o Urso Pardo, o Falcão Peregrino e o Lobo Cinzento) na carta aliada e
   no painel; os três também na fogueira, pelo tipo (o lobo c2 na 1.170.0, o urso r4 e o falcão na 1.176.0). O cajado
   aprovado no Atacar do Mago (1.177.0).
@@ -1055,11 +1055,10 @@ do catálogo):**
 - **Na 1.187.0, o Cavaleiro Sombrio P3** (a cúpula com a crista afundada no gorjal alto; entrou como o P3b, com os cantos
   de baixo completados a pedido do Jean), pela família, com o Último
   Guarda. **Na 1.188.0, a Abominação C3** (a boca enorme sustentada pelas bochechas), pela família, com os afixos.
-  **Propostas aguardando o Jean (nenhuma autorizada), a segunda rodada:** a **Árvore Desperta** T1 e T2, pelas duas
-  referências geradas (a T2, a direção preferida), e o **golem de pedra** G2r (o G2 com a cabeça separada dos ombros), em
-  `criaturas/arvore_golem/` (as folhas `arvore-t.png` e `golem-g2r.png`). Histórico, não escolhidos: a A1, a A2 e o G1 (o
-  G2 é a base do G2r). **Antes de qualquer integração por família:** o Espantalho Possuído (da família `ent_jovem`) e o
-  Mímico (da família `golem`) precisam de uma decisão própria.
+  **Na 1.189.0, a Árvore Desperta T1** (a transposição da referência 1) **e o Golem de pedra G2** original, pelas
+  famílias, com os afixos e os líderes (`criaturas/arvore_golem/`). Histórico, não escolhidos: a A1, a A2, a T2, o G1 e o
+  G2r. **Pendências à parte:** o Espantalho Possuído (da família `ent_jovem`) e o Mímico (da família `golem`) conservam o
+  desenho de antes pela `origem` do inimigo; falta a decisão própria de cada um (um desenho seu ou ficar nos traços).
   Histórico, não escolhidos: a Abominação A, B, C, C2, D e E e o Cavaleiro A, A2, B, T, T2, P1, P2 e P4. Histórico, não escolhidos, em
   `criaturas/fenda/`: o Cão A, B, T, N, N2, RA, RB, RC, RA2, RA3, P2 e P3 (a P1 foi a escolhida), a Cria A e B. A cria que o antagonista
   invoca é da família `cria_vazio` e usará o mesmo retrato. Histórico, não escolhidos: as Harpias HA, HB, H1 a H3 e a
@@ -1070,8 +1069,9 @@ do catálogo):**
   Anciã** (árvores vivas: "árvores que acordaram com raiva"; o guardião, "uma árvore milenar"). Os ids `ent_jovem` e
   `ent_anciao`, os números, as habilidades e as regras ficam; os saves antigos passam pela migração v5 → v6.
 - **Ainda nos desenhos genéricos dos traços (levantado em `dados.retrato` na 1.184.0):**
-  - **2 famílias inimigas:** a Árvore Desperta (`planta`) e o golem de pedra (`construto`). O cavaleiro sombrio tem o
-    dele desde a 1.187.0 e a abominação desde a 1.188.0 (o `corrompido` fica para quem só tiver o traço). A cria do Vazio tem o retrato dela desde a 1.185.0, com as que o
+  - **Nenhuma família inimiga comum** (desde a 1.189.0, com a Árvore Desperta e o golem de pedra; o cavaleiro sombrio
+    desde a 1.187.0 e a abominação desde a 1.188.0). Ficam nos traços, de propósito: o Espantalho Possuído e o Mímico
+    (pela `origem`, a decidir) e a família `esqueleto_servo` (que nenhum código cria). A cria do Vazio tem o retrato dela desde a 1.185.0, com as que o
     antagonista invoca; o cão infernal, desde a 1.186.0 (nenhuma família fica mais no `demonio`).
   - **8 guardiões:** a Árvore Anciã, a Hidra do Brejo, a Bruxa Afogada, o Dragão de Gelo, o Senhor da Guerra, o Profeta
     das Cinzas, o Lich Menor (o `etereo` na fase 2) e o Golem Primordial.
@@ -1232,16 +1232,16 @@ volta à pauta quando essa expansão exigir; não é uma migração de engine.
 
 ## Próxima passagem de trabalho — atualizada em 22/10/2026
 
-1. **Concluídos:** os 31 equipamentos-base (1D); na 1E, o contador de flechas e os 17 estados; 26 criaturas com retrato
-   (24 famílias, a Ilse, o Rei Troll e a Rainha Aracnídea); o ícone do Esgotado do mercado e os três animais do patrulheiro (na carta, no painel e na
+1. **Concluídos:** os 31 equipamentos-base (1D); na 1E, o contador de flechas e os 17 estados; 28 criaturas com retrato
+   (26 famílias, a Ilse, o Rei Troll e a Rainha Aracnídea); o ícone do Esgotado do mercado e os três animais do patrulheiro (na carta, no painel e na
    fogueira); o cajado no Atacar do Mago. As variantes e os compartilhamentos provisórios ficam abertos, separados.
 2. **Agora, 1E.3:** as demais criaturas, os chefes e as invocações, em pares pequenos escolhidos pelo Jean, pelo mesmo
    caminho (o retrato por família, por chave ou pelo tipo, sem trocar o sprite compartilhado). O Mercenário, o Lobo
    Gélido e o Esgotado integrados (1.179.0, 1.180.0); o Caído CA (1.182.0); o Grifo GA3 (1.183.0); a Harpia T2 e o Xamã
-   Caído X1r2 (1.184.0); a Cria do Vazio A2 (1.185.0); o Cão infernal P1 (1.186.0); o Cavaleiro Sombrio P3 (1.187.0); a Abominação C3 (1.188.0).
-   **Aguardando o Jean:** a Árvore Desperta (T1, T2) e o golem de pedra (G2r) (`criaturas/arvore_golem/`; o Espantalho
-   Possuído e o Mímico a decidir antes da integração); depois,
-   os chefes (a Árvore Anciã e o Golem Primordial numa rodada própria), sem começar antes do pedido. A relação em "A frente de criaturas em 22/10/2026" (item 1.12). O Esqueleto E2 e o Bandido do
+   Caído X1r2 (1.184.0); a Cria do Vazio A2 (1.185.0); o Cão infernal P1 (1.186.0); o Cavaleiro Sombrio P3 (1.187.0); a Abominação C3 (1.188.0); a Árvore Desperta T1 e o Golem G2 (1.189.0).
+   **Falta na 1E.3:** os 8 guardiões (a Árvore Anciã, a Hidra do Brejo, a Bruxa Afogada, o Dragão de Gelo, o Senhor da
+   Guerra, o Profeta das Cinzas, o Lich Menor e o Golem Primordial), o antagonista, o servo do Necromante e as decisões do
+   Espantalho Possuído e do Mímico; nada começado antes do pedido. A relação em "A frente de criaturas em 22/10/2026" (item 1.12). O Esqueleto E2 e o Bandido do
    chapéu estão reservados.
 3. **Depois, 1E.4:** os caminhos/destinos e os símbolos internos do mapa e do minimapa.
 4. **Retomar a etapa 2** e **seguir 3–7**, como na sequência abaixo; **etapa 8** com habilidades, talentos, Grimório e

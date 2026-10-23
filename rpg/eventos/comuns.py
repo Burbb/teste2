@@ -272,6 +272,7 @@ def bau_abandonado(g):
         mimico.nome = "Mímico"
         mimico.desc = "um mímico"
         mimico.tracos = ["construto"]
+        mimico.origem = "mimico"  # os números do golem, mas não o retrato dele: o desenho segue pelos traços
         mimico.habilidades = ["agarrar", "mordida_sangrenta"]
         mimico.ouro *= 4
         g.combate([mimico], emboscada="inimigo" if op == "forca" else None)

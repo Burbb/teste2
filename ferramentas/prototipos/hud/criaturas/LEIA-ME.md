@@ -234,3 +234,5 @@ A escolha do par e da direção é do Jean; nada foi começado.
   referências geradas (a T2, a direção preferida), e o Golem G2r (o G2 com a cabeça separada dos ombros), em
   `arvore_golem/` (as folhas `arvore-t.png` e `golem-g2r.png`). O Espantalho Possuído e o Mímico precisam de uma decisão
   própria antes de qualquer integração por família.
+- **Integrados na 1.189.0:** a Árvore Desperta T1 e o Golem de pedra G2 original, pelas famílias, com os afixos e os
+  líderes. O Espantalho Possuído e o Mímico conservam o desenho de antes (pela `origem`), com a decisão própria pendente.

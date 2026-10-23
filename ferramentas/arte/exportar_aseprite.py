@@ -130,6 +130,10 @@ DERIVADOS = {
     "retrato-cavaleiro-sombrio": {32: (16, 2), 48: (16, 3)},
     # 1.188.0: a abominação (a C3: a boca enorme sustentada pelas bochechas, o Vazio no fundo), pela família
     "retrato-abominacao": {32: (16, 2), 48: (16, 3)},
+    # 1.189.0: a árvore desperta (a T1, a transposição da referência 1, com a guia oculta) e o golem de pedra (o G2, o
+    # rochedo), pelas famílias; o Espantalho Possuído e o Mímico continuam nos traços
+    "retrato-arvore-desperta": {32: (16, 2), 48: (16, 3)},
+    "retrato-golem": {32: (16, 2), 48: (16, 3)},
 }
 # O martelo (1.149.0) só tem fontes do 40 e do 48 (aseprite/martelo/): o 32 e o 64 são a grade de desenhos.js, no
 # jogo, e não saem daqui.

@@ -136,3 +136,37 @@ próprio, ou aceitar o da família) antes de qualquer integração; nada foi dec
 - As fotos a 1920×945 nos modos atual, b, t1, t2 e g2r (os mesmos cenários e enquadramentos), sem erro no console.
 - As folhas `arvore-t.png` (as duas referências, as guias e as transposições a 12×; o jogo de hoje × T1 × T2 na carta e
   no Bestiário; a fileira) e `golem-g2r.png` (o G2 × o G2r).
+
+# A integração (1.189.0): a Árvore T1 e o Golem G2 original
+
+**Decisão do Jean:** a Árvore Desperta T1 (a transposição da referência 1) e o Golem de pedra G2 original (anterior ao
+G2r, com a cabeça e a ligação dela aos ombros como estavam) aprovados para integração, sem retoques. A1, A2, T2, G1 e
+G2r ficam como histórico.
+
+- **As fontes:** `fontes/arvore-t1/` (com a guia oculta) e `fontes/golem-g2/` (sem alteração desde o `745a07ae` e o
+  `0dd2e6e3`), copiadas byte a byte para `ferramentas/arte/aseprite/retrato-arvore-desperta/` (guia oculta, casca, rosto;
+  conferido na fonte de produção: `guia=false`) e `retrato-golem/` (pedra, musgo, juntas); o 32 e o 48 em `DERIVADOS`,
+  com os @2x.
+- **Antes de gravar no jogo:** exportados numa pasta temporária e comparados com as propostas (`proposta/arvore-t1-*` e
+  `proposta/golem-g2-*`): os doze iguais byte a byte. Depois, o `--conferir` dos dois: tudo igual ao jogo.
+- **No jogo:** pelas famílias (`RETRATO_FAMILIA`: `ent_jovem` → `arvore_desperta`, `golem` → `golem`; o papel `CRIATURA`
+  em `icones.js`), com os afixos e os líderes de nome próprio. O `planta` continua com a Árvore Anciã e o `construto` com o
+  Golem Primordial (guardiões, pelos traços), que aguardam as artes deles. Nenhuma regra nem atributo mudou.
+- **As exceções desta entrega:** o Espantalho Possuído e o Mímico conservam a aparência de antes. Os dois continuam da
+  família de origem (os números, o Bestiário, os contratos e o nêmesis como antes), mas o evento marca o inimigo com uma
+  `origem` (`"espantalho"`, `"mimico"`; `entidades.Inimigo.origem`, que só o retrato lê), e o `retrato()` não usa o da
+  família para quem tem origem: o desenho segue pelos traços (o Espantalho no `planta`, ou no `corrompido` com o afixo
+  corrompido; o Mímico no `construto`). A distinção não depende do nome exibido (um golem comum chamado "Mímico" continua
+  com o retrato do golem; está no teste).
+- **Conferido com os arquivos de produção** (`auxiliares/fotografar_jogo.mjs`, `capturas-1189/`, a 1920×945, nada
+  trocado na página): os dois na luta com o lobo e o javali; o Bestiário com a faixa do mestre caçador nos dois; o
+  cartaz e o rastreador de um contrato de cada; e as exceções pelo código real dos eventos (`auxiliares/cenario_excecoes.py`,
+  que só força a sorte do evento e o nível do herói): o Espantalho Possuído no sprite da planta e o Mímico no do
+  construto. Nenhum pedido a `ferramentas/`, sem erro no console. A folha `../integracoes-22-10/integracoes-1189.png`.
+
+## Pendências registradas à parte (não resolvidas nesta entrega)
+
+- **O Espantalho Possuído** (`eventos/biomas.py`, `espantalho`): hoje no sprite da planta pelos traços (no `corrompido`
+  perto da Fenda). Falta decidir se ganha um desenho próprio (um espantalho de palha, não uma árvore) ou fica assim.
+- **O Mímico** (`eventos/comuns.py`, `bau_abandonado`): hoje no sprite do construto pelos traços. Falta decidir se ganha um
+  desenho próprio (o baú com a boca) ou fica assim.

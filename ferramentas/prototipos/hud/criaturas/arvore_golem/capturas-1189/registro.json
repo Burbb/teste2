@@ -1,0 +1,58 @@
+{
+ "luta-arvore": {
+  "arquivos": [
+   "Árvore desperta: http://127.0.0.1:62812/static/hud/icones/retrato-arvore-desperta-32.png",
+   "Lobo: http://127.0.0.1:62812/static/hud/icones/retrato-lobo-32.png",
+   "Javali selvagem: http://127.0.0.1:62812/static/hud/icones/retrato-javali-32.png",
+   "Golem de pedra: http://127.0.0.1:62812/static/hud/icones/retrato-golem-32.png"
+  ],
+  "erros": [],
+  "ferramentas": []
+ },
+ "bestiario": {
+  "arquivos": [
+   "Esqueleto: http://127.0.0.1:62926/static/hud/icones/retrato-esqueleto-48.png",
+   "Golem de pedra: http://127.0.0.1:62926/static/hud/icones/retrato-golem-48.png",
+   "Javali selvagem: http://127.0.0.1:62926/static/hud/icones/retrato-javali-48.png",
+   "Lobo: http://127.0.0.1:62926/static/hud/icones/retrato-lobo-48.png",
+   "Troll da montanha: http://127.0.0.1:62926/static/hud/icones/retrato-troll-48.png",
+   "Árvore desperta: http://127.0.0.1:62926/static/hud/icones/retrato-arvore-desperta-48.png"
+  ],
+  "erros": [],
+  "ferramentas": []
+ },
+ "contratos-arvore": {
+  "arquivos": [
+   "contrato tipo-caca: http://127.0.0.1:63049/static/hud/icones/retrato-cao-infernal-48.png 48",
+   "contrato tipo-caca: http://127.0.0.1:63049/static/hud/icones/retrato-carnical-48.png 48",
+   "contrato tipo-caca ativo: http://127.0.0.1:63049/static/hud/icones/retrato-arvore-desperta-48.png 48",
+   "painel m-painel: http://127.0.0.1:63049/static/hud/icones/retrato-arvore-desperta-32.png 32"
+  ],
+  "erros": [],
+  "ferramentas": []
+ },
+ "contratos-golem": {
+  "arquivos": [
+   "contrato tipo-caca: http://127.0.0.1:63190/static/hud/icones/retrato-cao-infernal-48.png 48",
+   "contrato tipo-caca: http://127.0.0.1:63190/static/hud/icones/retrato-carnical-48.png 48",
+   "contrato tipo-caca ativo: http://127.0.0.1:63190/static/hud/icones/retrato-golem-48.png 48",
+   "painel m-painel: http://127.0.0.1:63190/static/hud/icones/retrato-golem-32.png 32"
+  ],
+  "erros": [],
+  "ferramentas": []
+ },
+ "espantalho": {
+  "arquivos": [
+   "Espantalho Possuído: data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAALRJREFUOE9jZKAQMIL083Jz/f/89RuYDeODaHQxZD5MLdyAWn8lhuaN98CaQAbi4yM7GsVWmCaQAmxsnC5AdjpIIzqAuQxbcMFdAPM7NgNAcrgMwWoAa6odQ53PArg3mrYkMPyefQirIUS7AJcrcBoAcjIMwLyFzRu0cwG2EMfrAljigfkVOTZAGnF5A29KhLkCVwoFycMNQE77yK5BD32QHLJalEBEz0zI4YAtGcNdQEmOBgA+0qARnfEIdAAAAABJRU5ErkJggg=="
+  ],
+  "erros": [],
+  "ferramentas": []
+ },
+ "mimico": {
+  "arquivos": [
+   "Mímico: data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAALFJREFUOE9jZKAQMKLr5+Xm+o/PzM9fv6HoQeGANNeWpjGYWVhgNePUiRMMzd2zGJANwTBg89p5DCCFuABOA2BOB7ngq0E/Q180NwOIDQMgjUVLvzJwXygEuwIEQC6BuwDmfGLDFOYSDAMOHDjB4OCAPQxAhsPkcRoAUgRzIjbXwLxF0ACQf9EBcrgQNABXWBB0AdlhALKRlJjA8ALMyYSSMkwdLDVi5AVi0wFM3cAbAACrWnUR0eOSXgAAAABJRU5ErkJggg=="
+  ],
+  "erros": [],
+  "ferramentas": []
+ }
+}
