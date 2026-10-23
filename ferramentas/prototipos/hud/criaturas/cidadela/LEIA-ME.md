@@ -178,3 +178,47 @@ encolheu a boca; a terceira devolveu o tamanho (a abertura uma coluna antes e al
 - As fotos a 1920×945 nos modos `c2` e `t`, em `capturas-2/` (os mesmos cenários das anteriores), sem erro no console;
   as folhas compactas `abominacao-c2.png` (a C × a C2) e `cavaleiro-t.png` (a referência, a guia e o T a 12×; o jogo de
   hoje × o T na carta e no Bestiário; a fileira).
+
+# A quarta rodada (22/10/2026, propostas; nada no jogo)
+
+**Avaliação do Jean:** a C2 exagerou a assimetria (a bochecha esquerda volumosa, o canto direito caído demais, a
+expressão caída, a mandíbula sem ligação); a orientação de mandíbula muito torta fica substituída por "deformação
+monstruosa com estrutura legível". No T, o busto (os ombros, a capa e a parte de baixo) foi bem recebido; o elmo perdeu a
+perspectiva da referência (o topo para um lado, a viseira para outro, o ponto violeta central como um olho de ciclope).
+C, C2 e T ficam como histórico; as cópias novas são `abominacao-c3` e `cavaleiro-t2`.
+
+## A Abominação C3 (`abominacao-c3`), de novo a partir da C
+
+Camadas carne, boca, dentes, olhos. A boca enorme (dez colunas, como na C) fica centralizada sob o rosto e sustentada dos
+dois lados por bochechas de carne; o lábio de cima ganha volume (aceso, pesando sobre a abertura, os cantos de cima
+arredondados) e o de baixo é grosso e desigual. A irregularidade fica nos dentes (a presa longa à esquerda, uma pequena
+em cima, uma de baixo e a grande da direita), na espessura da carne e nos cantos (o da direita uma linha mais largo); o
+brilho do Vazio continua no fundo da garganta. Na bancada: a primeira C3 centralizou a boca mas a encolheu; a segunda
+devolveu o tamanho e deixou o lábio de cima como uma linha reta que recortava; a terceira deu espessura ao lábio.
+
+## O Cavaleiro T2 (`cavaleiro-t2`), o busto do T com o elmo refeito
+
+Camadas guia (a mesma do T, oculta), capa, armadura, viseira. Da linha 8 para baixo é o T. O elmo foi resolvido primeiro
+sem o brilho, pela referência: a ponta à esquerda (colunas 5 e 6), o topo descendo para a direita até a nuca; a quina
+frontal na coluna 5, da testa ao queixo, com a frente estreita e acesa à esquerda dela; a lateral larga à direita, mais
+escura, com a emenda das placas na coluna 9; a fenda atravessando a frente na linha 6 e subindo pela lateral na linha 5,
+com a borda acesa embaixo; a base apoiada no gorjal do T. Por último, o brilho: um pixel violeta apagado (`u`) dentro da
+fenda, na lateral, fora do centro.
+
+## A minha leitura (quem escolhe é o Jean)
+
+- **C3:** a boca continua o traço da carta e agora parece presa ao rosto, sem cair; **limitação no tamanho real:** com
+  a boca centralizada e as bochechas dos dois lados, o rosto fica mais simétrico e um pouco menos monstruoso que a C.
+- **T2:** a 32 e a 48 se percebe que ele olha para a esquerda, como na referência; **limitação no tamanho real:** o
+  violeta apagado quase some a 32, e a viseira lê pela fenda escura e pela borda acesa.
+
+## Processo da quarta rodada
+
+- As grades à mão em `auxiliares/grades.py` (as de antes saem idênticas); as fontes pelo Aseprite em lote (o conector
+  continuou sem editor; a janela aberta não foi tocada), 0 diferentes e 0 fora da tela na releitura de cada camada;
+  a guia do T2 oculta (conferido na fonte: `guia=false`); a exportação igual à grade, o @2x exato, o 32 e o 48 em blocos
+  inteiros.
+- As fotos a 1920×945 nos modos `c3` e `t2`, em `capturas-2/` (os mesmos cenários e enquadramentos), sem erro no console.
+- As folhas compactas `abominacao-c3.png` (a C × a C2 × a C3) e `cavaleiro-t2.png` (a referência, a guia e o T2 a 12×;
+  a orientação no tamanho do retrato: a referência reduzida, o T e o T2 a 32 e 48; o T × o T2 na carta e no Bestiário; a
+  fileira).

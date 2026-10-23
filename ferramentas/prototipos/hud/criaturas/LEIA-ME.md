@@ -211,3 +211,6 @@ A escolha do par e da direção é do Jean; nada foi começado.
 - **Terceira rodada (22/10/2026), em avaliação:** a Abominação C escolhida como direção e refinada na C2 (a mandíbula
   presa pela carne); o Cavaleiro T, a transposição da referência `Cavaleiro sombrio do Vazio.png` (A, A2 e B como
   histórico). As folhas `cidadela/abominacao-c2.png` e `cidadela/cavaleiro-t.png`. Nenhum autorizado para integração.
+- **Quarta rodada (22/10/2026), em avaliação:** a Abominação C3 (de novo a partir da C: a boca enorme centralizada e
+  sustentada) e o Cavaleiro T2 (o busto do T com o elmo refeito pela referência); C, C2 e T como histórico. As folhas
+  `cidadela/abominacao-c3.png` e `cidadela/cavaleiro-t2.png`. Nenhum autorizado para integração.

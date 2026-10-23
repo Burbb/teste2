@@ -32,6 +32,13 @@ são o 16 ×2 e ×3. Desenhados à mão, uma letra por pixel; silhueta e volumes
           75 px por pixel): o elmo em leve três quartos com a ponta à esquerda do centro, a frente acesa e a lateral
           escura com a emenda, a viseira estreita subindo para a direita com a borda acesa embaixo e o violeta dentro,
           a quina descendo até o queixo, o gorjal com a borda em diagonal, as ombreiras em duas placas e a capa vinho.
+  A quarta rodada (o Jean achou a C2 caída e o elmo do T sem perspectiva; o busto do T foi bem recebido):
+      C3, de novo a partir da C: a boca enorme centralizada sob o rosto e sustentada dos dois lados, as bochechas e o
+          lábio de cima com volume (aceso, pesando sobre a abertura), o de baixo grosso e desigual; a irregularidade nos
+          dentes, na espessura da carne e nos cantos (o da direita um pouco mais largo); o brilho do Vazio no fundo;
+      Cavaleiro T2, o busto do T com o elmo refeito pela referência: a ponta à esquerda, a quina descendo da testa ao
+          queixo (a frente estreita à esquerda dela), a lateral larga à direita com a emenda, a fenda subindo para a
+          direita pela lateral e a borda acesa embaixo; o violeta mais apagado, dentro da fenda, fora do centro.
     python grades.py <pasta> [<id> ...]     # grava grades/<id>.txt e listas/<id>/<camada>.lua (a guia, do png dela)
 """
 import pathlib
@@ -54,7 +61,7 @@ PALETAS = {
     },
     "cavaleiro_t": {  # a paleta da referência, com os planos de luz separados
         "k": "0c0a10", "a": "1c1a24", "A": "2e2c3c", "M": "464258", "L": "6e6880", "W": "9e98ae",  # o aço
-        "v": "9a62d8", "c": "3a1022", "C": "5e1c36",  # o brilho do Vazio; a capa vinho
+        "v": "9a62d8", "u": "5a3a88", "c": "3a1022", "C": "5e1c36",  # o brilho do Vazio (u, o apagado do T2); a capa
     },
     "cavaleiro": {
         "a": "24242e", "A": "444452", "L": "6e6e80", "W": "aeaec0",  # o aço escuro (do fundo à borda clara)
@@ -227,6 +234,42 @@ CAVALEIRO_T = [
     "MLMAakaALMAaaMLa",
     "...aakaAAAAaaAA.",
 ]
+ABOMINACAO_C3 = [
+    "................",
+    "....oooooo......",
+    "...olhhllmo.....",
+    "..olhllllmmo....",
+    "..ollsslsssmo...",
+    "..olsesmmsesmo..",
+    ".olhlllhllmmmso.",
+    "olhskkkkkkkksmso",
+    "ollkdvvvvvdvkmso",
+    "ollkdvvvVvvvkmso",
+    "olmkvvvvgvvdvkso",
+    "olmskdvkkkkdkkso",
+    "osmmllllmmmlsmso",
+    "oosmmmmmmmmmmsoo",
+    "lmoossssssssssml",
+    "lmmooooooooooomm",
+]
+CAVALEIRO_T2 = [
+    ".....kk.........",
+    "....kWLAk.......",
+    "....WLMAMak.....",
+    "....WLMMAMak....",
+    "....LWMMAMak....",
+    "....LWMkukkk....",
+    "....kkkMMMAk....",
+    "....LWLAAMAk....",
+    "...cLWAaaaak....",
+    "..CcMLAakAMMakC.",
+    ".MLckLAkMMAaakCc",
+    "LWLLakkMAAaaLWLc",
+    "MLLMAkLMAAaaMLMA",
+    "aAAAakaLMAAaaAAa",
+    "MLMAakaALMAaaMLa",
+    "...aakaAAAAaaAA.",
+]
 CAVALEIRO_A2 = [
     ".....aaaaaa.....",
     "....aALWWLMa....",
@@ -280,6 +323,12 @@ def _camada_cavaleiro_t(x, y, ch):  # a fenda da viseira: o escuro das linhas 5 
     return "capa" if ch in "cC" else "armadura"
 
 
+def _camada_cavaleiro_t2(x, y, ch):  # a fenda: o escuro da linha 5 (colunas 7 a 10) e da 6 (4 a 6) e o brilho
+    if ch == "u" or (ch == "k" and ((y == 5 and 7 <= x <= 10) or (y == 6 and 4 <= x <= 6))):
+        return "viseira"
+    return "capa" if ch in "cC" else "armadura"
+
+
 def _camada_cavaleiro_b(x, y, ch):  # a espada da B fica nas colunas 0 a 2 (o pomo, o punho, a guarda e a lâmina)
     return "espada" if x <= 2 and ch in "grLW" else _camada_cavaleiro(x, y, ch)
 
@@ -302,8 +351,10 @@ CAMADAS = {  # a grade, a paleta, as camadas de baixo para cima e a camada de ca
     "cavaleiro-a2": (CAVALEIRO_A2, "cavaleiro", ["capa", "armadura", "viseira"], _camada_cavaleiro),
     "abominacao-c2": (ABOMINACAO_C2, "abominacao2", ["carne", "boca", "dentes", "olhos"], _camada_abominacao_c),
     "cavaleiro-t": (CAVALEIRO_T, "cavaleiro_t", ["guia", "capa", "armadura", "viseira"], _camada_cavaleiro_t),
+    "abominacao-c3": (ABOMINACAO_C3, "abominacao2", ["carne", "boca", "dentes", "olhos"], _camada_abominacao_c),
+    "cavaleiro-t2": (CAVALEIRO_T2, "cavaleiro_t", ["guia", "capa", "armadura", "viseira"], _camada_cavaleiro_t2),
 }
-GUIAS = {"cavaleiro-t": "guias/cavaleiro-t-guia-16.png"}  # a camada guia (oculta na fonte, fora da exportação)
+GUIAS = {"cavaleiro-t": "guias/cavaleiro-t-guia-16.png", "cavaleiro-t2": "guias/cavaleiro-t-guia-16.png"}  # a camada guia (oculta na fonte, fora da exportação)
 
 
 def cor(ident, ch):

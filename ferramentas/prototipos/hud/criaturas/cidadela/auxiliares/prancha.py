@@ -2,10 +2,11 @@
 a carta na luta a 1920×945 em tamanho real e a 2×, o cartão do Bestiário (48) em tamanho real, a fileira com os retratos
 aprovados pertinentes (na caixa da carta, real e 3×) e a 12× com a grade, sem suavização. Tudo trocado só na página
 (protótipo).
-Na terceira, abominacao-c2.png (a C × a C2) e cavaleiro-t.png (a referência, a guia e o T; o jogo de hoje × o T).
+Na quarta, abominacao-c3.png (a C × a C2 × a C3) e cavaleiro-t2.png (a referência, também no tamanho do retrato, × o T ×
+o T2). Na terceira, abominacao-c2.png (a C × a C2) e cavaleiro-t.png (a referência, a guia e o T; o jogo de hoje × o T).
 Na segunda rodada, abominacao-cde.png (o jogo de hoje × C × D × E) e cavaleiro-a2.png (o jogo de hoje × o A original ×
 o A2), das fotos em capturas-2/.
-    python prancha.py [abominacao|cavaleiro|abominacao-cde|cavaleiro-a2|abominacao-c2|cavaleiro-t ...]      (depois do fotografar.mjs)
+    python prancha.py [abominacao|cavaleiro|abominacao-cde|cavaleiro-a2|abominacao-c2|cavaleiro-t|abominacao-c3|cavaleiro-t2 ...]      (depois do fotografar.mjs)
 """
 import json
 import pathlib
@@ -48,9 +49,17 @@ CRIATURAS = {
                                           ("T, a transposição da referência", "t", "cavaleiro-t")],
                     ("esqueleto", "mercenario", "espectro", "bandido"), ["luta-cavaleiro"],
                     ("Cavaleiro sombrio do Vazio.png", (27, 54, 1227, 1254), "cavaleiro-t-guia-16.png")),
+    # a quarta: a C × a C2 × a C3; a referência × o T × o T2 (com a referência no tamanho do retrato)
+    "abominacao-c3": ("Abominação", [("C, a base", "c", "abominacao-c"), ("C2, a anterior", "c2", "abominacao-c2"),
+                                     ("C3, a nova", "c3", "abominacao-c3")],
+                      ("carnical", "afogado", "troll", "cria-vazio"), ["luta-abominacao"]),
+    "cavaleiro-t2": ("Cavaleiro sombrio", [("T, o anterior", "t", "cavaleiro-t"), ("T2, o novo", "t2", "cavaleiro-t2")],
+                     ("esqueleto", "mercenario", "espectro", "bandido"), ["luta-cavaleiro"],
+                     ("Cavaleiro sombrio do Vazio.png", (27, 54, 1227, 1254), "cavaleiro-t-guia-16.png")),
 }
 FOTOS = {"abominacao-cde": "capturas-2", "cavaleiro-a2": "capturas-2", "abominacao-c2": "capturas-2",
-         "cavaleiro-t": "capturas-2"}  # a pasta das fotos, se não for a capturas/
+         "cavaleiro-t": "capturas-2", "abominacao-c3": "capturas-2", "cavaleiro-t2": "capturas-2"}
+ORIENTACAO = {"cavaleiro-t2"}  # a referência reduzida ao tamanho do retrato (32 e 48), ao lado dos desenhos  # a pasta das fotos, se não for a capturas/
 REFERENCIAS = AQUI.parents[5] / "ferramentas/arte/referencias/icones"
 
 
@@ -104,6 +113,22 @@ def folha(chave):
         out.alpha_composite(grade12(Image.open(PASTA / "guias" / guia).convert("RGBA")), (232, y + 18))
         out.alpha_composite(grade12(desenho(colunas[-1][2])), (444, y + 18))
         y += 18 + 192 + 24
+        if chave in ORIENTACAO:  # a orientação: a referência reduzida (só para olhar) e cada desenho, a 32 e a 48
+            d.text((20, y), "a orientação no tamanho do retrato, na caixa da carta: a referência reduzida (LANCZOS, só "
+                   "para olhar) e cada desenho, a 32 e a 48", fill=TEXTO, font=f2)
+            y += 18
+            pequena = fundo.crop(corte)
+            itens = [("referência", lambda l: pequena.resize((l, l), Image.LANCZOS))] + [
+                (f, lambda l, f=f: amplia(desenho(f), l // 16)) for _, _, f in colunas if f]
+            for j, (rot, faz) in enumerate(itens):
+                x = 20 + j * 130
+                for i, lado in enumerate((32, 48)):
+                    cx = Image.new("RGBA", (lado + 6, lado + 6), (42, 36, 32, 255))
+                    cx.paste((13, 11, 10, 255), (2, 2, lado + 4, lado + 4))
+                    cx.alpha_composite(faz(lado), (3, 3))
+                    out.alpha_composite(cx, (x + i * 44, y + (48 - lado) // 2))
+                d.text((x, y + 58), rot, fill=TEXTO2, font=f2)
+            y += 58 + 24
     for sit in lutas:
         rot_sit = "a carta na luta" if sit != "luta-invocada" else "a carta da cria invocada pelo antagonista"
         d.text((20, y), f"{rot_sit} (1920×945), tamanho real e 2×", fill=TEXTO, font=f2)
