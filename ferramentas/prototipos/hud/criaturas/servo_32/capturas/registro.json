@@ -342,5 +342,91 @@
    }
   ],
   "erros": []
+ },
+ "n16b/100": {
+  "dpr": 1,
+  "cartas": [
+   {
+    "nome": "Jean",
+    "caixa": [
+     35,
+     27,
+     271,
+     100
+    ],
+    "retrato": {
+     "css": [
+      32,
+      32
+     ],
+     "aparelho": [
+      32,
+      32
+     ],
+     "arquivo": "data:722"
+    }
+   },
+   {
+    "nome": "Esqueleto (Invocado)",
+    "caixa": [
+     48,
+     104,
+     258,
+     154
+    ],
+    "retrato": {
+     "css": [
+      32,
+      32
+     ],
+     "aparelho": [
+      32,
+      32
+     ],
+     "arquivo": "data:846"
+    }
+   },
+   {
+    "nome": "Lobo (servo)",
+    "caixa": [
+     48,
+     162,
+     258,
+     212
+    ],
+    "retrato": {
+     "css": [
+      32,
+      32
+     ],
+     "aparelho": [
+      32,
+      32
+     ],
+     "arquivo": "data:754"
+    }
+   },
+   {
+    "nome": "Esqueleto",
+    "caixa": [
+     830,
+     97,
+     1040,
+     147
+    ],
+    "retrato": {
+     "css": [
+      32,
+      32
+     ],
+     "aparelho": [
+      32,
+      32
+     ],
+     "arquivo": "http://127.0.0.1:50244/static/hud/icones/retrato-esqueleto-32.png"
+    }
+   }
+  ],
+  "erros": []
  }
 }

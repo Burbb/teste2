@@ -295,3 +295,5 @@ A escolha do par e da direção é do Jean; nada foi começado.
 - **A segunda construção de 32 da Hidra (23/10/2026), aguardando o Jean:** o `hidra-n32b` em `hidra_32/` (a folha
   `construcao-32.png`): as cabeças em cunha, com testa, focinho e mandíbula, em vez de barras; sem nova adaptação para 16.
   O N32 e o N16 ficam. Nada integrado.
+- **O ajuste local do servo (23/10/2026), aguardando o Jean:** o `servo-n16b` em `servo_32/` (a folha `ajuste.png`): os
+  dentes em grupos sobre a mordida fechada e as órbitas inclinadas como no N32; o N16 e o N32 ficam. Nada integrado.

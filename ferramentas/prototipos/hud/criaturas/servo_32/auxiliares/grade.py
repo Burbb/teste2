@@ -68,9 +68,20 @@ GRADE_16 = [
     "oBBbboodDoobBBbo",
     "..obdodBbdodbo..",
 ]
+# O ajuste local do N16 (23/10/2026, o N16 preservado), com o N32 como referência imediata: só as órbitas (linhas 4 e 5) e
+# a boca (linhas 9 a 11). Os dentes alternavam claro e escuro de pixel em pixel (um xadrez): viraram dois grupos com uma
+# junta, sobre a mordida fechada numa linha escura contínua, e os de baixo em grupo na mandíbula; as órbitas voltam a
+# descer para o nariz (o canto de dentro coberto pela testa), como no N32.
+GRADE_16B = list(GRADE_16)
+GRADE_16B[4] = "..obkDbbbDkkdo.."
+GRADE_16B[5] = "..odkVkbkVkDdo.."
+GRADE_16B[9] = "....oBWBdBWdo..."
+GRADE_16B[10] = "....oDkkkkDo...."
+GRADE_16B[11] = "....obBBDBdo...."
 # cada desenho: a grade, o lado e a guia
 DESENHOS = {"servo-n32": (GRADE_32, 32, "guias/servo-guia-32.png"),
-            "servo-n16": (GRADE_16, 16, "guias/servo-guia-16.png")}
+            "servo-n16": (GRADE_16, 16, "guias/servo-guia-16.png"),
+            "servo-n16b": (GRADE_16B, 16, "guias/servo-guia-16.png")}
 # as camadas, de baixo para cima (a guia por baixo de tudo)
 ORDEM = ["guia", "ossos", "sombras", "feitico", "contorno"]
 

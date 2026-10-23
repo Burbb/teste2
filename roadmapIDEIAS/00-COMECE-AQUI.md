@@ -6619,3 +6619,17 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Verificações proporcionais:** o pyflakes dos auxiliares, a sintaxe do roteiro das fotos, a grade igual ao rascunho, a
   fonte reaberta (o lado, as camadas na ordem, a guia oculta), 0 diferentes na releitura, a exportação igual ao composto,
   o @2x em blocos inteiros, as anteriores reexportadas iguais e a foto sem erro no console.
+
+### 23/10/2026 (data do computador local) — O servo: o ajuste local do N16, N16B (nada no jogo)
+
+- **Estado:** depois da segunda construção de 32 da Hidra (`83cd006c`); só protótipo.
+- **Decisão do Jean:** o servo não aprovado; o crânio descoberto e a distinção do inimigo funcionam. Ajustar só os dentes,
+  a mordida e a mandíbula e recuperar a inclinação das órbitas do N32, numa cópia do N16.
+- **No protótipo, aguardando o Jean** (`ferramentas/prototipos/hud/criaturas/servo_32/LEIA-ME.md`, a folha `ajuste.png`):
+  o `servo-n16b`, só as linhas das órbitas e da boca mudadas: os dentes em dois grupos sobre uma mordida escura contínua,
+  os de baixo em grupo, as órbitas descendo para o nariz. O N16 e o N32 intactos.
+- **Verificações proporcionais:** o pyflakes dos auxiliares, a sintaxe do roteiro das fotos, a fonte reaberta (o lado, as
+  camadas na ordem, a guia oculta), 0 diferentes na releitura, a exportação igual ao composto, os derivados em blocos
+  inteiros, as anteriores reexportadas iguais e a foto sem erro no console, na mesma caixa da carta.
+- **Parado para a avaliação da Hidra (N32B) e do servo (N16B):** nada integrado, a Hidra sem nova adaptação para 16,
+  nenhum outro personagem, o mapa não começado.

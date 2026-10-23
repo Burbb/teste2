@@ -72,3 +72,31 @@ futura lado a lado com o estado de hoje (os dois na caveira).
   vértebra e as clavículas. **Perdeu** as costelas, a inclinação das órbitas e a forma da mandíbula; a boca a 1× vira uma
   faixa clara e escura. O que mais o separa do inimigo no 16 é a ausência do elmo e o osso claro, não o violeta.
 - **Na fileira:** o N16 tem o grão dos vizinhos; o N32 destoa, como os outros estudos de 32.
+
+# O ajuste local do N16: N16B (23/10/2026, protótipo; nada no jogo)
+
+**Pedido do Jean:** não aprovado ainda. O crânio descoberto e a distinção do Esqueleto inimigo funcionam; o ajuste fica
+nos dentes (grupos, menos alternância de claro e escuro), na mordida fechada e na mandíbula, e em recuperar parte da
+inclinação das órbitas do N32. Numa cópia (o N16 e o N32 ficam), com o N32 como referência imediata; o enquadramento, a
+paleta, o violeta contido, o pescoço e as clavículas como estavam.
+
+- **O que mudou** (`servo-n16b`, `GRADE_16B` em `grade.py`): só as linhas 4 e 5 (as órbitas) e 9 a 11 (a boca).
+  - **Os dentes:** alternavam claro e escuro de pixel em pixel (um xadrez); viraram dois grupos com uma junta escura entre
+    eles, o de trás mais na sombra.
+  - **A mordida:** uma linha escura contínua (antes, pretos e marrons alternados), fechada.
+  - **A mandíbula:** os dentes de baixo num grupo só, com uma junta, sobre o queixo como estava.
+  - **As órbitas:** o canto de dentro de cada uma coberto pela testa, e o fundo descendo para o nariz, como no N32; o
+    violeta escuro no mesmo lugar.
+- **A fonte, pelo Aseprite em lote** (`python auxiliares/exportar.py --montar servo-n16b`; o conector sem editor, a janela
+  aberta do Jean não foi tocada): 0 diferentes na releitura; reaberta com a guia oculta e as camadas na ordem; a
+  exportação igual ao composto, alfa 0/255, os derivados em blocos inteiros. O N16 e o N32 reexportados saíram iguais.
+- **A foto** (`MODOS=n16b`), na mesma luta e na mesma caixa da carta do N16, sem erro no console. **A folha:** `ajuste.png`
+  (`python auxiliares/prancha.py --b`: o N16 × o N16B com o N32 ao lado, a coluna aliada com o lobo erguido, a carta a 2×,
+  a fileira e o diagnóstico com as linhas mudadas marcadas).
+
+## A minha leitura do N16B (quem decide é o Jean)
+
+- **Melhorou:** a boca lê na carta como dentes em grupos sobre uma mordida fechada, sem grade nem faixa branca; as órbitas
+  descem para o nariz e o olhar fica mais duro, perto do N32.
+- **Ainda é limite do 16:** os dentes de cima e de baixo são dois blocos claros curtos, e a forma da mandíbula (o ângulo e
+  o ramo subindo até o crânio) continua só sugerida pelo contorno; as costelas do N32 não cabem.

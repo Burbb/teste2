@@ -1,11 +1,11 @@
 // As fotos do servo esquelético em 32 nativos e em 16 (protótipo; nada no jogo), a 1920×945, com os mesmos dados em cada
 // modo: uma luta contra o Esqueleto inimigo (o de elmo, para comparar) com os dois servos de pé (cenario_servos.py): o
 // "Esqueleto (Invocado)" do Erguer Servo e um "Lobo (servo)" como o que o Rei dos Mortos ergue, os dois com o tipo "servo"
-// (hoje os dois no sprite caveira). Modos: "atual" (o jogo), "sv2b" (a proposta anterior, de elmo), "n32" e "n16". Nos três
+// (hoje os dois no sprite caveira). Modos: "atual" (o jogo), "sv2b" (a proposta anterior, de elmo), "n32", "n16" e "n16b" (o ajuste local do N16). Nos
 // modos de proposta, a demonstração da seleção futura: o retrato novo só no "Esqueleto (Invocado)" e o "Lobo (servo)" com
 // o retrato da espécie (o do lobo, o arquivo do jogo). Trocados só na página, pelo nome, com o mesmo elemento que o
 // Icones.criatura(…, 32) monta. Registra a caixa e o retrato de cada carta aliada, e os erros do console.
-//   [MODOS=atual,sv2b,n32,n16] PLAYWRIGHT_MODULO=<file:// do index.mjs> node fotografar.mjs <raiz> <pasta das fotos>
+//   [MODOS=atual,sv2b,n32,n16,n16b] PLAYWRIGHT_MODULO=<file:// do index.mjs> node fotografar.mjs <raiz> <pasta das fotos>
 import { spawn } from "child_process";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import path from "path";
@@ -21,11 +21,12 @@ const PARES = {
   sv2b: ["../../chefes_e_especiais/proposta/servo-sv2b-32.png", "../../chefes_e_especiais/proposta/servo-sv2b-32@2x.png"],
   n32: ["../proposta/servo-n32-32.png", "../proposta/servo-n32-32@2x.png"],
   n16: ["../proposta/servo-n16-32.png", "../proposta/servo-n16-32@2x.png"],
+  n16b: ["../proposta/servo-n16b-32.png", "../proposta/servo-n16b-32@2x.png"],
 };
 const LOBO64 = [url64(LOBO[0]), url64(LOBO[1])];
 const TROCA = Object.fromEntries(Object.entries(PARES).map(([m, [a, b]]) => [m, [url64(a), url64(b), ...LOBO64]]));
 const TELAS = [{ nome: "100", width: 1920, height: 945, dpr: 1 }];
-const MODOS = (process.env.MODOS || "atual,sv2b,n32,n16").split(",");
+const MODOS = (process.env.MODOS || "atual,sv2b,n32,n16,n16b").split(",");
 const AMB = { TUTORIAL: "0", CLASSE: "mago", NIVEL_LUTA: "5", LUTA: "esqueleto", QUANTOS: "1" };
 mkdirSync(saida, { recursive: true });
 const b = await chromium.launch();
