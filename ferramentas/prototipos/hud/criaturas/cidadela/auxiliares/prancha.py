@@ -2,7 +2,9 @@
 a carta na luta a 1920×945 em tamanho real e a 2×, o cartão do Bestiário (48) em tamanho real, a fileira com os retratos
 aprovados pertinentes (na caixa da carta, real e 3×) e a 12× com a grade, sem suavização. Tudo trocado só na página
 (protótipo).
-    python prancha.py [abominacao|cavaleiro ...]      (depois do fotografar.mjs)
+Na segunda rodada, abominacao-cde.png (o jogo de hoje × C × D × E) e cavaleiro-a2.png (o jogo de hoje × o A original ×
+o A2), das fotos em capturas-2/.
+    python prancha.py [abominacao|cavaleiro|abominacao-cde|cavaleiro-a2 ...]      (depois do fotografar.mjs)
 """
 import json
 import pathlib
@@ -29,7 +31,17 @@ CRIATURAS = {
                                         ("A, o elmo fechado", "a", "cavaleiro-a"),
                                         ("B, a espada e a crista", "b", "cavaleiro-b")],
                   ("esqueleto", "mercenario", "espectro", "bandido"), ["luta-cavaleiro"]),
+    "abominacao-cde": ("Abominação", [("atual (o jogo: o corrompido)", "atual", None),
+                                      ("C, a mandíbula torta", "c", "abominacao-c"),
+                                      ("D, as duas cabeças", "d", "abominacao-d"),
+                                      ("E, os espinhos", "e", "abominacao-e")],
+                       ("carnical", "afogado", "troll", "cria-vazio"), ["luta-abominacao"]),
+    "cavaleiro-a2": ("Cavaleiro sombrio", [("atual (o jogo: a caveira)", "atual", None),
+                                           ("A original (a direção escolhida)", "a", "cavaleiro-a"),
+                                           ("A2, o A refinado", "a2", "cavaleiro-a2")],
+                     ("esqueleto", "mercenario", "espectro", "bandido"), ["luta-cavaleiro"]),
 }
+FOTOS = {"abominacao-cde": "capturas-2", "cavaleiro-a2": "capturas-2"}  # a pasta das fotos, se não for a capturas/
 REFERENCIAS = AQUI.parents[5] / "ferramentas/arte/referencias/icones"
 
 
@@ -61,12 +73,13 @@ def desenho(ident):
 
 def folha(chave):
     nome, colunas, aprovados, lutas, *ref = CRIATURAS[chave]
-    reg = json.loads((CAP / "registro.json").read_text(encoding="utf-8"))
+    cap = PASTA / FOTOS[chave] if chave in FOTOS else CAP
+    reg = json.loads((cap / "registro.json").read_text(encoding="utf-8"))
 
     def caixa_de(sit, modo):  # a carta da criatura (a primeira, se houver duas; a invocada pelo nome com a letra)
         return next(c["caixa"] for c in reg[f"{sit}/{modo}"]["caixas"] if c["nome"].startswith(nome))
     f, f2 = ImageFont.truetype("arial.ttf", 15), ImageFont.truetype("arial.ttf", 12)
-    larg = 460 if len(colunas) <= 3 else 380
+    larg = 460 if len(colunas) <= 3 else 440
     out = Image.new("RGBA", (max(1500, 20 + len(colunas) * larg), 2000), CARVAO)
     d = ImageDraw.Draw(out)
     d.text((20, 10), f"{nome} — trocados só na página (protótipo); nada no jogo", fill=TEXTO, font=f)
@@ -88,7 +101,7 @@ def folha(chave):
         y += 18
         alto = 0
         for j, (rot, modo, _) in enumerate(colunas):
-            cx = Image.open(CAP / f"{sit}-{modo}.png").convert("RGBA").crop(caixa_de(sit, modo))
+            cx = Image.open(cap / f"{sit}-{modo}.png").convert("RGBA").crop(caixa_de(sit, modo))
             x = 20 + j * larg
             d.text((x, y), rot, fill=TEXTO2, font=f2)
             out.alpha_composite(cx, (x, y + 16))
@@ -102,7 +115,7 @@ def folha(chave):
     y += 18
     alto = 0
     for j, (rot, modo, _) in enumerate(colunas):
-        ct = Image.open(CAP / f"bestiario-{modo}.png").convert("RGBA").crop(caixa_de("bestiario", modo))
+        ct = Image.open(cap / f"bestiario-{modo}.png").convert("RGBA").crop(caixa_de("bestiario", modo))
         if ct.width > larg - 10:
             ct = ct.crop((0, 0, larg - 10, ct.height))
         out.alpha_composite(ct, (20 + j * larg, y))

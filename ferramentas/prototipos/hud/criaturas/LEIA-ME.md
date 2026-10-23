@@ -202,5 +202,9 @@ A escolha do par e da direção é do Jean; nada foi começado.
 ## A Abominação e o Cavaleiro Sombrio (22/10/2026, na 1.186.0)
 
 - **Integrados desde a seção anterior:** a Cria do Vazio A2 (1.185.0) e o Cão infernal P1 (1.186.0), de `fenda/`.
-- **Em avaliação, nenhum aprovado:** a Abominação (A, a boca costurada; B, o brutamontes curvado) e o Cavaleiro Sombrio
-  (A, o elmo fechado; B, a espada e a crista), em `cidadela/` (as folhas `abominacao.png` e `cavaleiro.png`).
+- **Primeira rodada, avaliada:** a Abominação (A, a boca costurada; B, o brutamontes curvado) e o Cavaleiro Sombrio
+  (A, o elmo fechado; B, a espada e a crista), em `cidadela/` (as folhas `abominacao.png` e `cavaleiro.png`). O Jean
+  recusou a Abominação A e B e o Cavaleiro B; o Cavaleiro A ficou só como direção para refinar.
+- **Segunda rodada (22/10/2026), em avaliação:** três Abominações novas (C, a mandíbula torta; D, as duas cabeças; E,
+  os espinhos) e o Cavaleiro A2 (o A refinado), em `cidadela/` (as folhas `abominacao-cde.png` e `cavaleiro-a2.png`).
+  Nenhum autorizado para integração.

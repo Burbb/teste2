@@ -1,7 +1,8 @@
 // As fotos da Abominação e do Cavaleiro Sombrio (protótipo; nada no jogo), a 1920×945 e com os mesmos dados em cada
 // modo: a luta da abominação (com o carniçal e o troll), a do cavaleiro (com o esqueleto e o mercenário) e o Bestiário.
-// Modos: "atual" (o jogo), "a" e "b" (as propostas A e B das duas), trocados só na página, nas cartas inimigas e nos
-// cartões do Bestiário, pelo nome.
+// Modos: "atual" (o jogo), "a" e "b" (as propostas A e B das duas); na segunda rodada, "c", "d" e "e" (as Abominações
+// novas) e "a2" (o Cavaleiro refinado). Cada modo troca só as criaturas que têm aquele desenho, só na página, nas cartas
+// inimigas e nos cartões do Bestiário, pelo nome.
 //   [MODOS=atual,a,b] PLAYWRIGHT_MODULO=<file:// do index.mjs> node fotografar.mjs <raiz> <pasta das fotos>
 import { spawn } from "child_process";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
@@ -16,10 +17,12 @@ const dados = (pasta, id) => "data:image/png;base64," + readFileSync(path.join(a
 // cada criatura: o nome na carta e o desenho de cada modo
 const P = "../proposta";
 const BICHOS = [
-  ["^Abominação", { a: [P, "abominacao-a"], b: [P, "abominacao-b"] }],
-  ["^Cavaleiro sombrio", { a: [P, "cavaleiro-a"], b: [P, "cavaleiro-b"] }],
+  ["^Abominação", { a: [P, "abominacao-a"], b: [P, "abominacao-b"], c: [P, "abominacao-c"], d: [P, "abominacao-d"],
+                   e: [P, "abominacao-e"] }],
+  ["^Cavaleiro sombrio", { a: [P, "cavaleiro-a"], b: [P, "cavaleiro-b"], a2: [P, "cavaleiro-a2"] }],
 ];
-const TROCAS = Object.fromEntries(["a", "b"].map((m) => [m, BICHOS.map(([n, ms]) => [n, dados(...ms[m])])]));
+const TROCAS = Object.fromEntries(["a", "b", "c", "d", "e", "a2"].map((m) =>
+  [m, BICHOS.filter(([, ms]) => ms[m]).map(([n, ms]) => [n, dados(...ms[m])])]));
 const MODOS = (process.env.MODOS || "atual,a,b").split(",");
 const LUTA = { TUTORIAL: "0", CLASSE: "guerreiro", NIVEL_LUTA: "6" };
 const SITUACOES = [

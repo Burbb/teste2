@@ -13,6 +13,16 @@ são o 16 ×2 e ×3. Desenhados à mão, uma letra por pixel; silhueta e volumes
           entre elas;
       B, a espada e a crista: o elmo com a crista de crina vinho caindo para trás, a espada de ponta para baixo à frente,
           com a guarda e o punho, as ombreiras, a capa.
+  A segunda rodada (o Jean recusou a Abominação A e B e o Cavaleiro B; o A fica como direção): três Abominações novas,
+  cada uma com uma construção e um traço dominante, a corrupção no corpo e não só na pele; e o A refinado.
+      C, a mandíbula torta: a cabeça é quase só a boca, a mandíbula costurada torta (os pontos na dobradiça da
+          esquerda, aberta mais funda à direita), poucas presas, o Vazio no lugar da garganta;
+      D, as duas cabeças: o brutamontes com uma segunda cabeça, pálida, de outra pessoa, enxertada no ombro por uma
+          faixa de carne violeta (a corrupção é o que as une);
+      E, os espinhos: o corpo curvado com lascas de obsidiana do Vazio rompendo os ombros e as costas, o rosto
+          fundo com os olhos acesos.
+      Cavaleiro A2: o elmo mais largo e mais curto (a fenda vertical só até a metade), a base abrindo num gorjal que
+          liga às ombreiras em placas (a de cima e uma lâmina), o peitoral com a quina; o corpo mais escuro que o elmo (a metade de sombra do elmo um passo mais clara que o corpo).
     python grades.py <pasta> [<id> ...]     # grava grades/<id>.txt e listas/<id>/<camada>.lua
 """
 import pathlib
@@ -27,8 +37,15 @@ PALETAS = {
         "k": "1e1214", "t": "d8c8a8",  # a costura e a linha dela; os vãos escuros
         "m": "3a1a1a", "d": "e8d8c0", "e": "e8e070",  # a boca, os dentes, o olho amarelado
     },
+    "abominacao2": {  # a segunda rodada: a carne morta com as sombras frias, o Vazio da cria
+        "o": "1e0e16", "s": "5a2e3e", "m": "94625e", "l": "b8867a", "h": "dcae98",  # a carne (contorno à luz)
+        "v": "0e0a18", "V": "46346e", "u": "7a5aa8", "g": "d868c8",  # o Vazio (fundo, meio, borda, brilho)
+        "k": "140a0e", "d": "dccca8", "t": "9a8670", "e": "d8c060", "E": "f4b8f0",  # a boca, os dentes, a linha, os olhos
+        "p": "c4c4ac", "P": "868a72", "q": "e4e2cc", "x": "262820",  # a cabeça enxertada da D (outra pessoa)
+    },
     "cavaleiro": {
         "a": "24242e", "A": "444452", "L": "6e6e80", "W": "aeaec0",  # o aço escuro (do fundo à borda clara)
+        "M": "595968", "n": "16161c",  # a metade de sombra do elmo e o vão entre as placas (A2)
         "k": "0a080e", "v": "8a5ac8",  # a viseira e o ponto do Vazio dentro dela
         "c": "2a1820", "C": "5e3046",  # a capa e a crista vinho
         "g": "8a7a4a", "r": "5a3a2a",  # o pomo e o punho da espada
@@ -107,6 +124,78 @@ CAVALEIRO_B = [
     ".WcccCcCcccCcc..",
     ".W.ccCcCcCcc....",
 ]
+ABOMINACAO_C = [
+    "................",
+    "....oooooo......",
+    "...olhhllmo.....",
+    "..olhllllmmo....",
+    "..ollsslsssmo...",
+    "..olsesmmsesmo..",
+    "..olmmmhmmmmmso.",
+    "otktdkkkkkkdkkso",
+    ".okkdvvVgVvdvvko",
+    "otktvvvvvvvvvvko",
+    "..olkdkvvvvvvvko",
+    "..ollmkkkvvvvdko",
+    "oo.olllmmmkkkkso",
+    "lmooossmmmmmmsso",
+    "lmmmmooossssssoo",
+    "lmmmmmmmoooooomm",
+]
+ABOMINACAO_D = [
+    "................",
+    "................",
+    "........ooooo...",
+    "..ooo..olhhlmo..",
+    ".oqppo.ohhhhmo..",
+    ".oqpPPooseseso..",
+    ".oxpxPoolmmmsoo.",
+    ".opPPPooskkksolo",
+    ".oPxxPoosmmdoomo",
+    "..oPPoosoooosmso",
+    ".oVugsmllllmmmso",
+    "osVVsmlllmmmmmso",
+    "omsollmllmmmsoms",
+    "omsollmlmmmmsoms",
+    "osso.smmmmmss.so",
+    ".oo..osssssso.o.",
+]
+ABOMINACAO_E = [
+    ".u.........u....",
+    ".uv.....u..uv...",
+    ".uVv...uv..uVv..",
+    "..uVv..uVv.uVv..",
+    "..uVVv.uVvuVVv..",
+    "...gVVoooooVVg..",
+    "..oogolhllmoggo.",
+    ".ollsollllmossmo",
+    "olllsosssssosmmo",
+    "ollhossEsEssomso",
+    "olllosmmmmmsomso",
+    "omllosmkkkmsomso",
+    "omsooskmmmkoomso",
+    "omsollsoooosloms",
+    "osso.smmmmmss.so",
+    ".oo..osssssso.o.",
+]
+CAVALEIRO_A2 = [
+    ".....aaaaaa.....",
+    "....aALWWLMa....",
+    "...aALWLLLMMa...",
+    "...aLLLLLMMMa...",
+    "...akkkkvkkka...",
+    "...aLLLkkMMMa...",
+    "...aALLkkMMMa...",
+    "..naAALLAAAAan..",
+    ".aWWLnAAAAnLWWa.",
+    "aWLAAnaLAanAALWa",
+    "aAAaanaAaanaaAAa",
+    "aaaaanaAaanaaaaa",
+    "aLLanaaAaaanaLLa",
+    "aAanaaaAaaanaaAa",
+    "cnnnaaaAaaanannc",
+    "cCcnnaaaaaannCcc",
+]
 
 
 def _camada_abominacao(x, y, ch):
@@ -115,6 +204,25 @@ def _camada_abominacao(x, y, ch):
     if ch in "ktmd":
         return "costura"
     return "hematoma" if ch in "bB" else "carne"
+
+
+def _camada_abominacao_c(x, y, ch):
+    return {"v": "boca", "V": "boca", "g": "boca", "k": "boca", "d": "dentes", "t": "costura",
+            "e": "olhos"}.get(ch, "carne")
+
+
+def _camada_abominacao_d(x, y, ch):
+    if ch in "pPqx":
+        return "cabeca"
+    if ch in "Vug":
+        return "enxerto"
+    return "rosto" if ch in "kde" else "carne"
+
+
+def _camada_abominacao_e(x, y, ch):
+    if ch in "vVug":
+        return "espinhos"
+    return "rosto" if ch in "kE" else "carne"
 
 
 def _camada_cavaleiro_b(x, y, ch):  # a espada da B fica nas colunas 0 a 2 (o pomo, o punho, a guarda e a lâmina)
@@ -132,6 +240,11 @@ CAMADAS = {  # a grade, a paleta, as camadas de baixo para cima e a camada de ca
     "abominacao-b": (ABOMINACAO_B, "abominacao", ["carne", "hematoma", "costura", "olhos"], _camada_abominacao),
     "cavaleiro-a": (CAVALEIRO_A, "cavaleiro", ["capa", "armadura", "viseira"], _camada_cavaleiro),
     "cavaleiro-b": (CAVALEIRO_B, "cavaleiro", ["capa", "armadura", "viseira", "espada"], _camada_cavaleiro_b),
+    "abominacao-c": (ABOMINACAO_C, "abominacao2", ["carne", "boca", "dentes", "costura", "olhos"],
+                     _camada_abominacao_c),
+    "abominacao-d": (ABOMINACAO_D, "abominacao2", ["carne", "cabeca", "enxerto", "rosto"], _camada_abominacao_d),
+    "abominacao-e": (ABOMINACAO_E, "abominacao2", ["carne", "espinhos", "rosto"], _camada_abominacao_e),
+    "cavaleiro-a2": (CAVALEIRO_A2, "cavaleiro", ["capa", "armadura", "viseira"], _camada_cavaleiro),
 }
 
 
