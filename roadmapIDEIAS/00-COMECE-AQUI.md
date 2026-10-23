@@ -6869,3 +6869,30 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Aguardando o Jean:** escolher entre A e B e aprovar (ou não) cada elemento do lote; a integração e o Diário/as
   opções de viagem com o mesmo desenho ficam para depois da escolha.
 
+### 23/10/2026 (data do computador local) — A 1E.4 revisada: a direção B, a barricada, as fontes dos ícones de lugar e o estado fechado (nada no jogo)
+
+- **Estado conferido:** a branch em `f7e9fe29`, igual ao remoto; o `caido-avatar-512.png` fora dos commits; nenhum
+  arquivo do jogo mudou (produção **1.199.3**).
+- **A escolha do Jean:** a direção **B** (o herói na plaqueta) é a principal; a **A** (a seta) fica preservada como
+  alternativa no protótipo.
+- **A revisão, em `ferramentas/prototipos/hud/mapa/`** (o LEIA-ME, seção "A revisão depois da escolha do Jean"):
+  - a **cancela** refeita como barricada de madeira envelhecida (postes e tábuas em X, sem pintura); uma passada com
+    duas travessas lia como banco e ficou fora;
+  - a **plaqueta B** com a figura 16 da classe, conferida com o Guerreiro, o Mago e o Arqueiro; sem espaço acima (a
+    Capela no minimapa), ela vai para o lado do lugar; a missão e o contrato do lugar atual vão para o lado dela; o nome
+    e o símbolo ficam livres. A seta A é cortada pela borda nesse caso (anotado, sem mexer);
+  - a **presença no mapa grande:** um 48 dos ícones de lugar pelo mesmo processo do 32 e do 40 (`lugares48.py`), em
+    comparação (`presenca-lugares.png`); recomendado, condicionado à decisão sobre as fontes;
+  - **as fontes dos ícones de lugar** (`origem-lugares.png`): os 16 arquivos do jogo são reduções "paleta", por fator
+    não inteiro, dos recortes de uma folha de referência anexada na HUD 4 pixel (`assets4p/original/`, 14/10/2026), que
+    imita pixel art sem grade nativa; cada tamanho é uma redução própria; o processo os refaz idênticos hoje. Não há
+    fonte em grade; nada foi redesenhado;
+  - **o estado fechado:** vem do `loc["fechado"]` (os `fechados` da região, pela chave, em `campanha.py`), que a viagem
+    já usa; a integração pede um campo de bloqueio no `estado.py` pela mesma regra (mais a cidadela selada no
+    procedural), distinto do só conhecido e do não vizinho.
+- **Verificações:** nenhuma mudança no jogo desde a bateria completa da entrega anterior (unittest, gabarito, pyflakes e
+  fumaça "tudo certo"); nas 13 rodadas de fotos da proposta, cliques, destinos, estados e rótulos iguais ao jogo e
+  nenhum erro ou aviso no console; as peças novas conferidas pixel a pixel (fonte reaberta, exportado = grade).
+- **Aguardando o Jean:** avaliar a revisão (a barricada, a plaqueta, o 40 ou o 48) e decidir o que fazer com a origem
+  dos ícones de lugar antes da integração.
+

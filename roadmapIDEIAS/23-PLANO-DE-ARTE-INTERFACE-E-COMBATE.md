@@ -1123,6 +1123,19 @@ ou mudanças de dados por iniciativa do agente.
   da missão e o cartaz do mural do contrato, um tamanho para cada mapa); o "você está aqui" permanente em duas
   direções, **A** (a seta de ouro; a recomendada) e **B** (a figura 16 do herói numa plaqueta); a legenda só com o que
   existe. Áreas de clique, destinos, rótulos, regras e o procedural conferidos iguais; sem erro no console.
+- **A escolha do Jean e a revisão (23/10/2026, ainda no protótipo):** **a direção B** (o herói na plaqueta, com a figura
+  16 da classe) é a principal; **a A** (a seta) fica preservada como alternativa. Revisados: a **cancela** virou a
+  barricada de madeira envelhecida com as tábuas em X (a faixa vermelha e branca lembrava trânsito); a **plaqueta**
+  vai para o lado do lugar quando não há espaço acima e empurra a missão e o contrato para o lado dela (conferida com
+  as três classes, sem cobrir nome nem marcas); a **presença no mapa grande**: um 48 dos ícones pelo mesmo processo,
+  recomendado no lugar do 40 (condicionado à decisão sobre as fontes). **As fontes dos ícones de lugar:** os 32 e 40
+  do jogo são reduções por fator não inteiro (a "paleta" do `preparar_hud4p.py`) de uma folha de referência anexada na
+  HUD 4 pixel que imita pixel art sem grade nativa; cada tamanho é uma redução própria (o 40 não é margem nem
+  ampliação do 32); não há fonte em grade. Um redesenho nativo seria uma entrega própria, a decidir. **O estado
+  fechado:** a condição real é o `loc["fechado"]` (os `fechados` da região em `campanha.py`, pela chave; a viagem já
+  para por ele); a integração pede um campo de bloqueio no `estado.py` tirado da mesma regra (e a cidadela selada
+  enquanto o procedural existir), separado do só conhecido e do não vizinho. Tudo em `ferramentas/prototipos/hud/mapa/` (o LEIA-ME,
+  `origem-lugares.png`, `presenca-lugares.png`, `pecas.png`, `comparacao.png`).
 - **Dependências do procedural** (para o levantamento da retirada): o covil, o vencido, a cidadela e a "selada" só
   existem lá; a legenda fixa dos nove desenhos; `MapaPx.sprite` cai no bioma para a `saida` da campanha; os glifos de
   `rpg/mapa.py`; o `fechado` da campanha não chega à tela como campo.
@@ -1290,7 +1303,9 @@ volta à pauta quando essa expansão exigir; não é uma migração de engine.
    antagonista, (o Espantalho Possuído entrou na 1.195.0 e o servo do Necromante na 1.196.0); nada começado antes do pedido. A relação em "A frente de criaturas em 22/10/2026" (item 1.12). O Esqueleto E2 e o Bandido do
    chapéu estão reservados.
 3. **1E.4, em avaliação (23/10/2026):** o levantamento e o primeiro lote de protótipos (a posição, os caminhos, os
-   símbolos e as marcas; detalhes em "A 1E.4 em 23/10/2026", no item 1.12). Aguardando o Jean escolher; nada no jogo.
+   símbolos e as marcas; detalhes em "A 1E.4 em 23/10/2026", no item 1.12). O Jean escolheu a direção B (a A fica como
+   alternativa); a revisão (a barricada, a plaqueta, o 48, as fontes dos ícones de lugar e o estado fechado) aguarda a
+   avaliação antes da integração; nada no jogo.
 4. **Retomar a etapa 2** e **seguir 3–7**, como na sequência abaixo; **etapa 8** com habilidades, talentos, Grimório e
    árvore no mesmo ciclo; **etapa 9**, a campanha; **depois do plano**, a avaliação de refatoração.
 
