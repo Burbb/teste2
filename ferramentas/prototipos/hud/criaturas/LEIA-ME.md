@@ -251,3 +251,8 @@ A escolha do par e da direção é do Jean; nada foi começado.
   Menor) e dos três especiais (Espantalho Possuído, Mímico, servo esquelético), em `chefes_e_especiais/` (as folhas dos
   pares, `especiais.png` e a prancha geral `candidatos.png`).
 - **Integrado na 1.191.0:** o Golem Primordial R1b, pelo id do guardião (só o 16 e o 32 da carta).
+- **A segunda rodada dos chefes e especiais (23/10/2026), em avaliação:** as transposições da Hidra, do Dragão de Gelo,
+  do Senhor da Guerra, do Profeta das Cinzas e do Espantalho Possuído pelas referências novas; a boca do servo (SV2b) e
+  os refinamentos do Lich (L1b) e do Mímico (M1b); a Bruxa Afogada suspensa, com o levantamento da substituição; em
+  `chefes_e_especiais/` (as folhas `transposicoes1-hidra-dragao.png`, `transposicoes2-senhor-profeta-espantalho.png` e
+  `refinamentos-servo-lich-mimico.png`).

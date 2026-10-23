@@ -6371,3 +6371,21 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Verificações sobre o código final:** `unittest` (663, 1 pulado: a fumaça, rodada à parte), o gabarito (idêntico, sem
   atualizar: nenhuma das 24 partidas encontra o Golem Primordial), o pyflakes (só o aviso conhecido) e a fumaça inteira
   (378 ok, tudo certo).
+
+### 23/10/2026 (data do computador local) — A segunda rodada dos chefes e especiais (nada no jogo) e a Bruxa Afogada suspensa
+
+- **Estado conferido:** a integração do Golem Primordial no `05f06fdb` (1.191.0), no remoto; a produção não mudou depois.
+- **No protótipo, aguardando o Jean** (`ferramentas/prototipos/hud/criaturas/chefes_e_especiais/LEIA-ME.md`, "A segunda
+  rodada"): as transposições pelas sete referências novas (`hidra-t`, `dragao-t`, `senhor-t`, `profeta-t`,
+  `espantalho-t`; as referências guardadas sem alteração, a origem e o SHA-256 no LEIA-ME delas), a boca do servo
+  (`servo-sv2b`, a referência 7 só na boca e na mandíbula) e os refinamentos locais (`lich-l1b`, `mimico-m1b`). As folhas
+  `transposicoes1-hidra-dragao.png`, `transposicoes2-senhor-profeta-espantalho.png` e
+  `refinamentos-servo-lich-mimico.png`; as limitações no LEIA-ME.
+- **A Bruxa Afogada:** os desenhos suspensos; o levantamento (na campanha, a ficha `bruxa_afogada` é a Ilse) e três
+  conceitos de substituição (a minha recomendação, o Barqueiro do Charco) no mesmo LEIA-ME. Nada removido, renomeado ou
+  migrado.
+- **Verificações proporcionais (nenhum código do jogo mudou):** o pyflakes dos auxiliares, a sintaxe do roteiro das
+  fotos, as grades regravadas iguais às gravadas (as 18 da primeira rodada idênticas), 0 diferentes na releitura das
+  fontes, a guia oculta conferida, as fotos sem erro no console.
+- **Continua:** a escolha do Jean; a decisão da Bruxa Afogada; na integração do servo, separar pela origem o esqueleto
+  do Erguer Servo do inimigo que o Rei dos Mortos ergue. O antagonista e o mapa não foram começados.

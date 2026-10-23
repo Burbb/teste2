@@ -1248,8 +1248,13 @@ volta à pauta quando essa expansão exigir; não é uma migração de engine.
    da noite, nada no jogo):** duas propostas de cada um dos seis chefes restantes e dos três
    especiais (o Espantalho Possuído, o Mímico e o servo esquelético), em `criaturas/chefes_e_especiais/` (as folhas
    `par1-hidra-dragao.png`, `par2-senhor-profeta.png`, `par3-bruxa-lich.png`, `especiais.png` e `candidatos.png`; as
-   preferências e as limitações no LEIA-ME). Falta depois: o antagonista e, na integração do servo, decidir o inimigo que
-   o Rei dos Mortos ergue (o mesmo tipo `servo`). **Falta depois:** os outros 6 guardiões (a
+   preferências e as limitações no LEIA-ME). **Na segunda rodada (aguardando o Jean):** as transposições pelas
+   referências novas (`hidra-t`, `dragao-t`, `senhor-t`, `profeta-t`, `espantalho-t`), a boca do servo (`servo-sv2b`) e
+   os refinamentos locais (`lich-l1b`, `mimico-m1b`); as folhas `transposicoes1-hidra-dragao.png`,
+   `transposicoes2-senhor-profeta-espantalho.png` e `refinamentos-servo-lich-mimico.png`. Falta depois: o antagonista e, na integração do servo, decidir o inimigo que
+   o Rei dos Mortos ergue (o mesmo tipo `servo`). **A Bruxa Afogada:** desenhos suspensos (perto demais da Ilse); o
+   levantamento e três conceitos de substituição em `criaturas/chefes_e_especiais/LEIA-ME.md` (na campanha, a ficha
+   `bruxa_afogada` é a Ilse: trocar o guardião do covil pede um id próprio; nada mudou). **Falta depois:** os outros 6 guardiões (a
    Hidra do Brejo, a Bruxa Afogada, o Dragão de Gelo, o Senhor da Guerra, o Profeta das Cinzas e o Lich Menor), o
    antagonista, o servo do Necromante e as decisões do Espantalho Possuído e do Mímico; nada começado antes do pedido. A relação em "A frente de criaturas em 22/10/2026" (item 1.12). O Esqueleto E2 e o Bandido do
    chapéu estão reservados.
