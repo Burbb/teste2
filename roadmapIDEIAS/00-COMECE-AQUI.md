@@ -6119,3 +6119,21 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Verificações:** só o protótipo mudou (nada em `rpg/` nem em `tests/`): o pyflakes e a sintaxe do roteiro das fotos;
   a suíte, o gabarito e a fumaça não foram rodados, porque o jogo não mudou.
 - **Continua:** a escolha do Jean; outras criaturas, chefes e o mapa não foram começados.
+
+### 22/10/2026 (data do computador local) — A terceira rodada da Cidadela: a Abominação C2 e o Cavaleiro T (nada no jogo)
+
+- **Estado conferido:** a branch em `e4d384e5`, igual ao remoto; a única alteração local era a referência nova, deixada
+  pelo Jean em `ferramentas/arte/referencias/icones/Cavaleiro sombrio do Vazio.png` (guardada sem alteração, a origem no
+  LEIA-ME de lá).
+- **Decisão do Jean:** a Abominação C como direção (sem aprovação para integração); a imagem gerada como a referência
+  principal do Cavaleiro; A, A2 e B como histórico.
+- **No protótipo, aguardando o Jean** (`ferramentas/prototipos/hud/criaturas/cidadela/LEIA-ME.md`, "A terceira
+  rodada"): a C2 (a boca enorme e torta saindo da carne, com as bochechas e a mandíbula caindo à direita) e o T (a
+  transposição da referência, com a guia oculta na fonte). As folhas `abominacao-c2.png` e `cavaleiro-t.png`; as
+  limitações no tamanho real no LEIA-ME.
+- **Processo:** grades à mão; as fontes pelo Aseprite em lote (o conector sem editor), 0 diferentes na releitura, a guia
+  escondida depois da montagem; a exportação igual à grade (sem a guia), @2x exato, 32 e 48 em blocos inteiros; fotos a
+  1920×945 nos modos `c2` e `t`, sem erro no console.
+- **Verificações:** só o protótipo mudou: o pyflakes e a sintaxe do roteiro das fotos; a suíte, o gabarito e a fumaça
+  não foram rodados, porque o jogo não mudou.
+- **Continua:** a escolha do Jean; nada integrado; outras criaturas, chefes e o mapa não foram começados.
