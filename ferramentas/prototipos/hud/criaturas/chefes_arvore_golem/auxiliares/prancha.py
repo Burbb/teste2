@@ -58,10 +58,13 @@ CRIATURAS["primordial-r2"] = ("Golem Primordial", [
     ("golem", "rei-troll", "rainha-aracnidea", "esqueleto"), ["luta-primordial"],
     ("Rosto do Golem de Pedra Primordial-2.png", (27, 27, 1227, 1227), "primordial-r-guia-16.png",
      ["primordial-r2", "primordial-r2a", "primordial-r2b", "primordial-r2c"]))
+CRIATURAS["primordial-r1b"] = ("Golem Primordial", [  # a R1 (a base escolhida) × a R1b (o olhar mais pesado)
+    ("R1, a base escolhida", "r1", "primordial-r1"), ("R1b, o olhar mais pesado", "r1b", "primordial-r1b")],
+    ("golem", "arvore-ancia", "rei-troll", "rainha-aracnidea"), ["luta-primordial"])
 FOTOS = {}  # todas em capturas/
 ORIENTACAO = set()  # sem referência neste par
 EXTRAS = {}  # sem retratos do herói na fileira
-SEM_BESTIARIO = {"anciaa", "primordial", "anciaa-r", "primordial-r", "anciaa-r2", "primordial-r2"}  # os guardiões não entram no Bestiário
+SEM_BESTIARIO = {"anciaa", "primordial", "anciaa-r", "primordial-r", "anciaa-r2", "primordial-r2", "primordial-r1b"}  # os guardiões não entram no Bestiário
 REFERENCIAS = AQUI.parents[5] / "ferramentas/arte/referencias/icones"
 
 

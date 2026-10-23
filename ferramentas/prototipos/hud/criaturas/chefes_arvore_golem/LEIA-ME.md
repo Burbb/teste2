@@ -148,3 +148,20 @@ histórico. O Golem Primordial continua em avaliação.
   trocado na página): a guardiã na luta (`CHEFE=ent_anciao`) com a Árvore Desperta e o lobo, e o Espantalho pelo evento
   real (`auxiliares/cenario_excecoes.py`). Nenhum pedido a `ferramentas/`, sem erro no console. A folha
   `../integracoes-22-10/integracoes-1190.png`.
+
+# O Golem Primordial R1b (23/10/2026, proposta; nada no jogo)
+
+**Pedido do Jean:** a base escolhida é a `primordial-r1` (a da primeira folha de transposição, não a R2 nem as variações
+dela): a construção e a distribuição irregular das pedras ficam; só um olhar um pouco mais pesado e severo, no sentido do
+ajuste da Árvore Anciã aprovada.
+
+- **R1b** (`primordial-r1b`; camadas guia oculta, pedra, musgo, juntas): a R1 com três linhas mudadas. A pedra acima dos
+  olhos pesa mais: a laje acesa da sobrancelha nas linhas 5 e 6, atravessando o rosto; a sombra das órbitas na linha 7
+  mais funda junto do nariz (o escuro só nas órbitas, sem virar uma faixa preta). Os pontos de luz dos olhos ficam onde
+  estavam (linha 8), e o resto do rosto é o da R1, pixel a pixel.
+- **A minha leitura:** o olhar ficou mais pesado e severo a 32, e a construção da R1 continua. **Limitação no tamanho
+  real:** a testa acesa ficou mais clara que o resto do rosto, e a 32 pode chamar mais atenção que os olhos.
+- **Conferência:** 0 diferentes na releitura, a guia oculta; a exportação igual à grade, @2x exato, o 32 em blocos
+  inteiros; a foto a 1920×945 no modo `r1b` (a mesma luta da R1, com o golem comum e o esqueleto), sem erro no console. A
+  folha `primordial-r1b.png` (a R1 × a R1b na carta, real e 2×; a fileira com o comum, a Árvore Anciã e os chefes
+  aprovados; a 12×).

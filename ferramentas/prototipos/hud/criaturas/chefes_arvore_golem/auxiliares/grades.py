@@ -35,6 +35,9 @@ letra por pixel; a presença de chefe pela composição e pelos volumes, não po
       Golem: R2a, o close mais fechado (a cabeça até as bordas, cortada como na referência); R2b, os três quartos para
           a esquerda (a testa saliente na borda, o rosto deslocado, a bochecha direita maior); R2c, as pedras mais brutas
           (a silhueta em degraus, a mandíbula pesada embaixo).
+  O Golem R1b (pedido do Jean: a R1 é a base escolhida; só um olhar mais pesado e severo, como na Árvore Anciã
+  aprovada): a R1 com a pedra da sobrancelha mais pesada (a laje acesa nas linhas 5 e 6) e a sombra das órbitas mais
+  funda junto do nariz (a linha 7), os pontos de luz no lugar; o resto do rosto, pixel a pixel, o da R1.
     python grades.py <pasta> [<id> ...]     # grava grades/<id>.txt e listas/<id>/<camada>.lua (a guia, do png dela)
 """
 import pathlib
@@ -377,7 +380,13 @@ for _v in "abc":
                                   _camada_anciaa)
     CAMADAS[f"primordial-r2{_v}"] = (globals()[f"PRIMORDIAL_R2{_v.upper()}"], "primordial_r",
                                       ["guia", "pedra", "musgo", "juntas"], _camada_primordial)
-_RS = ("1", "2", "3", "2a", "2b", "2c")
+PRIMORDIAL_R1B = PRIMORDIAL_R1[:5] + [
+    ".lhhhhmllhhmgsss",
+    ".hhhhhllhhhsgss.",
+    "mlsskkkskk" + PRIMORDIAL_R1[7][10:],
+] + PRIMORDIAL_R1[8:]
+CAMADAS["primordial-r1b"] = (PRIMORDIAL_R1B, "primordial_r", ["guia", "pedra", "musgo", "juntas"], _camada_primordial)
+_RS = ("1", "2", "3", "2a", "2b", "2c", "1b")
 GUIAS = {**{f"anciaa-r{n}": "guias/anciaa-r-guia-16.png" for n in _RS},
          **{f"primordial-r{n}": "guias/primordial-r-guia-16.png" for n in _RS}}  # ocultas na fonte
 

@@ -21,9 +21,10 @@ const BICHOS = [
     r3: [P, "anciaa-r3"], r2a: [P, "anciaa-r2a"], r2b: [P, "anciaa-r2b"], r2c: [P, "anciaa-r2c"] }],
   ["^Golem Primordial", { a: [P, "primordial-gp1"], b: [P, "primordial-gp2"], r1: [P, "primordial-r1"],
     r2: [P, "primordial-r2"], r3: [P, "primordial-r3"],
-    r2a: [P, "primordial-r2a"], r2b: [P, "primordial-r2b"], r2c: [P, "primordial-r2c"] }],
+    r2a: [P, "primordial-r2a"], r2b: [P, "primordial-r2b"], r2c: [P, "primordial-r2c"],
+    r1b: [P, "primordial-r1b"] }],
 ];
-const TROCAS = Object.fromEntries(["a", "b", "r1", "r2", "r3", "r2a", "r2b", "r2c"].map((m) =>
+const TROCAS = Object.fromEntries(["a", "b", "r1", "r2", "r3", "r2a", "r2b", "r2c", "r1b"].map((m) =>
   [m, BICHOS.filter(([, ms]) => ms[m]).map(([n, ms]) => [n, dados(...ms[m])])]));
 const MODOS = (process.env.MODOS || "atual,a,b").split(",");
 const LUTA = { TUTORIAL: "0", CLASSE: "guerreiro", NIVEL_LUTA: "5" };
