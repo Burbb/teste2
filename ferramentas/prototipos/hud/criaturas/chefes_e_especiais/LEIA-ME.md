@@ -255,7 +255,7 @@ Nada redesenhado nesta rodada; os arquivos de todas as propostas ficam como est�
 
 | Criatura | Decisão | Para a próxima rodada |
 |---|---|---|
-| Hidra (`hidra-t`) | **recusada** | as três cabeças olhando para o mesmo lado, com anatomia de réptil convincente |
+| Hidra (`hidra-t`) | **recusada** | as três cabeças olhando para o mesmo lado, com anatomia de réptil convincente; construída em 32 nativos e adaptada para 16 em `../hidra_32/` (aguardando o Jean) |
 | Senhor da Guerra (`senhor-t`) | **recusado** | o rosto ainda precisa ser compreensível; refeito em 32 nativos e adaptado para 16 em `../senhor_32/`; **o N16 integrado na 1.194.0** |
 | Profeta das Cinzas (`profeta-t`) | **visual aceito**; preservar a versão atual; não integrar neste lote | — |
 | Espantalho Possuído (`espantalho-t`) | boa base, **ainda em avaliação** | refeito em 32 nativos e adaptado para 16 em `../espantalho_32/`, depois refinado; **o N16R2 integrado na 1.195.0**, pela origem |

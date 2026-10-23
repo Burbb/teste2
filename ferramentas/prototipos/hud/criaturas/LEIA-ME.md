@@ -285,3 +285,6 @@ A escolha do par e da direção é do Jean; nada foi começado.
   linhas 7 a 10 mudadas (os olhos alinhados sob a carranca, as brasas contidas, a costura com o esgar); a folha
   `espantalho_32/ajuste.png`. Nada integrado.
 - **Integrado na 1.195.0:** o Espantalho Possuído N16R2, pela origem (só o 16 e o 32 da carta).
+- **A Hidra do Brejo construída em 32 e adaptada para 16 (23/10/2026), aguardando o Jean:** `hidra_32/` (o estudo
+  `hidra-n32` e a proposta `hidra-n16`; a folha `comparacao.png`): as três cabeças de réptil olhando para a esquerda, com
+  pescoços grossos (a H1, a H2 e a `hidra-t`, recusadas, ficam como histórico). Nada integrado.

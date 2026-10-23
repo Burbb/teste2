@@ -6571,3 +6571,18 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   passam a esperar o retrato dele; uma origem sem retrato continua nos traços.
 - **Verificações sobre o código final:** `unittest` (667, 1 pulado: a fumaça, rodada à parte), o gabarito (idêntico, sem
   atualizar), o pyflakes (só o aviso conhecido) e a fumaça inteira (378 ok, tudo certo).
+
+### 23/10/2026 (data do computador local) — A Hidra do Brejo em 32 nativos, adaptada à mão para 16 (nada no jogo)
+
+- **Estado:** depois da integração do Espantalho (1.195.0, `bf5fb2e2`); só protótipo.
+- **Pedido do Jean:** uma construção nova (as anteriores pareciam fantoches): as três cabeças de réptil olhando para a
+  esquerda (a orientação corrigida por ele; a referência guardada dá o material, a anatomia e a expressão), fortes, com
+  pescoços grossos; primeiro em 32, depois à mão em 16.
+- **No protótipo, aguardando o Jean** (`ferramentas/prototipos/hud/criaturas/hidra_32/LEIA-ME.md`, a folha
+  `comparacao.png`): o `hidra-n32` e o `hidra-n16`. A H1, a H2 e a `hidra-t` ficam.
+- **A minha leitura:** o N32 lê como três cabeças de réptil com pescoços grossos, a principal dominante; o N16 guarda as
+  três cabeças, os olhos, a boca da principal e os pescoços, mas as de trás perdem o focinho longo e a principal perde a
+  crista e a mandíbula; a 1× é uma massa verde com três olhos.
+- **Verificações proporcionais (nenhum código do jogo mudou):** o pyflakes dos auxiliares, a sintaxe do roteiro das fotos,
+  as fontes reabertas (o lado, as camadas na ordem, a guia oculta), 0 diferentes na releitura, as exportações iguais ao
+  composto, alfa 0/255, os derivados em blocos inteiros e as fotos sem erro no console. As fontes pelo Aseprite em lote.
