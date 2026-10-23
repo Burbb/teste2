@@ -6,8 +6,9 @@ ampliados por fator inteiro, sem suavização.
 Com --b, a da segunda construção de 32 (construcao-32.png): o N32 anterior × o N32B na mesma luta, a carta a 2×, a
 fileira e o diagnóstico (sem nova adaptação para 16). Com --c, a da correção da cabeça principal (cabeca-principal.png):
 o N32B × o N32C, com a cabeça da referência ao lado. Com --d, a da reconstrução pela nova referência (reconstrucao.png):
-a referência nova × o N32C × o N32D.
-    python prancha.py [--b | --c | --d]      (depois do fotografar.mjs)
+a referência nova × o N32C × o N32D. Com --e, a da adaptação para 16 (adaptacao-16.png): o N32D × o N16D (no 32 da
+carta), a fileira e o diagnóstico.
+    python prancha.py [--b | --c | --d | --e]      (depois do fotografar.mjs)
 """
 import json
 import pathlib
@@ -143,7 +144,7 @@ def segunda(antes=("n32", "N32 (anterior)"), depois=("n32b", "N32B (a construç�
         out.alpha_composite(cx.resize((cx.width * 2, cx.height * 2), Image.NEAREST), (20 + j * 480, y))
     y += 2 * cx.height + 20
     um = Image.open(PASTA / f"proposta/hidra-{antes[0]}-32.png").convert("RGBA")
-    dois = Image.open(PASTA / f"proposta/hidra-{depois[0]}-32.png").convert("RGBA")
+    dois = Image.open(PASTA / f"proposta/hidra-{depois[0]}-32.png").convert("RGBA")  # o 16 entra no 32 da carta (×2)
     linha = [(n, Image.open(JOGO / f"retrato-{n}-16.png").convert("RGBA").resize((32, 32), Image.NEAREST)) for n in FILEIRA]
     linha += [(antes[1], um), (depois[1], dois)]
     d.text((20, y), "a fileira na caixa da carta, com retratos aprovados — tamanho real e 3×", fill=TEXTO, font=f2)
@@ -166,7 +167,12 @@ def segunda(antes=("n32", "N32 (anterior)"), depois=("n32b", "N32B (a construç�
 
 
 if __name__ == "__main__":
-    if "--d" in sys.argv:
+    if "--e" in sys.argv:
+        segunda(("n32d", "N32D (aprovado)"), ("n16d", "N16D (16 ×2)"), "adaptacao-16.png",
+                "a adaptação para 16: N32D × N16D", (0, 0, 1254, 1254),
+                "a referência nova (Hidra tríplice do pântano em pixel art.png; reduzida só para olhar)",
+                RAIZ / "ferramentas/arte/referencias/icones/Hidra tríplice do pântano em pixel art.png")
+    elif "--d" in sys.argv:
         segunda(("n32c", "N32C (anterior)"), ("n32d", "N32D (pela referência nova)"), "reconstrucao.png",
                 "a reconstrução pela nova referência: referência × N32C × N32D", (0, 0, 1254, 1254),
                 "a referência nova, a direção principal (Hidra tríplice do pântano em pixel art.png; reduzida só para olhar)",

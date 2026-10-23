@@ -310,14 +310,52 @@ AD = [
     (28, 6, "oooosssssssso"),
 ]
 GRADE_32D = pintar([BD, NBD, CD, NCD, NAD, AD], 32)
-# a paleta de cada desenho (a da nova referência só no N32D)
-PALETAS = {"hidra-n32d": PALETA_D}
+# A adaptação do N32D para 16 (23/10/2026, o N32D aprovado como base e preservado): redesenhada à mão na grade de 16, com
+# o 32 como mapa das posições e dos volumes, na ordem: as três cabeças para a esquerda; a principal maior, à frente e
+# embaixo; o focinho, a sobrancelha, a boca e a mandíbula dela; a separação das menores e os pescoços contínuos. Os dentes
+# simplificados (uma presa em cima e uma embaixo na principal; uma em cada cabeça de trás) e o alto das de trás aceso,
+# para não sumirem contra o fundo escuro da carta.
+B16D = [
+    (0, 4, "oooo"),
+    (1, 3, "ohssmmo"),
+    (2, 2, "oMlekmms"),
+    (3, 2, "oMMMmmmss"),
+    (4, 2, "oodooms"),
+]
+NB16D = [(5, 8, "Mmss"), (6, 8, "mmss"), (7, 9, "mms"), (8, 9, "mms")]
+C16D = [
+    (3, 11, "ooo"),
+    (4, 10, "ohssmmm"),
+    (5, 10, "oMekmm"),
+    (6, 10, "oMMMmm"),
+    (7, 10, "oodoms"),
+    (8, 11, "oosmm"),
+]
+NC16D = [(y, 12, "olms") for y in range(9, 16)]
+NA16D = [(7, 8, "mmms"), (8, 8, "mmmss"), (9, 8, "mmmss"), (10, 7, "mmmmss"), (11, 7, "lmmmss"), (12, 6, "lmmmmss"),
+      (13, 6, "llmmmss"), (14, 5, "mlHHlmmss"), (15, 4, "omlHHlmmss")]
+A16D = [
+    (5, 4, "ooo"),
+    (6, 2, "oohhhlm"),
+    (7, 1, "ohhsssllm"),
+    (8, 0, "ohhleksmmm"),
+    (9, 0, "okMMMMmmmm"),
+    (10, 0, "odoooooms"),
+    (11, 1, "dRrrRRkom"),
+    (12, 1, "oodooooom"),
+    (13, 1, "oHllllmmm"),
+    (14, 2, "osssmmso"),
+]
+GRADE_16D = pintar([B16D, NB16D, C16D, NC16D, NA16D, A16D], 16)
+# a paleta de cada desenho (a da nova referência só no N32D e no N16D)
+PALETAS = {"hidra-n32d": PALETA_D, "hidra-n16d": PALETA_D}
 # cada desenho: a grade, o lado e a guia
 DESENHOS = {"hidra-n32": (GRADE_32, 32, "guias/hidra-guia-32.png"),
             "hidra-n16": (GRADE_16, 16, "guias/hidra-guia-16.png"),
             "hidra-n32b": (GRADE_32B, 32, "guias/hidra-guia-32.png"),
             "hidra-n32c": (GRADE_32C, 32, "guias/hidra-guia-32.png"),
-            "hidra-n32d": (GRADE_32D, 32, "guias/hidra-d-guia-32.png")}
+            "hidra-n32d": (GRADE_32D, 32, "guias/hidra-d-guia-32.png"),
+            "hidra-n16d": (GRADE_16D, 16, "guias/hidra-d-guia-16.png")}
 # as camadas, de baixo para cima (a guia por baixo de tudo)
 ORDEM = ["guia", "escamas", "boca", "olhos", "contorno"]
 

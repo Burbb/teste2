@@ -161,3 +161,33 @@ focinho projetado, a mandíbula com espessura ligada ao pescoço, e a separaçã
 - **Ainda falta:** a oliva da referência é escura, e a 1× o N32D contrasta menos com o fundo da carta que o N32C; as
   cabeças de trás ainda têm a ponta do focinho reta; os pescoços de trás são faixas simples. Aguarda a avaliação do 32
   antes de qualquer adaptação para 16.
+
+# A adaptação do N32D para 16: N16D (23/10/2026, protótipo; candidata em avaliação, nada no jogo)
+
+**Decisão do Jean:** o N32D (`a7503ed9`) aprovado como base da adaptação, preservado intacto; uma fonte nova em 16, pelo
+processo do Dragão (o 32 orienta as posições e os volumes; a adaptação é resolvida à mão na grade de 16). A ordem do que
+preservar: as três cabeças para a esquerda; a principal maior, à frente e embaixo; o focinho, a sobrancelha, a boca e a
+mandíbula dela; a separação das menores e a continuidade dos pescoços.
+
+- **O N16D** (`hidra-n16d`, `GRADE_16D` em `grade.py`, com a paleta oliva do N32D), à mão, por partes (a cabeça de cima, o
+  pescoço dela, a da direita, o pescoço dela, o pescoço da principal e a principal), com o N32D reduzido a 2:1 como mapa:
+  - a principal: o alto do crânio e a sobrancelha acesos, a sombra sobre o olho, o focinho com a narina, o lábio, a boca
+    aberta (o fundo escuro com a língua), a mandíbula acesa e a sombra embaixo; o pescoço saindo de trás da mandíbula, o
+    ventre claro embaixo;
+  - as de trás: cada uma com o alto aceso, a sombra da testa sobre o olho, o focinho e uma presa.
+- **Na bancada:** três presas de 2×2 na principal viravam blocos brancos demais na carta; ficaram uma em cima e uma embaixo.
+  As cabeças de trás sumiam um pouco contra o fundo escuro da carta; o alto delas ficou aceso.
+- **A fonte, pelo Aseprite em lote** (`python auxiliares/exportar.py --montar hidra-n16d`; o conector sem editor, a janela
+  aberta do Jean não foi tocada): 0 diferentes na releitura; reaberta com a guia oculta (`guias/hidra-d-guia-16.png`) e as
+  camadas na ordem; a exportação igual ao composto, alfa 0/255, o 32 da carta e os @2x em blocos inteiros. O N32D
+  reexportado saiu igual.
+- **A foto** (`MODOS=n16d`), pela guardiã na luta, a 1920×945, com os mesmos dados e a mesma caixa da carta do N32D, sem
+  erro no console. **A folha:** `adaptacao-16.png` (`python auxiliares/prancha.py --e`: a referência, o N32D × o N16D na
+  mesma carta, a carta a 2×, a fileira e o diagnóstico).
+
+## A minha leitura do N16D (quem decide é o Jean)
+
+- **Preservou:** as três cabeças distintas, todas para a esquerda; a principal maior, embaixo e à frente, com o olho sob a
+  sobrancelha, a boca aberta e a mandíbula; as de trás com olho e presa; os pescoços contínuos, o da principal com o ventre.
+- **Perdeu:** o crânio arredondado da principal vira um degrau; a narina e a língua são de um pixel; as cabeças de trás têm o
+  focinho curto, e a da direita é a que menos se destaca do fundo; a 1× o conjunto é uma massa oliva com três olhos e a boca.

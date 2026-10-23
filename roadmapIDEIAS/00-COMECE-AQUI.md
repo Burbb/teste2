@@ -6683,3 +6683,18 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   atualizar), o pyflakes (só o aviso conhecido) e a fumaça inteira, uma vez (378 ok, tudo certo). Durante a fumaça, só uma
   quebra de linha mudou em `estado.py` (o teste que confere o texto da ficha repassando a origem); o comportamento é o
   mesmo, e a suíte e o gabarito rodaram depois dela.
+
+### 23/10/2026 (data do computador local) — A Hidra: a adaptação do N32D para 16, N16D (candidata em avaliação)
+
+- **Estado:** depois da integração do servo (1.196.0, `a1b731c2`); só protótipo.
+- **Decisão do Jean:** o N32D aprovado como base da adaptação e preservado; uma fonte nova em 16, à mão, pelo processo do
+  Dragão.
+- **No protótipo, candidata em avaliação** (`ferramentas/prototipos/hud/criaturas/hidra_32/LEIA-ME.md`, a folha
+  `adaptacao-16.png`): o `hidra-n16d`, com as três cabeças para a esquerda, a principal maior e à frente (o focinho, a
+  sobrancelha, a boca e a mandíbula) e os pescoços contínuos; os dentes simplificados e o alto das de trás aceso.
+- **A minha leitura:** preserva as três cabeças e a principal; perde o crânio arredondado, e a cabeça da direita é a que
+  menos se destaca do fundo da carta.
+- **Verificações proporcionais (nenhum código do jogo mudou):** o pyflakes dos auxiliares, a sintaxe do roteiro das fotos,
+  a grade igual ao rascunho, a fonte reaberta (o lado, as camadas na ordem, a guia oculta), 0 diferentes na releitura, a
+  exportação igual ao composto, os derivados em blocos inteiros, o N32D reexportado igual e a foto sem erro no console.
+- **Parado para a avaliação:** nada integrado além do servo; nenhuma criatura nova, o mapa não começado.
