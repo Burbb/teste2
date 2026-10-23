@@ -1,0 +1,1 @@
+paredes,enxaimel,janelas,telhado,chamine,plantas,contorno

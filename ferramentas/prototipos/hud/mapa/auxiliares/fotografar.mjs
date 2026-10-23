@@ -28,7 +28,9 @@ const SITUACOES = [
   { nome: "procedural-covil", cenario: "covil", amb: { CLASSE: "guerreiro", PERIODO: "0" } },
 ].filter((s) => !so || so.split(",").includes(s.nome));
 const prototipo = process.env.PROTOTIPO ? readFileSync(path.join(AQUI, "../prototipo/mapa.js"), "utf8") : null;
-const variante = { mini: Number(process.env.MINI || 32), grande: Number(process.env.GRANDE || 40), pos: process.env.POS || "b" };
+// NATIVO e NATIVO_GRANDE ("n32", "n48"): a vila e a floresta refeitas em grade nativa, no minimapa e no mapa grande
+const variante = { mini: Number(process.env.MINI || 32), grande: Number(process.env.GRANDE || 40), pos: process.env.POS || "b",
+  nativo: process.env.NATIVO || "", nativoGrande: process.env.NATIVO_GRANDE || "" };
 mkdirSync(saida, { recursive: true });
 const b = await chromium.launch();
 const registro = {};

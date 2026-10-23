@@ -15,6 +15,7 @@ descoberta e progressão não mudam. Produção consultada: **1.199.3**.
   mesmos dados (o minimapa a 2×, o mapa grande a 1×, o lugar atual a 2×) e a legenda.
 - **`origem-lugares.png`**: de onde vêm os ícones de lugar de 32 e 40 (a referência, o recorte, as duas reduções).
 - **`presenca-lugares.png`**: o mapa grande com o 40 aprovado e com um 48 pelo mesmo processo.
+- **`nativos.png`**: a vila e a floresta em grade nativa (32 e 48), antigo × novo, e o nome perto da borda.
 - As capturas inteiras, a 1920×945: `capturas/atual/`, `capturas/proposta-b/` (a escolhida, com o 40),
   `capturas/proposta-b48/` (com o 48 no mapa grande) e `capturas/proposta-a/` (a alternativa); para cada situação:
   `-pagina`, `-mundo`, `-mini`, `-mapa`, `-grande`, `-janela`, com o `registro.json` de cada bateria (o canvas nativo e
@@ -162,6 +163,53 @@ com a "selada" da descrição; a legenda lista os nove desenhos dos dois modos; 
 retirar o procedural, isso sai ou muda junto; a campanha precisa de um desenho e de um estado próprios para a saída (o
 `fechado` existe no motor, `campanha.py`, mas não chega à tela como campo: o protótipo o reconhece pela descrição).
 
+## A vila e a floresta em grade nativa (23/10/2026; pedido do Jean; só as duas, para validar o acabamento)
+
+**O pedido:** reconstruir os símbolos de lugar numa grade nativa, começando pela vila e pela floresta, com os ícones
+antigos como referência de composição e identidade. A plaqueta B, a cancela de madeira, os caminhos e as marcas do
+protótipo ficam como base (aprovados). Nada no jogo; os outros lugares continuam com os ícones antigos.
+
+- **As peças** (`auxiliares/lugares.py`, fontes em `fontes/`, exportadas em `proposta/`):
+  - `lugar-vila-n32` e `lugar-floresta-n32`: **grade 32×32, exibidas a 32** (no minimapa, 1:1);
+  - `lugar-vila-n48` e `lugar-floresta-n48`: **grade 48×48, exibidas a 48** (no mapa grande, 1:1): uma adaptação à
+    mão para a grade de 48, com a mesma composição do 32, não o 32 esticado;
+  - o `@2x` de cada uma é a duplicação exata por vizinho mais próximo (conferida: blocos inteiros que voltam ao
+    original), nunca outra redução da referência.
+- **O que ficou de cada referência:** a vila, a casa grande de enxaimel com a empena à esquerda, o telhado vermelho
+  indo para a direita, a chaminé, a casa pequena de telhado vermelho à direita, as janelas acesas e a porta; a
+  floresta, três pinheiros de alturas diferentes, o do meio mais alto, os da frente sobrepostos.
+- **Como foram feitas:** a floresta pelas linhas de cada camada de copa escritas à mão (a largura, a luz da esquerda,
+  a faixa escura embaixo de cada camada), as árvores da frente por cima da do meio; a vila por uma construção à mão das
+  formas (o telhado, a empena, as paredes, as vigas, as janelas, a porta), depois limpa na grade (a chaminé
+  estreitada, o canto de vigas aliviado, as mãos-francesas tiradas, os contornos que faltavam, o caixilho da janela).
+  No 48, a floresta precisou de uma segunda passada: a primeira saiu com árvores magras, separadas e troncos longos,
+  longe do 32; ficaram mais juntas, com camadas mais largas e troncos curtos. Os desenhos centralizados na altura. As
+  cores agrupadas por material (o telhado em quatro vermelhos, a parede em dois cremes, as copas em cinco verdes); o
+  creme da vila baixado depois da foto noturna, onde destoava.
+- **As fontes:** o Aseprite em lote (o conector continua sem o editor), camadas paredes, enxaimel, janelas, telhado,
+  chaminé, plantas e contorno (vila) e troncos, copas, luz e contorno (floresta); 0 diferentes na releitura; a fonte
+  reaberta com as camadas na ordem; o exportado igual à grade, alfa só 0 ou 255.
+- **No minimapa** (`capturas/proposta-n32`, de dia no Vau e à noite no Bosque): as duas leem no tamanho real; a vila
+  nova é mais limpa e mais clara que a antiga (a casa e o telhado se separam melhor à noite); a floresta nova tem as
+  três árvores mais distintas. A antiga tinha mais detalhe de textura (telhas, sombras miúdas), que a nova não carrega.
+- **No mapa grande:** o 32 nativo em 1:1 (`capturas/proposta-n32`) ficou pequeno diante do terreno e da plaqueta (a
+  plaqueta a 2× é maior que a vila); uma caixa maior não aumentaria o desenho. **O 48 nativo**
+  (`capturas/proposta-n48`) tem presença e equilibra a plaqueta. **Recomendação: o 32 no minimapa e o 48 no mapa
+  grande.**
+- **O nome perto das bordas:** o nome do lugar agora procura um lugar livre (embaixo, como antes; senão em cima, à
+  esquerda, antes da plaqueta, ou à direita) sem invadir o símbolo, o botão, a plaqueta, as marcas ou o nome de outro
+  lugar; sem nenhum livre, faz como o jogo. Na Capela atual do minimapa, ficam "nome · plaqueta · ruínas" na mesma
+  linha, sem encostar no Bosque. Só o desenho muda; o botão (a área de clique) é o mesmo. Ainda: à noite no Bosque, o
+  nome cabe embaixo das árvores, mas fica perto do quadrado do Vau (a plaqueta desfaz a dúvida).
+- **Conferido:** nas rodadas `proposta-b` (a base com os ícones antigos e o encaixe novo dos nomes), `proposta-n32` e
+  `proposta-n48`, os mesmos lugares, destinos clicáveis, estados, botões (28 e 40 px) e rótulos acessíveis do jogo, e
+  nenhum erro ou aviso no console. A folha **`nativos.png`**: as peças antigas e novas a 1× e ampliadas (com a grade e
+  o tamanho exibido de cada uma), as silhuetas, o minimapa de dia e à noite, o mapa grande com a plaqueta (40 antigo,
+  32 e 48 novos) e o nome da Capela antes e depois.
+- **Continua registrado:** o campo real de bloqueio para a integração; o reconhecimento da saída fechada pela
+  descrição é só uma limitação do protótipo. As capturas de `proposta-b` foram refeitas com o encaixe novo dos nomes
+  (as folhas anteriores ficam como estavam; o antes da Capela está em `capturas/sprites/`).
+
 ## O primeiro lote (a primeira rodada, como foi apresentada; a escolha e a revisão estão acima)
 
 Quatro elementos, escolhidos pelos defeitos acima e pela frequência: **a posição, os caminhos, os símbolos dos
@@ -214,6 +262,7 @@ releitura, o exportado igual à grade, alfa só 0 ou 255, o @2x em blocos inteir
     python auxiliares/exportar.py --montar        # as fontes (Aseprite em lote) e proposta/*.png, conferidas
     # as fotos (PLAYWRIGHT_BROWSERS_PATH e PLAYWRIGHT_MODULO como na fumaça):
     node auxiliares/fotografar.mjs <raiz> capturas/atual
+    python auxiliares/lugares.py ..               # a vila e a floresta nativas (grades e listas); depois exportar.py --montar
     python auxiliares/lugares48.py                # o 48 dos lugares (o mesmo processo do 32 e do 40), só em proposta/
     PROTOTIPO=1 node auxiliares/fotografar.mjs <raiz> capturas/proposta-b              # B, a escolhida (POS=b é o padrão)
     PROTOTIPO=1 GRANDE=48 node auxiliares/fotografar.mjs <raiz> capturas/proposta-b48 vau-manha,bosque-noite,capela-tarde,praca-tudo

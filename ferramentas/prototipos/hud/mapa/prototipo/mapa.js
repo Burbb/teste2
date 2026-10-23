@@ -26,7 +26,16 @@ const MapaPx = (() => {
   let ambiente = { periodo_n: 1, clima_id: "limpo" };
   const cache = {};
   const { BAYER4, rgb, misturar } = Sprites;
-  const P = Object.assign({ mini: 32, grande: 40, pos: "b" }, window.__MAPA || {});  // a variante em avaliação
+  const P = Object.assign({ mini: 32, grande: 40, pos: "b", nativo: "", nativoGrande: "" }, window.__MAPA || {});  // a variante em avaliação
+  // os símbolos refeitos em grade nativa (só a vila e a floresta, em avaliação): P.nativo no minimapa ("n32") e
+  // P.nativoGrande no mapa grande ("n32", o mesmo desenho 1:1, ou "n48", a adaptação à mão); os outros lugares ficam
+  // com os ícones antigos da família
+  const NATIVOS = new Set(["vila", "floresta"]);
+  function simbolo(n, grande, ladoAntigo) {
+    const s = sprite(n), v = grande ? P.nativoGrande : P.nativo;
+    if (v && NATIVOS.has(s)) return { lado: Number(v.slice(1)), html: `<img class="sprite desenho pixel" src="${PECA(`lugar-${s}-${v}`)}" alt="">` };
+    return { lado: ladoAntigo, html: [32, 40].includes(ladoAntigo) ? Icones.lugar(s, ladoAntigo) : `<img class="sprite desenho" src="${PECA(`lugar-${s}-${ladoAntigo}`)}" alt="">` };
+  }
   const PECA = (nome) => `/proposta-mapa/${nome}.png`;
 
   function tons(n) {
@@ -224,7 +233,7 @@ const MapaPx = (() => {
     });
     const legado = [];  // o que não tem ícone da família (o covil vencido, só do procedural): o sprite do jogo
     mapa.nos.forEach((n) => {
-      if (Icones.lugar(sprite(n), SIM)) return;
+      if (Icones.lugar(sprite(n), SIM) || (P.nativo && NATIVOS.has(sprite(n)))) return;
       const [px, py] = conv(n);
       const spr = Sprites.canvas(sprite(n)), l = Math.round(SIM / K);
       x.globalAlpha = n.visitado || n.atual ? 1 : 0.6;
@@ -242,17 +251,18 @@ const MapaPx = (() => {
       const [px, py] = conv(n);
       const sx = px * K, sy = py * K;  // o centro do lugar na tela, em pixel inteiro
       const apagado = !n.visitado && !n.atual;
+      const sim = simbolo(n, grande, SIM), L = sim.lado;  // o lado deste símbolo na tela
       // o símbolo da família, 1:1, por baixo do botão (o botão continua sendo a área de clique)
       if (!legado.includes(n.id)) {
         const holder = document.createElement("span");
-        // o tamanho que a família não tem (o minimapa em avaliação) vem da pasta da proposta
-        holder.innerHTML = [32, 40].includes(SIM) ? Icones.lugar(sprite(n), SIM) : `<img class="sprite desenho" src="${PECA(`lugar-${sprite(n)}-${SIM}`)}" alt="">`;
+        holder.innerHTML = sim.html;
         const im = holder.firstElementChild;
         if (im) {
           im.classList.add("simbolo-lugar");
+          im.dataset.id = n.id;
           if (apagado) im.classList.add("apagado");
-          im.style.left = sx - SIM / 2 + "px"; im.style.top = sy - SIM / 2 + "px";
-          im.style.width = im.style.height = SIM + "px";
+          im.style.left = sx - L / 2 + "px"; im.style.top = sy - L / 2 + "px";
+          im.style.width = im.style.height = L + "px";
           caixa.appendChild(im);
         }
       }
@@ -272,25 +282,26 @@ const MapaPx = (() => {
       const heroi = n.atual && P.pos === "b" && typeof Retratos !== "undefined" && estado && Retratos.tem(estado.heroi.classe);
       let plaqueta = null;
       if (heroi) {
-        const e2 = grande ? 2 : 1, cima = sy - Math.round(SIM / 2) - 19 * e2;
+        const e2 = grande ? 2 : 1, cima = sy - Math.round(L / 2) - 19 * e2;
         if (cima >= 2) plaqueta = { lado: "cima", x: sx - 10 * e2, y: cima, w: 20 * e2, h: 22 * e2, e2 };
         else {
-          const esq = sx - Math.round(SIM / 2) - 21 * e2;
+          const esq = sx - Math.round(L / 2) - 21 * e2;
           plaqueta = esq >= 2 ? { lado: "esq", x: esq, y: sy - 10 * e2, w: 22 * e2, h: 20 * e2, e2 }
-            : { lado: "dir", x: sx + Math.round(SIM / 2) - e2, y: sy - 10 * e2, w: 22 * e2, h: 20 * e2, e2 };
+            : { lado: "dir", x: sx + Math.round(L / 2) - e2, y: sy - 10 * e2, w: 22 * e2, h: 20 * e2, e2 };
         }
       }
       // as marcas no canto de cima à direita do símbolo (não do botão): a missão primeiro, o contrato ao lado; com a
       // plaqueta em cima, vão para o lado dela; com a plaqueta à direita, para o canto de cima à esquerda
-      const canto = [sx + Math.round(SIM / 2) - (grande ? 6 : 5), sy - Math.round(SIM / 2) - (grande ? 5 : 4)];
+      const canto = [sx + Math.round(L / 2) - (grande ? 6 : 5), sy - Math.round(L / 2) - (grande ? 5 : 4)];
       if (plaqueta && plaqueta.lado === "cima") canto[0] = Math.max(canto[0], plaqueta.x + plaqueta.w + 2);
       const passo = grande ? 12 : 10;
       const marcasAqui = [missao.has(n.id) && "missao", contrato.has(n.id) && "contrato"].filter(Boolean);
-      if (plaqueta && plaqueta.lado === "dir") canto[0] = sx - Math.round(SIM / 2) - (grande ? 5 : 4) - passo * (marcasAqui.length - 1);
+      if (plaqueta && plaqueta.lado === "dir") canto[0] = sx - Math.round(L / 2) - (grande ? 5 : 4) - passo * (marcasAqui.length - 1);
       marcasAqui.forEach((m, i) => caixa.appendChild(peca(m + mk, "marca", canto[0] + passo * i, canto[1])));
       if (plaqueta) {
         const { e2 } = plaqueta, t = document.createElement("span"), deLado = plaqueta.lado !== "cima";
         t.className = "pos-heroi" + (deLado ? " lado" : "") + (plaqueta.lado === "dir" ? " dir" : "");
+        t.dataset.id = n.id;
         Object.assign(t.style, { left: plaqueta.x + "px", top: plaqueta.y + "px", width: plaqueta.w + "px", height: plaqueta.h + "px" });
         const moldura = (deLado ? "posicao-plaqueta-lado" : "posicao-plaqueta") + (e2 === 2 ? "@2x" : "");
         const fx = (plaqueta.lado === "dir" ? 4 : 2) * e2;
@@ -300,15 +311,16 @@ const MapaPx = (() => {
         caixa.appendChild(t);
       } else if (n.atual) {
         const w = grande ? 19 : 13, h = grande ? 17 : 12;
-        caixa.appendChild(peca("posicao" + mk, "pos-seta", sx - (w - 1) / 2, sy - Math.round(SIM / 2) - h - 1));
+        caixa.appendChild(peca("posicao" + mk, "pos-seta", sx - (w - 1) / 2, sy - Math.round(L / 2) - h - 1));
       }
       if (grande || n.atual) {
         const r = document.createElement("span");
         const perigo = n.nivel && opts.nivelHeroi && n.nivel >= opts.nivelHeroi + 2;
         r.className = "rotulo-mapa" + (n.atual ? " atual" : "") + (perigo ? " perigo" : "") + (apagado ? " apagado" : "");
+        r.dataset.id = n.id;
         r.textContent = n.nome + (grande && n.nivel ? ` · Nv.${n.nivel}` : "");
         r.style.left = sx + "px";
-        r.style.top = sy + Math.round(SIM / 2) + (grande ? 0 : -1) + "px";
+        r.style.top = sy + Math.round(L / 2) + (grande ? 0 : -1) + "px";
         caixa.appendChild(r);
       }
     });
@@ -321,23 +333,39 @@ const MapaPx = (() => {
     return caixa;
   }
 
+  /** O nome de cada lugar: embaixo do símbolo, como no jogo; se ali ele sai da caixa ou invade o símbolo, o botão, a
+   *  plaqueta, as marcas ou o nome de outro lugar, tenta em cima, à esquerda (antes da plaqueta, quando ela está à
+   *  esquerda) e à direita, no primeiro lugar livre e dentro do mapa. Sem nenhum livre, faz como o jogo: desliza para
+   *  dentro da borda e desce até sair de cima de outro nome. A posição muda só no desenho; a área de clique é o botão. */
   function encaixarRotulos(caixa) {
     if (!caixa.isConnected) return;
     const c = caixa.getBoundingClientRect();
-    const postos = [];
     const cruza = (a, b) => a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom;
+    const ret = (el) => el.getBoundingClientRect();
+    const mover = (b, dx, dy) => ({ left: b.left + dx, right: b.right + dx, top: b.top + dy, bottom: b.bottom + dy });
+    const dentro = (r) => r.left >= c.left + 2 && r.right <= c.right - 2 && r.top >= c.top + 1 && r.bottom <= c.bottom - 1;
+    const postos = [];
     [...caixa.querySelectorAll(".rotulo-mapa")].sort((a, b) => a.offsetTop - b.offsetTop).forEach((r) => {
-      const b = r.getBoundingClientRect();
-      const dx = b.right > c.right - 4 ? c.right - 4 - b.right : b.left < c.left + 4 ? c.left + 4 - b.left : 0;
-      let dy = 0;
-      for (let k = 0; k < 4; k++) {
-        const aqui = { left: b.left + dx, right: b.right + dx, top: b.top + dy, bottom: b.bottom + dy };
-        const outro = postos.find((p) => cruza(aqui, p));
-        if (!outro) break;
-        dy += outro.bottom - aqui.top + 1;
+      const id = r.dataset.id, b = ret(r);
+      const proprio = (el) => el.dataset.id === id;
+      const obst = [...caixa.querySelectorAll(".no-btn, .simbolo-lugar, .pos-heroi, .peca-mapa.marca")]
+        .filter((el) => !(proprio(el) && (el.classList.contains("no-btn") || el.classList.contains("simbolo-lugar")))).map(ret).concat(postos);
+      const sim = caixa.querySelector(`.simbolo-lugar[data-id="${id}"]`), pl = caixa.querySelector(`.pos-heroi[data-id="${id}"]`);
+      const s = sim ? ret(sim) : b, meio = s.top + s.height / 2 - b.height / 2 - b.top;
+      const esq = pl && pl.classList.contains("lado") && !pl.classList.contains("dir") ? ret(pl).left : s.left;
+      const dir = pl && pl.classList.contains("dir") ? ret(pl).right : s.right;
+      const opcoes = [[0, 0], [0, s.top - 2 - b.bottom], [esq - 4 - b.right, meio], [dir + 4 - b.left, meio]];
+      const livre = opcoes.find(([dx, dy]) => { const m = mover(b, dx, dy); return dentro(m) && !obst.some((o) => cruza(m, o)); });
+      let [dx, dy] = livre || [b.right > c.right - 4 ? c.right - 4 - b.right : b.left < c.left + 4 ? c.left + 4 - b.left : 0, 0];
+      if (!livre) {
+        for (let k = 0; k < 4; k++) {
+          const outro = postos.find((p) => cruza(mover(b, dx, dy), p));
+          if (!outro) break;
+          dy += outro.bottom - (b.top + dy) + 1;
+        }
       }
       if (dx || dy) r.style.transform = `translate(calc(-50% + ${Math.round(dx)}px), ${Math.round(dy)}px)`;
-      postos.push({ left: b.left + dx, right: b.right + dx, top: b.top + dy, bottom: b.bottom + dy });
+      postos.push(mover(b, dx, dy));
     });
   }
 

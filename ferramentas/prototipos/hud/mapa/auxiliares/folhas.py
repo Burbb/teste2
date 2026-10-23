@@ -8,7 +8,9 @@ uma redução só onde a legenda diz, para caber a página inteira.
   - comparacao.png: atual × B (a escolhida) × A (a alternativa), nas quatro situações da campanha, com os mesmos
     dados (o minimapa a 2× e o mapa grande a 1×);
   - origem-lugares.png: de onde vêm os ícones de lugar de 32 e 40 (a folha de referência, o recorte, as reduções);
-  - presenca-lugares.png: o mapa grande com o 40 aprovado e com um 48 pelo mesmo processo (capturas/proposta-b48).
+  - presenca-lugares.png: o mapa grande com o 40 aprovado e com um 48 pelo mesmo processo (capturas/proposta-b48);
+  - nativos.png: a vila e a floresta refeitas em grade nativa (32 e 48), antigo × novo, e o nome perto da borda.
+    python folhas.py [nativos ...]   # sem nomes, todas
     python folhas.py
 """
 import json
@@ -308,9 +310,55 @@ def presenca():
     f.gravar(PASTA / "presenca-lugares.png")
 
 
+def nativos():
+    """A vila e a floresta refeitas em grade nativa: as peças (antigo × novo, a grade e o tamanho exibido), a silhueta,
+    o minimapa de dia e à noite, o mapa grande com a plaqueta B (o 40 antigo, o 32 nativo, o 48 nativo) e o nome da
+    Capela perto da borda, antes e depois."""
+    p = PASTA / "proposta"
+    f = Folha(1960)
+    f.texto("1E.4 — a vila e a floresta em grade nativa (proposta; nada no jogo)", 22, OURO, True)
+    f.texto("Capturas a 1920×945 com os mesmos dados; ampliações por vizinho mais próximo. \"Antigo\": os ícones de lugar do jogo "
+            "(reduções da folha de referência). \"Novo\": desenhados à mão na grade (lugares.py, fontes em camadas).", 14, TEXTO2)
+    f.espaco()
+    um = lambda n: Image.open(p / f"{n}.png").convert("RGBA")  # noqa: E731
+    jogo = lambda n: Image.open(ICONES / f"{n}.png").convert("RGBA")  # noqa: E731
+
+    def silhueta(im):
+        s = Image.new("RGBA", im.size)
+        for y in range(im.height):
+            for x in range(im.width):
+                if im.getpixel((x, y))[3]:
+                    s.putpixel((x, y), (40, 36, 30, 255) if im.getpixel((x, y))[:3] in ((20, 12, 8), (11, 19, 13)) else (200, 190, 170, 255))
+        return s
+    for lugar in ("vila", "floresta"):
+        f.texto(f"A {lugar}: as peças", 18, TEXTO, True)
+        pecas_ = [(jogo(f"lugar-{lugar}-32"), "antigo 32: redução, sem grade; exibido 32"),
+                  (um(f"lugar-{lugar}-n32"), "NOVO 32: grade 32×32; exibido 32 (minimapa)"),
+                  (jogo(f"lugar-{lugar}-40"), "antigo 40: redução; exibido 40 (mapa grande)"),
+                  (um(f"lugar-{lugar}-n48"), "NOVO 48: grade 48×48, à mão; exibido 48 (mapa grande)")]
+        f.imagens([(nicho(im, im.width + 8, 1), t.split(":")[0] + ", 1×") for im, t in pecas_], gap=24)
+        f.imagens([(nicho(im, im.width + 4, 6 if im.width <= 32 else 5), t) for im, t in pecas_], gap=18, legenda=12)
+        f.imagens([(nicho(silhueta(um(f"lugar-{lugar}-n32")), 36, 4), "silhueta do novo 32, 4×"),
+                   (nicho(silhueta(um(f"lugar-{lugar}-n48")), 52, 3), "silhueta do novo 48, 3×")], gap=24)
+    f.texto("O minimapa (o 32 em 1:1; o mapa a ×2): antigo × novo, de dia no Vau e à noite no Bosque", 18, TEXTO, True)
+    for sit in ("vau-manha", "bosque-noite"):
+        f.imagens([(amplia(abrir(CAP / f"{v}/{sit}-mini.png"), 2), f"{r}, 2×") for v, r in
+                   (("proposta-b", f"{sit}: antigo"), ("proposta-n32", f"{sit}: novo"))] +
+                  [(abrir(CAP / f"{v}/{sit}-mini.png"), f"{r}, 1×") for v, r in (("proposta-b", "antigo"), ("proposta-n32", "novo"))], gap=20)
+    f.texto("O mapa grande, com a plaqueta B: o 40 antigo × o 32 novo em 1:1 × o 48 novo (a recomendação)", 18, TEXTO, True)
+    for sit in ("vau-manha", "bosque-noite"):
+        cs = [centro("proposta-n48", sit, "mapa grande", n) for n in ("Vau do Turvo", "Bosque do Moinho")]
+        f.imagens([(amplia(recorte(abrir(CAP / f"{v}/{sit}-grande.png"), c, 150, 120), 2), f"{r}, 2×") for c in cs
+                   for v, r in (("proposta-b", "antigo 40"), ("proposta-n32", "novo 32"), ("proposta-n48", "novo 48"))], gap=10, legenda=12)
+    f.imagens([(abrir(CAP / "proposta-b/vau-manha-grande.png"), "antigo 40, 1×"), (abrir(CAP / "proposta-n48/vau-manha-grande.png"), "novo 48, 1×")], gap=20)
+    f.texto("O nome perto da borda: a Capela atual no minimapa (o nome procura um lugar livre: embaixo, em cima, à esquerda, à direita)", 18, TEXTO, True)
+    f.imagens([(amplia(abrir(CAP / "sprites/capela-tarde-mini-antes.png"), 2), "antes (a revisão anterior): o nome invade o Bosque, 2×"),
+               (amplia(abrir(CAP / "proposta-n48/capela-tarde-mini.png"), 2), "agora: nome, plaqueta e ruínas na mesma linha, 2×")], gap=20)
+    f.gravar(PASTA / "nativos.png")
+
+
 if __name__ == "__main__":
-    levantamento()
-    pecas()
-    comparacao()
-    origem()
-    presenca()
+    import sys
+    pedidas = sys.argv[1:] or ["levantamento", "pecas", "comparacao", "origem", "presenca", "nativos"]
+    for nome in pedidas:
+        globals()[nome]()
