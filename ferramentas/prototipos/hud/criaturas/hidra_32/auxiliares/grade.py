@@ -211,10 +211,39 @@ FAIXAS = {17: (16, 23), 18: (15, 23), 19: (14, 23), 20: (14, 23), 21: (13, 23), 
           24: (10, 23), 25: (9, 23), 26: (8, 23), 27: (8, 23), 28: (9, 24), 29: (9, 24), 30: (10, 25), 31: (10, 25)}
 PESCOCO2 = [(y, a, "o" + "lhll" + "m" * (b - a - 8) + "sss" + ("o" if b < 24 else "s")) for y, (a, b) in FAIXAS.items()]
 GRADE_32B = pintar([B2, C2, PESCOCO2, A2], 32)
+# A correção da cabeça principal (23/10/2026, o N32B preservado): a testa descia numa rampa contínua até o nariz, a
+# bochecha era grande e o perfil lembrava um cachorro de desenho, com a boca comprida sugerindo um sorriso. Pela
+# referência, a cabeça em peças: o focinho num bloco horizontal de topo chato, um degrau nítido até a testa, a sobrancelha
+# escura e pesada sobre o olho (no encontro do focinho com o crânio), a bochecha pequena, a mandíbula como bloco à parte,
+# inclinada para baixo, e a boca aberta em ângulo, com o fundo escuro e a língua. As duas de trás, o pescoço, a composição
+# e a paleta como no N32B.
+A3 = rows([
+    (8,  "..........oooooo........"),
+    (9,  "........oohhhhhhoooo...."),
+    (10, ".......ohhhhhhhhhlllmo.."),
+    (11, ".ooooooksssssslllmmmmmo."),
+    (12, "ohhhhhhhskeesmlmmmmmmso."),
+    (13, "ohkllllllssssmlmmmmmmso."),
+    (14, "ollllllllmmmmmsmmmmmsso."),
+    (15, "ommmmmmmmmmmmmsmmmmsso.."),
+    (16, "oooooooooooooomsmmmsso.."),
+    (17, ".dRRRRRRRRRkkosmmmsso..."),
+    (18, ".dRRRRRRRRkkosmmmsso...."),
+    (19, "..RRrrRRRkkooommmsso...."),
+    (20, "..RrrRRkkooolmmmsso....."),
+    (21, "..RRRkkoollllmmsso......"),
+    (22, "..dRkoollllmmmsso......."),
+    (23, "..ooollllllmmsso........"),
+    (24, "..ohllllmmmsso.........."),
+    (25, "...ossssssso............"),
+    (26, ".....oooooo............."),
+])
+GRADE_32C = pintar([B2, C2, PESCOCO2, A3], 32)
 # cada desenho: a grade, o lado e a guia
 DESENHOS = {"hidra-n32": (GRADE_32, 32, "guias/hidra-guia-32.png"),
             "hidra-n16": (GRADE_16, 16, "guias/hidra-guia-16.png"),
-            "hidra-n32b": (GRADE_32B, 32, "guias/hidra-guia-32.png")}
+            "hidra-n32b": (GRADE_32B, 32, "guias/hidra-guia-32.png"),
+            "hidra-n32c": (GRADE_32C, 32, "guias/hidra-guia-32.png")}
 # as camadas, de baixo para cima (a guia por baixo de tudo)
 ORDEM = ["guia", "escamas", "boca", "olhos", "contorno"]
 

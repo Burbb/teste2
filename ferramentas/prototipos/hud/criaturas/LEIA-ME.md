@@ -297,3 +297,6 @@ A escolha do par e da direção é do Jean; nada foi começado.
   O N32 e o N16 ficam. Nada integrado.
 - **O ajuste local do servo (23/10/2026), aguardando o Jean:** o `servo-n16b` em `servo_32/` (a folha `ajuste.png`): os
   dentes em grupos sobre a mordida fechada e as órbitas inclinadas como no N32; o N16 e o N32 ficam. Nada integrado.
+- **A correção da cabeça principal da Hidra (23/10/2026), aguardando o Jean:** o `hidra-n32c` em `hidra_32/` (a folha
+  `cabeca-principal.png`): o focinho horizontal com o degrau até a testa, a sobrancelha pesada sobre o olho, a bochecha
+  menor e a mandíbula à parte; o resto como no N32B, que fica. Nada integrado.

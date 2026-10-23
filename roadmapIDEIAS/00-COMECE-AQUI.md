@@ -6633,3 +6633,18 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   inteiros, as anteriores reexportadas iguais e a foto sem erro no console, na mesma caixa da carta.
 - **Parado para a avaliação da Hidra (N32B) e do servo (N16B):** nada integrado, a Hidra sem nova adaptação para 16,
   nenhum outro personagem, o mapa não começado.
+
+### 23/10/2026 (data do computador local) — A Hidra: a correção da cabeça principal, N32C (nada no jogo)
+
+- **Estado conferido:** a branch em `3dfa9293`, igual ao remoto; o `caido-avatar-512.png` continua fora dos commits.
+- **Pedido do Jean:** no N32B, a cabeça maior tinha a testa em rampa até o nariz, uma bochecha grande, um perfil de
+  cachorro ou dinossauro de desenho e uma boca que sugeria sorriso; corrigir só ela, numa cópia, em 32, pela referência.
+- **No protótipo, aguardando o Jean** (`ferramentas/prototipos/hud/criaturas/hidra_32/LEIA-ME.md`, a folha
+  `cabeca-principal.png`): o `hidra-n32c`, a cabeça principal reconstruída (o focinho horizontal, o degrau até a testa, a
+  sobrancelha pesada sobre o olho, a bochecha pequena, a mandíbula à parte e a boca aberta em ângulo, com o fundo escuro).
+  As cabeças de trás, a composição e a paleta como no N32B; o N32, o N16 e o N32B intactos.
+- **Verificações proporcionais:** o pyflakes dos auxiliares, a sintaxe do roteiro das fotos, a grade igual ao rascunho, a
+  fonte reaberta (o lado, as camadas na ordem, a guia oculta), 0 diferentes na releitura, a exportação igual ao composto,
+  o @2x em blocos inteiros, o N32B reexportado igual e a foto sem erro no console, na mesma caixa da carta.
+- **Parado para a avaliação:** o servo N16B segue em avaliação, sem mudança; nada integrado, sem adaptação para 16,
+  nenhum outro personagem.

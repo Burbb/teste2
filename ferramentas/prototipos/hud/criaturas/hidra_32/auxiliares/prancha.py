@@ -4,8 +4,9 @@ com os mesmos dados, no jogo de hoje, na T recusada (o 16 ×2), no estudo nativo
 carta a 2×; a fileira na caixa da carta com retratos aprovados, real e a 3×; e o diagnóstico: a T, o N32 e o N16
 ampliados por fator inteiro, sem suavização.
 Com --b, a da segunda construção de 32 (construcao-32.png): o N32 anterior × o N32B na mesma luta, a carta a 2×, a
-fileira e o diagnóstico (sem nova adaptação para 16).
-    python prancha.py [--b]      (depois do fotografar.mjs)
+fileira e o diagnóstico (sem nova adaptação para 16). Com --c, a da correção da cabeça principal (cabeca-principal.png):
+o N32B × o N32C, com a cabeça da referência ao lado.
+    python prancha.py [--b | --c]      (depois do fotografar.mjs)
 """
 import json
 import pathlib
@@ -109,40 +110,41 @@ def main():
     print("comparacao.png", out.size)
 
 
-def segunda():
+def segunda(antes=("n32", "N32 (anterior)"), depois=("n32b", "N32B (a construção nova)"), saida="construcao-32.png",
+            titulo="a segunda construção de 32: N32 (anterior) × N32B", recorte=RECORTE,
+            legenda="a referência (o material e a anatomia; a direção corrigida pelo Jean: todas para a esquerda)"):
     reg = json.loads((CAP / "registro.json").read_text(encoding="utf-8"))
-    assert foto(reg, "n32").size == foto(reg, "n32b").size  # a mesma carta
+    assert foto(reg, antes[0]).size == foto(reg, depois[0]).size  # a mesma carta
     f, f2 = ImageFont.truetype("arial.ttf", 15), ImageFont.truetype("arial.ttf", 12)
     out = Image.new("RGBA", (1500, 1400), CARVAO)
     d = ImageDraw.Draw(out)
-    d.text((20, 10), "Hidra do Brejo — a segunda construção de 32: N32 (anterior) × N32B (protótipo; trocado só na página, "
-           "nada no jogo)", fill=TEXTO, font=f)
+    d.text((20, 10), f"Hidra do Brejo — {titulo} (protótipo; trocado só na página, nada no jogo)", fill=TEXTO, font=f)
     y = 38
-    d.text((20, y), "a referência (o material e a anatomia; a direção corrigida pelo Jean: todas para a esquerda)",
-           fill=TEXTO, font=f2)
+    d.text((20, y), legenda, fill=TEXTO, font=f2)
     y += 18
     ref = Image.open(REF).convert("RGBA")
     fundo = Image.new("RGBA", ref.size, CARVAO)
     fundo.alpha_composite(ref)
-    out.alpha_composite(fundo.crop(RECORTE).resize((192, 192), Image.LANCZOS), (20, y))
+    out.alpha_composite(fundo.crop(recorte).resize((192, 192), Image.LANCZOS), (20, y))
     y += 212
     d.text((20, y), "a luta da guardiã, 1920×945 a 100%, tamanho real; os mesmos dados", fill=TEXTO, font=f2)
     y += 18
-    modos = [("atual (o jogo: a fera)", "atual"), ("N32 (anterior)", "n32"), ("N32B (a construção nova)", "n32b")]
+    modos = [("atual (o jogo: a fera)", "atual"), (antes[1], antes[0]), (depois[1], depois[0])]
     for j, (rot, modo) in enumerate(modos):
         d.text((20 + j * 370, y), rot, fill=TEXTO2, font=f2)
         out.alpha_composite(foto(reg, modo), (20 + j * 370, y + 16))
     y += 16 + foto(reg, "n32").height + 20
-    d.text((20, y), "a carta a 2× (a foto de 100%, por vizinho mais próximo): N32 | N32B", fill=TEXTO, font=f2)
+    d.text((20, y), f"a carta a 2× (a foto de 100%, por vizinho mais próximo): {antes[1]} | {depois[1]}", fill=TEXTO,
+           font=f2)
     y += 18
-    for j, modo in enumerate(("n32", "n32b")):
+    for j, modo in enumerate((antes[0], depois[0])):
         cx = foto(reg, modo)
         out.alpha_composite(cx.resize((cx.width * 2, cx.height * 2), Image.NEAREST), (20 + j * 480, y))
     y += 2 * cx.height + 20
-    n32 = Image.open(N32).convert("RGBA")
-    n32b = Image.open(PASTA / "proposta/hidra-n32b-32.png").convert("RGBA")
+    um = Image.open(PASTA / f"proposta/hidra-{antes[0]}-32.png").convert("RGBA")
+    dois = Image.open(PASTA / f"proposta/hidra-{depois[0]}-32.png").convert("RGBA")
     linha = [(n, Image.open(JOGO / f"retrato-{n}-16.png").convert("RGBA").resize((32, 32), Image.NEAREST)) for n in FILEIRA]
-    linha += [("N32 (anterior)", n32), ("N32B", n32b)]
+    linha += [(antes[1], um), (depois[1], dois)]
     d.text((20, y), "a fileira na caixa da carta, com retratos aprovados — tamanho real e 3×", fill=TEXTO, font=f2)
     y += 18
     for j, (_, im) in enumerate(linha):
@@ -152,15 +154,22 @@ def segunda():
         out.alpha_composite(caixa(im).resize((108, 108), Image.NEAREST), (20 + j * 122, y))
         d.text((20 + j * 122, y + 112), rot, fill=TEXTO2, font=f2)
     y += 136
-    d.text((20, y), "o diagnóstico, sem suavização: N32 (a 8×) | N32B (a 8×)", fill=TEXTO, font=f2)
+    d.text((20, y), f"o diagnóstico, sem suavização: {antes[1]} (a 8×) | {depois[1]} (a 8×)", fill=TEXTO, font=f2)
     y += 18
-    for j, im in enumerate((n32, n32b)):
+    for j, im in enumerate((um, dois)):
         out.alpha_composite(grade(im, 8), (20 + j * 276, y))
     y += 256 + 20
     out = out.crop((0, 0, out.width, y))
-    out.save(PASTA / "construcao-32.png")
-    print("construcao-32.png", out.size)
+    out.save(PASTA / saida)
+    print(saida, out.size)
 
 
 if __name__ == "__main__":
-    segunda() if "--b" in sys.argv else main()
+    if "--c" in sys.argv:
+        segunda(("n32b", "N32B (anterior)"), ("n32c", "N32C (a cabeça principal)"), "cabeca-principal.png",
+                "a correção da cabeça principal: N32B (anterior) × N32C", (0, 250, 800, 1050),
+                "a cabeça principal da referência (o crânio, a sobrancelha, o focinho e a mandíbula; reduzida só para olhar)")
+    elif "--b" in sys.argv:
+        segunda()
+    else:
+        main()
