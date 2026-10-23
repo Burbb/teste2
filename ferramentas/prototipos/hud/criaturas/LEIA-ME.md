@@ -300,3 +300,6 @@ A escolha do par e da direção é do Jean; nada foi começado.
 - **A correção da cabeça principal da Hidra (23/10/2026), aguardando o Jean:** o `hidra-n32c` em `hidra_32/` (a folha
   `cabeca-principal.png`): o focinho horizontal com o degrau até a testa, a sobrancelha pesada sobre o olho, a bochecha
   menor e a mandíbula à parte; o resto como no N32B, que fica. Nada integrado.
+- **A reconstrução da Hidra pela nova referência (23/10/2026), aguardando o Jean:** o `hidra-n32d` em `hidra_32/` (a
+  folha `reconstrucao.png`), pela `Hidra tríplice do pântano em pixel art.png`, com a paleta oliva dela; o N32C e as
+  anteriores ficam. Sem adaptação para 16. Nada integrado.

@@ -239,11 +239,85 @@ A3 = rows([
     (26, ".....oooooo............."),
 ])
 GRADE_32C = pintar([B2, C2, PESCOCO2, A3], 32)
+# A reconstrução pela nova referência (23/10/2026, `Hidra tríplice do pântano em pixel art.png`, a direção principal; o
+# N32C e as tentativas anteriores preservados): as três cabeças olhando para a esquerda, a principal maior e à frente, com
+# o crânio redondo atrás do olho, a sobrancelha pesada, o focinho projetado com a narina, a boca aberta com duas presas em
+# cima e uma embaixo (os dentes simplificados) e a mandíbula grossa; as de trás no alto e à direita, cada uma com o
+# focinho, o olho sob a sobrancelha e uma presa; os pescoços grossos, o da principal saindo de trás da mandíbula, e a nuca
+# de cada cabeça continuando no pescoço dela. A paleta é a oliva da referência, com o intervalo de valor aberto (o topo
+# aceso, as sombras fundas); a guia é a imagem inteira reduzida por média (guias/hidra-d-guia-32.png).
+PALETA_D = {"o": "121510", "D": "1c2218", "s": "2a3020", "m": "40462a", "M": "545730", "l": "6c6c3a", "h": "8e8c50",
+            "H": "a8a466", "e": "e8a422", "k": "0a0c08", "d": "e6dcc0", "R": "4a1612", "r": "7a2a1e"}
+
+
+def pescoco(faixas, miolo):
+    """Um pescoço: por linha, de onde a onde; o ventre claro na frente, a sombra atrás."""
+    return [(y, a, "o" + miolo + "m" * max(0, b - a - len(miolo) - 4) + "sso") for y, (a, b) in faixas.items()]
+
+
+# B: a cabeça de cima, atrás; a boca fechada com as presas por fora
+BD = [
+    (1, 12, "oooo"),
+    (2, 10, "oolhhloo"),
+    (3, 9, "olsssllmmms"),
+    (4, 8, "oMlsekmmmmsss"),
+    (5, 7, "olkMMMmmmmmsss"),
+    (6, 7, "oMMMMmmmmmmssss"),
+    (7, 7, "ooodoosmmmmsso"),
+    (8, 8, "osdssmmmmsso"),
+    (9, 9, "ooossmmmsso"),
+    (10, 12, "osmmmssso"),
+]
+NBD = pescoco({11: (14, 23), 12: (15, 24), 13: (15, 24), 14: (16, 25), 15: (16, 25), 16: (17, 26), 17: (17, 26),
+              18: (18, 27), 19: (18, 27), 20: (19, 28)}, "mMl")
+# C: a cabeça da direita, atrás
+CD = [
+    (7, 25, "oooo"),
+    (8, 23, "oolhhloo"),
+    (9, 22, "olsssllmmo"),
+    (10, 21, "oMlsekmmmmso"),
+    (11, 20, "olkMMMmmmmmso"),
+    (12, 20, "oMMMMmmmmmmss"),
+    (13, 20, "ooodoosmmmmss"),
+    (14, 21, "osdssmmmmss"),
+    (15, 22, "ooossmmmss"),
+]
+NCD = pescoco({y: (24, 33) for y in range(16, 32)}, "mMl")
+# A: a principal, na frente: o crânio redondo atrás do olho, a sobrancelha pesada, o degrau até o focinho, o focinho
+# projetado com a narina, o lábio com as presas, a boca aberta, a mandíbula grossa
+NAD = pescoco({17: (15, 24), 18: (14, 25), 19: (14, 25), 20: (13, 26), 21: (13, 26), 22: (12, 26), 23: (12, 27),
+              24: (11, 27), 25: (11, 27), 26: (10, 28), 27: (10, 28), 28: (9, 28), 29: (9, 29), 30: (9, 29),
+              31: (9, 29)}, "mlHHl")
+AD = [
+    (10, 8, "ooooo"),
+    (11, 6, "oohhhhhoo"),
+    (12, 5, "ohhhhhhhllmm"),
+    (13, 4, "ohhlllllllmmmm"),
+    (14, 3, "ohhhhhhhllllmmmm"),
+    (15, 2, "ohssssssllmmmmmm"),
+    (16, 1, "ohhhhlseksllmmmmmm"),
+    (17, 0, "ohkMMMlMssssMmmmmso"),
+    (18, 0, "oMMMMMMMMmmmmmmmsso"),
+    (19, 0, "omMMMMMmmmmmmmmmsso"),
+    (20, 1, "odoooodoooommmmsso"),
+    (21, 1, "odRRRRdRRRRkomMmmsso"),
+    (22, 1, "oRRrrrRRRRkoomMmsso"),
+    (23, 2, "oRdRRRRkoommMmsso"),
+    (24, 2, "oodooooooolllmmsso"),
+    (25, 2, "oHllllllllllmmmsso"),
+    (26, 3, "olllllllllmmmmsso"),
+    (27, 4, "osssmmmmmmmmsso"),
+    (28, 6, "oooosssssssso"),
+]
+GRADE_32D = pintar([BD, NBD, CD, NCD, NAD, AD], 32)
+# a paleta de cada desenho (a da nova referência só no N32D)
+PALETAS = {"hidra-n32d": PALETA_D}
 # cada desenho: a grade, o lado e a guia
 DESENHOS = {"hidra-n32": (GRADE_32, 32, "guias/hidra-guia-32.png"),
             "hidra-n16": (GRADE_16, 16, "guias/hidra-guia-16.png"),
             "hidra-n32b": (GRADE_32B, 32, "guias/hidra-guia-32.png"),
-            "hidra-n32c": (GRADE_32C, 32, "guias/hidra-guia-32.png")}
+            "hidra-n32c": (GRADE_32C, 32, "guias/hidra-guia-32.png"),
+            "hidra-n32d": (GRADE_32D, 32, "guias/hidra-d-guia-32.png")}
 # as camadas, de baixo para cima (a guia por baixo de tudo)
 ORDEM = ["guia", "escamas", "boca", "olhos", "contorno"]
 
@@ -260,11 +334,12 @@ def camada(x, y, ch, ident):
 
 def imagem(ident):
     grade, n, _ = DESENHOS[ident]
+    paleta = PALETAS.get(ident, PALETA)
     im = Image.new("RGBA", (n, n))
     for y, l in enumerate(grade):
         for x, ch in enumerate(l):
             if ch != ".":
-                im.putpixel((x, y), tuple(int(PALETA[ch][i:i + 2], 16) for i in (0, 2, 4)) + (255,))
+                im.putpixel((x, y), tuple(int(paleta[ch][i:i + 2], 16) for i in (0, 2, 4)) + (255,))
     return im
 
 
@@ -280,7 +355,7 @@ def gravar(base, ident):
     for y, l in enumerate(grade):
         for x, ch in enumerate(l):
             if ch != ".":
-                listas[camada(x, y, ch, ident)].append(f"{x},{y},{PALETA[ch]}")
+                listas[camada(x, y, ch, ident)].append(f"{x},{y},{PALETAS.get(ident, PALETA)[ch]}")
     d = base / f"listas/{ident}"
     d.mkdir(parents=True, exist_ok=True)
     for k, v in listas.items():

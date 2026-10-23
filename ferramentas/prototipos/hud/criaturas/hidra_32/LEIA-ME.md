@@ -118,3 +118,46 @@ numa cópia (o N32, o N16 e o N32B ficam), pela referência: separar crânio, so
 - **Ainda falta:** o alto do crânio é uma placa comprida e chata até a nuca (a referência tem o crânio mais arredondado
   atrás do olho); a mandíbula é fina perto do queixo; a 1× a boca aberta é o que mais aparece. As cabeças de trás seguem
   como no N32B.
+
+# A reconstrução pela nova referência: N32D (23/10/2026, protótipo; nada no jogo)
+
+**Pedido do Jean:** reconstruir a Hidra com a nova referência como direção principal (deixada por ele em
+`ferramentas/arte/referencias/icones/Hidra tríplice do pântano em pixel art.png`; a origem e o SHA-256 no LEIA-ME de lá),
+uma proposta nova em 32 nativos, preservando o N32C e as anteriores; sem adaptar para 16 nem integrar. Copiar a composição
+(três cabeças para a esquerda, a principal maior e à frente), o crânio arredondado atrás do olho, a sobrancelha pesada, o
+focinho projetado, a mandíbula com espessura ligada ao pescoço, e a separação entre as cabeças.
+
+- **A guia** (`guias/hidra-d-guia-32.png` e `-16.png`): a imagem inteira reduzida por média, oculta na fonte; mediu as
+  posições (a ponta do focinho de cima em x8, o olho dela por volta de (13, 4); a ponta da da direita em x21, o olho em
+  (25, 10); a principal com o crânio entre as linhas 10 e 13, o olho em (10, 16), a ponta do focinho em x0, a boca aberta
+  nas linhas 20 a 24 e a mandíbula até a 28). O desenho é à mão, com as cores agrupadas.
+- **A paleta** (`PALETA_D`, só deste desenho): a oliva da referência, com o intervalo de valor aberto (o topo aceso, as
+  sombras fundas); a primeira versão, com os verdes próximos demais, apagava a modelagem.
+- **O N32D** (`hidra-n32d`, `GRADE_32D`), à mão, em partes, de trás para a frente: a cabeça de cima, o pescoço dela, a da
+  direita, o pescoço dela, o pescoço da principal e a principal.
+  1. a primeira passada acertou a composição, mas os dentes viraram uma grade de blocos brancos na principal e dentões
+     quadrados nas de trás, e os ventres dos pescoços de trás viraram listras: **os dentes simplificados** (duas presas em
+     cima e uma embaixo na principal, uma presa em cada uma de trás) e os ventres de trás mais discretos;
+  2. o contorno da principal arredondado (a ponta do focinho e o crânio atrás do olho) e os planos marcados (o topo do
+     focinho aceso, a sobrancelha acesa com a sombra embaixo, o olho na sombra);
+  3. **o que não funcionou:** o pescoço da principal só aparecia nas últimas linhas; atrás da mandíbula se viam os
+     pescoços de trás, e a cabeça parecia solta. O pescoço dela ficou largo, saindo de trás da mandíbula e da nuca, na
+     frente dos outros dois;
+  4. o contorno que fechava a nuca de cada cabeça (e as fazia parecer caixas) saiu: a nuca continua no pescoço; a
+     separação entre as cabeças fica no contorno da frente, na sobreposição e na sombra.
+- **A fonte, pelo Aseprite em lote** (`python auxiliares/exportar.py --montar hidra-n32d`; o conector sem editor, a janela
+  aberta do Jean não foi tocada): 0 diferentes na releitura; reaberta com a guia oculta e as camadas na ordem; a
+  exportação igual ao composto, alfa 0/255, o @2x em blocos inteiros. A paleta por desenho (`PALETAS`) não mudou as
+  anteriores: as grades e as listas regravadas iguais, o N32C reexportado igual.
+- **A foto** (`MODOS=n32d`), pela guardiã na luta, a 1920×945, com os mesmos dados e a mesma caixa da carta, sem erro no
+  console. **A folha:** `reconstrucao.png` (`python auxiliares/prancha.py --d`: a referência nova, o N32C × o N32D na
+  mesma carta, a carta a 2×, a fileira e o diagnóstico a 8×).
+
+## A minha leitura do N32D (quem decide é o Jean)
+
+- **Segue a referência:** a composição (a principal grande embaixo e à frente, uma cabeça no alto e outra à direita, todas
+  para a esquerda), a principal com o crânio arredondado, a sobrancelha, o focinho com a narina, a boca aberta com as
+  presas e a mandíbula grossa ligada ao pescoço, e as duas de trás reconhecíveis como cabeças (focinho, olho, presa).
+- **Ainda falta:** a oliva da referência é escura, e a 1× o N32D contrasta menos com o fundo da carta que o N32C; as
+  cabeças de trás ainda têm a ponta do focinho reta; os pescoços de trás são faixas simples. Aguarda a avaliação do 32
+  antes de qualquer adaptação para 16.

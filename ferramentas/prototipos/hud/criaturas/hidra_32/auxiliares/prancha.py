@@ -5,8 +5,9 @@ carta a 2×; a fileira na caixa da carta com retratos aprovados, real e a 3×; e
 ampliados por fator inteiro, sem suavização.
 Com --b, a da segunda construção de 32 (construcao-32.png): o N32 anterior × o N32B na mesma luta, a carta a 2×, a
 fileira e o diagnóstico (sem nova adaptação para 16). Com --c, a da correção da cabeça principal (cabeca-principal.png):
-o N32B × o N32C, com a cabeça da referência ao lado.
-    python prancha.py [--b | --c]      (depois do fotografar.mjs)
+o N32B × o N32C, com a cabeça da referência ao lado. Com --d, a da reconstrução pela nova referência (reconstrucao.png):
+a referência nova × o N32C × o N32D.
+    python prancha.py [--b | --c | --d]      (depois do fotografar.mjs)
 """
 import json
 import pathlib
@@ -112,7 +113,7 @@ def main():
 
 def segunda(antes=("n32", "N32 (anterior)"), depois=("n32b", "N32B (a construção nova)"), saida="construcao-32.png",
             titulo="a segunda construção de 32: N32 (anterior) × N32B", recorte=RECORTE,
-            legenda="a referência (o material e a anatomia; a direção corrigida pelo Jean: todas para a esquerda)"):
+            legenda="a referência (o material e a anatomia; a direção corrigida pelo Jean: todas para a esquerda)", ref=REF):
     reg = json.loads((CAP / "registro.json").read_text(encoding="utf-8"))
     assert foto(reg, antes[0]).size == foto(reg, depois[0]).size  # a mesma carta
     f, f2 = ImageFont.truetype("arial.ttf", 15), ImageFont.truetype("arial.ttf", 12)
@@ -122,9 +123,9 @@ def segunda(antes=("n32", "N32 (anterior)"), depois=("n32b", "N32B (a construç�
     y = 38
     d.text((20, y), legenda, fill=TEXTO, font=f2)
     y += 18
-    ref = Image.open(REF).convert("RGBA")
-    fundo = Image.new("RGBA", ref.size, CARVAO)
-    fundo.alpha_composite(ref)
+    imref = Image.open(ref).convert("RGBA")
+    fundo = Image.new("RGBA", imref.size, CARVAO)
+    fundo.alpha_composite(imref)
     out.alpha_composite(fundo.crop(recorte).resize((192, 192), Image.LANCZOS), (20, y))
     y += 212
     d.text((20, y), "a luta da guardiã, 1920×945 a 100%, tamanho real; os mesmos dados", fill=TEXTO, font=f2)
@@ -165,7 +166,12 @@ def segunda(antes=("n32", "N32 (anterior)"), depois=("n32b", "N32B (a construç�
 
 
 if __name__ == "__main__":
-    if "--c" in sys.argv:
+    if "--d" in sys.argv:
+        segunda(("n32c", "N32C (anterior)"), ("n32d", "N32D (pela referência nova)"), "reconstrucao.png",
+                "a reconstrução pela nova referência: referência × N32C × N32D", (0, 0, 1254, 1254),
+                "a referência nova, a direção principal (Hidra tríplice do pântano em pixel art.png; reduzida só para olhar)",
+                RAIZ / "ferramentas/arte/referencias/icones/Hidra tríplice do pântano em pixel art.png")
+    elif "--c" in sys.argv:
         segunda(("n32b", "N32B (anterior)"), ("n32c", "N32C (a cabeça principal)"), "cabeca-principal.png",
                 "a correção da cabeça principal: N32B (anterior) × N32C", (0, 250, 800, 1050),
                 "a cabeça principal da referência (o crânio, a sobrancelha, o focinho e a mandíbula; reduzida só para olhar)")

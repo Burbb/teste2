@@ -165,3 +165,12 @@ guardados sem alteração. Ampliadas, não grades nativas: as transposições pa
 | `Espantalho possuído em pixel art-5.png` | `4d3feefdde99fd1b` | o chapéu pontudo e torto, a cabeça de estopa, os olhos fundos de brasa, a boca costurada, a gola de palha | `espantalho-t` |
 | `Retrato pixelado de esqueleto com mandíbula-6.png` | `011b076d1743db1d` | um esqueleto de elmo com a mandíbula | guardada, sem uso (a 7 a substitui) |
 | `Esqueleto pixelado com mordida cerrada-7.png` | `60d05e514dee5fa3` | o esqueleto de elmo com os olhos violeta e a mordida fechada | só a boca e a mandíbula do `servo-sv2b` |
+
+**A nova referência da Hidra** (1254×1254, RGBA, 23/10/2026, data do computador local): imagem gerada, deixada aqui pelo
+Jean como direção principal da reconstrução da Hidra; sem outra origem ou autoria informada; o original guardado sem
+alteração. Ampliada, não uma grade nativa: a construção em 32 está em `ferramentas/prototipos/hud/criaturas/hidra_32/`
+(`hidra-n32d`; a guia em `guias/hidra-d-guia-32.png`, a imagem inteira reduzida por média).
+
+| Arquivo | SHA-256 (começo) | O que mostra | Uso |
+|---|---|---|---|
+| `Hidra tríplice do pântano em pixel art.png` | `1d85baa9eb94de8e` | as três cabeças de réptil olhando para a esquerda em tons de oliva: a principal grande, embaixo e à frente, com a boca aberta cheia de dentes, o crânio arredondado atrás do olho âmbar, a sobrancelha pesada, o focinho projetado com a narina e a mandíbula grossa ligada ao pescoço; duas cabeças menores atrás, no alto e à direita, com as presas; os pescoços grossos com o ventre mais claro | `hidra-n32d` |

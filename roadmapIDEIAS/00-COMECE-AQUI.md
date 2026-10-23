@@ -6648,3 +6648,19 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   o @2x em blocos inteiros, o N32B reexportado igual e a foto sem erro no console, na mesma caixa da carta.
 - **Parado para a avaliação:** o servo N16B segue em avaliação, sem mudança; nada integrado, sem adaptação para 16,
   nenhum outro personagem.
+
+### 23/10/2026 (data do computador local) — A Hidra reconstruída pela nova referência: N32D (nada no jogo)
+
+- **Estado conferido:** a branch em `e72dbcc5`, igual ao remoto; a nova referência deixada pelo Jean
+  (`Hidra tríplice do pântano em pixel art.png`) registrada com a origem e o SHA-256; o `caido-avatar-512.png` continua
+  fora dos commits.
+- **Pedido do Jean:** uma construção nova em 32 pela nova referência (a composição, o crânio arredondado, a sobrancelha,
+  o focinho, a mandíbula ligada ao pescoço e a separação das cabeças), preservando o N32C e as anteriores; sem 16.
+- **No protótipo, aguardando o Jean** (`ferramentas/prototipos/hud/criaturas/hidra_32/LEIA-ME.md`, a folha
+  `reconstrucao.png`): o `hidra-n32d`, com a paleta oliva da referência e os dentes simplificados.
+- **A minha leitura:** segue a referência na composição e na anatomia da principal, e as de trás leem como cabeças; a
+  oliva escura contrasta menos com a carta a 1× que o N32C.
+- **Verificações proporcionais:** o pyflakes dos auxiliares, a sintaxe do roteiro das fotos, a grade igual ao rascunho, as
+  grades e as listas anteriores regravadas iguais, a fonte reaberta (o lado, as camadas na ordem, a guia oculta), 0
+  diferentes na releitura, a exportação igual ao composto, o @2x em blocos inteiros e a foto sem erro no console.
+- **Parado para a avaliação do 32:** sem adaptação para 16; o servo N16B e a produção intactos; nada integrado.
