@@ -2,10 +2,11 @@
 // milharal, pelo cenario_excecoes.py de chefes_e_especiais, que força a sorte e põe o herói no nível 5), com os mesmos
 // dados em cada modo: "atual" (o jogo: o sprite da planta, pela origem), "t" (a transposição de 16 da rodada anterior,
 // no arquivo de 32 que ela teria), "n32" (o estudo nativo de 32) e "n16" (a proposta de 16, no 32 da carta); no refino,
-// "n32r" e "n16r" (o quadro mais perto, o chapéu reto e o rosto afunilado). Os desenhos
+// "n32r" e "n16r" (o quadro mais perto, o chapéu reto e o rosto afunilado); depois, "n16r2" (a passagem local no rosto do
+// N16R). Os desenhos
 // entram na carta com o mesmo elemento que o Icones.criatura(…, 32) monta, trocados só na página. Registra a caixa de
 // cada carta, o tamanho do retrato na tela e no aparelho, e os erros do console.
-//   [MODOS=atual,t,n32,n16,n32r,n16r] PLAYWRIGHT_MODULO=<file:// do index.mjs> node fotografar.mjs <raiz> <pasta das fotos>
+//   [MODOS=atual,t,n32,n16,n32r,n16r,n16r2] PLAYWRIGHT_MODULO=<file:// do index.mjs> node fotografar.mjs <raiz> <pasta das fotos>
 import { spawn } from "child_process";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import path from "path";
@@ -22,10 +23,11 @@ const PARES = {
   n16: ["../proposta/espantalho-n16-32.png", "../proposta/espantalho-n16-32@2x.png"],
   n32r: ["../proposta/espantalho-n32r-32.png", "../proposta/espantalho-n32r-32@2x.png"],
   n16r: ["../proposta/espantalho-n16r-32.png", "../proposta/espantalho-n16r-32@2x.png"],
+  n16r2: ["../proposta/espantalho-n16r2-32.png", "../proposta/espantalho-n16r2-32@2x.png"],
 };
 const TROCA = Object.fromEntries(Object.entries(PARES).map(([m, [a, b]]) => [m, [url64(a), url64(b)]]));
 const TELAS = [{ nome: "100", width: 1920, height: 945, dpr: 1 }];
-const MODOS = (process.env.MODOS || "atual,t,n32,n16,n32r,n16r").split(",");
+const MODOS = (process.env.MODOS || "atual,t,n32,n16,n32r,n16r,n16r2").split(",");
 const AMB = { EVENTO: "espantalho", VEZES: "1" };
 const EXCECOES = path.join(aqui, "../../chefes_e_especiais/auxiliares/cenario_excecoes.py");
 mkdirSync(saida, { recursive: true });

@@ -101,3 +101,33 @@ como estavam (as fontes, as grades, as listas e os PNG conferidos iguais).
   o ponto mais forte do rosto a 3×. O enquadramento mais perto deixou o chapéu menos alto que no N16: ele lê como chapéu
   pela aba e pela faixa, a ponta da copa fica fora.
 - **Na fileira:** o N16R tem o grão dos vizinhos; o N32R, mais fino, destoa como os outros estudos de 32.
+
+# A passagem no rosto: N16R2 (23/10/2026, protótipo; nada no jogo)
+
+**Pedido do Jean:** o chapéu, o enquadramento, a palha e o corpo do N16R funcionam; o rosto não. Os olhos pareciam
+desalinhados por acidente, as brasas liam como pontos numa máscara lisa, e a sombra das órbitas e a costura perderam a
+malícia do N32R. Uma cópia (`espantalho-n16r2`), só no rosto; o N16R fica como estava (a fonte e os PNG conferidos iguais).
+
+- **O que mudou:** só as linhas 7 a 10 (`GRADE_16R2` em `grade.py`), com o N32R como referência de expressão.
+  - **Os olhos na mesma linha.** No 16, uma linha de diferença entre os olhos é metade da altura de uma órbita e lia como
+    erro; a inclinação do rosto continua na aba (um pixel mais baixa à direita), onde ela cabe.
+  - **A sombra oblíqua:** as sobrancelhas descem dos cantos de fora até se encontrar sobre o nariz (a carranca do N32R), e
+    as brasas ficam no canto de dentro de fendas escuras, embaixo dela. A da direita, do lado da sombra, num vermelho mais
+    apagado (`x`, `8a2414`): a perspectiva e a luz, não a simetria de uma máscara.
+  - **As bochechas:** a sombra embaixo dos olhos em marrom, não em preto, e a bochecha direita mais clara, com volume.
+  - **A boca:** a costura quebrada, com o canto direito subindo (o esgar), sobre a estopa.
+- **Na bancada:** com os olhos alinhados e as duas brasas no vermelho vivo, o rosto virou uma caveira simétrica de dois
+  pontos (a própria máscara); com o preto embaixo das brasas, as órbitas viraram buracos de caveira. As duas coisas saíram.
+- **A fonte, pelo Aseprite em lote** (`python auxiliares/exportar.py --montar espantalho-n16r2`; o conector sem editor, a
+  janela aberta do Jean não foi tocada): 0 diferentes na releitura; reaberta com a guia oculta e as camadas na ordem; a
+  exportação igual ao composto; os derivados em blocos inteiros.
+- **A foto** (`MODOS=n16r2`), pelo evento real, a 1920×945, com a mesma caixa da carta do N16R, sem erro no console.
+  **A folha:** `ajuste.png` (o N16R × o N16R2 na mesma luta, o N32R ao lado, a carta a 2×, a fileira com os aprovados e o
+  diagnóstico, com as linhas mudadas marcadas).
+
+## A minha leitura da passagem (quem decide é o Jean)
+
+- **Melhorou:** os olhos leem como intencionais, a carranca dá a ameaça e as brasas ficam dentro da sombra; a costura
+  sobe num esgar; o rosto tem bochechas, não uma placa lisa.
+- **Ainda é limite do 16:** os pontos cruzados da costura do N32R não cabem (a boca é uma linha quebrada), e a brasa do
+  lado aceso, mesmo dentro da fenda, continua o pixel mais forte do rosto a 3×.

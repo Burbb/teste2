@@ -281,3 +281,6 @@ A escolha do par e da direção é do Jean; nada foi começado.
   A primeira construção lia como "um bebê de barba e tapa-olho" (o Jean): a correção veio da anatomia de adulto (o alto da
   cabeça fora do quadro, a testa e a sobrancelha pesadas, o olho fundo, o nariz largo, a pele curtida). Nada integrado.
 - **Integrado na 1.194.0:** o Senhor da Guerra N16, pelo id do guardião (só o 16 e o 32 da carta).
+- **A passagem no rosto do Espantalho (23/10/2026), aguardando o Jean:** o `espantalho-n16r2`, cópia do N16R com só as
+  linhas 7 a 10 mudadas (os olhos alinhados sob a carranca, as brasas contidas, a costura com o esgar); a folha
+  `espantalho_32/ajuste.png`. Nada integrado.

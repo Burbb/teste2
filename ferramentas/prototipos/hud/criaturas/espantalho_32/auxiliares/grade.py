@@ -13,7 +13,8 @@ from PIL import Image
 
 PALETA = {"o": "1a120a", "D": "241c14", "d": "3a3028", "t": "3a2a18", "h": "5a3a22", "H": "7a5232", "j": "9a6a40",
           "J": "b48452", "C": "46361f", "c": "5e4a2c", "B": "8a7044", "b": "b89860", "w": "d8c088", "k": "120c06",
-          "r": "c03020", "R": "f07830", "y": "d8b048", "Y": "a07c30", "g": "5a4c42", "G": "75665a"}
+          "r": "c03020", "R": "f07830", "y": "d8b048", "Y": "a07c30", "g": "5a4c42", "G": "75665a",
+          "x": "8a2414"}
 GRADE_32 = [
     "................ojhoo...........",
     "...............ojHHhhoo.........",
@@ -123,14 +124,28 @@ GRADE_16R = [
     ".yYyhHtHhdYyyo..",
     "yYdYDDhDDDdYdyYd",
 ]
+# A passagem local no rosto do N16R (23/10/2026, o N16R preservado): só as linhas 7 a 10, com o N32R como referência de
+# expressão. Os olhos na mesma linha (no 16 a inclinação fica na aba; a linha de diferença lia como erro), as sobrancelhas
+# descendo até se encontrar sobre o nariz, as brasas no canto de dentro de fendas escuras (a do lado da sombra num vermelho
+# apagado, "x"), a sombra marrom embaixo em vez do preto (o preto fazia órbitas de caveira), as bochechas com volume e o
+# canto da costura subindo.
+GRADE_16R2 = list(GRADE_16R)
+GRADE_16R2[7:11] = [
+    "..otCcBcCtCCo...",
+    "..oCkrttxkCCo...",
+    ".obbcCBcCCcCo...",
+    ".obwbBbCcBtCo...",
+]
 # cada desenho: a grade, o lado e a guia
 DESENHOS = {"espantalho-n32": (GRADE_32, 32, "guias/espantalho-guia-32.png"),
             "espantalho-n16": (GRADE_16, 16, "guias/espantalho-guia-16.png"),
             "espantalho-n32r": (GRADE_32R, 32, "guias/espantalho-r-guia-32.png"),
-            "espantalho-n16r": (GRADE_16R, 16, "guias/espantalho-r-guia-16.png")}
+            "espantalho-n16r": (GRADE_16R, 16, "guias/espantalho-r-guia-16.png"),
+            "espantalho-n16r2": (GRADE_16R2, 16, "guias/espantalho-r-guia-16.png")}
 # onde cada desenho separa a aba, o pescoço e a aba caída (o "t" e os marrons mudam de camada por posição)
 CORTES = {"espantalho-n32": (12, 26, 23), "espantalho-n16": (6, 13, 13),
-          "espantalho-n32r": (12, 27, 99), "espantalho-n16r": (5, 13, 99)}
+          "espantalho-n32r": (12, 27, 99), "espantalho-n16r": (5, 13, 99),
+          "espantalho-n16r2": (5, 13, 99)}
 # as camadas, de baixo para cima (a guia por baixo de tudo)
 ORDEM = ["guia", "casaco", "estopa", "chapeu", "palha", "costura", "olhos", "contorno"]
 
@@ -139,7 +154,7 @@ def camada(x, y, ch, ident):
     aba, pescoco, lado = CORTES[ident]
     if ch == "o":
         return "contorno"
-    if ch in "kRr":
+    if ch in "kRrx":
         return "olhos"
     if ch in "hHjJ":  # o chapéu, ou a corda na gola
         return "palha" if y >= pescoco else "chapeu"

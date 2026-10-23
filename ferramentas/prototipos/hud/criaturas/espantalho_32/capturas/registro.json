@@ -154,5 +154,31 @@
    }
   ],
   "erros": []
+ },
+ "n16r2/100": {
+  "dpr": 1,
+  "cartas": [
+   {
+    "nome": "Espantalho Possuído",
+    "caixa": [
+     830,
+     96,
+     1040,
+     146
+    ],
+    "retrato": {
+     "css": [
+      32,
+      32
+     ],
+     "aparelho": [
+      32,
+      32
+     ],
+     "arquivo": "data:950"
+    }
+   }
+  ],
+  "erros": []
  }
 }

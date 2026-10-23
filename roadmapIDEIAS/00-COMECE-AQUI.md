@@ -6536,3 +6536,21 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   esperavam o Senhor no `humano` passam a esperar o retrato dele; o teste dos guardiões inclui o Senhor.
 - **Verificações sobre o código final:** `unittest` (666, 1 pulado: a fumaça, rodada à parte), o gabarito (idêntico, sem
   atualizar), o pyflakes (só o aviso conhecido) e a fumaça inteira (378 ok, tudo certo).
+
+### 23/10/2026 (data do computador local) — A passagem no rosto do Espantalho: N16R2 (nada no jogo)
+
+- **Estado:** depois da integração do Senhor da Guerra (1.194.0, `d750988a`); só protótipo.
+- **Pedido do Jean:** no N16R, o chapéu, o enquadramento, a palha e o corpo funcionam; o rosto não (os olhos pareciam
+  desalinhados por acidente, as brasas eram pontos numa máscara lisa, a sombra das órbitas e a costura perderam a malícia
+  do N32R). Uma cópia, só no rosto, com o N32R como referência.
+- **No protótipo, aguardando o Jean** (`ferramentas/prototipos/hud/criaturas/espantalho_32/LEIA-ME.md`, a folha
+  `ajuste.png`): o `espantalho-n16r2`, só as linhas 7 a 10 mudadas: os olhos na mesma linha (a inclinação fica na aba), as
+  sobrancelhas se encontrando sobre o nariz, as brasas dentro de fendas (a do lado da sombra mais apagada), a sombra
+  marrom embaixo, as bochechas com volume e o canto da costura subindo. O N16R intacto.
+- **A minha leitura:** os olhos leem como intencionais e a ameaça voltou pela carranca; os pontos da costura não cabem no
+  16, e a brasa do lado aceso ainda é o pixel mais forte a 3×.
+- **Verificações proporcionais (nenhum código do jogo mudou):** o pyflakes dos auxiliares, a sintaxe do roteiro das fotos,
+  as grades e as listas antigas regravadas iguais, a fonte nova reaberta (o lado, as camadas na ordem, a guia oculta), 0
+  diferentes na releitura, a exportação igual ao composto (o N16R reexportado igual), os derivados em blocos inteiros e a
+  foto sem erro no console, com a mesma caixa da carta. As fontes pelo Aseprite em lote.
+- **Parado para a avaliação do Espantalho:** nada integrado, nenhuma criatura nova, o mapa não começado.
