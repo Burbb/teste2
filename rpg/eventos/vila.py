@@ -71,8 +71,8 @@ def ouvir_rumor(g, preferir=None):
         g.ganhar_xp(5)
     elif tipo == "lore":
         a = g.antagonista
-        g.dizer(f"{fonte} conta a velha história de {a['nome']}, {a['origem']}. Dizem que ele ainda sente "
-                f"falta de quem foi.", "amarelo")
+        g.dizer(f"{fonte} conta a velha história de {a['nome']}, {a['origem']}. Dizem que "
+                f"{'ela' if a['g'] == 'f' else 'ele'} ainda sente falta de quem foi.", "amarelo")
         g.ganhar_xp(5)
     else:
         fofoca = g.sortear([

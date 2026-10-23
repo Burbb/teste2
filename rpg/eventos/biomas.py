@@ -333,10 +333,11 @@ def sussurros_na_nevoa(g):
 @evento(peso=10, cooldown=6, cond=_bioma("cidadela"))
 def eco_do_vazio(g):
     a = g.antagonista
-    g.dizer(f"As paredes mostram cenas como janelas: {a['curto']} jovem, sorrindo; depois ajoelhado diante da "
-            f"Fenda; depois algo que não é mais gente.", "magenta")
+    f = a["g"] == "f"
+    g.dizer(f"As paredes mostram cenas como janelas: {a['curto']} jovem, sorrindo; depois "
+            f"{'ajoelhada' if f else 'ajoelhado'} diante da Fenda; depois algo que não é mais gente.", "magenta")
     if g.teste("vontade", 14):
-        g.dizer("Você entende algo sobre seu inimigo. Isso te deixa mais forte.", "verde")
+        g.dizer(f"Você entende algo sobre {'sua inimiga' if f else 'seu inimigo'}. Isso te deixa mais forte.", "verde")
         g.ganhar_xp(30)
     else:
         g.ferir(g.j.max_hp * 0.15, " com a angústia")

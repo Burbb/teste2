@@ -454,12 +454,17 @@ ANTAGONISTAS = [
     ("Arcebispo Profanado", "m"), ("Mãe das Ninhadas", "f"), ("Arauto do Vazio", "m"),
     ("Noiva da Peste", "f"), ("Rei Enforcado", "m"),
 ]
+# Cada origem nas duas formas, (masculina, feminina), escolhida pelo gênero do título: o sorteio é de uma origem só,
+# na mesma lista de sempre, e a forma vem depois (1.199.2).
 ORIGENS_ANTAGONISTA = [
-    "que um dia foi um herói como você, até cravar uma pedra do Inferno na própria testa para aprisionar um demônio — e perder",
-    "que vendeu a cidade inteira ao Vazio em troca de não morrer, e cumpriu o contrato rua por rua",
-    "nascido do último suspiro de um deus que os homens deixaram de adorar",
-    "o bispo que abriu as catacumbas da catedral procurando Deus e encontrou outra coisa",
-    "que abriu a Fenda há cem anos e agora quer atravessá-la por completo, arrastando o mundo junto",
+    ("que um dia foi um herói como você, até cravar uma pedra do Inferno na própria testa para aprisionar um demônio — e perder",
+     "que um dia foi uma heroína como você, até cravar uma pedra do Inferno na própria testa para aprisionar um demônio — e perder"),
+    ("que vendeu a cidade inteira ao Vazio em troca de não morrer, e cumpriu o contrato rua por rua",) * 2,
+    ("nascido do último suspiro de um deus que os homens deixaram de adorar",
+     "nascida do último suspiro de um deus que os homens deixaram de adorar"),
+    ("o bispo que abriu as catacumbas da catedral procurando Deus e encontrou outra coisa",
+     "a bispa que abriu as catacumbas da catedral procurando Deus e encontrou outra coisa"),
+    ("que abriu a Fenda há cem anos e agora quer atravessá-la por completo, arrastando o mundo junto",) * 2,
 ]
 NOMES_CIDADELA = ["Torre Negra", "Cidadela Partida", "Trono do Vazio", "Bastião das Cinzas", "Coroa de Obsidiana"]
 

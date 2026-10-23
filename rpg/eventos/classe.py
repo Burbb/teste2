@@ -142,7 +142,9 @@ def veterano_cicatrizes(g):
         g.bonus_permanente("defesa", 1)
         g.j.recalcular()
     elif op == "ouvir":
-        g.dizer(f"Ele fala sobre {g.antagonista['curto']} como quem fala de um velho conhecido.", "cinza")
+        a = g.antagonista  # "Ele" é o veterano; o "conhecido" é o antagonista, no gênero do título
+        g.dizer(f"Ele fala sobre {a['curto']} como quem fala de "
+                f"{'uma velha conhecida' if a['g'] == 'f' else 'um velho conhecido'}.", "cinza")
         g.ganhar_xp(15 + 3 * g.j.nivel)
 
 

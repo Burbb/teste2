@@ -229,7 +229,7 @@ def gerar_mundo(rng):
         "nome": f"{tx.nome_proprio(rng, 3)}, {titulo}",
         "curto": titulo,
         "g": g,
-        "origem": rng.choice(ORIGENS_ANTAGONISTA),
+        "origem": rng.choice(ORIGENS_ANTAGONISTA)[1 if g == "f" else 0],  # a forma que concorda com o título
     }
     return {"locais": locais, "antagonista": antagonista, "atual": 0}
 
