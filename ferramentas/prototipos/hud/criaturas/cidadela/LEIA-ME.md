@@ -340,3 +340,22 @@ como histórico; a Abominação C3 continua aceita visualmente e intacta, fora d
   pelo `auxiliares/cenario_guarda.py`, que o cria como `chefes.py`); o Bestiário com a faixa do mestre caçador; o cartaz
   do mural e o rastreador do contrato. Todos com `retrato-cavaleiro-sombrio-32/48`, nenhum pedido a `ferramentas/`, sem
   erro no console. A folha `../integracoes-22-10/integracoes-1187.png`.
+
+# A integração da Abominação (1.188.0): a C3
+
+**Decisão do Jean:** a C3 aprovada para integração, sem retoques. A, B, C, C2, D e E ficam como histórico; o Cavaleiro
+P3b da 1.187.0 fica como está.
+
+- **A fonte:** `fontes/abominacao-c3/abominacao-c3-16.aseprite` (sem alteração desde o `961e574a`), copiada byte a byte
+  para `ferramentas/arte/aseprite/retrato-abominacao/retrato-abominacao-16.aseprite` (camadas carne, boca, dentes,
+  olhos); o 32 e o 48 em `DERIVADOS` (`exportar_aseprite.py`), com os @2x.
+- **Antes de gravar no jogo:** exportados numa pasta temporária e comparados com a proposta (`proposta/abominacao-c3-*`):
+  os seis iguais byte a byte. Depois, o `--conferir`: tudo igual ao jogo, o 32 e o 48 em blocos inteiros do 16.
+- **No jogo:** pela família (`RETRATO_FAMILIA`; o papel `CRIATURA` em `icones.js`), com os afixos (o afixo corrompido
+  também: a família vem antes dos traços). O sprite `corrompido` não perde uso: fica para quem tiver o traço sem retrato
+  próprio (o afixo corrompido na Árvore Desperta, no golem e nos guardiões que seguem pelos traços); nenhuma regra nem
+  atributo mudou.
+- **Conferido com os arquivos de produção** (`auxiliares/fotografar_jogo_abominacao.mjs`, `capturas-1188/`, a 1920×945,
+  nada trocado na página): a abominação na luta com o troll, o carniçal e o cavaleiro; o Bestiário com a faixa do mestre
+  caçador; o cartaz e o rastreador. Todos com `retrato-abominacao-32/48`, nenhum pedido a `ferramentas/`, sem erro no
+  console. A folha `../integracoes-22-10/integracoes-1188.png`.

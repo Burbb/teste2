@@ -216,6 +216,22 @@ class TestRetratos(unittest.TestCase):
                 self.assertTrue((ESTATICO / f"hud/icones/retrato-cavaleiro-sombrio-{lado}{sufixo}.png").exists(),
                                 (lado, sufixo))
 
+    def test_abominacao_pela_familia(self):
+        # 1.188.0: a abominação pela família, com os afixos; o sprite "corrompido" continua para quem tem o traço sem
+        # retrato próprio (o afixo corrompido numa família ainda sem retrato, como a Árvore Desperta)
+        import random
+        from rpg.inimigos import criar
+        for afixo in (None, "feroz", "corrompido"):
+            e = criar(random.Random(13), "abominacao", 6, afixo)
+            self.assertEqual(retrato(e.tracos, e.familia, e.chave), "abominacao", afixo)
+        arvore = criar(random.Random(14), "ent_jovem", 3, "corrompido")
+        self.assertEqual(retrato(arvore.tracos, arvore.familia, arvore.chave), "corrompido")
+        icones = (ESTATICO / "icones.js").read_text(encoding="utf-8")
+        self.assertIn('abominacao: "retrato-abominacao"', icones)
+        for lado in (16, 32, 48):
+            for sufixo in ("", "@2x"):
+                self.assertTrue((ESTATICO / f"hud/icones/retrato-abominacao-{lado}{sufixo}.png").exists(), (lado, sufixo))
+
     def test_troll_pela_familia_e_o_rei_pelo_guardiao(self):
         # o troll da montanha pela família (1.166.0); o Rei Troll pelo id do guardião (1.167.0), em qualquer lugar
         self.assertEqual(retrato(FAMILIAS["troll"]["tracos"], "troll"), "troll")

@@ -6205,3 +6205,20 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   sem atualizar), o pyflakes (só o aviso conhecido) e a fumaça inteira (378 ok, tudo certo; o código não mudou depois
   dela, só os PNGs do retrato).
 - **Continua:** a integração da Abominação C3, quando o Jean pedir; outras criaturas, chefes e o mapa não foram começados.
+
+### 22/10/2026 (data do computador local) — A Abominação no jogo (1.188.0): a C3, pela família
+
+- **Estado conferido:** a branch em `85cd419e`, igual ao remoto, sem alterações locais; produção na 1.187.0.
+- **Decisão do Jean:** a C3 aprovada para integração, sem retoques; o Cavaleiro P3b da 1.187.0 encerrado.
+- **No jogo (1.188.0):** `retrato-abominacao` (16, 32, 48 e os @2x) pela família `abominacao`, com os afixos. O sprite
+  `corrompido` continua para quem só tiver o traço; nenhuma regra nem atributo mudou.
+- **A fonte:** a da C3, copiada byte a byte para `ferramentas/arte/aseprite/retrato-abominacao/`; o 32 e o 48 em
+  `DERIVADOS`. Exportados numa pasta temporária e iguais byte a byte à proposta antes de gravar; `--conferir`: tudo igual.
+- **Conferido com os arquivos de produção** (`criaturas/cidadela/capturas-1188/`): a luta, o Bestiário com a faixa do
+  mestre caçador, o cartaz e o rastreador; sem erro no console, nenhum pedido a `ferramentas/`. A folha
+  `ferramentas/prototipos/hud/integracoes-22-10/integracoes-1188.png`.
+- **Testes:** a abominação pela família, com os afixos (o corrompido também); a Árvore Desperta corrompida continua no
+  sprite `corrompido`.
+- **Verificações sobre o código final:** `unittest` (659, 1 pulado: a fumaça, rodada à parte), o gabarito (idêntico,
+  sem atualizar), o pyflakes (só o aviso conhecido) e a fumaça inteira (378 ok, tudo certo).
+- **Continua:** as propostas da Árvore Desperta e do golem de pedra (em seguida, num commit separado).

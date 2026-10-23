@@ -1,0 +1,34 @@
+{
+ "luta-abominacao": {
+  "arquivos": [
+   "Abominação: http://127.0.0.1:63222/static/hud/icones/retrato-abominacao-32.png",
+   "Carniçal: http://127.0.0.1:63222/static/hud/icones/retrato-carnical-32.png",
+   "Troll da montanha: http://127.0.0.1:63222/static/hud/icones/retrato-troll-32.png",
+   "Cavaleiro sombrio: http://127.0.0.1:63222/static/hud/icones/retrato-cavaleiro-sombrio-32.png"
+  ],
+  "erros": [],
+  "ferramentas": []
+ },
+ "bestiario": {
+  "arquivos": [
+   "Abominação: http://127.0.0.1:63337/static/hud/icones/retrato-abominacao-48.png",
+   "Afogado: http://127.0.0.1:63337/static/hud/icones/retrato-afogado-48.png",
+   "Carniçal: http://127.0.0.1:63337/static/hud/icones/retrato-carnical-48.png",
+   "Cavaleiro sombrio: http://127.0.0.1:63337/static/hud/icones/retrato-cavaleiro-sombrio-48.png",
+   "Cria do Vazio: http://127.0.0.1:63337/static/hud/icones/retrato-cria-vazio-48.png",
+   "Troll da montanha: http://127.0.0.1:63337/static/hud/icones/retrato-troll-48.png"
+  ],
+  "erros": [],
+  "ferramentas": []
+ },
+ "contratos": {
+  "arquivos": [
+   "contrato tipo-caca: http://127.0.0.1:63461/static/hud/icones/retrato-cao-infernal-48.png 48",
+   "contrato tipo-caca: http://127.0.0.1:63461/static/hud/icones/retrato-carnical-48.png 48",
+   "contrato tipo-caca ativo: http://127.0.0.1:63461/static/hud/icones/retrato-abominacao-48.png 48",
+   "painel m-painel: http://127.0.0.1:63461/static/hud/icones/retrato-abominacao-32.png 32"
+  ],
+  "erros": [],
+  "ferramentas": []
+ }
+}

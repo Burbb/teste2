@@ -222,3 +222,4 @@ A escolha do par e da direção é do Jean; nada foi começado.
   autorizado para integração; a Abominação C3 aceita visualmente.
 - **Integrado na 1.187.0:** o Cavaleiro Sombrio P3, pela família, com o Último Guarda (os outros Cavaleiros como
   histórico). A Abominação C3, aceita visualmente, continua fora do jogo.
+- **Integrada na 1.188.0:** a Abominação C3, pela família, com os afixos (as outras como histórico).

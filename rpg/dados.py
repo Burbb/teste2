@@ -164,7 +164,8 @@ RETRATOS = ("demonio", "etereo", "corrompido", "morto-vivo", "construto", "voado
 # Cães de Ferro, e o lobo gélido; 1.182.0: o caído, com os que o xamã ergue, que são o mesmo caído; o xamã caído, de
 # família própria, e o cão infernal continuam no "demonio"; 1.183.0: o grifo; 1.184.0: a harpia e o xamã caído; 1.185.0: a cria
 # do Vazio, com as que o antagonista invoca, que são da família; 1.186.0: o cão infernal; 1.187.0: o cavaleiro sombrio,
-# com o Último Guarda, que é da família; o Dragão de Gelo continua no "voador" e o antagonista no "humano"). Quem não está aqui segue pelos traços: o animal do herói e as outras feras continuam
+# com o Último Guarda, que é da família; 1.188.0: a abominação; o "corrompido" fica para quem tiver o traço sem retrato
+# próprio; o Dragão de Gelo continua no "voador" e o antagonista no "humano"). Quem não está aqui segue pelos traços: o animal do herói e as outras feras continuam
 # no "fera", os outros humanos (o Senhor da Guerra, o antagonista) no "humano". O guardião pelo id do catálogo (1.167.0: o Rei
 # Troll; 1.168.0: a Rainha Aracnídea; a chave de um guardião muda com o lugar), depois da chave; os outros guardiões
 # continuam pelos traços, e as aranhas que a Rainha invoca têm a família "aranha" (o retrato da Aranha gigante).
@@ -176,7 +177,7 @@ RETRATO_FAMILIA = {"afogado": "afogado", "lobo": "lobo", "bandido": "bandido", "
                    "esqueleto": "esqueleto", "mercenario": "mercenario", "lobo_gelido": "lobo_gelido",
                    "caido": "caido", "grifo": "grifo", "harpia": "harpia", "xama_caido": "xama_caido",
                    "cria_vazio": "cria_vazio", "cao_infernal": "cao_infernal",
-                   "cavaleiro_sombrio": "cavaleiro_sombrio"}
+                   "cavaleiro_sombrio": "cavaleiro_sombrio", "abominacao": "abominacao"}
 
 
 def retrato(tracos, familia=None, chave=None, guardiao=None):
