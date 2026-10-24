@@ -344,3 +344,13 @@ Os botões mais diretos: `DANO_HEROI` e `DANO_INIMIGOS` (todo golpe, físico e m
 
 Nenhuma especialização deve ficar muito longe da média: hoje o Paladino é a mais tolerante e Sombra, Piromante
 e Necromante as mais duras (veja o ROADMAP).
+
+## Uma especialização nova: a identidade da festa
+
+A festa de tornar-se uma especialização (`rpg/web/static/celebracoes/`) escolhe a identidade visual pelo id da
+especialização (`SPECS`), que `Progressao.especializar` manda na festa. Para uma especialização nova, acrescente a
+chave dela em `CHAVE` e `PAL` de `especializacoes.js` e um conceito em `POR_CHAVE` (o que acontece em volta do nome:
+`quadro`, `desenhar`, `parado`, a classe CSS do nome); sem isso, a festa usa o arcano de sempre. O nome fica parado e
+legível; os efeitos, em volta, num poço escuro; o movimento reduzido precisa de um quadro parado próprio. Fotografe
+nas duas apresentações (Estouro e Relicário) com `ferramentas/prototipos/hud/celebracoes/auxiliares/fotografar.mjs`
+(`APRESENTACAO=relicario`) antes de propor.

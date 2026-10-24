@@ -48,13 +48,7 @@
 .festa .ganho { display: inline-flex; align-items: center; gap: 6px; font-family: var(--num); font-size: 25px; padding: 3px 10px 3px 6px; background: #120e0b; border: 3px solid #3d6a2a; color: var(--bom); box-shadow: 3px 3px 0 #000; opacity: 0; animation: surgir 0.3s cubic-bezier(.2,.8,.3,1.2) forwards; }
 .festa .ganho img.sprite { --s: 32; }
 .festa .ganho.ouro { border-color: #8a6a14; color: var(--ouro); }
-.festa .habilidade-nova { margin-top: 10px; padding: 8px 12px; background: #120e0b; border: 3px solid #5a3a8a; text-align: left; opacity: 0; animation: surgir 0.3s cubic-bezier(.2,.8,.3,1.2) forwards; }
-.festa .habilidade-nova b { font-family: var(--titulo); font-size: calc(var(--px) * 32); font-weight: 400; color: var(--arcano); display: block; line-height: 1; }
 .festa .retrato-festa { width: 112px; height: 112px; margin: 0 auto 10px; background: #0d0b0a; border: 4px solid #1f5f63; display: grid; place-items: center; }
-.festa .losangos { display: flex; justify-content: center; gap: 22px; margin: 16px 0 4px; }
-.festa .losangos i { width: 34px; height: 34px; border: 4px solid #4a4038; transform: rotate(45deg); background: #1b1511; }
-.festa .losangos i.tem { background: var(--ouro); border-color: #fff3a0; box-shadow: 0 0 0 3px #8a6a14; }
-.festa .losangos i.novo { animation: aprendeu 0.9s steps(6) 0.4s both; }
 .festa .dica { margin-top: 12px; font-size: 13px; color: var(--tinta-3); }
 .festa .continuar { margin-top: 14px; }
 .particula { position: fixed; width: 6px; height: 6px; pointer-events: none; z-index: 41; animation: explodir 1.2s cubic-bezier(.15,.7,.3,1) forwards; }
@@ -103,25 +97,8 @@ body.derrotado #predios { visibility: hidden; }
 @keyframes festa-entra { from { transform: scale(0.75); opacity: 0; } to { transform: none; opacity: 1; } }
 .festa .grande { animation: pulsar-suave 2.4s ease-in-out infinite; }
 @keyframes pulsar-suave { 50% { text-shadow: 4px 4px 0 #000, 0 0 46px rgba(242, 201, 76, 0.85); } }
-.festa-nivel { overflow: hidden; isolation: isolate; }
-.festa-nivel .raios { position: absolute; left: 50%; top: 32%; width: 900px; height: 900px; margin: -450px 0 0 -450px; z-index: -1; pointer-events: none;
-  background: repeating-conic-gradient(rgba(242, 201, 76, 0.13) 0 7deg, transparent 7deg 18deg);
-  -webkit-mask-image: radial-gradient(circle, #000 0, transparent 62%); mask-image: radial-gradient(circle, #000 0, transparent 62%);
-  animation: raios-girando 18s linear infinite, raios-entram 0.9s ease-out both; }
-@keyframes raios-girando { to { rotate: 360deg; } }
-@keyframes raios-entram { from { opacity: 0; scale: 0.4; } }
-.festa-nivel .anel { position: absolute; left: 50%; top: 32%; width: 40px; height: 40px; margin: -20px 0 0 -20px; z-index: -1; border-radius: 50%; pointer-events: none;
-  border: 4px solid rgba(255, 243, 160, 0.9); box-shadow: 0 0 30px rgba(242, 201, 76, 0.8); animation: anel-expande 0.9s cubic-bezier(.1, .7, .3, 1) 0.15s both; }
-@keyframes anel-expande { from { transform: scale(0.2); opacity: 1; } to { transform: scale(14); opacity: 0; } }
-.festa-nivel .nivel-bloco { display: flex; align-items: baseline; justify-content: center; gap: 18px; margin: 4px 0 2px; }
-.festa-nivel .nivel-palavra { font-family: var(--titulo); font-size: calc(var(--px) * 64); color: #e8dcc0; text-shadow: 3px 3px 0 #000; opacity: 0; animation: surgir-suave 0.35s ease-out 0.1s forwards; }
-.festa-nivel .nivel-numero { font-family: var(--num); font-size: 128px; line-height: 0.85; color: var(--ouro);
-  text-shadow: 5px 5px 0 #000, 0 0 40px rgba(242, 201, 76, 0.75); animation: numero-bate 0.55s cubic-bezier(.2, 1.6, .4, 1) 0.2s both, pulsar-suave 2.4s ease-in-out 1s infinite; }
-@keyframes numero-bate { 0% { transform: scale(2.6); opacity: 0; filter: brightness(3); } 60% { opacity: 1; } 100% { transform: none; filter: none; } }
-@keyframes surgir-suave { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
-.festa .ganho, .festa .habilidade-nova { animation: ganho-pula 0.38s cubic-bezier(.2, 1.4, .4, 1) forwards; }
+.festa .ganho { animation: ganho-pula 0.38s cubic-bezier(.2, 1.4, .4, 1) forwards; }
 @keyframes ganho-pula { from { opacity: 0; transform: translateY(10px) scale(0.85); } to { opacity: 1; transform: none; } }
-.festa .ganho b.conta { font-weight: normal; margin-right: 6px; }
 
 /* ------------------------------------------------------------------ Grimório: um livro aberto */
 .grimorio-livro { position: relative; display: grid; grid-template-columns: 1fr 1.25fr; width: min(1020px, 94vw); height: min(640px, 88vh);
@@ -215,8 +192,6 @@ body.derrotado #predios { visibility: hidden; }
 .janela-achado .tela.achado { margin: 0; }
 .janela-achado .achado-acoes { margin-top: 16px; min-height: 34px; }  /* o lugar dos botões já reservado: a janela não cresce quando eles chegam */
 .janela-achado .botao-janela.reserva { visibility: hidden; pointer-events: none; }  /* os rótulos guardando o lugar (achado.js) */
-/* Primeiro o achado sozinho (achado.js): o que você usa e os botões esperam, já no lugar, sem ocupar a vista. */
-.janela-achado.so-o-achado .achado-cartao.atual, .janela-achado.so-o-achado .achado-acoes { visibility: hidden; animation: none; }
 .janela-achado .achado-acoes { animation: achado-botoes .3s .35s ease-out both; }
 @keyframes achado-botoes { 0% { transform: translateY(6px); opacity: 0; } 100% { transform: none; opacity: 1; } }
 .festa-amanhecer { margin-top: 24vh; width: min(560px, 92vw); padding: 16px 28px 18px; background: rgba(18, 13, 9, 0.92); border: 3px solid #5a4630; box-shadow: 4px 4px 0 #000; }

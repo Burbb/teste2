@@ -46,8 +46,8 @@ class Progressao:
         ganhos = {NOMES_STATS.get(k, k) if k != "max_rec" else j.nome_recurso: getattr(j, k) - v
                   for k, v in antes.items() if getattr(j, k) > v}
         self.ui.celebrar("nivel", {"nivel": j.nivel, "ganhos": ganhos, "pontos": j.pontos_talento,
-                                   "habilidades": [{"nome": HABILIDADES[h]["nome"], "desc": HABILIDADES[h]["desc"]}
-                                                   for h in novas],
+                                   "habilidades": [{"nome": HABILIDADES[h]["nome"], "desc": HABILIDADES[h]["desc"],
+                                                    "icone": HABILIDADES[h]["icone"]} for h in novas],
                                    "especializacao": j.nivel >= bal.NIVEL_ESPECIALIZACAO and not j.spec})
         if j.nivel >= bal.NIVEL_ESPECIALIZACAO and not j.spec and f"encruzilhada_{j.classe}" not in self.forcados:
             self.forcados.append(f"encruzilhada_{j.classe}")
@@ -141,9 +141,10 @@ class Progressao:
             self.ui.titulo(f"VOCÊ AGORA É {SPECS[spec]['nome'].upper()}", "magenta+negrito")
             self.dizer(SPECS[spec]["desc"], "magenta")
         novas = self._aprender_habilidades(anunciar=not festa)
-        self.ui.celebrar("spec", {"nome": SPECS[spec]["nome"], "desc": SPECS[spec]["desc"],
-                                  "habilidades": [{"nome": HABILIDADES[h]["nome"], "desc": HABILIDADES[h]["desc"]}
-                                                  for h in novas]})
+        # o id da especialização: a tela escolhe a identidade visual da festa por ele, não pelo nome exibido
+        self.ui.celebrar("spec", {"id": spec, "nome": SPECS[spec]["nome"], "desc": SPECS[spec]["desc"],
+                                  "habilidades": [{"nome": HABILIDADES[h]["nome"], "desc": HABILIDADES[h]["desc"],
+                                                   "icone": HABILIDADES[h]["icone"]} for h in novas]})
         if SPECS[spec].get("reage"):
             comitiva.reagir(self, *SPECS[spec]["reage"], forca=1.5)
         if SPECS[spec].get("companheiro"):

@@ -1266,7 +1266,7 @@ async function cenarioBroquel(browser) {
     conferir(cartoes.length === 2 && /Reforçar/.test(cartoes[0]) && /broquel que trouxeram da capela/.test(cartoes[1]),
       "save que já venceu o ossuário: a forja mostra o reforço e o broquel, um cartão cada");
     await page.click('.balcao-predio .servico:has-text("broquel")');
-    const achado = await esperar(".achado-cartao", 15000);
+    const achado = await esperar("#sobre-achado .tela.achado", 15000);  // o cartão e a ficha (1.201.0: a ficha fica ao lado do cartão)
     await page.waitForTimeout(1200);
     const texto = await achado.evaluate((x) => x.textContent);
     conferir(/Revide: com o escudo erguido/.test(texto) && /▲ Revide/.test(texto),
@@ -1854,9 +1854,11 @@ async function cenarioAneis(browser) {
       const info = await page.evaluate(() => {
         const j = document.querySelector(".janela-achado").getBoundingClientRect();
         return { botoes: [...document.querySelectorAll("#sobre-achado .achado-acoes button")].map((b) => b.textContent.replace(/^\d/, "")),
-          selos: [...document.querySelectorAll(".achado-aneis .achado-selo")].map((s) => s.textContent),
-          trocas: [...document.querySelectorAll(".achado-cartao.novo .comparacao.por-espaco .troca small")].map((s) => s.textContent),
-          novo: document.querySelector(".achado-cartao.novo").textContent,
+          // 1.201.0: cada espaço de anel é um cartão "você usa" ao lado da ficha, com a troca dele (ou "vazio", sem troca)
+          selos: [...document.querySelectorAll("#sobre-achado .achado-cartao.atual[data-espaco] .achado-selo")].map((s) => s.textContent),
+          trocas: [...document.querySelectorAll("#sobre-achado .achado-cartao.atual[data-espaco]")].filter((c) => c.querySelector(".ficha-troca"))
+            .map((c) => c.querySelector(".achado-selo").textContent),
+          novo: document.querySelector("#sobre-achado .tela.achado").textContent,
           cabe: j.top >= 0 && j.bottom <= innerHeight, eq: { ...App.estado.heroi.equip } };
       });
       const n1 = info.eq.anel1.nome.replace(/^★ /, "").replace(/ \(Anel\)$/, "");
@@ -1864,12 +1866,12 @@ async function cenarioAneis(browser) {
         const n2 = info.eq.anel2.nome.replace(/ \(Anel\)$/, "");
         conferir(info.botoes[0] === `Substituir ${n1} (Anel 1)` && info.botoes[1] === `Substituir ${n2} (Anel 2)`,
           "dois anéis: um botão por espaço, com o anel que sai e o espaço");
-        conferir(info.selos.join("|") === "Anel 1 · você usa|Anel 2 · você usa" && info.trocas.length === 2 && info.trocas[1].startsWith("Anel 2 · no lugar de"),
+        conferir(info.selos.join("|") === "Anel 1 · você usa|Anel 2 · você usa" && info.trocas.length === 2 && info.trocas[1].startsWith("Anel 2"),
           "a comparação mostra a troca com cada anel, pelo nome do espaço");
       } else {
         // a comparação só com o anel vestido: o espaço vazio já está no cartão ao lado (1.174.2, sem o "tudo é ganho")
         conferir(info.botoes[1] === "Equipar no Anel 2 (vazio)" && info.selos[1] === "Anel 2 · vazio"
-          && info.trocas.length === 1 && info.trocas[0].startsWith("Anel 1 · no lugar de") && !/tudo é ganho/.test(info.novo),
+          && info.trocas.length === 1 && info.trocas[0].startsWith("Anel 1") && !/tudo é ganho/.test(info.novo),
           "um espaço vazio: o botão e o cartão dizem que ele está vazio; a comparação, só com o anel do Anel 1");
         // a dica da mochila e do mercado (o mesmo htmlItem) também sem a linha do espaço vazio, no anel e num espaço único
         const dica = await page.evaluate(() => {

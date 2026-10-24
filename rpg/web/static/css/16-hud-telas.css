@@ -133,6 +133,6 @@
 :root body .cc-retrato { border: 1px solid var(--aresta); background: #0b0c0e; }
 :root body .toast { border-width: 1px; border-radius: 2px; background: rgba(12, 13, 15, 0.96); box-shadow: 0 1px 0 #000, 0 8px 20px rgba(0, 0, 0, 0.6); }
 /* as linhas das janelas de fim de luta e do amanhecer: aresta fina de ferro (as de cor continuam a cor delas) */
-:root body :is(.noite-item, .achado-espolio, .festa .ganho, .festa .habilidade-nova, .espolio-linha, .espolio-contrato) {
+:root body :is(.noite-item, .achado-espolio, .festa .ganho, .espolio-linha, .espolio-contrato) {
   border-width: 1px; border-radius: 2px; background: rgba(0, 0, 0, 0.3); }
 :root body :is(.noite-item, .achado-espolio, .espolio-linha, .espolio-contrato):not(.bom):not(.aviso):not(.perigo):not(.feito):not([class*="rar-"]) { border-color: var(--aresta); }

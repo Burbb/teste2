@@ -106,24 +106,6 @@
     setTimeout(() => f.remove(), 4000);
   }
 
-  /** Mostra a celebração. Devolve uma Promise que resolve quando o jogador fecha (ou na hora, se rápida). */
-  /** Os ganhos do nível contam de 0 até o valor, cada um com um tique. */
-  function contarGanhos(caixa) {
-    caixa.querySelectorAll(".conta").forEach((b) => {
-      const alvo = Number(b.dataset.alvo), atraso = Number(b.dataset.atraso);
-      setTimeout(() => {
-        App.som("tique");
-        const inicio = performance.now(), dur = 320;
-        const passo = (agora) => {
-          const t = Math.min(1, (agora - inicio) / dur);
-          b.textContent = "+" + Math.round(alvo * (1 - Math.pow(1 - t, 3)));
-          if (t < 1) requestAnimationFrame(passo);
-        };
-        requestAnimationFrame(passo);
-      }, atraso);
-    });
-  }
-
   /** O ícone de um item voando de um ponto da tela até um elemento (o espaço do corpo, a mochila), num arco. */
   function voarIcone(item, origem, alvo) {
     const r = alvo.getBoundingClientRect();
@@ -280,52 +262,8 @@
     if (m.tipo === "espolio") return instantaneo ? Promise.resolve() : Sensacao.espolio(caixa, d);
     if (m.tipo === "atributo") return instantaneo ? Promise.resolve() : seloAtributo(d);
     if (m.tipo === "chegada") return instantaneo ? Promise.resolve() : chegada(d);
-    let html = "", festa = null;
-    if (m.tipo === "nivel") {
-      const icones = { Vida: "coracao", Ataque: "espada", Defesa: "escudo", Agilidade: "folha", Poder: "chama", Mana: "pocao_azul", Vigor: "chama", Foco: "olho" };
-      const ganhos = Object.entries(d.ganhos).map(([k, v], i) => `<span class="ganho" style="animation-delay:${0.75 + i * 0.12}s">${S(icones[k] || "estrela", 1)}<b class="conta" data-alvo="${v}" data-atraso="${750 + i * 120}">+0</b>${h(k)}</span>`).join("");
-      const atraso = 0.75 + Object.keys(d.ganhos).length * 0.12;
-      const habs = d.habilidades.map((x, i) => `<div class="habilidade-nova" style="animation-delay:${atraso + 0.35 + i * 0.2}s"><span class="rotulo-festa">nova habilidade</span><b>${h(x.nome)}</b>${Realce.texto(x.desc)}</div>`).join("");
-      html = `<div class="festa festa-nivel m-janela"><div class="raios"></div><div class="anel"></div>
-        <div class="rotulo-festa">você subiu de nível</div>
-        <div class="nivel-bloco"><span class="nivel-palavra">Nível</span><span class="nivel-numero">${d.nivel}</span></div>
-        <div class="lista">${ganhos}<span class="ganho ouro" style="animation-delay:${atraso + 0.08}s">${S("estrela", 1)}+1 ponto de talento</span></div>${habs}
-        ${d.especializacao ? '<div class="texto-festa" style="color:var(--arcano)">Uma encruzilhada se aproxima: em breve você escolherá sua especialização.</div>' : ""}
-        <button class="continuar" type="button">Continuar <span>▸</span></button></div>`;
-      festa = () => { App.som("subir"); particulas(["#f2c94c", "#fff3a0", "#ff9d4d", "#8fbf6a"], 90); setTimeout(() => contarGanhos(caixa), 0); };
-    } else if (m.tipo === "sigilo") {
-      const los = [0, 1, 2].map((i) => `<i class="${i < d.sigilos ? "tem" : ""}${i === d.sigilos - 1 ? " novo" : ""}"></i>`).join("");
-      html = `<div class="festa m-janela"><div class="rotulo-festa">${h(d.guardiao)} caiu</div><div class="grande">Sigilo ${d.sigilos}/3</div>
-        <div class="losangos">${los}</div><div class="texto-festa">Uma runa ardente se grava na sua mão.</div>
-        <div class="lista"><span class="ganho ouro">${S("estrela", 1)}+1 ponto de talento</span></div>
-        <button class="continuar" type="button">Continuar <span>▸</span></button></div>`;
-      festa = () => { App.som("fanfarra"); particulas(["#f2c94c", "#ff4020", "#fff3a0"], 110); };
-    } else if (m.tipo === "spec") {
-      const habs = d.habilidades.map((x, i) => `<div class="habilidade-nova" style="animation-delay:${0.6 + i * 0.25}s"><span class="rotulo-festa">nova habilidade</span><b>${h(x.nome)}</b>${Realce.texto(x.desc)}</div>`).join("");
-      html = `<div class="festa m-janela"><div class="rotulo-festa">você agora é</div><div class="grande arcano">${h(d.nome)}</div>
-        <div class="texto-festa">${h(d.desc)}</div>${habs}<button class="continuar" type="button">Continuar <span>▸</span></button></div>`;
-      festa = () => { App.som("fanfarra"); particulas(["#b49cff", "#c8b0ff", "#ffffff"], 90); };
-    } else {
-      return Promise.resolve();
-    }
-    // Sem cerimônia (refazendo a página ou no texto instantâneo), a festa não aparece: nem a janela, nem o som e o estouro
-    // de partículas dela. Antes eles saíam assim mesmo, e a página refeita soltava um estouro por nível ganho de uma vez.
-    if (instantaneo) return Promise.resolve();
-    caixa.innerHTML = html;
-    caixa.hidden = false;
-    if (festa) festa();
-    return new Promise((resolver) => {
-      const fechar = () => {
-        caixa.hidden = true; caixa.innerHTML = "";
-        document.removeEventListener("keydown", tecla, true);
-        resolver();
-      };
-      const tecla = (ev) => {
-        if ([" ", "Enter", "Escape"].includes(ev.key)) { ev.preventDefault(); ev.stopPropagation(); fechar(); }
-      };
-      setTimeout(() => document.addEventListener("keydown", tecla, true), 600);
-      caixa.querySelector(".continuar").addEventListener("click", (ev) => { ev.stopPropagation(); fechar(); });
-    });
+    // O nível, o Sigilo e a especialização: a festa da apresentação (celebracoes/festa.js; Estouro, ou Relicário)
+    return Festa.celebrar(m, caixa, instantaneo);
   }
 
   /** Contratos cumpridos: os cartazes chegam, o carimbo bate em cada um, o total aparece, e "Receber" faz as

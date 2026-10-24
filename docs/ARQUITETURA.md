@@ -224,6 +224,19 @@ id, `ficha_guardiao`; os contratos por `contratos.desc_caca` e `desc_alvo`, os m
   (`Object.assign(Telas, {...})`, no fim); a ordem dos `<script>` no `index.html` é a das dependências. Pedir a
   `Telas` um nome que ninguém pôs é erro na hora, com o nome. Tela nova: um arquivo em `telas/`, o `registrar` no fim
   e o `<script>` antes de quem a usa.
+- `celebracoes/` (1.201.0) as festas da subida de nível, do Sigilo e da especialização e a janela do item achado:
+  `fx.js` (os efeitos em pixel: um palco de baixa resolução, texels de 3 px a 15 quadros, só cores da paleta, degradê
+  por pontilhado; com o movimento reduzido, um quadro parado), `festa.js` (o comum: os dados em pedaços, a regra dos
+  gestos, a janela do achado com o adiantar; `Festa.celebrar` e `Festa.abrirAchado`, que `telas/celebracoes.js` e
+  `telas/achado.js` usam), as apresentações `estouro.js` (o padrão) e `relicario.js` (a alternativa; `Festa.usar
+  ("relicario")` troca; a escolha é uma futura opção do jogo, sem tela ainda) e as identidades das especializações
+  (`identidades.js`, o fogo do Piromante e o contorno das letras; `especializacoes.js`, as outras cinco), escolhidas
+  pelo `id` que `Progressao.especializar` manda na festa (`Especializacoes.chave`/`pal`). A habilidade nova vem na
+  festa com o `icone` dela (o de `HABILIDADES`, o mesmo do Grimório). As duas apresentações usam as mesmas
+  identidades e a mesma janela do achado (o tamanho de uso dos itens, o selo da raridade, a comparação numa peça só).
+  O CSS de cada módulo é injetado por ele (as cores das identidades saem de funções). A vitória, os contratos, o
+  mestre caçador e as faixas continuam em `telas/celebracoes.js`, como antes. Fontes, alternativas e a história:
+  `ferramentas/prototipos/hud/celebracoes/LEIA-ME.md` (o jogo não lê essa pasta).
   O mercado (`telas/mercado.js`) é a tela com abas: elas são só da tela (não falam com o motor); a tela ocupa a altura
   visível da página e só a lista da aba rola; a banca é uma faixa em cima (em qualquer largura), desenhada em canvas
   no estilo das paisagens, com vãos de mercadoria que aparecem conforme a largura. O que não se compra vem com o
