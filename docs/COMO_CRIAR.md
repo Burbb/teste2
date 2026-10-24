@@ -345,6 +345,28 @@ Os botões mais diretos: `DANO_HEROI` e `DANO_INIMIGOS` (todo golpe, físico e m
 Nenhuma especialização deve ficar muito longe da média: hoje o Paladino é a mais tolerante e Sombra, Piromante
 e Necromante as mais duras (veja o ROADMAP).
 
+## Um documento para ler (um livro, um registro)
+
+O livro aberto da tela (`rpg/web/static/telas/livro.js`, 1.204.0) é a base aprovada dos livros do jogo: as duas
+páginas, a letra Fondamento (`fontes/OFL-Fondamento.txt`), a pauta alinhada pela métrica da fonte, o couro e o Fechar.
+Um documento novo não precisa de tela nova:
+
+1. **O texto, no motor:** um dicionário como o `LIVRO_DA_CAPELA` (`rpg/missoes.py`): `titulo` (a etiqueta da
+   interface, fora da página), `paginas` (a primeira entrada vai para a página da esquerda; as outras, para a da
+   direita, depois de um traço de pena; parágrafos separados por linha em branco) e, se quiser, `acabamento`.
+2. **Abrir:** `g.ui.celebrar("livro", DOC)` na ação que lê (com `g.ui.conquistas_na_tela`; no modo texto, os
+   parágrafos com `g.narrar`). A descoberta (pistas, Diário) é do motor, antes de abrir; o livro só mostra.
+3. **O acabamento:** sem `acabamento`, o livro limpo (`livros/base.png`). Um acabamento próprio (gasto, queimado,
+   rasgado) é um desenho sobre uma cópia da base: `ferramentas/prototipos/hud/livro-capela/desenhar_capela.py` é o
+   exemplo (os danos à mão, a base intacta); grave a imagem e as máscaras em `rpg/web/static/livros/` e registre o
+   nome em `ACABAMENTOS` (`livro.js`). A máscara de cada página tira a pauta e a tinta onde falta papel.
+4. **Conferir:** `ferramentas/prototipos/hud/livro-capela/auxiliares/conferir_jogo.mjs` é o modelo, no jogo de
+   verdade: a escrita na pauta em toda linha e, num acabamento com rasgos, o que o dano tira de cada palavra (as que
+   importam intactas, nenhuma perdendo mais de 40%), também com um texto maior rolando. O livro cabe 12 linhas na
+   esquerda e 11 na direita antes de rolar. Um texto novo num livro com rasgos pede essa conferência de novo.
+
+Não há escolha do jogador: o acabamento pertence ao documento. O Grimório e as outras telas têm os seus.
+
 ## Uma especialização nova: a identidade da festa
 
 A festa de tornar-se uma especialização (`rpg/web/static/celebracoes/`) escolhe a identidade visual pelo id da

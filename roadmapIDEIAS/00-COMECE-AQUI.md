@@ -7279,3 +7279,17 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   registrado: o dano é da página; um texto novo pede o `dano.mjs` de novo. O jogo não mudou.
 - **Demonstração:** `demo.bat`, http://127.0.0.1:8767/. **Agora:** a avaliação do Jean; nada integrado. O conteúdo
   narrativo continua para a frente narrativa da campanha.
+
+### 24/10/2026 (data do computador local) — O livro integrado (1.204.0)
+
+- **Aprovados pelo Jean:** a A refinada (`831a1bbb`) como base visual dos livros e a capela deteriorada (`5147ec85`) no
+  livro da sacristia, com uma correção antes: as três colônias de bolor no couro da faixa de baixo (pontos soltos além
+  da borda da capa) saíram, e o bolor só pinta sobre papel ou couro opacos (conferido pixel a pixel).
+- **No jogo:** `telas/livro.js` (`Telas.lerLivro`, `Telas.fecharLivro`), `css/22-livro.css` (dentro da trava do estilo
+  pixel), `static/livros/` (a base, a capela e as máscaras), a Fondamento e a licença em `static/fontes/`. O documento
+  declara o acabamento (`LIVRO_DA_CAPELA["acabamento"] = "capela"`); sem seletor do jogador. O livro antigo (em
+  `cenas.js`, com o CSS dele e o `.grimorio-fechar`, que só ele usava) saiu. O Grimório e as outras telas não mudaram.
+  Receita para outros livros: `docs/COMO_CRIAR.md`, "Um documento para ler".
+- **Conferido:** `conferir_jogo.mjs` no jogo de produção, a 1920×945 e a 1280×720 (só arquivos de produção; o
+  acabamento; a pauta com desvio 0; o dano tirando só trechos, as essenciais intactas; um texto maior rolando com a
+  pauta e o dano presos à página; Esc e as teclas do menu); a fumaça (primeira leitura, cartão, releitura, foco, Esc).

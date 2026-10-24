@@ -12,7 +12,7 @@ colônias de bolor), poucos e assimétricos, em vez de uma camada de ruído.
   já estava lá (o grão continua), com a linha da marca escura no alto; a água que correu pela dobra da direita.
 - **O bolor:** colônias verde-acinzentadas e castanhas nas beiras e junto da encadernação.
 - **O couro:** mais escuro, gasto nas quinas e nas beiras, sem o canto de baixo da esquerda (onde as folhas também se
-  foram) e com bolor perto da lombada.
+  foram).
 - **As máscaras** (`mascara-capela-<lado>.png`, na escala 3, do tamanho do bloco de texto de cada página): o que a
   página escreve por cima (a pauta e a tinta, `livro.css`) some onde falta papel (0) e desbota sob o bolor e a água
   (entre 0 e 1). Assim o rasgo tira papel, pauta e tinta juntos, e o dano fica preso à página na rolagem.
@@ -41,6 +41,7 @@ PAPEL = (232, 217, 175)
 COURO = {(90, 52, 34): (68, 41, 29), (122, 76, 48): (90, 60, 41), (58, 32, 22): (43, 26, 19),
          (138, 96, 66): (112, 88, 66), (26, 15, 10): (20, 12, 8)}
 GASTO = (100, 74, 54)
+CONTORNO = COURO[(26, 15, 10)]  # o contorno da capa, escurecido
 
 E = (8, 6, 143, 160)       # a página da esquerda (a folha de cima), como na base
 D = (143, 6, 279, 160)     # a da direita
@@ -153,12 +154,11 @@ DENSO = ["vdm.cvd.",
          ".dvcm.dv",
          "mv.dvc.m",
          "vd.mv.dv"]
-# satélites (colônias pequenas, à mão) perto das manchas, e o bolor no couro
+# satélites (colônias pequenas, à mão) perto das manchas, só sobre o papel
 COLONIAS = [
     ("pequena", 112, 132, False), ("pequena", 63, 150, True), ("pequena", 246, 150, True),
     ("pequena", 273, 56, False),
-    ("media", 150, 162, False), ("pequena", 126, 163, True), ("pequena", 15, 162, False),
-]
+]  # (1.204.0: saíram as três do couro, na faixa de baixo da capa: pareciam pontos soltos fora do livro)
 # quinas e beiras do couro mais gastas (pálidas), à mão: (x, y, largura, altura)
 GASTOS = [(4, 1, 9, 1), (2, 3, 1, 6), (240, 1, 14, 1), (285, 40, 1, 9), (285, 120, 1, 6), (60, 167, 12, 1),
           (200, 167, 8, 1), (284, 158, 2, 6)]
@@ -263,7 +263,9 @@ def main():
         for j, linha in enumerate(MOFO[nome]):
             for i, c in enumerate(linha[::-1] if esp else linha):
                 x, y = cx + i, cy + j
-                if c == "." or not (0 <= x < W and 0 <= y < H) or px[x, y][3] == 0:
+                # só sobre papel ou couro: nunca na sombra da capa (semitransparente), no contorno, no que foi
+                # arrancado nem fora do livro (o bolor não flutua além da borda)
+                if c == "." or not (0 <= x < W and 0 <= y < H) or px[x, y][3] != 255 or px[x, y][:3] == CONTORNO                         or (x, y) in sem_capa:
                     continue
                 px[x, y] = COR[c] + (255,)
                 lavado[(x, y)] = min(lavado.get((x, y), 1), 0.55 if c == "c" else 0.25)

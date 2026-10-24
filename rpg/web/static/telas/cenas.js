@@ -1233,7 +1233,7 @@
       capa.id = "pontos-cena";
       document.getElementById("cena").appendChild(capa);
     }
-    fecharLeitura();  // uma página nova fecha o livro aberto
+    Telas.fecharLivro();  // uma página nova fecha o livro aberto (telas/livro.js)
     capa.innerHTML = "";
     capa.classList.remove("perto");
     tirarOlhar();
@@ -1324,51 +1324,6 @@
     });
     return true;
   }
-  // ---------------------------------------------------------------- ler (o livro da sacristia)
-  // Um livro aberto, como o Grimório, por cima da sala: o motor manda abrir (a celebração "livro", depois de registrar
-  // a descoberta) com o título e as páginas prontos. Fechar (o botão, Esc, Enter, espaço ou o véu em volta) devolve a
-  // sala e deixa o texto seguir; nada pede ler até o fim. Recarregando, não abre de novo.
-  let leitura = null, aoFecharLeitura = null;
-  function lerLivro(d, instantaneo) {
-    if (instantaneo || !d || !d.paginas) return Promise.resolve();
-    return new Promise((r) => { aoFecharLeitura = r; abrirLeitura(d, false); });
-  }
-  function abrirLeitura(ler, teclado) {
-    if (!leitura) {
-      leitura = document.createElement("div");
-      leitura.id = "sobre-leitura"; leitura.className = "sobreposicao"; leitura.hidden = true;
-      leitura.setAttribute("role", "dialog"); leitura.setAttribute("aria-modal", "true");
-      leitura.addEventListener("click", (ev) => { if (ev.target === leitura) fecharLeitura(false); });
-      document.body.appendChild(leitura);
-    }
-    const [p1, ...resto] = ler.paginas, pars = (t) => t.split("\n\n").map((x) => `<p class="leitura-texto">${h(x)}</p>`).join("");
-    leitura.setAttribute("aria-label", ler.titulo);
-    leitura.innerHTML = `<div class="grimorio-livro leitura-livro">
-      <div class="grimorio-pagina esquerda"><div class="grimorio-cab"><b>${h(ler.titulo)}</b></div>${pars(p1)}</div>
-      <div class="grimorio-pagina direita">${resto.map((t) => `<div class="leitura-entrada">${pars(t)}</div>`).join("")}</div>
-      <button class="grimorio-fechar" type="button">Fechar <kbd>Esc</kbd></button></div>`;
-    leitura.querySelector(".grimorio-fechar").addEventListener("click", (ev) => fecharLeitura(ev.detail === 0));
-    leitura.hidden = false;
-    leitura.dataset.teclado = teclado ? "1" : "";
-    document.addEventListener("keydown", teclaLeitura, true);
-    leitura.querySelector(".grimorio-fechar").focus({ focusVisible: !!teclado });
-  }
-  /** Com o livro aberto, as teclas são dele: Esc, Enter e espaço fecham; as outras não escolhem nada embaixo. */
-  function teclaLeitura(ev) {
-    if (!leitura || leitura.hidden) return;
-    if (["Escape", "Enter", " "].includes(ev.key)) { ev.preventDefault(); ev.stopPropagation(); fecharLeitura(true); return; }
-    if (ev.key === "Tab") { ev.preventDefault(); return; }  // um só controle: o foco fica nele
-    if (!["F4", "F1"].includes(ev.key)) ev.stopPropagation();
-  }
-  function fecharLeitura() {
-    if (!leitura || leitura.hidden) return false;
-    leitura.hidden = true;
-    document.removeEventListener("keydown", teclaLeitura, true);
-    const fim = aoFecharLeitura; aoFecharLeitura = null;
-    if (fim) fim();  // o texto segue (o Continuar da leitura)
-    return true;
-  }
-
   /** Esc com um ponto de olhar aproximado: afasta (como o botão, pelo teclado). */
   function afastar() { const af = capa && capa.querySelector(".ci-afastar"); return !!(af && !af.hidden && longe(true)); }
   /** Luta: os pontos saem (a arte desce para a arena); a câmera volta à sala inteira, para a arena mostrar o lugar. */
@@ -1402,7 +1357,7 @@
   }
 
   Telas.registrar("cena", () => "", {});
-  Object.assign(Telas, { soltarCorrentes, momentoIlse, lerLivro });
+  Object.assign(Telas, { soltarCorrentes, momentoIlse });
   window.Cenas = { mostrar, limpar, virou, conferirPendente, aoCombate, aoMenu, posicionar, atual: () => atual,
     alternarDestaque, destacando, afastar, cantos };  // cantos: o mesmo contorno nas figuras da fogueira
 })();

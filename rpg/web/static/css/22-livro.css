@@ -1,0 +1,33 @@
+/* Um livro aberto para ler (telas/livro.js, 1.204.0): a base aprovada dos livros. O livro é pixel art
+   (livros/*.png, escala 3), a letra é a Fondamento (SIL OFL 1.1, fontes/OFL-Fondamento.txt: uma escrita humanista de
+   pena larga, legível, com os acentos do português). Tudo aqui é do livro (as classes livro-*); o Grimório tem o dele. */
+@font-face { font-family: "Fondamento"; font-weight: 400; src: url(../fontes/fondamento-latin-400-normal.woff2) format("woff2"); font-display: block; }
+
+.livro-quadro { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+/* o nome do documento é a etiqueta da interface, fora da página: não é um título que o autor escreveu */
+.livro-rotulo { padding: 3px 12px; font-family: var(--leitura); font-weight: 700; font-size: 13px; letter-spacing: 0.22em; text-transform: uppercase;
+  color: #b9ab8c; text-shadow: 0 1px 0 #000; background: #050403; }
+.livro-livro { position: relative; background-size: 100% 100%; image-rendering: pixelated; }
+.livro-pagina { position: absolute; font-family: "Fondamento", var(--prosa), serif; font-size: 21px; line-height: 33px; color: #5b3c24; }
+.livro-pagina p { margin: 0; text-indent: 1.2em; }
+.livro-pagina p:first-child { text-indent: 0; }
+/* a pauta: uma linha de 3 px (1 px do desenho) a cada 33 px, a primeira a 30 px do alto do bloco; o livro.js desce o
+   texto até a linha de base cair nela. Um texto maior que a página rola com a pauta junto. */
+.livro-regua { overflow-y: auto; overflow-x: hidden; scrollbar-width: thin; scrollbar-color: #b8a47a transparent; }
+.livro-regua .livro-texto { position: relative; box-sizing: border-box; min-height: 100%;
+  background: repeating-linear-gradient(to bottom, transparent 0 30px, #d6c69c 30px 33px); }
+.livro-sonda { visibility: hidden; left: 0; top: 0; width: 400px; }
+/* a segunda entrada: outra tinta, um traço de pena na primeira linha e o recuo de quem retomou o livro */
+.livro-entrada2 { color: #1d1510; }
+.livro-entrada2 p:first-child { text-indent: 2.4em; }
+.livro-entrada2 .livro-texto::before { content: ""; position: absolute; left: var(--esq); top: 27px; width: 54px; height: 3px; background: #3a2c22;
+  clip-path: polygon(0 40%, 8% 0, 100% 30%, 96% 100%, 4% 80%); }
+/* o acabamento com dano (a capela): a máscara da página tira a pauta e a tinta onde falta papel */
+.livro-mascarada { -webkit-mask-image: var(--mascara); mask-image: var(--mascara); -webkit-mask-size: 100% 100%; mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; mask-mode: alpha; }
+/* o Fechar é da interface: o botão da HUD, embaixo do livro, longe da escrita */
+:root body .livro .continuar { display: inline-flex; align-items: center; gap: 6px; min-width: 0; margin: 0; }
+:root body .livro .continuar kbd { font-size: 12px; font-weight: 400; }
+.livro .livro-quadro { animation: livro-ler-abre 0.28s cubic-bezier(.2, .8, .3, 1) both; }
+@keyframes livro-ler-abre { from { opacity: 0; transform: translateY(12px); } }
+@media (prefers-reduced-motion: reduce) { .livro .livro-quadro { animation: none; } }

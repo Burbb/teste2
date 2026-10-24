@@ -5,8 +5,16 @@ referência reutilizável e limpa: a composição de duas páginas, a Fondamento
 as margens, o couro e o comportamento de leitura (`livro-a2.png`, `.lv-regua` e `medirTopo` em `livro.css`/`livro.js`,
 `duas_paginas_refinado` em `desenhar_livro.py`). A aprovação não troca outras telas (o Grimório continua o dele).
 
-**Agora: o livro da capela deteriorado, candidata em avaliação** (seção abaixo). Nada integrado; o livro de hoje
-continua no jogo. O texto e a história continuam para a frente narrativa da campanha.
+**Integrados na 1.204.0 (24/10/2026), aprovados pelo Jean:** a base limpa (o acabamento reutilizável) e a capela
+deteriorada (o livro da sacristia), com uma correção antes: as três colônias de bolor que eu tinha posto no couro da
+faixa de baixo pareciam pontos soltos além da borda da capa e saíram; o bolor agora só pinta sobre papel ou couro
+opacos (nunca a sombra, o contorno ou o que foi arrancado), conferido pixel a pixel. No jogo: `rpg/web/static/livros/`
+(`base.png` = `propostas/livro-a2.png`; `capela.png` e as duas máscaras = as de `propostas/`), a Fondamento e a licença
+em `rpg/web/static/fontes/`, `telas/livro.js` e `css/22-livro.css`; o documento declara o acabamento
+(`LIVRO_DA_CAPELA["acabamento"] = "capela"`), sem escolha do jogador. O livro antigo (a casca do Grimório em
+`cenas.js` e o CSS dele) saiu do jogo; fica nas capturas daqui (`capturas/*-atual.png`). A, B, C e as rodadas ficam
+aqui como histórico. Como fazer outro livro: `docs/COMO_CRIAR.md`, "Um documento para ler". Conferência no jogo:
+`auxiliares/conferir_jogo.mjs` (`capturas/jogo-*.png`). O texto e a história continuam para a frente narrativa.
 
 ## O livro da capela deteriorado (candidata)
 

@@ -640,7 +640,7 @@ async function cenarioCapela(browser) {
     conferir(!/Ilse/.test(JSON.stringify(await page.evaluate(() => estado.missoes))), "antes de ler, o personagem não sabe de Ilse");
     await page.click(`${MENU}:has-text("Ler o livro da capela")`);
     await page.waitForSelector("#sobre-leitura:not([hidden])", { timeout: 20000 });
-    await page.click("#sobre-leitura .grimorio-fechar");
+    await page.click("#sobre-leitura .livro-fechar");
     await page.waitForSelector("#prompt .continuar", { timeout: 20000 });
     conferir(/Ilse/.test(await page.textContent("#texto .novidade-missao").catch(() => "")), "a primeira leitura: o cartão com Ilse e o Sigilo");
     await page.waitForTimeout(800);
@@ -880,7 +880,7 @@ async function cenarioCapelaSalas(browser) {
     await page.waitForSelector("#sobre-leitura:not([hidden])", { timeout: 20000 });
     const livro = await page.textContent("#sobre-leitura");
     conferir(/O livro da capela/.test(livro) && /Que Deus nos perdoe/.test(livro) && /guardiã desta casa/.test(livro) && !/padre/.test(livro)
-      && (await page.evaluate(() => document.activeElement.classList.contains("grimorio-fechar"))),
+      && (await page.evaluate(() => document.activeElement.classList.contains("livro-fechar"))),
       "o livro, pelo teclado: as entradas do padre, em primeira pessoa, num livro aberto, com o Fechar no foco");
     await page.keyboard.press("1");  // as teclas do menu não escolhem nada embaixo do livro
     await page.keyboard.press("Escape");
@@ -889,7 +889,7 @@ async function cenarioCapelaSalas(browser) {
       "Esc fecha o livro e o Continuar devolve a sacristia: nada gasto nem escolhido");
     await page.click(`${MENU}:has-text("Ler o livro da capela")`);  // reler pelo menu, e fechar no botão
     await page.waitForSelector("#sobre-leitura:not([hidden])", { timeout: 20000 });
-    await page.click("#sobre-leitura .grimorio-fechar");
+    await page.click("#sobre-leitura .livro-fechar");
     await fimDoLivro();
     await page.mouse.move(2, 2);
     conferir((await page.$("#sobre-leitura[hidden]")) && (await foto()) === antes && !(await page.$(".ci-ponto.aceso")),

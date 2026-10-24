@@ -772,9 +772,11 @@ def cena_ossuario(g, mid="febre_do_turvo", foco=None, pagina=False):
 # O que se vê de perto na sacristia (pontos de olhar, só na página do lugar): o que a arte mostra, sem repetir o livro.
 OLHAR_JANELA = "Uma escada de mão, de madeira, encostada na parede até a janela alta."
 # O livro da sacristia, nas palavras do padre que fez os registros: duas entradas, anos entre elas (cada uma numa
-# página; dentro delas, só o que ele escreveu). Ler é a descoberta (_ler_livro).
+# página; dentro delas, só o que ele escreveu). Ler é a descoberta (_ler_livro). O acabamento é o do documento (a tela
+# desenha o livro com ele: "capela", o registro gasto pelos anos na capela alagada; sem acabamento, o livro limpo).
 LIVRO_DA_CAPELA = {
     "titulo": "O livro da capela",
+    "acabamento": "capela",
     "paginas": [
         "Registro que chegou hoje Ilse, para ficar como guardiã desta casa. É o ano em que a Fenda foi fechada.\n\n"
         "A Igreja deixou com ela o Sigilo do Turvo. Ele não deve sair desta capela nem ir para mão nenhuma.",

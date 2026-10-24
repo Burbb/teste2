@@ -154,12 +154,6 @@ body.derrotado #predios { visibility: hidden; }
 .g-versao-onde { margin: 6px 0 0; font-size: 13px; font-style: italic; color: #7a6646; }
 .g-versao-trocar { margin-top: 8px; font: inherit; font-size: 15px; color: var(--tinta); background: #2a1f16; border: 3px solid #5a4632; padding: 4px 12px; box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.35); cursor: pointer; }
 .g-versao-trocar:hover, .g-versao-trocar:focus-visible { border-color: var(--ouro); }
-.grimorio-fechar { position: absolute; top: -16px; right: -10px; z-index: 2; font: inherit; font-size: 15px; color: var(--tinta); background: #120e0b; border: 3px solid #5a4632; padding: 3px 10px; box-shadow: 3px 3px 0 #000; cursor: pointer; }
-/* O livro da sacristia (cenas.js, abrirLeitura): o mesmo livro aberto, menor, só texto corrido */
-.leitura-livro { grid-template-columns: 1fr 1fr; width: min(860px, 94vw); height: auto; min-height: min(360px, 80vh); max-height: 88vh; }
-.leitura-texto { margin: 14px 0 0; font-size: 18px; line-height: 1.5; color: #2a1f16; }
-.grimorio-pagina.direita .leitura-entrada:first-child .leitura-texto:first-child { margin-top: 44px; }
-.leitura-entrada .leitura-texto { color: #3a2a1e; font-style: italic; }  /* a entrada de anos depois, outra tinta */
 @keyframes livro-abre { from { transform: scale(.92) translateY(10px); opacity: 0; } }
 @keyframes pagina-vira { from { opacity: 0; transform: translateX(14px); } }
 @media (max-width: 760px) {
@@ -359,4 +353,3 @@ body.derrotado #predios { visibility: hidden; }
 .ajuda-dado { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 10px; }
 .ajuda-dado-rotulo { margin-right: 4px; color: var(--tinta-2); }
 .ajuda-dado [aria-pressed="true"] { border-color: var(--ouro); color: var(--ouro); }
-@media (prefers-reduced-motion: reduce) { .leitura-livro { animation: none; } }
