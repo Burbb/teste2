@@ -423,3 +423,23 @@ recusadas em `rodada1/` e `rodada2/` ficam como histórico).
 - **Os auxiliares:** `anel_amuleto/auxiliares/aro.py <N>` (o anel: o aro como um cilindro curto; `ajuste_aro.py`, a
   busca do ângulo pela referência principal) e `joias.py amuleto <N>`. As referências permanentes:
   `ferramentas/arte/referencias/aneis/`.
+
+## Os símbolos e as marcas do mapa (1.200.0, a 1E.4)
+
+As fontes aprovadas pelo Jean no protótipo (`ferramentas/prototipos/hud/mapa/`, com o histórico e as alternativas),
+copiadas sem retoque para as pastas de produção; o `exportar_aseprite.py <peça>` grava os PNGs em `hud/icones/` (o @2x
+pela duplicação exata) e o `--conferir` os compara com os do jogo.
+
+| Peça | Fontes (o lado é a largura) | De onde | Uso |
+|---|---|---|---|
+| `mapa-vila`, `mapa-floresta` | 32, 48 | `lugar-*-n32/n48`, commit `094bb80a` | o lugar no minimapa e fora do mapa (32) e no mapa grande e na Viagem (48) |
+| `mapa-pantano`, `mapa-ruinas` | 32, 48 | `lugar-*-n32/n48`, commit `c7bd2348` | idem |
+| `mapa-planicie` | 32, 48 | `lugar-planicie-n32b/n48b` (a refinada), commit `05af61c5` | idem (também a saída da campanha) |
+| `mapa-posicao` | 20 (o 40 derivado, ×2 exato) | `posicao-plaqueta` | o herói na plaqueta: 20 no minimapa, 40 no mapa grande |
+| `mapa-posicao_lado` | 22 (o 44 derivado, ×2 exato) | `posicao-plaqueta-lado` | a plaqueta de lado, perto da borda (espelhada à direita) |
+| `mapa-missao`, `mapa-contrato` | 9, 11 | `missao(-mini)`, `contrato(-mini)` | as marcas: 9 no minimapa e no texto, 11 no mapa grande |
+| `mapa-cancela` | 13, 19 | `cancela(-mini)` (a madeira em X) | o destino bloqueado: 13 no minimapa, 19 no mapa grande |
+
+As marcas e a plaqueta não são quadradas: o `DERIVADOS` do exportador passou a aceitar a ampliação exata de uma peça
+retangular (a largura é o lado). Os ícones de lugar antigos (`lugar-*-32/40`) continuam no jogo, só na lista de
+Caminhos do painel.

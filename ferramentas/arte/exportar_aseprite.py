@@ -148,6 +148,11 @@ DERIVADOS = {
     "retrato-hidra-do-brejo": {32: (16, 2)},
     "retrato-profeta-das-cinzas": {32: (16, 2)},
     "retrato-lich-menor": {32: (16, 2)},
+    # 1.200.0: os símbolos e as marcas do mapa (a 1E.4; as fontes vieram de ferramentas/prototipos/hud/mapa/fontes/,
+    # aprovadas pelo Jean): a plaqueta do "você está aqui", 1:1 no minimapa e a 2× no mapa grande (a moldura e a figura
+    # do herói juntas, pixel a pixel); a de lado, para o lugar sem espaço acima. Não são quadradas: o lado é a largura
+    "mapa-posicao": {40: (20, 2)},
+    "mapa-posicao_lado": {44: (22, 2)},
 }
 # O martelo (1.149.0) só tem fontes do 40 e do 48 (aseprite/martelo/): o 32 e o 64 são a grade de desenhos.js, no
 # jogo, e não saem daqui.
@@ -193,9 +198,9 @@ def exportar(peca, pasta):
             der.paste(im, ((lado - base) // 2,) * 2)
         else:
             der = im.resize((im.width * fator, im.height * fator), Image.NEAREST)
-        assert der.size == (lado, lado), f"{peca}: {base}×{fator} não dá {lado}"
+        assert der.width == lado and (fator == CENTRO or der.height == im.height * fator), f"{peca}: {base}×{fator} não dá {lado}"
         der.save(pasta / f"{peca}-{lado}.png")
-        der.resize((lado * 2, lado * 2), Image.NEAREST).save(pasta / f"{peca}-{lado}@2x.png")
+        der.resize((der.width * 2, der.height * 2), Image.NEAREST).save(pasta / f"{peca}-{lado}@2x.png")
         feitos += [f"{peca}-{lado}.png", f"{peca}-{lado}@2x.png"]
     return feitos
 
@@ -216,8 +221,8 @@ def recupera(peca):
             ok.append(miolo and beira)
             continue
         blocos = all(len({der.getpixel((x * fator + i, y * fator + j)) for i in range(fator) for j in range(fator)}) == 1
-                     for y in range(base) for x in range(base))
-        volta = all(der.getpixel((x * fator, y * fator)) == src.getpixel((x, y)) for y in range(base) for x in range(base))
+                     for y in range(src.height) for x in range(src.width))
+        volta = all(der.getpixel((x * fator, y * fator)) == src.getpixel((x, y)) for y in range(src.height) for x in range(src.width))
         print(f"{peca}-{lado}: blocos {fator}×{fator} {'uniformes' if blocos else 'NÃO uniformes'}; reduzido "
               f"{'= ' if volta else '≠ '}{peca}-{base}")
         ok.append(blocos and volta)
