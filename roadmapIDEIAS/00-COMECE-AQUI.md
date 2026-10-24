@@ -7050,3 +7050,16 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   habilidade nova no evento da festa.
 - **Para avaliar:** o painel (`demo.bat`, http://127.0.0.1:8765/) com B3 e A3 em destaque; os vídeos `r3-*.webm` sem
   áudio em `para-avaliacao/`; as folhas em `capturas-r3/`; os gestos em `auxiliares/gestos.mjs`.
+
+### 24/10/2026 (data do computador local) — Etapa 2: aprovações, o selo do Estouro e as identidades (protótipo)
+
+- **Aprovado pelo Jean:** A3 e B3 visualmente (com a ressalva do selo dos itens no Estouro) e o Piromante nas duas
+  apresentações. Continuam valendo: Relicário e Estouro como duas apresentações, o Estouro como padrão pretendido, a
+  troca entre elas para as futuras opções do jogo.
+- **No protótipo** (A4 e B4, cópias; A3 e B3 como referência aprovada): o selo dos itens do Estouro com a proximidade e
+  o miolo colorido da B2 e só uma separação escura pequena em volta do sprite; as identidades das seis
+  especializações (`v2/identidades.js`; a direção de cada uma no LEIA-ME): fogo, luz, sangue, folhas, sombra e almas,
+  com forma e movimento próprios, só na celebração da especialização.
+- **Para avaliar:** o painel (`demo.bat`, http://127.0.0.1:8765/) com uma linha por especialização; os vídeos `r4-*.webm`
+  sem áudio em `para-avaliacao/` (o antes × depois dos itens e as especializações por apresentação); as folhas em
+  `capturas-r4/`. Nada integrado: a integração espera esta avaliação.
