@@ -14,7 +14,8 @@ V2 = AQUI.parent / "v2"
 SAIDA = AQUI.parent / "prototipo-v2"
 DIRECOES = ["relicario", "estouro", "estandarte", "relicario2", "estouro2", "relicario3", "estouro3", "relicario4", "estouro4",
             "relicario5a", "relicario5b", "estouro5a", "estouro5b",
-            "relicario5c", "estouro5c"]  # 5c: as candidatas finais  # 5a/5b: a mesma apresentação, a identidade 1 ou 2  # as de número 2: a rodada de refinamento
+            "relicario5c", "estouro5c",  # 5c: as candidatas finais
+            "relicario5d", "estouro5d", "relicario5e", "estouro5e", "relicario5f", "estouro5f"]  # 5d-f: as alternativas de detalhe  # 5a/5b: a mesma apresentação, a identidade 1 ou 2  # as de número 2: a rodada de refinamento
 
 
 def trocar(s, a, b):
@@ -34,7 +35,7 @@ def main():
                    + celebracoes[fim:])
     base = "\n".join((V2 / f).read_text(encoding="utf-8") for f in ("fx.js", "festas.js", "identidade.js", "identidades.js", "identidades2.js")) + "\n"
     for nome in DIRECOES:
-        variante = nome[-1] if nome[-2:-1].isdigit() and nome[-1] in "abc" else None
+        variante = nome[-1] if nome[-2:-1].isdigit() and nome[-1] in "abcdef" else None
         fonte = V2 / f"{nome[:-1] if variante else nome}.js"
         if not fonte.exists():
             continue

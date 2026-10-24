@@ -99,7 +99,7 @@ const b = await chromium.launch();
   await p.context().close(); proc.kill();
 }
 // 4. as especializações: Esc fecha, o palco sai; no Patrulheiro, o clique que fecha não escolhe o companheiro
-for (const spec of ["sombra", "patrulheiro"]) {
+for (const spec of (process.env.GESTOS_SPECS || "sombra,patrulheiro").split(",")) {
   const { p, proc, erros } = await abrir(b, `spec_${spec}`, "arqueiro");
   await p.waitForSelector("#celebracao .festa"); await espera(900);
   const antes = await p.evaluate(() => window.__respostas);

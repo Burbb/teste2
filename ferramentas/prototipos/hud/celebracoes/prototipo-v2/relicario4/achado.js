@@ -1659,26 +1659,200 @@ const Identidades2 = (() => {
     parado: 8,
   };
 
+  // ================================================================ AS ALTERNATIVAS DE DETALHE (versões "d", "e", "f")
+  // Só dois detalhes: o escorrimento do Berserker e a relação entre a luz e o nome do Paladino. O resto de cada
+  // celebração é o da candidata final (versão "c"); as outras especializações usam a final aprovada.
+
+  // ---- BERSERKER: o sangue numa camada logo acima do nome (pode escorrer pela borda das letras). A sequência é sempre
+  // a mesma: acumula na letra → escorre um pouco → forma a gota → a ligação se rompe (um vão visível) → a gota cai
+  // separada e some antes da descrição. Sem poças.
+  const GOTAS = {  // b o corpo, c o ponto de luz, a a sombra do lado de baixo e da direita
+    1: { presa: ["b.", "bc", "ba"], caindo: ["b.", "bc", "bb", ".a"] },
+    2: { presa: [".b.", "bbc", "bba", ".a."], caindo: [".b.", ".bc", "bbb", "bba", ".a."] },
+    3: { presa: ["..b..", ".bbc.", "bbbcb", "bbbba", ".bba."], caindo: ["..b..", ".bbc.", ".bbbc", "bbbbb", "bbbba", ".aaa."] },
+  };
+  const COR_SANGUE = { b: "r", c: "R", a: "D" };
+  const ESCORRE = {
+    // A: gotas pequenas, escorrimento curto, desprendimento rápido e irregular
+    d: { pontos: 9, tam: () => 1, espera: () => al(150, 1300), acumula: () => al(4, 8), desce: () => Math.round(al(1, 3)), pescoco: () => Math.round(al(1, 2)), satelite: 0.35 },
+    // B: filetes: o sangue percorre a borda de algumas letras antes de juntar e soltar a gota
+    e: { pontos: 6, tam: () => (Math.random() < 0.7 ? 2 : 1), espera: () => al(400, 1900), acumula: () => al(6, 10), desce: () => Math.round(al(2, 4)), pescoco: () => Math.round(al(2, 3)), satelite: 0.2, filete: true },
+    // C: volumes variados: poucas quedas, tamanhos e intervalos diferentes
+    f: { pontos: 5, tam: () => sorteio([1, 1, 2, 2, 3]), espera: () => al(700, 3200), acumula: (k) => 5 + k * 4 + al(0, 4), desce: (k) => Math.round(1 + k + al(0, 2)), pescoco: (k) => Math.round(1 + k * 0.7 + al(0, 1.5)), satelite: 0.5 },
+  };
+  function pontosEscorre(c, r, cfg) {
+    const bases = c.bases.filter((o) => o.y > r.y).sort((m, n) => m.x - n.x);
+    if (!bases.length) return null;
+    const pts = [];
+    for (let i = 0; i < cfg.pontos; i++) {
+      const o = bases[Math.min(bases.length - 1, Math.floor(((i + al(0.15, 0.85)) / cfg.pontos) * bases.length))];
+      // o filete: as bordas da mesma letra, acima da base, de cima para baixo
+      const borda = cfg.filete ? c.lados.filter((l) => Math.abs(l.x - o.x) <= 1 && l.y < o.y && l.y > r.y - r.ry * 0.7).sort((m, n) => m.y - n.y) : [];
+      pts.push({ x: o.x, y: o.y, borda, estado: "espera", ate: 250 + Math.round(al(0, 1500)) + i * 60 });
+    }
+    return pts;
+  }
+  function moverEscorre(s, t, cfg, limite) {
+    if (s.estado === "espera") {
+      if (t < s.ate) return;
+      s.tam = cfg.tam(); s.k = 0; s.durAc = cfg.acumula(s.tam); s.desce = cfg.desce(s.tam); s.pesc = cfg.pescoco(s.tam); s.d = 0;
+      s.estado = s.borda && s.borda.length > 2 && Math.random() < 0.75 ? "filete" : "acumula"; s.f = 0;
+      return;
+    }
+    if (s.estado === "filete") { s.f += 0.9; if (s.f >= s.borda.length) s.estado = "acumula"; return; }
+    if (s.estado === "acumula") { s.k += 1 / s.durAc; if (s.k >= 1) s.estado = "escorre"; return; }
+    if (s.estado === "escorre") { s.d += 0.35 + s.tam * 0.05; if (s.d >= s.desce + s.pesc) { s.estado = "rompe"; s.romp = 0; } return; }
+    if (s.estado === "rompe") { s.romp++; if (s.romp >= 2) { s.estado = "cai"; s.gy = s.y + s.d; s.vy = 0.5; s.resto = s.pesc; s.sat = Math.random() < cfg.satelite ? s.y + s.desce : null; s.satVy = 0; } return; }
+    if (s.estado === "cai") {
+      s.vy += 0.34; s.gy += s.vy; s.resto = Math.max(0, s.resto - 0.7);  // o resto da ligação volta para a letra
+      if (s.sat !== null) { s.satVy += 0.3; s.sat += s.satVy * (s.idadeCai > 1 ? 1 : 0); }
+      s.idadeCai = (s.idadeCai || 0) + 1;
+      if (s.gy > limite + 3) { s.estado = "espera"; s.ate = t + Math.round(cfg.espera()); s.idadeCai = 0; }
+    }
+  }
+  function desenharEscorre(p, s, limite) {
+    if (s.estado === "espera") return;
+    const sangra = (x, y, cor = "r") => p.por(x, y, C(cor));
+    if (s.estado === "filete") {  // o sangue correndo pela borda da letra, de cima para baixo, com a ponta mais clara
+      const n = Math.floor(s.f);
+      for (let i = Math.max(0, n - 6); i <= Math.min(n, s.borda.length - 1); i++) sangra(s.borda[i].x, s.borda[i].y, i === n ? "R" : "r");
+      return;
+    }
+    const tam = s.tam, g = GOTAS[tam], meio = tam === 3 ? 2 : tam === 2 ? 1 : 0;
+    if (s.estado === "acumula") {  // junta na borda de baixo da letra: uma lâmina que engrossa
+      const w = Math.max(1, Math.round(s.k * (tam + 1)));
+      for (let i = 0; i < w; i++) sangra(s.x - (w >> 1) + i, s.y, i === 0 ? "R" : "r");
+      if (s.k > 0.6) sangra(s.x, s.y + 1);
+      return;
+    }
+    if (s.estado === "escorre" || s.estado === "rompe") {
+      const d = Math.round(s.d), corpo = Math.max(0, d - s.pesc);
+      sangra(s.x - 1, s.y); sangra(s.x, s.y); sangra(s.x + 1, s.y, "D");
+      for (let i = 1; i <= corpo; i++) sangra(s.x, s.y + i);  // o pouco que escorre
+      for (let i = corpo + 1; i <= d; i++) if (!(s.estado === "rompe" && i === corpo + Math.ceil((d - corpo) / 2))) sangra(s.x, s.y + i, "D");  // o pescoço; ao romper, abre um vão
+      pintar(p, g.presa, s.x - meio, s.y + d + 1, COR_SANGUE);
+      return;
+    }
+    // caindo: a gota separada, o resto da ligação subindo para a letra, e às vezes uma gotinha de satélite
+    sangra(s.x, s.y); for (let i = 1; i <= Math.round(s.resto); i++) sangra(s.x, s.y + i, "D");
+    const forma = s.vy > 1.6 ? g.caindo : g.presa, gy = Math.round(s.gy);
+    const some = gy > limite ? Math.max(0, 14 - (gy - limite) * 5) : 16;  // apaga em degraus logo antes da descrição
+    for (let y = 0; y < forma.length; y++) for (let x = 0; x < forma[y].length; x++) {
+      const ch = forma[y][x], px = s.x - meio + x, py = gy + y;
+      if (ch !== "." && pt(px, py, some)) p.por(px, py, C(COR_SANGUE[ch]));
+    }
+    if (s.sat !== null && s.sat < limite) sangra(s.x, Math.round(s.sat), "r");
+  }
+  for (const v of ["d", "e", "f"]) {
+    const cfg = ESCORRE[v];
+    BERSERKER[v] = {
+      ...BERSERKER.c,
+      quadro(ctx) {  // a mesma composição da final (garras, veias, queda do nome), sem as poças nem as gotas antigas
+        const { p, r, c, t, q, parado, ex, dados } = ctx;
+        iniciarSangue(r, dados);
+        veias(p, t, parado);
+        if (!dados.garras) dados.garras = garras(r);
+        poco(p, r, 10, 16);
+        const u = parado ? 1 : rampa(t, 170, 200);
+        if (u > 0) dados.garras.forEach((g, i) => desenharGarra(p, g, Math.min(1, u * 1.3 - i * 0.15)));
+        dados.limite = r.base + 6;
+        if (!dados.pts && c.bases.length) dados.pts = pontosEscorre(c, r, cfg);
+        if (dados.pts && !parado) for (const s of dados.pts) moverEscorre(s, t, cfg, dados.limite);
+        if (!parado && t > 500 && q % 9 === 0) ex.soltar(1, () => { const g = sorteio(dados.garras), f = al(0.2, 0.8);
+          return { tipo: "verte", x: Math.round(g.x0 + (g.x1 - g.x0) * f) + 3, y: Math.round(g.y0 + (g.y1 - g.y0) * f), g: 0.12, vy: 0.2, vida: 12 }; });
+      },
+      sobre(p, dados) { if (dados.pts) for (const s of dados.pts) desenharEscorre(p, s, dados.limite); },
+      desenhar(p, s) { pintar(p, s.vy > 1.2 ? GOTAS[1].caindo : GOTAS[1].presa, Math.round(s.x), Math.round(s.y), COR_SANGUE); },
+      parado: 3,
+    };
+  }
+
+  // ---- PALADINO: a luz e as penas da final, sem o recorte preto atrás do nome. As letras ficam à frente da luz (a
+  // luz é desenhada por baixo do texto), com o contorno escuro e a sombra delas.
+  const VITRAL = [  // por faixa, os vidros de cima para baixo (marfim, ouro envelhecido e nuances dessaturadas)
+    ["#efe2c4", "#c9a35a", "#b48c86", "#efe2c4"], ["#c9a35a", "#efe2c4", "#8fa59c", "#c9a35a"], ["#efe2c4", "#d8c08c", "#efe2c4", "#a99bb0"],
+    ["#d8c08c", "#efe2c4", "#c9a35a", "#efe2c4"], ["#a99bb0", "#efe2c4", "#c9a35a", "#d8c08c"], ["#c9a35a", "#8fa59c", "#efe2c4", "#b48c86"],
+  ];
+  function luzSemRecorte(modo) {
+    return (lp, r, t, parado) => {
+      const ox = r.x, oy = -lp.t(260), desce = parado ? 1 : rampa(t, 0, 460), fundo = r.base + 2;
+      const x0 = Math.max(0, Math.floor(r.x - r.rx * 2.4)), x1 = Math.min(lp.W - 1, Math.ceil(r.x + r.rx * 2.4));
+      const mexe = (i) => (parado ? 0 : Math.sin(t / 2700 + i * 1.7) * 0.012);
+      // C: a região ampla e regular de menos luz atrás do título (uma elipse grande, em três degraus)
+      const Ex = r.rx * 1.45, Ey = r.ry * 3.4, Ecy = r.y - r.ry * 0.6;
+      for (let y = 0; y < Math.min(lp.H, Math.round(fundo * desce) + 16); y++) for (let x = x0; x <= x1; x++) {
+        const pe = fundo - Math.round(hash(x >> 2) * 10), falta = pe - y;
+        if (falta < -12) continue;
+        const a = Math.atan2(x - ox, y - oy), dist = Math.hypot(x - ox, y - oy);
+        let cor = null, n = 0, faixa = -1;
+        for (let i = 0; i < FAIXAS.length; i++) {
+          const [ai, wi, ci] = FAIXAS[i], d = Math.abs(a - ai - mexe(i));
+          if (d > wi) continue;
+          n++;
+          if (!cor || d < wi * 0.6) { cor = ci; faixa = i; }
+          if (d > wi * 0.78 && !pt(x, y, 8)) { n--; if (n === 0) cor = null; }
+        }
+        if (!cor) continue;
+        if (falta < 0 && !pt(x, y, Math.round(14 + falta))) continue;
+        if (modo === "vitral") {
+          // os vidros: a cor muda ao longo da faixa, com um fio escuro (o chumbo) entre um vidro e outro
+          const desl = dist + faixa * 13 + (faixa % 2) * 7, vidro = Math.floor(desl / 34), resto = desl % 34;  // os vidros desencontrados entre as faixas
+          if (resto < 1) continue;
+          cor = VITRAL[faixa][vidro % VITRAL[faixa].length];
+          if (n > 1) cor = "#fbf0d8";
+        } else if (n > 1) cor = "#fffbe6";
+        if (modo === "suave") {
+          const e = Math.pow((x - r.x) / Ex, 2) + Math.pow((y - Ecy) / Ey, 2);
+          if (e < 1) cor = e < 0.45 ? "#5e4e36" : e < 0.75 ? "#8a7550" : "#b39a68";  // menos luz no centro, em degraus regulares
+        }
+        lp.por(x, y, C(cor));
+      }
+      const op = parado ? 0.5 : t < 700 ? 0.5 + Math.round(6 * (1 - t / 700)) * 0.02 : 0.47 + Math.round(2 + 2 * Math.sin(t / 1100)) * 0.01;
+      lp.el.style.opacity = op.toFixed(2);
+    };
+  }
+  const LUZ_MODO = { d: "continua", e: "vitral", f: "suave" };
+  for (const v of ["d", "e", "f"]) {
+    PALADINO[v] = {
+      ...PALADINO.c, classe: "idv-luz-a idv-luz-legivel", semPocoRotulo: true,
+      luz: luzSemRecorte(LUZ_MODO[v]),
+      quadro(ctx) {  // a final sem o poço escuro atrás do nome
+        const { p, r, t, q, parado, ex, dados } = ctx;
+        if (!parado && t > 380 && t < 920) {
+          const u = (t - 380) / 540;
+          FX.anel(p, { cx: r.x, cy: r.y, r: Math.round(r.rx * (0.9 + u * 0.55)), esp: 1, pal: ["W", "w", "G"], achata: 0.3, rastro: 3, vis: Math.round(13 * (1 - u)) });
+        }
+        if (parado) return;
+        if (!dados.soltou && t > 300) { dados.soltou = true; ex.soltar(9, () => penaCaindo(r.x + Math.round(al(-r.rx * 1.7, r.rx * 1.7)), Math.round(al(-10, r.topo * 0.6)), r.base + 6, al(0.3, 0.5))); }
+        if (q % 6 === 0) ex.soltar(1, () => penaCaindo(r.x + Math.round(al(-r.rx * 1.9, r.rx * 1.9)), -8, r.base + 6));
+        if (q % 3 === 0) motes(ex, r, 1, t);
+      },
+    };
+  }
+
   const CONCEITOS = { luz: PALADINO, sangue: BERSERKER, folhas: PATRULHEIRO, sombra: SOMBRA_ID, almas: NECROMANTE };
   const NOMES = {
     luz: { a: "Luz do alto", b: "Asas" }, sangue: { a: "O nome sangra", b: "Garras" }, folhas: { a: "Vendaval", b: "Clareira" },
     sombra: { a: "Corte", b: "Invisível" }, almas: { a: "Erguer", b: "Almas" },
     // as candidatas finais
+    detalhe: { luz: { d: "A · luz contínua", e: "B · vitral", f: "C · centro menos intenso" },
+      sangue: { d: "A · gotas pequenas", e: "B · filetes", f: "C · volumes variados" } },
     final: { luz: "Luz e penas", sangue: "Garras, sangue líquido", folhas: "Vendaval verde", sombra: "Invisível com o corte", almas: "Erguer com a fumaça" },
   };
 
   /** A identidade `id` na versão `v` ("a" ou "b") para o nome `el`; a apresentação chama `quadro(p, t, q, parado)`
    *  depois do fundo dela e lê `atenua` (quanto baixar os raios dela) e `pal`/`cacos`. */
   function criar(id, el, v) {
-    const conc = CONCEITOS[id] && CONCEITOS[id][v];
+    const conc = CONCEITOS[id] && (CONCEITOS[id][v] || (/[def]/.test(v) ? CONCEITOS[id].c : null));
     if (!conc) return null;
     el.className = el.className.replace(/\bidn-\S+/g, "").trim() + ` idv ${conc.classe}`;
     const alvoContorno = conc.nome ? conc.nome(el) : el;
     const ex = enxame(), dados = {}, rotulo = el.closest(".festa")?.querySelector(".fa2-sobre, .fb2-faixa span");
-    let c = null, pronto = false, luz = null;
+    let c = null, pronto = false, luz = null, sobre = null;
+    if (conc.semPocoRotulo && rotulo) rotulo.classList.add("idv-rotulo-legivel");
     const vazio = { topos: [], bases: [], lados: [], todos: [] };
     return {
-      id, versao: v, pal: conc.pal, cacos: conc.cacos, atenua: conc.atenua || 0, semClarao: !!conc.semClarao, claros: conc.claros || null,
+      id, versao: v, semPocoRotulo: !!conc.semPocoRotulo, pal: conc.pal, cacos: conc.cacos, atenua: conc.atenua || 0, semClarao: !!conc.semClarao, claros: conc.claros || null,
       /** Chamado pela apresentação antes do fundo dela (os raios): o que fica por baixo de tudo. */
       antes(p, t, q, parado) { if (conc.antes) conc.antes({ p, r: p.de(el), t, q, parado }); },
       treme: () => 0,
@@ -1699,7 +1873,11 @@ const Identidades2 = (() => {
         }
         if (!parado) avancar();
         for (const s of ex.lista) conc.desenhar(p, s, parado);
-        if (rotulo) { const l = p.de(rotulo); FX.poco(p, { cx: l.x, cy: l.y, rx: l.rx + 10, ry: l.ry + 5, forca: 16 }); }
+        if (rotulo && !conc.semPocoRotulo) { const l = p.de(rotulo); FX.poco(p, { cx: l.x, cy: l.y, rx: l.rx + 10, ry: l.ry + 5, forca: 16 }); }
+        if (conc.sobre) {  // a camada logo acima do texto (o sangue que escorre pela borda das letras)
+          if (!sobre) { sobre = FX.palco(p.el.parentElement, { z: 2 }); p.el.parentElement.append(sobre.el); }
+          sobre.limpar(); conc.sobre(sobre, dados); sobre.mostrar();
+        }
       },
     };
     function avancar() {
@@ -1763,6 +1941,11 @@ const Identidades2 = (() => {
   .idv-sombra-c > .idv-baixo { clip-path: polygon(-5% 78%, 105% 30%, 105% 120%, -5% 120%); animation: idv-corte-c-baixo 1.6s steps(1) both; }
   @keyframes idv-corte-c-cima { 0%, 65% { translate: 0 0; } 66%, 69% { translate: -7px -3px; } 70%, 84% { translate: -14px -6px; } 85%, 88% { translate: -4px -2px; } 89%, 91% { translate: 1px 0; } 92%, 100% { translate: 0 0; } }
   @keyframes idv-corte-c-baixo { 0%, 65% { translate: 0 0; } 66%, 69% { translate: 7px 3px; } 70%, 84% { translate: 14px 6px; } 85%, 88% { translate: 4px 2px; } 89%, 91% { translate: -1px 0; } 92%, 100% { translate: 0 0; } }
+  /* PALADINO, as alternativas sem o recorte: as letras à frente da luz, com o contorno escuro e a sombra delas; o
+     rótulo com o contorno, sem a placa */
+  .idv-luz-legivel { filter: drop-shadow(2px 0 0 #3a2a0c) drop-shadow(-2px 0 0 #3a2a0c) drop-shadow(0 -2px 0 #6b4b18) drop-shadow(0 2px 0 #1a1206) drop-shadow(0 5px 0 #08090a) !important; }
+  :root body .idv.idv-luz-a.idv-luz-legivel { animation: none !important; }
+  .idv-rotulo-legivel { text-shadow: 2px 0 #08090a, -2px 0 #08090a, 0 2px #08090a, 0 -2px #08090a, 2px 2px #08090a, -2px 2px #08090a, 2px -2px #08090a, -2px -2px #08090a !important; }
   /* NECROMANTE: verde de túmulo, profundo, com o claro só no alto das letras */
   .idv-almas-a, .idv-almas-b { ${faixas("#e6f2d8", "#a8d48a", "#4f9a5b")} filter: ${borda("#0d2a14", "#4f9a5b", "#050a06")}; }
   :root body .idv.idv-almas-b { animation: idv-almas 1.2s 0.2s steps(6) both !important; }

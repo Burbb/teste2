@@ -16,6 +16,48 @@ canto de baixo, "repetir" e "painel" (essa faixa só existe na demonstração). 
 Movimento reduzido: no Chrome/Edge, F12 → ⋮ → More tools → Rendering → "Emulate CSS media feature
 prefers-reduced-motion" → reduce, e "repetir" (ou "Mostrar animações" desligado no Windows, para o sistema todo).
 
+## Sétima rodada (24/10/2026): o sangue do Berserker e a luz do Paladino
+
+**Aprovados** (preservados, versão final "c"): **Necromante** (erguer com fumaça), **Sombra** (invisível com o corte)
+e **Patrulheiro** (vendaval em verde), nas duas apresentações; o Piromante; o Estouro B4 e o Relicário A4.
+
+**Pendentes, com três alternativas de detalhe cada** (o resto da celebração é o da final): as montagens `estouro5d/e/f`
+e `relicario5d/e/f`. A letra vale para os dois: A = `d`, B = `e`, C = `f` (nas outras especializações elas mostram a
+final aprovada).
+
+**Berserker, o escorrimento** (`ESCORRE` em `v2/identidades2.js`). O sangue passou para uma camada logo acima do nome,
+para poder correr pela borda das letras. Em todas, a mesma sequência visível: acumula na borda de baixo da letra →
+escorre um pouco → forma a gota → a ligação abre um vão por dois quadros (rompe) → a gota cai separada enquanto o resto
+do fio volta para a letra → a gota apaga em degraus logo abaixo do título, antes da descrição. Sem poças. Vermelho
+fundo, um ponto de luz e a sombra no lado de baixo; três formas de gota desenhadas à mão.
+- **A · gotas pequenas:** nove pontos, gotas de 2 a 3 texels, escorrimento de 1 a 3, espera curta e irregular
+  (0,15 a 1,3 s); às vezes uma gotinha satélite.
+- **B · filetes:** seis pontos; antes de juntar, o sangue desce pela borda da letra (a ponta mais clara correndo de cima
+  para baixo), depois forma e solta a gota.
+- **C · volumes variados:** cinco pontos, gotas de três tamanhos, o acúmulo e o escorrimento proporcionais ao tamanho,
+  esperas longas e desencontradas (0,7 a 3,2 s).
+
+**Paladino, a luz e o nome** (`luzSemRecorte`). Nas três, sem o recorte preto atrás do nome: a luz passa contínua por
+trás das letras (a camada da luz fica abaixo do texto), e as letras se separam dela pelo contorno escuro de 2 px e a
+sombra delas; o "Você agora é" com contorno, sem placa. As penas caindo e o anel do pouso continuam; sem asas.
+- **A · luz contínua:** as faixas de marfim e ouro pálido da final, sem o buraco.
+- **B · vitral:** cada faixa dividida em vidros de marfim, ouro envelhecido e nuances dessaturadas (rosa, verde-acinzentado,
+  lilás), separados por um fio escuro como o chumbo; os vidros desencontrados entre as faixas.
+- **C · centro menos intenso:** a mesma luz, com uma elipse ampla e regular atrás do título em três degraus de menos luz
+  (não segue o formato das letras).
+
+**Conferido:** as seis montagens em 1920×945 (0,3; 1,5; 3,1 s), 1280×720 e movimento reduzido (o sangue parado no
+quadro do reduzido; a luz parada); `gestos.mjs` com Berserker e Paladino: 18 verificações em cada montagem, nenhuma
+falha (inclusive a camada do sangue e a da luz saindo ao fechar).
+
+**Vídeos** (`para-avaliacao/`, sem áudio; os anteriores ficam): `r7-1-berserker-sangue-A-B-C.webm` (cada alternativa
+~9 s, vários ciclos), `r7-2-paladino-luz-A-B-C.webm` (a entrada e ~5 s de luz sustentada), e
+`r7-3-relicario-berserker-e-paladino-A-B-C.webm` (o registro da adaptação ao Relicário). Folhas em `capturas-r7/`.
+
+**Limitações vistas:** o som não foi ouvido; no tamanho real as gotas são pequenas (2 a 5 texels), então a separação se
+vê melhor no vídeo que nas fotos; no vitral, as nuances de cor ficam mais fracas pela transparência da camada; no
+centro menos intenso, a elipse aparece como uma mancha mais escura quando a luz respira.
+
 ## Sexta rodada (24/10/2026): as candidatas finais das cinco especializações
 
 **Aprovado** (preservado): o Estouro B4 e o Relicário A4 como apresentações e o Piromante nas duas. **Escolhidas pelo

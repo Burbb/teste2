@@ -75,7 +75,7 @@
         sol(p, { cx: m.x, cy: m.y, R, r1: R + (r1 - R) * abre, ang: parado ? 0.12 : q * (ident && ident.id === "fogo" ? 0.045 : 0.035), pal, vis: vivo(t, parado) - treme - (ident ? Math.round((ident.atenua || 0) * 1.5) : 0) });  // no Relicário, o sol baixa mais: a identidade conduz
         if (!parado && t < 330) FX.halo(p, { cx: m.x, cy: m.y, r: R * (2.6 - (t / 330) * 1.2), pal: [claros[0], claros[0], claros[1], pal[1]], vis: Math.round(16 * (1 - t / 330)) });
         poco(p, inf);
-        poco(p, el.querySelector(".fa2-sobre"), 50, 16);  // o rótulo de cima, legível sobre os raios
+        if (!(ident && ident.semPocoRotulo)) poco(p, el.querySelector(".fa2-sobre"), 50, 16);  // o rótulo de cima, legível sobre os raios
         if (!titulo) medalha(p, m.x, m.y, R, pal);
         if (ident) ident.quadro(p, t, q, parado);  // a identidade da especialização, em volta do nome
         if (parado) return;

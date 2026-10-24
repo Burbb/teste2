@@ -1,0 +1,18 @@
+{
+ "spec-paladino": {
+  "erros": [],
+  "avisos": [],
+  "linha": [
+   "paladino: apareceu em 1279 ms",
+   "paladino: fechado (clique) em 3080 ms"
+  ]
+ },
+ "spec-berserker": {
+  "erros": [],
+  "avisos": [],
+  "linha": [
+   "berserker: apareceu em 1096 ms",
+   "berserker: fechado (clique) em 2881 ms"
+  ]
+ }
+}

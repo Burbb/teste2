@@ -107,6 +107,32 @@ def rodada6():
     folha(["Estouro · 1280", "Relicário · 1280", "Estouro · reduzido", "Relicário · reduzido"], linhas, R6 / "folha-r6-apertados.png")
 
 
+def rodada7():
+    """A sétima rodada: as três alternativas do sangue do Berserker (o título ampliado, para ver as gotas) e as três da
+    luz do Paladino, no Estouro e no Relicário; e 1280×720 e o movimento reduzido."""
+    from PIL import Image
+    R7 = BASE / "capturas-r7"
+    rot = {"d": "A", "e": "B", "f": "C"}
+    titulo = (760, 280, 1160, 440)
+    linhas = []
+    for v in "def":
+        ims = []
+        for ms in ("1500", "3100"):
+            for d in ("estouro5", "relicario5"):
+                q = quadro(R7 / f"{d}{v}" / "1920" / f"spec-berserker-berserker-{ms}.png", titulo if d == "estouro5" else (760, 260, 1160, 420), 1)
+                ims.append(q.resize((q.width * 2, q.height * 2), Image.NEAREST) if q else None)
+        linhas.append((f"Berserker {rot[v]} (título a 2×, para ver o sangue)", ims))
+    folha(["Estouro · 1,5 s", "Relicário · 1,5 s", "Estouro · 3,1 s", "Relicário · 3,1 s"], linhas, R7 / "folha-r7-berserker.png")
+    meio = (460, 0, 1460, 560)
+    linhas = [(f"Paladino {rot[v]}", [quadro(R7 / f"{d}{v}" / "1920" / f"spec-paladino-paladino-{ms}.png", meio, 0.4) for d in ("estouro5", "relicario5") for ms in ("0300", "3100")])
+              for v in "def"]
+    folha(["Estouro · 0,3 s", "Estouro · 3,1 s", "Relicário · 0,3 s", "Relicário · 3,1 s"], linhas, R7 / "folha-r7-paladino.png")
+    linhas = [(f"{k} {rot[v]}", [quadro(R7 / f"{d}{v}" / "1280" / f"spec-{k}-{k}-1600.png", None, 0.36) for d in ("estouro5", "relicario5")] +
+               [quadro(R7 / f"{d}{v}" / "reduzido" / f"spec-{k}-{k}-1600.png", (560, 40, 1360, 500), 0.4) for d in ("estouro5", "relicario5")])
+              for k in ("paladino", "berserker") for v in "def"]
+    folha(["Estouro · 1280", "Relicário · 1280", "Estouro · reduzido", "Relicário · reduzido"], linhas, R7 / "folha-r7-apertados.png")
+
+
 if __name__ == "__main__":
     import sys
-    rodada6() if "r6" in sys.argv else rodada5() if "r5" in sys.argv else rodada4() if "r4" in sys.argv else rodada3() if "r3" in sys.argv else main()
+    rodada7() if "r7" in sys.argv else rodada6() if "r6" in sys.argv else rodada5() if "r5" in sys.argv else rodada4() if "r4" in sys.argv else rodada3() if "r3" in sys.argv else main()

@@ -78,7 +78,7 @@
             vis: vis - (ident && !parado ? ident.treme(q) : 0) - (ident ? ident.atenua || 0 : 0), alterna: 0.6 });
         } else selo(p, { cx: c.x, cy: c.y, re, q, t, pal, cores, quieto: parado });
         poco(p, inf);
-        poco(p, el.querySelector(".fb2-faixa span"), 34, 16);  // a base preta irregular do título
+        if (!(ident && ident.semPocoRotulo)) poco(p, el.querySelector(".fb2-faixa span"), 34, 16);  // a base preta irregular do título
         if (ident) ident.quadro(p, t, q, parado);  // a identidade da especialização, em volta do nome
         if (parado) return;
         golpe(p, { cx: c.x, cy: c.y, r: titulo ? Math.round(c.ry) : re, t, pal, forte: !(ident && ident.semClarao) });  // as identidades escuras entram sem o clarão branco
