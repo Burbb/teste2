@@ -145,7 +145,7 @@ async function cenarioCombate(browser) {
     if (continuarEspolio) await continuarEspolio.click().catch(() => {});
     for (let t = 0; t < 20 && (await page.$(".festa-espolio")); t++) await page.waitForTimeout(100);
     // A luta pode deixar um item (o saque é sorteado): a janela dele vem logo depois do espólio.
-    const guardar = await esperar('#sobre-achado .botao-janela:not(.reserva):has-text("Guardar")', 8000);
+    const guardar = await esperar('#sobre-achado:not(.saindo) .botao-janela:not(.reserva):has-text("Guardar")', 8000);
     if (guardar) { await guardar.click(); for (let t = 0; t < 30 && (await page.$("#sobre-achado")); t++) await page.waitForTimeout(100); }
     conferir(await page.evaluate(() => document.getElementById("vista").parentElement.id === "cena"),
       "a paisagem sai da arena e volta para o topo da cena, fora da área que rola");
@@ -235,7 +235,7 @@ async function cenarioVila(browser) {
     const passo = () => {
       const j = document.querySelector("#sobre-achado .janela-achado");
       if (j) { const r = j.getBoundingClientRect(); window.__moldura.add(`${Math.round(r.width)}x${Math.round(r.height)} em ${Math.round(r.left)},${Math.round(r.top)}`); }
-      if (document.querySelector("#sobre-achado .botao-janela:not(.reserva)")) depois++;
+      if (document.querySelector("#sobre-achado:not(.saindo) .botao-janela:not(.reserva)")) depois++;
       if (depois < 20) requestAnimationFrame(passo);
     };
     requestAnimationFrame(passo);
@@ -244,8 +244,8 @@ async function cenarioVila(browser) {
     conferir(!!(await esperar("#sobre-achado .achado-cartao.novo")), "o item encontrado aparece como cartão, numa janela própria");
     conferir(!!(await page.$("#sobre-achado .achado-cartao.atual")), "o item que você usa aparece ao lado");
     conferir(!(await page.$("#texto .tela.achado")), "o cartão do item não fica no log");
-    conferir(!(await page.$('#sobre-achado .botao-janela:not(.reserva):has-text("Deixar para trás")')), "sem 'deixar para trás' com a mochila livre");
-    const guardar = await esperar('#sobre-achado .botao-janela:not(.reserva):has-text("Guardar")');
+    conferir(!(await page.$('#sobre-achado:not(.saindo) .botao-janela:not(.reserva):has-text("Deixar para trás")')), "sem 'deixar para trás' com a mochila livre");
+    const guardar = await esperar('#sobre-achado:not(.saindo) .botao-janela:not(.reserva):has-text("Guardar")');
     await page.waitForTimeout(500);
     const molduras = await page.evaluate(() => [...window.__moldura]);
     conferir(molduras.length === 1, `a moldura do item fica do mesmo tamanho da revelação aos botões (${molduras.join(" | ")})`);
@@ -583,7 +583,7 @@ async function cenarioCapela(browser) {
         const alvo = await page.$(".carta.alvejavel"); if (alvo) await alvo.click().catch(() => {});
       }
       const f = await page.$(".festa-espolio .continuar"); if (f) { await page.waitForTimeout(1000); await f.click().catch(() => {}); }
-      const achado = await page.$('#sobre-achado .botao-janela:not(.reserva)'); if (achado) await achado.click().catch(() => {});
+      const achado = await page.$('#sobre-achado:not(.saindo) .botao-janela:not(.reserva)'); if (achado) await achado.click().catch(() => {});
       const fim = await page.$("#prompt .continuar:not(.confirmar)"); if (fim) await fim.click().catch(() => {});  // o fim da luta
       await page.waitForTimeout(250);
     }
@@ -1037,7 +1037,7 @@ async function cenarioGuardia(browser) {
         const alvo = await page.$(".carta.alvejavel"); if (alvo) await alvo.click().catch(() => {});
       }
       const f = await page.$(".festa .continuar, .festa-espolio .continuar"); if (f) { await page.waitForTimeout(1000); await f.click().catch(() => {}); }
-      const achado = await page.$('#sobre-achado .botao-janela:not(.reserva)'); if (achado) await achado.click().catch(() => {});
+      const achado = await page.$('#sobre-achado:not(.saindo) .botao-janela:not(.reserva)'); if (achado) await achado.click().catch(() => {});
       const fim = await page.$("#prompt .continuar:not(.confirmar)"); if (fim) await fim.click().catch(() => {});
       await page.waitForTimeout(250);
     }
@@ -1122,7 +1122,7 @@ async function cenarioRetorno(browser) {
     await page.click('#predios .predio[data-predio="taverna"]');
     await (await page.waitForSelector('.balcao-predio .servico:has-text("Contar a Vó Berta")', { timeout: 10000 })).click();
     for (let k = 0; k < 80 && !(await page.$("#prompt .continuar.confirmar")); k++) {
-      const ach = await page.$('#sobre-achado .botao-janela:not(.reserva)');
+      const ach = await page.$('#sobre-achado:not(.saindo) .botao-janela:not(.reserva)');
       if (ach) { await page.waitForTimeout(700); await ach.click().catch(() => {}); }
       await page.waitForTimeout(250);
     }
@@ -1271,7 +1271,7 @@ async function cenarioBroquel(browser) {
     const texto = await achado.evaluate((x) => x.textContent);
     conferir(/Revide: com o escudo erguido/.test(texto) && /▲ Revide/.test(texto),
       "o cartão diz a regra (Revide) e a comparação mostra o ganho dela");
-    await (await esperar('#sobre-achado .botao-janela:not(.reserva):has-text("Guardar")', 8000)).click();
+    await (await esperar('#sobre-achado:not(.saindo) .botao-janela:not(.reserva):has-text("Guardar")', 8000)).click();
     await (await esperar('#predios .predio[data-predio="ferreiro"]')).click();
     conferir(!!(await page.waitForSelector(".forja", { timeout: 10000 }).catch(() => null)),
       "recebido o broquel, a forja volta a ser só o reforço (a oferta não se repete)");
@@ -1748,7 +1748,7 @@ async function cenarioTutorial(browser) {
     const { proc, url } = await subir("tutorial", { LUGAR: "charco", PERIODO: "3" });
     const { page, erros } = await abrir(browser, url);
     try {
-      conferir(await ate(page, /^A noite deixa os inimigos mais fortes\./) && !(await cobre(page)) && (await pontaNoAlvo(page)) <= 2,
+      conferir(await ate(page, /^À noite, os inimigos ficam mais fortes, com ou sem tocha\./) && !(await cobre(page)) && (await pontaNoAlvo(page)) <= 2,
         "N1: fora da vila, à noite, a linha da noite nos riscos do lugar, com a seta encostando nela, sem cobrir a página");
       await page.keyboard.press("1");  // explorar, pelo teclado: a ocasião passa
       for (let k = 0; k < 80 && !(await page.$("#prompt .escolha")); k++) {
@@ -2445,12 +2445,18 @@ async function cenarioBaus(browser) {
     for (let t = 0; t < 20 && (await page.$(".festa-espolio .continuar")); t++) { await page.click(".festa-espolio .continuar").catch(() => {}); await page.waitForTimeout(300); }
     const vistos = [];
     for (;;) {
-      const guardar = await esperar('#sobre-achado .botao-janela:not(.reserva):has-text("Guardar")', 6000);
+      const guardar = await esperar('#sobre-achado:not(.saindo) .botao-janela:not(.reserva):has-text("Guardar")', 6000);
       if (!guardar) break;
-      vistos.push(await page.$eval("#sobre-achado .achado-cartao.novo b", (b) => b.textContent));
+      vistos.push(await page.$eval("#sobre-achado:not(.saindo) .achado-cartao.novo b", (b) => b.textContent));
       await page.waitForTimeout(400);
       await guardar.click();
-      for (let t = 0; t < 40 && (await page.$("#sobre-achado:not(.saindo)")); t++) await page.waitForTimeout(100);
+      // a janela escolhida esmaece com o id (1.201.3) e sem receber clique: espera ela sair ou a próxima chegar
+      const deste = vistos[vistos.length - 1];
+      for (let t = 0; t < 40; t++) {
+        const aberto = await page.$eval("#sobre-achado:not(.saindo) .achado-cartao.novo b", (b) => b.textContent).catch(() => null);
+        if (aberto !== deste) break;
+        await page.waitForTimeout(100);
+      }
     }
     conferir(vistos.join("|") === resumo.equips.join("|"), "depois do resumo, cada equipamento vem na janela dele, na mesma ordem");
     await page.waitForTimeout(600);
