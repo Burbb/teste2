@@ -816,8 +816,9 @@ def _ler_livro(g, mid):
     for pid in ("ilse", "sigilo_do_turvo"):
         _pista(m, pid)
     g.ui.painel("cena", cena_sacristia(g, mid, "visita"))  # o livro sem o couro, no lugar dele
-    if g.ui.conquistas_na_tela:  # o livro aberto por cima da sala; fecha quando o jogador quiser
-        g.ui.celebrar("livro", LIVRO_DA_CAPELA)
+    if g.ui.conquistas_na_tela:  # o livro aberto por cima da sala; fecha quando o jogador quiser. `primeira`: só a
+        # descoberta entra no Histórico da tela (reler abre o mesmo livro, sem outra linha)
+        g.ui.celebrar("livro", {**LIVRO_DA_CAPELA, "primeira": primeira})
     else:
         for i, pagina in enumerate(LIVRO_DA_CAPELA["paginas"]):
             if i:
@@ -1248,12 +1249,14 @@ ACOES = [
     dict(missao="febre_do_turvo", id="sacristia", rotulo="Atravessar o salão alagado",
          lugar="capela_afogada", etapas=("sacristia",), fn=_sacristia, confirmar=True, sala=True, onde="salao"),
     # O baú da sacristia, no canto até ser recolhido (o ponto "Baú" faz a mesma ação); a missão segue sem ele.
+    # `atalho=False`: uma ação ao lado do objetivo (fica no menu e no ponto; o atalho do painel da missão é o passo do
+    # objetivo, como "Descer ao ossuário", não ela).
     dict(missao="febre_do_turvo", id="bau", rotulo="Recolher o baú", lugar="capela_afogada",
          etapas=("ossuario", "fundo", "retorno"), pode=lambda g: registro(g, "febre_do_turvo").get("bau") == "no_canto",
-         fn=_recolher_bau, confirmar=True, onde="sacristia"),
+         fn=_recolher_bau, confirmar=True, onde="sacristia", atalho=False),
     # O livro da capela: ler (o ponto "Livro" faz o mesmo) é como se descobre quem era a guardiã. Sempre dá para reler.
     dict(missao="febre_do_turvo", id="livro", rotulo="Ler o livro da capela", lugar="capela_afogada",
-         etapas=("ossuario", "fundo", "retorno"), fn=_ler_livro, confirmar=True, onde="sacristia"),
+         etapas=("ossuario", "fundo", "retorno"), fn=_ler_livro, confirmar=True, onde="sacristia", atalho=False),
     dict(missao="febre_do_turvo", id="ossuario", rotulo="Descer ao ossuário", lugar="capela_afogada",
          etapas=("ossuario",), fn=_ossuario, confirmar=True, sala=True, onde="sacristia"),
     dict(missao="febre_do_turvo", id="correntes", rotulo="Soltar as correntes", abre=True,
@@ -1366,7 +1369,7 @@ def opcoes(g):
     validas = sorted((d for d in ACOES if _vale(g, d)), key=lambda d: bool(d.get("avanca")))  # estável: o resto na ordem
     return [(d["rotulo"](g) if callable(d["rotulo"]) else d["rotulo"], ("missao", d["missao"], d["id"]),
              {**d.get("meta", {}), "missao": d["missao"], "acao_missao": d["id"], **({"abre": True} if d.get("abre") else {}),
-              **_nota_sala(g, d)})
+              **({"atalho": False} if d.get("atalho") is False else {}), **_nota_sala(g, d)})
             for d in validas]
 
 

@@ -1296,6 +1296,10 @@ ou mudanças de dados por iniciativa do agente.
   livro da sacristia (o documento declara `acabamento`; sem seletor do jogador), depois de tirar o bolor solto da faixa
   de baixo da capa. `telas/livro.js`, `css/22-livro.css`, `static/livros/`, a Fondamento (OFL) em `static/fontes/`; o
   livro antigo saiu. O Grimório e as outras telas não mudaram. Receita para outros livros em `docs/COMO_CRIAR.md`.
+- **As duas pendências do livro corrigidas na 1.204.1:** o atalho do painel da missão é o passo do objetivo
+  ("Descer ao ossuário"), não as ações ao lado dele (ler o livro, recolher o baú: `atalho=False` nas ações, que seguem
+  no menu e no ponto da cena); reler o livro não repete a linha do Histórico (o motor manda `primeira`). Reproduzidas
+  antes no jogo (o atalho no livro antes e depois de ler; uma linha por leitura) e conferidas depois.
 - **O baú, a A2 em avaliação (24/10/2026, só no protótipo; histórico):** o A escolhido como direção; a A2 refina a tampa, a três
   quartos e o volume, com um 48 próprio para a pilha. A, B e o placeholder como histórico.
 - **O baú em avaliação, primeira rodada (24/10/2026, só no protótipo):** duas propostas para o Baú Trancado em

@@ -858,7 +858,8 @@ class TestLivroDaCapela(unittest.TestCase):
         h.ui.celebrar = lambda tipo, dados: festas.append((tipo, dados))
         h.ui.ditos.clear()
         missoes.executar(h, MID, "livro")
-        self.assertEqual(festas, [("livro", missoes.LIVRO_DA_CAPELA)])
+        # o documento, mais `primeira` (1.204.1: só a primeira leitura entra no Histórico da tela)
+        self.assertEqual(festas, [("livro", {**missoes.LIVRO_DA_CAPELA, "primeira": True})])
         self.assertNotIn("Que Deus nos perdoe", " ".join(h.ui.ditos))  # na tela, o livro aberto, sem repetir o texto
 
     def test_sem_ler_a_capela_segue_e_a_guardia_nao_tem_nome(self):

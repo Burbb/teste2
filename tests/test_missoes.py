@@ -413,6 +413,31 @@ class TestMissao(unittest.TestCase):
         self.assertTrue(missoes.ir_na_capela(g, "ossuario"))
         self.assertEqual([o[1][2] for o in opcoes_febre(g)], ["correntes", "fundo"])
 
+    def test_livro_e_bau_ficam_fora_do_atalho_e_reler_nao_repete_a_linha(self):
+        """1.204.1: o atalho do painel da missão é o passo do objetivo ("Descer ao ossuário"), não as ações ao lado
+        dele (ler o livro, recolher o baú), que continuam no menu; reler o livro abre o mesmo livro, com `primeira`
+        só na descoberta (a linha do Histórico da tela sai uma vez)."""
+        celebrados = []
+
+        class Tela(Roteiro):
+            conquistas_na_tela = True
+
+            def celebrar(self, tipo, dados):
+                celebrados.append((tipo, dados))
+        g = na_capela(ui=Tela())
+        lutas(g, "vitoria", "vitoria")
+        fazer(g, "nave"); fazer(g, "sacristia")
+        metas = {o[1][2]: o[2] for o in opcoes_febre(g)}
+        self.assertEqual(list(metas), ["bau", "livro", "ossuario"])  # a ordem do menu não muda
+        self.assertEqual([aid for aid, m in metas.items() if m.get("atalho") is not False], ["ossuario"])
+        for _ in range(3):
+            self.assertTrue(fazer(g, "livro"))
+        livros = [d for t, d in celebrados if t == "livro"]
+        self.assertEqual([d["primeira"] for d in livros], [True, False, False])
+        self.assertTrue(all(d["paginas"] == missoes.LIVRO_DA_CAPELA["paginas"] and d["acabamento"] == "capela" for d in livros))
+        self.assertEqual(missoes.registro(g, MID)["pistas"].count("ilse"), 1)  # a descoberta, uma vez
+        self.assertNotIn("primeira", missoes.LIVRO_DA_CAPELA)  # o documento não muda
+
     def test_arqueiro_sem_flechas_so_tem_o_caminho_geral(self):
         g = na_capela("arqueiro", etapa="fundo")
         g.j.flechas = 0

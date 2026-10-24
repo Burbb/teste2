@@ -7293,3 +7293,17 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Conferido:** `conferir_jogo.mjs` no jogo de produção, a 1920×945 e a 1280×720 (só arquivos de produção; o
   acabamento; a pauta com desvio 0; o dano tirando só trechos, as essenciais intactas; um texto maior rolando com a
   pauta e o dano presos à página; Esc e as teclas do menu); a fumaça (primeira leitura, cartão, releitura, foco, Esc).
+
+### 24/10/2026 (data do computador local) — As pendências do livro (1.204.1)
+
+- **Reproduzidas no jogo antes de corrigir** (cenário `capela`, o livro por ler): com o objetivo "Descer ao ossuário",
+  o atalho do painel da missão dizia "Ler o livro da capela ▸" antes e depois de ler (o painel pega a primeira opção da
+  missão no menu, e o livro e o baú vêm antes); o Histórico ganhava uma linha "Leu o livro da capela" a cada abertura.
+- **Corrigidas:** as ações ao lado do objetivo (o livro e o baú da sacristia) levam `atalho=False` e ficam fora do
+  atalho (continuam no menu, na mesma ordem, e no ponto da cena: a releitura fica); o motor manda `primeira` com o livro
+  e só a primeira leitura entra no Histórico. Sem mudança de save, de pistas, de requisitos nem de recompensas.
+- **Regressões:** `test_missoes` (as metas do menu, `primeira` só na descoberta, a pista uma vez) e a fumaça (o atalho
+  "Descer ao ossuário" e uma linha no Histórico, também depois de reler).
+- **Fica como está, de propósito:** na etapa do fundo, "Soltar as correntes" vem antes de "Descer ao fundo" e é o
+  atalho; é um preparo do caminho do descanso, não uma ação lateral como o livro. Se o Jean preferir o atalho no
+  "Descer ao fundo", é marcar `atalho=False` nela.

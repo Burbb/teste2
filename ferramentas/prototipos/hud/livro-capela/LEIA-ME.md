@@ -223,11 +223,11 @@ depois a capa castanho-escura (#5a3422) com o corte das folhas e o couro pendend
    a tinta mais clara. Quem lê não percebe que a segunda entrada é de anos depois (só o conteúdo dá a pista).
 5. **O Fechar fica por fora da moldura**, pendurado no canto (herança do Grimório); a 1280 ele encosta no painel da
    direita.
-6. **O atalho da missão aponta para o livro.** O painel da missão (o rastreador) transforma em atalho a primeira opção
+6. **(Corrigido na 1.204.1.) O atalho da missão aponta para o livro.** O painel da missão (o rastreador) transforma em atalho a primeira opção
    de missão do menu, e "Ler o livro da capela" vem antes de "Descer ao ossuário". Com o objetivo "Descer ao ossuário",
    o atalho diz "Ler o livro da capela ▸", antes e **depois** de ler (`app/escolhas.js`, `opcaoMissao`). Não é visual
    do livro, mas confunde o progresso; é uma correção à parte, pequena (por exemplo, a releitura não virar atalho).
-7. **O Histórico repete "Leu o livro da capela"** a cada releitura (a celebração é a mesma). Pequeno; anotar junto do 6.
+7. **(Corrigido na 1.204.1.) O Histórico repete "Leu o livro da capela"** a cada releitura (a celebração é a mesma). Pequeno; anotar junto do 6.
 
 ## Sugestões (não são problemas; pedem a decisão do Jean)
 

@@ -349,7 +349,7 @@
     if (m.tipo === "exausto") return `▸ Exausto: ${d.texto}`;
     if (m.tipo === "retirada") return `▸ ${d.exausto ? "Exausto: " : ""}${d.texto}`;
     if (m.tipo === "derrota") return d.morte ? "▸ Você morreu" : "▸ Você caiu";
-    if (m.tipo === "livro") return "▸ Leu o livro da capela";
+    if (m.tipo === "livro") return d.primeira ? "▸ Leu o livro da capela" : "";  // reler não repete a linha
     if (m.tipo === "mestre") return `▸ Mestre caçador: ${d.plural} (+10% de dano contra eles)`;
     if (m.tipo === "equipou" && d.achado) return `▸ Vestiu: ${d.item.nome}`;
     if (m.tipo === "guardou") return `▸ Na mochila: ${d.item.nome}`;

@@ -370,10 +370,11 @@ function opcaoCacar(id) {
   if (!pergunta || pergunta.tipo !== "opcoes") return -1;
   return pergunta.opcoes.findIndex((o) => o.meta && o.meta.cacar === id);
 }
-/** O passo da missão que se dá aqui (examinar a fonte nova...): o cartão da missão no rastreador vira atalho para ele. */
+/** O passo da missão que se dá aqui (examinar a fonte nova...): o cartão da missão no rastreador vira atalho para ele.
+ *  As ações ao lado do objetivo (`atalho: false`: ler o livro, recolher o baú) ficam no menu e na cena, não no atalho. */
 function opcaoMissao(id) {
   if (!pergunta || pergunta.tipo !== "opcoes") return -1;
-  return pergunta.opcoes.findIndex((o) => o.meta && o.meta.missao === id);
+  return pergunta.opcoes.findIndex((o) => o.meta && o.meta.missao === id && o.meta.atalho !== false);
 }
 function marcarCacadas() {
   document.querySelectorAll(".rastro-contrato").forEach((c) => {

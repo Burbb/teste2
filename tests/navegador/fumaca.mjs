@@ -646,6 +646,18 @@ async function cenarioCapela(browser) {
     await page.waitForTimeout(800);
     await page.click("#prompt .continuar");
     await page.waitForSelector(`${MENU}:has-text("Descer ao ossuário")`, { timeout: 20000 });
+    // 1.204.1: o atalho do painel da missão é o passo do objetivo, não o livro; e reler não repete a linha do Histórico
+    const atalhoMissao = () => page.evaluate(() => [...document.querySelectorAll(".rastro-missao .rastro-cacar")].map((e) => e.textContent.trim()).join("|"));
+    const linhasLivro = () => page.evaluate(() => [...document.querySelectorAll("#historico-lista p")].filter((e) => /Leu o livro/.test(e.textContent)).length);
+    conferir(/^Descer ao ossuário/.test(await atalhoMissao()) && (await linhasLivro()) === 1,
+      `o atalho da missão é "Descer ao ossuário" (não o livro) e o Histórico tem uma linha da leitura (${await atalhoMissao()})`);
+    await page.click(`${MENU}:has-text("Ler o livro da capela")`);  // reler: o mesmo livro, sem outra linha
+    await page.waitForSelector("#sobre-leitura:not([hidden])", { timeout: 20000 });
+    await page.keyboard.press("Escape");
+    await (await page.waitForSelector("#prompt .continuar", { timeout: 20000 })).click();
+    await page.waitForSelector(`${MENU}:has-text("Descer ao ossuário")`, { timeout: 20000 });
+    conferir((await linhasLivro()) === 1 && /^Descer ao ossuário/.test(await atalhoMissao()),
+      "reler o livro: o Histórico continua com uma linha e o atalho continua o do objetivo");
     await page.keyboard.press("d");
     await page.waitForSelector(".missao-pistas", { timeout: 10000 });
     const diario = await page.textContent(".missao-diario");
