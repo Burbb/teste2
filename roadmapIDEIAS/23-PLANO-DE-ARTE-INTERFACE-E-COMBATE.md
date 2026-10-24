@@ -1218,6 +1218,10 @@ ou mudanças de dados por iniciativa do agente.
   separação escura pequena em volta do sprite; e as identidades das seis especializações reais (Piromante, Paladino,
   Berserker, Patrulheiro, Sombra, Necromante), cada uma com paleta, forma e movimento próprios (a direção de cada uma
   no LEIA-ME do protótipo), só na celebração da especialização. Na integração: a identidade pelo id da especialização.
+- **Duas identidades por especialização (24/10/2026, nada no jogo):** aprovados o B4, o A4 e o Piromante. Em
+  avaliação, duas propostas para Paladino, Berserker, Patrulheiro, Sombra e Necromante (Luz do alto / Asas; O nome
+  sangra / Garras; Vendaval / Clareira; Corte / Invisível; Erguer / Almas), com símbolos desenhados à mão, nas duas
+  apresentações; uma por especialização será escolhida antes da integração.
 - **Dependências do procedural** (para o levantamento da retirada): o covil, o vencido, a cidadela e a "selada" só
   existem lá; a legenda fixa dos nove desenhos; `MapaPx.sprite` cai no bioma para a `saida` da campanha; os glifos de
   `rpg/mapa.py`; o `fechado` da campanha não chega à tela como campo.
@@ -1388,7 +1392,8 @@ volta à pauta quando essa expansão exigir; não é uma migração de engine.
    avaliação, segunda rodada** (três direções da subida de nível com as celebrações e a raridade, só no protótipo;
    item 1.12); o Jean escolheu refinar A e B (24/10/2026) e depois manter as duas como apresentações disponíveis, o
    Estouro como padrão pretendido (a troca vai para as opções do jogo); A3, B3 e o Piromante aprovados (24/10/2026);
-   em avaliação, o selo dos itens retocado (B4) e as identidades das seis especializações; depois, a integração. Histórico: **1E.4, em avaliação (23/10/2026):** o levantamento e o primeiro lote de protótipos (a posição, os caminhos, os
+   B4, A4 e o Piromante aprovados; em avaliação, duas identidades para cada uma das outras cinco especializações;
+   depois, a integração. Histórico: **1E.4, em avaliação (23/10/2026):** o levantamento e o primeiro lote de protótipos (a posição, os caminhos, os
    símbolos e as marcas; detalhes em "A 1E.4 em 23/10/2026", no item 1.12). O Jean escolheu a direção B (a A fica como
    alternativa); aprovados como base a plaqueta B, a cancela, os caminhos e as marcas; a vila e a floresta nativas
    aprovadas (`094bb80a`: 32 no minimapa, 48 no mapa grande); o pântano e as ruínas aprovados (`c7bd2348`); em

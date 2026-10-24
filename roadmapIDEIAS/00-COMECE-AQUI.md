@@ -7063,3 +7063,14 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Para avaliar:** o painel (`demo.bat`, http://127.0.0.1:8765/) com uma linha por especialização; os vídeos `r4-*.webm`
   sem áudio em `para-avaliacao/` (o antes × depois dos itens e as especializações por apresentação); as folhas em
   `capturas-r4/`. Nada integrado: a integração espera esta avaliação.
+
+### 24/10/2026 (data do computador local) — Etapa 2: duas identidades por especialização (protótipo)
+
+- **Aprovado pelo Jean:** o Estouro B4 e o Relicário A4 como apresentações (o Estouro como padrão pretendido; a
+  alternância para as futuras opções) e o Piromante nas duas. Não mudam.
+- **Candidatas (nada integrado):** duas identidades para Paladino, Berserker, Patrulheiro, Sombra e Necromante, em
+  `ferramentas/prototipos/hud/celebracoes/v2/identidades2.js`, nas duas apresentações (`estouro5a/5b`,
+  `relicario5a/5b`): Luz do alto / Asas; O nome sangra / Garras; Vendaval / Clareira; Corte / Invisível; Erguer /
+  Almas. Direção, referências e limitações no LEIA-ME.
+- **Para avaliar:** o painel (`demo.bat`, http://127.0.0.1:8765/); os vídeos `r5-*.webm` sem áudio em
+  `para-avaliacao/`; as folhas em `capturas-r5/`. Esperando a escolha de uma identidade por especialização.
