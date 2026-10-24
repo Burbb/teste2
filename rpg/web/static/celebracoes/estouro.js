@@ -242,6 +242,8 @@
   .dir-estouro .fb2-cabeca .ficha-lore { margin-top: 4px; }
   /* a coluna mais alta desce para onde os raios do selo chegam: no raro e no lendário, ela se afasta dele */
   :root body #sobre-achado.dir-estouro:is(.rar-raro, .rar-lendario) .fb2-achado.sem-compara .achado-cartao.novo { gap: 88px; }
+  /* o lendário tem os raios mais longos (aura 2.3): as pontas encostavam no "+" dos números; 12 px de folga a mais */
+  :root body #sobre-achado.dir-estouro.rar-lendario .fb2-achado.sem-compara .achado-cartao.novo { gap: 100px; }
   .dir-estouro .ficha-lore { grid-area: lore; max-width: 640px; font: italic 15px/1.4 var(--texto); color: #a89878; }
   .dir-estouro .achado-acoes { display: flex; justify-content: center; gap: 10px; margin-top: 16px; }
   :root body #sobre-achado.dir-estouro.entrando:is(.rar-raro, .rar-lendario):not(.bateu):not(.adiantado) .fb2-selo-item > * { visibility: hidden; }
