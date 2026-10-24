@@ -10,7 +10,8 @@ uma redução só onde a legenda diz, para caber a página inteira.
   - origem-lugares.png: de onde vêm os ícones de lugar de 32 e 40 (a folha de referência, o recorte, as reduções);
   - presenca-lugares.png: o mapa grande com o 40 aprovado e com um 48 pelo mesmo processo (capturas/proposta-b48);
   - nativos.png: a vila e a floresta refeitas em grade nativa (32 e 48), antigo × novo, e o nome perto da borda;
-  - cinco.png: os cinco símbolos da campanha em grade nativa, antigo × novo de dia e à noite, e o nome do Bosque.
+  - cinco.png: os cinco símbolos da campanha em grade nativa, antigo × novo de dia e à noite, e o nome do Bosque;
+  - lote3.png: a planície refinada (antes × depois) e os usos fora do mapa, a Viagem e o Diário (antes × proposta).
     python folhas.py [nativos ...]   # sem nomes, todas
     python folhas.py
 """
@@ -398,8 +399,43 @@ def cinco():
     f.gravar(PASTA / "cinco.png")
 
 
+def lote3():
+    """A planície refinada (antes × depois, com os quatro aprovados) e os dois itens seguintes: as opções de viagem (com o
+    mapa da tela de Viagem) e o Diário, antes × depois, com os mesmos dados."""
+    p = PASTA / "proposta"
+    f = Folha(1960)
+    f.texto("1E.4 — a planície refinada e os usos fora do mapa: Viagem e Diário (proposta; nada no jogo)", 22, OURO, True)
+    f.texto("Capturas a 1920×945 com os mesmos dados; ampliações por vizinho mais próximo. Os quatro aprovados (vila, floresta, "
+            "pântano, ruínas) intactos; a planície anterior preservada (lugar-planicie-n32/n48).", 14, TEXTO2)
+    f.espaco()
+    um = lambda n: Image.open(p / f"{n}.png").convert("RGBA")  # noqa: E731
+    f.texto("1. A planície/saída: antes × depois, ao lado dos quatro aprovados", 18, TEXTO, True)
+    aprov = ("vila", "floresta", "pantano", "ruinas")
+    f.imagens([(nicho(um(f"lugar-{n}-n32"), 34, 3), f"{n}, 32 a 3×") for n in aprov] +
+              [(nicho(um("lugar-planicie-n32"), 34, 3), "planície antes, 32 a 3×"), (nicho(um("lugar-planicie-n32b"), 34, 3), "planície DEPOIS, 32 a 3×")], gap=12, legenda=12)
+    f.imagens([(nicho(um(f"lugar-{n}-n48"), 50, 2), f"{n}, 48 a 2×") for n in aprov] +
+              [(nicho(um("lugar-planicie-n48"), 50, 2), "antes, 48 a 2×"), (nicho(um("lugar-planicie-n48b"), 50, 2), "DEPOIS, 48 a 2×")], gap=12, legenda=12)
+    f.imagens([(nicho(um(n), 36 if "32" in n else 52, 1), t) for n, t in
+               (("lugar-planicie-n32", "antes 32, 1×"), ("lugar-planicie-n32b", "depois 32, 1×"), ("lugar-planicie-n48", "antes 48, 1×"), ("lugar-planicie-n48b", "depois 48, 1×"))], gap=20)
+    for sit, r in (("vau-manha", "de dia, no Vau"), ("bosque-noite", "à noite, no Bosque")):
+        f.imagens([(amplia(abrir(CAP / f"{v}/{sit}-mini.png"), 2), f"minimapa {r}: {t}, 2×") for v, t in (("cinco-novo", "antes"), ("planicie-b", "depois"))], gap=20)
+        c = centro("planicie-b", sit, "mapa grande", "Estrada de Varn")
+        f.imagens([(amplia(recorte(abrir(CAP / f"{v}/{sit}-grande.png"), c, 200, 130), 2), f"mapa grande {r}: {t}, 2×") for v, t in (("cinco-novo", "antes"), ("planicie-b", "depois"))], gap=20)
+    f.imagens([(abrir(CAP / "planicie-b/vau-manha-grande.png"), "o mapa grande com os cinco (a planície refinada), de dia, 1×"),
+               (abrir(CAP / "planicie-b/bosque-noite-grande.png"), "à noite, 1×")], gap=20)
+    f.texto("2. As opções de viagem (a tela de Viagem): o mapa da página e os destinos de \"Para onde?\"", 18, TEXTO, True)
+    for sit in ("viagem-dia", "viagem-noite"):
+        f.imagens([(abrir(CAP / f"{v}/{sit}-pagina.png").crop((560, 200, 1310, 800)), f"{sit}: {t}, 1×") for v, t in (("telas-atual", "antes (o jogo)"), ("telas-proposta", "proposta"))], gap=20)
+    f.imagens([(amplia(abrir(CAP / f"{v}/viagem-dia-pagina.png").crop((590, 700, 1060, 790)), 2), f"os destinos, {t}, 2×") for v, t in (("telas-atual", "antes"), ("telas-proposta", "proposta"))], gap=20)
+    f.texto("3. O Diário: o lugar da missão e do contrato", 18, TEXTO, True)
+    f.imagens([(abrir(CAP / f"{v}/diario-pagina.png").crop((585, 250, 1300, 850)), f"{t}, 1×") for v, t in (("telas-atual", "antes (o jogo)"), ("telas-proposta", "proposta"))], gap=20)
+    f.imagens([(amplia(abrir(CAP / f"{v}/diario-pagina.png").crop(cx), 2), f"{t}, 2×") for v, t in (("telas-atual", "antes"), ("telas-proposta", "proposta"))
+               for cx in ((600, 360, 830, 392), (600, 760, 815, 812))], gap=16)
+    f.gravar(PASTA / "lote3.png")
+
+
 if __name__ == "__main__":
     import sys
-    pedidas = sys.argv[1:] or ["levantamento", "pecas", "comparacao", "origem", "presenca", "nativos", "cinco"]
+    pedidas = sys.argv[1:] or ["levantamento", "pecas", "comparacao", "origem", "presenca", "nativos", "cinco", "lote3"]
     for nome in pedidas:
         globals()[nome]()

@@ -17,6 +17,7 @@ descoberta e progressão não mudam. Produção consultada: **1.199.3**.
 - **`presenca-lugares.png`**: o mapa grande com o 40 aprovado e com um 48 pelo mesmo processo.
 - **`nativos.png`**: a vila e a floresta em grade nativa (32 e 48), antigo × novo, e o nome perto da borda.
 - **`cinco.png`**: os cinco símbolos da campanha em grade nativa, antigo × novo de dia e à noite, e o nome do Bosque.
+- **`lote3.png`**: a planície refinada (antes × depois) e os usos fora do mapa, a Viagem e o Diário (antes × proposta).
 - As capturas inteiras, a 1920×945: `capturas/atual/`, `capturas/proposta-b/` (a escolhida, com o 40),
   `capturas/proposta-b48/` (com o 48 no mapa grande) e `capturas/proposta-a/` (a alternativa); para cada situação:
   `-pagina`, `-mundo`, `-mini`, `-mapa`, `-grande`, `-janela`, com o `registro.json` de cada bateria (o canvas nativo e
@@ -163,6 +164,56 @@ com a "selada" da descrição; a legenda lista os nove desenhos dos dois modos; 
 `saida` da campanha; `GLIFO_TIPO`/`GLIFO_BIOMA` (`rpg/mapa.py`, a interface de texto) e o `covil` de `estado.py`. Ao
 retirar o procedural, isso sai ou muda junto; a campanha precisa de um desenho e de um estado próprios para a saída (o
 `fechado` existe no motor, `campanha.py`, mas não chega à tela como campo: o protótipo o reconhece pela descrição).
+
+## A planície refinada e os usos fora do mapa: Viagem e Diário (23/10/2026; em avaliação)
+
+**Aprovados pelo Jean, sem retoques:** o pântano e as ruínas nativos, 32 e 48, do commit **`c7bd2348`** (fontes
+`fontes/lugar-pantano-n32.aseprite`, `lugar-pantano-n48`, `lugar-ruinas-n32`, `lugar-ruinas-n48`; MD5 dos PNGs:
+pântano-n32 `438caa2a…`, pântano-n48 `726439dd…`, ruínas-n32 `072bb92f…`, ruínas-n48 `4791bc54…`). A vila e a floresta
+continuam aprovadas (`094bb80a`). Os oito conferidos iguais depois desta rodada.
+
+### 1. A planície refinada (`lugar-planicie-n32b` e `-n48b`; a anterior, `-n32`/`-n48`, preservada)
+
+A anterior ficou baixa e lisa, uma faixa de gramado. A nova, à mão nas duas grades, com paleta e camadas próprias
+(morros, campo, caminho, árvores, contorno): o **morro do fundo azulado**, os **dois morros do meio** separados, o
+**campo da frente** com pontos de flor, a **passagem de terra** subindo em curva entre os morros e **duas árvores
+folhosas espaçadas**, a da esquerda alta e a da direita menor, de copa redonda (distintas dos pinheiros da floresta),
+sem preencher tudo nem textura miúda. Uma primeira passada tinha a passagem larga como um triângulo (lia como um
+monte); ficou estreita e em curva. Continua de bioma: serve à Estrada de Varn e às planícies do procedural; a
+barricada continua marca separada, desenhada pelo mapa onde a regra bloqueia. As fontes conferidas como as outras (0
+diferentes, exportado = grade, alfa 0/255, `@2x` exato). Fotos em `capturas/planicie-b` (o antes é `capturas/cinco-novo`,
+com os mesmos dados), no minimapa e no mapa grande, de dia e à noite.
+
+### 2. Os dois itens seguintes: a Viagem e o Diário (os usos do lugar fora do mapa)
+
+**Por que estes, e por que agora:** o levantamento deixou pendentes, para a coerência da campanha, o Diário e as opções
+de viagem com o mesmo desenho do mapa. Conferido o que existe: a tela de **Viagem** (a opção "Viajar") mostra o
+**mapa na página**, pelo mesmo `MapaPx` (um uso que o levantamento não tinha separado), e as opções **"Para onde?"**
+com o **sprite 16 antigo** de cada destino; o **Diário** mostra o lugar da missão e do contrato com o **sprite 16
+antigo** e o **"!" de texto** (`MARCA_MAPA`). Os dois aparecem toda vez que se viaja ou se consulta o Diário, e
+reaproveitam peças aprovadas: nenhum desenho novo. (Os símbolos só do procedural ficam fora.)
+
+- **A Viagem** (`prototipo/escolhas.js`, a cópia com uma linha trocada, e o `mapa.js` da proposta): o mapa da página na
+  mesma linguagem (×3 inteiro: 235×134 → 705×402, o 48 nativo, a plaqueta B, a cancela, as marcas); nas opções, o
+  **símbolo do minimapa em 32, 1:1**, com a **marca do mapa** (a plaqueta da missão, o cartaz do contrato) quando o
+  destino a tem. O 32 é o único tamanho de leitura parada da família nova que cabe na linha da opção sem reduzir o
+  desenho; não há um 16 nativo e reduzir o 32 não vale como acabamento.
+- **O Diário** (`prototipo/contratos.js`, a cópia com as duas linhas do lugar trocadas): na missão e no cartaz do
+  contrato, o **símbolo do minimapa em 32** e, no lugar do "!", **a plaqueta da missão** ou **o cartaz do contrato** do
+  minimapa (9×11, 1:1), com o significado no texto alternativo e no passar do mouse, como o "!" tinha.
+- **Conferido** (`capturas/telas-atual` × `capturas/telas-proposta`: a Viagem de dia e à noite e o Diário, no Bosque, com
+  a missão na Capela e um contrato no Charco): os mesmos lugares, destinos, estados, botões e rótulos acessíveis do
+  jogo; sem erro no console. (A espera longa do `/responder`, abortada quando a foto fecha a página, acontece igual no
+  jogo e o roteiro não a conta mais como falha.)
+- **Limitações:** no cartaz do contrato, estreito, o "· 2 trechos" passa para a linha de baixo; o cartaz tem o leve
+  giro de sempre, que também gira o símbolo (32,4 px no retângulo da tela, não uma escala). O `MARCA_MAPA` fica sem uso
+  na cópia; na integração, sai.
+- **A folha `lote3.png`:** a planície antes × depois ao lado dos quatro aprovados, no minimapa e no mapa grande de dia
+  e à noite; a Viagem e o Diário antes × proposta.
+
+**O que falta à 1E.4 depois disto:** a avaliação da planície refinada e destas duas propostas, e então **a integração
+do conjunto** (os cinco símbolos no mapa, no minimapa, na Viagem e no Diário; as marcas; a plaqueta B; a cancela; os
+caminhos; o campo de bloqueio da regra real da viagem). Depois da 1E.4, o plano segue para a etapa 2.
 
 ## Os cinco símbolos da campanha (23/10/2026): a vila e a floresta aprovadas, os três restantes em avaliação
 

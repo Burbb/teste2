@@ -33,7 +33,9 @@ const MapaPx = (() => {
   const NATIVOS = new Set(P.lugaresNativos || ["vila", "floresta", "pantano", "ruinas", "planicie"]);
   function simbolo(n, grande, ladoAntigo) {
     const s = sprite(n), v = grande ? P.nativoGrande : P.nativo;
-    if (v && NATIVOS.has(s)) return { lado: Number(v.slice(1)), html: `<img class="sprite desenho pixel" src="${PECA(`lugar-${s}-${v}`)}" alt="">` };
+    // P.variantes: a versão de um desenho em avaliação ({ planicie: "b" }: a planície refinada)
+    const suf = (P.variantes || {})[s] || "";
+    if (v && NATIVOS.has(s)) return { lado: Number(v.slice(1)), html: `<img class="sprite desenho pixel" src="${PECA(`lugar-${s}-${v}${suf}`)}" alt="">` };
     return { lado: ladoAntigo, html: [32, 40].includes(ladoAntigo) ? Icones.lugar(s, ladoAntigo) : `<img class="sprite desenho" src="${PECA(`lugar-${s}-${ladoAntigo}`)}" alt="">` };
   }
   const PECA = (nome) => `/proposta-mapa/${nome}.png`;
@@ -195,8 +197,12 @@ const MapaPx = (() => {
   function criar(mapa, opts = {}) {
     const grande = !!opts.grande;
     const K = grande ? 3 : 2;  // pixels de tela por pixel do mapa
-    const alvo = document.querySelector(grande ? "#mapa-grande" : "#mapa-mini");
-    const largura = alvo && alvo.clientWidth ? alvo.clientWidth - (grande ? 28 : 2) : (grande ? 928 : 284);
+    // o mapa grande da janela (M) ou, com ela fechada, o da página (a tela de Viagem: o [data-mapa] que o jogo acabou
+    // de esvaziar para receber este mapa); o minimapa do painel do mundo
+    const janela = !document.querySelector("#sobre-mapa") || !document.querySelector("#sobre-mapa").hidden;
+    const pagina = grande && !janela ? [...document.querySelectorAll("[data-mapa]")].pop() : null;
+    const alvo = pagina || document.querySelector(grande ? "#mapa-grande" : "#mapa-mini");
+    const largura = alvo && alvo.clientWidth ? alvo.clientWidth - (pagina ? 2 : grande ? 28 : 2) : (grande ? 928 : 284);
     const W = Math.floor(largura / K), H = Math.round(W / 1.75);
     const SIM = grande ? P.grande : P.mini;  // o lado do símbolo na tela
     const vb = enquadrar(mapa.nos, grande);
@@ -405,6 +411,11 @@ const MapaPx = (() => {
     .mapa-px.proposta .pos-seta { animation: seta-mapa 1.2s steps(1) infinite; }
     @keyframes seta-mapa { 50% { transform: translateY(-2px); } }
     #mapa-legenda .peca-legenda { image-rendering: pixelated; }
+    /* fora do mapa: o símbolo de 32 nas opções de viagem e no Diário, e as marcas do mapa no lugar do "!" */
+    :root body img.simbolo-texto { width: 32px; height: 32px; image-rendering: pixelated; flex: none; vertical-align: middle; margin: -6px 0; }
+    img.marca-texto { width: 9px; height: 11px; image-rendering: pixelated; vertical-align: 0; margin-left: 4px; }
+    .op-lugar { position: relative; display: inline-flex; align-items: center; flex: none; }
+    .op-lugar .marca-texto { margin-left: 2px; align-self: flex-start; }
     #mapa-legenda .leg-plaqueta { position: relative; display: inline-block; width: 20px; height: 22px; }
     #mapa-legenda .leg-plaqueta img { position: absolute; left: 0; top: 0; image-rendering: pixelated; }
     #mapa-legenda .leg-plaqueta img.fig { left: 2px; top: 2px; width: 16px; height: 16px; }
@@ -433,5 +444,20 @@ const MapaPx = (() => {
       (missao.size ? it(im("missao"), "missão") : "") + (contrato.size ? it(im("contrato"), "contrato") : "") +
       (e.mapa.nos.some(fechado) ? it(im("cancela"), "saída fechada") : "");
   }
-  return { criar, sprite, legenda, ambiente(m) { if (m) ambiente = m; } };
+  /** O símbolo de um lugar fora do mapa (as opções de viagem, o Diário): o mesmo desenho do minimapa, 1:1, em `lado`
+   *  (32: o único tamanho de leitura parada que serve a uma linha de texto sem reduzir o desenho). `n` é um nó do mapa
+   *  ou {tipo, bioma}. */
+  function simboloHTML(n, lado = 32) {
+    const s = simbolo(n, false, lado);
+    return s.html.replace("<img ", `<img width="${s.lado}" height="${s.lado}" `).replace('class="', 'class="simbolo-texto ');
+  }
+  /** As marcas de um lugar fora do mapa: a plaqueta da missão e o cartaz do contrato do minimapa, 1:1 (as peças do
+   *  mapa, no lugar do "!" de texto). `quais`: "missao", "contrato" ou os dois, pelo id do lugar no estado. */
+  function marcasHTML(id, quais) {
+    const { missao, contrato } = marcasPorTipo({});
+    const lista = quais ? [quais] : [missao.has(id) && "missao", contrato.has(id) && "contrato"].filter(Boolean);
+    const nome = { missao: "objetivo da missão, marcado no mapa", contrato: "contrato aceito, marcado no mapa" };
+    return lista.map((m) => `<img class="marca-texto" src="${PECA(m + "-mini")}" width="9" height="11" alt="${nome[m]}" title="${nome[m][0].toUpperCase() + nome[m].slice(1)}">`).join("");
+  }
+  return { criar, sprite, legenda, simboloHTML, marcasHTML, ambiente(m) { if (m) ambiente = m; } };
 })();

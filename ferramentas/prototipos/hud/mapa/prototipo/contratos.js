@@ -1,0 +1,147 @@
+/* PROTÓTIPO da 1E.4: rpg/web/static/telas/contratos.js da 1.199.3, com só o lugar da missão e do contrato no
+   Diário trocado (marcado "PROTÓTIPO 1E.4"). Servido no lugar do do jogo só nas fotos. */
+/* Contratos: o mural da vila, o diário (os contratos aceitos, os rumores e quem te persegue) e o rastreador do
+   painel do herói. */
+"use strict";
+
+(() => {
+  const { h, S, barra } = Telas;
+
+  /** A missão da campanha no diário, na ordem de quem volta ao jogo: o objetivo de agora e onde; a novidade mais
+   *  recente; os caminhos e preparos que importam agora; e, fechado, o histórico da investigação (com o dia de cada
+   *  passo quando ele foi registrado; o que um save antigo já sabia aparece sem data). */
+  /** O "!" do mapa ao lado do destino que o mapa marca (o objetivo da missão, o contrato em andamento): o mesmo
+   *  selo, com o significado para leitores de tela e no passar do mouse. */
+  const MARCA_MAPA = ' <span class="marca-contrato marca-no-texto" role="img" aria-label="marcado no mapa" title="Marcado no mapa">!</span>';
+  function missaoDiario(m) {
+    // PROTÓTIPO 1E.4: o símbolo do minimapa (32, 1:1) e a plaqueta da missão do mapa no lugar do "!"
+    const lugar = m.lugar ? `${MapaPx.simboloHTML({ tipo: m.lugar_tipo, bioma: m.bioma }, 32)} ${h(m.lugar)}${m.lugar_id != null ? MapaPx.marcasHTML(m.lugar_id, "missao") : ""}${m.distancia ? ` · ${Texto.plural(m.distancia, "trecho")}` : m.distancia === 0 ? " · você está aqui" : ""}` : "";
+    // O que um caminho pede (o rito, a denúncia): o que já está feito e o que falta, com onde se consegue (o motor
+    // diz; a tela só desenha).
+    const req = m.requisitos;
+    const rito = req ? req.itens.map((r) => `<li class="${r.feito ? "feito" : "falta"}">${r.feito ? "✓" : "○"} ${h(r.texto)}${!r.feito && r.onde ? ` <small>· ${h(r.onde)}</small>` : ""}</li>`).join("") : "";
+    const perguntas = (m.perguntas || []).map((p) => `<li>${h(p)}</li>`).join("");
+    const feitos = !req && !m.concluida ? (m.preparos || []).map((p) => `<li>${h(p)}</li>`).join("") : "";  // concluída: no histórico
+    // Concluída: no lugar do objetivo, a conclusão (o desfecho), o estado da Fonte e o que ainda espera por você.
+    const topo = m.concluida
+      ? `<div class="missao-objetivo missao-conclusao">${h(m.conclusao)}</div>${(m.linhas || []).map((l) => `<div class="missao-lugar">${h(l)}</div>`).join("")}`
+      : `<div class="missao-objetivo">${h(m.objetivo)}</div><div class="missao-lugar">${lugar}</div>`;
+    const espera = m.aguardando ? `<div class="missao-aguardando">${h(m.aguardando)}</div>` : "";
+    const recente = m.recente ? `<div class="missao-recente"><span>${m.recente.dia != null ? `Mais recente · dia ${m.recente.dia}` : "Mais recente"}</span>${h(m.recente.texto)}</div>` : "";
+    const hist = (m.historico || []).map((e) => `<li><span>${e.dia != null ? `Dia ${e.dia}` : "Antes deste registro (sem data)"}</span><ul>${e.itens.map((i) => `<li>${h(i)}</li>`).join("")}</ul></li>`).reverse().join("");
+    return `<div class="missao-diario${m.concluida ? " concluida" : ""}" data-missao="${h(m.id)}"><div class="missao-cab">${S("pergaminho", 2)}<b>${h(m.nome)}</b>${m.concluida ? "<small>concluída</small>" : ""}</div>
+      ${topo}${espera}${recente}
+      ${rito ? `<div class="missao-pistas missao-rito"><span>${h(req.titulo)}</span><ul>${rito}</ul></div>` : ""}
+      ${perguntas ? `<div class="missao-pistas missao-perguntas"><span>Perguntas em aberto:</span><ul>${perguntas}</ul></div>` : ""}
+      ${feitos ? `<div class="missao-pistas missao-feitos"><span>O que você já fez:</span><ul>${feitos}</ul></div>` : ""}
+      ${hist ? `<details class="missao-historico"><summary>Histórico da investigação</summary><ol>${hist}</ol></details>` : ""}</div>`;
+  }
+
+  /** As missões do Diário: as em andamento primeiro; o que uma concluída ainda espera (a herança de Berta), à vista;
+   *  as concluídas numa seção recolhida, com o desfecho, o que mudou e o histórico para consultar. */
+  function missoesDiario(lista, capitulo) {
+    const ativas = lista.filter((m) => !m.concluida), feitas = lista.filter((m) => m.concluida);
+    const fim = capitulo ? `<div class="missao-pendencia missao-capitulo">${S("pergaminho", 1)}<span><b>${h(capitulo.nome)}</b> · ${h(capitulo.texto)} ${h(capitulo.nota)}</span></div>` : "";
+    const pendencias = feitas.filter((m) => m.pendente).map((m) => `<div class="missao-pendencia">${S("pergaminho", 1)}<span><b>${h(m.nome)}</b> · ${h(m.pendente)}</span></div>`).join("");
+    return fim + ativas.map(missaoDiario).join("") + pendencias + (feitas.length
+      ? `<details class="missoes-concluidas"><summary>Concluídas (${feitas.length})</summary>${feitas.map(missaoDiario).join("")}</details>` : "");
+  }
+
+  function diario(d) {
+    const missoes = missoesDiario(d.missoes || [], d.capitulo);
+    const contratos = d.contratos.map((c) => cartaz(c, true, false, d.nivel_heroi)).join("");
+    const rumores = d.rumores.map((r) => `<div class="bilhete"><span class="prego"></span>${S("olho", 1)} ${h(r.texto)}<small>${r.expira > 0 ? `some em ${Texto.plural(r.expira, "dia")}` : "some hoje"}</small></div>`).join("");
+    const losangos = [0, 1, 2].map((i) => `<i class="sigilo${i < d.sigilos ? " tem" : ""}"></i>`).join("");
+    return `<div class="tela diario">
+      <div class="faixa-jornada"><span>Dia ${d.dia}</span><span class="sigilos-diario" title="Sigilos dos guardiões">${losangos} ${d.sigilos}/3</span></div>
+      ${missoes ? `<div class="quadro quadro-missao"><div class="quadro-cab"><b>Missão</b><span></span></div>${missoes}</div>` : ""}
+      <div class="quadro"><div class="quadro-cab"><b>Contratos</b><span>${d.contratos.length}/${d.limite}</span></div>
+        <div class="cartazes">${contratos || '<span class="vazio">Nenhum contrato. Procure o mural de uma vila.</span>'}</div></div>
+      ${rumores ? `<h4>Rumores</h4><div class="bilhetes">${rumores}</div>` : ""}
+      ${d.nemesis ? `<h4>Quem te persegue</h4><div class="bilhete inimigo">${S("fera", 1)} ${h(d.nemesis.nome)}, ${h(d.nemesis.familia)}. Ele não esqueceu de você.</div>` : ""}
+    </div>`;
+  }
+
+  const TIPO_CONTRATO = { caca: "Caça", alvo: "Procurado", entrega: "Entrega" };
+  function cartaz(c, ativo, cheio, nivelHeroi) {
+    const arte = c.tipo === "entrega" ? "saco" : c.retrato || "caveira";
+    const titulo = c.tipo === "alvo" ? c.alvo : c.tipo === "entrega" ? (c.objeto || "Entrega") : c.desc.replace(/^Eliminar /, "").replace(/ em .*$/, "");
+    const perigo = c.nivel == null ? "" : c.nivel - nivelHeroi >= 2 ? "alto" : c.nivel >= nivelHeroi ? "medio" : "baixo";
+    // PROTÓTIPO 1E.4: o símbolo do minimapa (32, 1:1) e o cartaz do contrato do mapa no lugar do "!"
+    const lugar = `${MapaPx.simboloHTML({ tipo: c.lugar_tipo, bioma: c.bioma }, 32)} ${h(c.lugar)}${ativo && !c.concluido ? MapaPx.marcasHTML(c.lugar_id, "contrato") : ""}${c.distancia != null ? ` · ${Texto.plural(c.distancia, "trecho")}` : ""}${c.nivel != null ? ` <span class="perigo-tag ${perigo}">Nv.${c.nivel}</span>` : ""}`;
+    let progresso = "";
+    if (ativo && c.tipo === "caca" && c.progresso && !c.recebendo) {
+      const [feito, total] = c.progresso.split("/").map(Number);
+      progresso = `<div class="contrato-progresso">${barra("xp", feito, total)}<span>${feito}/${total}</span></div>`;
+    }
+    let botao;
+    if (c.recebendo) botao = '<span class="carimbo">Cumprido</span>';  // no quadro de pagamento: o carimbo bate
+    else if (ativo) botao = c.concluido ? '<span class="contrato-feito">Feito! Volte a uma vila para receber</span>'
+      : `<button type="button" class="contrato-botao abandonar" data-abandonar="${c.id}" title="Reputação −${c.penalidade}">Abandonar</button>`;
+    else botao = `<button type="button" class="contrato-botao${cheio ? " bloqueado" : ""}" data-aceitar="${c.id}"${cheio ? ' aria-disabled="true"' : ""}>Aceitar</button>`;
+    const recem = ativo && contratosVistos && !contratosVistos.has(c.id);
+    return `<div class="contrato tipo-${h(c.tipo)}${ativo ? " ativo" : ""}${c.concluido && !c.recebendo ? " concluido" : ""}${recem ? " recem" : ""}">
+      <span class="prego"></span><div class="contrato-tipo">${TIPO_CONTRATO[c.tipo] || h(c.tipo)}</div>
+      <div class="contrato-arte">${Icones.criatura(arte, 48) || S(arte, 3)}</div>
+      <div class="contrato-titulo">${h(titulo)}</div>
+      <div class="contrato-desc">${h(c.desc)}</div>
+      <div class="contrato-lugar">${lugar}</div>${progresso}
+      <div class="contrato-premio"><span>${Icones.moeda() || S("moeda", 1)} ${c.ouro}</span><span>${S("estrela", 1)} ${c.xp} XP</span></div>
+      ${botao}</div>`;
+  }
+  let contratosVistos = null;  // os contratos que você já tinha: o recém-aceito chega pregado com destaque
+  function mural(d) {
+    const cheio = d.ativos.length >= d.limite;
+    const oferta = d.oferta.map((c) => cartaz(c, false, cheio, d.nivel_heroi)).join("");
+    const ativos = d.ativos.map((c) => cartaz(c, true, cheio, d.nivel_heroi)).join("");
+    contratosVistos = new Set(d.ativos.map((c) => c.id));
+    return `<div class="tela mural">
+      <div class="quadro"><div class="quadro-cab"><b>Contratos</b><span>${d.renova ? `novos cartazes em ${Texto.plural(d.renova, "dia")}` : "cartazes novos amanhã"}</span></div>
+        <div class="cartazes">${oferta || '<span class="vazio">O mural está vazio. Volte em alguns dias.</span>'}</div></div>
+      <h4>Seus contratos <small>${d.ativos.length}/${d.limite}</small></h4>
+      <div class="cartazes seus">${ativos || '<span class="vazio">Nenhum. Pegue um cartaz do mural.</span>'}</div></div>`;
+  }
+  function ligarMural(raiz, d) {
+    // No limite de contratos, aceitar não vai ao jogo: o "não" e o aviso de por quê, perto do clique, a cada tentativa.
+    const cheio = d && d.limite && (d.ativos || []).length >= d.limite;
+    raiz.querySelectorAll("[data-aceitar]").forEach((b) => b.addEventListener("click", (ev) => {
+      ev.stopPropagation();
+      if (cheio) { App.som("falha"); App.avisar(`Você já tem ${d.limite} contratos: entregue ou abandone um antes.`, "contratos"); return; }
+      App.acao({ aceitar: Number(b.dataset.aceitar) }, "pagina");
+    }));
+    raiz.querySelectorAll("[data-abandonar]").forEach((b) => b.addEventListener("click", (ev) => { ev.stopPropagation(); App.acao({ abandonar: Number(b.dataset.abandonar) }, "escolha"); }));
+  }
+
+  /** Rastreador sempre à vista: alvo, lugar, distância e progresso de cada contrato. */
+  /** O rastreador do painel do mundo: a missão da campanha (se houver), o capítulo concluído e os contratos aceitos. */
+  function rastreador(contratos, nivelHeroi, missoes, capitulo) {
+    const linhasMissao = (missoes || []).map((m) => `<div class="rastro-contrato rastro-missao" data-local="${m.lugar_id}" data-missao="${h(m.id)}" title="${h(m.objetivo)}">
+        <span class="rastro-arte">${S("pergaminho", 2)}</span>
+        <span class="rastro-info"><b>${h(m.nome)}</b><span class="rastro-objetivo">${h(m.objetivo)}</span>
+          <span class="rastro-lugar">${h(m.lugar || "")}${m.distancia ? ` · ${Texto.plural(m.distancia, "trecho")}` : m.distancia === 0 ? " · você está aqui" : ""}</span></span></div>`).join("");
+    // Sem missão em andamento e com o capítulo concluído: a linha do fim, no lugar dela (o motor diz quando).
+    const fim = capitulo && !linhasMissao ? `<div class="secao rastreador"><h3>Capítulo</h3><div class="rastro-contrato rastro-missao feito" title="${h(capitulo.texto)}">
+        <span class="rastro-arte">${S("pergaminho", 2)}</span>
+        <span class="rastro-info"><b>${h(capitulo.nome)}</b><span class="rastro-objetivo">${h(capitulo.texto)}</span>
+          <span class="rastro-lugar">${h(capitulo.nota)}</span></span></div></div>` : "";
+    const missao = linhasMissao ? `<div class="secao rastreador"><h3>Missão</h3>${linhasMissao}</div>` : fim;
+    if (!contratos || !contratos.length) return missao;
+    return missao + `<div class="secao rastreador"><h3>Contratos</h3>${contratos.map((c) => {
+      const arte = c.tipo === "entrega" ? "saco" : c.retrato || "caveira";
+      const alvo = c.tipo === "alvo" ? c.alvo : c.tipo === "entrega" ? `Levar ${c.objeto}` : c.desc.replace(/^Eliminar /, "").replace(/ em .*$/, "");
+      let prog = "";
+      if (c.tipo === "caca" && c.progresso) { const [f, t] = c.progresso.split("/").map(Number); prog = `${barra("xp", f, t)}<small>${f}/${t}</small>`; }
+      const perigo = c.nivel == null ? "" : c.nivel - nivelHeroi >= 2 ? "alto" : c.nivel >= nivelHeroi ? "medio" : "baixo";
+      return `<div class="rastro-contrato${c.concluido ? " feito" : ""}" data-local="${c.lugar_id}" data-contrato="${c.id}" title="${h(c.desc)}">
+        <span class="rastro-arte">${Icones.criatura(arte, 32) || S(arte, 2)}</span>
+        <span class="rastro-info"><b>${h(alvo)}</b>
+          <span class="rastro-lugar">${c.concluido ? "Feito! Receba numa vila" : `${h(c.lugar)}${c.distancia ? ` · ${Texto.plural(c.distancia, "trecho")}` : c.distancia === 0 ? " · você está aqui" : ""}`}${c.nivel != null && !c.concluido ? ` <span class="perigo-tag ${perigo}">Nv.${c.nivel}</span>` : ""}</span>
+          ${prog ? `<span class="rastro-prog">${prog}</span>` : ""}</span></div>`;
+    }).join("")}</div>`;
+  }
+
+  Telas.registrar("mural", mural, { ligar: ligarMural, esquecer: () => { contratosVistos = null; } });
+  Telas.registrar("diario", diario, { ligar: ligarMural });
+
+  Object.assign(Telas, { cartaz, rastreador });
+})();

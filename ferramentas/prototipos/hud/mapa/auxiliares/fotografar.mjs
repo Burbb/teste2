@@ -26,11 +26,20 @@ const SITUACOES = [
   { nome: "praca-tudo", cenario: "praca", amb: {} },
   // o procedural (fora da prioridade): só para ver o que ele compartilha com a campanha (o covil, a cidadela, a legenda)
   { nome: "procedural-covil", cenario: "covil", amb: { CLASSE: "guerreiro", PERIODO: "0" } },
-].filter((s) => !so || so.split(",").includes(s.nome));
+  // as telas que mostram o lugar fora do mapa (no Bosque, a missão na Capela e um contrato no Charco): a Viagem (o mapa
+  // na página e as opções "Para onde?") e o Diário; de dia e à noite
+  { nome: "viagem-dia", cenario: "tutorial", amb: { ...BASE, LUGAR: "bosque", PERIODO: "0", ETAPA: "capela", CONTRATO: "aceito", CONTRATO_EM: "charco" },
+    tela: [{ clicar: "Viajar" }] },
+  { nome: "viagem-noite", cenario: "tutorial", amb: { ...BASE, LUGAR: "bosque", PERIODO: "3", ETAPA: "capela", CONTRATO: "aceito", CONTRATO_EM: "charco" },
+    tela: [{ clicar: "Viajar" }] },
+  { nome: "diario", cenario: "tutorial", amb: { ...BASE, LUGAR: "bosque", PERIODO: "0", ETAPA: "capela", CONTRATO: "aceito", CONTRATO_EM: "charco" },
+    tela: [{ tecla: "d" }] },
+].filter((s) => (so ? so.split(",").includes(s.nome) : !s.tela));
 const prototipo = process.env.PROTOTIPO ? readFileSync(path.join(AQUI, "../prototipo/mapa.js"), "utf8") : null;
 // NATIVO e NATIVO_GRANDE ("n32", "n48"): a vila e a floresta refeitas em grade nativa, no minimapa e no mapa grande
 const variante = { mini: Number(process.env.MINI || 32), grande: Number(process.env.GRANDE || 40), pos: process.env.POS || "b",
-  nativo: process.env.NATIVO || "", nativoGrande: process.env.NATIVO_GRANDE || "" };
+  nativo: process.env.NATIVO || "", nativoGrande: process.env.NATIVO_GRANDE || "",
+  variantes: process.env.PLANICIE ? { planicie: process.env.PLANICIE } : {} };  // PLANICIE=b: a planície refinada
 mkdirSync(saida, { recursive: true });
 const b = await chromium.launch();
 const registro = {};
@@ -44,10 +53,15 @@ for (const sit of SITUACOES) {
     const erros = [], avisos = [];
     p.on("pageerror", (e) => erros.push(String(e)));
     p.on("console", (m) => { if (m.type() === "error" || m.type() === "warning") avisos.push(m.text()); });
-    p.on("requestfailed", (r) => erros.push(`falhou: ${r.url()}`));
+    // a espera longa do /responder, abortada quando a foto fecha a página (acontece igual no jogo), não é falha
+    p.on("requestfailed", (r) => { if (!(r.url().endsWith("/responder") && /ABORTED/.test((r.failure() || {}).errorText || "")))
+      erros.push(`falhou: ${r.url()} ${(r.failure() || {}).errorText}`); });
     if (prototipo) {
       await p.addInitScript((v) => { window.__MAPA = v; }, variante);
       await p.route("**/static/mapa.js", (rota) => rota.fulfill({ contentType: "application/javascript", body: prototipo }));
+      // as cópias das telas que mostram o lugar fora do mapa (as opções de viagem, o Diário)
+      for (const [url, arq] of [["**/static/app/escolhas.js", "escolhas.js"], ["**/static/telas/contratos.js", "contratos.js"]])
+        await p.route(url, (rota) => rota.fulfill({ contentType: "application/javascript", body: readFileSync(path.join(AQUI, "../prototipo", arq), "utf8") }));
       await p.route("**/proposta-mapa/*", (rota) => rota.fulfill({ contentType: "image/png",
         body: readFileSync(path.join(AQUI, "../proposta", path.basename(new URL(rota.request().url()).pathname))) }));
     }
@@ -75,6 +89,19 @@ for (const sit of SITUACOES) {
       for (const [n, u] of Object.entries(urls)) writeFileSync(path.join(pasta, `${n}.png`), Buffer.from(u.split(",")[1], "base64"));
     }
     const fotos = [];
+    if (sit.tela) {  // uma tela da página: os passos e a foto inteira
+      for (const passo of sit.tela) {
+        if (passo.clicar) await p.locator("button", { hasText: passo.clicar }).first().click();
+        if (passo.tecla) await p.keyboard.press(passo.tecla);
+        await espera(1800);
+      }
+      await p.screenshot({ path: path.join(saida, `${sit.nome}-pagina.png`) });
+      registro[sit.nome] = { erros, avisos, fotos: ["pagina"], simbolos: await p.evaluate(() => [...document.querySelectorAll("img.simbolo-texto, img.marca-texto")]
+        .map((i) => `${i.getAttribute("src").split("/").pop()} ${i.naturalWidth}→${i.getBoundingClientRect().width}`)),
+        medidas: await medir() };
+      await p.close();
+      continue;
+    }
     await p.screenshot({ path: path.join(saida, `${sit.nome}-pagina.png`) }); fotos.push("pagina");
     await p.locator("#mundo").screenshot({ path: path.join(saida, `${sit.nome}-mundo.png`) }); fotos.push("mundo");
     await p.locator("#mapa-mini .mapa-px").screenshot({ path: path.join(saida, `${sit.nome}-mini.png`) }); fotos.push("mini");
