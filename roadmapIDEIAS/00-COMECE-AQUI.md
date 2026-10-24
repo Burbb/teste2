@@ -7024,3 +7024,14 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   simulação identificada); o som é o atual (não ouvido nesta máquina: só o sincronismo pelos tempos).
 - **Agora:** a escolha do Jean entre A, B e C (ou a mistura). Depois, a integração. O carregar jogo e a criação de
   personagem continuam esperando o levantamento da retirada do procedural; os retratos suspensos e o Grimório, parados.
+
+### 24/10/2026 (data do computador local) — Etapa 2, o refinamento de A e B (protótipo)
+
+- **Nada no jogo.** O Jean escolheu refinar A (Relicário) e B (Estouro), sem misturar; a C fica reservada; as versões
+  anteriores viram histórico. A2 e B2 em `ferramentas/prototipos/hud/celebracoes/v2/` (o que mudou no LEIA-ME): itens
+  no tamanho de uso (64), informação sem molduras repetidas, a especialização com o nome protagonista, a comparação
+  numa peça só, comum e mágico mais contidos, sustentação mais baixa depois da entrada.
+- **Para avaliar:** o painel (`demo.bat`, http://127.0.0.1:8765/) com A2 e B2 em destaque; quatro vídeos sem áudio em
+  `ferramentas/prototipos/hud/celebracoes/para-avaliacao/`; a folha `capturas-refino/folha-refino.png`.
+- **Agora:** a avaliação do Jean (os vídeos vão também para outra avaliação externa). Carregar jogo e criação de
+  personagem, os retratos suspensos e o Grimório continuam parados.

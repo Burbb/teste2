@@ -1199,6 +1199,12 @@ ou mudanças de dados por iniciativa do agente.
   reduzido parado, 1280×720 conferido. A demonstração (`demo.bat`, http://127.0.0.1:8765/) abre cada cenário nas
   três, no jogo atual e na primeira proposta; cenários reais (um nível, dois níveis, as quatro raridades, o nível 4, o
   Sigilo, a especialização) e uma simulação identificada (textos longos). A primeira proposta fica como histórico.
+- **O refinamento de A e B (24/10/2026, nada no jogo):** o Jean gostou da presença (os feixes do Relicário, o lendário,
+  o Sigilo) e pediu A e B refinadas sem mistura (a C reservada): itens no tamanho de uso (64), a informação sem molduras
+  repetidas (ganhos alinhados, talento e habilidade integrados, o Continuar do jogo), a especialização com o nome
+  protagonista, a comparação numa peça só, comum e mágico mais contidos, a sustentação depois da entrada; na B2, o selo
+  de miolo escuro e a faixa de ferro no lugar da fita e do contorno de quadrinhos. A2 e B2 no painel; quatro vídeos em
+  `para-avaliacao/`. Na integração, o ícone da habilidade nova entra no evento da festa (hoje só no servidor de teste).
 - **Dependências do procedural** (para o levantamento da retirada): o covil, o vencido, a cidadela e a "selada" só
   existem lá; a legenda fixa dos nove desenhos; `MapaPx.sprite` cai no bioma para a `saida` da campanha; os glifos de
   `rpg/mapa.py`; o `fechado` da campanha não chega à tela como campo.
@@ -1367,7 +1373,7 @@ volta à pauta quando essa expansão exigir; não é uma migração de engine.
    chapéu estão reservados.
 3. **1E.4, integrada na 1.200.0 (23/10/2026)**; a lista de Caminhos na 1.200.1. **Etapa 2, o primeiro lote em
    avaliação, segunda rodada** (três direções da subida de nível com as celebrações e a raridade, só no protótipo;
-   item 1.12): esperando a escolha do Jean. Histórico: **1E.4, em avaliação (23/10/2026):** o levantamento e o primeiro lote de protótipos (a posição, os caminhos, os
+   item 1.12); o Jean escolheu refinar A e B (24/10/2026): A2 e B2 em avaliação, a C reservada. Histórico: **1E.4, em avaliação (23/10/2026):** o levantamento e o primeiro lote de protótipos (a posição, os caminhos, os
    símbolos e as marcas; detalhes em "A 1E.4 em 23/10/2026", no item 1.12). O Jean escolheu a direção B (a A fica como
    alternativa); aprovados como base a plaqueta B, a cancela, os caminhos e as marcas; a vila e a floresta nativas
    aprovadas (`094bb80a`: 32 no minimapa, 48 no mapa grande); o pântano e as ruínas aprovados (`c7bd2348`); em
