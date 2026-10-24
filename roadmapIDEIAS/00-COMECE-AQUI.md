@@ -7095,3 +7095,24 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   poças) e a luz (A contínua atrás do nome, B vitral, C centro menos intenso), sem o recorte preto. Nada integrado.
 - **Para avaliar:** o painel (`demo.bat`), os vídeos `r7-*.webm` sem áudio em `para-avaliacao/`, as folhas em
   `capturas-r7/`. Esperando a escolha de um sangue e de uma luz.
+
+### 24/10/2026 (data do computador local) — Etapa 2: as celebrações integradas (1.201.0)
+
+- **Integração concluída (no jogo):** a subida de nível, os achados e as raridades, o Sigilo e as especializações, em
+  `rpg/web/static/celebracoes/` (`fx.js`, `festa.js`, `estouro.js`, `relicario.js`, `identidades.js`,
+  `especializacoes.js`). Versões: o Estouro B4 (padrão) e o Relicário A4; o Piromante (o piloto); Necromante, Sombra e
+  Patrulheiro da sexta rodada (`6a1b774b`); o Berserker com o sangue A e o Paladino com a luz B (o vitral), da sétima
+  (`59da1c8f`). O motor manda o `id` da especialização e o `icone` da habilidade nova na festa. Saíram a festa antiga
+  do nível, do Sigilo e da especialização, a cerimônia antiga do saque (o feixe da `Sensacao`) e o CSS delas.
+- **Futura opção do jogo (registrada, sem tela):** a apresentação Estouro ou Relicário (`Festa.usar`).
+- **Reservado só para o desenvolvimento:** o Paladino A, a luz contínua (o modo `"continua"` em `especializacoes.js`;
+  a fonte e as capturas no protótipo).
+- **Conferido no jogo real** (as duas apresentações): nível, dois níveis seguidos, as quatro raridades, a comparação,
+  o Sigilo, as seis especializações e um texto longo, em 1920×945 e 1280×720 e com o movimento reduzido; gestos (30
+  verificações em cada apresentação); os sons chamados sem erro (não ouvidos nesta máquina). Verificações: o
+  `unittest`, o gabarito (atualizado: só os campos novos da festa), o pyflakes e a fumaça.
+- **Correção feita na integração (sem mudar a aparência):** os botões reservados do achado (invisíveis, guardando o
+  lugar) não tinham as medidas do acabamento novo, e a janela crescia 3 px quando os botões chegavam (já no B4 do
+  protótipo); a fumaça pegou e agora a janela nasce no tamanho final. A fumaça passou a ler a ficha do achado ao lado
+  do cartão (a regra do Broquel, a troca por espaço de anel).
+- **Agora:** o próximo lote da etapa 2, o redesenho do d20 (não começado).

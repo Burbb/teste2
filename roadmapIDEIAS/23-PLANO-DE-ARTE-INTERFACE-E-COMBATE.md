@@ -36,9 +36,9 @@ Não iniciar todo o plano numa única tarefa. As etapas técnicas A–I e a vali
   com os invocados do Lich); o urso e o falcão também na fogueira (1.176.0); o Mercenário e o Lobo Gélido (1.179.0).
   A relação do que falta
   está em "A frente de criaturas em 22/10/2026", no item 1.12. O Bandido do chapéu está reservado como conceito de um possível chefe, fora do jogo.
-- **A 1E concluída para a campanha (1.200.0):** a 1E.4 integrada; da 1E.3, só restam os retratos do modo procedural (o substituto da Bruxa nos covis e o antagonista), suspensos com a direção de ficar só com a campanha. **Agora: a etapa 2, o primeiro lote em avaliação, segunda rodada** (a subida de nível, as celebrações e a raridade
-em três direções, só no protótipo: `ferramentas/prototipos/hud/celebracoes/LEIA-ME.md`; o escopo em "A 1E.4 integrada",
-no item 1.12). Histórico: **1E.3, as demais criaturas, os chefes e as invocações** (as outras ainda saem dos traços: o `fera`, o
+- **A 1E concluída para a campanha (1.200.0):** a 1E.4 integrada; da 1E.3, só restam os retratos do modo procedural (o substituto da Bruxa nos covis e o antagonista), suspensos com a direção de ficar só com a campanha. **Etapa 2, o primeiro lote integrado na 1.201.0 (24/10/2026):** a subida de nível, as celebrações e a raridade
+(o Estouro como padrão, o Relicário guardado como alternativa, as seis identidades de especialização). **Agora: o
+próximo lote da etapa 2, o redesenho do d20** (o escopo em "A etapa 2, o escopo atualizado", no item 1.12). Histórico: **1E.3, as demais criaturas, os chefes e as invocações** (as outras ainda saem dos traços: o `fera`, o
   `humano`, a caveira e os outros sprites de 16×16; o levantamento em `ferramentas/prototipos/hud/criaturas/`).
   **1E.4 começada (23/10/2026, a direção agora é só a campanha):** o levantamento e o primeiro lote de protótipos em
   `ferramentas/prototipos/hud/mapa/` (nada no jogo; aguardando o Jean). Em seguida, as **etapas 2–9** como estão
@@ -1229,6 +1229,17 @@ ou mudanças de dados por iniciativa do agente.
   "c"). Pendentes, com três alternativas cada: o escorrimento do Berserker (gotas pequenas, filetes, volumes variados) e
   a relação entre a luz e o nome do Paladino (luz contínua, vitral, centro menos intenso), em `estouro5d/e/f` e
   `relicario5d/e/f`.
+- **A etapa 2, o primeiro lote integrado (1.201.0, 24/10/2026).** No jogo, em `rpg/web/static/celebracoes/`: a
+  subida de nível, os dois níveis seguidos, o achado e as raridades (com a comparação), o Sigilo e as seis
+  especializações, nas duas apresentações (o Estouro B4 é o padrão; o Relicário A4 fica implementado como alternativa,
+  sem tela). Identidades: o Piromante (o piloto), Necromante, Sombra e Patrulheiro (a sexta rodada, `6a1b774b`), o
+  Berserker com o sangue A e o Paladino com a luz B, o vitral (a sétima, `59da1c8f`). O motor manda o id da
+  especialização e o ícone da habilidade nova na festa (o gabarito mudou só nesses campos). Fora da integração, como
+  estavam: a vitória, os contratos, o mestre caçador e as faixas. **Registrado à parte:** a futura opção Estouro ou
+  Relicário nas configurações do jogo; o Paladino A (a luz contínua) reservado só para o desenvolvimento (o modo
+  `"continua"` de `luzSemRecorte`; a fonte no protótipo). **O que falta da etapa 2:** o redesenho do d20 (o próximo); o
+  livro narrativo da capela; os componentes antigos restantes, por evidência; o carregar jogo e as fichas dos saves e a
+  criação de personagem, depois do levantamento da retirada do procedural.
 - **Dependências do procedural** (para o levantamento da retirada): o covil, o vencido, a cidadela e a "selada" só
   existem lá; a legenda fixa dos nove desenhos; `MapaPx.sprite` cai no bioma para a `saida` da campanha; os glifos de
   `rpg/mapa.py`; o `fechado` da campanha não chega à tela como campo.
@@ -1399,8 +1410,8 @@ volta à pauta quando essa expansão exigir; não é uma migração de engine.
    avaliação, segunda rodada** (três direções da subida de nível com as celebrações e a raridade, só no protótipo;
    item 1.12); o Jean escolheu refinar A e B (24/10/2026) e depois manter as duas como apresentações disponíveis, o
    Estouro como padrão pretendido (a troca vai para as opções do jogo); A3, B3 e o Piromante aprovados (24/10/2026);
-   B4, A4, Piromante, Necromante, Sombra e Patrulheiro aprovados; Berserker (o sangue) e Paladino (a luz atrás do nome)
-   com três alternativas cada em avaliação; depois, a integração. Histórico: **1E.4, em avaliação (23/10/2026):** o levantamento e o primeiro lote de protótipos (a posição, os caminhos, os
+   B4, A4, Piromante, Necromante, Sombra e Patrulheiro aprovados; o sangue A do Berserker e a luz B (vitral) do Paladino
+   escolhidos; **integrado na 1.201.0 (24/10/2026)**. O próximo lote da etapa 2: o redesenho do d20. Histórico: **1E.4, em avaliação (23/10/2026):** o levantamento e o primeiro lote de protótipos (a posição, os caminhos, os
    símbolos e as marcas; detalhes em "A 1E.4 em 23/10/2026", no item 1.12). O Jean escolheu a direção B (a A fica como
    alternativa); aprovados como base a plaqueta B, a cancela, os caminhos e as marcas; a vila e a floresta nativas
    aprovadas (`094bb80a`: 32 no minimapa, 48 no mapa grande); o pântano e as ruínas aprovados (`c7bd2348`); em
