@@ -1191,13 +1191,14 @@
     return ids.filter((id) => atual.def.pontos[id]);
   }
   // "Destacar interações" (Ajuda e F4): os nomes e os contornos de todos os pontos à vista; sem ele, só no mouse e no
-  // foco do teclado. Preferência de quem joga, guardada no navegador.
+  // foco do teclado. Preferência de quem joga, guardada no navegador e no disco (`noDisco`: não, só ao aplicar a guardada).
   let destacar = false;
   try { destacar = localStorage.getItem("cdf-destacar") === "1"; } catch (e) { /* sem armazenamento */ }
   const destacando = () => destacar;
-  function alternarDestaque(forcar) {
+  function alternarDestaque(forcar, noDisco = true) {
     destacar = forcar === undefined ? !destacar : !!forcar;
     try { localStorage.setItem("cdf-destacar", destacar ? "1" : "0"); } catch (e) { /* sem armazenamento */ }
+    if (noDisco) preferir("destacar", destacar ? "1" : "0");
     document.body.classList.toggle("destacar-interacoes", destacar);
     return destacar;
   }

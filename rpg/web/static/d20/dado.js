@@ -290,8 +290,7 @@ const Dado20 = (() => {
     qual = MAT[nome] ? nome : "";
     if (guardarEscolha) {
       guardar(PREF, qual || "classico");
-      fetch("/preferencia", { method: "POST", headers: { "Content-Type": "application/json", "X-Token": TOKEN },
-        body: JSON.stringify({ chave: "d20", valor: qual || "classico" }) }).catch(() => { /* fica a do navegador */ });
+      preferir("d20", qual || "classico");
     }
     document.documentElement.classList.toggle("d20-usa-marfim", qual === "marfim");
     document.documentElement.classList.toggle("d20-usa-vidro", qual === "vidro");

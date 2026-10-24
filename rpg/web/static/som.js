@@ -496,6 +496,12 @@ const Som = (() => {
     iniciar,
     tocar(nome) { if (!ligado || !ctx || !efeitos[nome]) return; try { efeitos[nome](); } catch (e) { /* sem som */ } },
     ambiente(bioma) { if (ctx) trocarAmbiente(bioma); else ambienteBioma = null; this._pendente = bioma; },
+    /** Liga ou desliga sem alternar (a preferência guardada, na abertura). */
+    definir(sim) {
+      ligado = !!sim;
+      try { localStorage.setItem("cdf-som", ligado ? "1" : "0"); } catch (e) { /* ok */ }
+      if (ctx) mestre.gain.setTargetAtTime(ligado ? 0.9 : 0, ctx.currentTime, 0.1);
+    },
     alternar() {
       ligado = !ligado;
       try { localStorage.setItem("cdf-som", ligado ? "1" : "0"); } catch (e) { /* ok */ }

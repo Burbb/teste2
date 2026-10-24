@@ -15,6 +15,12 @@ function el(tag, classe, html) {
 }
 function guardar(chave, valor) { try { localStorage.setItem(chave, valor); } catch (e) { /* sem armazenamento */ } }
 function ler(chave) { try { return localStorage.getItem(chave); } catch (e) { return null; } }
+/** Uma preferência de quem joga também no disco, pelo jogo (servidor.PREFERENCIAS): a porta muda a cada abertura, e o
+ *  armazenamento do navegador com ela. Volta na abertura, pela /config (controles.js, iniciar). */
+function preferir(chave, valor) {
+  fetch("/preferencia", { method: "POST", headers: { "Content-Type": "application/json", "X-Token": TOKEN },
+    body: JSON.stringify({ chave, valor }) }).catch(() => { /* fica a do navegador */ });
+}
 
 const TOKEN = new URLSearchParams(location.search).get("token") || "";
 const VELOCIDADES = { lento: 60, normal: 120, rapido: 300, instantaneo: 0 };

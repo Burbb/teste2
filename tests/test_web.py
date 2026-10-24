@@ -309,6 +309,30 @@ class TestPreferencias(unittest.TestCase):
             srv, base = self.abrir(arquivo)
             self.assertEqual(self.config(base, srv)["preferencias"], {}, conteudo)
 
+    def test_cada_preferencia_sem_apagar_as_outras(self):
+        # 1.202.2: a velocidade do texto, o som e o "Destacar interações" no mesmo arquivo do d20
+        import os
+        arquivo = os.path.join(tempfile.mkdtemp(), "preferencias", "tela.json")
+        srv, base = self.abrir(arquivo)
+        for chave, valor in (("d20", "marfim"), ("velocidade", "rapido"), ("som", "0"), ("destacar", "1")):
+            self.assertEqual(self.mandar(base, srv, {"chave": chave, "valor": valor}), 204)
+        self.assertEqual(self.mandar(base, srv, {"chave": "velocidade", "valor": "lento"}), 204)  # muda só ela
+        self.assertEqual(self.mandar(base, srv, {"chave": "som", "valor": "talvez"}), 400)
+        srv2, base2 = self.abrir(arquivo)
+        self.assertEqual(self.config(base2, srv2)["preferencias"],
+                         {"d20": "marfim", "velocidade": "lento", "som": "0", "destacar": "1"})
+
+    def test_arquivo_incompleto_ou_com_um_valor_estranho_guarda_o_que_vale(self):
+        import os
+        arquivo = os.path.join(tempfile.mkdtemp(), "tela.json")
+        with open(arquivo, "w", encoding="utf-8") as f:
+            f.write('{"velocidade": "turbo", "som": "0"}')  # sem o d20 e o destaque; a velocidade estranha
+        srv, base = self.abrir(arquivo)
+        self.assertEqual(self.config(base, srv)["preferencias"], {"som": "0"})  # o resto, os padrões da tela
+        self.assertEqual(self.mandar(base, srv, {"chave": "destacar", "valor": "1"}), 204)
+        with open(arquivo, encoding="utf-8") as f:
+            self.assertEqual(json.load(f), {"som": "0", "destacar": "1"})
+
     def test_sem_arquivo_nada_vai_para_o_disco(self):
         srv, base = self.abrir(None)
         self.assertEqual(self.mandar(base, srv, {"chave": "d20", "valor": "marfim"}), 204)

@@ -18,8 +18,10 @@ mimetypes.add_type("font/ttf", ".ttf")
 mimetypes.add_type("text/javascript", ".js")
 
 # As preferências da tela guardadas em disco (a porta muda a cada vez que o jogo abre, e o armazenamento do navegador
-# vai junto): só as chaves e os valores daqui. 1.202.0: o dado dos testes (d20/dado.js), até o menu de configurações.
-PREFERENCIAS = {"d20": ("classico", "marfim", "vidro")}
+# vai junto): só as chaves e os valores daqui, cada uma gravada sem mexer nas outras. 1.202.0: o dado dos testes
+# (d20/dado.js); 1.202.2: a velocidade do texto, o som e o "Destacar interações". Até o menu de configurações.
+PREFERENCIAS = {"d20": ("classico", "marfim", "vidro"), "velocidade": ("lento", "normal", "rapido", "instantaneo"),
+                "som": ("1", "0"), "destacar": ("1", "0")}
 
 
 def ler_preferencias(caminho):

@@ -14,11 +14,13 @@ function alternarMapa(forcar) {
 function mudarVelocidade() {
   velocidade = ORDEM_VEL[(ORDEM_VEL.indexOf(velocidade) + 1) % ORDEM_VEL.length];
   guardar("cdf-velocidade", velocidade);
+  preferir("velocidade", velocidade);
   $("#vel-rotulo").textContent = NOME_VEL[velocidade];
 }
 function alternarSom() {
   Som.iniciar();
   const ligado = Som.alternar();
+  preferir("som", ligado ? "1" : "0");
   $("#botao-som").classList.toggle("desligado", !ligado);
   if (ligado && estado) Som.ambiente(corpo.dataset.bioma);
 }
@@ -198,8 +200,13 @@ async function iniciar() {
   try {
     const r = await fetch(`/config?token=${encodeURIComponent(TOKEN)}`);
     const cfg = await r.json();
-    if (!ler("cdf-velocidade") && VELOCIDADES[cfg.velocidade] !== undefined) velocidade = cfg.velocidade;
-    if (cfg.preferencias && cfg.preferencias.d20) Dado20.usar(cfg.preferencias.d20, false);  // a do disco vale mais
+    // as preferências do disco (servidor.PREFERENCIAS) valem mais que as do navegador; sem elas, as de antes
+    const pref = cfg.preferencias || {};
+    if (VELOCIDADES[pref.velocidade] !== undefined) velocidade = pref.velocidade;
+    else if (!ler("cdf-velocidade") && VELOCIDADES[cfg.velocidade] !== undefined) velocidade = cfg.velocidade;
+    if (pref.som) Som.definir(pref.som === "1");
+    if (pref.destacar) Cenas.alternarDestaque(pref.destacar === "1", false);
+    if (pref.d20) Dado20.usar(pref.d20, false);
   } catch (e) { /* usa o padrão */ }
   $("#vel-rotulo").textContent = NOME_VEL[velocidade];
   // A fonte pixel da história saiu (1.137.0): a de livro é a única. A preferência antiga guardada só é apagada.
