@@ -110,6 +110,8 @@ for (const sit of SITUACOES) {
   const t0 = Date.now();
   try {
     await p.goto(url);
+    // no jogo (sem PROTOTIPO): APRESENTACAO=relicario troca a apresentação das celebrações (o Estouro é o padrão)
+    if (process.env.APRESENTACAO) await p.evaluate((n) => typeof Festa !== "undefined" && Festa.usar(n), process.env.APRESENTACAO);
     await (await p.waitForSelector("button:has-text('Começar o teste')", { timeout: 30000 })).click();  // a partida do cenário de teste
     if (process.env.PULAR_TEXTO) {  // os vídeos curtos: uma tecla adianta o texto de abertura, como o jogador faria
       const primeiro = sit.passos[0].festa;

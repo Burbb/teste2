@@ -24,6 +24,8 @@ async function abrir(b, cenario, classe, preparar = null) {
     window.fetch = (...a) => { if (String(a[0]).includes("/responder")) window.__respostas++; return f(...a); };
   });
   await p.goto(url);
+  // no jogo (sem PROTOTIPO): APRESENTACAO=relicario troca a apresentação das celebrações (o Estouro é o padrão)
+  if (process.env.APRESENTACAO) await p.evaluate((n) => typeof Festa !== "undefined" && Festa.usar(n), process.env.APRESENTACAO);
   if (preparar) await p.evaluate(preparar);
   await (await p.waitForSelector("button:has-text('Começar o teste')")).click();
   for (let k = 0; k < 40 && !(await p.$("#celebracao .festa, .festa-espolio, #sobre-achado .achado-cartao")); k++) { await p.keyboard.press("x"); await espera(250); }

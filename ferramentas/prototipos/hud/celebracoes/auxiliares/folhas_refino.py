@@ -133,6 +133,22 @@ def rodada7():
     folha(["Estouro · 1280", "Relicário · 1280", "Estouro · reduzido", "Relicário · reduzido"], linhas, R7 / "folha-r7-apertados.png")
 
 
+def producao():
+    """O jogo (1.201.0): cada momento nas duas apresentações (3 s), e 1280×720 e o movimento reduzido."""
+    RP = BASE / "capturas-producao"
+    meio = (360, 0, 1560, 780)
+    momentos = [("dois-niveis", "nivel2", "Nível (dois seguidos)"), ("raridades", "comum", "Comum"), ("raridades", "magico", "Mágico"),
+                ("raridades", "raro", "Raro, com a comparação"), ("raridades", "lendario", "Lendário"), ("sigilo", "sigilo", "Sigilo"),
+                ("limites", "lendario", "Texto longo (simulação)")] + [(f"spec-{k}", k, k.capitalize()) for k in
+                ("piromante", "paladino", "berserker", "patrulheiro", "sombra", "necromante")]
+    linhas = [(rot, [quadro(RP / a / "1920" / f"{s}-{f}-3000.png", meio, 0.3) for a in ("estouro", "relicario")] +
+               [quadro(RP / a / "1280" / f"{s}-{f}-1500.png", None, 0.28) for a in ("estouro", "relicario")] +
+               [quadro(RP / a / "reduzido" / f"{s}-{f}-1500.png", meio, 0.22) for a in ("estouro", "relicario")])
+              for s, f, rot in momentos]
+    folha(["Estouro · 1920", "Relicário · 1920", "Estouro · 1280", "Relicário · 1280", "Estouro · reduzido", "Relicário · reduzido"],
+          linhas, RP / "folha-producao.png")
+
+
 if __name__ == "__main__":
     import sys
-    rodada7() if "r7" in sys.argv else rodada6() if "r6" in sys.argv else rodada5() if "r5" in sys.argv else rodada4() if "r4" in sys.argv else rodada3() if "r3" in sys.argv else main()
+    producao() if "producao" in sys.argv else rodada7() if "r7" in sys.argv else rodada6() if "r6" in sys.argv else rodada5() if "r5" in sys.argv else rodada4() if "r4" in sys.argv else rodada3() if "r3" in sys.argv else main()

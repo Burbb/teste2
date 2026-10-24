@@ -1,0 +1,122 @@
+{
+ "nivel": {
+  "erros": [],
+  "avisos": [],
+  "linha": [
+   "espolio: apareceu em 2002 ms",
+   "espolio: fechado (clique) em 5445 ms",
+   "nivel: apareceu em 5814 ms",
+   "nivel: fechado (clique) em 9044 ms"
+  ]
+ },
+ "dois-niveis": {
+  "erros": [],
+  "avisos": [],
+  "linha": [
+   "espolio: apareceu em 1452 ms",
+   "espolio: fechado (clique) em 4891 ms",
+   "nivel2: apareceu em 5261 ms",
+   "nivel2: fechado (duplo) em 8559 ms",
+   "depois do clique duplo, há festa aberta: true",
+   "nivel3: apareceu em 9442 ms",
+   "nivel3: fechado (tecla) em 12646 ms"
+  ]
+ },
+ "raridades": {
+  "erros": [],
+  "avisos": [],
+  "linha": [
+   "comum: apareceu em 1020 ms",
+   "comum: fechado (deixar) em 4318 ms",
+   "magico: apareceu em 5188 ms",
+   "magico: fechado (deixar) em 8451 ms",
+   "raro: apareceu em 9313 ms",
+   "raro: fechado (deixar) em 12645 ms",
+   "lendario: apareceu em 13555 ms",
+   "lendario: fechado (deixar) em 17276 ms",
+   "achados: botões 230, 304, 443, 600 ms depois do cartão"
+  ]
+ },
+ "sigilo": {
+  "erros": [],
+  "avisos": [],
+  "linha": [
+   "sigilo: apareceu em 1451 ms",
+   "sigilo: fechado (clique) em 4679 ms"
+  ]
+ },
+ "limites": {
+  "erros": [],
+  "avisos": [],
+  "linha": [
+   "nivel: apareceu em 1014 ms",
+   "nivel: fechado (clique) em 4284 ms",
+   "lendario: apareceu em 4683 ms",
+   "lendario: fechado (deixar) em 8007 ms",
+   "achados: botões 599 ms depois do cartão"
+  ]
+ },
+ "spec-piromante": {
+  "erros": [],
+  "avisos": [],
+  "linha": [
+   "piromante: apareceu em 1185 ms",
+   "piromante: fechado (clique) em 4456 ms"
+  ]
+ },
+ "spec-paladino": {
+  "erros": [],
+  "avisos": [],
+  "linha": [
+   "paladino: apareceu em 1094 ms",
+   "paladino: fechado (clique) em 4376 ms"
+  ]
+ },
+ "spec-berserker": {
+  "erros": [],
+  "avisos": [],
+  "linha": [
+   "berserker: apareceu em 1216 ms",
+   "berserker: fechado (clique) em 4482 ms"
+  ]
+ },
+ "spec-patrulheiro": {
+  "erros": [],
+  "avisos": [],
+  "linha": [
+   "patrulheiro: apareceu em 1127 ms",
+   "patrulheiro: fechado (clique) em 4387 ms"
+  ]
+ },
+ "spec-sombra": {
+  "erros": [],
+  "avisos": [],
+  "linha": [
+   "sombra: apareceu em 1168 ms",
+   "sombra: fechado (clique) em 4490 ms"
+  ]
+ },
+ "spec-necromante": {
+  "erros": [],
+  "avisos": [],
+  "linha": [
+   "necromante: apareceu em 1501 ms",
+   "necromante: fechado (clique) em 4848 ms"
+  ]
+ },
+ "itens-estouro": {
+  "erros": [],
+  "avisos": [],
+  "linha": [
+   "raro1: apareceu em 1154 ms",
+   "raro1: fechado (deixar) em 4702 ms",
+   "lendario1: apareceu em 5706 ms",
+   "lendario1: fechado (deixar) em 8968 ms",
+   "raro2: apareceu em 9808 ms",
+   "raro2: fechado (deixar) em 13091 ms",
+   "lendario2: apareceu em 13934 ms",
+   "lendario2: fechado (deixar) em 17285 ms",
+   "achados: botões 466, 585, 443, 593 ms depois do cartão"
+  ]
+ }
+}

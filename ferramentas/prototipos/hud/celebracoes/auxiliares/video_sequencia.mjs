@@ -10,7 +10,7 @@ const { chromium } = await import(process.env.PLAYWRIGHT_MODULO || "playwright")
 const [raiz, saida, lista] = process.argv.slice(2);
 const AQUI = path.dirname(fileURLToPath(import.meta.url));
 const PERMANECE = Number(process.env.PERMANECE || 4500);
-const ROTULOS = { estouro3: "B3 · antes", estouro4: "B4 · depois", relicario4: "A4 · Relicário", "": "jogo atual",
+const ROTULOS = { estouro: "jogo · Estouro", relicario: "jogo · Relicário", estouro3: "B3 · antes", estouro4: "B4 · depois", relicario4: "A4 · Relicário", "": "jogo atual",
   estouro5a: "Estouro · identidade 1", estouro5b: "Estouro · identidade 2", relicario5a: "Relicário · identidade 1", relicario5b: "Relicário · identidade 2",
   estouro5c: "Estouro · final candidata", relicario5c: "Relicário · final candidata",
   estouro5d: "Estouro · alternativa A", estouro5e: "Estouro · alternativa B", estouro5f: "Estouro · alternativa C",
@@ -25,10 +25,12 @@ for (const item of lista.split(",")) {
   const [versao, cenario, classe] = item.split(":");
   const rotulo = process.env[`ROTULO_${versao}`] || ROTULOS[versao] || versao;
   const proc = spawn(process.platform === "win32" ? "python" : "python3", [path.join(AQUI, "cenarios_teste.py"), cenario], {
-    cwd: raiz, env: { ...process.env, PYTHONPATH: raiz, PYTHONIOENCODING: "utf-8", CLASSE: classe, PROTOTIPO: versao, ROTULO: rotulo, PAINEL: "http://127.0.0.1:8765/" } });
+    cwd: raiz, env: { ...process.env, PYTHONPATH: raiz, PYTHONIOENCODING: "utf-8", CLASSE: classe, PROTOTIPO: ["estouro", "relicario"].includes(versao) ? "" : versao, ROTULO: rotulo, PAINEL: ["estouro", "relicario"].includes(versao) ? "" : "http://127.0.0.1:8765/" } });
   let url = null; proc.stdout.on("data", (d) => { const m = String(d).match(/http:\S+/); if (m) url = m[0]; });
   for (let k = 0; k < 300 && !url; k++) await espera(100);
   await p.goto(url);
+  // no jogo (versão "estouro" ou "relicario", sem PROTOTIPO): a apresentação escolhida pela Festa
+  if (["estouro", "relicario"].includes(versao)) await p.evaluate((n) => Festa.usar(n), versao);
   await (await p.waitForSelector("button:has-text('Começar o teste')")).click();
   // as janelas deste cenário: uma festa (fecha com Enter) ou um achado novo (fecha deixando o item)
   for (let n = 0; n < 8; n++) {

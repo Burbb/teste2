@@ -1,0 +1,107 @@
+{
+ "nivel": {
+  "erros": [],
+  "avisos": [],
+  "linha": [
+   "espolio: apareceu em 941 ms",
+   "espolio: fechado (clique) em 2884 ms",
+   "nivel: apareceu em 3256 ms",
+   "nivel: fechado (clique) em 4969 ms"
+  ]
+ },
+ "dois-niveis": {
+  "erros": [],
+  "avisos": [],
+  "linha": [
+   "espolio: apareceu em 886 ms",
+   "espolio: fechado (clique) em 2819 ms",
+   "nivel2: apareceu em 3185 ms",
+   "nivel2: fechado (duplo) em 5021 ms",
+   "depois do clique duplo, há festa aberta: true",
+   "nivel3: apareceu em 5888 ms",
+   "nivel3: fechado (tecla) em 7600 ms"
+  ]
+ },
+ "raridades": {
+  "erros": [],
+  "avisos": [],
+  "linha": [
+   "comum: apareceu em 649 ms",
+   "comum: fechado (deixar) em 2456 ms",
+   "magico: apareceu em 3299 ms",
+   "magico: fechado (deixar) em 5000 ms",
+   "raro: apareceu em 5851 ms",
+   "raro: fechado (deixar) em 7581 ms",
+   "lendario: apareceu em 8381 ms",
+   "lendario: fechado (deixar) em 10120 ms",
+   "achados: botões 230, 315, 441, 591 ms depois do cartão"
+  ]
+ },
+ "sigilo": {
+  "erros": [],
+  "avisos": [],
+  "linha": [
+   "sigilo: apareceu em 1291 ms",
+   "sigilo: fechado (clique) em 3012 ms"
+  ]
+ },
+ "limites": {
+  "erros": [],
+  "avisos": [],
+  "linha": [
+   "nivel: apareceu em 649 ms",
+   "nivel: fechado (clique) em 2396 ms",
+   "lendario: apareceu em 2763 ms",
+   "lendario: fechado (deixar) em 4530 ms",
+   "achados: botões 592 ms depois do cartão"
+  ]
+ },
+ "spec-piromante": {
+  "erros": [],
+  "avisos": [],
+  "linha": [
+   "piromante: apareceu em 795 ms",
+   "piromante: fechado (clique) em 2554 ms"
+  ]
+ },
+ "spec-paladino": {
+  "erros": [],
+  "avisos": [],
+  "linha": [
+   "paladino: apareceu em 725 ms",
+   "paladino: fechado (clique) em 2436 ms"
+  ]
+ },
+ "spec-berserker": {
+  "erros": [],
+  "avisos": [],
+  "linha": [
+   "berserker: apareceu em 792 ms",
+   "berserker: fechado (clique) em 2552 ms"
+  ]
+ },
+ "spec-patrulheiro": {
+  "erros": [],
+  "avisos": [],
+  "linha": [
+   "patrulheiro: apareceu em 729 ms",
+   "patrulheiro: fechado (clique) em 2435 ms"
+  ]
+ },
+ "spec-sombra": {
+  "erros": [],
+  "avisos": [],
+  "linha": [
+   "sombra: apareceu em 1005 ms",
+   "sombra: fechado (clique) em 2697 ms"
+  ]
+ },
+ "spec-necromante": {
+  "erros": [],
+  "avisos": [],
+  "linha": [
+   "necromante: apareceu em 701 ms",
+   "necromante: fechado (clique) em 2412 ms"
+  ]
+ }
+}

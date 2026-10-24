@@ -16,6 +16,30 @@ canto de baixo, "repetir" e "painel" (essa faixa só existe na demonstração). 
 Movimento reduzido: no Chrome/Edge, F12 → ⋮ → More tools → Rendering → "Emulate CSS media feature
 prefers-reduced-motion" → reduce, e "repetir" (ou "Mostrar animações" desligado no Windows, para o sistema todo).
 
+## Integração (24/10/2026, 1.201.0)
+
+**No jogo:** as celebrações aprovadas, em `rpg/web/static/celebracoes/`: o Estouro B4 (padrão) e o Relicário A4 (a
+alternativa, `Festa.usar("relicario")`), o Piromante (o piloto), o Necromante, a Sombra e o Patrulheiro da sexta
+rodada (a versão "c", commit `6a1b774b`), o Berserker com o sangue A e o Paladino com a luz B (o vitral), da sétima
+(commit `59da1c8f`). Os arquivos saíram desse commit por `integrar.py` (no scratchpad da sessão; o resumo: a v2 sem as
+versões não escolhidas). O motor manda o id da especialização e o ícone de cada habilidade nova na festa; o protótipo
+fazia isso pelo nome e por uma tabela no servidor de teste (`com_icones` em `auxiliares/cenarios_teste.py`, que fica
+como histórico e agora só repete o que o motor já manda).
+
+**Correção na integração:** os botões reservados do achado passaram a ter as medidas do acabamento novo (no protótipo
+eles não tinham, e a janela crescia 3 px quando os botões chegavam).
+
+**Reservado para o desenvolvimento (não é opção do jogo):** o Paladino A, a luz contínua sem os vidros. A fonte está
+aqui (`v2/identidades2.js`, `PALADINO.d`, e as montagens `estouro5d`/`relicario5d` no painel) e no jogo, como o modo
+`"continua"` de `luzSemRecorte` em `especializacoes.js` (`LUZ_DO_PALADINO = "vitral"`); trocar a constante é a revisão.
+
+**Registrado para as opções do jogo:** a escolha entre Estouro e Relicário (as duas implementadas; o Estouro é o
+padrão; sem tela de opções por enquanto).
+
+**As ferramentas** fotografam o jogo real quando não recebem `PROTOTIPO`: `fotografar.mjs` e `gestos.mjs` aceitam
+`APRESENTACAO=relicario`; `video_sequencia.mjs` aceita as versões `estouro` e `relicario`. As capturas do jogo estão em
+`capturas-producao/`; os vídeos, em `para-avaliacao/producao-*.webm`.
+
 ## Sétima rodada (24/10/2026): o sangue do Berserker e a luz do Paladino
 
 **Aprovados** (preservados, versão final "c"): **Necromante** (erguer com fumaça), **Sombra** (invisível com o corte)
