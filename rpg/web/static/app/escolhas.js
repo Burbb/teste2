@@ -217,6 +217,10 @@ function mostrarOpcoes(m) {
     // Na tela de menu, o Voltar vai para a barra do topo (e Esc/Backspace), em vez de ficar no fim da lista.
     porVoltar(/^Sair do mercado/.test(m.opcoes[voltar].texto) ? "Sair do mercado" : "Voltar", () => responder(m.id, voltar));
     pergunta.voltar = voltar;
+  } else if (corpo.classList.contains("modo-titulo")) {
+    // No título (a lista de saves, a escolha da classe), o Voltar fica na lista, com a cara do menu; o Esc volta também.
+    const vt = m.opcoes.findIndex((o) => o.meta && o.meta.voltar);
+    if (vt >= 0) pergunta.voltar = vt;
   }
   let grupoAnterior = null;
   m.opcoes.forEach((o, i) => {
@@ -267,7 +271,9 @@ function mostrarOpcoes(m) {
     const li = el("li");
     const b = el("button", "escolha");
     b.type = "button";
-    b.style.animationDelay = `${replay ? 0 : i * 40}ms`;
+    // a ordem de entrada é a dos botões à vista: as opções feitas pela tela (os cartões dos saves, os prédios da vila)
+    // não contam, ou o Voltar depois de 38 saves esperava 1,5 s invisível
+    b.style.animationDelay = `${replay ? 0 : (pergunta.numeros.length - 1) * 40}ms`;
     if (/^(Voltar|Sair|Cancelar|Nada|Ignorar|Fechar)/.test(o.texto)) b.classList.add("secundaria");
     const pos = pergunta.numeros.length - 1;
     const tecla = pos < 9 ? String(pos + 1) : pos === 9 ? "0" : "";
