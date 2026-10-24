@@ -1,31 +1,5 @@
 {
  "medidas": {
-  "1920-atual": {
-   "livro": [
-    860,
-    360
-   ],
-   "quadro": [
-    530,
-    293,
-    860,
-    360
-   ],
-   "dentroDaJanela": true,
-   "pags": [
-    {
-     "cabe": true,
-     "sobra": 0,
-     "letra": "Alegreya, Georgia, serif"
-    },
-    {
-     "cabe": true,
-     "sobra": 0,
-     "letra": "Alegreya, Georgia, serif"
-    }
-   ],
-   "fonte": true
-  },
   "1920-a": {
    "livro": [
     870,
@@ -48,6 +22,110 @@
      "cabe": true,
      "sobra": 0,
      "letra": "Fondamento, Alegreya, Georgia, serif, serif"
+    }
+   ],
+   "fonte": true
+  },
+  "1920-a2": {
+   "livro": [
+    870,
+    510
+   ],
+   "quadro": [
+    525,
+    176,
+    870,
+    593
+   ],
+   "dentroDaJanela": true,
+   "pags": [
+    {
+     "cabe": true,
+     "sobra": 0,
+     "letra": "Fondamento, Alegreya, Georgia, serif, serif"
+    },
+    {
+     "cabe": true,
+     "sobra": 0,
+     "letra": "Fondamento, Alegreya, Georgia, serif, serif"
+    }
+   ],
+   "fonte": true
+  },
+  "1280-a": {
+   "livro": [
+    870,
+    510
+   ],
+   "quadro": [
+    205,
+    64,
+    870,
+    593
+   ],
+   "dentroDaJanela": true,
+   "pags": [
+    {
+     "cabe": true,
+     "sobra": 0,
+     "letra": "Fondamento, Alegreya, Georgia, serif, serif"
+    },
+    {
+     "cabe": true,
+     "sobra": 0,
+     "letra": "Fondamento, Alegreya, Georgia, serif, serif"
+    }
+   ],
+   "fonte": true
+  },
+  "1280-a2": {
+   "livro": [
+    870,
+    510
+   ],
+   "quadro": [
+    205,
+    64,
+    870,
+    593
+   ],
+   "dentroDaJanela": true,
+   "pags": [
+    {
+     "cabe": true,
+     "sobra": 0,
+     "letra": "Fondamento, Alegreya, Georgia, serif, serif"
+    },
+    {
+     "cabe": true,
+     "sobra": 0,
+     "letra": "Fondamento, Alegreya, Georgia, serif, serif"
+    }
+   ],
+   "fonte": true
+  },
+  "1920-atual": {
+   "livro": [
+    860,
+    360
+   ],
+   "quadro": [
+    530,
+    293,
+    860,
+    360
+   ],
+   "dentroDaJanela": true,
+   "pags": [
+    {
+     "cabe": true,
+     "sobra": 0,
+     "letra": "Alegreya, Georgia, serif"
+    },
+    {
+     "cabe": true,
+     "sobra": 0,
+     "letra": "Alegreya, Georgia, serif"
     }
    ],
    "fonte": true
@@ -142,32 +220,6 @@
      "cabe": true,
      "sobra": 0,
      "letra": "Alegreya, Georgia, serif"
-    }
-   ],
-   "fonte": true
-  },
-  "1280-a": {
-   "livro": [
-    870,
-    510
-   ],
-   "quadro": [
-    205,
-    64,
-    870,
-    593
-   ],
-   "dentroDaJanela": true,
-   "pags": [
-    {
-     "cabe": true,
-     "sobra": 0,
-     "letra": "Fondamento, Alegreya, Georgia, serif, serif"
-    },
-    {
-     "cabe": true,
-     "sobra": 0,
-     "letra": "Fondamento, Alegreya, Georgia, serif, serif"
     }
    ],
    "fonte": true

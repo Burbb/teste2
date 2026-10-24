@@ -25,7 +25,7 @@ CASOS = {
     "releitura": ("Releitura: o livro já lido (nada muda ao reler)",
                   {"ETAPA": "ossuario", "SALA": "sacristia"}),
 }
-ROTULOS = {"": "o livro de hoje", "a": "A · registro", "b": "B · registro que vira confissão", "c": "C · leitura próxima"}
+ROTULOS = {"": "o livro de hoje", "a": "A · registro", "a2": "A refinada", "b": "B · registro que vira confissão", "c": "C · leitura próxima"}
 TIPOS = {".css": "text/css; charset=utf-8", ".js": "text/javascript; charset=utf-8", ".png": "image/png",
          ".json": "application/json", ".woff2": "font/woff2"}
 

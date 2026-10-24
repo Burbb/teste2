@@ -1,10 +1,10 @@
 // Fotografa o livro da capela no jogo de verdade (cenarios_livro.py, caso "primeira"): o livro de hoje e as propostas
 // A, B e C, com os mesmos dados, a 1920×945 e a 1280×720. Na C, também a segunda entrada. Guarda em ../capturas/
-// (<janela>-<versão>[-2].png) e as medidas em ../capturas/medidas.json (a caixa do livro, se o texto cabe na página,
+// (<janela>-<versão>[-2].png) e as medidas em ../capturas/medidas.json (VERSOES=a,a2 refaz só essas) (a caixa do livro, se o texto cabe na página,
 // a letra que a página de fato usou).
 //   PLAYWRIGHT_MODULO=<caminho do playwright>/index.mjs node ferramentas/prototipos/hud/livro-capela/auxiliares/fotografar.mjs
 import { spawn } from "child_process";
-import { mkdirSync, writeFileSync } from "fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import { fileURLToPath } from "url";
 import path from "path";
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULO || "playwright");
@@ -67,5 +67,8 @@ for (const [jan, W, H] of [["1920", 1920, 945], ["1280", 1280, 720]]) {
   }
 }
 await b.close();
-writeFileSync(path.join(SAIDA, "medidas.json"), JSON.stringify({ medidas, erros }, null, 1));
+// junta com as medidas de antes (VERSOES=... refaz só algumas)
+const arq = path.join(SAIDA, "medidas.json");
+const antes = existsSync(arq) ? JSON.parse(readFileSync(arq, "utf8")).medidas : {};
+writeFileSync(arq, JSON.stringify({ medidas: { ...antes, ...medidas }, erros }, null, 1));
 console.log(JSON.stringify({ medidas, erros }, null, 1));

@@ -7247,3 +7247,19 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   antes da segunda entrada (a frase que o modo texto já usa), porque a cronologia não fica clara só pela apresentação.
 - **Continuam separados:** o atalho da missão que aponta para o livro e a linha repetida no Histórico.
 - **Agora:** a escolha do Jean. Não começados: a retirada do procedural e outras frentes.
+
+### 24/10/2026 (data do computador local) — O livro da capela: a A refinada (protótipo, nada no jogo)
+
+- **A decisão do Jean:** a A como base; esta rodada é só a aparência. **O texto e a história do livro serão revistos
+  depois, na frente narrativa da campanha**; o conteúdo atual fica como amostra de leitura, sem mudança e sem
+  explicação nova de tempo, data ou autoria.
+- **A refinada** (`ferramentas/prototipos/hud/livro-capela/`, LEIA-ME, seção "A refinada"; `folha-a2.png`): o papel com
+  o centro calmo e o desgaste nas beiras e na dobra (`livro-a2.png`); a letra apoiada na pauta pela métrica da
+  Fondamento, com a pauta desenhada pelo bloco de texto, em qualquer texto e quebra (na A, a linha de base ficava 2 px
+  acima). Iguais à A: as duas páginas, a fonte, a pauta e a margem, o couro e as medidas, as tintas, o vazio da
+  esquerda. A, B e C intactas.
+- **Conferido** a 1920×945 e 1280×720 no cenário `capela`: desvio 0 px em todas as linhas, também com textos de teste
+  longos, acentuados e maiores que a página (rola com a pauta junto; `auxiliares/pauta.mjs`); foco, fechar, véu, as
+  teclas do menu isoladas, as mesmas pistas (`auxiliares/gestos.mjs`). O jogo não mudou.
+- **Demonstração:** `demo.bat`, http://127.0.0.1:8767/ ("A refinada" ao lado de A, B, C e do livro de hoje).
+- **Agora:** a avaliação do Jean; nada integrado. Não começados: a retirada do procedural e outras frentes.

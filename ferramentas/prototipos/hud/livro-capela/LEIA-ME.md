@@ -1,9 +1,43 @@
 # O livro narrativo da capela (etapa 2, 24/10/2026)
 
-**Agora: três propostas no protótipo (A, B e C), aguardando a escolha do Jean.** Nada integrado; o livro de hoje
-continua no jogo. As propostas estão na seção "As três propostas", abaixo; o levantamento que as originou vem depois.
+**Agora: a A refinada, em avaliação.** O Jean escolheu a A como base (24/10/2026); esta rodada trata só da
+apresentação do livro. O texto e a história serão revistos depois, na frente narrativa da campanha: o conteúdo atual é
+a amostra de leitura, sem mudança. Nada integrado; o livro de hoje continua no jogo. A, B e C ficam como estavam.
 
-## As três propostas
+## A refinada
+
+**O que fica da A:** as duas páginas, a Fondamento, a pauta (o mesmo passo de 33 px, a mesma cor, a mesma largura) e
+a margem, o couro castanho com as mesmas medidas, a diferença discreta de tinta entre as entradas, o traço de pena e o
+recuo da segunda, e o vazio da página da esquerda (nada foi acrescentado para preenchê-lo).
+
+**O que mudou (só isto):**
+
+1. **O papel** (`livro-a2.png`, de `duas_paginas_refinado` em `desenhar_livro.py`): o centro quase liso (um ladrilho
+   calmo, três marcas por 16×16, à mão), o grão de antes só numa faixa de 9 px junto das beiras e da dobra, e o fio da
+   folha um pouco gasto (as duas linhas de pixels da beira). A umidade dos cantos, a dobra e o resto, iguais.
+2. **A letra na pauta:** na A, a linha de base ficava 2 px acima da pauta em todas as linhas (a letra flutuava; o
+   alto do texto era um número ajustado à mão). Na refinada, a pauta é desenhada pelo próprio bloco de texto
+   (`livro.css`, `.lv-regua`), no passo da linha, e o `livro.js` desce o texto o que falta entre a linha de base da
+   Fondamento e a pauta, medido pela métrica da fonte (não por uma frase). Toda linha, em qualquer quebra, cai na
+   pauta; um texto maior que a página rola com a pauta junto. Nenhuma posição depende do texto atual.
+
+**Conferido** (no jogo real, cenário `capela`, a 1920×945 e a 1280×720):
+- `auxiliares/pauta.mjs`: cada linha de base na pauta (desvio 0 px nas 6 linhas da esquerda e nas 10 da direita),
+  também com textos de teste entregues ao mesmo `Telas.lerLivro` (acentos, cedilha, palavras longas, outras
+  quebras; e um texto maior que a página, que rola com a pauta alinhada); as fotos `capturas/pauta-*.png`. Os textos
+  de teste são só do roteiro; o jogo e o livro não os têm;
+- `auxiliares/gestos.mjs`: o foco no Fechar, Esc, Enter, espaço e o véu fecham, as teclas do menu e o clique no véu não
+  chegam ao jogo, as mesmas pistas e o mesmo cartão na primeira leitura, nada na releitura;
+- a A original intacta (`livro-a.png` igual, byte a byte; a A continua na demonstração).
+
+**A comparação:** `folha-a2.png` (A × A refinada a 1920 em tamanho real, o mesmo trecho ampliado 2× e as telas de
+1280 a um terço). **Demonstração:** a mesma (`demo.bat`, http://127.0.0.1:8767/), com a linha "A refinada".
+
+**Para a integração, se aprovada:** a pauta e a métrica vêm junto (o `.lv-regua` e o `medirTopo`); a capacidade da
+página é de 12 linhas na esquerda e 11 na direita (a primeira é a do traço de pena) antes de rolar; o texto atual usa 6 e 10.
+
+# As três propostas (rodada anterior)
+
 
 **A direção (Jean):** sentir que se lê algo escrito por uma pessoa daquele mundo; o texto começa como registro e
 termina numa confissão de culpa, e a apresentação sustenta essa mudança. O objeto é o livro simples de couro castanho

@@ -6,6 +6,8 @@
 //   LivroProto.usar("a")   A · o registro: as duas páginas pautadas, a segunda entrada em outra tinta e outro começo
 //   LivroProto.usar("b")   B · o registro que vira confissão: a segunda entrada na mesma mão, mais depressa
 //   LivroProto.usar("c")   C · a leitura próxima: uma página, uma entrada por vez, Anterior e Próxima
+//   LivroProto.usar("a2")  A refinada: o livro da A com o papel calmo no centro e a escrita apoiada na pauta, que a
+//                          página desenha junto com o texto (qualquer texto, qualquer quebra de linha)
 //
 // O texto é da página (HTML), nunca da imagem: a imagem é só o livro (desenhar_livro.py, escala 3).
 (() => {
@@ -26,6 +28,29 @@
     const palavras = x.split(" ").map((p) => `<span style="--y:${OSCILA[i++ % OSCILA.length]}px">${h(p)}</span>`);
     return `<p>${palavras.join(" ")}</p>`;
   }).join("");
+
+  // A refinada: a pauta é do bloco de texto (livro.css, .lv-regua), no passo da linha (33 px = 11 px do desenho), com
+  // a primeira linha a 30 px do alto do bloco. Para a letra se apoiar nela, o alto do texto desce o que falta entre a
+  // linha de base da Fondamento (a métrica da fonte, medida uma vez, não uma frase) e a pauta. Assim vale para
+  // qualquer texto; um texto maior que a página rola, com a pauta junto.
+  const PASSO = 33, PAUTA = 30;
+  let topo = null;
+  function medirTopo() {
+    if (topo !== null) return topo;
+    const t = document.createElement("div");
+    t.className = "lv-pagina lv-regua lv-a2-sonda";
+    t.innerHTML = '<div class="lv-texto"><p>Ág<span style="display:inline-block;width:0;height:0"></span></p></div>';
+    document.body.appendChild(t);
+    const linha = t.querySelector("p").getBoundingClientRect().top, base = t.querySelector("span").getBoundingClientRect().bottom;
+    t.remove();
+    topo = Math.round(PAUTA - (base - linha));
+    return topo;
+  }
+  const regua = (r, entradaN, html) => {
+    const [x0, y0, x1, y1] = r.caixa, [t0, t1] = r.texto;
+    return `<div class="lv-pagina lv-regua lv-entrada${entradaN}" style="${caixa([x0, y0, x1, y1])}">
+      <div class="lv-texto" style="--esq:${(t0 - x0) * ESCALA}px;padding:${medirTopo() + (entradaN === 2 ? PASSO : 0)}px ${(x1 - t1) * ESCALA}px 0 var(--esq)">${html}</div></div>`;
+  };
 
   function caixa(area, ex = {}) {
     const [x0, y0, x1, y1] = area;
@@ -54,7 +79,9 @@
     const [W, H] = a.tamanho;
     const img = versao === "c" ? `livro-c-${entrada + 1}.png` : `livro-${versao}.png`;
     let paginas;
-    if (versao === "c") {
+    if (versao === "a2") {
+      paginas = regua(a.reguas.esquerda, 1, pars(p1)) + regua(a.reguas.direita, 2, pars(p2));
+    } else if (versao === "c") {
       const t = entrada ? p2 : p1;
       paginas = `<div class="lv-pagina lv-entrada${entrada + 1}" style="${caixa(a.paginas.direita)}" aria-live="polite">
         ${entrada ? maoApressada(t) : pars(t)}</div>`;
@@ -130,6 +157,7 @@
   async function lerLivro(d, instantaneo) {
     if (instantaneo || !d || !d.paginas) return;
     await pronto;
+    await document.fonts.load('21px "Fondamento"');
     montar();
     ler = d; entrada = 0;
     sobre.dataset.teclado = "";

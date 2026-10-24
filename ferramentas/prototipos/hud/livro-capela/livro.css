@@ -31,6 +31,21 @@
   clip-path: polygon(0 40%, 8% 0, 100% 30%, 96% 100%, 4% 80%); opacity: 0.85; }
 .lv-a .lv-entrada2 p:first-child { text-indent: 2.4em; }
 
+/* ---------------------------------------------------------------- A refinada
+   O livro da A (desenhar_livro.py, livro-a2.png: o papel calmo no centro, o desgaste nas beiras e na dobra) e a pauta
+   desenhada pelo próprio bloco de texto: uma linha de 3 px (1 px do desenho) a cada 33 px, a primeira a 30 px do alto,
+   na cor da pauta da A. O livro.js desce o texto até a linha de base da Fondamento cair na pauta (a métrica da fonte,
+   não uma frase); cada linha seguinte, no mesmo passo, cai na seguinte, em qualquer quebra. Um texto maior que a
+   página rola com a pauta junto. As tintas, o traço de pena e o recuo da segunda entrada são os da A. */
+.lv-regua { overflow-y: auto; overflow-x: hidden; scrollbar-width: thin; scrollbar-color: #b8a47a transparent; }
+.lv-regua .lv-texto { position: relative; box-sizing: border-box; min-height: 100%;
+  background: repeating-linear-gradient(to bottom, transparent 0 30px, #d6c69c 30px 33px); }
+.lv-a2-sonda { visibility: hidden; left: 0; top: 0; width: 400px; }
+.lv-a2 .lv-entrada2 { color: var(--lv-tinta-2); }
+.lv-a2 .lv-entrada2 p:first-child { text-indent: 2.4em; }
+.lv-a2 .lv-entrada2 .lv-texto::before { content: ""; position: absolute; left: var(--esq); top: 27px; width: 54px; height: 3px;
+  background: var(--lv-tinta-2); clip-path: polygon(0 40%, 8% 0, 100% 30%, 96% 100%, 4% 80%); opacity: 0.85; }
+
 /* ---------------------------------------------------------------- B · o registro que vira confissão
    A primeira entrada arrumada, com espaço entre as linhas; a segunda na mesma mão mais depressa (a itálica da
    Fondamento), mais apertada, com a linha que oscila um pouco por palavra, em outra tinta. */

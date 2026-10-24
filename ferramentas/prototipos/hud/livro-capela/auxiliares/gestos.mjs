@@ -1,7 +1,7 @@
 // Confere os gestos do livro no jogo de verdade (cenarios_livro.py), nas três propostas e no livro de hoje:
 // - a primeira leitura grava as mesmas pistas (Ilse e o Sigilo) e mostra o mesmo cartão; reler não muda nada;
 // - as teclas do menu não escolhem nada embaixo do livro; um clique no véu não chega ao jogo;
-// - A e B: Esc, Enter e espaço fecham, o véu fecha (como hoje), o Tab fica no Fechar;
+// - A, A refinada e B: Esc, Enter e espaço fecham, o véu fecha (como hoje), o Tab fica no Fechar;
 // - C: Próxima e Anterior (botões e setas), o foco previsível, o Anterior volta à primeira entrada, o véu não fecha,
 //   o Tab circula só nos botões do livro, Esc fecha de qualquer entrada.
 //   PLAYWRIGHT_MODULO=<caminho do playwright>/index.mjs node ferramentas/prototipos/hud/livro-capela/auxiliares/gestos.mjs
@@ -50,7 +50,7 @@ const depois = async (p) => {
 };
 
 let referencia = null;
-for (const v of ["atual", "a", "b", "c"]) {
+for (const v of ["atual", "a", "a2", "b", "c"]) {
   console.log(`== ${v}`);
   let { p, proc, erros } = await abrirPagina(v, "primeira");
   const antes = await pistas(p);
@@ -84,7 +84,7 @@ for (const v of ["atual", "a", "b", "c"]) {
     await p.keyboard.press("PageDown"); await espera(300);
     conferir(/Entrada 2 de 2/.test(await p.textContent(".lv-conta")), "C: PageDown vai à segunda");
     await p.keyboard.press("Escape");
-  } else if (v === "a" || v === "b") {
+  } else if (v === "a" || v === "a2" || v === "b") {
     const foco = await p.evaluate(() => document.activeElement.className);
     await p.keyboard.press("Tab");
     conferir(/lv-fechar/.test(foco) && /lv-fechar/.test(await p.evaluate(() => document.activeElement.className)), `${v.toUpperCase()}: o foco no Fechar, e o Tab fica nele`);
@@ -103,7 +103,7 @@ for (const v of ["atual", "a", "b", "c"]) {
   if (v === "atual") referencia = agora; else conferir(agora === referencia, "as pistas iguais às do livro de hoje (nada a mais, nada a menos)");
   // reler: nada muda; nas A e B, pelo Enter e pelo véu; na C, pelo botão Fechar
   await ler(p);
-  if (v === "a" || v === "b") {
+  if (v === "a" || v === "a2" || v === "b") {
     await p.keyboard.press("Enter"); await espera(300);
     conferir(!(await aberto(p)), `${v.toUpperCase()}: Enter fecha`);
     await depois(p);

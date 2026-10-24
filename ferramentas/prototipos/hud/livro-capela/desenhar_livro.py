@@ -29,7 +29,7 @@ C = {
     "papel": (232, 217, 175, 255), "papel_esc": (224, 207, 163, 255), "papel_luz": (238, 225, 186, 255),
     "dobra1": (219, 201, 155, 255), "dobra2": (205, 186, 139, 255), "dobra3": (186, 166, 120, 255),
     "umidade": (226, 209, 164, 255), "umidade_linha": (208, 187, 140, 255),
-    "pauta": (214, 198, 156, 255), "margem": (204, 168, 140, 255),
+    "pauta": (214, 198, 156, 255), "margem": (204, 168, 140, 255), "papel_gasto": (219, 199, 150, 255),
 }
 
 # O grão do papel, desenhado à mão: '.' o papel, 'e' um tom abaixo, 'l' um acima. Ralo, para não brigar com a letra.
@@ -50,6 +50,37 @@ GRAO = [
     "..........e.....",
     "....l...........",
     ".............e..",
+]
+
+# A refinada: o centro da página quase liso (três marcas por ladrilho, para o papel não parecer plástico) e o fio da
+# folha gasto (as duas primeiras linhas de pixels junto da beira: 'g' um tom amarelado mais escuro).
+CALMO = [
+    "................",
+    "................",
+    "..........e.....",
+    "................",
+    "................",
+    "................",
+    "................",
+    "...l............",
+    "................",
+    "................",
+    "................",
+    "................",
+    ".............e..",
+    "................",
+    "................",
+    "................",
+]
+GASTO = [
+    "g..e.g..",
+    "..g.....",
+    ".e...g.e",
+    "g....l..",
+    "..e.g...",
+    "....g..e",
+    ".g......",
+    "...e..g.",
 ]
 
 # A marca de umidade no canto de baixo de fora (a capela alagada), à mão: 'x' a linha da maré, 'u' dentro dela.
@@ -189,6 +220,54 @@ def duas_paginas(nome, pautado, H):
     return {"tamanho": [W, H], "paginas": areas, "pauta": {"primeira": e[1] + 19, "passo": 11} if pautado else None}
 
 
+def grao_calmo(t, x0, y0, x1, y1, fora):
+    """O papel da A refinada: o centro quase liso (o ladrilho calmo) e o grão de sempre só perto das beiras e da dobra,
+    com o fio da folha mais gasto (o ladrilho da beira). `fora` é o lado da beira solta (-1 à esquerda, +1 à direita);
+    o outro lado é a dobra."""
+    for y in range(y0, y1 + 1):
+        for x in range(x0, x1 + 1):
+            beira = min(y - y0, y1 - y, (x - x0) if fora < 0 else (x1 - x))  # a de fora, a de cima e a de baixo
+            dobra_ = (x1 - x) if fora < 0 else (x - x0)
+            perto = min(beira, dobra_)
+            if beira <= 2:
+                c = GASTO[y % 8][x % 8]
+            elif perto <= 9:
+                c = GRAO[y % 16][x % 16]
+            else:
+                c = CALMO[y % 16][x % 16]
+            if c != ".":
+                t.px(x, y, {"e": "papel_esc", "l": "papel_luz", "g": "papel_gasto"}[c])
+
+
+def duas_paginas_refinado(nome, H):
+    """A refinada: o mesmo livro da A (as medidas, a capa, as folhas, a dobra, a margem, a umidade), com o papel calmo
+    no centro e sem as linhas da pauta no desenho: a página as desenha junto com o texto (livro.css, `.lv-a2`), no
+    mesmo passo de 11 px, para cada linha escrita cair numa linha da pauta. Devolve, além das áreas, a área das
+    pautas de cada página e a primeira linha."""
+    W = 290
+    t = Tela(W, H)
+    capa(t, 0, 0, W - 3, H - 3)
+    meio = (W - 3) // 2
+    e = bloco(t, 8, 6, meio, H - 10, -1, 3)
+    d = bloco(t, meio, 6, W - 11, H - 10, +1, 3)
+    grao_calmo(t, *e, -1)
+    grao_calmo(t, *d, +1)
+    umidade(t, e[0], e[3], True)
+    umidade(t, d[2], d[3], False)
+    dobra(t, meio, 6, H - 10)
+    curva(t, meio, 6, H - 10)
+    areas, reguas = {}, {}
+    for lado, (x0, y0, x1, y1) in (("esquerda", e), ("direita", d)):
+        tx0 = x0 + (14 if lado == "esquerda" else 12)
+        tx1 = x1 - (10 if lado == "esquerda" else 14)
+        primeira, ultima = y0 + 19, y0 + 19 + 11 * ((y1 - 8 - (y0 + 19)) // 11)
+        t.px(tx0 - 4, primeira - 6, "margem", 1, ultima - primeira + 10)    # a margem, como na A
+        areas[lado] = [tx0, y0 + 10, tx1, y1 - 8]
+        reguas[lado] = {"caixa": [x0 + 6, primeira - 10, x1 - 6, ultima + 1], "texto": [tx0, tx1]}
+    t.salvar(nome)
+    return {"tamanho": [W, H], "paginas": areas, "reguas": reguas, "pauta": {"primeira": e[1] + 19, "passo": 11}}
+
+
 def pagina_proxima(nome, viradas):
     """C: 214×156. A página da direita inteira e, à esquerda da dobra, uma faixa da página anterior com o
     bloco das folhas já viradas (`viradas` camadas) e a capa por baixo."""
@@ -215,6 +294,7 @@ def main():
         "b": duas_paginas("livro-b.png", False, 134),
         "c1": pagina_proxima("livro-c-1.png", 2),
         "c2": pagina_proxima("livro-c-2.png", 6),
+        "a2": duas_paginas_refinado("livro-a2.png", 170),
     }
     (SAIDA / "areas.json").write_text(json.dumps(areas, indent=1), encoding="utf-8")
     for k, v in areas.items():
