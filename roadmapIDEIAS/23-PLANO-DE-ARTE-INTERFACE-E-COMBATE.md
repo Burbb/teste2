@@ -1142,6 +1142,11 @@ ou mudanças de dados por iniciativa do agente.
   fontes em camadas e o @2x por duplicação exata; o nome do lugar perto da borda procura um lugar livre. Recomendação:
   32 no minimapa e 48 no mapa grande. **Aguardando o Jean validar o acabamento** antes dos outros lugares e da
   integração (a folha `nativos.png`).
+- **Aprovadas a vila e a floresta nativas (23/10/2026):** o 32 no minimapa e o 48 no mapa grande, sem retoques, do
+  commit `094bb80a` (as fontes `lugar-vila-n32/n48` e `lugar-floresta-n32/n48` em `ferramentas/prototipos/hud/mapa/fontes/`).
+  **Em avaliação:** o pântano, as ruínas e a planície/saída, no mesmo método (32 e 48 à mão, de bioma, porque o
+  procedural também os usa; a barricada fica marca separada), e o nome do Bosque longe do Vau (a folha `cinco.png`).
+  A integração será do conjunto aprovado, com o campo de bloqueio da regra real da viagem.
 - **Dependências do procedural** (para o levantamento da retirada): o covil, o vencido, a cidadela e a "selada" só
   existem lá; a legenda fixa dos nove desenhos; `MapaPx.sprite` cai no bioma para a `saida` da campanha; os glifos de
   `rpg/mapa.py`; o `fechado` da campanha não chega à tela como campo.
@@ -1310,9 +1315,9 @@ volta à pauta quando essa expansão exigir; não é uma migração de engine.
    chapéu estão reservados.
 3. **1E.4, em avaliação (23/10/2026):** o levantamento e o primeiro lote de protótipos (a posição, os caminhos, os
    símbolos e as marcas; detalhes em "A 1E.4 em 23/10/2026", no item 1.12). O Jean escolheu a direção B (a A fica como
-   alternativa); aprovados como base a plaqueta B, a cancela, os caminhos e as marcas; agora, a vila e a floresta em
-   grade nativa (32 no minimapa, 48 no mapa grande) aguardam a validação do acabamento antes dos outros lugares e da
-   integração; nada no jogo.
+   alternativa); aprovados como base a plaqueta B, a cancela, os caminhos e as marcas; a vila e a floresta nativas
+   aprovadas (`094bb80a`: 32 no minimapa, 48 no mapa grande); o pântano, as ruínas e a planície em avaliação; depois, a
+   integração do conjunto; nada no jogo.
 4. **Retomar a etapa 2** e **seguir 3–7**, como na sequência abaixo; **etapa 8** com habilidades, talentos, Grimório e
    árvore no mesmo ciclo; **etapa 9**, a campanha; **depois do plano**, a avaliação de refatoração.
 

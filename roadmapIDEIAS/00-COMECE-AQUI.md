@@ -6912,3 +6912,21 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   conferidas pixel a pixel.
 - **Aguardando o Jean:** validar o acabamento da vila e da floresta; os outros lugares e a integração depois.
 
+### 23/10/2026 (data do computador local) — A 1E.4: a vila e a floresta aprovadas; o pântano, as ruínas e a planície em avaliação (nada no jogo)
+
+- **Estado conferido:** a branch em `681f3abf`, igual ao remoto; o `caido-avatar-512.png` fora dos commits; nenhum
+  arquivo do jogo mudou (produção **1.199.3**).
+- **Aprovadas pelo Jean, sem retoques:** a vila e a floresta nativas, 32 no minimapa e 48 no mapa grande, do commit
+  `094bb80a` (as fontes `lugar-vila-n32/n48` e `lugar-floresta-n32/n48` em `ferramentas/prototipos/hud/mapa/fontes/`; os
+  PNGs conferidos iguais nesta rodada).
+- **Feito** (o LEIA-ME do mapa e `cinco.png`): o pântano, as ruínas e a planície/saída à mão em 32 e 48, fontes em
+  camadas, o @2x por duplicação exata; de bioma, porque o procedural também os usa (a barricada continua marca
+  separada da saída fechada). O nome do Bosque à noite agora fica sob as próprias árvores, longe do quadrado do Vau
+  (a folga dos outros lugares e a posição livre mais longe deles), sem perder a Capela.
+- **Ressalva registrada:** o arco das ruínas novas lê mais como pilares quebrados que como arcada.
+- **Verificações:** o jogo não mudou desde a bateria completa (unittest, gabarito, pyflakes, fumaça "tudo certo"); nas
+  fotos, cliques, destinos, estados e rótulos iguais ao jogo, sem erro no console; as seis peças novas conferidas pixel a
+  pixel; a vila e a floresta aprovadas intactas.
+- **Aguardando o Jean:** avaliar os três símbolos novos; depois, a integração do conjunto com o campo de bloqueio da
+  regra real da viagem. Os símbolos só do procedural ficam fora.
+
