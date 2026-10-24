@@ -8,6 +8,9 @@ momento a fotografar. Ficam fora de tests/ (não são testes do jogo) e do jogo.
     python cenarios_teste.py raridades      # TESTE: quatro achados seguidos, um de cada raridade (comum a lendário)
 
 CLASSE (guerreiro, mago, arqueiro). Imprime o endereço na primeira linha, como tests/navegador/cenarios.py.
+Para a demonstração (demo.py): PROTOTIPO=1 serve as cópias de ../prototipo/ no lugar de telas/celebracoes.js e
+telas/achado.js (só neste servidor de teste; o jogo não muda) e PAINEL=<endereço> põe no canto da página os atalhos
+de volta ao painel e de repetir o cenário.
 """
 import os
 import random
@@ -15,6 +18,7 @@ import sys
 import tempfile
 import threading
 import time
+import html
 import pathlib
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[5]))
@@ -80,13 +84,42 @@ def raridades(ui):
 
 
 CENARIOS = {"nivel": nivel, "dois_niveis": dois_niveis, "raridades": raridades}
+PROTOTIPO = pathlib.Path(__file__).resolve().parents[1] / "prototipo"
+TROCADOS = {"telas/celebracoes.js": "celebracoes.js", "telas/achado.js": "achado.js"}
+
+
+def demonstracao(srv, nome):
+    """Só na demonstração: as cópias da proposta no lugar das telas do jogo (PROTOTIPO=1) e a faixa do painel no canto
+    da página (PAINEL). Troca o método de arquivos do servidor deste processo; nada é gravado no jogo."""
+    proposta, painel = bool(os.environ.get("PROTOTIPO")), os.environ.get("PAINEL")
+    h = srv.httpd.RequestHandlerClass
+    original = h._arquivo
+
+    def _arquivo(self, relativo):
+        if proposta and relativo in TROCADOS:
+            return self._responder(200, (PROTOTIPO / TROCADOS[relativo]).read_bytes(), "text/javascript; charset=utf-8")
+        if painel and relativo == "index.html":
+            pagina = (pathlib.Path(sys.modules[Servidor.__module__].PASTA) / "index.html").read_text(encoding="utf-8")
+            versao = "proposta (protótipo)" if proposta else "jogo atual"
+            repetir = html.escape(f"{painel}iniciar?{os.environ.get('REPETIR', '')}", quote=True)
+            faixa = (f'<div id="demo-faixa" style="position:fixed;left:8px;bottom:6px;z-index:99999;font:12px/1.4 sans-serif;'
+                     f'background:#000c;color:#e8dcbe;border:1px solid #6b5a3a;padding:3px 8px;border-radius:3px">'
+                     f'Demonstração: {html.escape(nome)} · {versao} · '
+                     f'<a href="{repetir}" style="color:#f2c94c">repetir</a> · '
+                     f'<a href="{html.escape(painel, quote=True)}" style="color:#f2c94c">painel</a></div>')
+            return self._responder(200, pagina.replace("</body>", faixa + "</body>").encode("utf-8"), "text/html; charset=utf-8")
+        return original(self, relativo)
+
+    h._arquivo = _arquivo
 
 
 def main():
     nome = sys.argv[1] if len(sys.argv) > 1 else "nivel"
     ui = WebUI()
     ui.jogo = None
-    srv = Servidor(ui, config={"velocidade": os.environ.get("VELOCIDADE", "normal")}).iniciar()
+    srv = Servidor(ui, config={"velocidade": os.environ.get("VELOCIDADE", "normal")})
+    demonstracao(srv, nome)
+    srv.iniciar()
     print(srv.url, flush=True)
     threading.Thread(target=CENARIOS[nome], args=(ui,), daemon=True).start()
     while True:

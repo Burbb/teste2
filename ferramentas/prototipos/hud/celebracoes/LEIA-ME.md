@@ -3,6 +3,17 @@
 **Nada disto está no jogo.** As cópias em `prototipo/` substituem `telas/celebracoes.js` e `telas/achado.js` só nas
 páginas do fotógrafo (`page.route`); o jogo nunca lê `ferramentas/`. A base é a 1.200.1.
 
+## Testar no navegador (a demonstração)
+
+`demo.bat` (ou `python ferramentas/prototipos/hud/celebracoes/auxiliares/demo.py`) abre o painel em
+**http://127.0.0.1:8765/**: os três cenários, cada um na proposta ou no jogo atual. Cada botão encerra o cenário
+anterior e sobe outro do zero (um processo com saves temporários: o save do jogo não é tocado); na página, "Começar o
+teste"; no canto de baixo, "repetir" e "painel". A proposta é servida por esse servidor de teste (`PROTOTIPO=1` em
+`cenarios_teste.py` troca `telas/celebracoes.js` e `telas/achado.js` pelas cópias de `prototipo/`); a faixa do canto
+só existe na demonstração. Movimento reduzido: no Chrome/Edge, F12 → ⋮ → More tools → Rendering → "Emulate CSS media
+feature prefers-reduced-motion" → reduce, e repetir o cenário (ou o "Mostrar animações" desligado no Windows, que vale
+para o sistema todo).
+
 ## O levantamento (o que existe hoje)
 
 - **Como o jogador avança:** o XP vem das lutas (o quadro do espólio, `Jogo.abrir_espolio`/`ganhar_xp`), dos contratos
