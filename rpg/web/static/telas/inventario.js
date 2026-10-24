@@ -70,7 +70,7 @@
     return `<div class="testes-ficha" tabindex="0" ${dica(`<b>Testes do d20</b><div class="tipo">d20 + bônus contra a dificuldade</div>
       <ul class="dica-lista testes-lista">${linhas}</ul>
       <div class="rodape">Tire 20 e passa sempre; 1 falha sempre. A dificuldade depende da situação e sobe 1 a cada dois níveis seus${extra}.</div>`)}>
-      <span class="d20">${D20}</span><span class="nome">Testes do d20</span><span class="seta" aria-hidden="true">›</span></div>`;
+      <span class="d20">${Dado20.icone()}</span><span class="nome">Testes do d20</span><span class="seta" aria-hidden="true">›</span></div>`;
   }
   function reputacaoHtml(p) {
     const r = p.reputacao_info || { titulo: "", linhas: [] };

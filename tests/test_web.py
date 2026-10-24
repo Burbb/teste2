@@ -266,5 +266,54 @@ class TestPagina(unittest.TestCase):
         self.assertEqual(self.cenas(passos)[-1], ("cabecalho", "Vale do Corvo", False))
 
 
+class TestPreferencias(unittest.TestCase):
+    """1.202.0: o dado dos testes guardado em disco (a porta muda a cada abertura, e o armazenamento do navegador com
+    ela): só as chaves e os valores conhecidos; um arquivo ausente ou estragado dá o padrão (nada guardado)."""
+
+    def abrir(self, arquivo):
+        srv = Servidor(WebUI(), preferencias=arquivo).iniciar()
+        self.addCleanup(srv.parar)
+        return srv, f"http://127.0.0.1:{srv.httpd.server_address[1]}"
+
+    def config(self, base, srv):
+        with urllib.request.urlopen(f"{base}/config?token={srv.token}", timeout=10) as r:
+            return json.loads(r.read())
+
+    def mandar(self, base, srv, corpo, token=None):
+        req = urllib.request.Request(f"{base}/preferencia", method="POST", data=json.dumps(corpo).encode(),
+                                     headers={"Content-Type": "application/json", "X-Token": token or srv.token})
+        try:
+            return urllib.request.urlopen(req, timeout=10).status
+        except urllib.error.HTTPError as e:
+            return e.code
+
+    def test_o_dado_escolhido_volta_na_proxima_abertura(self):
+        import os
+        arquivo = os.path.join(tempfile.mkdtemp(), "preferencias", "tela.json")
+        srv, base = self.abrir(arquivo)
+        self.assertEqual(self.config(base, srv)["preferencias"], {})  # sem nada guardado: o Clássico, pela tela
+        self.assertEqual(self.mandar(base, srv, {"chave": "d20", "valor": "vidro"}), 204)
+        self.assertEqual(self.mandar(base, srv, {"chave": "d20", "valor": "dourado"}), 400)
+        self.assertEqual(self.mandar(base, srv, {"chave": "estouro", "valor": "relicario"}), 400)  # outra escolha
+        self.assertEqual(self.mandar(base, srv, {"chave": "d20", "valor": "marfim"}, token="errado"), 403)
+        srv2, base2 = self.abrir(arquivo)  # o jogo aberto de novo, noutra porta
+        self.assertEqual(self.config(base2, srv2)["preferencias"], {"d20": "vidro"})
+
+    def test_arquivo_estragado_ou_com_valor_estranho_da_o_padrao(self):
+        import os
+        pasta = tempfile.mkdtemp()
+        for conteudo in ("{não é json", '["d20"]', '{"d20": "dourado", "outra": 1}'):
+            arquivo = os.path.join(pasta, "tela.json")
+            with open(arquivo, "w", encoding="utf-8") as f:
+                f.write(conteudo)
+            srv, base = self.abrir(arquivo)
+            self.assertEqual(self.config(base, srv)["preferencias"], {}, conteudo)
+
+    def test_sem_arquivo_nada_vai_para_o_disco(self):
+        srv, base = self.abrir(None)
+        self.assertEqual(self.mandar(base, srv, {"chave": "d20", "valor": "marfim"}), 204)
+        self.assertEqual(self.config(base, srv)["preferencias"], {"d20": "marfim"})
+
+
 if __name__ == "__main__":
     unittest.main()

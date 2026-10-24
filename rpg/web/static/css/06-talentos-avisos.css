@@ -355,4 +355,8 @@ body.derrotado #predios { visibility: hidden; }
 #ajuda-corpo ul { margin: 0; padding-left: 20px; line-height: 1.45; }
 #ajuda-corpo b { color: var(--ouro); font-weight: 600; }
 .ajuda-chave { margin-top: 6px; }
+/* o dado dos testes (provisório, até o menu de configurações): três botões, o escolhido aceso */
+.ajuda-dado { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 10px; }
+.ajuda-dado-rotulo { margin-right: 4px; color: var(--tinta-2); }
+.ajuda-dado [aria-pressed="true"] { border-color: var(--ouro); color: var(--ouro); }
 @media (prefers-reduced-motion: reduce) { .leitura-livro { animation: none; } }

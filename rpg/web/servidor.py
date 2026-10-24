@@ -17,12 +17,31 @@ mimetypes.add_type("font/woff2", ".woff2")
 mimetypes.add_type("font/ttf", ".ttf")
 mimetypes.add_type("text/javascript", ".js")
 
+# As preferências da tela guardadas em disco (a porta muda a cada vez que o jogo abre, e o armazenamento do navegador
+# vai junto): só as chaves e os valores daqui. 1.202.0: o dado dos testes (d20/dado.js), até o menu de configurações.
+PREFERENCIAS = {"d20": ("classico", "marfim", "vidro")}
+
+
+def ler_preferencias(caminho):
+    """As preferências válidas do arquivo (as outras, e um arquivo ausente ou estragado, ficam de fora)."""
+    try:
+        with open(caminho, encoding="utf-8") as f:
+            dados = json.load(f)
+    except (OSError, ValueError, TypeError):
+        return {}
+    if not isinstance(dados, dict):
+        return {}
+    return {k: v for k, v in dados.items() if v in PREFERENCIAS.get(k, ())}
+
 
 class Servidor:
-    def __init__(self, ui, porta=0, config=None):
+    def __init__(self, ui, porta=0, config=None, preferencias=None):
         self.ui = ui
         self.token = secrets.token_urlsafe(16)
         self.config = config or {}
+        # `preferencias`: o arquivo delas (sem ele, nada vai para o disco: os testes e os cenários)
+        self.arquivo_preferencias = preferencias
+        self.config["preferencias"] = ler_preferencias(preferencias) if preferencias else {}
         servidor = self
 
         class Handler(BaseHTTPRequestHandler):
@@ -59,8 +78,16 @@ class Servidor:
 
             def do_POST(self):
                 url = urlparse(self.path)
-                if url.path not in ("/responder", "/orientacao") or not self._token_ok({}):
+                if url.path not in ("/responder", "/orientacao", "/preferencia") or not self._token_ok({}):
                     return self._responder(403)
+                if url.path == "/preferencia":  # {"chave": "d20", "valor": "marfim"}: vale a partir da próxima abertura
+                    try:
+                        tamanho = min(int(self.headers.get("Content-Length", 0)), 1_000)
+                        dados = json.loads(self.rfile.read(tamanho) or b"{}")
+                        servidor.guardar_preferencia(dados["chave"], dados["valor"])
+                    except (ValueError, KeyError, TypeError):
+                        return self._responder(400)
+                    return self._responder(204)
                 if url.path == "/orientacao":  # dispensar ou religar as orientações (abertura.py)
                     try:
                         tamanho = min(int(self.headers.get("Content-Length", 0)), 1_000)
@@ -128,6 +155,16 @@ class Servidor:
         self.httpd = ThreadingHTTPServer(("127.0.0.1", porta), Handler)
         self.httpd.daemon_threads = True
         self.thread = None
+
+    def guardar_preferencia(self, chave, valor):
+        """Guarda uma preferência da tela; uma chave ou um valor desconhecido é ValueError."""
+        if valor not in PREFERENCIAS.get(chave, ()):
+            raise ValueError(chave)
+        self.config["preferencias"][chave] = valor
+        if self.arquivo_preferencias:
+            os.makedirs(os.path.dirname(self.arquivo_preferencias), exist_ok=True)
+            with open(self.arquivo_preferencias, "w", encoding="utf-8") as f:
+                json.dump(self.config["preferencias"], f, ensure_ascii=False, indent=1)
 
     @property
     def url(self):

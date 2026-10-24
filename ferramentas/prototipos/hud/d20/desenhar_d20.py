@@ -388,4 +388,8 @@ if __name__ == "__main__":
           "   um caractere por pixel. Não edite à mão: os retoques vão em AJUSTES. */\n"
           "const D20_DADOS = " + json.dumps(dados, ensure_ascii=False, separators=(",", ":")) + ";\n")
     (AQUI / "d20-dados.js").write_text(js, encoding="utf-8")
+    # a cópia do jogo (1.202.0: o Marfim e o Vidro integrados), com o cabeçalho de lá; as duas saem sempre iguais
+    jogo = js.replace("/* GERADO por desenhar_d20.py (protótipo do d20, etapa 2; nada no jogo): as grades do dado nas duas propostas,",
+                      "/* GERADO por ferramentas/prototipos/hud/d20/desenhar_d20.py (o d20 do Marfim e do Vidro, 1.202.0): as grades do dado,")
+    (AQUI.parents[3] / "rpg" / "web" / "static" / "d20" / "dados.js").write_text(jogo, encoding="utf-8")
     print("ok")

@@ -614,7 +614,7 @@ const Orientacao = (() => {
   function desenharAjuda() {
     const o = estado && estado.orientacao;
     const corpoAjuda = $("#ajuda-corpo");
-    if (!o) { corpoAjuda.innerHTML = '<p class="vazio">Comece ou carregue um jogo para ver as orientações dele.</p>'; botaoDestaque(corpoAjuda); return; }
+    if (!o) { corpoAjuda.innerHTML = '<p class="vazio">Comece ou carregue um jogo para ver as orientações dele.</p>'; botaoDestaque(corpoAjuda); escolhaDado(corpoAjuda); return; }
     const grupos = {};
     o.linhas.forEach((l) => { (grupos[l.grupo] = grupos[l.grupo] || []).push(l.texto); });
     const lista = Object.entries(grupos).map(([g, ls]) => `<h3>${esc(g)}</h3><ul>${ls.map((t) => `<li>${negrito(t)}</li>`).join("")}</ul>`).join("");
@@ -628,6 +628,7 @@ const Orientacao = (() => {
       desenharAjuda();
     });
     botaoDestaque(corpoAjuda);
+    escolhaDado(corpoAjuda);
   }
   /** "Destacar interações": os nomes e os contornos dos pontos clicáveis das cenas sempre à vista (telas/cenas.js). */
   function botaoDestaque(corpoAjuda) {
@@ -638,6 +639,24 @@ const Orientacao = (() => {
     b.addEventListener("click", (ev) => { ev.stopPropagation(); Cenas.alternarDestaque(); desenharAjuda(); corpoAjuda.querySelector(".ajuda-destaque")?.focus(); });
     const primeiro = corpoAjuda.querySelector(".ajuda-chave");
     if (primeiro) primeiro.after(b); else corpoAjuda.prepend(b);
+  }
+
+  /** O dado dos testes (Clássico, Marfim ou Vidro; d20/dado.js), depois das chaves: provisório, até o menu de
+   *  configurações existir. A escolha vale na hora e fica guardada. */
+  function escolhaDado(corpoAjuda) {
+    const g = document.createElement("div");
+    g.className = "ajuda-dado"; g.setAttribute("role", "group"); g.setAttribute("aria-label", "Dado dos testes");
+    g.innerHTML = `<span class="ajuda-dado-rotulo">Dado dos testes</span>` + Dado20.OPCOES.map(([k, nome]) =>
+      `<button type="button" class="botao-janela" data-dado="${k}" aria-pressed="${Dado20.atual === k}">${nome}</button>`).join("");
+    g.addEventListener("click", (ev) => {
+      const b = ev.target.closest("[data-dado]");
+      if (!b) return;
+      ev.stopPropagation();
+      Dado20.usar(b.dataset.dado);
+      g.querySelectorAll("[data-dado]").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+    });
+    const ultima = [...corpoAjuda.querySelectorAll(".ajuda-chave")].pop();
+    if (ultima) ultima.after(g); else corpoAjuda.prepend(g);
   }
 
   function alternarAjuda(forcar) {

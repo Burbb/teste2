@@ -4,6 +4,7 @@ Abre numa janela própria se o pywebview estiver instalado; senão, no navegador
 Tudo é local e offline: o servidor escuta só em 127.0.0.1.
 """
 
+import os
 import threading
 import time
 import traceback
@@ -16,7 +17,9 @@ from .servidor import Servidor
 def jogar(args, menu_principal):
     ui = WebUI()
     ui.jogo = None
-    srv = Servidor(ui, porta=args.porta, config={"velocidade": args.velocidade}).iniciar()
+    # as preferências da tela numa pasta ao lado dos saves (fora da lista deles, que lê os .json da pasta dos saves)
+    srv = Servidor(ui, porta=args.porta, config={"velocidade": args.velocidade},
+                   preferencias=os.path.join(args.saves, "preferencias", "tela.json")).iniciar()
 
     def rodar_jogo():
         try:

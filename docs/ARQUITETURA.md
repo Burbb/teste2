@@ -306,6 +306,13 @@ id, `ficha_guardiao`; os contratos por `contratos.desc_caca` e `desc_alvo`, os m
   consequência, no tempo de sempre (950 ms + `ritmo(650)`). No texto instantâneo, refazendo a página e na luta, só a
   tirinha. Lê a mensagem `rolagem` (`Testes.teste`: `atributo, cd, d20, mod, total, sucesso` e `precisa`, o menor d20
   que passa, de `Testes.precisa_no_dado`) e as parcelas de `heroi.testes` (`20-rolagem.css`).
+- `d20/dado.js` (1.202.0) o d20 em três apresentações: o Clássico (o de `app/rolagem.js`, o padrão), o Marfim e o Vidro
+  (o dado em pixel art, `d20/dados.js`, gerado por `ferramentas/prototipos/hud/d20/desenhar_d20.py`; `21-d20.css`).
+  Troca a função `rolagem` por uma que chama a escolhida; a mesma mensagem, o mesmo ritmo e os mesmos gestos. A
+  escolha é uma preferência da tela (`cdf-d20` no navegador e `preferencias/tela.json` ao lado dos saves, pela rota
+  `/preferencia` do servidor, que só aceita as chaves e os valores de `servidor.PREFERENCIAS`: a porta muda a cada
+  abertura e o armazenamento do navegador com ela); a do disco chega pela `/config`. O controle provisório fica na
+  Ajuda (F1), até o menu de configurações; o ícone da ficha vem de `Dado20.icone()`. Independe de Estouro/Relicário.
 - Os testes de atributo na ficha (1.118.0): a linha "Testes do d20" embaixo dos atributos (`telas/inventario.js`,
   `testesHtml`), com a dica dos seis testes. Tudo vem de `heroi.testes` (`web/estado.py`, `explicar_testes`): o total
   de agora, as partes fixas (`Testes.partes_fixas_teste`: nível, atributo, classe), as da situação

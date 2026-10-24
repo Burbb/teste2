@@ -97,6 +97,8 @@ document.addEventListener("keydown", (ev) => {
   if (ev.target.tagName === "INPUT" && (ev.target.type !== "checkbox" || ev.key === " ")) { if (ev.key === "Escape") ev.target.blur(); return; }
   if (ev.ctrlKey || ev.metaKey || ev.altKey) return;
   const k = ev.key;
+  // Enter e Espaço num botão da Ajuda aberta apertam o botão (a chave, o dado): não respondem a pergunta de trás
+  if ((k === "Enter" || k === " ") && document.activeElement && document.activeElement.closest("#sobre-ajuda:not([hidden]) button")) return;
   if (k === "F1") { ev.preventDefault(); if (!ev.repeat) Orientacao.alternarAjuda(); return; }
   if (k === "F4") {  // destacar interações: os nomes e contornos dos pontos da cena (a escolha fica na Ajuda também)
     ev.preventDefault();
@@ -197,6 +199,7 @@ async function iniciar() {
     const r = await fetch(`/config?token=${encodeURIComponent(TOKEN)}`);
     const cfg = await r.json();
     if (!ler("cdf-velocidade") && VELOCIDADES[cfg.velocidade] !== undefined) velocidade = cfg.velocidade;
+    if (cfg.preferencias && cfg.preferencias.d20) Dado20.usar(cfg.preferencias.d20, false);  // a do disco vale mais
   } catch (e) { /* usa o padrão */ }
   $("#vel-rotulo").textContent = NOME_VEL[velocidade];
   // A fonte pixel da história saiu (1.137.0): a de livro é a única. A preferência antiga guardada só é apagada.

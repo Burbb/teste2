@@ -1,8 +1,15 @@
 # O d20: o redesenho do dado dos testes (etapa 2, protótipo, 24/10/2026)
 
-**Nada disto está no jogo.** O jogo nunca lê `ferramentas/`. As propostas só existem nas páginas do servidor de teste
-desta pasta: a demonstração e as do fotógrafo. A base é a 1.201.0, com as celebrações integradas, que não mudam.
-Aguarda a escolha do Jean.
+**Integrado na 1.202.0 (24/10/2026), as três aprovadas pelo Jean:** o jogo atual (o **Clássico**, que continua o
+padrão), **A · Marfim** e **B · Vidro**, à escolha na Ajuda (F1), "Dado dos testes"; a escolha fica guardada no
+navegador e em `preferencias/tela.json`, ao lado dos saves, e volta ao reabrir o jogo (sem escolha válida, o
+Clássico). No jogo: `rpg/web/static/d20/dado.js` (o `d20.js` daqui com os nomes de produção: `d20-pixel`,
+`d20-marfim`, `d20-vidro`), `d20/dados.js` (gravado também por `desenhar_d20.py`) e `css/21-d20.css`. O controle é
+provisório: vai para o menu de configurações quando ele existir. Conferido: o jogo e o protótipo, caso a caso (os
+reais e o laboratório), com o mesmo resultado do motor e o mesmo desenho (só o recorte de 1 px e o texto de fundo
+diferem); a folha `integracao-jogo.png`.
+
+O protótipo abaixo fica como estava (a demonstração ainda sobe as propostas pelo `PROPOSTA`).
 
 ## Testar no navegador (a demonstração)
 
