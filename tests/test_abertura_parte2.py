@@ -164,11 +164,11 @@ class TestExplorarNoiteTalentos(unittest.TestCase):
         g.periodo = 3
         o = ab.atual(g)
         self.assertEqual((o["id"], o["ancora"]), ("N1", "risco:noite"))
-        self.assertIn("sem ela, ser pego de surpresa fica mais provável", o["texto"])
+        self.assertIn("Sem tocha, ser pego de surpresa fica mais provável", o["texto"])
         self.assertNotIn("com o mouse", o["texto"])
         ir(g, "capela_afogada")
         self.assertIn("sem tocha, cada sala começa com o inimigo atacando primeiro", ab.atual(g)["texto"])
-        self.assertIn("a noite continua perigosa", ab.atual(g)["texto"])  # a tocha não tira a noite
+        self.assertIn("com ou sem tocha", ab.atual(g)["texto"])  # a tocha não tira a noite
         g.periodo = 1
         self.assertNotEqual(oid(g), "N1")  # de dia, a noite não tem o que dizer
 

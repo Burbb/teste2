@@ -38,14 +38,14 @@ class TestFerimento(unittest.TestCase):
         o = ab.atual(g)
         self.assertEqual((o["id"], o["ancora"]), ("F1", "ferimento:costelas"))
         self.assertEqual(o["texto"], "**Costelas quebradas**\n−25% de Defesa e −15% de Vigor máximo.\n"
-                                     "Precisa de descanso ou tratamento para sarar.")
+                                     "Sara com descanso ou na Curandeira.")
         self.assertNotIn("bandagem", o["texto"].lower())  # fratura: a bandagem não trata
 
     def test_f1_corte_com_os_numeros_reais(self):
         g = depois_da_despensa("mago")
         ferir(g, "corte")
         self.assertEqual(ab.atual(g)["texto"], "**Corte profundo**\n−10% de vida máxima.\n"
-                                               "Precisa de descanso ou tratamento para sarar.")
+                                               "Sara com descanso ou na Curandeira.")
         g = depois_da_despensa("mago")
         ferir(g, "concussao")
         self.assertIn("−25% de Poder e −15% de Mana máxima.", ab.atual(g)["texto"])
@@ -54,7 +54,7 @@ class TestFerimento(unittest.TestCase):
         g = depois_da_despensa()
         ferir(g, "infeccao")
         texto = ab.atual(g)["texto"]
-        self.assertIn("Não passa com descanso: precisa de unguento ou tratamento.", texto)
+        self.assertIn("Não sara com descanso: use unguento ou vá à Curandeira.", texto)
         self.assertNotIn("Precisa de descanso", texto)  # nada de prometer que o descanso cura
 
     def test_f1_espera_a_luta_acabar(self):

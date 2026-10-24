@@ -56,13 +56,13 @@ def explicar(f, recurso=None, jogador=None):
         linhas.append(efeito_no_heroi(jogador, f["id"]))
     if f["id"] == "infeccao":
         linhas += ["Arde em febre: perde 12% da vida a cada amanhecer.",
-                   "Não passa sozinha: use um unguento ou pague um curandeiro."]
+                   "Não sara sozinha: use um unguento ou vá à Curandeira."]
         return linhas
     if d.get("aberto") and not f.get("tratado"):
-        linhas.append(f"Ferida aberta: enfaixe com uma bandagem. Sem isso, {round(CHANCE_INFECCAO * 100)}% de chance de "
-                      "infeccionar a cada noite.")
-    linhas.append(f"Sara em {f['dias']} dia{'s' if f['dias'] != 1 else ''} de descanso (dormir numa cama conta dobrado; "
-                  "com fome não sara). Um curandeiro resolve na hora.")
+        linhas.append(f"Ferida aberta: sem bandagem, {round(CHANCE_INFECCAO * 100)}% de chance de infeccionar a cada "
+                      "noite.")
+    linhas.append(f"Sara em {f['dias']} dia{'s' if f['dias'] != 1 else ''} de descanso (a cama conta dobrado; com fome "
+                  "não sara). A Curandeira trata na hora.")
     return linhas
 
 
@@ -110,13 +110,13 @@ def vida_bloqueio(jogador):
     # dele também como vida; a bandagem só evita a infecção; a fome passa comendo)
     devolve = []
     if any(f["nome"] != "Fome" for f in fontes):
-        devolve.append("Um ferimento devolve a sua parte quando sara (descansando) ou na Curandeira; a bandagem só "
-                       "evita a infecção.")
+        devolve.append("A parte de um ferimento volta quando ele sara (descanso ou Curandeira); a bandagem não "
+                       "devolve.")
     if any(f["nome"] == "Fome" for f in fontes):
-        devolve.append("A fome devolve a dela quando você come.")
+        devolve.append("A da fome volta quando você come.")
     return {"saudavel": saudavel, "limite": jogador.max_hp, "bloqueado": bloqueado, "fontes": fontes,
             "causas": tx.lista_natural([f["nome"] if f["nome"] != "Fome" else "a fome" for f in fontes]),
-            "dica": [f"{jogador.max_hp} é o limite agora: uma cura comum não passa dele.",
+            "dica": [f"Curas param em {jogador.max_hp}.",
                      f"Saudável: {saudavel}. {' '.join(devolve)}"]}
 
 

@@ -1729,7 +1729,7 @@ async function cenarioTutorial(browser) {
     const { proc, url } = await subir("tutorial", { ITEM: "1", VIDA: "0.4" });
     const { page, erros } = await abrir(browser, url);
     try {
-      conferir(await ate(page, /A linha "contra…" compara o achado/) && !(await cobre(page)), "E1: no item achado, a comparação e as escolhas, sem cobrir a janela");
+      conferir(await ate(page, /Na troca mostra o que muda/) && !(await cobre(page)), "E1: no item achado, a comparação e as escolhas, sem cobrir a janela");
       await page.keyboard.press("2");  // Guardar, pelo teclado
       conferir(await ate(page, /^O Templo recupera sua vida\. Seu primeiro atendimento é grátis\./) && !(await cobre(page)),
         "decidido o item, o E1 sai; na vila, V2 aponta o Templo (a vida baixa), sem cobrir prédio nem página");
@@ -2269,7 +2269,7 @@ async function cenarioFeridas(browser) {
     const { proc, url } = await subir("tutorial", { LUGAR: "charco", VISTAS: "A1,A0,AL,N1,V5", FERIMENTOS: "corte", BANDAGENS: "2", VIDA: "0.5" });
     const { page, erros } = await abrir(browser, url);
     try {
-      conferir(await ate(page, /^Corte profundo −10% de vida máxima\. Precisa de descanso ou tratamento para sarar\./) && (await pontaNoAlvo(page)) <= 2,
+      conferir(await ate(page, /^Corte profundo −10% de vida máxima\. Sara com descanso ou na Curandeira\./) && (await pontaNoAlvo(page)) <= 2,
         "F1: o nome, o efeito real e o que faz sarar, a seta no ferimento");
       await page.click(".orientacao-entendi");
       await page.click('#doca .atalho[data-rotulo="Inventário"]');

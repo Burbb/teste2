@@ -375,8 +375,8 @@ def _v5(g, a):
     from . import missoes
     if not missoes.pode_explorar(g):  # dentro da capela, a opção não existe: o quadro espera o lado de fora
         return None
-    return {"id": "V5", "texto": "**Explorar a região** gasta um período. Pode dar luta, um achado, alguém pelo "
-                                 "caminho ou nada: é por aí que se acha o que não está nos contratos.",
+    return {"id": "V5", "texto": "**Explorar a região** gasta um período: pode dar luta, um achado, alguém pelo "
+                                 "caminho ou nada. É assim que se acha o que não está nos contratos.",
             "ancora": "opcao:Explorar a região"}
 
 
@@ -384,9 +384,9 @@ def _e1(g, a, dados):
     """A primeira comparação de equipamento (um item achado que você pode usar, com o que você veste no lugar)."""
     if not _pendente(a, "E1") or not dados or not dados.get("compara"):
         return None
-    compara = "A linha \"contra…\" compara o achado com o que você usa (▲ ganha, ▼ perde)."
+    compara = "**Na troca** mostra o que muda (▲ ganha, ▼ perde)."
     if dados.get("cabe"):
-        texto = f"{compara} **Equipar** veste o novo e guarda o antigo na mochila; **Guardar** leva o novo na mochila."
+        texto = f"{compara} **Equipar** veste o novo e guarda o antigo na mochila; **Guardar** leva o novo para a mochila."
     else:
         texto = f"{compara} Com a mochila cheia, **Equipar** deixa o antigo para trás."
     return {"id": "E1", "texto": texto, "ancora": "achado"}
@@ -409,16 +409,14 @@ def _n1(g, a):
     if not _pendente(a, "N1") or g.loc["tipo"] == "vila" or not g.noite:
         return None
     if missoes.tem_salas(g):
-        luz = ("Este lugar é escuro também de dia: sem tocha, cada sala começa com o inimigo atacando primeiro. "
-               "A tocha ilumina, mas a noite continua perigosa.")
+        luz = "Este lugar é escuro também de dia: sem tocha, cada sala começa com o inimigo atacando primeiro."
     elif g.bioma in ("ruinas", "cidadela"):
-        luz = ("Este lugar é escuro também de dia: sem tocha, ser pego de surpresa fica mais provável. A tocha "
-               "ilumina, mas a noite continua perigosa.")
+        luz = "Este lugar é escuro também de dia: sem tocha, ser pego de surpresa fica mais provável."
     else:
-        luz = ("No escuro, a tocha ilumina o caminho; sem ela, ser pego de surpresa fica mais provável. A noite "
-               "continua perigosa com ou sem luz.")
+        luz = "Sem tocha, ser pego de surpresa fica mais provável."
     # A âncora: os riscos do lugar, à direita (a linha da noite, com os números, e a da tocha).
-    return {"id": "N1", "texto": f"A noite deixa os inimigos mais fortes. {luz}", "ancora": "risco:noite", "entendi": True}
+    return {"id": "N1", "texto": f"À noite, os inimigos ficam mais fortes, com ou sem tocha. {luz}", "ancora": "risco:noite",
+            "entendi": True}
 
 
 # ------------------------------------------------------------------ os ciclos básicos (K1–K4, B1, S, A1)
@@ -617,8 +615,8 @@ def _f1(g, a):
     if not _pendente(a, "F1") or not j.ferimentos:
         return None
     f = j.ferimentos[0]
-    sara = ("Não passa com descanso: precisa de unguento ou tratamento." if f["id"] == "infeccao" else
-            "Precisa de descanso ou tratamento para sarar.")
+    sara = ("Não sara com descanso: use unguento ou vá à Curandeira." if f["id"] == "infeccao" else
+            "Sara com descanso ou na Curandeira.")
     return {"id": "F1", "texto": f"**{FERIMENTOS[f['id']]['nome']}**\n{_efeito_ferimento(f['id'], j.nome_recurso)}."
                                  f"\n{sara}",
             "ancora": f"ferimento:{f['id']}", "entendi": True}
@@ -798,17 +796,16 @@ def ajuda(g):
             ("V4", "Comitiva", "**Comitiva**, na barra de baixo, abre quem anda com você: conversar, ver a confiança "
                                "e mandar para o acampamento."),
             ("V5", "Estrada", "**Explorar a região** gasta um período: luta, achado, alguém pelo caminho ou nada."),
-            ("E1", "Herói", "No item achado, ▲ e ▼ comparam com o que você usa. **Equipar** troca; **Guardar** leva "
-                            "na mochila."),
+            ("E1", "Herói", "No item achado, **Na troca** mostra o que muda (▲ ganha, ▼ perde). **Equipar** troca; "
+                            "**Guardar** leva para a mochila."),
             ("T1", "Herói", "**Talentos**, na barra de baixo, abre a árvore quando há ponto para gastar."),
-            ("N1", "Estrada", f"À noite, os inimigos vêm {bal.NOITE_NIVEL} nível acima e batem mais forte. A tocha "
-                              "ilumina os lugares escuros (sem ela, a surpresa fica mais provável; nas salas da "
-                              "capela, certa), mas não tira o perigo da noite."),
-            ("F1", "Ferimentos", "Ferimentos ficam na ficha depois da luta (o sangramento passa com ela). Saram com "
-                                 "descanso; a **Curandeira** trata na hora; a infecção pede unguento ou a Curandeira."),
-            ("F2", "Ferimentos", "A bandagem só enfaixa uma ferida aberta (corte, mordida, queimadura) e a protege "
-                                 "contra infecção: uma por bandagem, a primeira da lista. Não recupera vida, não cura "
-                                 "infecção, e o ferimento ainda precisa sarar."),
+            ("N1", "Estrada", f"À noite, os inimigos vêm {bal.NOITE_NIVEL} nível acima e batem mais forte, com ou sem "
+                              "tocha. Sem tocha no escuro, a surpresa fica mais provável (nas salas da capela, certa)."),
+            ("F1", "Ferimentos", "Ferimentos ficam depois da luta (o sangramento, não) e tiram parte da vida máxima, do "
+                                 f"{r} máximo ou de atributos até sarar. Saram com descanso ou na **Curandeira**; a infecção, só "
+                                 "com unguento ou na Curandeira."),
+            ("F2", "Ferimentos", "A bandagem enfaixa uma ferida aberta (corte, mordida, queimadura), a primeira da "
+                                 "lista, e a protege contra infecção. Não recupera vida nem cura infecção."),
             ("F3", "Vila", "A **Curandeira** trata ferimentos; o **Templo** recupera vida."
                            + (" O primeiro tratamento é grátis." if curandeira_gratis(g) else "")),
             ("D1", "Descanso", "Dormir na **Taverna** vai até o amanhecer, devolve parte da vida e todo o recurso; nenhuma "
