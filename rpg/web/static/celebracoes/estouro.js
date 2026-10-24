@@ -103,13 +103,12 @@
 
     achado(d) {
       const f = fichaItem(d);
-      return `<div class="tela achado fb2-achado rar-${f.rar}">
+      return `<div class="tela achado fb2-achado rar-${f.rar}${f.compara ? "" : " sem-compara"}">
         <div class="achado-cartao novo rar-${f.rar}">
           <div class="fb2-selo-item"><div class="achado-arte">${arteItem(d.item, 64)}</div></div>
-          <div class="fb2-cabeca"><span class="achado-selo">Você encontrou</span>${f.raridade}${f.nome}</div>
+          <div class="fb2-cabeca"><span class="achado-selo">Você encontrou</span>${f.raridade}${f.nome}${f.compara ? "" : f.grupo + f.lore}</div>
         </div>
-        <div class="fb2-ficha${f.compara ? " compara" : ""}">${f.premio}${f.troca}${f.usa ? `<div class="fb2-usa">${f.usa}</div>` : ""}</div>
-        ${f.lore}${f.aviso}</div>`;
+        ${f.compara ? `<div class="fb2-ficha compara">${f.premio}${f.troca}<div class="fb2-usa">${f.usa}</div></div>${f.lore}` : ""}${f.aviso}</div>`;
     },
     GOLPE: {
       comum: null,
@@ -238,6 +237,11 @@
   .fb2-usa .achado-selo { font: 700 11px/1.4 var(--texto); letter-spacing: 0.22em; text-transform: uppercase; color: #8a8070; }
   .dir-estouro .ficha-usa-nome { display: flex; align-items: center; gap: 8px; } .dir-estouro .ficha-usa-nome b { font: 400 22px/1.05 var(--titulo); }
   .fb2-usa .ficha-troca { display: flex; flex-direction: column; font-size: 15px; }
+  /* sem nada no espaço: o tipo e os números debaixo do nome, na coluna dele (sem a ficha larga e a linha de cima) */
+  .dir-estouro .fb2-cabeca .ficha-grupo { display: flex; flex-direction: column; gap: 3px; margin-top: 6px; }
+  .dir-estouro .fb2-cabeca .ficha-lore { margin-top: 4px; }
+  /* a coluna mais alta desce para onde os raios do selo chegam: no raro e no lendário, ela se afasta dele */
+  :root body #sobre-achado.dir-estouro:is(.rar-raro, .rar-lendario) .fb2-achado.sem-compara .achado-cartao.novo { gap: 88px; }
   .dir-estouro .ficha-lore { grid-area: lore; max-width: 640px; font: italic 15px/1.4 var(--texto); color: #a89878; }
   .dir-estouro .achado-acoes { display: flex; justify-content: center; gap: 10px; margin-top: 16px; }
   :root body #sobre-achado.dir-estouro.entrando:is(.rar-raro, .rar-lendario):not(.bateu):not(.adiantado) .fb2-selo-item > * { visibility: hidden; }

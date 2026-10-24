@@ -100,9 +100,9 @@
       return `<div class="tela achado fa2-achado rar-${f.rar}">
         <div class="achado-cartao novo rar-${f.rar}">
           <div class="fa2-altar"><div class="achado-arte">${arteItem(d.item, 64)}</div></div>
-          <div class="fa2-cabeca"><span class="achado-selo">Você encontrou</span>${f.raridade}${f.nome}</div>
+          <div class="fa2-cabeca"><span class="achado-selo">Você encontrou</span>${f.raridade}${f.nome}${f.compara ? "" : f.grupo}</div>
         </div>
-        <div class="fa2-ficha${f.compara ? " compara" : ""}">${f.premio}${f.troca}${f.usa ? `<div class="fa2-usa">${f.usa}</div>` : ""}</div>
+        ${f.compara ? `<div class="fa2-ficha compara">${f.premio}${f.troca}<div class="fa2-usa">${f.usa}</div></div>` : ""}
         ${f.lore}${f.aviso}</div>`;
     },
     SOL: {
@@ -229,6 +229,8 @@
   .fa2-usa { gap: 10px; } .fa2-usa .achado-selo { font: 700 11px/1.4 var(--texto); letter-spacing: 0.22em; text-transform: uppercase; color: #8a8070; }
   .dir-relicario .ficha-usa-nome { display: flex; align-items: center; gap: 8px; } .dir-relicario .ficha-usa-nome b { font: 400 22px/1.05 var(--titulo); }
   .fa2-usa .ficha-linhas { font-size: 17px; } .fa2-usa .ficha-troca { border: 0; padding: 0; align-items: flex-start; font-size: 15px; }
+  /* sem nada no espaço: o tipo e os números debaixo do nome, centrados como ele (sem a ficha larga e a linha de cima) */
+  .dir-relicario .fa2-cabeca .ficha-grupo { display: flex; flex-direction: column; align-items: center; gap: 3px; margin-top: 4px; }
   .dir-relicario .ficha-lore { max-width: 620px; font: italic 15px/1.4 var(--texto); color: #a89878; }
   .dir-relicario .achado-acoes { display: flex; justify-content: center; gap: 10px; margin-top: 16px; }
   .dir-relicario.entrando .fa2-altar .achado-arte { animation: fa2-desce 0.27s steps(4) both; }

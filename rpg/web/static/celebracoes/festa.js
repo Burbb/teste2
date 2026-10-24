@@ -154,13 +154,15 @@ const Festa = (() => {
 
   /** A ficha do achado em pedaços, para as direções compor sem molduras: o nome, o tipo, os números do prêmio, a troca
    *  (o que muda, linha a linha, pelo Telas.linhasTroca do jogo) e o que você usa (cartões .achado-cartao.atual, que
-   *  as celebrações de vestir e guardar procuram). Sem nada no espaço, a troca e o "você usa" ficam vazios. */
+   *  as celebrações de vestir e guardar procuram). Sem nada no espaço, a troca e o "você usa" ficam vazios, e o
+   *  `grupo` (o tipo com os números, numa peça só) vai para debaixo do nome: sem coluna de comparação a preencher. */
   function fichaItem(d) {
     const it = d.item, rar = h(it.raridade), hr = heroi();
     const linhas = (x) => h(x.bonus || "").split(", ").filter(Boolean).map((l) => `<span>${l}</span>`).join("") +
       (x.efeito ? `<span class="efeito">${h(x.efeito)}</span>` : "");
     const naoUsa = it.classe && hr.classe && it.classe !== hr.classe ? `<div class="pior">Só ${h({ guerreiro: "guerreiros", arqueiro: "arqueiros", mago: "magos" }[it.classe] || it.classe)} sabem usar isto.</div>` : "";
-    const premio = `<div class="ficha-premio"><span class="ficha-rotulo">${h(Telas.NOME_ESPACO[it.slot] || "")}</span><div class="ficha-linhas">${linhas(it)}</div>${naoUsa}</div>`;
+    const tipo = `<span class="ficha-rotulo">${h(Telas.NOME_ESPACO[it.slot] || "")}</span><div class="ficha-linhas">${linhas(it)}</div>${naoUsa}`;
+    const premio = `<div class="ficha-premio">${tipo}</div>`;
     const aneis = d.espacos && (d.equipados || []).length;
     let troca = "", usa = "";
     if (aneis) {
@@ -178,7 +180,7 @@ const Festa = (() => {
     }
     return {
       rar, nome: `<b class="ficha-nome r-${rar}">${h(it.nome)}</b>`, raridade: `<span class="ficha-raridade rar-${rar}">${RARIDADE[it.raridade] || rar}</span>`,
-      premio, troca, usa, compara: !!(troca || usa),
+      premio, troca, usa, compara: !!(troca || usa), grupo: `<div class="ficha-grupo">${tipo}</div>`,
       lore: it.lore ? `<div class="ficha-lore">"${h(it.lore)}"</div>` : "", aviso: aviso(d),
     };
   }
