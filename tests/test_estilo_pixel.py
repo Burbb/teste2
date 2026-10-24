@@ -26,8 +26,10 @@ PENDENTES_JS = {"talentos.js"}  # filtros de cor em animações feitas pelo JS (
 # imagem, véus translúcidos sobre elas, relevo e sombra suaves, cantos de 2 px). Não é pixel art de interface nem
 # migração pendente: é outro material, decidido de propósito, e fica só nestes arquivos. O menu inicial (17, 1.93.1)
 # segue o mesmo acabamento: a sombra suave atrás do título e das opções, sem caixa.
+# O d20 do Marfim e do Vidro (21, 1.202.0) estende a rolagem (20): a mesma poça translúcida e a sombra atrás do dado,
+# como no protótipo aprovado; o dado em si é pixel art (canvas).
 FORA_DA_TRAVA = {"14-hud.css", "15-hud-luta.css", "16-hud-telas.css", "17-titulo.css", "18-seletor-habilidades.css", "19-turnos.css",
-                 "20-rolagem.css"}
+                 "20-rolagem.css", "21-d20.css"}
 
 FILTRO = r"\b(grayscale|sepia|hue-rotate|brightness|saturate|contrast|invert|opacity|drop-shadow)\(|filter\s*:\s*url\("
 PROIBIDO = {
