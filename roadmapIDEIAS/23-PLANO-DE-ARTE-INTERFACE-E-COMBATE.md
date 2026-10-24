@@ -38,7 +38,8 @@ Não iniciar todo o plano numa única tarefa. As etapas técnicas A–I e a vali
   está em "A frente de criaturas em 22/10/2026", no item 1.12. O Bandido do chapéu está reservado como conceito de um possível chefe, fora do jogo.
 - **A 1E concluída para a campanha (1.200.0):** a 1E.4 integrada; da 1E.3, só restam os retratos do modo procedural (o substituto da Bruxa nos covis e o antagonista), suspensos com a direção de ficar só com a campanha. **Etapa 2, o primeiro lote integrado na 1.201.0 (24/10/2026):** a subida de nível, as celebrações e a raridade
 (o Estouro como padrão, o Relicário guardado como alternativa, as seis identidades de especialização). **Agora: o
-próximo lote da etapa 2, o redesenho do d20** (o escopo em "A etapa 2, o escopo atualizado", no item 1.12). Histórico: **1E.3, as demais criaturas, os chefes e as invocações** (as outras ainda saem dos traços: o `fera`, o
+redesenho do d20 em avaliação** (24/10/2026, nada no jogo: duas propostas, A Marfim e B Vidro, em
+`ferramentas/prototipos/hud/d20/`; aguardando a escolha do Jean). Histórico: **1E.3, as demais criaturas, os chefes e as invocações** (as outras ainda saem dos traços: o `fera`, o
   `humano`, a caveira e os outros sprites de 16×16; o levantamento em `ferramentas/prototipos/hud/criaturas/`).
   **1E.4 começada (23/10/2026, a direção agora é só a campanha):** o levantamento e o primeiro lote de protótipos em
   `ferramentas/prototipos/hud/mapa/` (nada no jogo; aguardando o Jean). Em seguida, as **etapas 2–9** como estão
@@ -1240,6 +1241,18 @@ ou mudanças de dados por iniciativa do agente.
   `"continua"` de `luzSemRecorte`; a fonte no protótipo). **O que falta da etapa 2:** o redesenho do d20 (o próximo); o
   livro narrativo da capela; os componentes antigos restantes, por evidência; o carregar jogo e as fichas dos saves e a
   criação de personagem, depois do levantamento da retirada do procedural.
+- **A etapa 2, o d20 em avaliação (24/10/2026, nada no jogo).** Em `ferramentas/prototipos/hud/d20/` (LEIA-ME,
+  `folha-1920.png`, `folha-1280.png`, a demonstração em `demo.bat`, http://127.0.0.1:8766/). O levantamento: um só
+  sorteio de d20 no jogo (`Testes.teste`, 73 chamadas), com o 20 natural sempre passando e o 1 sempre falhando em todos
+  os testes ("Crítico!" e "Desastre" são só nomes, sem consequência extra); três apresentações na tela (o centro, a
+  tirinha do texto, que também roda sozinha na luta, no instantâneo e ao refazer a página, e o ícone da ficha). Duas
+  propostas, o dado em pixel art (a geometria do icosaedro, os tons, as quinas e os algarismos à mão, 70 px nativos a
+  2× no centro, 30 na tirinha, 22 na ficha): **A · Marfim** (osso, o número entalhado, o tombo em seis quadros, a conta
+  numa tirinha em quatro casas com rótulo: dado + bônus = total, contra a dificuldade) e **B · Vidro** (vidro fumê
+  violeta, o número aceso por dentro, que pisca enquanto o dado tomba, frente a frente: o bônus e depois o total de um
+  lado, a dificuldade do outro). As duas: a mesma mensagem do motor, o mesmo tempo, os sons, as faixas de resultado
+  aprovadas e uma nota só quando o 20 ou o 1 natural decidiu contra a conta. A recomendação: A. Nada de regras,
+  sorteios, bônus ou dificuldades mudou.
 - **Dependências do procedural** (para o levantamento da retirada): o covil, o vencido, a cidadela e a "selada" só
   existem lá; a legenda fixa dos nove desenhos; `MapaPx.sprite` cai no bioma para a `saida` da campanha; os glifos de
   `rpg/mapa.py`; o `fechado` da campanha não chega à tela como campo.
@@ -1411,7 +1424,8 @@ volta à pauta quando essa expansão exigir; não é uma migração de engine.
    item 1.12); o Jean escolheu refinar A e B (24/10/2026) e depois manter as duas como apresentações disponíveis, o
    Estouro como padrão pretendido (a troca vai para as opções do jogo); A3, B3 e o Piromante aprovados (24/10/2026);
    B4, A4, Piromante, Necromante, Sombra e Patrulheiro aprovados; o sangue A do Berserker e a luz B (vitral) do Paladino
-   escolhidos; **integrado na 1.201.0 (24/10/2026)**. O próximo lote da etapa 2: o redesenho do d20. Histórico: **1E.4, em avaliação (23/10/2026):** o levantamento e o primeiro lote de protótipos (a posição, os caminhos, os
+   escolhidos; **integrado na 1.201.0 (24/10/2026)**. O próximo lote da etapa 2, o redesenho do d20, em avaliação
+   (24/10/2026, só no protótipo). Histórico: **1E.4, em avaliação (23/10/2026):** o levantamento e o primeiro lote de protótipos (a posição, os caminhos, os
    símbolos e as marcas; detalhes em "A 1E.4 em 23/10/2026", no item 1.12). O Jean escolheu a direção B (a A fica como
    alternativa); aprovados como base a plaqueta B, a cancela, os caminhos e as marcas; a vila e a floresta nativas
    aprovadas (`094bb80a`: 32 no minimapa, 48 no mapa grande); o pântano e as ruínas aprovados (`c7bd2348`); em

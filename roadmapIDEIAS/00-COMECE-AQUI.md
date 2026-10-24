@@ -7115,4 +7115,21 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   lugar) não tinham as medidas do acabamento novo, e a janela crescia 3 px quando os botões chegavam (já no B4 do
   protótipo); a fumaça pegou e agora a janela nasce no tamanho final. A fumaça passou a ler a ficha do achado ao lado
   do cartão (a regra do Broquel, a troca por espaço de anel).
-- **Agora:** o próximo lote da etapa 2, o redesenho do d20 (não começado).
+- **Depois:** o próximo lote da etapa 2, o redesenho do d20 (em avaliação desde 24/10/2026; abaixo).
+
+### 24/10/2026 (data do computador local) — Etapa 2: o d20 em avaliação (protótipo, nada no jogo)
+
+- **Onde:** `ferramentas/prototipos/hud/d20/` (LEIA-ME com o levantamento, as propostas e as verificações; as folhas
+  `folha-1920.png` e `folha-1280.png`; a prancha `pranchas/construcao.png`). Base: a 1.201.0, intacta.
+- **Demonstração:** `demo.bat` ou `python ferramentas/prototipos/hud/d20/auxiliares/demo.py`, painel em
+  http://127.0.0.1:8766/ (o jogo atual, A e B em cada caso; saves temporários).
+- **As propostas:** A · Marfim (o dado de osso, o número entalhado, a conta numa tirinha em quatro casas) e B · Vidro
+  (o dado de vidro violeta, o número aceso, frente a frente: bônus/total × dificuldade). Recomendação: A.
+- **Conferido:** os casos reais (o baú abandonado pelo Explorar; a semente decide o d20 do motor) e o laboratório
+  (SIMULAÇÃO, o 20 e o 1 que decidem contra a conta), a 1920×945 e a 1280×720, com o movimento reduzido; gestos
+  (pular por clique e Esc, cliques rápidos e tecla segurada sem atravessar, texto instantâneo); o número do dado igual,
+  pixel a pixel, ao desenhado com o d20 da mensagem.
+- **Preferência permanente de entrega (Jean, 24/10/2026):** sem vídeos, salvo pedido explícito; capturas, folhas
+  comparativas e uma demonstração no navegador.
+- **Agora:** a escolha do Jean entre A e B (nada integrado). Não começados: o livro da capela, as outras telas, a
+  retirada do procedural.
