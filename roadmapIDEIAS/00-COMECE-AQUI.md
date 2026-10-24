@@ -7307,3 +7307,16 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Fica como está, de propósito:** na etapa do fundo, "Soltar as correntes" vem antes de "Descer ao fundo" e é o
   atalho; é um preparo do caminho do descanso, não uma ação lateral como o livro. Se o Jean preferir o atalho no
   "Descer ao fundo", é marcar `atalho=False` nela.
+
+### 24/10/2026 (data do computador local) — Etapa 2: o que resta (levantamento, nada mudado)
+
+- **Onde:** `ferramentas/prototipos/hud/levantamento-etapa2/` (LEIA-ME, `folha-levantamento.png`, as fotos e os dois
+  roteiros que as tiram). Sobre a 1.204.1, no jogo a 1920×945.
+- **Já substituído:** a subida de nível, as celebrações e a raridade, o d20, o baú, o livro; antes deles, a HUD de ferro
+  (painéis, doca, mapa, Diário, Bestiário, Comitiva, Inventário, mercado, mural, serviços, Ajuda, Histórico,
+  confirmação, viagem, fogueira, luta).
+- **Destoa ainda:** as faixas de passagem (a de Vitória a cada luta; a tarja por cima das colunas, o sprite antigo, o
+  subtítulo miúdo) e os quadros de orientação da abertura guiada (o botão chapado); detalhes menores no texto narrado.
+- **Adiado** (retirada do procedural): o título, os saves, a criação de personagem. **Etapa 8:** Grimório e Talentos.
+- **Recomendação:** o próximo lote são as faixas de passagem, num lote só, em protótipo com duas variantes; depois, a
+  orientação. A etapa 2 não está concluída. Não começados: a retirada do procedural e outras frentes.

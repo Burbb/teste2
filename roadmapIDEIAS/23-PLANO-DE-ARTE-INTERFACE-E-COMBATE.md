@@ -1300,6 +1300,13 @@ ou mudanças de dados por iniciativa do agente.
   ("Descer ao ossuário"), não as ações ao lado dele (ler o livro, recolher o baú: `atalho=False` nas ações, que seguem
   no menu e no ponto da cena); reler o livro não repete a linha do Histórico (o motor manda `primeira`). Reproduzidas
   antes no jogo (o atalho no livro antes e depois de ler; uma linha por leitura) e conferidas depois.
+- **A etapa 2, o levantamento do que resta (24/10/2026, sobre a 1.204.1; nada mudado):** em
+  `ferramentas/prototipos/hud/levantamento-etapa2/` (LEIA-ME, `folha-levantamento.png`). A etapa **não** está concluída.
+  Ainda destoam na campanha: **as faixas de passagem** (Vitória a cada luta, Guardião, Você caiu, Exausto, Saindo da
+  capela, a chegada à comitiva, Mestre caçador: a tarja que cruza as colunas da HUD, o sprite antigo, o subtítulo
+  miúdo) e **os quadros de orientação** da abertura guiada (a caixa lisa e o botão chapado); detalhes menores no texto
+  narrado. Adiados pela retirada do procedural: o título, os saves e a criação de personagem. Etapa 8: o Grimório e
+  os Talentos. **O próximo lote recomendado: as faixas de passagem** (a mais vista: uma por luta); depois, a orientação.
 - **O baú, a A2 em avaliação (24/10/2026, só no protótipo; histórico):** o A escolhido como direção; a A2 refina a tampa, a três
   quartos e o volume, com um 48 próprio para a pilha. A, B e o placeholder como histórico.
 - **O baú em avaliação, primeira rodada (24/10/2026, só no protótipo):** duas propostas para o Baú Trancado em
