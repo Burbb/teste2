@@ -7009,3 +7009,18 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   achado pequena a 1920.
 - **Agora:** a avaliação do Jean. Depois, a integração do que for aprovado. O carregar jogo e a criação de personagem
   continuam esperando o levantamento da retirada do procedural; os retratos suspensos e o Grimório, parados.
+
+### 24/10/2026 (data do computador local) — Etapa 2, segunda rodada: três direções (protótipo)
+
+- **Estado conferido:** a branch em `db97777e`, igual ao remoto; o jogo igual à 1.200.1; o `caido-avatar-512.png` fora
+  dos commits.
+- **Nada no jogo.** A primeira proposta (o Brilho) ficou contida demais para o Jean; fica como histórico. Três
+  direções novas em `ferramentas/prototipos/hud/celebracoes/v2/`, montadas por `auxiliares/montar_v2.py`: A ·
+  Relicário (cerimonial), B · Estouro (explosivo) e C · Estandarte (faixa de palco). Referências, decisões, cenários e
+  limitações no LEIA-ME do protótipo.
+- **Demonstração:** `demo.bat` (painel em http://127.0.0.1:8765/): cada cenário nas três direções, no jogo atual e na
+  primeira proposta, com troca de classe e saves temporários. Folhas e vídeos em `capturas-v2/`.
+- **Conferido:** 1920×945 e 1280×720, movimento reduzido, clique rápido, clique duplo, teclado, textos longos (uma
+  simulação identificada); o som é o atual (não ouvido nesta máquina: só o sincronismo pelos tempos).
+- **Agora:** a escolha do Jean entre A, B e C (ou a mistura). Depois, a integração. O carregar jogo e a criação de
+  personagem continuam esperando o levantamento da retirada do procedural; os retratos suspensos e o Grimório, parados.
