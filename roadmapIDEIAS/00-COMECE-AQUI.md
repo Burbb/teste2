@@ -7085,3 +7085,13 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   → recomposição), o Patrulheiro todo em verde (a origem do castanho, corrigida) e a fumaça escura do Necromante.
 - **Para avaliar:** o painel (`demo.bat`, http://127.0.0.1:8765/), os vídeos `r6-*.webm` sem áudio em
   `para-avaliacao/`, as folhas em `capturas-r6/`.
+
+### 24/10/2026 (data do computador local) — Etapa 2: o sangue do Berserker e a luz do Paladino (protótipo)
+
+- **Aprovados (preservados):** Necromante, Sombra e Patrulheiro da sexta rodada (a versão final "c"), nas duas
+  apresentações; o Piromante; o Estouro B4 e o Relicário A4.
+- **Pendentes:** Berserker e Paladino, com três alternativas de detalhe cada, em `estouro5d/e/f` e `relicario5d/e/f`:
+  o sangue (A gotas pequenas, B filetes, C volumes variados: acumula, escorre, forma a gota, rompe, cai e some, sem
+  poças) e a luz (A contínua atrás do nome, B vitral, C centro menos intenso), sem o recorte preto. Nada integrado.
+- **Para avaliar:** o painel (`demo.bat`), os vídeos `r7-*.webm` sem áudio em `para-avaliacao/`, as folhas em
+  `capturas-r7/`. Esperando a escolha de um sangue e de uma luz.

@@ -1225,6 +1225,10 @@ ou mudanças de dados por iniciativa do agente.
 - **As candidatas finais (24/10/2026, nada no jogo):** escolhidas as bases (Paladino, a luz com as penas; Berserker,
   as garras; Sombra, o invisível com o corte; Patrulheiro, o vendaval; Necromante, o erguer), refinadas numa versão
   final de cada, nas duas apresentações (`estouro5c`, `relicario5c`); as identidades 1 e 2 ficam como histórico.
+- **Aprovações e os dois detalhes (24/10/2026, nada no jogo):** aprovados Necromante, Sombra e Patrulheiro (a final
+  "c"). Pendentes, com três alternativas cada: o escorrimento do Berserker (gotas pequenas, filetes, volumes variados) e
+  a relação entre a luz e o nome do Paladino (luz contínua, vitral, centro menos intenso), em `estouro5d/e/f` e
+  `relicario5d/e/f`.
 - **Dependências do procedural** (para o levantamento da retirada): o covil, o vencido, a cidadela e a "selada" só
   existem lá; a legenda fixa dos nove desenhos; `MapaPx.sprite` cai no bioma para a `saida` da campanha; os glifos de
   `rpg/mapa.py`; o `fechado` da campanha não chega à tela como campo.
@@ -1395,8 +1399,8 @@ volta à pauta quando essa expansão exigir; não é uma migração de engine.
    avaliação, segunda rodada** (três direções da subida de nível com as celebrações e a raridade, só no protótipo;
    item 1.12); o Jean escolheu refinar A e B (24/10/2026) e depois manter as duas como apresentações disponíveis, o
    Estouro como padrão pretendido (a troca vai para as opções do jogo); A3, B3 e o Piromante aprovados (24/10/2026);
-   B4, A4 e o Piromante aprovados; as bases das outras cinco escolhidas e as candidatas finais em avaliação;
-   depois, a integração. Histórico: **1E.4, em avaliação (23/10/2026):** o levantamento e o primeiro lote de protótipos (a posição, os caminhos, os
+   B4, A4, Piromante, Necromante, Sombra e Patrulheiro aprovados; Berserker (o sangue) e Paladino (a luz atrás do nome)
+   com três alternativas cada em avaliação; depois, a integração. Histórico: **1E.4, em avaliação (23/10/2026):** o levantamento e o primeiro lote de protótipos (a posição, os caminhos, os
    símbolos e as marcas; detalhes em "A 1E.4 em 23/10/2026", no item 1.12). O Jean escolheu a direção B (a A fica como
    alternativa); aprovados como base a plaqueta B, a cancela, os caminhos e as marcas; a vila e a floresta nativas
    aprovadas (`094bb80a`: 32 no minimapa, 48 no mapa grande); o pântano e as ruínas aprovados (`c7bd2348`); em
