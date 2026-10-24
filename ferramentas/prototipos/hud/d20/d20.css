@@ -1,0 +1,61 @@
+/* PROTÓTIPO do redesenho do d20 (etapa 2; nada no jogo): o que muda sobre 20-rolagem.css nas duas propostas (d20.js).
+   O véu, a poça, o cabeçalho, o pincel das faixas e a faixa de resultado são os aprovados (20-rolagem.css); aqui, o
+   dado em pixel (canvas ampliado 2× sem suavização), a conta organizada e a nota da regra do 20 e do 1. */
+.d20p, .d20p-pouso { image-rendering: pixelated; display: block; }
+
+/* o dado do centro: 70 px nativos, 2× (140 px; o de hoje tem 128); o efeito do pouso por cima, centrado */
+.d20-proposta .d20-dado { position: relative; width: 140px; height: 140px; margin: 4px 0 2px; flex: none;
+  filter: drop-shadow(0 6px 5px rgba(0, 0, 0, 0.7)); }
+.d20-proposta .d20p-pouso { position: absolute; left: 50%; top: 50%; translate: -50% -50%; pointer-events: none; }
+/* o pouso do marfim: o dado cai os dois últimos pixels (dois quadros) */
+.d20-proposta.d20-a.pousou .d20-dado .d20p-centro { animation: d20a-pulo 140ms steps(2) both; }
+@keyframes d20a-pulo { from { translate: 0 -4px; } to { translate: 0 0; } }
+
+/* A · a conta numa tirinha só: quatro casas com rótulo (dado + bônus = total, contra a dificuldade) */
+.d20-a .rc-grupo { width: 440px; }
+.d20-a .d20a-conta { padding: 8px 48px 9px; gap: 2px; white-space: normal; }
+.d20a-linha { display: flex; align-items: flex-start; justify-content: center; gap: 8px; }
+.d20a-casa { display: flex; flex-direction: column; align-items: center; min-width: 30px; }
+.d20a-casa b { font-family: var(--num); font-weight: 400; font-size: 28px; line-height: 1; color: #fff3d6; }
+.d20a-casa i { font-style: normal; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #a89878; margin-top: 2px; }
+.d20a-casa.dado b, .d20a-casa.total b { min-width: 1.2em; text-align: center; }
+.d20a-casa.cd b { color: #e6dbc0; }
+.d20a-op { font-family: var(--num); font-size: 22px; line-height: 28px; color: #a89878; }
+.d20a-op.contra { font-family: inherit; font-size: 14px; letter-spacing: 0.04em; margin: 0 4px; }
+.rolagem-centro.rolando.d20-a .d20a-casa:is(.dado, .total) b { color: #8a8070; }
+.d20-a .rc-precisa { margin-top: 3px; }
+.d20-a .rc-partes { max-width: 360px; white-space: normal; line-height: 1.3; }
+
+/* B · frente a frente: o bônus (depois o total) à esquerda, a dificuldade à direita, o dado no meio */
+.d20-b .rc-grupo { width: 600px; }
+.d20b-linha { display: flex; align-items: center; justify-content: center; gap: 12px; }
+.d20b-placa.rc-faixa { width: 168px; min-height: 104px; padding: 10px 26px 12px; gap: 1px; white-space: normal; --fundo: #34302f; }
+.d20b-placa .rot { font-style: normal; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #bdb3a0; }
+.d20b-placa .valor { font-family: var(--num); font-weight: 400; font-size: 40px; line-height: 1; color: #fff3d6; }
+.d20b-placa .sub { font-size: 12.5px; line-height: 1.3; color: #d8cdb2; max-width: 130px; }
+/* as pontas do pincel mais curtas nas placas (as da tirinha, de 34 e 42 px, comiam metade de uma placa estreita) */
+.d20b-placa.rc-faixa::before {
+  -webkit-mask: var(--sh-ponta-e1) 0 0 / 16px 100% no-repeat, var(--sh-meio) 15px 0 / calc(100% - 32px) 100% no-repeat, var(--sh-ponta-d2) 100% 0 / 18px 100% no-repeat;
+  mask: var(--sh-ponta-e1) 0 0 / 16px 100% no-repeat, var(--sh-meio) 15px 0 / calc(100% - 32px) 100% no-repeat, var(--sh-ponta-d2) 100% 0 / 18px 100% no-repeat; }
+.d20b-placa.direita::before { rotate: 1.5deg; }
+/* a poça mais larga: o grupo é largo e baixo (o texto de trás não pode aparecer entre as placas) */
+.d20-b .rc-grupo::before { inset: -50px -80px -40px; background: radial-gradient(closest-side, rgba(8, 6, 5, 0.96), rgba(8, 6, 5, 0.92) 80%, rgba(8, 6, 5, 0)); }
+.d20b-placa.direita .rc-contorno { rotate: 1.5deg; }
+.rolagem-centro.pousou.d20-b .d20b-placa.esquerda .valor { color: #ffffff; }
+/* as parcelas do bônus, embaixo das placas, numa linha só quando cabem */
+.d20b-partes { max-width: 520px; text-align: center; line-height: 1.3; text-shadow: 0 1px 0 #000; }
+
+/* a nota da regra, só quando o 20 ou o 1 natural decidiu contra a conta */
+.d20-regra { font-size: 13px; font-style: italic; color: #d8cdb2; text-shadow: 0 1px 0 #000; min-height: 0; }
+.d20-regra:empty { display: none; }
+
+/* a tirinha do texto: o dado pequeno (30 px nativos, 2×: 60 px, o tamanho de hoje) */
+.d20p-tirinha .d20-mini { width: 60px; height: 60px; flex: none; }
+.d20p-tirinha.falha.pousou { animation: tremer 0.3s steps(4); }
+
+/* a ficha: o ícone dos Testes do d20 (22 px, 1×) */
+:root body .testes-ficha .d20 .d20p-ficha { width: 22px; height: 22px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .d20-proposta.d20-a.pousou .d20-dado .d20p-centro, .d20p-tirinha.falha.pousou { animation: none; }
+}

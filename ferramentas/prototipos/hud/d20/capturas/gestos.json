@@ -1,0 +1,266 @@
+[
+ {
+  "versao": "atual",
+  "nome": "sucesso: ritmo e resultado",
+  "ok": true,
+  "resultado": "▸ Percepção 13 contra 12 — sucesso (d20 11)",
+  "tirinha_a_consequencia_ms": 1633,
+  "numero": null,
+  "limpo": true,
+  "erros": []
+ },
+ {
+  "versao": "atual",
+  "nome": "falha: ritmo e resultado",
+  "ok": true,
+  "resultado": "▸ Percepção 11 contra 12 — falha (d20 9)",
+  "tirinha_a_consequencia_ms": 1622,
+  "numero": null,
+  "limpo": true,
+  "erros": []
+ },
+ {
+  "versao": "atual",
+  "nome": "critico: ritmo e resultado",
+  "ok": true,
+  "resultado": "▸ Percepção 22 contra 12 — sucesso (d20 20)",
+  "tirinha_a_consequencia_ms": 1630,
+  "numero": null,
+  "limpo": true,
+  "erros": []
+ },
+ {
+  "versao": "atual",
+  "nome": "pular (clique)",
+  "ok": true,
+  "centro_some_ms": 123,
+  "resultado": "▸ Percepção 13 contra 12 — sucesso (d20 11)",
+  "respostas_depois_do_baú": 0,
+  "limpo": true
+ },
+ {
+  "versao": "atual",
+  "nome": "pular (Escape)",
+  "ok": true,
+  "centro_some_ms": 65,
+  "resultado": "▸ Percepção 13 contra 12 — sucesso (d20 11)",
+  "respostas_depois_do_baú": 0,
+  "limpo": true
+ },
+ {
+  "versao": "atual",
+  "nome": "cliques durante a rolagem",
+  "ok": true,
+  "respostas_depois_do_baú": 0,
+  "tela_seguinte_esperando": true,
+  "resultado": "▸ Percepção 13 contra 12 — sucesso (d20 11)",
+  "limpo": true
+ },
+ {
+  "versao": "atual",
+  "nome": "tecla segurada durante a rolagem",
+  "ok": true,
+  "respostas_depois_do_baú": 0,
+  "tela_seguinte_esperando": true,
+  "resultado": "▸ Percepção 13 contra 12 — sucesso (d20 11)",
+  "limpo": true
+ },
+ {
+  "versao": "atual",
+  "nome": "movimento reduzido",
+  "ok": true,
+  "pouso": false,
+  "animacoes_no_dado": 0,
+  "resultado": "▸ Percepção 11 contra 12 — falha (d20 9)",
+  "tirinha_a_consequencia_ms": 1627
+ },
+ {
+  "versao": "atual",
+  "nome": "texto instantâneo",
+  "ok": true,
+  "apareceu_no_centro": false,
+  "resultado": "▸ Percepção 13 contra 12 — sucesso (d20 11)"
+ },
+ {
+  "versao": "a",
+  "nome": "sucesso: ritmo e resultado",
+  "ok": true,
+  "resultado": "▸ Percepção 13 contra 12 — sucesso (d20 11)",
+  "tirinha_a_consequencia_ms": 1632,
+  "numero": {
+   "d20": 11,
+   "iguais": true
+  },
+  "limpo": true,
+  "erros": []
+ },
+ {
+  "versao": "a",
+  "nome": "falha: ritmo e resultado",
+  "ok": true,
+  "resultado": "▸ Percepção 11 contra 12 — falha (d20 9)",
+  "tirinha_a_consequencia_ms": 1629,
+  "numero": {
+   "d20": 9,
+   "iguais": true
+  },
+  "limpo": true,
+  "erros": []
+ },
+ {
+  "versao": "a",
+  "nome": "critico: ritmo e resultado",
+  "ok": true,
+  "resultado": "▸ Percepção 22 contra 12 — sucesso (d20 20)",
+  "tirinha_a_consequencia_ms": 1635,
+  "numero": {
+   "d20": 20,
+   "iguais": true
+  },
+  "limpo": true,
+  "erros": []
+ },
+ {
+  "versao": "a",
+  "nome": "pular (clique)",
+  "ok": true,
+  "centro_some_ms": 84,
+  "resultado": "▸ Percepção 13 contra 12 — sucesso (d20 11)",
+  "respostas_depois_do_baú": 0,
+  "limpo": true
+ },
+ {
+  "versao": "a",
+  "nome": "pular (Escape)",
+  "ok": true,
+  "centro_some_ms": 68,
+  "resultado": "▸ Percepção 13 contra 12 — sucesso (d20 11)",
+  "respostas_depois_do_baú": 0,
+  "limpo": true
+ },
+ {
+  "versao": "a",
+  "nome": "cliques durante a rolagem",
+  "ok": true,
+  "respostas_depois_do_baú": 0,
+  "tela_seguinte_esperando": true,
+  "resultado": "▸ Percepção 13 contra 12 — sucesso (d20 11)",
+  "limpo": true
+ },
+ {
+  "versao": "a",
+  "nome": "tecla segurada durante a rolagem",
+  "ok": true,
+  "respostas_depois_do_baú": 0,
+  "tela_seguinte_esperando": true,
+  "resultado": "▸ Percepção 13 contra 12 — sucesso (d20 11)",
+  "limpo": true
+ },
+ {
+  "versao": "a",
+  "nome": "movimento reduzido",
+  "ok": true,
+  "pouso": false,
+  "animacoes_no_dado": 0,
+  "resultado": "▸ Percepção 11 contra 12 — falha (d20 9)",
+  "tirinha_a_consequencia_ms": 1631
+ },
+ {
+  "versao": "a",
+  "nome": "texto instantâneo",
+  "ok": true,
+  "apareceu_no_centro": false,
+  "resultado": "▸ Percepção 13 contra 12 — sucesso (d20 11)"
+ },
+ {
+  "versao": "b",
+  "nome": "sucesso: ritmo e resultado",
+  "ok": true,
+  "resultado": "▸ Percepção 13 contra 12 — sucesso (d20 11)",
+  "tirinha_a_consequencia_ms": 1637,
+  "numero": {
+   "d20": 11,
+   "iguais": true
+  },
+  "limpo": true,
+  "erros": []
+ },
+ {
+  "versao": "b",
+  "nome": "falha: ritmo e resultado",
+  "ok": true,
+  "resultado": "▸ Percepção 11 contra 12 — falha (d20 9)",
+  "tirinha_a_consequencia_ms": 1637,
+  "numero": {
+   "d20": 9,
+   "iguais": true
+  },
+  "limpo": true,
+  "erros": []
+ },
+ {
+  "versao": "b",
+  "nome": "critico: ritmo e resultado",
+  "ok": true,
+  "resultado": "▸ Percepção 22 contra 12 — sucesso (d20 20)",
+  "tirinha_a_consequencia_ms": 1636,
+  "numero": {
+   "d20": 20,
+   "iguais": true
+  },
+  "limpo": true,
+  "erros": []
+ },
+ {
+  "versao": "b",
+  "nome": "pular (clique)",
+  "ok": true,
+  "centro_some_ms": 85,
+  "resultado": "▸ Percepção 13 contra 12 — sucesso (d20 11)",
+  "respostas_depois_do_baú": 0,
+  "limpo": true
+ },
+ {
+  "versao": "b",
+  "nome": "pular (Escape)",
+  "ok": true,
+  "centro_some_ms": 89,
+  "resultado": "▸ Percepção 13 contra 12 — sucesso (d20 11)",
+  "respostas_depois_do_baú": 0,
+  "limpo": true
+ },
+ {
+  "versao": "b",
+  "nome": "cliques durante a rolagem",
+  "ok": true,
+  "respostas_depois_do_baú": 0,
+  "tela_seguinte_esperando": true,
+  "resultado": "▸ Percepção 13 contra 12 — sucesso (d20 11)",
+  "limpo": true
+ },
+ {
+  "versao": "b",
+  "nome": "tecla segurada durante a rolagem",
+  "ok": true,
+  "respostas_depois_do_baú": 0,
+  "tela_seguinte_esperando": true,
+  "resultado": "▸ Percepção 13 contra 12 — sucesso (d20 11)",
+  "limpo": true
+ },
+ {
+  "versao": "b",
+  "nome": "movimento reduzido",
+  "ok": true,
+  "pouso": false,
+  "animacoes_no_dado": 0,
+  "resultado": "▸ Percepção 11 contra 12 — falha (d20 9)",
+  "tirinha_a_consequencia_ms": 1633
+ },
+ {
+  "versao": "b",
+  "nome": "texto instantâneo",
+  "ok": true,
+  "apareceu_no_centro": false,
+  "resultado": "▸ Percepção 13 contra 12 — sucesso (d20 11)"
+ }
+]

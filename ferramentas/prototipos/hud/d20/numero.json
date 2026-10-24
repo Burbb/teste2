@@ -1,0 +1,18 @@
+{
+  "marfim": {
+    "rolando": {"tinta": "#3a2c20", "luz": "#fffdf4"},
+    "neutro": {"tinta": "#24180f", "luz": "#fffdf4"},
+    "sucesso": {"tinta": "#1f4a25", "luz": "#fffdf4"},
+    "falha": {"tinta": "#6e0d0d", "luz": "#fffdf4"},
+    "critico": {"tinta": "#5a3a08", "luz": "#fff3a0"},
+    "desastre": {"tinta": "#4a0808", "luz": "#e0cfa4"}
+  },
+  "vidro": {
+    "rolando": {"tinta": "#c8b0ff", "halo": "#5a4f8c", "miolo": "#efe6ff"},
+    "neutro": {"tinta": "#f1e4c4", "halo": "#6a5f7c", "miolo": "#ffffff"},
+    "sucesso": {"tinta": "#8fbf6a", "halo": "#2f5a35", "miolo": "#dff5c4"},
+    "falha": {"tinta": "#e2574c", "halo": "#5a1a1e", "miolo": "#ffb8a6"},
+    "critico": {"tinta": "#f2c94c", "halo": "#8a6a14", "miolo": "#fff3a0"},
+    "desastre": {"tinta": "#b3262b", "halo": "#3a0c10", "miolo": "#e2574c"}
+  }
+}

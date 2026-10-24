@@ -1,0 +1,842 @@
+[
+ {
+  "caso": "sucesso",
+  "versao": "atual",
+  "janela": "1920x945",
+  "reduzido": false,
+  "resultado": "▸ Percepção 13 contra 12 — sucesso (d20 11)",
+  "grupo": {
+   "x": 740,
+   "y": 377,
+   "w": 400,
+   "h": 347.1875
+  },
+  "erros": []
+ },
+ {
+  "caso": "sucesso",
+  "versao": "a",
+  "janela": "1920x945",
+  "reduzido": false,
+  "resultado": "▸ Percepção 13 contra 12 — sucesso (d20 11)",
+  "grupo": {
+   "x": 720,
+   "y": 376,
+   "w": 440,
+   "h": 348.890625
+  },
+  "erros": []
+ },
+ {
+  "caso": "sucesso",
+  "versao": "b",
+  "janela": "1920x945",
+  "reduzido": false,
+  "resultado": "▸ Percepção 13 contra 12 — sucesso (d20 11)",
+  "grupo": {
+   "x": 640,
+   "y": 420,
+   "w": 600,
+   "h": 260.890625
+  },
+  "erros": []
+ },
+ {
+  "caso": "sucesso",
+  "versao": "atual",
+  "janela": "1280x720",
+  "reduzido": false,
+  "resultado": "▸ Percepção 13 contra 12 — sucesso (d20 11)",
+  "grupo": {
+   "x": 430,
+   "y": 264,
+   "w": 400,
+   "h": 347.1875
+  },
+  "erros": []
+ },
+ {
+  "caso": "sucesso",
+  "versao": "a",
+  "janela": "1280x720",
+  "reduzido": false,
+  "resultado": "▸ Percepção 13 contra 12 — sucesso (d20 11)",
+  "grupo": {
+   "x": 410,
+   "y": 263,
+   "w": 440,
+   "h": 348.890625
+  },
+  "erros": []
+ },
+ {
+  "caso": "sucesso",
+  "versao": "b",
+  "janela": "1280x720",
+  "reduzido": false,
+  "resultado": "▸ Percepção 13 contra 12 — sucesso (d20 11)",
+  "grupo": {
+   "x": 330,
+   "y": 307,
+   "w": 600,
+   "h": 260.890625
+  },
+  "erros": []
+ },
+ {
+  "caso": "falha",
+  "versao": "atual",
+  "janela": "1920x945",
+  "reduzido": false,
+  "resultado": "▸ Percepção 11 contra 12 — falha (d20 9)",
+  "grupo": {
+   "x": 740,
+   "y": 377,
+   "w": 400,
+   "h": 347.1875
+  },
+  "erros": []
+ },
+ {
+  "caso": "falha",
+  "versao": "a",
+  "janela": "1920x945",
+  "reduzido": false,
+  "resultado": "▸ Percepção 11 contra 12 — falha (d20 9)",
+  "grupo": {
+   "x": 720,
+   "y": 376,
+   "w": 440,
+   "h": 348.890625
+  },
+  "erros": []
+ },
+ {
+  "caso": "falha",
+  "versao": "b",
+  "janela": "1920x945",
+  "reduzido": false,
+  "resultado": "▸ Percepção 11 contra 12 — falha (d20 9)",
+  "grupo": {
+   "x": 640,
+   "y": 420,
+   "w": 600,
+   "h": 260.890625
+  },
+  "erros": []
+ },
+ {
+  "caso": "falha",
+  "versao": "atual",
+  "janela": "1280x720",
+  "reduzido": false,
+  "resultado": "▸ Percepção 11 contra 12 — falha (d20 9)",
+  "grupo": {
+   "x": 430,
+   "y": 264,
+   "w": 400,
+   "h": 347.1875
+  },
+  "erros": []
+ },
+ {
+  "caso": "falha",
+  "versao": "a",
+  "janela": "1280x720",
+  "reduzido": false,
+  "resultado": "▸ Percepção 11 contra 12 — falha (d20 9)",
+  "grupo": {
+   "x": 410,
+   "y": 263,
+   "w": 440,
+   "h": 348.890625
+  },
+  "erros": []
+ },
+ {
+  "caso": "falha",
+  "versao": "b",
+  "janela": "1280x720",
+  "reduzido": false,
+  "resultado": "▸ Percepção 11 contra 12 — falha (d20 9)",
+  "grupo": {
+   "x": 330,
+   "y": 307,
+   "w": 600,
+   "h": 260.890625
+  },
+  "erros": []
+ },
+ {
+  "caso": "critico",
+  "versao": "atual",
+  "janela": "1920x945",
+  "reduzido": false,
+  "resultado": "▸ Percepção 22 contra 12 — sucesso (d20 20)",
+  "grupo": {
+   "x": 740,
+   "y": 377,
+   "w": 400,
+   "h": 347.1875
+  },
+  "erros": []
+ },
+ {
+  "caso": "critico",
+  "versao": "a",
+  "janela": "1920x945",
+  "reduzido": false,
+  "resultado": "▸ Percepção 22 contra 12 — sucesso (d20 20)",
+  "grupo": {
+   "x": 720,
+   "y": 376,
+   "w": 440,
+   "h": 348.890625
+  },
+  "erros": []
+ },
+ {
+  "caso": "critico",
+  "versao": "b",
+  "janela": "1920x945",
+  "reduzido": false,
+  "resultado": "▸ Percepção 22 contra 12 — sucesso (d20 20)",
+  "grupo": {
+   "x": 640,
+   "y": 420,
+   "w": 600,
+   "h": 260.890625
+  },
+  "erros": []
+ },
+ {
+  "caso": "critico",
+  "versao": "atual",
+  "janela": "1280x720",
+  "reduzido": false,
+  "resultado": "▸ Percepção 22 contra 12 — sucesso (d20 20)",
+  "grupo": {
+   "x": 430,
+   "y": 264,
+   "w": 400,
+   "h": 347.1875
+  },
+  "erros": []
+ },
+ {
+  "caso": "critico",
+  "versao": "a",
+  "janela": "1280x720",
+  "reduzido": false,
+  "resultado": "▸ Percepção 22 contra 12 — sucesso (d20 20)",
+  "grupo": {
+   "x": 410,
+   "y": 263,
+   "w": 440,
+   "h": 348.890625
+  },
+  "erros": []
+ },
+ {
+  "caso": "critico",
+  "versao": "b",
+  "janela": "1280x720",
+  "reduzido": false,
+  "resultado": "▸ Percepção 22 contra 12 — sucesso (d20 20)",
+  "grupo": {
+   "x": 330,
+   "y": 307,
+   "w": 600,
+   "h": 260.890625
+  },
+  "erros": []
+ },
+ {
+  "caso": "desastre",
+  "versao": "atual",
+  "janela": "1920x945",
+  "reduzido": false,
+  "resultado": "▸ Percepção 3 contra 12 — falha (d20 1)",
+  "grupo": {
+   "x": 740,
+   "y": 377,
+   "w": 400,
+   "h": 347.1875
+  },
+  "erros": []
+ },
+ {
+  "caso": "desastre",
+  "versao": "a",
+  "janela": "1920x945",
+  "reduzido": false,
+  "resultado": "▸ Percepção 3 contra 12 — falha (d20 1)",
+  "grupo": {
+   "x": 720,
+   "y": 376,
+   "w": 440,
+   "h": 348.890625
+  },
+  "erros": []
+ },
+ {
+  "caso": "desastre",
+  "versao": "b",
+  "janela": "1920x945",
+  "reduzido": false,
+  "resultado": "▸ Percepção 3 contra 12 — falha (d20 1)",
+  "grupo": {
+   "x": 640,
+   "y": 420,
+   "w": 600,
+   "h": 260.890625
+  },
+  "erros": []
+ },
+ {
+  "caso": "desastre",
+  "versao": "atual",
+  "janela": "1280x720",
+  "reduzido": false,
+  "resultado": "▸ Percepção 3 contra 12 — falha (d20 1)",
+  "grupo": {
+   "x": 430,
+   "y": 264,
+   "w": 400,
+   "h": 347.1875
+  },
+  "erros": []
+ },
+ {
+  "caso": "desastre",
+  "versao": "a",
+  "janela": "1280x720",
+  "reduzido": false,
+  "resultado": "▸ Percepção 3 contra 12 — falha (d20 1)",
+  "grupo": {
+   "x": 410,
+   "y": 263,
+   "w": 440,
+   "h": 348.890625
+  },
+  "erros": []
+ },
+ {
+  "caso": "desastre",
+  "versao": "b",
+  "janela": "1280x720",
+  "reduzido": false,
+  "resultado": "▸ Percepção 3 contra 12 — falha (d20 1)",
+  "grupo": {
+   "x": 330,
+   "y": 307,
+   "w": 600,
+   "h": 260.890625
+  },
+  "erros": []
+ },
+ {
+  "caso": "forca",
+  "versao": "atual",
+  "janela": "1920x945",
+  "reduzido": false,
+  "resultado": "▸ Força 24 contra 14 — sucesso (d20 15)",
+  "grupo": {
+   "x": 740,
+   "y": 377,
+   "w": 400,
+   "h": 347.1875
+  },
+  "erros": []
+ },
+ {
+  "caso": "forca",
+  "versao": "a",
+  "janela": "1920x945",
+  "reduzido": false,
+  "resultado": "▸ Força 24 contra 14 — sucesso (d20 15)",
+  "grupo": {
+   "x": 720,
+   "y": 376,
+   "w": 440,
+   "h": 348.890625
+  },
+  "erros": []
+ },
+ {
+  "caso": "forca",
+  "versao": "b",
+  "janela": "1920x945",
+  "reduzido": false,
+  "resultado": "▸ Força 24 contra 14 — sucesso (d20 15)",
+  "grupo": {
+   "x": 640,
+   "y": 420,
+   "w": 600,
+   "h": 260.890625
+  },
+  "erros": []
+ },
+ {
+  "caso": "forca",
+  "versao": "a",
+  "janela": "1280x720",
+  "reduzido": false,
+  "resultado": "▸ Força 24 contra 14 — sucesso (d20 15)",
+  "grupo": {
+   "x": 410,
+   "y": 263,
+   "w": 440,
+   "h": 348.890625
+  },
+  "erros": []
+ },
+ {
+  "caso": "forca",
+  "versao": "b",
+  "janela": "1280x720",
+  "reduzido": false,
+  "resultado": "▸ Força 24 contra 14 — sucesso (d20 15)",
+  "grupo": {
+   "x": 330,
+   "y": 307,
+   "w": 600,
+   "h": 260.890625
+  },
+  "erros": []
+ },
+ {
+  "caso": "escuro",
+  "versao": "atual",
+  "janela": "1920x945",
+  "reduzido": false,
+  "resultado": "▸ Percepção 12 contra 12 — sucesso (d20 14)",
+  "grupo": {
+   "x": 740,
+   "y": 377,
+   "w": 400,
+   "h": 347.1875
+  },
+  "erros": []
+ },
+ {
+  "caso": "escuro",
+  "versao": "a",
+  "janela": "1920x945",
+  "reduzido": false,
+  "resultado": "▸ Percepção 12 contra 12 — sucesso (d20 14)",
+  "grupo": {
+   "x": 720,
+   "y": 376,
+   "w": 440,
+   "h": 348.890625
+  },
+  "erros": []
+ },
+ {
+  "caso": "escuro",
+  "versao": "b",
+  "janela": "1920x945",
+  "reduzido": false,
+  "resultado": "▸ Percepção 12 contra 12 — sucesso (d20 14)",
+  "grupo": {
+   "x": 640,
+   "y": 420,
+   "w": 600,
+   "h": 260.890625
+  },
+  "erros": []
+ },
+ {
+  "caso": "escuro",
+  "versao": "atual",
+  "janela": "1280x720",
+  "reduzido": false,
+  "resultado": "▸ Percepção 12 contra 12 — sucesso (d20 14)",
+  "grupo": {
+   "x": 430,
+   "y": 264,
+   "w": 400,
+   "h": 347.1875
+  },
+  "erros": []
+ },
+ {
+  "caso": "escuro",
+  "versao": "a",
+  "janela": "1280x720",
+  "reduzido": false,
+  "resultado": "▸ Percepção 12 contra 12 — sucesso (d20 14)",
+  "grupo": {
+   "x": 410,
+   "y": 263,
+   "w": 440,
+   "h": 348.890625
+  },
+  "erros": []
+ },
+ {
+  "caso": "escuro",
+  "versao": "b",
+  "janela": "1280x720",
+  "reduzido": false,
+  "resultado": "▸ Percepção 12 contra 12 — sucesso (d20 14)",
+  "grupo": {
+   "x": 330,
+   "y": 307,
+   "w": 600,
+   "h": 260.890625
+  },
+  "erros": []
+ },
+ {
+  "caso": "longo",
+  "versao": "atual",
+  "janela": "1920x945",
+  "reduzido": false,
+  "resultado": "▸ Percepção 13 contra 15 — falha (d20 6)",
+  "grupo": {
+   "x": 740,
+   "y": 377,
+   "w": 400,
+   "h": 347.1875
+  },
+  "erros": []
+ },
+ {
+  "caso": "longo",
+  "versao": "a",
+  "janela": "1920x945",
+  "reduzido": false,
+  "resultado": "▸ Percepção 13 contra 15 — falha (d20 6)",
+  "grupo": {
+   "x": 720,
+   "y": 376,
+   "w": 440,
+   "h": 348.890625
+  },
+  "erros": []
+ },
+ {
+  "caso": "longo",
+  "versao": "b",
+  "janela": "1920x945",
+  "reduzido": false,
+  "resultado": "▸ Percepção 13 contra 15 — falha (d20 6)",
+  "grupo": {
+   "x": 640,
+   "y": 420,
+   "w": 600,
+   "h": 260.890625
+  },
+  "erros": []
+ },
+ {
+  "caso": "longo",
+  "versao": "atual",
+  "janela": "1280x720",
+  "reduzido": false,
+  "resultado": "▸ Percepção 13 contra 15 — falha (d20 6)",
+  "grupo": {
+   "x": 430,
+   "y": 264,
+   "w": 400,
+   "h": 347.1875
+  },
+  "erros": []
+ },
+ {
+  "caso": "longo",
+  "versao": "a",
+  "janela": "1280x720",
+  "reduzido": false,
+  "resultado": "▸ Percepção 13 contra 15 — falha (d20 6)",
+  "grupo": {
+   "x": 410,
+   "y": 263,
+   "w": 440,
+   "h": 348.890625
+  },
+  "erros": []
+ },
+ {
+  "caso": "longo",
+  "versao": "b",
+  "janela": "1280x720",
+  "reduzido": false,
+  "resultado": "▸ Percepção 13 contra 15 — falha (d20 6)",
+  "grupo": {
+   "x": 330,
+   "y": 307,
+   "w": 600,
+   "h": 260.890625
+  },
+  "erros": []
+ },
+ {
+  "caso": "sim_so20",
+  "versao": "atual",
+  "janela": "1920x945",
+  "reduzido": false,
+  "resultado": "▸ Carisma 21 contra 22 — sucesso (d20 20)",
+  "grupo": {
+   "x": 740,
+   "y": 386,
+   "w": 400,
+   "h": 329.1875
+  },
+  "erros": []
+ },
+ {
+  "caso": "sim_so20",
+  "versao": "a",
+  "janela": "1920x945",
+  "reduzido": false,
+  "resultado": "▸ Carisma 21 contra 22 — sucesso (d20 20)",
+  "grupo": {
+   "x": 720,
+   "y": 385,
+   "w": 440,
+   "h": 353
+  },
+  "erros": []
+ },
+ {
+  "caso": "sim_so20",
+  "versao": "b",
+  "janela": "1920x945",
+  "reduzido": false,
+  "resultado": "▸ Carisma 21 contra 22 — sucesso (d20 20)",
+  "grupo": {
+   "x": 640,
+   "y": 431,
+   "w": 600,
+   "h": 261
+  },
+  "erros": []
+ },
+ {
+  "caso": "sim_so20",
+  "versao": "atual",
+  "janela": "1280x720",
+  "reduzido": false,
+  "resultado": "▸ Carisma 21 contra 22 — sucesso (d20 20)",
+  "grupo": {
+   "x": 430,
+   "y": 273,
+   "w": 400,
+   "h": 329.1875
+  },
+  "erros": []
+ },
+ {
+  "caso": "sim_so20",
+  "versao": "a",
+  "janela": "1280x720",
+  "reduzido": false,
+  "resultado": "▸ Carisma 21 contra 22 — sucesso (d20 20)",
+  "grupo": {
+   "x": 410,
+   "y": 273,
+   "w": 440,
+   "h": 353
+  },
+  "erros": []
+ },
+ {
+  "caso": "sim_so20",
+  "versao": "b",
+  "janela": "1280x720",
+  "reduzido": false,
+  "resultado": "▸ Carisma 21 contra 22 — sucesso (d20 20)",
+  "grupo": {
+   "x": 330,
+   "y": 319,
+   "w": 600,
+   "h": 261
+  },
+  "erros": []
+ },
+ {
+  "caso": "sim_so1",
+  "versao": "atual",
+  "janela": "1920x945",
+  "reduzido": false,
+  "resultado": "▸ Força 15 contra 12 — falha (d20 1)",
+  "grupo": {
+   "x": 740,
+   "y": 386,
+   "w": 400,
+   "h": 329.1875
+  },
+  "erros": []
+ },
+ {
+  "caso": "sim_so1",
+  "versao": "a",
+  "janela": "1920x945",
+  "reduzido": false,
+  "resultado": "▸ Força 15 contra 12 — falha (d20 1)",
+  "grupo": {
+   "x": 720,
+   "y": 385,
+   "w": 440,
+   "h": 353
+  },
+  "erros": []
+ },
+ {
+  "caso": "sim_so1",
+  "versao": "b",
+  "janela": "1920x945",
+  "reduzido": false,
+  "resultado": "▸ Força 15 contra 12 — falha (d20 1)",
+  "grupo": {
+   "x": 640,
+   "y": 431,
+   "w": 600,
+   "h": 261
+  },
+  "erros": []
+ },
+ {
+  "caso": "sim_so1",
+  "versao": "atual",
+  "janela": "1280x720",
+  "reduzido": false,
+  "resultado": "▸ Força 15 contra 12 — falha (d20 1)",
+  "grupo": {
+   "x": 430,
+   "y": 273,
+   "w": 400,
+   "h": 329.1875
+  },
+  "erros": []
+ },
+ {
+  "caso": "sim_so1",
+  "versao": "a",
+  "janela": "1280x720",
+  "reduzido": false,
+  "resultado": "▸ Força 15 contra 12 — falha (d20 1)",
+  "grupo": {
+   "x": 410,
+   "y": 273,
+   "w": 440,
+   "h": 353
+  },
+  "erros": []
+ },
+ {
+  "caso": "sim_so1",
+  "versao": "b",
+  "janela": "1280x720",
+  "reduzido": false,
+  "resultado": "▸ Força 15 contra 12 — falha (d20 1)",
+  "grupo": {
+   "x": 330,
+   "y": 319,
+   "w": 600,
+   "h": 261
+  },
+  "erros": []
+ },
+ {
+  "caso": "sim_carisma",
+  "versao": "atual",
+  "janela": "1920x945",
+  "reduzido": false,
+  "resultado": "▸ Carisma 14 contra 13 — sucesso (d20 17)",
+  "grupo": {
+   "x": 740,
+   "y": 386,
+   "w": 400,
+   "h": 329.1875
+  },
+  "erros": []
+ },
+ {
+  "caso": "sim_carisma",
+  "versao": "a",
+  "janela": "1920x945",
+  "reduzido": false,
+  "resultado": "▸ Carisma 14 contra 13 — sucesso (d20 17)",
+  "grupo": {
+   "x": 720,
+   "y": 385,
+   "w": 440,
+   "h": 330
+  },
+  "erros": []
+ },
+ {
+  "caso": "sim_carisma",
+  "versao": "b",
+  "janela": "1920x945",
+  "reduzido": false,
+  "resultado": "▸ Carisma 14 contra 13 — sucesso (d20 17)",
+  "grupo": {
+   "x": 640,
+   "y": 431,
+   "w": 600,
+   "h": 238
+  },
+  "erros": []
+ },
+ {
+  "caso": "sim_carisma",
+  "versao": "atual",
+  "janela": "1280x720",
+  "reduzido": false,
+  "resultado": "▸ Carisma 14 contra 13 — sucesso (d20 17)",
+  "grupo": {
+   "x": 430,
+   "y": 273,
+   "w": 400,
+   "h": 329.1875
+  },
+  "erros": []
+ },
+ {
+  "caso": "sim_carisma",
+  "versao": "a",
+  "janela": "1280x720",
+  "reduzido": false,
+  "resultado": "▸ Carisma 14 contra 13 — sucesso (d20 17)",
+  "grupo": {
+   "x": 410,
+   "y": 273,
+   "w": 440,
+   "h": 330
+  },
+  "erros": []
+ },
+ {
+  "caso": "sim_carisma",
+  "versao": "b",
+  "janela": "1280x720",
+  "reduzido": false,
+  "resultado": "▸ Carisma 14 contra 13 — sucesso (d20 17)",
+  "grupo": {
+   "x": 330,
+   "y": 319,
+   "w": 600,
+   "h": 238
+  },
+  "erros": []
+ },
+ {
+  "caso": "forca",
+  "versao": "atual",
+  "janela": "1280x720",
+  "reduzido": false,
+  "resultado": "▸ Força 24 contra 14 — sucesso (d20 15)",
+  "grupo": {
+   "x": 430,
+   "y": 264,
+   "w": 400,
+   "h": 347.1875
+  },
+  "erros": []
+ }
+]
