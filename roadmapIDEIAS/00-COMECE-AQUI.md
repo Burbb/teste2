@@ -6996,3 +6996,16 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   com um nome longo; sem erro no console.
 - **Verificações sobre o código final:** `unittest` (689, 1 pulado), o gabarito idêntico, o pyflakes (só os avisos
   conhecidos) e a fumaça inteira, uma vez.
+
+### 23/10/2026 (data do computador local) — Etapa 2, o primeiro lote em avaliação (protótipo)
+
+- **Estado conferido:** a branch em `9fe39e55` (1.200.1), igual ao remoto; o `caido-avatar-512.png` fora dos commits.
+- **Nada no jogo.** A subida de nível, as celebrações e a raridade como protótipo em
+  `ferramentas/prototipos/hud/celebracoes/` (o levantamento, as decisões e as limitações no LEIA-ME; as cópias de
+  `celebracoes.js` e `achado.js` servidas só nas fotos). Atual × proposta com os mesmos dados (cenários de teste: um
+  nível, dois níveis seguidos, quatro raridades), a 1920×945 e a 1280×720, com movimento reduzido, clique duplo,
+  teclado e clique rápido; folhas estáticas e vídeos.
+- **Limitações:** o Sigilo, a especialização e as fagulhas da vitória sem cenário fotografado; o som igual; a aura do
+  achado pequena a 1920.
+- **Agora:** a avaliação do Jean. Depois, a integração do que for aprovado. O carregar jogo e a criação de personagem
+  continuam esperando o levantamento da retirada do procedural; os retratos suspensos e o Grimório, parados.

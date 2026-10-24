@@ -36,7 +36,8 @@ Não iniciar todo o plano numa única tarefa. As etapas técnicas A–I e a vali
   com os invocados do Lich); o urso e o falcão também na fogueira (1.176.0); o Mercenário e o Lobo Gélido (1.179.0).
   A relação do que falta
   está em "A frente de criaturas em 22/10/2026", no item 1.12. O Bandido do chapéu está reservado como conceito de um possível chefe, fora do jogo.
-- **A 1E concluída para a campanha (1.200.0):** a 1E.4 integrada; da 1E.3, só restam os retratos do modo procedural (o substituto da Bruxa nos covis e o antagonista), suspensos com a direção de ficar só com a campanha. **Agora: a etapa 2** (o escopo e o primeiro lote recomendado em "A 1E.4 integrada", no item 1.12). Histórico: **1E.3, as demais criaturas, os chefes e as invocações** (as outras ainda saem dos traços: o `fera`, o
+- **A 1E concluída para a campanha (1.200.0):** a 1E.4 integrada; da 1E.3, só restam os retratos do modo procedural (o substituto da Bruxa nos covis e o antagonista), suspensos com a direção de ficar só com a campanha. **Agora: a etapa 2, o primeiro lote em avaliação** (a subida de nível, as celebrações e a raridade, só no protótipo:
+`ferramentas/prototipos/hud/celebracoes/LEIA-ME.md`; o escopo em "A 1E.4 integrada", no item 1.12). Histórico: **1E.3, as demais criaturas, os chefes e as invocações** (as outras ainda saem dos traços: o `fera`, o
   `humano`, a caveira e os outros sprites de 16×16; o levantamento em `ferramentas/prototipos/hud/criaturas/`).
   **1E.4 começada (23/10/2026, a direção agora é só a campanha):** o levantamento e o primeiro lote de protótipos em
   `ferramentas/prototipos/hud/mapa/` (nada no jogo; aguardando o Jean). Em seguida, as **etapas 2–9** como estão
@@ -1174,6 +1175,16 @@ ou mudanças de dados por iniciativa do agente.
   feixes e partículas em pixel art, faixas para os ganhos, intensidade proporcional, o movimento reduzido), porque
   acontecem durante toda a campanha. O carregar jogo e a criação de personagem ficam para depois do levantamento da
   retirada do procedural, que muda o menu do título (o "Novo jogo" e a escolha do modo).
+- **A etapa 2, o primeiro lote em avaliação (23/10/2026, nada no jogo):** o levantamento e a proposta em
+  `ferramentas/prototipos/hud/celebracoes/` (LEIA-ME, folhas atual × proposta, vídeos). Uma direção: o Brilho, um efeito
+  em pixel de baixa resolução (aura e estouro curtos, paletas por raridade e por festa, nada atrás do texto); a festa de
+  nível com os ganhos nos ícones da HUD já com o valor final, o ponto de talento com o atalho (T) e a habilidade nova;
+  fechar a qualquer momento (sem a espera de 600 ms), com a proteção do gesto do espólio (o toque anterior, o clique
+  duplo, a tecla segurada); o selo da raridade no achado e a intensidade proporcional; o cartão raro e lendário sem
+  esperar o feixe inteiro (os botões em 1,2 s em vez de 2,2 e 2,8 s; um clique adianta); o movimento reduzido parado.
+  O Sigilo, a especialização e as fagulhas da vitória e dos contratos no mesmo código, sem cenário fotografado. Os
+  cenários de teste ficam no protótipo (`auxiliares/cenarios_teste.py`). Achado de passagem, no jogo também: o clique
+  duplo que fecha uma festa deixava selecionado o texto do Continuar da seguinte (corrigido só no protótipo).
 - **Dependências do procedural** (para o levantamento da retirada): o covil, o vencido, a cidadela e a "selada" só
   existem lá; a legenda fixa dos nove desenhos; `MapaPx.sprite` cai no bioma para a `saida` da campanha; os glifos de
   `rpg/mapa.py`; o `fechado` da campanha não chega à tela como campo.
@@ -1340,8 +1351,8 @@ volta à pauta quando essa expansão exigir; não é uma migração de engine.
    Afogada, pendente de identidade: o substituto dela nos covis; o Lich Menor entrou na 1.199.0; o Senhor da Guerra entrou na 1.194.0, a Hidra do Brejo na 1.197.0 e o Profeta das Cinzas na 1.198.0), o
    antagonista, (o Espantalho Possuído entrou na 1.195.0 e o servo do Necromante na 1.196.0); nada começado antes do pedido. A relação em "A frente de criaturas em 22/10/2026" (item 1.12). O Esqueleto E2 e o Bandido do
    chapéu estão reservados.
-3. **1E.4, integrada na 1.200.0 (23/10/2026)**; o próximo é a etapa 2 (o primeiro lote recomendado: a subida de nível
-   com as celebrações e a raridade). Histórico: **1E.4, em avaliação (23/10/2026):** o levantamento e o primeiro lote de protótipos (a posição, os caminhos, os
+3. **1E.4, integrada na 1.200.0 (23/10/2026)**; a lista de Caminhos na 1.200.1. **Etapa 2, o primeiro lote em
+   avaliação** (a subida de nível com as celebrações e a raridade, só no protótipo; item 1.12). Histórico: **1E.4, em avaliação (23/10/2026):** o levantamento e o primeiro lote de protótipos (a posição, os caminhos, os
    símbolos e as marcas; detalhes em "A 1E.4 em 23/10/2026", no item 1.12). O Jean escolheu a direção B (a A fica como
    alternativa); aprovados como base a plaqueta B, a cancela, os caminhos e as marcas; a vila e a floresta nativas
    aprovadas (`094bb80a`: 32 no minimapa, 48 no mapa grande); o pântano e as ruínas aprovados (`c7bd2348`); em
