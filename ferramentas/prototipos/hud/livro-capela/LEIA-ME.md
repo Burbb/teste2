@@ -1,4 +1,87 @@
-# O livro narrativo da capela: o levantamento (etapa 2, 24/10/2026)
+# O livro narrativo da capela (etapa 2, 24/10/2026)
+
+**Agora: três propostas no protótipo (A, B e C), aguardando a escolha do Jean.** Nada integrado; o livro de hoje
+continua no jogo. As propostas estão na seção "As três propostas", abaixo; o levantamento que as originou vem depois.
+
+## As três propostas
+
+**A direção (Jean):** sentir que se lê algo escrito por uma pessoa daquele mundo; o texto começa como registro e
+termina numa confissão de culpa, e a apresentação sustenta essa mudança. O objeto é o livro simples de couro castanho
+da sacristia. Textos, pistas, requisitos e releitura iguais aos do jogo.
+
+**O que está estabelecido e foi respeitado:** o autor é "o padre que escreveu o livro da sacristia" (a pista `ilse`),
+sem nome; o código diz "duas entradas, anos entre elas"; o documento da região (11) põe o Sigilo há cerca de 58 anos
+e o afogamento há cerca de 55. Nada disso aparece como data, nome ou assinatura na página: nenhuma das três inventa
+autor, data ou fato.
+
+**A referência (o trabalho da Lettermatic para Pentiment):** dela veio a ideia, não a aparência. A letra faz o papel
+da voz de quem escreve; para texto longo, uma escrita humanista legível; e a "habilidade da mão" varia com contenção
+(a mesma letra mais ou menos controlada), em vez de letras tortas ao acaso. Nada da interface deles.
+
+**A letra:** Fondamento (Astigmatic, SIL OFL 1.1; `fontes/OFL-Fondamento.txt`), da Fontsource 5.3.0
+(`@fontsource/fondamento`, pelo jsDelivr; os arquivos `latin-400-normal` e `latin-400-italic`). Uma escrita humanista
+de pena larga, legível a 21–24 px, com os acentos e a pontuação do português; a itálica é a mesma mão mais depressa.
+Escolhida num espécime com o texto real, ao lado de Felipa, Bilbo, IM Fell English, Cormorant Garamond, Marck Script,
+Mynerve, Sedgwick Ave, Cedarville Cursive e a Alegreya itálica: as cursivas eram difíceis de ler, as de imprensa não
+pareciam escritas à mão.
+
+**O livro:** `desenhar_livro.py` desenha o registro aberto visto de cima pelo método das cenas (cada parte em `px`
+deliberados; o grão do papel num ladrilho escrito à mão): o couro da cena (#5a3422, a luz #7a4c30), os cantos gastos,
+as folhas de baixo saindo pela beira, a dobra escurecendo em três passos sem faixa, o vão em V do couro na dobra e a
+marca de umidade nos cantos de baixo (a capela alagada). Escala 3, igual nas duas janelas. O texto é HTML por cima,
+nunca imagem (`livro.js`, `livro.css`, só as classes `lv-*`; nada do Grimório).
+
+| | A · registro | B · registro que vira confissão | C · leitura próxima |
+|---|---|---|---|
+| o livro | as duas páginas, pautadas, 870×510 | as duas páginas, lisas, 870×402 | uma página e a faixa da anterior, 642×468 |
+| a 1ª entrada | Fondamento, a tinta castanha, nas linhas | Fondamento, arrumada, com espaço | como a B, a 24 px |
+| a 2ª entrada | outra tinta (quase preta), depois de um traço de pena, uma linha abaixo, com recuo próprio | a mesma mão mais depressa (a itálica), mais apertada, a linha oscilando meio pixel por palavra (uma sequência fixa) | como a B, e mais folhas viradas à esquerda |
+| ler | as duas de uma vez | as duas de uma vez | uma por vez: Anterior e Próxima, "Entrada 1 de 2" |
+| fechar | Fechar, Esc, Enter, espaço, o véu (como hoje) | o mesmo | Fechar e Esc; o véu não fecha (um clique que erra a navegação não fecha o livro) |
+
+Comum às três: "O livro da capela" é a etiqueta da interface, em cima, fora da página; o Fechar é o botão da HUD,
+embaixo, longe da escrita; o clique fora dos botões não tira o foco do livro; as teclas do menu não escolhem nada
+embaixo; com o movimento reduzido, nada anima. Na C, as setas e PageUp/PageDown mudam de entrada; o foco começa no
+Próxima, passa ao Fechar na última entrada e volta ao Próxima na primeira; o Tab circula só nos botões ligados.
+
+**Conferido** (`auxiliares/fotografar.mjs`, `auxiliares/gestos.mjs`, no jogo real, cenário `capela`): as três e o
+livro de hoje a 1920×945 e a 1280×720, o livro inteiro na janela e o texto cabendo nas páginas, sem erro na página;
+a primeira leitura grava as mesmas pistas que o livro de hoje e mostra o mesmo cartão; reler não muda nada; os gestos
+acima, um por um. A folha: `folha-propostas.png` (as três em tamanho real a 1920; as telas de 1280 a um terço).
+
+**A avaliação (recomendação: C, com a mão da B):**
+
+- **A:** o ganho é o documento: a pauta e a margem fazem dele um livro de registro, e a ordem combina com a primeira
+  entrada. A limitação: a mudança para a confissão quase não se sente (a mesma letra, só outra tinta), e o traço de
+  pena sozinho não diz "anos depois"; a página da esquerda fica com metade das linhas vazias.
+- **B:** o ganho é a voz: a mesma mão mais apressada e apertada se percebe de relance como outro momento, mais
+  pessoal, e o livro fica do tamanho do texto. A limitação: a itálica a 21 px é a leitura mais densa das três, e nada
+  diz quanto tempo passou.
+- **C:** o ganho é a leitura e a passagem do tempo: a letra maior (24 px), uma entrada por vez com a página inteira
+  para ela, a mudança de mão da B e as folhas viradas à esquerda; a segunda entrada fica a um clique ou uma seta, e
+  "Entrada 2 de 2" diz que há mais. A limitação: perde-se a comparação lado a lado das duas mãos, e é um passo a mais
+  (quem fecha na primeira entrada não lê a segunda; o Próxima já vem com o foco).
+
+**A cronologia só pela apresentação não fica clara em nenhuma das três** (a C chega mais perto, pelas folhas
+viradas). Proposta à parte, para avaliação, sem implementar: uma nota curta da interface antes da segunda entrada,
+**"Algumas páginas adiante:"**, a frase que o modo texto do jogo já usa entre as entradas (`_ler_livro`). Fica fora
+da escrita do padre (na letra da interface), não inventa data e diz o que o objeto mostra.
+
+**Ajuste editorial:** nenhum outro necessário para esta apresentação; os textos ficaram como estão.
+
+**Demonstração:** `demo.bat` ou `python ferramentas/prototipos/hud/livro-capela/auxiliares/demo.py`, painel em
+http://127.0.0.1:8767/: o livro de hoje, A, B e C, na primeira leitura e na releitura, cada caso numa partida de
+teste com saves temporários (os seus saves não são tocados).
+
+**Os arquivos:** `desenhar_livro.py` (o livro), `propostas/` (os PNGs e `areas.json`, onde fica o texto), `livro.js`
+e `livro.css` (a apresentação), `fontes/` (a Fondamento e a licença), `auxiliares/` (`cenarios_livro.py`, o servidor
+que põe o protótipo só na página da demonstração; `demo.py`; `fotografar.mjs`; `gestos.mjs`; `folha.py`),
+`capturas/` (as fotos e `medidas.json`).
+
+**Achados à parte (continuam fora desta avaliação):** o atalho da missão que aponta para o livro e a linha repetida
+no Histórico (problemas 6 e 7 do levantamento).
+
+# O levantamento (24/10/2026)
 
 **Só o levantamento.** Nada redesenhado, implementado nem mudado no jogo; textos narrativos e regras intocados. Base: a
 1.203.0. Visto no jogo pelo cenário `capela` (`ETAPA=ossuario LIVRO=0 SALA=sacristia`: a sacristia vencida, o livro

@@ -1,0 +1,63 @@
+/* O livro da capela, as três propostas (protótipo; livro.js). Isolado: só as classes lv-*, nada do Grimório.
+   A letra é a Fondamento (OFL, fontes/OFL-Fondamento.txt): uma escrita humanista de pena larga, legível, com os
+   acentos do português; a itálica dela é a mesma mão escrevendo mais depressa. */
+@font-face { font-family: "Fondamento"; font-style: normal; font-weight: 400; font-display: block;
+  src: url("/static/prototipo-livro/fontes/fondamento-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Fondamento"; font-style: italic; font-weight: 400; font-display: block;
+  src: url("/static/prototipo-livro/fontes/fondamento-latin-400-italic.woff2") format("woff2"); }
+
+.lv { --lv-tinta-1: #5b3c24; --lv-tinta-2: #1d1510; background: rgba(5, 4, 3, 0.82); }
+.lv-quadro { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+/* "O livro da capela" é a etiqueta da interface, não um título escrito na página */
+.lv-rotulo { font-family: var(--leitura); font-weight: 700; font-size: 13px; letter-spacing: 0.22em; text-transform: uppercase;
+  color: #b9ab8c; text-shadow: 0 1px 0 #000; padding: 3px 12px; background: rgba(5, 4, 3, 0.9); }
+.lv-livro { position: relative; background-size: 100% 100%; image-rendering: pixelated; }
+.lv-pagina { position: absolute; overflow: hidden; font-family: "Fondamento", var(--prosa), serif; color: var(--lv-tinta-1);
+  font-size: 21px; line-height: 33px; }
+.lv-pagina p { margin: 0; text-indent: 1.2em; }
+.lv-pagina p:first-child { text-indent: 0; }
+.lv-baixo { display: flex; align-items: center; justify-content: center; gap: 18px; }
+/* o Fechar é da interface: o botão da HUD, embaixo do livro, longe da escrita */
+:root body .lv .continuar { display: inline-flex; align-items: center; gap: 6px; min-width: 0; margin: 0; }
+:root body .lv .continuar kbd { font-size: 12px; font-weight: 400; }
+:root body .lv .continuar[disabled] { opacity: 0.35; cursor: default; }
+
+/* ---------------------------------------------------------------- A · o registro pautado
+   As duas entradas nas linhas da pauta. A primeira na tinta que envelheceu para o castanho; a segunda em outra
+   tinta, mais escura e fria, começando uma linha abaixo, depois de um traço de pena (como se separa um registro do
+   outro), e com o recuo próprio de quem retomou o livro. */
+.lv-a .lv-entrada2 { color: var(--lv-tinta-2); padding-top: 33px; }
+.lv-a .lv-entrada2::before { content: ""; position: absolute; left: 0; top: 14px; width: 54px; height: 3px; background: var(--lv-tinta-2);
+  clip-path: polygon(0 40%, 8% 0, 100% 30%, 96% 100%, 4% 80%); opacity: 0.85; }
+.lv-a .lv-entrada2 p:first-child { text-indent: 2.4em; }
+
+/* ---------------------------------------------------------------- B · o registro que vira confissão
+   A primeira entrada arrumada, com espaço entre as linhas; a segunda na mesma mão mais depressa (a itálica da
+   Fondamento), mais apertada, com a linha que oscila um pouco por palavra, em outra tinta. */
+.lv-b .lv-entrada1 { line-height: 34px; padding-top: 4px; }
+.lv-b .lv-entrada1 p + p { margin-top: 10px; }
+.lv-b .lv-entrada2 { color: var(--lv-tinta-2); font-style: italic; font-size: 21px; line-height: 29px; letter-spacing: -0.01em;
+  word-spacing: -0.06em; padding-top: 4px; }
+.lv-b .lv-entrada2 p { text-indent: 0; }
+.lv-b .lv-entrada2 p + p { margin-top: 6px; }
+.lv-b .lv-entrada2 span, .lv-c .lv-entrada2 span { display: inline-block; transform: translateY(var(--y)); }
+
+/* ---------------------------------------------------------------- C · a leitura próxima
+   Uma página por vez, maior; a primeira entrada como na B, a segunda na mão apressada e mais folhas viradas à
+   esquerda. Anterior, a contagem e Próxima embaixo, com o Fechar ao lado. */
+.lv-c .lv-pagina { font-size: 24px; line-height: 37px; }
+.lv-c .lv-entrada1 p + p { margin-top: 12px; }
+.lv-c .lv-entrada2 { color: var(--lv-tinta-2); font-style: italic; line-height: 34px; letter-spacing: -0.01em; word-spacing: -0.05em; }
+.lv-c .lv-entrada2 p { text-indent: 0; }
+.lv-c .lv-entrada2 p + p { margin-top: 8px; }
+.lv-nav { display: flex; align-items: center; gap: 14px; }
+.lv-conta { min-width: 112px; text-align: center; font-family: var(--leitura); font-size: 14px; letter-spacing: 0.08em; color: #b9ab8c; }
+.lv-c .lv-pagina.vira { animation: lv-vira 0.22s ease-out both; }
+.lv-c .lv-pagina.vira-volta { animation: lv-vira-volta 0.22s ease-out both; }
+@keyframes lv-vira { from { opacity: 0; transform: translateX(10px); } }
+@keyframes lv-vira-volta { from { opacity: 0; transform: translateX(-10px); } }
+
+/* abrir: o livro sobe um pouco e aparece (com o movimento reduzido, já aberto) */
+.lv.abre .lv-quadro { animation: lv-abre 0.28s cubic-bezier(.2, .8, .3, 1) both; }
+@keyframes lv-abre { from { opacity: 0; transform: translateY(12px); } }
+@media (prefers-reduced-motion: reduce) { .lv.abre .lv-quadro, .lv-c .lv-pagina.vira, .lv-c .lv-pagina.vira-volta { animation: none; } }

@@ -7227,3 +7227,23 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   com grão e as duas tintas, a marca do salto de tempo sem texto novo, o tamanho pelo texto, o Fechar dentro da moldura
   de ferro, CSS separado do Grimório, a abertura em poucos quadros. Duas variantes na proposta.
 - **Agora:** a decisão do Jean sobre o escopo. Não começados: a retirada do procedural e outras frentes.
+
+### 24/10/2026 (data do computador local) — Etapa 2: o livro da capela, três propostas (protótipo, nada no jogo)
+
+- **Onde:** `ferramentas/prototipos/hud/livro-capela/` (LEIA-ME, seção "As três propostas"; `folha-propostas.png`;
+  demonstração em `demo.bat`, painel em http://127.0.0.1:8767/, com saves temporários). O livro de hoje continua no
+  jogo; nada integrado.
+- **A direção do Jean:** ler algo escrito por uma pessoa daquele mundo; o registro que termina em confissão. A
+  referência foi a tipografia de Pentiment (a letra como voz de quem escreve), sem a estética dele. Sem autor, data,
+  assinatura nem fato novo: o autor é "o padre" (a pista `ilse`), sem nome.
+- **As propostas:** A · registro pautado (outra tinta e outro começo na segunda entrada); B · registro que vira
+  confissão (a mesma mão, mais depressa, na segunda); C · leitura próxima (uma entrada por vez, Anterior/Próxima e as
+  setas). Letra: Fondamento (OFL 1.1, Fontsource 5.3.0, licença em `fontes/`). O livro em pixel art pelo método das
+  cenas, com o couro da sacristia; o texto em HTML.
+- **Conferido:** as três e o livro de hoje a 1920×945 e 1280×720 no cenário `capela`; as mesmas pistas e o mesmo
+  cartão na primeira leitura, nada na releitura; os gestos (teclado, Tab, véu, nada atravessando, movimento reduzido)
+  em `auxiliares/gestos.mjs`. `unittest` (695 ok, 1 pulado) e pyflakes; o jogo não mudou.
+- **Recomendação:** C, com a mão da B. **À parte, para avaliação:** a nota da interface "Algumas páginas adiante:"
+  antes da segunda entrada (a frase que o modo texto já usa), porque a cronologia não fica clara só pela apresentação.
+- **Continuam separados:** o atalho da missão que aponta para o livro e a linha repetida no Histórico.
+- **Agora:** a escolha do Jean. Não começados: a retirada do procedural e outras frentes.

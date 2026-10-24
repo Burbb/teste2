@@ -1,0 +1,77 @@
+{
+ "a": {
+  "tamanho": [
+   290,
+   170
+  ],
+  "paginas": {
+   "esquerda": [
+    22,
+    16,
+    133,
+    152
+   ],
+   "direita": [
+    155,
+    16,
+    265,
+    152
+   ]
+  },
+  "pauta": {
+   "primeira": 25,
+   "passo": 11
+  }
+ },
+ "b": {
+  "tamanho": [
+   290,
+   134
+  ],
+  "paginas": {
+   "esquerda": [
+    22,
+    16,
+    133,
+    116
+   ],
+   "direita": [
+    155,
+    16,
+    265,
+    116
+   ]
+  },
+  "pauta": null
+ },
+ "c1": {
+  "tamanho": [
+   214,
+   156
+  ],
+  "paginas": {
+   "direita": [
+    64,
+    19,
+    191,
+    136
+   ]
+  },
+  "pauta": null
+ },
+ "c2": {
+  "tamanho": [
+   214,
+   156
+  ],
+  "paginas": {
+   "direita": [
+    64,
+    19,
+    191,
+    136
+   ]
+  },
+  "pauta": null
+ }
+}
