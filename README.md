@@ -277,7 +277,7 @@ papel: a gótica **Jacquard 24** nos títulos e nomes; **Jersey 15** nos número
 Dez espaços no corpo, cada classe com suas peças: o guerreiro usa elmo, manoplas, grevas e
 **escudo**; o arqueiro, capuz, braçadeiras e **aljava**; o mago, chapéu ou diadema, luvas de seda
 e **tomo**. Amuleto e dois anéis servem a todos. Os itens vêm em quatro raridades (comum,
-mágico, raro e lendário) com afixos aleatórios, e há itens únicos com história, como a Égide
+incomum, raro e lendário) com afixos aleatórios, e há itens únicos com história, como a Égide
 do Mártir, as Botas do Andarilho Morto e a Coroa dos Afogados. O ferreiro reforça arma, peito
 e mão secundária. A mochila guarda 12 itens.
 
@@ -350,7 +350,7 @@ que abrem o caminho até a Cidadela, onde o vilão (gerado a cada partida) esper
 ## Saque
 
 Itens têm raridade, como em Diablo:
-**comum** · mágico (azul, 1 afixo) · raro (amarelo, 2–3 afixos, nome próprio) ·
+**comum** · incomum (azul, 1 afixo) · raro (amarelo, 2–3 afixos, nome próprio) ·
 **★ lendário** (itens únicos com nome, história e efeitos especiais).
 Afixos especiais: roubo de vida, chance de crítico, espinhos, vida por turno e vida por abate.
 

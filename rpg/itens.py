@@ -57,7 +57,8 @@ def para_tela():
 PENA_FENIX_AGE_SOZINHA = "A Pena de Fênix age sozinha: se você cair em combate, ela te ergue com metade da vida."
 
 RARIDADES = ["comum", "magico", "raro", "lendario"]
-NOMES_RARIDADE = {"comum": "Comum", "magico": "Mágico", "raro": "Raro", "lendario": "LENDÁRIO"}
+# O id "magico" fica (saves e regras); o nome à vista é Incomum: Comum → Incomum → Raro → Lendário.
+NOMES_RARIDADE = {"comum": "Comum", "magico": "Incomum", "raro": "Raro", "lendario": "LENDÁRIO"}
 COR_RARIDADE = {"comum": None, "magico": "azul", "raro": "amarelo", "lendario": "magenta+negrito"}
 
 MATERIAIS = [  # qualidade da base conforme o nível

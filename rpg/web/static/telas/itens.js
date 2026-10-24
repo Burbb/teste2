@@ -16,7 +16,7 @@
     secundaria: "escudo", pernas: "calca", pes: "bota", anel1: "anel", anel2: "anel" };
   const AREA = { cabeca: "cab", amuleto: "amu", armadura: "pei", maos: "mao", arma: "arm", secundaria: "sec",
     pernas: "per", pes: "pes", anel1: "an1", anel2: "an2" };
-  const RARIDADE = { comum: "comum", magico: "mágico", raro: "raro", lendario: "LENDÁRIO" };
+  const RARIDADE = { comum: "comum", magico: "incomum", raro: "raro", lendario: "LENDÁRIO" };
   const NOMES_STAT = { max_hp: "Vida", atk: "Ataque", defesa: "Defesa", agi: "Agilidade", poder: "Poder", get max_rec() { return (App.estado && App.estado.heroi && App.estado.heroi.recurso) || "Mana/Vigor/Foco"; },
     roubo_vida: "% roubo de vida", critico: "% crítico", espinhos: "Espinhos", regen_vida: "Vida por turno", vida_abate: "Vida por abate" };
   const CLASSE_NOME = { guerreiro: "guerreiros", arqueiro: "arqueiros", mago: "magos" };

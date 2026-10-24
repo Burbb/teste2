@@ -13,7 +13,7 @@
 const Festa = (() => {
   const h = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
   const VITAIS = ["Vida", "Mana", "Vigor", "Foco"];
-  const RARIDADE = { comum: "Comum", magico: "Mágico", raro: "Raro", lendario: "Lendário" };
+  const RARIDADE = { comum: "Comum", magico: "Incomum", raro: "Raro", lendario: "Lendário" };
   const CLASSE = { guerreiro: "Guerreiro", arqueiro: "Arqueiro", mago: "Mago" };
   // As apresentações (Estouro e Relicário) se registram aqui; o Estouro é o padrão. A escolha entre as duas é uma
   // futura opção do jogo (sem tela por enquanto): Festa.usar("relicario") troca.

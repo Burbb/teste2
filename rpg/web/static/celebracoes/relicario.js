@@ -208,25 +208,28 @@
   .fa2-altar { display: grid; place-items: center; height: 150px; }
   #sobre-achado.dir-relicario:is(.rar-comum, .rar-magico) .fa2-altar { height: 84px; }
   :root body #sobre-achado .fa2-achado .achado-cartao.novo > .achado-selo { font: 700 13px/1 var(--texto); letter-spacing: 0.32em; text-transform: uppercase; color: #f2d27a; text-shadow: ${contorno(2)}; }
-  .ficha-raridade { display: inline-flex; align-items: center; gap: 10px; font: 700 13px/1 var(--texto); letter-spacing: 0.26em; text-transform: uppercase; }
-  .ficha-raridade::before, .ficha-raridade::after { content: ""; width: 34px; height: 2px; background: currentColor; box-shadow: 0 1px 0 #000; }
-  .ficha-raridade.rar-comum { color: #c0b8a8; } .ficha-raridade.rar-magico { color: #7fb0ff; } .ficha-raridade.rar-raro { color: #f2c94c; } .ficha-raridade.rar-lendario { color: #ffb35c; }
-  .ficha-nome { display: block; max-width: 820px; font: 400 40px/1.05 var(--titulo); text-shadow: ${contorno(2)}, 0 4px 0 #000; text-wrap: balance; }
-  .ficha-nome.r-comum { color: #f1e4c4; }
+  /* tudo pela .dir-relicario: as duas apresentações estão carregadas, e uma regra solta daqui pintava o texto do selo do
+     Estouro na cor do fundo dele (o selo vazio) */
+  .dir-relicario .ficha-raridade { display: inline-flex; align-items: center; gap: 10px; font: 700 13px/1 var(--texto); letter-spacing: 0.26em; text-transform: uppercase; }
+  .dir-relicario .ficha-raridade::before, .dir-relicario .ficha-raridade::after { content: ""; width: 34px; height: 2px; background: currentColor; box-shadow: 0 1px 0 #000; }
+  .dir-relicario .ficha-raridade.rar-comum { color: #c0b8a8; } .dir-relicario .ficha-raridade.rar-magico { color: #7fb0ff; }
+  .dir-relicario .ficha-raridade.rar-raro { color: #f2c94c; } .dir-relicario .ficha-raridade.rar-lendario { color: #ffb35c; }
+  .dir-relicario .ficha-nome { display: block; max-width: 820px; font: 400 40px/1.05 var(--titulo); text-shadow: ${contorno(2)}, 0 4px 0 #000; text-wrap: balance; }
+  .dir-relicario .ficha-nome.r-comum { color: #f1e4c4; }
   .fa2-ficha { display: grid; grid-template-columns: 1fr; justify-items: center; gap: 0 26px; padding-top: 12px; width: 100%; box-shadow: inset 0 2px 0 #2b2219; }
   .fa2-ficha.compara { grid-template-columns: 1fr auto 1fr; align-items: start; justify-items: stretch; }
-  .ficha-premio, .fa2-ficha .ficha-troca, .fa2-usa { display: flex; flex-direction: column; gap: 3px; }
-  .ficha-premio { align-items: center; } .fa2-ficha.compara .ficha-premio { align-items: flex-end; text-align: right; }
-  .ficha-rotulo { font: 700 11px/1.4 var(--texto); letter-spacing: 0.22em; text-transform: uppercase; color: #8a8070; }
-  .ficha-linhas { display: flex; flex-direction: column; font: 19px/1.25 var(--num, var(--texto)); color: #f1e4c4; }
-  .ficha-linhas .efeito { color: #c8b0ff; font-size: 16px; }
+  .fa2-ficha .ficha-premio, .fa2-ficha .ficha-troca, .fa2-usa { display: flex; flex-direction: column; gap: 3px; }
+  .fa2-ficha .ficha-premio { align-items: center; } .fa2-ficha.compara .ficha-premio { align-items: flex-end; text-align: right; }
+  .dir-relicario .ficha-rotulo { font: 700 11px/1.4 var(--texto); letter-spacing: 0.22em; text-transform: uppercase; color: #8a8070; }
+  .dir-relicario .ficha-linhas { display: flex; flex-direction: column; font: 19px/1.25 var(--num, var(--texto)); color: #f1e4c4; }
+  .dir-relicario .ficha-linhas .efeito { color: #c8b0ff; font-size: 16px; }
   .fa2-ficha .ficha-troca { align-items: center; padding: 0 22px; border-left: 1px solid #3a3128; border-right: 1px solid #3a3128; font: 17px/1.3 var(--num, var(--texto)); }
-  .ficha-troca .melhor { color: #8fbf6a; } .ficha-troca .pior { color: #e2574c; }
+  .dir-relicario .ficha-troca .melhor { color: #8fbf6a; } .dir-relicario .ficha-troca .pior { color: #e2574c; }
   :root body #sobre-achado .fa2-usa .achado-cartao.atual { width: auto; padding: 0; background: none; border: 0; box-shadow: none; text-align: left; overflow: visible; animation: none; opacity: 0.92; }
   .fa2-usa { gap: 10px; } .fa2-usa .achado-selo { font: 700 11px/1.4 var(--texto); letter-spacing: 0.22em; text-transform: uppercase; color: #8a8070; }
-  .ficha-usa-nome { display: flex; align-items: center; gap: 8px; } .ficha-usa-nome b { font: 400 22px/1.05 var(--titulo); }
+  .dir-relicario .ficha-usa-nome { display: flex; align-items: center; gap: 8px; } .dir-relicario .ficha-usa-nome b { font: 400 22px/1.05 var(--titulo); }
   .fa2-usa .ficha-linhas { font-size: 17px; } .fa2-usa .ficha-troca { border: 0; padding: 0; align-items: flex-start; font-size: 15px; }
-  .ficha-lore { max-width: 620px; font: italic 15px/1.4 var(--texto); color: #a89878; }
+  .dir-relicario .ficha-lore { max-width: 620px; font: italic 15px/1.4 var(--texto); color: #a89878; }
   .dir-relicario .achado-acoes { display: flex; justify-content: center; gap: 10px; margin-top: 16px; }
   .dir-relicario.entrando .fa2-altar .achado-arte { animation: fa2-desce 0.27s steps(4) both; }
   @keyframes fa2-desce { from { translate: 0 -40px; } 75% { translate: 0 3px; } to { translate: 0 0; } }
@@ -242,7 +245,7 @@
   :root body :is(#celebracao, #sobre-achado).dir-relicario :is(.continuar, .botao-janela:not(.reserva)):focus-visible { border-color: #f2d27a; color: #fff3d6; outline: 2px solid #f2d27a; outline-offset: 3px; }
   :root body :is(#celebracao, #sobre-achado).dir-relicario :is(.continuar, .botao-janela:not(.reserva)):active { translate: 0 1px; box-shadow: inset 0 1px 0 #2b2219, 0 0 0 1px #000, 0 2px 0 #000; }
   :root body :is(#celebracao, #sobre-achado).dir-relicario :is(.continuar, .botao-janela) kbd { font: 13px/1 var(--num); color: #f2d27a; border: 1px solid #6b5426; background: #070504; padding: 2px 5px; margin: 0 2px; }
-  /* o mágico: um acento azul parado junto do item (o fio com o losango, em azul), sem aura */
+  /* o incomum: um acento azul parado junto do item (o fio com o losango, em azul), sem aura */
   #sobre-achado.dir-relicario.rar-magico .achado-cartao.novo .achado-arte { position: relative; }
   #sobre-achado.dir-relicario.rar-magico .achado-cartao.novo .achado-arte::after { content: ""; position: absolute; left: 50%; bottom: -10px; width: 64px; height: 3px;
     translate: -50% 0; background: #3d63c9; box-shadow: 0 1px 0 #000; }
@@ -251,7 +254,7 @@
   @media (max-height: 760px) {
     .fa2-coroa { gap: 14px; margin-bottom: 14px; } .fa2-medalha { width: 128px; height: 128px; } .fa2-numero { font-size: 64px; }
     .fa2-titulo { font-size: 70px; } .fa2-info { gap: 10px; } .fa2-hab b { font-size: 24px; } .fa2-hab p { font-size: 15px; }
-    .fa2-altar { height: 112px; } .ficha-nome { font-size: 32px; }
+    .fa2-altar { height: 112px; } .dir-relicario .ficha-nome { font-size: 32px; }
   }
   @media (prefers-reduced-motion: reduce) {
     .fa2 :is(.fa2-medalha, .fa2-titulo, .fa2-info), .dir-relicario .fa2-altar .achado-arte { animation: none !important; }

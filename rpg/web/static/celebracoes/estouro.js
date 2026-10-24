@@ -129,7 +129,7 @@
         const a = p.de(arte), R = Math.round(a.rx), ti = t - queda;
         if (!quieto && !bateu && (ti >= 0 || adiantou())) { bateu = true; App.som("achado_raro"); FX.tremer(cfg.tremor); fundo.classList.add("bateu"); }
         poco(p, info, 50, 15); poco(p, cabeca, 40, 14);
-        if (!cfg || !cfg.coluna) FX.poco(p, { cx: a.x, cy: a.y, rx: R + 14, ry: R + 12, forca: 15 });  // o comum e o mágico no escuro, junto da ficha
+        if (!cfg || !cfg.coluna) FX.poco(p, { cx: a.x, cy: a.y, rx: R + 14, ry: R + 12, forca: 15 });  // o comum e o incomum no escuro, junto da ficha
         if (cfg && cfg.coluna) {
           const re = p.t(cfg.re);
           if (quieto || bateu) {
@@ -254,7 +254,7 @@
   :root body :is(#celebracao, #sobre-achado).dir-estouro :is(.continuar, .botao-janela:not(.reserva)):focus-visible { border-color: #f2d27a; color: #fff3d6; outline: 2px solid #f2d27a; outline-offset: 3px; }
   :root body :is(#celebracao, #sobre-achado).dir-estouro :is(.continuar, .botao-janela:not(.reserva)):active { translate: 0 1px; box-shadow: inset 0 1px 0 #2b2219, 0 0 0 1px #000, 0 2px 0 #000; }
   :root body :is(#celebracao, #sobre-achado).dir-estouro :is(.continuar, .botao-janela) kbd { font: 13px/1 var(--num); color: #f2d27a; border: 1px solid #6b5426; background: #070504; padding: 2px 5px; margin: 0 2px; }
-  /* o mágico: um acento azul parado junto do item (o fio com o losango, em azul), sem aura */
+  /* o incomum: um acento azul parado junto do item (o fio com o losango, em azul), sem aura */
   #sobre-achado.dir-estouro.rar-magico .achado-cartao.novo .achado-arte { position: relative; }
   #sobre-achado.dir-estouro.rar-magico .achado-cartao.novo .achado-arte::after { content: ""; position: absolute; left: 50%; bottom: -10px; width: 64px; height: 3px;
     translate: -50% 0; background: #3d63c9; box-shadow: 0 1px 0 #000; }
