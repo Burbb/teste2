@@ -21,7 +21,9 @@ const Festa = (() => {
   }
   const ganhos = (d) => Object.entries(d.ganhos || {}).map(([k, v]) => ({ k, v, icone: icone(k) }));
   const talento = (lado = 32) => Icones.atalho("Talentos", lado) || "";
-  const habilidades = (lista) => (lista || []).map((x) => ({ nome: h(x.nome), desc: Realce.texto(x.desc) }));
+  const habilidades = (lista) => (lista || []).map((x) => ({ nome: h(x.nome), desc: Realce.texto(x.desc), icone: Telas.S(x.icone || "estrela", 2) }));
+  /** O Continuar no acabamento dos botões do jogo (a face e a aresta da HUD), com a tecla. */
+  const continuar = (rotulo = "Continuar") => `<button class="continuar" type="button">${rotulo}<kbd>Enter</kbd></button>`;
   const heroi = () => (App.estado && App.estado.heroi) || {};
 
   /** A janela da festa aberta em `caixa` (#celebracao) com `html`; `efeito(el)` liga o efeito e devolve o controle dele
@@ -145,8 +147,39 @@ const Festa = (() => {
     .achado-v2 .achado-arte { filter: none; animation: none; }
     .achado-v2 .achado-cartao.novo .achado-arte:not(.pequena) { width: 128px; height: 128px; margin: 0; }</style>`);
 
+  /** A ficha do achado em pedaços, para as direções compor sem molduras: o nome, o tipo, os números do prêmio, a troca
+   *  (o que muda, linha a linha, pelo Telas.linhasTroca do jogo) e o que você usa (cartões .achado-cartao.atual, que
+   *  as celebrações de vestir e guardar procuram). Sem nada no espaço, a troca e o "você usa" ficam vazios. */
+  function fichaItem(d) {
+    const it = d.item, rar = h(it.raridade), hr = heroi();
+    const linhas = (x) => h(x.bonus || "").split(", ").filter(Boolean).map((l) => `<span>${l}</span>`).join("") +
+      (x.efeito ? `<span class="efeito">${h(x.efeito)}</span>` : "");
+    const naoUsa = it.classe && hr.classe && it.classe !== hr.classe ? `<div class="pior">Só ${h({ guerreiro: "guerreiros", arqueiro: "arqueiros", mago: "magos" }[it.classe] || it.classe)} sabem usar isto.</div>` : "";
+    const premio = `<div class="ficha-premio"><span class="ficha-rotulo">${h(Telas.NOME_ESPACO[it.slot] || "")}</span><div class="ficha-linhas">${linhas(it)}</div>${naoUsa}</div>`;
+    const aneis = d.espacos && (d.equipados || []).length;
+    let troca = "", usa = "";
+    if (aneis) {
+      usa = d.espacos.map((e) => e.item
+        ? `<div class="achado-cartao atual rar-${h(e.item.raridade)}" data-espaco="${h(e.espaco)}"><span class="achado-selo">${h(e.nome)} · você usa</span>
+            <div class="ficha-usa-nome">${arteItem(e.item, 32)}<b class="r-${h(e.item.raridade)}">${h(e.item.nome)}</b></div>
+            <div class="ficha-troca">${Telas.linhasTroca(it, e.item)}</div></div>`
+        : `<div class="achado-cartao atual vazio" data-espaco="${h(e.espaco)}"><span class="achado-selo">${h(e.nome)} · vazio</span></div>`).join("");
+    } else if ((d.equipados || []).length) {
+      const e = d.equipados[0];
+      troca = `<div class="ficha-troca"><span class="ficha-rotulo">na troca</span>${Telas.linhasTroca(it, e)}</div>`;
+      usa = `<div class="achado-cartao atual rar-${h(e.raridade)}"><span class="achado-selo">Você usa</span>
+        <div class="ficha-usa-nome">${arteItem(e, 32)}<b class="r-${h(e.raridade)}">${h(e.nome)}</b></div>
+        <div class="ficha-linhas">${linhas(e)}</div></div>`;
+    }
+    return {
+      rar, nome: `<b class="ficha-nome r-${rar}">${h(it.nome)}</b>`, raridade: `<span class="ficha-raridade rar-${rar}">${RARIDADE[it.raridade] || rar}</span>`,
+      premio, troca, usa, compara: !!(troca || usa),
+      lore: it.lore ? `<div class="ficha-lore">"${h(it.lore)}"</div>` : "", aviso: aviso(d),
+    };
+  }
+
   return {
-    h, RARIDADE, CLASSE, icone, ganhos, talento, habilidades, heroi, abrir, celebrar, abrirAchado, textoItem, arteItem,
+    h, RARIDADE, fichaItem, CLASSE, icone, ganhos, talento, habilidades, continuar, heroi, abrir, celebrar, abrirAchado, textoItem, arteItem,
     equipados, aviso,
     usar(d) { direcao = d; },
     get direcao() { return direcao; },

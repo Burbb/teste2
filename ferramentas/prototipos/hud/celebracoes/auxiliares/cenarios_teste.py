@@ -9,6 +9,9 @@ momento a fotografar. Ficam fora de tests/ (não são testes do jogo) e do jogo.
     python cenarios_teste.py nivel4         # TESTE: do 3 ao 4, o nível da encruzilhada (o aviso da especialização)
     python cenarios_teste.py sigilo         # TESTE: o Sigilo de um guardião (receber_sigilo, como no rito da Ilse)
     python cenarios_teste.py especializacao # TESTE: no nível 4, a especialização escolhida (especializar)
+    python cenarios_teste.py nivel_especializacao  # TESTE (sequência para os vídeos): do 3 ao 4 e, em seguida, a
+                                                   # especialização escolhida
+    python cenarios_teste.py raridades_sigilo      # TESTE (sequência para os vídeos): as quatro raridades e o Sigilo
     python cenarios_teste.py limites        # SIMULAÇÃO: dados fora do jogo para testar os limites da tela (nomes e
                                             # textos longos, seis ganhos de dois dígitos); não acontece nas regras
 
@@ -28,6 +31,7 @@ import pathlib
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[5]))
 from rpg.inimigos import instanciar_guardiao  # noqa: E402
+from rpg.habilidades import HABILIDADES  # noqa: E402
 from rpg.itens import gerar_equip  # noqa: E402
 from rpg.jogo import FimDeJogo, Jogo  # noqa: E402
 from rpg.web.ponte import WebUI  # noqa: E402
@@ -112,6 +116,25 @@ def especializacao(ui):
     rodar(g)
 
 
+def nivel_especializacao(ui):
+    """TESTE: duas festas reais em sequência, para um vídeo só: o nível 4 (o espólio de um lobo) e a especialização."""
+    g = heroi(ui, niveis=2)
+    espolio(g, [g.inimigo("lobo", nivel=3)])
+    g.fechar_espolio()  # o quadro e o nível agora, como depois de uma luta; a especialização vem em seguida
+    g.especializar(ESPECIALIZACAO[g.j.classe])
+    rodar(g)
+
+
+def raridades_sigilo(ui):
+    """TESTE: os quatro achados e o Sigilo em sequência, para um vídeo só."""
+    g = heroi(ui)
+    rng = random.Random(9)
+    for rar in ("comum", "magico", "raro", "lendario"):
+        g.oferecer_equip(gerar_equip(rng, g.j.classe, 3, raridade=rar))
+    g.receber_sigilo("pantano", "Ilse")
+    rodar(g)
+
+
 def limites(ui):
     """SIMULAÇÃO (não acontece nas regras): a festa e o achado com textos no limite, para ver a tela aguentar."""
     g = heroi(ui, titulo="SIMULAÇÃO de limites (dados fora das regras)")
@@ -126,9 +149,24 @@ def limites(ui):
 
 
 CENARIOS = {"nivel": nivel, "dois_niveis": dois_niveis, "raridades": raridades, "nivel4": nivel4, "sigilo": sigilo,
-            "especializacao": especializacao, "limites": limites}
+            "especializacao": especializacao, "limites": limites, "nivel_especializacao": nivel_especializacao,
+            "raridades_sigilo": raridades_sigilo}
 PROTOTIPOS = pathlib.Path(__file__).resolve().parents[1]
 TROCADOS = {"telas/celebracoes.js": "celebracoes.js", "telas/achado.js": "achado.js"}
+
+
+def com_icones(ui):
+    """PROTÓTIPO (só neste servidor de teste): a festa do nível e a da especialização levam o ícone de cada habilidade
+    nova, o mesmo do Grimório (HABILIDADES[...]["icone"]). O evento do jogo só manda nome e descrição, e a página ainda
+    tem o estado de antes do nível; na integração, o campo entra no motor (progressao.py)."""
+    original = ui.celebrar
+    icones = {h["nome"]: h.get("icone") for h in HABILIDADES.values()}
+
+    def celebrar(tipo, dados=None, *a, **k):
+        if tipo in ("nivel", "spec") and dados:
+            dados = {**dados, "habilidades": [{**x, "icone": icones.get(x["nome"])} for x in dados.get("habilidades", [])]}
+        return original(tipo, dados, *a, **k)
+    ui.celebrar = celebrar
 
 
 def demonstracao(srv, nome):
@@ -164,6 +202,7 @@ def main():
     nome = sys.argv[1] if len(sys.argv) > 1 else "nivel"
     ui = WebUI()
     ui.jogo = None
+    com_icones(ui)
     srv = Servidor(ui, config={"velocidade": os.environ.get("VELOCIDADE", "normal")})
     demonstracao(srv, nome)
     srv.iniciar()

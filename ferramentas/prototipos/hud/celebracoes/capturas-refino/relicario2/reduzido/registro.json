@@ -1,0 +1,35 @@
+{
+ "nivel": {
+  "erros": [],
+  "avisos": [],
+  "linha": [
+   "espolio: apareceu em 974 ms",
+   "espolio: fechado (clique) em 2585 ms",
+   "nivel: apareceu em 2964 ms",
+   "nivel: fechado (clique) em 4354 ms"
+  ]
+ },
+ "raridades": {
+  "erros": [],
+  "avisos": [],
+  "linha": [
+   "comum: apareceu em 576 ms",
+   "comum: fechado (deixar) em 2007 ms",
+   "magico: apareceu em 2828 ms",
+   "magico: fechado (deixar) em 4321 ms",
+   "raro: apareceu em 5173 ms",
+   "raro: fechado (deixar) em 6711 ms",
+   "lendario: apareceu em 7539 ms",
+   "lendario: fechado (deixar) em 9014 ms",
+   "achados: botões 254, 340, 487, 636 ms depois do cartão"
+  ]
+ },
+ "especializacao": {
+  "erros": [],
+  "avisos": [],
+  "linha": [
+   "spec: apareceu em 1026 ms",
+   "spec: fechado (clique) em 2488 ms"
+  ]
+ }
+}

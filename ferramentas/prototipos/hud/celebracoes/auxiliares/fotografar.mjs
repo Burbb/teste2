@@ -40,6 +40,17 @@ const SITUACOES = [
   { nome: "limites", cenario: "limites", classe: "guerreiro", passos: [
     { festa: FESTA, foto: "nivel", fechar: "clique" },
     { festa: ACHADO, foto: "lendario", fechar: "deixar" }] },
+  // Os vídeos para avaliação (fora da lista padrão): duas festas reais em sequência em cada um
+  { nome: "video-nivel-spec", cenario: "nivel_especializacao", classe: "mago", video: true, passos: [
+    { festa: ".festa-espolio .continuar", foto: "espolio", fechar: "clique" },
+    { festa: FESTA, foto: "nivel", fechar: "clique" },
+    { festa: FESTA, foto: "spec", fechar: "clique" }] },
+  { nome: "video-raridades-sigilo", cenario: "raridades_sigilo", classe: "arqueiro", video: true, passos: [
+    { festa: ACHADO, foto: "comum", fechar: "deixar" },
+    { festa: ACHADO, foto: "magico", fechar: "deixar" },
+    { festa: ACHADO, foto: "raro", fechar: "deixar" },
+    { festa: ACHADO, foto: "lendario", fechar: "deixar" },
+    { festa: FESTA, foto: "sigilo", fechar: "clique" }] },
   // O clique rápido: um clique fora dos botões assim que a janela surge (antes de os botões chegarem). Não deve escolher
   // nada nem fechar a janela: no achado, adianta a cerimônia; na festa, completa a revelação. Fora da lista padrão.
   { nome: "rapido", cenario: "raridades", classe: "arqueiro", rapido: true, passos: [
@@ -50,7 +61,7 @@ const SITUACOES = [
   { nome: "rapido-nivel", cenario: "nivel", classe: "guerreiro", rapido: true, passos: [
     { festa: ".festa-espolio .continuar", foto: "espolio", fechar: "clique" },
     { cedo: "#celebracao .festa", festa: "#celebracao .festa", foto: "nivel", fechar: "tecla" }] },
-].filter((s) => (so ? so.split(",").includes(s.nome) : !s.rapido));
+].filter((s) => (so ? so.split(",").includes(s.nome) : !s.rapido && !s.video));
 const QUAL = process.env.PROTOTIPO || "";  // "1": a primeira proposta; o nome de uma direção: a segunda rodada
 const PROTO = !QUAL ? null : ["1", "brilho"].includes(QUAL) ? path.join(AQUI, "../prototipo") : path.join(AQUI, "../prototipo-v2", QUAL);
 const [vw, vh] = (process.env.JANELA || "1920x945").split("x").map(Number);

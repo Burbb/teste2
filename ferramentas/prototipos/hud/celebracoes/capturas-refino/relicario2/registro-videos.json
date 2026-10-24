@@ -1,0 +1,14 @@
+{
+ "video-nivel-spec": {
+  "erros": [],
+  "avisos": [],
+  "linha": [
+   "espolio: apareceu em 1672 ms",
+   "espolio: fechado (clique) em 6056 ms",
+   "nivel: apareceu em 6455 ms",
+   "nivel: fechado (clique) em 10796 ms",
+   "spec: apareceu em 11156 ms",
+   "spec: fechado (clique) em 15388 ms"
+  ]
+ }
+}

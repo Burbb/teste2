@@ -187,8 +187,9 @@ const FX = (() => {
 
   /** Uma estrela de pontas (a placa do estouro): `pontas` pontas entre os raios `ri` e `re`, girada `ang`, preenchida
    *  em faixas da paleta de fora para dentro, com contorno escuro de um texel e o lado de cima-esquerda mais claro. */
-  function estrela(p, { cx, cy, pontas, ri, re, ang = 0, pal, contorno = "k" }) {
-    const cs = pal.map(cor), ck = cor(contorno), passo = (2 * Math.PI) / pontas;
+  function estrela(p, { cx, cy, pontas, ri, re, ang = 0, pal, contorno = "k", cores = null }) {
+    // `cores` ([miolo, meio, aro, luz do aro]) troca as faixas da paleta: o selo de miolo escuro e aro de metal
+    const cs = cores ? [cores[3], cores[0], cores[1], cores[2]].map(cor) : pal.map(cor), ck = cor(contorno), passo = (2 * Math.PI) / pontas;
     const raioEm = (a) => {
       let f = (a - ang) / passo; f -= Math.floor(f);
       const t = Math.abs(f - 0.5) * 2;  // 1 na ponta, 0 no vale
@@ -203,6 +204,18 @@ const FX = (() => {
       if (u > 0.82 && (dx + dy) < 0) i -= 1;  // a luz de cima e da esquerda na borda
       p.por(x, y, cs[Math.max(0, Math.min(cs.length - 1, i))]);
     }
+  }
+
+  /** Um poço escuro (uma elipse de raios rx, ry) que apaga em pontilhado do meio para a borda: o efeito passa por
+   *  trás da área de leitura sem disputar com o texto. `forca` (0 a 16) é o escuro no meio. */
+  function poco(p, { cx, cy, rx, ry, forca = 14, c = "N" }) {
+    const v = cor(c);
+    for (let y = Math.max(0, Math.floor(cy - ry)); y <= Math.min(p.H - 1, cy + ry); y++)
+      for (let x = Math.max(0, Math.floor(cx - rx)); x <= Math.min(p.W - 1, cx + rx); x++) {
+        const dx = (x - cx) / rx, dy = (y - cy) / ry, u = Math.sqrt(dx * dx + dy * dy);
+        if (u > 1) continue;
+        if (pontilha(x, y, Math.round(forca * Math.min(1, (1 - u) * 4)))) p.buf[y * p.W + x] = v;  // cheio até 3/4, depois apaga
+      }
   }
 
   // ------------------------------------------------------------------ partículas desenhadas à mão
@@ -265,6 +278,6 @@ const FX = (() => {
   const rampa = (t, de, ms, a = 0, b = 1) => (t <= de ? a : t >= de + ms ? b : a + (b - a) * (1 - Math.pow(1 - (t - de) / ms, 3)));
   const aleatorio = (a, b) => a + Math.random() * (b - a);
 
-  return { cor, reduzido, FPS, QUADRO, PALETAS, DESENHOS, palco, animar, raios, feixes, halo, anel, coluna, clarao, estrela,
+  return { cor, reduzido, FPS, QUADRO, PALETAS, DESENHOS, palco, animar, raios, feixes, halo, anel, coluna, clarao, estrela, poco,
     enxame, tremer, rampa, aleatorio };
 })();

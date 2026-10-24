@@ -14,6 +14,52 @@ canto de baixo, "repetir" e "painel" (essa faixa só existe na demonstração). 
 Movimento reduzido: no Chrome/Edge, F12 → ⋮ → More tools → Rendering → "Emulate CSS media feature
 prefers-reduced-motion" → reduce, e "repetir" (ou "Mostrar animações" desligado no Windows, para o sistema todo).
 
+## Refinamento (24/10/2026): A2 · Relicário refinado e B2 · Estouro refinado
+
+O Jean gostou da presença dos efeitos (os feixes do Relicário, o lendário e o Sigilo) e pediu para refinar A e B, sem
+misturar as duas; a C fica reservada. As versões anteriores ficam como histórico (no painel, em cinza). O que mudou nas
+duas (`v2/relicario2.js`, `v2/estouro2.js`; o comum em `v2/festas.js`):
+
+- **Os itens no tamanho de uso:** o arquivo de 64 do cartão do saque, sem ampliar (antes, 128). O efeito continua
+  grande e conduz o olhar ao item.
+- **A informação sem molduras repetidas:** os ganhos numa linha (ícone, valor, nome alinhados; separados por fios ou
+  pontos, sem caixas), o ponto de talento na mesma composição com o atalho (T), a habilidade nova pelo ícone do
+  Grimório, nome e descrição (sem o retângulo roxo) e o Continuar dos botões do jogo, com a tecla (Enter). Sem a placa
+  externa: os raios passam por trás da leitura num poço escuro em pontilhado (`FX.poco`), que une o alto e o pé.
+- **A especialização:** o nome é o protagonista (grande, com o sol ou o estouro atrás), fora da medalha.
+- **A comparação:** o nome do achado no alto, com a raridade; embaixo, numa peça só, três colunas: o prêmio, a troca
+  (linha a linha, pelo `Telas.linhasTroca` do jogo) e o que você usa. O nome longo tem a largura da janela (uma ou duas
+  linhas).
+- **Comum e mágico:** o item fica junto da ficha; o comum entra sem aura (pousa com um pouco de poeira e um brilho
+  só); o mágico tem um brilho breve e localizado (um anel curto e faíscas) que some. Raro, lendário e Sigilo continuam
+  fortes.
+- **A sustentação:** a entrada continua a mesma; depois de ~1,4 s, o efeito baixa um pouco e segue vivo (os raios em
+  pontilhado mais aberto na A2; na B2, o selo respira, um pulso fino a cada 2,2 s e poucas brasas).
+- **A2:** o rótulo de cima e a informação ficam sobre o poço escuro, ligados à medalha por um fio de latão com um
+  losango.
+- **B2:** o selo do impacto tem miolo escuro e aro de ouro (a mesma silhueta de pontas), o número em ouro sem o
+  contorno grosso, a fita virou uma faixa reta de ferro com fios de latão; o achado é horizontal (o item no selo ao lado
+  da ficha); o talento e a habilidade ficam lado a lado.
+- **O ícone da habilidade:** a festa do jogo só manda nome e descrição, e a página ainda tem o estado de antes do
+  nível. No protótipo, o servidor de teste acrescenta o ícone ao evento (`com_icones` em `cenarios_teste.py`); na
+  integração, o campo entra no motor (`progressao.py`).
+
+**Conferido:** 1920×945 e 1280×720 (casos reais e a simulação de textos longos), movimento reduzido, teclado (o foco no
+Continuar; Enter fecha), clique duplo (fecha uma festa só), clique rápido (medido na página: ~85 ms até os botões, sem
+escolher nada) e o clique que fecha a festa sem atravessar para o achado seguinte (medido na página: o achado abre
+10 ms depois e os botões chegam no tempo normal). A folha `capturas-refino/folha-refino.png` põe A, A2, B e B2 lado a
+lado; `folha-refino-1280.png`, as refinadas em 1280×720.
+
+**Vídeos para avaliação** (`para-avaliacao/`, 1920×945, **sem áudio**: a gravação do navegador de teste não tem trilha
+de som), cada um com o ciclo completo e uns 4 s depois de cada entrada:
+`1-relicario-refinado-nivel-e-especializacao.webm`, `2-relicario-refinado-raridades-e-sigilo.webm`,
+`3-estouro-refinado-nivel-e-especializacao.webm`, `4-estouro-refinado-raridades-e-sigilo.webm`. As sequências são
+cenários de teste (`nivel_especializacao`, `raridades_sigilo`): festas reais encadeadas para caber num vídeo.
+
+**Limitações vistas:** seis ganhos ainda quebram em duas linhas (5 + 1) nas duas; na B2, em 1280×720, os raios da aura do
+lendário encostam no começo de um título longo; o som não foi ouvido; na A2, o mágico some rápido e pode passar despercebido para quem não
+olha o item; os efeitos grandes continuam gerados por regra (as partículas são desenhadas à mão).
+
 ## Segunda rodada (24/10/2026): três direções
 
 O Jean achou a primeira proposta contida demais: gostava dos feixes girando atrás, o problema era o acabamento de

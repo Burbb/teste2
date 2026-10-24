@@ -27,10 +27,13 @@ CENARIOS = [("nivel", "Um nível (do 1 ao 2, dois lobos)", "guerreiro"),
             ("nivel4", "Nível 4, a encruzilhada (o aviso da especialização)", "arqueiro"),
             ("sigilo", "O Sigilo de um guardião", "guerreiro"),
             ("especializacao", "A especialização escolhida", "mago"),
-            ("limites", "SIMULAÇÃO de limites: textos longos e seis ganhos (fora das regras)", "guerreiro")]
+            ("limites", "SIMULAÇÃO de limites: textos longos e seis ganhos (fora das regras)", "guerreiro"),
+            ("nivel_especializacao", "Sequência: nível 4 e, em seguida, a especialização (a dos vídeos)", "mago"),
+            ("raridades_sigilo", "Sequência: as quatro raridades e o Sigilo (a dos vídeos)", "arqueiro")]
 # as versões: o valor de PROTOTIPO (vazio: o jogo como está) e o rótulo
-VERSOES = [("relicario", "A · Relicário"), ("estouro", "B · Estouro"), ("estandarte", "C · Estandarte"),
-           ("", "Jogo atual"), ("brilho", "1ª proposta")]
+VERSOES = [("relicario2", "A2 · Relicário refinado"), ("estouro2", "B2 · Estouro refinado"), ("", "Jogo atual"),
+           ("relicario", "A · 1ª versão"), ("estouro", "B · 1ª versão"), ("estandarte", "C · reservada"),
+           ("brilho", "1ª proposta")]
 NOMES = dict(VERSOES)
 CLASSES = ["guerreiro", "mago", "arqueiro"]
 trava = threading.Lock()
@@ -71,7 +74,7 @@ def pagina():
     linhas = []
     for cid, rotulo, classe in CENARIOS:
         botoes = " ".join(
-            f'<a class="b{" p" if v in ("relicario", "estouro", "estandarte") else ""}" href="/iniciar?{html.escape(urlencode({"cenario": cid, "versao": v, "classe": classe}))}">{nome}</a>'
+            f'<a class="b{" p" if v in ("relicario2", "estouro2") else " h" if v in ("relicario", "estouro", "estandarte", "brilho") else ""}" href="/iniciar?{html.escape(urlencode({"cenario": cid, "versao": v, "classe": classe}))}">{nome}</a>'
             for v, nome in VERSOES)
         linhas.append(f"<tr><td>{html.escape(rotulo)}<br><small>classe: {classe}</small></td><td>{botoes}</td></tr>")
     opcoes = "".join(f"<option>{c}</option>" for c in CLASSES)
@@ -82,12 +85,13 @@ def pagina():
 <style>body{{background:#141210;color:#e8dcbe;font:16px/1.5 Georgia,serif;max-width:1180px;margin:32px auto;padding:0 16px}}
 h1{{font-size:24px;color:#f2c94c}} table{{border-collapse:collapse;width:100%}} td{{border-top:1px solid #3a3226;padding:10px 6px}}
 small{{color:#a89878}} a.b{{display:inline-block;padding:6px 14px;margin:2px;border:1px solid #6b5a3a;color:#e8dcbe;text-decoration:none;border-radius:3px}}
-a.b.p{{border-color:#f2c94c;color:#f2c94c}} a.b:hover{{background:#2a2418}} form{{margin-top:12px}} select,button{{font:inherit}}
+a.b.p{{border-color:#f2c94c;color:#f2c94c;font-weight:bold}} a.b.h{{color:#8a8070;border-color:#3a3226}} a.b:hover{{background:#2a2418}} form{{margin-top:12px}} select,button{{font:inherit}}
 .nota{{color:#a89878;font-size:14px}}</style></head><body>
 <h1>Demonstração da etapa 2 (protótipo, nada no jogo)</h1>
 <p class="nota">Cada botão encerra o cenário anterior e começa outro do zero, numa partida de teste com saves
 temporários (o seu save não é tocado). Na página, clique em "Começar o teste"; no canto de baixo, "repetir" e "painel".
-A, B e C são as três direções desta rodada; "1ª proposta" é a da rodada anterior, guardada como histórico. Movimento
+A2 e B2 são as versões refinadas (em destaque); "A · 1ª versão", "B · 1ª versão", "C · reservada" e "1ª proposta"
+são o histórico, em cinza. Movimento
 reduzido: F12 → ⋮ → More tools → Rendering → prefers-reduced-motion: reduce, e "repetir".</p>
 <table>{''.join(linhas)}</table>
 <form action="/iniciar">Outra classe: <select name="cenario">{cens}</select> <select name="classe">{opcoes}</select>

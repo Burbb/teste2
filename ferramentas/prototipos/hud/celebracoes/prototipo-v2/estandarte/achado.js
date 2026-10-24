@@ -188,8 +188,9 @@ const FX = (() => {
 
   /** Uma estrela de pontas (a placa do estouro): `pontas` pontas entre os raios `ri` e `re`, girada `ang`, preenchida
    *  em faixas da paleta de fora para dentro, com contorno escuro de um texel e o lado de cima-esquerda mais claro. */
-  function estrela(p, { cx, cy, pontas, ri, re, ang = 0, pal, contorno = "k" }) {
-    const cs = pal.map(cor), ck = cor(contorno), passo = (2 * Math.PI) / pontas;
+  function estrela(p, { cx, cy, pontas, ri, re, ang = 0, pal, contorno = "k", cores = null }) {
+    // `cores` ([miolo, meio, aro, luz do aro]) troca as faixas da paleta: o selo de miolo escuro e aro de metal
+    const cs = cores ? [cores[3], cores[0], cores[1], cores[2]].map(cor) : pal.map(cor), ck = cor(contorno), passo = (2 * Math.PI) / pontas;
     const raioEm = (a) => {
       let f = (a - ang) / passo; f -= Math.floor(f);
       const t = Math.abs(f - 0.5) * 2;  // 1 na ponta, 0 no vale
@@ -204,6 +205,18 @@ const FX = (() => {
       if (u > 0.82 && (dx + dy) < 0) i -= 1;  // a luz de cima e da esquerda na borda
       p.por(x, y, cs[Math.max(0, Math.min(cs.length - 1, i))]);
     }
+  }
+
+  /** Um poço escuro (uma elipse de raios rx, ry) que apaga em pontilhado do meio para a borda: o efeito passa por
+   *  trás da área de leitura sem disputar com o texto. `forca` (0 a 16) é o escuro no meio. */
+  function poco(p, { cx, cy, rx, ry, forca = 14, c = "N" }) {
+    const v = cor(c);
+    for (let y = Math.max(0, Math.floor(cy - ry)); y <= Math.min(p.H - 1, cy + ry); y++)
+      for (let x = Math.max(0, Math.floor(cx - rx)); x <= Math.min(p.W - 1, cx + rx); x++) {
+        const dx = (x - cx) / rx, dy = (y - cy) / ry, u = Math.sqrt(dx * dx + dy * dy);
+        if (u > 1) continue;
+        if (pontilha(x, y, Math.round(forca * Math.min(1, (1 - u) * 4)))) p.buf[y * p.W + x] = v;  // cheio até 3/4, depois apaga
+      }
   }
 
   // ------------------------------------------------------------------ partículas desenhadas à mão
@@ -266,7 +279,7 @@ const FX = (() => {
   const rampa = (t, de, ms, a = 0, b = 1) => (t <= de ? a : t >= de + ms ? b : a + (b - a) * (1 - Math.pow(1 - (t - de) / ms, 3)));
   const aleatorio = (a, b) => a + Math.random() * (b - a);
 
-  return { cor, reduzido, FPS, QUADRO, PALETAS, DESENHOS, palco, animar, raios, feixes, halo, anel, coluna, clarao, estrela,
+  return { cor, reduzido, FPS, QUADRO, PALETAS, DESENHOS, palco, animar, raios, feixes, halo, anel, coluna, clarao, estrela, poco,
     enxame, tremer, rampa, aleatorio };
 })();
 
@@ -293,7 +306,9 @@ const Festa = (() => {
   }
   const ganhos = (d) => Object.entries(d.ganhos || {}).map(([k, v]) => ({ k, v, icone: icone(k) }));
   const talento = (lado = 32) => Icones.atalho("Talentos", lado) || "";
-  const habilidades = (lista) => (lista || []).map((x) => ({ nome: h(x.nome), desc: Realce.texto(x.desc) }));
+  const habilidades = (lista) => (lista || []).map((x) => ({ nome: h(x.nome), desc: Realce.texto(x.desc), icone: Telas.S(x.icone || "estrela", 2) }));
+  /** O Continuar no acabamento dos botões do jogo (a face e a aresta da HUD), com a tecla. */
+  const continuar = (rotulo = "Continuar") => `<button class="continuar" type="button">${rotulo}<kbd>Enter</kbd></button>`;
   const heroi = () => (App.estado && App.estado.heroi) || {};
 
   /** A janela da festa aberta em `caixa` (#celebracao) com `html`; `efeito(el)` liga o efeito e devolve o controle dele
@@ -417,8 +432,39 @@ const Festa = (() => {
     .achado-v2 .achado-arte { filter: none; animation: none; }
     .achado-v2 .achado-cartao.novo .achado-arte:not(.pequena) { width: 128px; height: 128px; margin: 0; }</style>`);
 
+  /** A ficha do achado em pedaços, para as direções compor sem molduras: o nome, o tipo, os números do prêmio, a troca
+   *  (o que muda, linha a linha, pelo Telas.linhasTroca do jogo) e o que você usa (cartões .achado-cartao.atual, que
+   *  as celebrações de vestir e guardar procuram). Sem nada no espaço, a troca e o "você usa" ficam vazios. */
+  function fichaItem(d) {
+    const it = d.item, rar = h(it.raridade), hr = heroi();
+    const linhas = (x) => h(x.bonus || "").split(", ").filter(Boolean).map((l) => `<span>${l}</span>`).join("") +
+      (x.efeito ? `<span class="efeito">${h(x.efeito)}</span>` : "");
+    const naoUsa = it.classe && hr.classe && it.classe !== hr.classe ? `<div class="pior">Só ${h({ guerreiro: "guerreiros", arqueiro: "arqueiros", mago: "magos" }[it.classe] || it.classe)} sabem usar isto.</div>` : "";
+    const premio = `<div class="ficha-premio"><span class="ficha-rotulo">${h(Telas.NOME_ESPACO[it.slot] || "")}</span><div class="ficha-linhas">${linhas(it)}</div>${naoUsa}</div>`;
+    const aneis = d.espacos && (d.equipados || []).length;
+    let troca = "", usa = "";
+    if (aneis) {
+      usa = d.espacos.map((e) => e.item
+        ? `<div class="achado-cartao atual rar-${h(e.item.raridade)}" data-espaco="${h(e.espaco)}"><span class="achado-selo">${h(e.nome)} · você usa</span>
+            <div class="ficha-usa-nome">${arteItem(e.item, 32)}<b class="r-${h(e.item.raridade)}">${h(e.item.nome)}</b></div>
+            <div class="ficha-troca">${Telas.linhasTroca(it, e.item)}</div></div>`
+        : `<div class="achado-cartao atual vazio" data-espaco="${h(e.espaco)}"><span class="achado-selo">${h(e.nome)} · vazio</span></div>`).join("");
+    } else if ((d.equipados || []).length) {
+      const e = d.equipados[0];
+      troca = `<div class="ficha-troca"><span class="ficha-rotulo">na troca</span>${Telas.linhasTroca(it, e)}</div>`;
+      usa = `<div class="achado-cartao atual rar-${h(e.raridade)}"><span class="achado-selo">Você usa</span>
+        <div class="ficha-usa-nome">${arteItem(e, 32)}<b class="r-${h(e.raridade)}">${h(e.nome)}</b></div>
+        <div class="ficha-linhas">${linhas(e)}</div></div>`;
+    }
+    return {
+      rar, nome: `<b class="ficha-nome r-${rar}">${h(it.nome)}</b>`, raridade: `<span class="ficha-raridade rar-${rar}">${RARIDADE[it.raridade] || rar}</span>`,
+      premio, troca, usa, compara: !!(troca || usa),
+      lore: it.lore ? `<div class="ficha-lore">"${h(it.lore)}"</div>` : "", aviso: aviso(d),
+    };
+  }
+
   return {
-    h, RARIDADE, CLASSE, icone, ganhos, talento, habilidades, heroi, abrir, celebrar, abrirAchado, textoItem, arteItem,
+    h, RARIDADE, fichaItem, CLASSE, icone, ganhos, talento, habilidades, continuar, heroi, abrir, celebrar, abrirAchado, textoItem, arteItem,
     equipados, aviso,
     usar(d) { direcao = d; },
     get direcao() { return direcao; },

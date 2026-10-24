@@ -1,0 +1,49 @@
+{
+ "dois-niveis": {
+  "erros": [],
+  "avisos": [],
+  "linha": [
+   "espolio: apareceu em 1207 ms",
+   "espolio: fechado (clique) em 2700 ms",
+   "nivel2: apareceu em 3058 ms",
+   "nivel2: fechado (duplo) em 4407 ms",
+   "depois do clique duplo, há festa aberta: true",
+   "nivel3: apareceu em 5272 ms",
+   "nivel3: fechado (tecla) em 6577 ms"
+  ]
+ },
+ "raridades": {
+  "erros": [],
+  "avisos": [],
+  "linha": [
+   "comum: apareceu em 754 ms",
+   "comum: fechado (deixar) em 2146 ms",
+   "magico: apareceu em 2972 ms",
+   "magico: fechado (deixar) em 4344 ms",
+   "raro: apareceu em 5155 ms",
+   "raro: fechado (deixar) em 6529 ms",
+   "lendario: apareceu em 7349 ms",
+   "lendario: fechado (deixar) em 8731 ms",
+   "achados: botões 258, 338, 488, 637 ms depois do cartão"
+  ]
+ },
+ "especializacao": {
+  "erros": [],
+  "avisos": [],
+  "linha": [
+   "spec: apareceu em 846 ms",
+   "spec: fechado (clique) em 2185 ms"
+  ]
+ },
+ "limites": {
+  "erros": [],
+  "avisos": [],
+  "linha": [
+   "nivel: apareceu em 1078 ms",
+   "nivel: fechado (clique) em 2417 ms",
+   "lendario: apareceu em 2776 ms",
+   "lendario: fechado (deixar) em 4172 ms",
+   "achados: botões 637 ms depois do cartão"
+  ]
+ }
+}
