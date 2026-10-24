@@ -51,6 +51,12 @@ const SITUACOES = [
     { festa: ACHADO, foto: "raro", fechar: "deixar" },
     { festa: ACHADO, foto: "lendario", fechar: "deixar" },
     { festa: FESTA, foto: "sigilo", fechar: "clique" }] },
+  // As especializações, cada uma na classe dela (fora da lista padrão: "spec-paladino", ...), e os itens do Estouro
+  ...["piromante", "paladino", "berserker", "patrulheiro", "sombra", "necromante"].map((k) => ({ nome: `spec-${k}`, cenario: `spec_${k}`, classe: "mago", extra: true,
+    passos: [{ festa: FESTA, foto: k, fechar: "clique" }] })),
+  { nome: "itens-estouro", cenario: "itens_estouro", classe: "guerreiro", extra: true, passos: [
+    { festa: ACHADO, foto: "raro1", fechar: "deixar" }, { festa: ACHADO, foto: "lendario1", fechar: "deixar" },
+    { festa: ACHADO, foto: "raro2", fechar: "deixar" }, { festa: ACHADO, foto: "lendario2", fechar: "deixar" }] },
   // O clique rápido: um clique fora dos botões assim que a janela surge (antes de os botões chegarem). Não deve escolher
   // nada nem fechar a janela: no achado, adianta a cerimônia; na festa, completa a revelação. Fora da lista padrão.
   { nome: "rapido", cenario: "raridades", classe: "arqueiro", rapido: true, passos: [
@@ -61,7 +67,7 @@ const SITUACOES = [
   { nome: "rapido-nivel", cenario: "nivel", classe: "guerreiro", rapido: true, passos: [
     { festa: ".festa-espolio .continuar", foto: "espolio", fechar: "clique" },
     { cedo: "#celebracao .festa", festa: "#celebracao .festa", foto: "nivel", fechar: "tecla" }] },
-].filter((s) => (so ? so.split(",").includes(s.nome) : !s.rapido && !s.video));
+].filter((s) => (so ? so.split(",").includes(s.nome) : !s.rapido && !s.video && !s.extra));
 const QUAL = process.env.PROTOTIPO || "";  // "1": a primeira proposta; o nome de uma direção: a segunda rodada
 const PROTO = !QUAL ? null : ["1", "brilho"].includes(QUAL) ? path.join(AQUI, "../prototipo") : path.join(AQUI, "../prototipo-v2", QUAL);
 const [vw, vh] = (process.env.JANELA || "1920x945").split("x").map(Number);

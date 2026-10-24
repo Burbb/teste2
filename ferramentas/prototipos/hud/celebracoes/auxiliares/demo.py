@@ -29,9 +29,17 @@ CENARIOS = [("nivel", "Um nível (do 1 ao 2, dois lobos)", "guerreiro"),
             ("especializacao", "A especialização escolhida", "mago"),
             ("limites", "SIMULAÇÃO de limites: textos longos e seis ganhos (fora das regras)", "guerreiro"),
             ("nivel_especializacao", "Sequência: nível 4 e, em seguida, a especialização (a dos vídeos)", "mago"),
-            ("raridades_sigilo", "Sequência: as quatro raridades e o Sigilo (a dos vídeos)", "arqueiro")]
+            ("raridades_sigilo", "Sequência: as quatro raridades e o Sigilo (a dos vídeos)", "arqueiro"),
+            ("itens_estouro", "Itens do Estouro: dois raros e dois lendários de silhuetas diferentes", "guerreiro"),
+            ("spec_piromante", "Especialização: Piromante (mago; aprovado)", "mago"),
+            ("spec_paladino", "Especialização: Paladino (guerreiro)", "guerreiro"),
+            ("spec_berserker", "Especialização: Berserker (guerreiro)", "guerreiro"),
+            ("spec_patrulheiro", "Especialização: Patrulheiro (arqueiro; depois, a escolha do companheiro)", "arqueiro"),
+            ("spec_sombra", "Especialização: Sombra (arqueiro)", "arqueiro"),
+            ("spec_necromante", "Especialização: Necromante (mago)", "mago")]
 # as versões: o valor de PROTOTIPO (vazio: o jogo como está) e o rótulo
-VERSOES = [("estouro3", "B3 · Estouro (padrão pretendido)"), ("relicario3", "A3 · Relicário"), ("", "Jogo atual"),
+VERSOES = [("estouro4", "B4 · Estouro (padrão pretendido)"), ("relicario4", "A4 · Relicário"), ("", "Jogo atual"),
+           ("estouro3", "B3 · aprovado"), ("relicario3", "A3 · aprovado"),
            ("estouro2", "B2 · anterior"), ("relicario2", "A2 · anterior"), ("relicario", "A · 1ª versão"),
            ("estouro", "B · 1ª versão"), ("estandarte", "C · reservada"), ("brilho", "1ª proposta")]
 NOMES = dict(VERSOES)
@@ -74,7 +82,7 @@ def pagina():
     linhas = []
     for cid, rotulo, classe in CENARIOS:
         botoes = " ".join(
-            f'<a class="b{" p" if v in ("relicario3", "estouro3") else " h" if v else ""}" href="/iniciar?{html.escape(urlencode({"cenario": cid, "versao": v, "classe": classe}))}">{nome}</a>'
+            f'<a class="b{" p" if v in ("relicario4", "estouro4") else " h" if v else ""}" href="/iniciar?{html.escape(urlencode({"cenario": cid, "versao": v, "classe": classe}))}">{nome}</a>'
             for v, nome in VERSOES)
         linhas.append(f"<tr><td>{html.escape(rotulo)}<br><small>classe: {classe}</small></td><td>{botoes}</td></tr>")
     opcoes = "".join(f"<option>{c}</option>" for c in CLASSES)
@@ -90,8 +98,9 @@ a.b.p{{border-color:#f2c94c;color:#f2c94c;font-weight:bold}} a.b.h{{color:#8a807
 <h1>Demonstração da etapa 2 (protótipo, nada no jogo)</h1>
 <p class="nota">Cada botão encerra o cenário anterior e começa outro do zero, numa partida de teste com saves
 temporários (o seu save não é tocado). Na página, clique em "Começar o teste"; no canto de baixo, "repetir" e "painel".
-B3 (Estouro, o padrão pretendido) e A3 (Relicário) são as duas apresentações desta rodada, em destaque; a
-especialização do mago (Piromante) traz a identidade de fogo. As outras são o histórico, em cinza. Movimento
+B4 (Estouro, o padrão pretendido, com o selo dos itens retocado) e A4 (Relicário) são as duas apresentações desta
+rodada, em destaque, com a identidade de cada especialização (as linhas "Especialização" já usam a classe certa). As
+outras são o histórico, em cinza (A3 e B3, aprovados, para comparar). Movimento
 reduzido: F12 → ⋮ → More tools → Rendering → prefers-reduced-motion: reduce, e "repetir".</p>
 <table>{''.join(linhas)}</table>
 <form action="/iniciar">Outra classe: <select name="cenario">{cens}</select> <select name="classe">{opcoes}</select>

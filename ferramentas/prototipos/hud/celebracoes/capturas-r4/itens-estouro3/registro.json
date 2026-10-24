@@ -1,0 +1,17 @@
+{
+ "itens-estouro": {
+  "erros": [],
+  "avisos": [],
+  "linha": [
+   "raro1: apareceu em 1726 ms",
+   "raro1: fechado (deixar) em 3788 ms",
+   "lendario1: apareceu em 4853 ms",
+   "lendario1: fechado (deixar) em 6627 ms",
+   "raro2: apareceu em 7459 ms",
+   "raro2: fechado (deixar) em 9297 ms",
+   "lendario2: apareceu em 10132 ms",
+   "lendario2: fechado (deixar) em 11907 ms",
+   "achados: botões 443, 590, 444, 598 ms depois do cartão"
+  ]
+ }
+}

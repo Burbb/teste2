@@ -148,9 +148,36 @@ def limites(ui):
     rodar(g)
 
 
+def especializacao_em(spec):
+    """TESTE: no nível 4, a especialização `spec`, na classe dela (a classe do painel não vale aqui)."""
+    from rpg.classes import SPECS
+
+    def cenario(ui):
+        os.environ["CLASSE"] = SPECS[spec]["classe"]
+        g = heroi(ui, niveis=3)
+        g.especializar(spec)
+        rodar(g)
+    return cenario
+
+
+def itens_estouro(ui):
+    """TESTE: dois raros e dois lendários de silhuetas diferentes (espaços diferentes), para o selo do Estouro."""
+    g = heroi(ui)
+    rng, vistos = random.Random(21), set()
+    for rar in ("raro", "lendario", "raro", "lendario"):
+        for _ in range(60):  # o primeiro de um espaço ainda não visto (a raridade e as regras são as do gerador)
+            it = gerar_equip(rng, g.j.classe, 3, raridade=rar)
+            if it.get("slot") not in vistos:
+                break
+        vistos.add(it.get("slot"))
+        g.oferecer_equip(it)
+    rodar(g)
+
+
 CENARIOS = {"nivel": nivel, "dois_niveis": dois_niveis, "raridades": raridades, "nivel4": nivel4, "sigilo": sigilo,
             "especializacao": especializacao, "limites": limites, "nivel_especializacao": nivel_especializacao,
-            "raridades_sigilo": raridades_sigilo}
+            "raridades_sigilo": raridades_sigilo, "itens_estouro": itens_estouro,
+            **{f"spec_{k}": especializacao_em(k) for k in ("piromante", "paladino", "berserker", "patrulheiro", "sombra", "necromante")}}
 PROTOTIPOS = pathlib.Path(__file__).resolve().parents[1]
 TROCADOS = {"telas/celebracoes.js": "celebracoes.js", "telas/achado.js": "achado.js"}
 

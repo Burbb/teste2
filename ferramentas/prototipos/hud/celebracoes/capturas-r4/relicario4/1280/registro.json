@@ -1,0 +1,50 @@
+{
+ "spec-piromante": {
+  "erros": [],
+  "avisos": [],
+  "linha": [
+   "piromante: apareceu em 1546 ms",
+   "piromante: fechado (clique) em 3226 ms"
+  ]
+ },
+ "spec-paladino": {
+  "erros": [],
+  "avisos": [],
+  "linha": [
+   "paladino: apareceu em 1149 ms",
+   "paladino: fechado (clique) em 2765 ms"
+  ]
+ },
+ "spec-berserker": {
+  "erros": [],
+  "avisos": [],
+  "linha": [
+   "berserker: apareceu em 1372 ms",
+   "berserker: fechado (clique) em 2993 ms"
+  ]
+ },
+ "spec-patrulheiro": {
+  "erros": [],
+  "avisos": [],
+  "linha": [
+   "patrulheiro: apareceu em 988 ms",
+   "patrulheiro: fechado (clique) em 2632 ms"
+  ]
+ },
+ "spec-sombra": {
+  "erros": [],
+  "avisos": [],
+  "linha": [
+   "sombra: apareceu em 1271 ms",
+   "sombra: fechado (clique) em 2877 ms"
+  ]
+ },
+ "spec-necromante": {
+  "erros": [],
+  "avisos": [],
+  "linha": [
+   "necromante: apareceu em 994 ms",
+   "necromante: fechado (clique) em 2625 ms"
+  ]
+ }
+}

@@ -98,5 +98,18 @@ const b = await chromium.launch();
   conferir("sem erros na página", !erros.length, erros.join("; "));
   await p.context().close(); proc.kill();
 }
+// 4. as especializações: Esc fecha, o palco sai; no Patrulheiro, o clique que fecha não escolhe o companheiro
+for (const spec of ["sombra", "patrulheiro"]) {
+  const { p, proc, erros } = await abrir(b, `spec_${spec}`, "arqueiro");
+  await p.waitForSelector("#celebracao .festa"); await espera(900);
+  const antes = await p.evaluate(() => window.__respostas);
+  if (spec === "sombra") { await p.keyboard.press("Escape"); }
+  else { const c = await p.$("#celebracao .continuar"), r = await c.boundingBox(); await p.mouse.dblclick(r.x + r.width / 2, r.y + r.height / 2); }
+  await espera(1500);
+  conferir(`${spec}: a festa fechou e o palco saiu`, !(await festaAberta(p)) && (await palcos(p)) === 0, `palcos: ${await palcos(p)}`);
+  conferir(`${spec}: nenhuma escolha mandada pelo gesto que fechou`, (await p.evaluate(() => window.__respostas)) === antes);
+  conferir(`${spec}: sem erros na página`, !erros.length, erros.join("; "));
+  await p.context().close(); proc.kill();
+}
 await b.close();
 console.log(`${process.env.PROTOTIPO || "jogo atual"}:\n  ${resultados.join("\n  ")}`);

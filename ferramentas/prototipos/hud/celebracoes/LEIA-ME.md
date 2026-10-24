@@ -6,14 +6,65 @@
 ## Testar no navegador (a demonstração)
 
 `demo.bat` (ou `python ferramentas/prototipos/hud/celebracoes/auxiliares/demo.py`) monta as direções e abre o painel em
-**http://127.0.0.1:8765/**. Cada cenário abre em **B3 · Estouro** (o padrão pretendido) e **A3 · Relicário** (as
-apresentações desta rodada, em destaque), no **jogo atual** ou no histórico (B2, A2, A, B, C reservada, 1ª proposta, em
-cinza); um formulário troca a classe (o mago chega ao Piromante). Cada botão encerra o cenário anterior e
+**http://127.0.0.1:8765/**. Cada cenário abre em **B4 · Estouro** (o padrão pretendido) e **A4 · Relicário** (as
+apresentações desta rodada, em destaque), no **jogo atual** ou no histórico (B3 e A3 aprovados, B2, A2, A, B, C
+reservada, 1ª proposta, em cinza); um formulário troca a classe; cada especialização tem a sua linha. Cada botão encerra o cenário anterior e
 sobe outro do zero, num processo com saves temporários (o save do jogo não é tocado); na página, "Começar o teste"; no
 canto de baixo, "repetir" e "painel" (essa faixa só existe na demonstração). O servidor de teste (`cenarios_teste.py`,
 `PROTOTIPO=<direção>`) serve `telas/celebracoes.js` e `telas/achado.js` montados em `prototipo-v2/<direção>/`.
 Movimento reduzido: no Chrome/Edge, F12 → ⋮ → More tools → Rendering → "Emulate CSS media feature
 prefers-reduced-motion" → reduce, e "repetir" (ou "Mostrar animações" desligado no Windows, para o sistema todo).
+
+## Quarta rodada (24/10/2026): o selo dos itens no Estouro e as identidades das especializações
+
+**Aprovado pelo Jean:** A3 e B3 (com a ressalva do selo dos itens no Estouro) e o Piromante nas duas apresentações.
+As versões desta rodada são cópias: **A4 · Relicário** (`v2/relicario4.js`) e **B4 · Estouro** (`v2/estouro4.js`);
+A3 e B3 ficam como referência aprovada.
+
+**O selo dos itens (B4):** o miolo colorido e a proximidade da B2 voltam (o selo menor, a cor e a explosão abraçando o
+item; o raro em ouro escuro), com só uma separação escura pequena em volta do sprite; o item no mesmo tamanho. Os
+botões, o clarão concentrado, o acento do mágico e os outros acabamentos da B3 ficam. Conferido com dois raros e dois
+lendários de silhuetas diferentes (peito, anel, pés, mãos; o cenário `itens_estouro`). Nível, Sigilo, especialização e
+o Relicário não foram reabertos.
+
+**As identidades** (`v2/identidades.js`; o piloto do fogo virou a primeira de seis). Levantamento do catálogo
+(`rpg/classes.py`, SPECS, e as habilidades novas de cada uma) e a direção de cada uma, antes do desenho:
+
+| Especialização | Tema no jogo | Paleta | Comportamento | O que a distingue |
+|---|---|---|---|---|
+| Piromante (aprovado) | A Chama Viva: Inferno, Combustão, Fênix | ouro, laranja, brasa | chamas nascendo do topo das letras e subindo; brasas | o único que queima: a forma sobe da letra |
+| Paladino | Juramento da Luz: Golpe Sagrado, Prece, Julgamento Divino | branco, pergaminho, ouro velho | colunas de luz descendo sobre o nome e pulsando devagar; brilhos nas pontas das letras; partículas de luz subindo | o único que desce: luz vertical, calma, sem fagulha |
+| Berserker | Pacto de Sangue: Sede de Sangue, Redemoinho, Fúria Cega | vermelho-sangue, quase preto | fissuras se abrindo dos dois lados do nome; sangue escorrendo e pingando da base das letras; um anel que bate como um coração (dois golpes e uma pausa) | o ritmo pulsado e o peso para baixo |
+| Patrulheiro | Guardião das matas: companheiro animal, Fúria da Natureza | verde-folha, verde-escuro, marrom | rajadas de vento da esquerda para a direita levando folhas que giram, com riscos de vento | o único com movimento lateral, orgânico |
+| Sombra | Irmandade da Sombra: Desaparecer, Flecha Envenenada, Execução | cinza-fumo, violeta escuro, verde do veneno | fumaça saindo das bordas das letras; véus de sombra rastejando para os lados; um corte de lâmina cruzando o nome de tempos em tempos; gotas de veneno | o contido e furtivo: quase sem cor, o corte como o único clarão |
+| Necromante | O Sussurro do Túmulo: Drenar Vida, Erguer Servo, Maldição | verde-espectral, violeta, preto | almas com rastro vindo de longe em espiral e entrando no nome (o dreno); um círculo de maldição com runas girando em degraus no chão | o único que puxa para dentro |
+
+Em todas: o nome estável, em faixas duras na cor da identidade, com a borda e uma sombra escura; os efeitos nas
+bordas e em volta, sobre um poço escuro logo atrás do nome; a descrição, os ícones e o botão fora do alcance. Com o
+movimento reduzido, cada uma tem um quadro parado próprio (as chamas, as colunas, as fissuras e gotas, as folhas, a
+fumaça e o corte, as almas e o círculo). A identidade vale só para a celebração da especialização; as raridades, o
+nível e o Sigilo não mudam. Escolhida pelo nome da especialização (o evento não manda o id; na integração, o id vem do
+motor). Nas duas apresentações a identidade é a mesma; a apresentação muda a entrada (os raios girando do Relicário, o
+estouro com a base escura do Estouro).
+
+**Conferido:** as seis em 1920×945 e 1280×720 (a entrada aos 150 ms e a sustentação aos 2,6 s), no movimento reduzido;
+o nome mais longo (Necromante, Patrulheiro) cabe nas duas. `auxiliares/gestos.mjs` nas duas: o de antes (tecla
+segurada, Esc, clique duplo, clique e Enter rápidos, transição sem atravessar, limpeza dos efeitos, sem erros) e,
+nas especializações, Sombra (Esc) e Patrulheiro (clique duplo; a escolha do companheiro vem depois e não é escolhida
+pelo gesto): a festa fecha, o palco sai, nenhuma escolha mandada.
+
+**Demonstração:** o painel tem uma linha por especialização (cada uma já na classe dela) e a dos itens do Estouro;
+B4 e A4 em destaque, A3 e B3 aprovados para comparar.
+
+**Vídeos** (`para-avaliacao/`, sem áudio; os anteriores ficam): `r4-0-estouro-itens-antes-e-depois.webm` (B3 e,
+em seguida, B4, com os mesmos quatro itens), `r4-1` e `r4-2` (o Estouro: Piromante, Paladino, Berserker; Patrulheiro,
+Sombra, Necromante), `r4-3` e `r4-4` (o Relicário, na mesma ordem). A faixa do canto diz a versão. Folhas em
+`capturas-r4/`: `folha-r4-especializacoes.png`, `folha-r4-especializacoes-1280.png`, `folha-r4-itens-estouro.png`.
+
+**Limitações vistas:** o som não foi ouvido; os efeitos são gerados em tempo real (cada repetição é um pouco
+diferente); o corte da Sombra passa por cima do nome durante dois quadros (de propósito, é o "golpe"); no Paladino do
+Relicário, as colunas e os raios claros juntos pesam mais no alto que nos outros; a identidade depende da fonte do
+título carregada para achar o contorno das letras.
 
 ## Terceira rodada (24/10/2026): duas apresentações e a identidade do Piromante
 

@@ -44,6 +44,30 @@ def rodada3():
     folha(["A3 · 1280×720", "B3 · 1280×720", "A3 · reduzido", "B3 · reduzido"], linhas, R3 / "folha-r3-apertados.png")
 
 
+def rodada4():
+    """A quarta rodada: as seis especializações nas duas apresentações (a entrada, a sustentação, 1280×720 e o movimento
+    reduzido) e o selo dos itens do Estouro, B3 × B4."""
+    R4 = BASE / "capturas-r4"
+    meio = (480, 40, 1440, 620)
+    specs = [("piromante", "Piromante (aprovado)"), ("paladino", "Paladino"), ("berserker", "Berserker"),
+             ("patrulheiro", "Patrulheiro"), ("sombra", "Sombra"), ("necromante", "Necromante")]
+    linhas = []
+    for k, rot in specs:
+        ims = []
+        for d in ("estouro4", "relicario4"):
+            ims += [quadro(R4 / d / "1920" / f"spec-{k}-{k}-{ms}.png", meio, 0.36) for ms in ("0150", "2600")]
+        ims += [quadro(R4 / d / "reduzido" / f"spec-{k}-{k}-1500.png", meio, 0.36) for d in ("estouro4", "relicario4")]
+        linhas.append((rot, ims))
+    folha(["B4 · entrada (150 ms)", "B4 · depois (2,6 s)", "A4 · entrada (150 ms)", "A4 · depois (2,6 s)", "B4 · reduzido", "A4 · reduzido"],
+          linhas, R4 / "folha-r4-especializacoes.png")
+    linhas = [(rot, [quadro(R4 / d / "1280" / f"spec-{k}-{k}-1500.png", None, 0.42) for d in ("estouro4", "relicario4")]) for k, rot in specs]
+    folha(["B4 · 1280×720", "A4 · 1280×720"], linhas, R4 / "folha-r4-especializacoes-1280.png")
+    caixa = (480, 200, 1300, 640)
+    linhas = [(f"{rot} (real)", [quadro(R4 / f"itens-{d}" / f"itens-estouro-{f}-1500.png", caixa, 0.55) for d in ("estouro3", "estouro4")])
+              for f, rot in (("raro1", "Raro, peito"), ("lendario1", "Lendário, anel"), ("raro2", "Raro, pés"), ("lendario2", "Lendário, mãos"))]
+    folha(["B3 · antes", "B4 · depois"], linhas, R4 / "folha-r4-itens-estouro.png")
+
+
 if __name__ == "__main__":
     import sys
-    rodada3() if "r3" in sys.argv else main()
+    rodada4() if "r4" in sys.argv else rodada3() if "r3" in sys.argv else main()
