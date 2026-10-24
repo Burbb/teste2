@@ -90,7 +90,7 @@ const Festa = (() => {
   /** A janela do achado (no lugar de Telas.abrirAchado): o HTML da direção, os botões reservados (os rótulos que vêm
    *  com o cartão, invisíveis: a janela já nasce no tamanho final) e a entrada da direção. */
   async function abrirAchado(d, semCerimonia = false) {
-    Telas.fecharAchado();
+    Telas.fecharAchado(true);  // a anterior, mesmo esmaecendo, sai já: só uma #sobre-achado na página
     const fundo = document.createElement("div");
     fundo.id = "sobre-achado";
     fundo.className = `sobreposicao achado-v2 dir-${direcao.nome} rar-${h(d.item.raridade)}`;

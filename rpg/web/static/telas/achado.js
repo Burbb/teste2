@@ -34,13 +34,19 @@
       </div>${eq}</div>`;
   }
   /** Onde a pergunta "o que fazer com o item?" põe os botões (null se a janela não está aberta). */
-  function acoesDoAchado() { return document.querySelector("#sobre-achado .achado-acoes"); }
-  function fecharAchado() {
+  function acoesDoAchado() { return document.querySelector("#sobre-achado:not(.saindo) .achado-acoes"); }
+  /** A janela some pelo esmaecer dela (06-talentos-avisos.css), ainda com o id: o desenho da apresentação vem dele.
+   *  Antes, o id saía no começo do esmaecer, e a janela que sumia voltava por um instante ao desenho antigo (a moldura,
+   *  o fundo, o brilho verde do "Vestido"). `agora`: sai sem esmaecer (outra janela vai abrir no lugar dela). */
+  function fecharAchado(agora = false) {
     const f = document.getElementById("sobre-achado");
     if (!f) return;
-    f.id = "";  // a próxima janela (outro item logo em seguida) já pode abrir enquanto esta some
-    f.classList.add("saindo");
-    setTimeout(() => f.remove(), 220);
+    if (agora) { f.remove(); return; }
+    if (f.classList.contains("saindo")) return;
+    f.classList.add("saindo");  // e não recebe mais clique (o 2º clique de um duplo não acerta o que está sumindo)
+    const tirar = () => f.remove();
+    f.addEventListener("animationend", (ev) => { if (ev.target === f) tirar(); });
+    setTimeout(tirar, 300);
   }
 
   Telas.registrar("achado", achado);

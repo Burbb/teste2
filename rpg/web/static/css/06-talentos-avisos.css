@@ -185,7 +185,7 @@ body.derrotado #predios { visibility: hidden; }
 .botao-janela.perigo { border-color: #8a2a1c; color: #ffb3a8; }
 .botao-janela.perigo:hover, .botao-janela.perigo:focus-visible { border-color: var(--sangue-2); color: #ffd0c8; }
 #sobre-achado { z-index: 30; background: rgba(5, 4, 3, 0.72); }
-#sobre-achado.saindo { animation: some 0.22s ease-in forwards; }
+#sobre-achado.saindo { animation: some 0.22s ease-in forwards; pointer-events: none; }
 .janela-achado { padding: 16px 18px 18px; background: rgba(18, 13, 9, 0.96); border: 3px solid #5a4630; box-shadow: 4px 4px 0 #000; }
 /* Numa tela muito baixa, a janela rola por dentro em vez de passar da borda. */
 .janela-achado { max-height: calc(100vh - 12px); overflow-y: auto; }
