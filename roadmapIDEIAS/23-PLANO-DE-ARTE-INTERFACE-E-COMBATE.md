@@ -1205,6 +1205,14 @@ ou mudanças de dados por iniciativa do agente.
   protagonista, a comparação numa peça só, comum e mágico mais contidos, a sustentação depois da entrada; na B2, o selo
   de miolo escuro e a faixa de ferro no lugar da fita e do contorno de quadrinhos. A2 e B2 no painel; quatro vídeos em
   `para-avaliacao/`. Na integração, o ícone da habilidade nova entra no evento da festa (hoje só no servidor de teste).
+- **Duas apresentações e o piloto de identidade (24/10/2026, nada no jogo):** Relicário e Estouro ficam disponíveis,
+  o Estouro como padrão pretendido; a escolha entre eles fica para as futuras opções do jogo. A apresentação faz a
+  composição e a entrada; a identidade da especialização (as cores e o comportamento) é separada. Piloto só no
+  Piromante (o nome em ouro e laranja, a borda incandescente, chamas em pixel nascendo das letras, o fundo de fogo), nas
+  duas apresentações; as outras especializações depois da avaliação e da conferência do catálogo. Acabamento: o clarão
+  concentrado na origem, os botões em ferro e latão, o acento parado do mágico, a base preta do título do Estouro, o
+  miolo escuro do selo do item. Os ícones antigos das habilidades ficam para a etapa do Grimório. Na integração: o id
+  da especialização e o ícone da habilidade nova no evento da festa.
 - **Dependências do procedural** (para o levantamento da retirada): o covil, o vencido, a cidadela e a "selada" só
   existem lá; a legenda fixa dos nove desenhos; `MapaPx.sprite` cai no bioma para a `saida` da campanha; os glifos de
   `rpg/mapa.py`; o `fechado` da campanha não chega à tela como campo.
@@ -1373,7 +1381,8 @@ volta à pauta quando essa expansão exigir; não é uma migração de engine.
    chapéu estão reservados.
 3. **1E.4, integrada na 1.200.0 (23/10/2026)**; a lista de Caminhos na 1.200.1. **Etapa 2, o primeiro lote em
    avaliação, segunda rodada** (três direções da subida de nível com as celebrações e a raridade, só no protótipo;
-   item 1.12); o Jean escolheu refinar A e B (24/10/2026): A2 e B2 em avaliação, a C reservada. Histórico: **1E.4, em avaliação (23/10/2026):** o levantamento e o primeiro lote de protótipos (a posição, os caminhos, os
+   item 1.12); o Jean escolheu refinar A e B (24/10/2026) e depois manter as duas como apresentações disponíveis, o
+   Estouro como padrão pretendido (a troca vai para as opções do jogo); A3 e B3 e o piloto do Piromante em avaliação. Histórico: **1E.4, em avaliação (23/10/2026):** o levantamento e o primeiro lote de protótipos (a posição, os caminhos, os
    símbolos e as marcas; detalhes em "A 1E.4 em 23/10/2026", no item 1.12). O Jean escolheu a direção B (a A fica como
    alternativa); aprovados como base a plaqueta B, a cancela, os caminhos e as marcas; a vila e a floresta nativas
    aprovadas (`094bb80a`: 32 no minimapa, 48 no mapa grande); o pântano e as ruínas aprovados (`c7bd2348`); em

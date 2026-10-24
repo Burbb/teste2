@@ -7035,3 +7035,18 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   `ferramentas/prototipos/hud/celebracoes/para-avaliacao/`; a folha `capturas-refino/folha-refino.png`.
 - **Agora:** a avaliação do Jean (os vídeos vão também para outra avaliação externa). Carregar jogo e criação de
   personagem, os retratos suspensos e o Grimório continuam parados.
+
+### 24/10/2026 (data do computador local) — Etapa 2: duas apresentações e o piloto do Piromante (protótipo)
+
+- **Decisão do Jean:** Relicário e Estouro ficam como duas apresentações disponíveis, o **Estouro como padrão
+  pretendido**; a troca entre elas vai para as futuras opções do jogo. Nada integrado.
+- **No protótipo** (`ferramentas/prototipos/hud/celebracoes/`, cópias A3 e B3; A2 e B2 como histórico): o clarão
+  concentrado na origem, os botões em ferro escuro com aresta de latão, o acento azul parado do mágico, a base preta
+  irregular do título do Estouro, o miolo escuro do selo do item. A identidade separada da apresentação
+  (`v2/identidade.js`), piloto só no Piromante: o nome em ouro e laranja com a borda incandescente e chamas em pixel
+  nascendo do contorno das letras.
+- **Registrado para depois:** os ícones antigos das habilidades, para a etapa do Grimório; as outras especializações,
+  depois da avaliação do piloto e da conferência do catálogo; na integração, o id da especialização e o ícone da
+  habilidade nova no evento da festa.
+- **Para avaliar:** o painel (`demo.bat`, http://127.0.0.1:8765/) com B3 e A3 em destaque; os vídeos `r3-*.webm` sem
+  áudio em `para-avaliacao/`; as folhas em `capturas-r3/`; os gestos em `auxiliares/gestos.mjs`.
