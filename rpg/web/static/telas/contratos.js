@@ -8,11 +8,9 @@
   /** A missão da campanha no diário, na ordem de quem volta ao jogo: o objetivo de agora e onde; a novidade mais
    *  recente; os caminhos e preparos que importam agora; e, fechado, o histórico da investigação (com o dia de cada
    *  passo quando ele foi registrado; o que um save antigo já sabia aparece sem data). */
-  /** O "!" do mapa ao lado do destino que o mapa marca (o objetivo da missão, o contrato em andamento): o mesmo
-   *  selo, com o significado para leitores de tela e no passar do mouse. */
-  const MARCA_MAPA = ' <span class="marca-contrato marca-no-texto" role="img" aria-label="marcado no mapa" title="Marcado no mapa">!</span>';
   function missaoDiario(m) {
-    const lugar = m.lugar ? `${S(MapaPx.sprite({ tipo: m.lugar_tipo, bioma: m.bioma }), 1)} ${h(m.lugar)}${m.lugar_id != null ? MARCA_MAPA : ""}${m.distancia ? ` · ${Texto.plural(m.distancia, "trecho")}` : m.distancia === 0 ? " · você está aqui" : ""}` : "";
+    // o lugar com o símbolo do minimapa (32) e, ao lado do nome, a marca que o mapa põe nele (a plaqueta da missão)
+    const lugar = m.lugar ? `${MapaPx.simboloHTML({ tipo: m.lugar_tipo, bioma: m.bioma })} ${h(m.lugar)}${m.lugar_id != null ? MapaPx.marcasHTML(m.lugar_id, "missao") : ""}${m.distancia ? ` · ${Texto.plural(m.distancia, "trecho")}` : m.distancia === 0 ? " · você está aqui" : ""}` : "";
     // O que um caminho pede (o rito, a denúncia): o que já está feito e o que falta, com onde se consegue (o motor
     // diz; a tela só desenha).
     const req = m.requisitos;
@@ -64,7 +62,12 @@
     const arte = c.tipo === "entrega" ? "saco" : c.retrato || "caveira";
     const titulo = c.tipo === "alvo" ? c.alvo : c.tipo === "entrega" ? (c.objeto || "Entrega") : c.desc.replace(/^Eliminar /, "").replace(/ em .*$/, "");
     const perigo = c.nivel == null ? "" : c.nivel - nivelHeroi >= 2 ? "alto" : c.nivel >= nivelHeroi ? "medio" : "baixo";
-    const lugar = `${S(MapaPx.sprite({ tipo: c.lugar_tipo, bioma: c.bioma }), 1)} ${h(c.lugar)}${ativo && !c.concluido ? MARCA_MAPA : ""}${c.distancia != null ? ` · ${Texto.plural(c.distancia, "trecho")}` : ""}${c.nivel != null ? ` <span class="perigo-tag ${perigo}">Nv.${c.nivel}</span>` : ""}`;
+    // o lugar com o símbolo do minimapa (32): o nome (com o cartaz do mapa, no contrato em andamento) e, numa segunda
+    // linha, a distância e o nível juntos ("2 trechos · Nv.1"), sem separador sobrando quando falta um deles
+    const segunda = [c.distancia != null ? Texto.plural(c.distancia, "trecho") : "", c.nivel != null ? `<span class="perigo-tag ${perigo}">Nv.${c.nivel}</span>` : ""]
+      .filter(Boolean).join(" · ");
+    const lugar = `${MapaPx.simboloHTML({ tipo: c.lugar_tipo, bioma: c.bioma })}<span class="contrato-onde"><span class="contrato-nome">${h(c.lugar)}` +
+      `${ativo && !c.concluido ? MapaPx.marcasHTML(c.lugar_id, "contrato") : ""}</span>${segunda ? `<span class="contrato-dist">${segunda}</span>` : ""}</span>`;
     let progresso = "";
     if (ativo && c.tipo === "caca" && c.progresso && !c.recebendo) {
       const [feito, total] = c.progresso.split("/").map(Number);

@@ -134,23 +134,47 @@
 .caminho.clicavel:hover { --anel: var(--anel-a); background-color: var(--p-z); }
 
 /* Mapa pixelado, num nicho escuro com filete de bronze e esquadros de ouro velho nos cantos. */
-.mapa-px { position: relative; margin-top: 12px; background: var(--p-k); overflow: hidden; }
+/* Desde a 1.200.0 (mapa.js): o canvas na escala inteira (a largura vem do mapa.js, em pixels), as peças 1:1 por cima. */
+.mapa-px { position: relative; margin: 12px auto 0; background: var(--p-k); overflow: hidden; }
 #mapa-mini .mapa-px { border: var(--borda) solid var(--p-J); border-image: var(--retrato-a) 3 / calc(var(--P) * 3) stretch; }
 .mapa-px .no-btn, .mapa-px .rotulo-mapa { z-index: 1; }  /* os nomes e os destinos ficam acima da sombra das bordas */
-.mapa-px canvas { display: block; width: 100%; height: auto; }
+.mapa-px canvas { display: block; }
+.mapa-px .simbolo-lugar, .mapa-px .peca-mapa, .mapa-px .pos-heroi { position: absolute; pointer-events: none; image-rendering: pixelated; }
+:root body .mapa-px img.simbolo-lugar { margin: 0; }
+.mapa-px .simbolo-lugar.apagado { opacity: .6; }  /* conhecido, ainda não visitado */
+.mapa-px .peca-mapa.marca, .mapa-px .pos-heroi { z-index: 2; }
+.mapa-px .pos-heroi img { position: absolute; left: 0; top: 0; image-rendering: pixelated; }
+.mapa-px .pos-heroi.dir img.moldura { transform: scaleX(-1); }  /* a plaqueta de lado, espelhada à direita do lugar */
 .mapa-px .no-btn { position: absolute; width: 28px; height: 28px; margin: -14px 0 0 -14px; border: 0; background: transparent; padding: 0; cursor: default; }
 .mapa-px.grande .no-btn { width: 40px; height: 40px; margin: -20px 0 0 -20px; }
 .mapa-px .no-btn.clicavel { cursor: pointer; }
 .mapa-px .no-btn.clicavel::before { content: ""; position: absolute; inset: -2px; border: 2px dashed var(--ouro); animation: pulsa-px 1.6s ease-in-out infinite; }
 @keyframes pulsa-px { 50% { transform: scale(1.22); opacity: 0.65; } }
 .mapa-px .no-btn.clicavel:hover::before { border-style: solid; border-color: #fff3a0; inset: -6px; animation: none; }
-.mapa-px .no-btn.atual::after { content: ""; position: absolute; inset: -4px; border: 3px solid #fff3a0; animation: anel-px 1.5s cubic-bezier(.2, .7, .4, 1) infinite; }
+/* o tracejado acompanha o símbolo de 48 do mapa grande (o clique continua no botão de 40) */
+.mapa-px.grande .no-btn.clicavel::before { inset: -6px; }
+.mapa-px.grande .no-btn.clicavel:hover::before { inset: -9px; }
+/* o destino bloqueado (a regra da viagem): continua clicável (a viagem diz o porquê), sem o ouro nem o pulso do convite */
+.mapa-px .no-btn.bloqueado.clicavel::before { border-color: #8a7a6a; animation: none; }
+.mapa-px .no-btn.atual:not(.com-plaqueta)::after { content: ""; position: absolute; inset: -4px; border: 3px solid #fff3a0; animation: anel-px 1.5s cubic-bezier(.2, .7, .4, 1) infinite; }
 @keyframes anel-px { 0% { transform: scale(0.95); opacity: 1; } 100% { transform: scale(1.6); opacity: 0; } }
 .mapa-px .rotulo-mapa { position: absolute; transform: translate(-50%, 0); white-space: nowrap; font-family: var(--num); font-size: 15px; line-height: 1; color: var(--tinta); text-shadow: 2px 0 0 #000, -2px 0 0 #000, 0 2px 0 #000, 0 -2px 0 #000; pointer-events: none; }
 .mapa-px.grande .rotulo-mapa { font-size: 19px; }
+.mapa-px.estreito .rotulo-mapa { font-size: 13px; }
+/* o nome apertado entre a borda e um vizinho (mapa.js, encaixarRotulos): em duas linhas, centrado */
+.mapa-px .rotulo-mapa.duas-linhas { text-align: center; line-height: 1.05; }
 .mapa-px .rotulo-mapa.atual { color: var(--ouro); }
 .mapa-px .rotulo-mapa.perigo { color: #ff8e80; }
 .mapa-px .rotulo-mapa.apagado { color: var(--tinta-3); }
+#mapa-legenda .peca-legenda { image-rendering: pixelated; }
+#mapa-legenda .leg-plaqueta { position: relative; display: inline-block; width: 20px; height: 22px; }
+#mapa-legenda .leg-plaqueta img { position: absolute; left: 0; top: 0; image-rendering: pixelated; }
+#mapa-legenda .leg-plaqueta img.fig { left: 2px; top: 2px; width: 16px; height: 16px; }
+/* fora do mapa (as opções de viagem, o Diário, o mural): o símbolo do minimapa em 32 e as marcas do mapa em 1:1 */
+:root body img.simbolo-texto { width: 32px; height: 32px; image-rendering: pixelated; flex: none; vertical-align: middle; margin: -6px 0; }
+img.marca-texto { width: 9px; height: 11px; image-rendering: pixelated; vertical-align: 0; margin-left: 4px; cursor: default; }  /* informação com dica, não botão */
+.op-lugar { position: relative; display: inline-flex; align-items: center; flex: none; }
+.op-lugar .marca-texto { margin-left: 2px; align-self: flex-start; }
 .mapa-dica { font-size: 12px; color: var(--ouro); margin-top: 4px; text-align: center; animation: alerta 1.4s steps(2) infinite; }
 
 /* ------------------------------------------------------------------ telas (personagem, diário, bestiário, comitiva) */

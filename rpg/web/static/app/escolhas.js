@@ -288,7 +288,8 @@ function mostrarOpcoes(m) {
     }
     if (o.meta && o.meta.local !== undefined && estado) {
       const n = estado.mapa.nos.find((x) => x.id === o.meta.local);
-      if (n) icone = spr(MapaPx.sprite(n), 1);
+      // o destino com o símbolo do minimapa (32, 1:1) e as marcas do mapa (a missão, o contrato), desde a 1.200.0
+      if (n) icone = `<span class="op-lugar">${MapaPx.simboloHTML(n)}${MapaPx.marcasHTML(n.id)}</span>`;
     }
     const miudo = (n) => Icones.miudo(n) || spr(n, 1);
     if (o.meta && o.meta.item) icone = Icones.pequeno(o.meta.item) || miudo(Telas.iconeConsumivel(o.meta.item));
@@ -1068,7 +1069,7 @@ function atualizarMapasDaPagina() {
   textoEl.querySelectorAll("[data-mapa]").forEach((caixa) => {
     const clic = destinosClicaveis();
     caixa.innerHTML = "";
-    caixa.appendChild(MapaPx.criar(estado.mapa, { grande: true, clicaveis: clic, aoClicar: viajarPara, nivelHeroi: estado.heroi.nivel, marcas: marcasContrato(estado) }));
+    caixa.appendChild(MapaPx.criar(estado.mapa, { grande: true, caixa, clicaveis: clic, aoClicar: viajarPara, nivelHeroi: estado.heroi.nivel, marcas: marcasContrato(estado) }));
     if (clic.size) caixa.appendChild(el("div", "mapa-dica", "Clique num destino no mapa para viajar"));
   });
 }

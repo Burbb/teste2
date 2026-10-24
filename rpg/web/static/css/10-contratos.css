@@ -17,8 +17,12 @@
 .contrato.tipo-alvo .contrato-arte img { filter: sepia(0.6) contrast(1.2); }
 .contrato-titulo { font-weight: 600; font-size: 15px; text-align: center; line-height: 1.2; }
 .contrato-desc { font-size: 13px; line-height: 1.35; color: #4a3a28; }
-.contrato-lugar { font-size: 12px; color: #4a3a28; display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
-.contrato-lugar img.sprite { --s: 16; }
+.contrato-lugar { font-size: 12px; color: #4a3a28; display: flex; align-items: center; gap: 6px; }
+.contrato-lugar img.simbolo-texto { margin: 0; }
+/* o nome (com o cartaz do mapa) e, embaixo, a distância e o nível juntos; o nome longo quebra dentro da coluna */
+.contrato-onde { display: flex; flex-direction: column; min-width: 0; line-height: 1.25; }
+.contrato-nome { overflow-wrap: anywhere; }
+.contrato-dist { white-space: nowrap; }
 /* O nível do lugar no papel do cartaz: em tinta escura (o ouro e o verde claros do painel somem no pergaminho). */
 .contrato .perigo-tag { font-weight: 700; }
 .contrato .perigo-tag.baixo { color: #2e5a20; }
@@ -133,10 +137,6 @@
 .rastro-prog { display: flex; align-items: center; gap: 6px; }
 .rastro-prog .barra-px { flex: 1; height: 8px; }
 .rastro-prog small { font-family: var(--num); font-size: 15px; color: var(--tinta-2); }
-.marca-contrato { position: absolute; right: -5px; top: -7px; z-index: 2; min-width: 10px; padding: 0 2px; font-family: var(--num); font-size: 11px; line-height: 11px; text-align: center; color: #120e0b; background: var(--ouro); box-shadow: 0 0 0 1px #000; pointer-events: none; }
-/* O mesmo selo ao lado do nome do destino, no Diário: na linha do texto, sem a posição do mapa. */
-.marca-contrato.marca-no-texto { position: static; display: inline-block; margin-left: 4px; vertical-align: 1px; pointer-events: auto; cursor: default; }
-.mapa-px.grande .marca-contrato { right: -6px; top: -8px; min-width: 13px; font-size: 14px; line-height: 14px; animation: alerta 1.2s steps(2) infinite; }
 .no-btn.destacado { outline: 3px solid var(--ouro); outline-offset: 3px; }
 .faixa-jornada { display: flex; flex-wrap: wrap; gap: 18px; align-items: center; margin-bottom: 12px; font-family: var(--num); font-size: 19px; color: var(--tinta-2); }
 .faixa-jornada .barra-px { display: inline-block; width: 120px; vertical-align: middle; }

@@ -399,7 +399,7 @@ function desenharMundo(e) {
     ${(l.riscos || []).length ? `<div class="riscos-lugar">${l.riscos.map((r) => `<div class="risco-lugar ${esc(r.tipo || "")}">${Icones.miudo(r.icone) || spr(r.icone, 1)}<span>${esc(r.texto)}</span></div>`).join("")}</div>` : ""}<div id="mapa-mini"></div>
     ${Telas.rastreador(e.contratos, e.heroi.nivel, e.missoes, e.capitulo)}
     <div class="secao"><h3>Caminhos</h3><div class="caminhos">${caminhos || '<div class="vazio">nenhum</div>'}</div></div>`;
-  const mini = MapaPx.criar(e.mapa, { clicaveis: clic, aoClicar: viajarPara, nivelHeroi: e.heroi.nivel, marcas: marcasContrato(e), dicaDe: dicaDoLugar(e, clic) });
+  const mini = MapaPx.criar(e.mapa, { caixa: $("#mapa-mini"), clicaveis: clic, aoClicar: viajarPara, nivelHeroi: e.heroi.nivel, marcas: marcasContrato(e), dicaDe: dicaDoLugar(e, clic) });
   mini.title = "Abrir o mapa (M)";
   mini.addEventListener("click", (ev) => { if (!ev.target.closest(".clicavel")) alternarMapa(true); });
   $("#mapa-mini").appendChild(mini);
@@ -423,17 +423,12 @@ function desenharMundo(e) {
   });
 }
 
-function legendaMapa() {
-  return [["floresta", "floresta"], ["pantano", "pântano"], ["montanha", "montanha"], ["planicie", "planície"], ["ruinas", "ruínas"],
-    ["cidadela", "cidadela"], ["vila", "vila"], ["covil", "covil de guardião"], ["vencido", "covil vencido"]]
-    .map(([s, n]) => `<span>${spr(s, 1)} ${n}</span>`).join("");
-}
 function desenharMapaGrande() {
   if (!estado) return;
   const caixa = $("#mapa-grande");
   caixa.innerHTML = "";
-  caixa.appendChild(MapaPx.criar(estado.mapa, { grande: true, clicaveis: destinosClicaveis(), nivelHeroi: estado.heroi.nivel, marcas: marcasContrato(estado),
+  caixa.appendChild(MapaPx.criar(estado.mapa, { grande: true, caixa, clicaveis: destinosClicaveis(), nivelHeroi: estado.heroi.nivel, marcas: marcasContrato(estado),
     dicaDe: dicaDoLugar(estado, destinosClicaveis()),
     aoClicar: (id) => { alternarMapa(false); viajarPara(id); } }));
-  $("#mapa-legenda").innerHTML = legendaMapa();
+  $("#mapa-legenda").innerHTML = MapaPx.legenda(estado);  // só o que o mapa conhecido mostra, e as marcas
 }
