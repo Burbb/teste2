@@ -213,7 +213,8 @@
 :root body .rastro-contrato.cacavel:hover { background: rgba(255, 255, 255, 0.05); }
 :root body .rastro-cacar { color: var(--latao-claro); }
 :root body .rastro-arte { border: 1px solid var(--aresta); border-image: none; background: #0b0c0e; }
-:root body #mundo .caminho > img.desenho { width: 40px; height: 40px; margin: -4px 0; }
+/* o símbolo do lugar na lista de Caminhos: o 32 do minimapa, 1:1 (1.200.1; antes, o ícone antigo esticado a 40) */
+:root body #mundo .caminho > img.simbolo-texto { width: 32px; height: 32px; margin: 0; }
 
 /* ------------------------------------------------------------ títulos de seção: versal pequena com o fio */
 :root body :is(#heroi, #mundo) .secao h3 {

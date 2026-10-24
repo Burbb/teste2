@@ -449,16 +449,17 @@ id, `ficha_guardiao`; os contratos por `contratos.desc_caca` e `desc_alvo`, os m
   (usa o Diadema por ora; pede arte própria), os
   itens únicos com desenho próprio, a bolsa vazia e o frasco vazio no topo, os inimigos e as cartas deles (menos o
   Afogado e a Ilse, abaixo), os
-  ícones de habilidade e de efeito, o covil vencido (no mapa, o sprite do jogo), a lista de Caminhos do painel (os ícones de
-  lugar antigos da HUD 4 pixel; o mapa, a Viagem e o Diário usam os `mapa-*`, abaixo). O mercador da banca tem o busto no balcão (`telas/mercado.js`,
+  ícones de habilidade e de efeito, o covil vencido (no mapa, o sprite do jogo). Os ícones de lugar antigos da HUD 4 pixel
+  (`lugar-*-32/40`) ficam só para os lugares do mundo gerado sem peça nova (a montanha, a cidadela, o covil); o mapa, a
+  Viagem, o Diário e a lista de Caminhos usam os `mapa-*` (abaixo). O mercador da banca tem o busto no balcão (`telas/mercado.js`,
   **O mapa (`mapa.js`, desde a 1.200.0):** o canvas na resolução do pixel do mapa (×2 no minimapa, ×3 no mapa grande e
   no da Viagem; a largura vem da caixa que o chamador passa em `opts.caixa`), e por cima, 1:1, os símbolos dos cinco
   lugares da campanha (`hud/icones/mapa-<lugar>-32/48`, em grade nativa; os só do procedural com os ícones de lugar da
   família, o vencido com o sprite), a plaqueta do herói (`mapa-posicao`, de lado `mapa-posicao_lado` perto da borda,
   com a figura da classe de `retratos.js`), as marcas da missão e do contrato (`mapa-missao`, `mapa-contrato`) e a
   cancela (`mapa-cancela`) no destino que o motor diz bloqueado (`bloqueio`, de `mapa.bloqueio`: a mesma regra da
-  viagem). Os nomes procuram um lugar livre (`encaixarRotulos`). `MapaPx.simboloHTML` e `MapaPx.marcasHTML` levam o
-  mesmo desenho às opções de destino e ao Diário; `MapaPx.legenda` monta a legenda do mapa grande.
+  viagem). Os nomes procuram um lugar livre (`encaixarRotulos`). `MapaPx.simboloHTML`, `MapaPx.marcasHTML` e `MapaPx.bloqueioHTML` levam o
+  mesmo desenho às opções de destino, ao Diário e à lista de Caminhos; `MapaPx.legenda` monta a legenda do mapa grande.
   com as cores da figura da banca).
 - As cabeças próprias das criaturas (1.162.0): o motor dá o retrato (`dados.retrato(tracos, familia, chave)`): a
   chave da criatura única (`RETRATO_CHAVE`: a Ilse da capela, `chefe.chave = "ilse"` em `missoes.py`), senão a

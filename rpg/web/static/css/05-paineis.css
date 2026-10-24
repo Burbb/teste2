@@ -128,6 +128,8 @@
 .caminho { --anel: var(--anel-j); display: grid; grid-template-columns: 34px 1fr auto; gap: 10px; align-items: center; font-size: 16px; padding: 6px 10px 6px 6px; color: var(--tinta);
   border: var(--borda) solid var(--p-j); border-image: var(--anel) 1 / 1 stretch; background: var(--p-k); background-clip: padding-box; }
 .caminho img.sprite { --s: 32; }
+.caminho .caminho-nome { overflow-wrap: anywhere; }
+img.marca-bloqueio { width: 13px; }
 .caminho .nome small { display: block; color: var(--tinta-2); font-size: 14px; margin-top: 1px; }
 .caminho .dist { font-family: var(--num); font-size: 15px; color: var(--tinta-2); white-space: nowrap; }
 .caminho.clicavel { cursor: pointer; }

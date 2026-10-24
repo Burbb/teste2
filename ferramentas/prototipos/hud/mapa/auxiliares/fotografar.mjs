@@ -39,6 +39,9 @@ const SITUACOES = [
   // o Diário com um nome de lugar longo no contrato (o contrato no Charco, renomeado só na tela de teste: NOME_LUGAR)
   { nome: "diario-longo", cenario: "tutorial", amb: { ...BASE, CLASSE: "mago", LUGAR: "bosque", PERIODO: "3", ETAPA: "capela", CONTRATO: "aceito", CONTRATO_EM: "charco" },
     tela: [{ tecla: "d" }], nomeLongo: "Charco dos Juncos Afogados do Velho Moinho" },
+  // a lista de Caminhos do painel com um nome longo (só na tela aberta: o texto do destino), no Vau com a saída fechada
+  { nome: "caminhos-longo", cenario: "tutorial", amb: { ...BASE, LUGAR: "vau", PERIODO: "0", CONTRATO: "aceito" }, tela: [],
+    nomeLongo: "Estrada de Varn pelo Desfiladeiro do Velho Rei", seletorLongo: ".caminho-nome" },
   // o mural da vila (o mesmo cartaz do contrato, antes de aceitar)
   { nome: "mural", cenario: "tutorial", amb: { ...BASE, LUGAR: "vau", PERIODO: "1" }, tela: [{ clicar: "Mural" }] },
 ].filter((s) => (so ? so.split(",").includes(s.nome) : !s.tela && s.nome !== "charco-noite"));
@@ -120,7 +123,8 @@ for (const sit of SITUACOES) {
         await espera(1800);
       }
       if (sit.nomeLongo) {  // um nome de lugar longo só na tela aberta (o texto do cartaz), para conferir a quebra
-        await p.evaluate((nome) => document.querySelectorAll(".contrato-nome").forEach((el) => { el.firstChild.textContent = nome; }), sit.nomeLongo);
+        await p.evaluate(([nome, sel]) => document.querySelectorAll(sel).forEach((el, i) => { if (sel === ".contrato-nome" || i === 0) el.firstChild.textContent = nome; }),
+          [sit.nomeLongo, sit.seletorLongo || ".contrato-nome"]);
         await espera(300);
       }
       await p.screenshot({ path: path.join(saida, `${sit.nome}-pagina.png`) });

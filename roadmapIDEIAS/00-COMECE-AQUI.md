@@ -6982,3 +6982,17 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   símbolos só do procedural (os antigos); o zoom não inteiro do navegador.
 - **Agora:** a etapa 2. O primeiro lote recomendado: a subida de nível com as celebrações e a raridade (o escopo no
   item 1.12 do plano 23). Nada começado.
+
+### 23/10/2026 (data do computador local) — A lista de Caminhos com os símbolos nativos (1.200.1)
+
+- **Estado conferido:** a branch em `4eebba8f`, igual ao remoto; o `caido-avatar-512.png` fora dos commits.
+- **No jogo (1.200.1):** a lista de Caminhos do painel do mundo usa o mesmo símbolo de 32 do minimapa (1:1; antes, o
+  ícone antigo esticado a 40), com as marcas do mapa (a missão, o contrato) ao lado do nome e a cancela no destino que a
+  viagem recusa (`MapaPx.bloqueioHTML`, com o porquê na dica). Os lugares só do mundo gerado sem peça nova ficam com o
+  ícone de 32 da família. O nome longo quebra dentro da coluna; os cliques, o destaque no mapa ao passar o mouse e as
+  regras de viagem iguais.
+- **Conferido** (`ferramentas/prototipos/hud/mapa/capturas/caminhos*`): 1920×945 (o Vau com a saída fechada e o
+  contrato no Bosque, o Bosque à noite, a Capela, o procedural) e 1280×720 (o painel rola até os Caminhos, como antes),
+  com um nome longo; sem erro no console.
+- **Verificações sobre o código final:** `unittest` (689, 1 pulado), o gabarito idêntico, o pyflakes (só os avisos
+  conhecidos) e a fumaça inteira, uma vez.

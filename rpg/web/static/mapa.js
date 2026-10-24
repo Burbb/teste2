@@ -444,5 +444,10 @@ const MapaPx = (() => {
     const nome = { missao: "objetivo da missão, marcado no mapa", contrato: "contrato aceito, marcado no mapa" };
     return lista.map((m) => `<img class="marca-texto" ${arquivo(PECAS[m][0])} width="9" height="11" alt="${nome[m]}" title="${nome[m][0].toUpperCase() + nome[m].slice(1)}">`).join("");
   }
-  return { criar, sprite, legenda, simboloHTML, marcasHTML, ambiente(m) { if (m) ambiente = m; } };
+  /** A cancela do mapa ao lado do nome de um destino bloqueado (a lista de Caminhos), com o porquê na dica. */
+  function bloqueioHTML(motivo) {
+    const dica = motivo === "selada" ? "Selada: faltam Sigilos" : "Fechada por enquanto";
+    return `<img class="marca-texto marca-bloqueio" ${arquivo(PECAS.cancela[0])} width="13" height="11" alt="${dica}" title="${dica}">`;
+  }
+  return { criar, sprite, legenda, simboloHTML, marcasHTML, bloqueioHTML, ambiente(m) { if (m) ambiente = m; } };
 })();

@@ -390,8 +390,10 @@ function desenharMundo(e) {
   const l = e.local;
   const clic = destinosClicaveis();
   const caminhos = e.mapa.nos.filter((n) => n.distancia).sort((a, b) => a.distancia - b.distancia || a.nome.localeCompare(b.nome))
-    .map((n) => `<div class="caminho${clic.has(n.id) ? " clicavel" : ""}" data-local="${n.id}">${Icones.lugar(MapaPx.sprite(n)) || spr(MapaPx.sprite(n), 2)}
-      <span class="nome">${esc(n.nome)}<small>${n.nivel ? `<span class="nivel-cam ${nivelPerigo(n.nivel)}">Nível ${n.nivel}</span> · ` : ""}${esc(n.descricao)}</small></span>
+    // o símbolo do minimapa (32, 1:1; desde a 1.200.1), as marcas do mapa ao lado do nome e a cancela no destino que a
+    // viagem recusa (o `bloqueio` do motor)
+    .map((n) => `<div class="caminho${clic.has(n.id) ? " clicavel" : ""}${n.bloqueio ? " bloqueado" : ""}" data-local="${n.id}">${MapaPx.simboloHTML(n)}
+      <span class="nome"><span class="caminho-nome">${esc(n.nome)}${MapaPx.marcasHTML(n.id)}${n.bloqueio ? MapaPx.bloqueioHTML(n.bloqueio) : ""}</span><small>${n.nivel ? `<span class="nivel-cam ${nivelPerigo(n.nivel)}">Nível ${n.nivel}</span> · ` : ""}${esc(n.descricao)}</small></span>
       <span class="dist">${Texto.plural(n.distancia, "trecho")}</span></div>`).join("");
   const raiz = $("#mundo");
   raiz.innerHTML = `<div class="local-nome">${esc(l.nome)}</div><div class="local-desc">${esc(maiuscula(l.descricao))}</div>

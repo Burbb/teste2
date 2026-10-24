@@ -1,0 +1,227 @@
+{
+ "vau-manha": {
+  "erros": [],
+  "avisos": [],
+  "fotos": [
+   "pagina",
+   "mundo",
+   "mini",
+   "mapa",
+   "grande",
+   "janela"
+  ],
+  "medidas": [
+   {
+    "onde": "minimapa",
+    "nativo": "112×64",
+    "exibido": "224.0×128.0",
+    "escala": "2.000",
+    "simbolos": [
+     "32→32",
+     "32→32",
+     "32→32",
+     "32→32",
+     "32→32"
+    ],
+    "lugares": [
+     {
+      "id": "0",
+      "classes": "no-btn atual tem-contrato com-plaqueta",
+      "centro": [
+       89,
+       63
+      ],
+      "botao": "28×28",
+      "rotulo": "Vau do Turvo — vila · arredores Nv.1 · você tem um contrato aqui"
+     },
+     {
+      "id": "1",
+      "classes": "no-btn clicavel",
+      "centro": [
+       25,
+       45
+      ],
+      "botao": "28×28",
+      "rotulo": "Charco dos Juncos — Pântano · inimigos Nv.1 · 1 trecho daqui"
+     },
+     {
+      "id": "2",
+      "classes": "no-btn clicavel tem-contrato",
+      "centro": [
+       147,
+       41
+      ],
+      "botao": "28×28",
+      "rotulo": "Bosque do Moinho — Floresta · inimigos Nv.2 · 1 trecho daqui · você tem um contrato aqui"
+     },
+     {
+      "id": "3",
+      "classes": "no-btn",
+      "centro": [
+       201,
+       21
+      ],
+      "botao": "28×28",
+      "rotulo": "Capela Afogada — Ruínas · inimigos Nv.3"
+     },
+     {
+      "id": "4",
+      "classes": "no-btn clicavel bloqueado",
+      "centro": [
+       103,
+       109
+      ],
+      "botao": "28×28",
+      "rotulo": "Estrada de Varn — saída, fechada por enquanto · 2 trechos daqui"
+     }
+    ]
+   },
+   {
+    "onde": "mapa grande",
+    "nativo": "308×176",
+    "exibido": "924.0×528.0",
+    "escala": "3.000",
+    "simbolos": [
+     "48→48",
+     "48→48",
+     "48→48",
+     "48→48",
+     "48→48"
+    ],
+    "lugares": [
+     {
+      "id": "0",
+      "classes": "no-btn atual tem-contrato com-plaqueta",
+      "centro": [
+       363,
+       258
+      ],
+      "botao": "40×40",
+      "rotulo": "Vau do Turvo — vila · arredores Nv.1 · você tem um contrato aqui"
+     },
+     {
+      "id": "1",
+      "classes": "no-btn clicavel",
+      "centro": [
+       99,
+       183
+      ],
+      "botao": "40×40",
+      "rotulo": "Charco dos Juncos — Pântano · inimigos Nv.1 · 1 trecho daqui"
+     },
+     {
+      "id": "2",
+      "classes": "no-btn clicavel tem-contrato",
+      "centro": [
+       603,
+       165
+      ],
+      "botao": "40×40",
+      "rotulo": "Bosque do Moinho — Floresta · inimigos Nv.2 · 1 trecho daqui · você tem um contrato aqui"
+     },
+     {
+      "id": "3",
+      "classes": "no-btn",
+      "centro": [
+       825,
+       84
+      ],
+      "botao": "40×40",
+      "rotulo": "Capela Afogada — Ruínas · inimigos Nv.3"
+     },
+     {
+      "id": "4",
+      "classes": "no-btn clicavel bloqueado",
+      "centro": [
+       423,
+       444
+      ],
+      "botao": "40×40",
+      "rotulo": "Estrada de Varn — saída, fechada por enquanto · 2 trechos daqui"
+     }
+    ]
+   }
+  ]
+ },
+ "caminhos-longo": {
+  "erros": [],
+  "avisos": [],
+  "fotos": [
+   "pagina"
+  ],
+  "simbolos": [
+   "mapa-floresta-32.png 32→32",
+   "mapa-contrato-9.png 9→9",
+   "mapa-pantano-32.png 32→32",
+   "mapa-planicie-32.png 32→32",
+   "mapa-cancela-13.png 13→9"
+  ],
+  "medidas": [
+   {
+    "onde": "minimapa",
+    "nativo": "112×64",
+    "exibido": "224.0×128.0",
+    "escala": "2.000",
+    "simbolos": [
+     "32→32",
+     "32→32",
+     "32→32",
+     "32→32",
+     "32→32"
+    ],
+    "lugares": [
+     {
+      "id": "0",
+      "classes": "no-btn atual tem-contrato com-plaqueta",
+      "centro": [
+       89,
+       63
+      ],
+      "botao": "28×28",
+      "rotulo": "Vau do Turvo — vila · arredores Nv.1 · você tem um contrato aqui"
+     },
+     {
+      "id": "1",
+      "classes": "no-btn clicavel",
+      "centro": [
+       25,
+       45
+      ],
+      "botao": "28×28",
+      "rotulo": "Charco dos Juncos — Pântano · inimigos Nv.1 · 1 trecho daqui"
+     },
+     {
+      "id": "2",
+      "classes": "no-btn clicavel tem-contrato",
+      "centro": [
+       147,
+       41
+      ],
+      "botao": "28×28",
+      "rotulo": "Bosque do Moinho — Floresta · inimigos Nv.2 · 1 trecho daqui · você tem um contrato aqui"
+     },
+     {
+      "id": "3",
+      "classes": "no-btn",
+      "centro": [
+       201,
+       21
+      ],
+      "botao": "28×28",
+      "rotulo": "Capela Afogada — Ruínas · inimigos Nv.3"
+     },
+     {
+      "id": "4",
+      "classes": "no-btn clicavel bloqueado",
+      "centro": [
+       103,
+       109
+      ],
+      "botao": "28×28",
+      "rotulo": "Estrada de Varn — saída, fechada por enquanto · 2 trechos daqui"
+     }
+    ]
+   }
+  ]
+ }
+}
