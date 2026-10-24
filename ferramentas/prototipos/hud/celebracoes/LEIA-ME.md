@@ -6,14 +6,65 @@
 ## Testar no navegador (a demonstração)
 
 `demo.bat` (ou `python ferramentas/prototipos/hud/celebracoes/auxiliares/demo.py`) monta as direções e abre o painel em
-**http://127.0.0.1:8765/**. Cada cenário abre em **B4 · Estouro** (o padrão pretendido) e **A4 · Relicário** (as
-apresentações desta rodada, em destaque), no **jogo atual** ou no histórico (B3 e A3 aprovados, B2, A2, A, B, C
-reservada, 1ª proposta, em cinza); um formulário troca a classe; cada especialização tem a sua linha. Cada botão encerra o cenário anterior e
+**http://127.0.0.1:8765/**. Em destaque, as candidatas da quinta rodada: **Estouro · identidade 1 / 2** e
+**Relicário · identidade 1 / 2** (só a especialização muda); o **jogo atual**; e o histórico em cinza (B4 e A4
+aprovados, B3, A3, B2, A2, A, B, C reservada, 1ª proposta). Um formulário troca a classe; cada especialização tem a
+sua linha, já na classe certa. Cada botão encerra o cenário anterior e
 sobe outro do zero, num processo com saves temporários (o save do jogo não é tocado); na página, "Começar o teste"; no
 canto de baixo, "repetir" e "painel" (essa faixa só existe na demonstração). O servidor de teste (`cenarios_teste.py`,
 `PROTOTIPO=<direção>`) serve `telas/celebracoes.js` e `telas/achado.js` montados em `prototipo-v2/<direção>/`.
 Movimento reduzido: no Chrome/Edge, F12 → ⋮ → More tools → Rendering → "Emulate CSS media feature
 prefers-reduced-motion" → reduce, e "repetir" (ou "Mostrar animações" desligado no Windows, para o sistema todo).
+
+## Quinta rodada (24/10/2026): duas identidades para cada especialização
+
+**Aprovado pelo Jean** (não muda nesta rodada): o Estouro B4 e o Relicário A4 como apresentações (o Estouro como
+padrão pretendido; a troca para as futuras opções do jogo) e o Piromante nas duas.
+
+**Candidatas** (esperando a escolha): duas identidades para Paladino, Berserker, Patrulheiro, Sombra e Necromante
+(`v2/identidades2.js`), cada uma com símbolos e movimento próprios e três tempos: a identidade aparece, o nome é
+revelado com impacto, o efeito se acomoda para a leitura. São dez conceitos, a mesma identidade nas duas
+apresentações: `estouro5a`/`estouro5b` e `relicario5a`/`relicario5b` (cópias do B4 e do A4; só a especialização muda;
+no Relicário o sol baixa mais para a identidade conduzir).
+
+| Especialização | Identidade 1 | Identidade 2 |
+|---|---|---|
+| Paladino | **Luz do alto**: um cone largo de luz desce do alto e se abre sobre o nome; um anel claro corre no pouso; poeira de luz; o nome sai incandescente e esfria para marfim | **Asas**: duas asas de penas se abrem atrás do nome, a auréola acende, as penas soltas caem pela composição |
+| Berserker | **O nome sangra**: respingos pintam o fundo; o sangue tinge as letras de cima para baixo; fios escorrem das letras, formam gotas, caem e empoçam sob o nome | **Garras**: o nome despenca e três garras rasgam o fundo; as feridas vertem; o sangue pinga das letras; as bordas da tela batem como um coração |
+| Patrulheiro | **Vendaval**: uma rajada atravessa a composição inteira e revela o nome da esquerda para a direita, levando folhas (de perto e de longe), e volta de tempos em tempos | **Clareira**: dois ramos crescem dos lados e abraçam o nome, brotando folhas; raios de sol entram pela copa; folhas caem devagar |
+| Sombra | **Corte**: a lâmina corta o nome; as duas metades se separam e se recompõem; fica a cicatriz atrás, com um brilho que corre pelas pontas | **Invisível**: no escuro, dois olhos; o nome aparece aos pedaços, uma letra falha e some antes de firmar; depois, olhos nas laterais de vez em quando |
+| Necromante | **Erguer**: um círculo de runas se desenha sob o nome e caveiras sobem dele, acendendo os olhos | **Almas**: almas com rosto chegam das bordas e entram nas letras, que clareiam a cada uma; três ficam rondando o nome |
+
+Desenhos à mão (grades de texto, ampliadas por fator inteiro): a pena em três posições, a folha com nervura em quatro
+(sem marrom: verdes da mata), a caveira, a alma com rosto, a gota de sangue com brilho, os olhos, as runas. As cores
+de cada uma: Paladino em marfim, branco quente e ouro; Berserker em vermelho profundo; Patrulheiro em verdes da mata;
+Sombra em cinza de pedra no escuro; Necromante em verde de túmulo, profundo, com o claro só nos pontos (os olhos, o
+alto das letras), sobre um fundo quase negro. Sombra e Necromante entram sem o clarão branco do Estouro.
+
+**Referências vistas** (imagens reais; nada copiado): **Hollow Knight**, a habilidade adquirida (a figura em tinta que
+se forma e o texto que só vem depois: antecipação antes da leitura); **Darkest Dungeon**, a virtude e a aflição (a luz
+quente que se abre por trás da figura e a moldura vermelha que pulsa: a cor e o símbolo dizem o estado antes do texto);
+**Hades**, as bênçãos (cada deus com a sua cor e o seu símbolo, na mesma moldura: a identidade separada da
+apresentação); e as da segunda rodada (Pokémon, a evolução: o momento cerimonial que segura e revela; Blasphemous: o
+nome como título de um ato). O que se aproveitou: a antecipação curta (a identidade aparece primeiro), o impacto num
+único golpe e a acomodação que deixa ler; nenhuma interface copiada, e "mais partículas" não foi o critério.
+
+**Conferido:** as cinco especializações nas quatro montagens, em 1920×945 (a entrada aos 150, 400 e 900 ms e a
+permanência aos 3 s) e em 1280×720 (Patrulheiro e Necromante inteiros), e no movimento reduzido (cada uma com o seu
+quadro parado). `auxiliares/gestos.mjs` nas quatro: 18 verificações, nenhuma falha (tecla segurada, Esc, clique duplo,
+clique e Enter rápidos, transição sem atravessar, limpeza dos efeitos ao fechar, Sombra e Patrulheiro). O corte da
+Sombra foi conferido na página (as metades separadas aos 400 ms e de volta aos 900 ms). O rótulo "Você agora é"
+ganhou um escuro por trás nas identidades (as asas e as garras passavam atrás dele).
+
+**Vídeos** (`para-avaliacao/`, sem áudio; os anteriores ficam): `r5-1` a `r5-5`, uma especialização por vídeo com as
+duas identidades no Estouro, em sequência (a faixa do canto diz qual); `r5-6` e `r5-7`, o Relicário com as duas
+identidades de cada uma. Folhas em `capturas-r5/`: `folha-r5-identidades.png` (a entrada e a permanência) e
+`folha-r5-apertados.png` (1280×720 e o movimento reduzido).
+
+**Limitações vistas:** o som não foi ouvido; os ícones das habilidades continuam os antigos (ficam para o Grimório); no
+Estouro, a entrada de Paladino, Berserker e Patrulheiro mantém o clarão de dois quadros da apresentação aprovada; no
+Paladino 1 e nas Asas, a luz e as asas sobem até o topo da tela em 1280×720; no Clareira, os ramos passam atrás das
+letras e deixam o contorno do nome mais carregado; a identidade ainda é escolhida pelo nome da especialização.
 
 ## Quarta rodada (24/10/2026): o selo dos itens no Estouro e as identidades das especializações
 

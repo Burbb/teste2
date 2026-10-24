@@ -1,0 +1,10 @@
+{
+ "spec-patrulheiro": {
+  "erros": [],
+  "avisos": [],
+  "linha": [
+   "patrulheiro: apareceu em 1360 ms",
+   "patrulheiro: fechado (clique) em 3002 ms"
+  ]
+ }
+}

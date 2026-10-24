@@ -12,7 +12,8 @@ AQUI = pathlib.Path(__file__).resolve().parent
 RAIZ = AQUI.parents[4]
 V2 = AQUI.parent / "v2"
 SAIDA = AQUI.parent / "prototipo-v2"
-DIRECOES = ["relicario", "estouro", "estandarte", "relicario2", "estouro2", "relicario3", "estouro3", "relicario4", "estouro4"]  # as de número 2: a rodada de refinamento
+DIRECOES = ["relicario", "estouro", "estandarte", "relicario2", "estouro2", "relicario3", "estouro3", "relicario4", "estouro4",
+            "relicario5a", "relicario5b", "estouro5a", "estouro5b"]  # 5a/5b: a mesma apresentação, a identidade 1 ou 2  # as de número 2: a rodada de refinamento
 
 
 def trocar(s, a, b):
@@ -30,16 +31,18 @@ def main():
     fim = celebracoes.index("  /** Contratos cumpridos:")
     celebracoes = (celebracoes[:ini] + "    return Festa.celebrar(m, caixa, instantaneo);  // PROTÓTIPO: a direção\n  }\n\n"
                    + celebracoes[fim:])
-    base = "\n".join((V2 / f).read_text(encoding="utf-8") for f in ("fx.js", "festas.js", "identidade.js", "identidades.js")) + "\n"
+    base = "\n".join((V2 / f).read_text(encoding="utf-8") for f in ("fx.js", "festas.js", "identidade.js", "identidades.js", "identidades2.js")) + "\n"
     for nome in DIRECOES:
-        fonte = V2 / f"{nome}.js"
+        variante = nome[-1] if nome[-2:-1].isdigit() and nome[-1] in "ab" else None
+        fonte = V2 / f"{nome[:-1] if variante else nome}.js"
         if not fonte.exists():
             continue
         pasta = SAIDA / nome
         pasta.mkdir(parents=True, exist_ok=True)
         cab = (f"/* PROTÓTIPO da etapa 2, segunda rodada, direção {nome} (montado por auxiliares/montar_v2.py; nada no "
                f"jogo). */\n")
-        (pasta / "achado.js").write_text(cab + base + fonte.read_text(encoding="utf-8") + "\n" + achado, encoding="utf-8")
+        prefixo = f'const IDENTIDADE_VARIANTE = "{variante}";\n' if variante else ""
+        (pasta / "achado.js").write_text(cab + prefixo + base + fonte.read_text(encoding="utf-8") + "\n" + achado, encoding="utf-8")
         (pasta / "celebracoes.js").write_text(cab + celebracoes, encoding="utf-8")
         print("montado:", nome)
 

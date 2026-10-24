@@ -68,6 +68,27 @@ def rodada4():
     folha(["B3 · antes", "B4 · depois"], linhas, R4 / "folha-r4-itens-estouro.png")
 
 
+def rodada5():
+    """A quinta rodada: as duas identidades de cada especialização, no Estouro (a entrada aos 400 ms e a permanência aos
+    3 s) e no Relicário (3 s); e 1280×720 e o movimento reduzido."""
+    R5 = BASE / "capturas-r5"
+    meio = (480, 20, 1440, 600)
+    specs = [("paladino", "Paladino · 1 Luz do alto / 2 Asas"), ("berserker", "Berserker · 1 O nome sangra / 2 Garras"),
+             ("patrulheiro", "Patrulheiro · 1 Vendaval / 2 Clareira"), ("sombra", "Sombra · 1 Corte / 2 Invisível"),
+             ("necromante", "Necromante · 1 Erguer / 2 Almas")]
+    linhas = [(rot, [quadro(R5 / "estouro5a" / "1920" / f"spec-{k}-{k}-0400.png", meio, 0.3), quadro(R5 / "estouro5a" / "1920" / f"spec-{k}-{k}-3000.png", meio, 0.3),
+                     quadro(R5 / "estouro5b" / "1920" / f"spec-{k}-{k}-0400.png", meio, 0.3), quadro(R5 / "estouro5b" / "1920" / f"spec-{k}-{k}-3000.png", meio, 0.3),
+                     quadro(R5 / "relicario5a" / "1920" / f"spec-{k}-{k}-3000.png", meio, 0.3), quadro(R5 / "relicario5b" / "1920" / f"spec-{k}-{k}-3000.png", meio, 0.3)])
+              for k, rot in specs]
+    folha(["Estouro 1 · entrada", "Estouro 1 · 3 s", "Estouro 2 · entrada", "Estouro 2 · 3 s", "Relicário 1 · 3 s", "Relicário 2 · 3 s"],
+          linhas, R5 / "folha-r5-identidades.png")
+    linhas = [(rot, [quadro(R5 / d / "1280" / f"spec-{k}-{k}-1500.png", None, 0.36) for d in ("estouro5a", "estouro5b")] +
+               [quadro(R5 / d / "reduzido" / f"spec-{k}-{k}-1500.png", meio, 0.3) for d in ("estouro5a", "estouro5b", "relicario5a", "relicario5b")])
+              for k, rot in specs]
+    folha(["Estouro 1 · 1280", "Estouro 2 · 1280", "Estouro 1 · reduzido", "Estouro 2 · reduzido", "Relicário 1 · reduzido", "Relicário 2 · reduzido"],
+          linhas, R5 / "folha-r5-apertados.png")
+
+
 if __name__ == "__main__":
     import sys
-    rodada4() if "r4" in sys.argv else rodada3() if "r3" in sys.argv else main()
+    rodada5() if "r5" in sys.argv else rodada4() if "r4" in sys.argv else rodada3() if "r3" in sys.argv else main()

@@ -38,8 +38,9 @@ CENARIOS = [("nivel", "Um nível (do 1 ao 2, dois lobos)", "guerreiro"),
             ("spec_sombra", "Especialização: Sombra (arqueiro)", "arqueiro"),
             ("spec_necromante", "Especialização: Necromante (mago)", "mago")]
 # as versões: o valor de PROTOTIPO (vazio: o jogo como está) e o rótulo
-VERSOES = [("estouro4", "B4 · Estouro (padrão pretendido)"), ("relicario4", "A4 · Relicário"), ("", "Jogo atual"),
-           ("estouro3", "B3 · aprovado"), ("relicario3", "A3 · aprovado"),
+VERSOES = [("estouro5a", "Estouro · identidade 1"), ("estouro5b", "Estouro · identidade 2"),
+           ("relicario5a", "Relicário · identidade 1"), ("relicario5b", "Relicário · identidade 2"), ("", "Jogo atual"),
+           ("estouro4", "B4 · aprovado"), ("relicario4", "A4 · aprovado"), ("estouro3", "B3"), ("relicario3", "A3"),
            ("estouro2", "B2 · anterior"), ("relicario2", "A2 · anterior"), ("relicario", "A · 1ª versão"),
            ("estouro", "B · 1ª versão"), ("estandarte", "C · reservada"), ("brilho", "1ª proposta")]
 NOMES = dict(VERSOES)
@@ -82,7 +83,7 @@ def pagina():
     linhas = []
     for cid, rotulo, classe in CENARIOS:
         botoes = " ".join(
-            f'<a class="b{" p" if v in ("relicario4", "estouro4") else " h" if v else ""}" href="/iniciar?{html.escape(urlencode({"cenario": cid, "versao": v, "classe": classe}))}">{nome}</a>'
+            f'<a class="b{" p" if v in ("relicario5a", "relicario5b", "estouro5a", "estouro5b") else " h" if v else ""}" href="/iniciar?{html.escape(urlencode({"cenario": cid, "versao": v, "classe": classe}))}">{nome}</a>'
             for v, nome in VERSOES)
         linhas.append(f"<tr><td>{html.escape(rotulo)}<br><small>classe: {classe}</small></td><td>{botoes}</td></tr>")
     opcoes = "".join(f"<option>{c}</option>" for c in CLASSES)
@@ -98,9 +99,11 @@ a.b.p{{border-color:#f2c94c;color:#f2c94c;font-weight:bold}} a.b.h{{color:#8a807
 <h1>Demonstração da etapa 2 (protótipo, nada no jogo)</h1>
 <p class="nota">Cada botão encerra o cenário anterior e começa outro do zero, numa partida de teste com saves
 temporários (o seu save não é tocado). Na página, clique em "Começar o teste"; no canto de baixo, "repetir" e "painel".
-B4 (Estouro, o padrão pretendido, com o selo dos itens retocado) e A4 (Relicário) são as duas apresentações desta
-rodada, em destaque, com a identidade de cada especialização (as linhas "Especialização" já usam a classe certa). As
-outras são o histórico, em cinza (A3 e B3, aprovados, para comparar). Movimento
+Em destaque, as candidatas desta rodada: as duas identidades de Paladino, Berserker, Patrulheiro, Sombra e
+Necromante, no Estouro (o padrão pretendido) e no Relicário. Identidade 1 / 2: Paladino, Luz do alto / Asas;
+Berserker, O nome sangra / Garras; Patrulheiro, Vendaval / Clareira; Sombra, Corte / Invisível; Necromante, Erguer /
+Almas. O Piromante (aprovado), os itens, os níveis e os Sigilos são os mesmos do B4 e do A4 (aprovados, em cinza,
+com o resto do histórico). As linhas "Especialização" já usam a classe certa. Movimento
 reduzido: F12 → ⋮ → More tools → Rendering → prefers-reduced-motion: reduce, e "repetir".</p>
 <table>{''.join(linhas)}</table>
 <form action="/iniciar">Outra classe: <select name="cenario">{cens}</select> <select name="classe">{opcoes}</select>
