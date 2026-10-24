@@ -1307,6 +1307,13 @@ ou mudanças de dados por iniciativa do agente.
   miúdo) e **os quadros de orientação** da abertura guiada (a caixa lisa e o botão chapado); detalhes menores no texto
   narrado. Adiados pela retirada do procedural: o título, os saves e a criação de personagem. Etapa 8: o Grimório e
   os Talentos. **O próximo lote recomendado: as faixas de passagem** (a mais vista: uma por luta); depois, a orientação.
+- **As faixas de passagem, duas direções em avaliação (24/10/2026, só no protótipo):** em
+  `ferramentas/prototipos/hud/faixas/` (LEIA-ME com os usos reais, `folha-faixas.png`, `demo.bat`). A · a faixa
+  integrada ao palco (base escura de beiras rasgadas, pontas abertas) e B · emblema e anúncio (a placa chanfrada e a
+  joia com o símbolo); as duas dentro do palco, o subtítulo legível, quatro pesos (comum, marco, peso, passagem) pela
+  forma e pelo movimento. Os tempos, os sons e a ordem são os de hoje (conferido na sequência real: Guardião → Mestre
+  caçador → espólio → nível → achado, com os mesmos tempos nas três). Recomendação: A. À parte: o adiantar não encurta
+  as faixas (só a queda olha o `pular`). Aguarda o Jean.
 - **O baú, a A2 em avaliação (24/10/2026, só no protótipo; histórico):** o A escolhido como direção; a A2 refina a tampa, a três
   quartos e o volume, com um 48 próprio para a pilha. A, B e o placeholder como histórico.
 - **O baú em avaliação, primeira rodada (24/10/2026, só no protótipo):** duas propostas para o Baú Trancado em

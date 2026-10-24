@@ -1,0 +1,95 @@
+/* As faixas de passagem, duas direções (protótipo; faixas.js). Só as classes fx-faixa, fa-* e fb-*; a faixa antiga
+   (.faixa-festa) não é tocada: o faixas.js a troca pela nova no instante em que ela nasce. Cores sólidas da paleta
+   do jogo, sem desfoque nem translúcido (a regra das peças em pixel), a letra de título nos tamanhos inteiros. */
+.fx-faixa { position: fixed; z-index: 39; pointer-events: none; text-align: center; }
+.fx-medida { position: fixed; left: -9999px; top: 0; font-family: var(--titulo); font-weight: 400; white-space: nowrap; }
+.fx-faixa .sprite, .fx-faixa img { image-rendering: pixelated; display: block; }
+
+/* ---------------------------------------------------------------- A · a faixa integrada ao palco */
+.fa { box-sizing: border-box; padding: 16px 48px 18px; }
+.fa-borda, .fa-base { position: absolute; inset: 0; }
+.fa-borda { background: #6b5527; }                      /* o fio da beira rasgada (latão escuro) */
+.fa-base { background: #0e0c0a; }
+.fa-corpo { position: relative; }
+.fa-linha { display: inline-flex; align-items: center; gap: 14px; }
+.fa-titulo { font-family: var(--titulo); font-weight: 400; line-height: 1; color: var(--ouro); white-space: nowrap; text-shadow: var(--contorno); }
+.fa-sub { margin: 10px auto 0; max-width: 64ch; font-family: var(--prosa); font-size: 19px; line-height: 1.35; color: #e6dbc2; }
+/* a Vitória: a mais curta e a mais baixa, só o título e a espada */
+.fa.peso-comum { padding: 10px 40px 12px; }
+.fa.peso-comum .fa-icone { width: 40px; height: 40px; }
+.fa.peso-comum .fa-icone img { width: 40px; height: 40px; }
+/* o marco: a faixa larga, o fio claro, o subtítulo mais aceso */
+.fa.peso-marco .fa-borda { background: #c9a14a; }
+.fa.peso-marco .fa-sub { color: #f2e6c8; }
+/* o peso: sem ouro nem brilho; a queda em sangue escuro, o cansaço em cinza de cinza */
+.fa.peso-peso .fa-base { background: #0d0909; }
+.fa.peso-peso.tom-sangue .fa-borda { background: #5a2018; }
+.fa.peso-peso.tom-sangue .fa-titulo { color: #d0503c; }
+.fa.peso-peso.tom-cinza .fa-borda { background: #3c3d44; }
+.fa.peso-peso.tom-cinza .fa-titulo { color: #c8c0b2; }
+.fa.peso-peso .fa-sub { color: #bdb4a6; }
+/* a passagem: sem base de festa, uma tira estreita e baixa, o título pequeno, o texto que conta a saída */
+.fa.peso-passagem { padding: 10px 36px 12px; }
+.fa.peso-passagem .fa-borda { background: #3a3326; }
+.fa.peso-passagem .fa-base { background: #0e0c0a; }
+.fa.peso-passagem .fa-titulo { color: #e6dbc2; }
+.fa.peso-passagem .fa-sub { margin-top: 6px; font-size: 18px; }
+.fa.peso-passagem .fa-icone img { width: 32px; height: 32px; }
+
+/* ---------------------------------------------------------------- B · emblema e anúncio */
+.fb { display: flex; flex-direction: column; align-items: center; }
+/* o emblema: uma joia de ferro em losango com o aro de latão; o símbolo de pé dentro dela */
+.fb-emblema { position: relative; z-index: 2; width: 108px; height: 108px; margin-bottom: -38px; background: #8a7038;
+  clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); display: grid; place-items: center; }
+.fb-joia { width: 102px; height: 102px; background: #15161a; clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); display: grid; place-items: center; }
+.fb-joia img { width: 48px; height: 48px; }
+/* a placa: chanfrada, o aro de latão por fora, o ferro por dentro */
+.fb-placa { padding: 3px; background: #8a7038; clip-path: polygon(12px 0, calc(100% - 12px) 0, 100% 12px, 100% calc(100% - 12px), calc(100% - 12px) 100%, 12px 100%, 0 calc(100% - 12px), 0 12px); }
+.fb-dentro { padding: 16px 34px 16px; background: #121316; clip-path: polygon(10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px), 0 10px); }
+.fb-emblema + .fb-placa .fb-dentro { padding-top: 44px; }
+.fb-titulo { display: inline-flex; align-items: center; gap: 10px; font-family: var(--titulo); font-weight: 400; line-height: 1; color: var(--ouro); white-space: nowrap; text-shadow: var(--contorno); }
+.fb-sub { margin: 10px auto 0; max-width: 60ch; font-family: var(--prosa); font-size: 19px; line-height: 1.35; color: #e6dbc2; }
+.fb.peso-comum .fb-emblema { width: 84px; height: 84px; margin-bottom: -30px; }
+.fb.peso-comum .fb-joia { width: 78px; height: 78px; }
+.fb.peso-comum .fb-joia img { width: 40px; height: 40px; }
+.fb.peso-comum .fb-dentro { padding: 36px 30px 12px; }
+.fb.peso-marco .fb-emblema, .fb.peso-marco .fb-placa { background: #c9a14a; }
+.fb.peso-marco .fb-sub { color: #f2e6c8; }
+.fb.peso-peso .fb-placa { background: #4a2a22; }
+.fb.peso-peso .fb-dentro { background: #0e0a0a; padding: 18px 40px; }
+.fb.peso-peso.tom-sangue .fb-titulo { color: #d0503c; }
+.fb.peso-peso.tom-cinza .fb-placa { background: #3c3d44; }
+.fb.peso-peso.tom-cinza .fb-titulo { color: #c8c0b2; }
+.fb.peso-peso .fb-sub { color: #bdb4a6; }
+.fb.peso-passagem .fb-placa { background: #3a3326; }
+.fb.peso-passagem .fb-dentro { padding: 10px 26px 12px; }
+.fb.peso-passagem .fb-titulo { color: #e6dbc2; }
+.fb.peso-passagem .fb-sub { margin-top: 6px; font-size: 18px; }
+.fb-icone img { width: 32px; height: 32px; }
+
+/* ---------------------------------------------------------------- a entrada e a saída
+   O texto já nasce legível: as entradas mexem a posição e a faixa, nunca deixam o título borrado ou ilegível por
+   muito tempo. Com o movimento reduzido, nada anima: a faixa aparece e some no mesmo tempo, com tudo escrito. */
+.fx-faixa.entra { animation: fx-entra 160ms steps(4, end) both; }
+.fx-faixa.sai { animation: fx-sai var(--saida, 260ms) steps(5, end) both; }
+@keyframes fx-entra { from { opacity: 0; transform: translateY(6px); } }
+@keyframes fx-sai { to { opacity: 0; } }
+/* A: a faixa abre do meio (a base corre para os lados) e o texto chega junto */
+.fa.entra .fa-borda, .fa.entra .fa-base { animation: fa-abre 200ms steps(5, end) both; }
+@keyframes fa-abre { from { transform: scaleX(0.2); } }
+.fa.peso-marco.entra { animation-duration: 220ms; }
+.fa.peso-peso.entra { animation: fx-peso 420ms steps(6, end) both; }
+.fa.peso-peso.sai { --saida: 520ms; }
+.fa.peso-passagem.entra, .fb.peso-passagem.entra { animation: fx-entra 260ms steps(4, end) both; }
+@keyframes fx-peso { from { opacity: 0; transform: translateY(-8px); } }
+/* B: a placa entra; no marco, o emblema bate (do grande para o lugar, em três degraus) */
+.fb.peso-marco.entra .fb-emblema { animation: fb-bate 240ms steps(3, end) both; }
+.fb.peso-comum.entra .fb-emblema { animation: fb-bate-leve 160ms steps(2, end) both; }
+@keyframes fb-bate { from { transform: scale(1.6); } }
+@keyframes fb-bate-leve { from { transform: scale(1.25); } }
+.fb.peso-peso.entra { animation: fx-afunda 420ms steps(6, end) both; }
+.fb.peso-peso.sai { --saida: 520ms; }
+@keyframes fx-afunda { from { opacity: 0; transform: translateY(-10px); } }
+@media (prefers-reduced-motion: reduce) {
+  .fx-faixa.entra, .fx-faixa.sai, .fx-faixa.entra * { animation: none !important; }
+}

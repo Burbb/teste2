@@ -7320,3 +7320,19 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Adiado** (retirada do procedural): o título, os saves, a criação de personagem. **Etapa 8:** Grimório e Talentos.
 - **Recomendação:** o próximo lote são as faixas de passagem, num lote só, em protótipo com duas variantes; depois, a
   orientação. A etapa 2 não está concluída. Não começados: a retirada do procedural e outras frentes.
+
+### 24/10/2026 (data do computador local) — As faixas de passagem: duas direções (protótipo, nada no jogo)
+
+- **Onde:** `ferramentas/prototipos/hud/faixas/` (LEIA-ME, `folha-faixas.png`, as fotos em tamanho real, a
+  demonstração em `demo.bat`, painel em http://127.0.0.1:8768/, com saves temporários). As faixas de hoje no jogo.
+- **Os usos reais levantados:** Vitória (1 s, toda luta), Guardião (1,5 s), Mestre caçador (1,8 s), Você caiu/morreu
+  (2,2 s, a única que se adianta), Exausto (2,3 s), Saindo da capela (2,6 s; o texto até 155 letras), a chegada à
+  comitiva (1,5 s). A sequência real: Guardião → Mestre caçador → espólio → subida de nível → achado.
+- **As direções:** A · a faixa integrada ao palco; B · emblema e anúncio. As duas dentro do palco, o subtítulo a 18–19
+  px (hoje 15–17), os ícones da família, quatro pesos pela forma e pelo movimento. Só o desenho muda: os tempos, os
+  sons e a ordem são os de hoje (os mesmos tempos medidos nas três versões); cliques e teclas nas faixas não escolhem
+  nada na tela seguinte; o movimento reduzido mostra a faixa inteira, parada.
+- **Recomendação:** A (a mais leve para a Vitória repetida, apoiada no palco; a 1280 com folga). **À parte:** o adiantar
+  não encurta as faixas (só a queda olha o `pular`); hoje, o Guardião e o Mestre ficam ~0,1 s um sobre o outro.
+- **Agora:** a escolha do Jean; nada integrado. Não começados: os quadros do tutorial, o menu inicial, o Grimório e a
+  retirada do procedural.
