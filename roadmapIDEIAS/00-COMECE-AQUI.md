@@ -7208,4 +7208,22 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   bolsa (32) e a pilha "Baús abertos ×3" (48), a 1920×945 e a 1280×720, só com os arquivos de `/static/hud/icones/`
   (nenhum pedido ao protótipo, nenhum erro): `ferramentas/prototipos/hud/bau/folha-integracao.png`.
 - **Sem mudança:** o Mímico, o quadro do espólio, as regras e o sorteio dos baús.
-- **O próximo da etapa 2:** o livro narrativo da capela (o levantamento, separado desta entrega).
+- **O próximo da etapa 2:** o livro narrativo da capela (o levantamento, registrado à parte, abaixo).
+
+### 24/10/2026 (data do computador local) — Etapa 2: o livro narrativo da capela, o levantamento (nada no jogo)
+
+- **Onde:** `ferramentas/prototipos/hud/livro-capela/` (LEIA-ME e `folha-atual.png`, a 1920×945 e a 1280×720 pelo
+  cenário `capela`, `ETAPA=ossuario LIVRO=0 SALA=sacristia`). Só o levantamento: nada redesenhado nem implementado;
+  textos e regras intocados.
+- **Hoje:** lê-se na sacristia depois da luta (menu ou ponto "Livro"), nas etapas ossuário, fundo e retorno (e depois
+  do fim); a primeira leitura grava `ilse` e `sigilo_do_turvo` (o nome da guardiã, a pergunta que leva à Berta, o
+  primeiro requisito do descanso); reler não muda nada; fecha por botão, Esc, Enter, espaço ou véu. A tela é a casca do
+  Grimório antigo (CSS, filete dourado), 860×360 nas duas janelas.
+- **Problemas observados:** a casca não é a linguagem aprovada; outro objeto que o registro castanho da cena; metade das
+  páginas vazia; o salto de anos entre as entradas não se vê na tela (o modo texto tem "Algumas páginas adiante:"); o
+  Fechar por fora da moldura. À parte, para uma correção separada: o atalho da missão no painel aponta para "Ler o
+  livro da capela" mesmo com o objetivo "Descer ao ossuário" e depois de ler; o Histórico repete a linha a cada leitura.
+- **Escopo proposto:** o registro aberto em pixel art (couro castanho como na cena, lombada, blocos de folhas), o papel
+  com grão e as duas tintas, a marca do salto de tempo sem texto novo, o tamanho pelo texto, o Fechar dentro da moldura
+  de ferro, CSS separado do Grimório, a abertura em poucos quadros. Duas variantes na proposta.
+- **Agora:** a decisão do Jean sobre o escopo. Não começados: a retirada do procedural e outras frentes.
