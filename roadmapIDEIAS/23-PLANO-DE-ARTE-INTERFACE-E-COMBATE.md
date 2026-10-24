@@ -1259,7 +1259,11 @@ ou mudanças de dados por iniciativa do agente.
   navegador e em disco (`preferencias/tela.json`, ao lado dos saves), volta ao reabrir o jogo; sem escolha válida, o
   Clássico. **Depois:** o seletor vai para o menu de configurações do jogo (junto da futura opção Estouro/Relicário,
   que é outra escolha, independente). Regras, sorteios, bônus, dificuldade, ritmo e comandos sem mudança.
-- **O baú em avaliação (24/10/2026, só no protótipo):** duas propostas para o Baú Trancado em
+- **Preferências da tela (1.202.2):** a velocidade, o som e o destaque no mesmo arquivo do d20; o menu de
+  configurações, quando existir, lê e grava por ele (`servidor.PREFERENCIAS`, `preferir`).
+- **O baú, a A2 em avaliação (24/10/2026, só no protótipo):** o A escolhido como direção; a A2 refina a tampa, a três
+  quartos e o volume, com um 48 próprio para a pilha. A, B e o placeholder como histórico.
+- **O baú em avaliação, primeira rodada (24/10/2026, só no protótipo):** duas propostas para o Baú Trancado em
   `ferramentas/prototipos/hud/bau/` (A, a identidade de sempre; B, o baú trancado com o cadeado), o 32 desenhado à mão
   e o 48 da pilha como o 32 centrado (um 48 próprio depois da escolha, se o Jean quiser). O jogo segue com o
   placeholder. Esperando a escolha.
@@ -1437,8 +1441,8 @@ volta à pauta quando essa expansão exigir; não é uma migração de engine.
    Estouro como padrão pretendido (a troca vai para as opções do jogo); A3, B3 e o Piromante aprovados (24/10/2026);
    B4, A4, Piromante, Necromante, Sombra e Patrulheiro aprovados; o sangue A do Berserker e a luz B (vitral) do Paladino
    escolhidos; **integrado na 1.201.0 (24/10/2026)**. O d20: as três apresentações aprovadas (o Clássico, padrão, o
-   Marfim e o Vidro) **integradas na 1.202.0**, à escolha na Ajuda até o menu de configurações. O baú em avaliação
-   (duas propostas, só no protótipo). Histórico: **1E.4, em avaliação (23/10/2026):** o levantamento e o primeiro lote de protótipos (a posição, os caminhos, os
+   Marfim e o Vidro) **integradas na 1.202.0**, à escolha na Ajuda até o menu de configurações. O baú: a A2 (o refino do A) em avaliação,
+   só no protótipo. Histórico: **1E.4, em avaliação (23/10/2026):** o levantamento e o primeiro lote de protótipos (a posição, os caminhos, os
    símbolos e as marcas; detalhes em "A 1E.4 em 23/10/2026", no item 1.12). O Jean escolheu a direção B (a A fica como
    alternativa); aprovados como base a plaqueta B, a cancela, os caminhos e as marcas; a vila e a floresta nativas
    aprovadas (`094bb80a`: 32 no minimapa, 48 no mapa grande); o pântano e as ruínas aprovados (`c7bd2348`); em

@@ -7171,3 +7171,24 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   porta muda a cada abertura, eles também não voltam ao reabrir o jogo. Levar para o arquivo de preferências junto do
   menu de configurações.
 - **Não começados:** o livro da capela, a retirada do procedural e outras frentes.
+
+### 24/10/2026 (data do computador local) — Preferências persistentes, dicas mais claras, o lendário e a A2 do baú (1.202.2 a 1.202.4)
+
+- **Preferências (1.202.2, no jogo):** a velocidade do texto, o som e o "Destacar interações" passaram a ficar no
+  mesmo arquivo do d20 (`preferencias/tela.json`, ao lado dos saves; independente dos saves da campanha), pela mesma
+  rota e por um ajudante só (`preferir`, em `app/nucleo.js`). Cada uma é gravada sem mexer nas outras; na abertura,
+  as guardadas valem mais que as do navegador; sem arquivo (ou com valor inválido), os padrões de antes. Conferido
+  abrindo o jogo três vezes em portas diferentes com o navegador zerado. **Para conferir:** mude o texto (V), o som
+  (S), o destaque (F4) e o dado (F1), feche e abra o jogo; o arquivo fica em `~/.cronicas_da_fenda/preferencias/`.
+- **Dicas (1.202.3, no jogo):** a dica da vida bloqueada diz o que reduz a vida máxima e quanto ("Um ferimento e a
+  fome reduzem sua vida máxima de 60 para 49. Curas param em 49.") e como o limite volta ("depois de alguns dias de
+  descanso, ou na hora, na Curandeira"; a fome, comendo); a bandagem explicada na dica dela ("Não recupera vida nem a
+  vida máxima: o ferimento continua até sarar."); o primeiro ferimento com os dias reais.
+- **O achado lendário (1.202.4, no jogo):** conferido durante a entrada, a 1920×945 e 1280×720: as pontas dos raios
+  encostavam no "+" dos atributos; só no lendário sem comparação, a coluna se afasta 12 px a mais.
+- **O baú (só no protótipo):** o Jean escolheu o A como direção. A **A2**, o refino (a tampa abaulada, a três quartos
+  evidente, os planos de luz e um 48 próprio para a pilha), em `ferramentas/prototipos/hud/bau/` (`folha-a2.png`);
+  A, B e o placeholder ficam como histórico. **Aguarda a avaliação; nada integrado.**
+- **Verificações:** o `unittest` (695 ok, 1 pulado), o gabarito (atualizado só nos textos da vida bloqueada e da
+  bandagem, conferido trocando os textos antigos pelos novos), o pyflakes e a fumaça.
+- **Não começados:** o livro da capela e a retirada do procedural.
