@@ -1,4 +1,5 @@
-// Confere a escrita da A refinada apoiada na pauta, no jogo de verdade (cenarios_livro.py, PROPOSTA=a2), a 1920×945 e
+// Confere a escrita da A refinada apoiada na pauta, no jogo de verdade (cenarios_livro.py, PROPOSTA=a2, ou outra como
+// PROPOSTA=capela), a 1920×945 e
 // a 1280×720: em cada linha escrita das duas páginas, a linha de base (medida por uma sonda depois de cada palavra)
 // cai em cima de uma linha da pauta (a 30 + 33·k px do alto do bloco; tolerância de 1 px). Primeiro com o texto real
 // (o livro aberto pelo menu); depois, na mesma página, com textos de teste mais longos (outros acentos, palavras
@@ -31,7 +32,7 @@ const TESTES = {
 
 async function subir() {
   const proc = spawn(PY, [path.join(aqui, "cenarios_livro.py"), "releitura"],
-    { cwd: raiz, env: { ...process.env, VELOCIDADE: "rapido", PYTHONPATH: raiz, PROPOSTA: "a2" } });
+    { cwd: raiz, env: { ...process.env, VELOCIDADE: "rapido", PYTHONPATH: raiz, PROPOSTA: process.env.PROPOSTA || "a2" } });
   let url = null;
   proc.stdout.on("data", (d) => { const m = String(d).match(/http:\S+/); if (m) url = m[0]; });
   for (let k = 0; k < 300 && !url; k++) await espera(100);
@@ -89,7 +90,7 @@ for (const [jan, W, H] of [["1920", 1920, 945], ["1280", 1280, 720]]) {
     await p.evaluate((d) => { Telas.lerLivro(d, false); }, d);
     await p.waitForSelector("#sobre-leitura:not([hidden])"); await espera(400);
     await p.mouse.move(2, 2);
-    await p.screenshot({ path: path.join(SAIDA, `pauta-${jan}-${nome}.png`) });
+    await p.screenshot({ path: path.join(SAIDA, `pauta-${process.env.PROPOSTA || "a2"}-${jan}-${nome}.png`) });
     const m = await medir(p);
     conferir(m.every((x) => x.desvio.every((dd) => Math.abs(dd) <= 1)), `texto de teste "${nome}": cada linha na pauta (linhas ${m.map((x) => x.linhas).join(" e ")})`);
     if (nome === "transborda") {

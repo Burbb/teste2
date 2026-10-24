@@ -38,7 +38,7 @@ Não iniciar todo o plano numa única tarefa. As etapas técnicas A–I e a vali
   está em "A frente de criaturas em 22/10/2026", no item 1.12. O Bandido do chapéu está reservado como conceito de um possível chefe, fora do jogo.
 - **A 1E concluída para a campanha (1.200.0):** a 1E.4 integrada; da 1E.3, só restam os retratos do modo procedural (o substituto da Bruxa nos covis e o antagonista), suspensos com a direção de ficar só com a campanha. **Etapa 2, o primeiro lote integrado na 1.201.0 (24/10/2026):** a subida de nível, as celebrações e a raridade
 (o Estouro como padrão, o Relicário guardado como alternativa, as seis identidades de especialização); o d20 na
-1.202.0 e o baú (o A original) na 1.203.0. **Agora: o livro narrativo da capela**, a A refinada em avaliação (24/10/2026, só a apresentação, nada no jogo;
+1.202.0 e o baú (o A original) na 1.203.0. **Agora: o livro narrativo da capela**, a base aprovada e a variante deteriorada em avaliação (24/10/2026, só a apresentação, nada no jogo;
 `ferramentas/prototipos/hud/livro-capela/`). Histórico: **1E.3, as demais criaturas, os chefes e as invocações** (as outras ainda saem dos traços: o `fera`, o
   `humano`, a caveira e os outros sprites de 16×16; o levantamento em `ferramentas/prototipos/hud/criaturas/`).
   **1E.4 começada (23/10/2026, a direção agora é só a campanha):** o levantamento e o primeiro lote de protótipos em
@@ -1283,7 +1283,16 @@ ou mudanças de dados por iniciativa do agente.
   ficam as duas páginas, a Fondamento, a pauta e a margem, o couro e as medidas, a diferença discreta de tinta e o vazio
   da página da esquerda; mudam o papel (o centro calmo, o desgaste nas beiras e na dobra) e a letra apoiada na pauta,
   pela métrica da fonte, em qualquer texto e quebra (na A, a linha de base ficava 2 px acima). A, B e C intactas.
-  Comparação em `livro-capela/folha-a2.png`. Aguarda o Jean.
+  Comparação em `livro-capela/folha-a2.png`.
+- **A base visual dos livros do jogo: a A refinada, aprovada (24/10/2026, `831a1bbb`).** Referência limpa e
+  reutilizável (as duas páginas, a Fondamento, a pauta alinhada pela métrica da fonte, as margens, o couro, a leitura),
+  guardada em `ferramentas/prototipos/hud/livro-capela/`. Não troca outras telas por si (o Grimório continua o dele).
+- **O livro da capela deteriorado, candidata em avaliação (24/10/2026, só no protótipo):** a base com os anos na capela
+  úmida, em poucos danos com forma (pedaços arrancados que mostram a folha de baixo, o couro ou nada; um rasgo
+  entrando pela beira; os níveis da água; manchas de bolor junto da encadernação e nas quinas; o couro escuro e
+  gasto). O rasgo tira papel, pauta e tinta juntos (a máscara da página) e só trechos de letras ("nem" 5%, "do" 26%),
+  com Ilse, o Sigilo e as outras essenciais intactas nas duas janelas. Comparação em `livro-capela/folha-capela.png`.
+  O conteúdo narrativo continua para depois. Aguarda o Jean.
 - **O baú, a A2 em avaliação (24/10/2026, só no protótipo; histórico):** o A escolhido como direção; a A2 refina a tampa, a três
   quartos e o volume, com um 48 próprio para a pilha. A, B e o placeholder como histórico.
 - **O baú em avaliação, primeira rodada (24/10/2026, só no protótipo):** duas propostas para o Baú Trancado em
@@ -1465,7 +1474,7 @@ volta à pauta quando essa expansão exigir; não é uma migração de engine.
    B4, A4, Piromante, Necromante, Sombra e Patrulheiro aprovados; o sangue A do Berserker e a luz B (vitral) do Paladino
    escolhidos; **integrado na 1.201.0 (24/10/2026)**. O d20: as três apresentações aprovadas (o Clássico, padrão, o
    Marfim e o Vidro) **integradas na 1.202.0**, à escolha na Ajuda até o menu de configurações. O baú: o A original **integrado na 1.203.0**
-   (a A2 não aprovada). O livro narrativo da capela: a A escolhida como base, a A refinada em avaliação (só a apresentação; o conteúdo narrativo fica para depois). Histórico: **1E.4, em avaliação (23/10/2026):** o levantamento e o primeiro lote de protótipos (a posição, os caminhos, os
+   (a A2 não aprovada). O livro narrativo da capela: a A refinada aprovada como base visual dos livros; a variante deteriorada da capela em avaliação (só a apresentação; o conteúdo narrativo fica para depois). Histórico: **1E.4, em avaliação (23/10/2026):** o levantamento e o primeiro lote de protótipos (a posição, os caminhos, os
    símbolos e as marcas; detalhes em "A 1E.4 em 23/10/2026", no item 1.12). O Jean escolheu a direção B (a A fica como
    alternativa); aprovados como base a plaqueta B, a cancela, os caminhos e as marcas; a vila e a floresta nativas
    aprovadas (`094bb80a`: 32 no minimapa, 48 no mapa grande); o pântano e as ruínas aprovados (`c7bd2348`); em

@@ -7263,3 +7263,19 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   teclas do menu isoladas, as mesmas pistas (`auxiliares/gestos.mjs`). O jogo não mudou.
 - **Demonstração:** `demo.bat`, http://127.0.0.1:8767/ ("A refinada" ao lado de A, B, C e do livro de hoje).
 - **Agora:** a avaliação do Jean; nada integrado. Não começados: a retirada do procedural e outras frentes.
+
+### 24/10/2026 (data do computador local) — A base dos livros aprovada; o livro da capela deteriorado (candidata)
+
+- **Aprovada pelo Jean:** a A refinada (`831a1bbb`) é a **base visual dos livros do jogo**: as duas páginas, a
+  Fondamento, a pauta alinhada pela métrica da fonte, as margens, o couro e a leitura. Guardada limpa e separada em
+  `ferramentas/prototipos/hud/livro-capela/` (`livro-a2.png`, `.lv-regua`, `medirTopo`). Não troca outras telas.
+- **Candidata, só no protótipo:** o livro da capela deteriorado (`desenhar_capela.py`, `livro-capela.png` e as máscaras;
+  `folha-capela.png`): pedaços arrancados mostrando a folha de baixo, o couro ou nada; um rasgo entrando pela beira;
+  três níveis de água na esquerda e um na direita; manchas de bolor junto da encadernação e nas quinas; o couro escuro,
+  gasto e sem um canto. O rasgo tira papel, pauta e tinta juntos e só trechos ("nem" 5%, "do" 26%); Ilse, Sigilo e as
+  outras essenciais intactas, as mesmas letras tocadas a 1920 e a 1280.
+- **Conferido:** `dano.mjs` (as palavras tocadas, o texto real e textos de teste maiores rolando), `pauta.mjs`
+  (`PROPOSTA=capela`: desvio 0, a rolagem), `gestos.mjs` (foco, fechar, véu, as teclas do menu, as mesmas pistas). Limite
+  registrado: o dano é da página; um texto novo pede o `dano.mjs` de novo. O jogo não mudou.
+- **Demonstração:** `demo.bat`, http://127.0.0.1:8767/. **Agora:** a avaliação do Jean; nada integrado. O conteúdo
+  narrativo continua para a frente narrativa da campanha.

@@ -23,7 +23,7 @@ from cenarios_livro import CASOS, ROTULOS  # noqa: E402
 
 PORTA = int(os.environ.get("DEMO_PORTA", "8767"))
 PAINEL = f"http://127.0.0.1:{PORTA}/"
-VERSOES = ["", "a", "a2", "b", "c"]
+VERSOES = ["", "a2", "capela", "a", "b", "c"]
 trava = threading.Lock()
 atual = {"proc": None, "rotulo": ""}
 

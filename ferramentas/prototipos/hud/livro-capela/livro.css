@@ -41,10 +41,16 @@
 .lv-regua .lv-texto { position: relative; box-sizing: border-box; min-height: 100%;
   background: repeating-linear-gradient(to bottom, transparent 0 30px, #d6c69c 30px 33px); }
 .lv-a2-sonda { visibility: hidden; left: 0; top: 0; width: 400px; }
-.lv-a2 .lv-entrada2 { color: var(--lv-tinta-2); }
-.lv-a2 .lv-entrada2 p:first-child { text-indent: 2.4em; }
-.lv-a2 .lv-entrada2 .lv-texto::before { content: ""; position: absolute; left: var(--esq); top: 27px; width: 54px; height: 3px;
+:is(.lv-a2, .lv-capela) .lv-entrada2 { color: var(--lv-tinta-2); }
+:is(.lv-a2, .lv-capela) .lv-entrada2 p:first-child { text-indent: 2.4em; }
+:is(.lv-a2, .lv-capela) .lv-entrada2 .lv-texto::before { content: ""; position: absolute; left: var(--esq); top: 27px; width: 54px; height: 3px;
   background: var(--lv-tinta-2); clip-path: polygon(0 40%, 8% 0, 100% 30%, 96% 100%, 4% 80%); opacity: 0.85; }
+
+/* O livro da capela deteriorado (candidata): a base acima, com a máscara de cada página no bloco de texto
+   (desenhar_capela.py): onde falta papel, a pauta e a tinta somem junto; sob o bolor e a água, desbotam. A máscara é
+   do bloco que rola, não do texto: o dano fica preso à página. */
+.lv-mascarada { -webkit-mask-image: var(--mascara); mask-image: var(--mascara); -webkit-mask-size: 100% 100%; mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; mask-mode: alpha; }
 
 /* ---------------------------------------------------------------- B · o registro que vira confissão
    A primeira entrada arrumada, com espaço entre as linhas; a segunda na mesma mão mais depressa (a itálica da

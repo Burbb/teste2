@@ -7,7 +7,10 @@
 //   LivroProto.usar("b")   B · o registro que vira confissão: a segunda entrada na mesma mão, mais depressa
 //   LivroProto.usar("c")   C · a leitura próxima: uma página, uma entrada por vez, Anterior e Próxima
 //   LivroProto.usar("a2")  A refinada: o livro da A com o papel calmo no centro e a escrita apoiada na pauta, que a
-//                          página desenha junto com o texto (qualquer texto, qualquer quebra de linha)
+//                          página desenha junto com o texto (qualquer texto, qualquer quebra de linha). A BASE
+//                          APROVADA dos livros do jogo (24/10/2026)
+//   LivroProto.usar("capela") o livro da capela deteriorado (candidata): a base, com os danos de desenhar_capela.py e
+//                          a máscara de cada página no bloco de texto (onde falta papel, somem a pauta e a tinta)
 //
 // O texto é da página (HTML), nunca da imagem: a imagem é só o livro (desenhar_livro.py, escala 3).
 (() => {
@@ -46,9 +49,10 @@
     topo = Math.round(PAUTA - (base - linha));
     return topo;
   }
-  const regua = (r, entradaN, html) => {
+  const regua = (r, entradaN, html, mascara) => {
     const [x0, y0, x1, y1] = r.caixa, [t0, t1] = r.texto;
-    return `<div class="lv-pagina lv-regua lv-entrada${entradaN}" style="${caixa([x0, y0, x1, y1])}">
+    const m = mascara ? `;--mascara:url('${BASE}propostas/${mascara}')` : "";
+    return `<div class="lv-pagina lv-regua lv-entrada${entradaN}${mascara ? " lv-mascarada" : ""}" style="${caixa([x0, y0, x1, y1])}${m}">
       <div class="lv-texto" style="--esq:${(t0 - x0) * ESCALA}px;padding:${medirTopo() + (entradaN === 2 ? PASSO : 0)}px ${(x1 - t1) * ESCALA}px 0 var(--esq)">${html}</div></div>`;
   };
 
@@ -79,8 +83,9 @@
     const [W, H] = a.tamanho;
     const img = versao === "c" ? `livro-c-${entrada + 1}.png` : `livro-${versao}.png`;
     let paginas;
-    if (versao === "a2") {
-      paginas = regua(a.reguas.esquerda, 1, pars(p1)) + regua(a.reguas.direita, 2, pars(p2));
+    if (versao === "a2" || versao === "capela") {
+      const ms = a.mascaras || {};
+      paginas = regua(a.reguas.esquerda, 1, pars(p1), ms.esquerda) + regua(a.reguas.direita, 2, pars(p2), ms.direita);
     } else if (versao === "c") {
       const t = entrada ? p2 : p1;
       paginas = `<div class="lv-pagina lv-entrada${entrada + 1}" style="${caixa(a.paginas.direita)}" aria-live="polite">

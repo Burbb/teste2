@@ -49,8 +49,8 @@ const depois = async (p) => {
   await espera(300);
 };
 
-let referencia = null;
-for (const v of ["atual", "a", "a2", "b", "c"]) {
+let referencia = null;  // as pistas do livro de hoje (VERSOES começa por "atual" para comparar)
+for (const v of (process.env.VERSOES || "atual,a,a2,capela,b,c").split(",")) {
   console.log(`== ${v}`);
   let { p, proc, erros } = await abrirPagina(v, "primeira");
   const antes = await pistas(p);
@@ -84,7 +84,7 @@ for (const v of ["atual", "a", "a2", "b", "c"]) {
     await p.keyboard.press("PageDown"); await espera(300);
     conferir(/Entrada 2 de 2/.test(await p.textContent(".lv-conta")), "C: PageDown vai à segunda");
     await p.keyboard.press("Escape");
-  } else if (v === "a" || v === "a2" || v === "b") {
+  } else if (["a", "a2", "capela", "b"].includes(v)) {
     const foco = await p.evaluate(() => document.activeElement.className);
     await p.keyboard.press("Tab");
     conferir(/lv-fechar/.test(foco) && /lv-fechar/.test(await p.evaluate(() => document.activeElement.className)), `${v.toUpperCase()}: o foco no Fechar, e o Tab fica nele`);
@@ -103,7 +103,7 @@ for (const v of ["atual", "a", "a2", "b", "c"]) {
   if (v === "atual") referencia = agora; else conferir(agora === referencia, "as pistas iguais às do livro de hoje (nada a mais, nada a menos)");
   // reler: nada muda; nas A e B, pelo Enter e pelo véu; na C, pelo botão Fechar
   await ler(p);
-  if (v === "a" || v === "a2" || v === "b") {
+  if (["a", "a2", "capela", "b"].includes(v)) {
     await p.keyboard.press("Enter"); await espera(300);
     conferir(!(await aberto(p)), `${v.toUpperCase()}: Enter fecha`);
     await depois(p);

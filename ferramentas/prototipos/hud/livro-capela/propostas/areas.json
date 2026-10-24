@@ -123,5 +123,59 @@
    "primeira": 25,
    "passo": 11
   }
+ },
+ "capela": {
+  "tamanho": [
+   290,
+   170
+  ],
+  "paginas": {
+   "esquerda": [
+    22,
+    16,
+    133,
+    152
+   ],
+   "direita": [
+    155,
+    16,
+    265,
+    152
+   ]
+  },
+  "reguas": {
+   "esquerda": {
+    "caixa": [
+     14,
+     15,
+     137,
+     147
+    ],
+    "texto": [
+     22,
+     133
+    ]
+   },
+   "direita": {
+    "caixa": [
+     149,
+     15,
+     273,
+     147
+    ],
+    "texto": [
+     155,
+     265
+    ]
+   }
+  },
+  "pauta": {
+   "primeira": 25,
+   "passo": 11
+  },
+  "mascaras": {
+   "esquerda": "mascara-capela-esquerda.png",
+   "direita": "mascara-capela-direita.png"
+  }
  }
 }

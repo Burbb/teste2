@@ -1,10 +1,54 @@
 # O livro narrativo da capela (etapa 2, 24/10/2026)
 
-**Agora: a A refinada, em avaliação.** O Jean escolheu a A como base (24/10/2026); esta rodada trata só da
-apresentação do livro. O texto e a história serão revistos depois, na frente narrativa da campanha: o conteúdo atual é
-a amostra de leitura, sem mudança. Nada integrado; o livro de hoje continua no jogo. A, B e C ficam como estavam.
+**A base visual dos livros do jogo: a A refinada, APROVADA pelo Jean (24/10/2026, commit `831a1bbb`).** Fica como
+referência reutilizável e limpa: a composição de duas páginas, a Fondamento, a pauta alinhada pela métrica da fonte,
+as margens, o couro e o comportamento de leitura (`livro-a2.png`, `.lv-regua` e `medirTopo` em `livro.css`/`livro.js`,
+`duas_paginas_refinado` em `desenhar_livro.py`). A aprovação não troca outras telas (o Grimório continua o dele).
 
-## A refinada
+**Agora: o livro da capela deteriorado, candidata em avaliação** (seção abaixo). Nada integrado; o livro de hoje
+continua no jogo. O texto e a história continuam para a frente narrativa da campanha.
+
+## O livro da capela deteriorado (candidata)
+
+**A direção (Jean):** o livro passou anos numa capela úmida e abandonada, e isso aparece no objeto, com danos
+perceptíveis no tamanho real: poucos, com forma e presença, assimétricos, em vez de sujeira espalhada por igual.
+
+**Como foi feito:** `desenhar_capela.py` lê uma cópia da base (`livro-a2.png`, que não muda: o mesmo SHA-1 antes e
+depois) e desenha por cima, cada forma escolhida à mão (os vértices dos rasgos, os níveis da água, as manchas):
+- **pedaços arrancados:** o canto de baixo de fora da página da esquerda (com as folhas de baixo e o canto da capa),
+  a mordida na beira de fora da esquerda, o canto de cima de fora da direita e falhas pequenas nas beiras;
+- **o rasgo** que entra pela beira de fora da direita, estreitando até uma fenda fina;
+- onde falta papel, **a folha de baixo** (pautada, sem escrita, com a sombra da beira rasgada); mais fundo, **o couro
+  por dentro**; sem capa, nada. A beira que ficou tem o **fio claro do papel rasgado**. Nenhuma mancha escura faz as
+  vezes de recorte;
+- **a água:** três níveis na esquerda (a página que ficou mais tempo molhada), com as marcas no alto de cada um e cores
+  diferentes; um nível baixo na direita; a água que desceu pela dobra da direita. Cada nível tinge o papel que estava
+  lá (o grão continua);
+- **o bolor** em manchas com contorno próprio (o papel tingido, o miolo mais escuro, os esporos ralos e densos), junto
+  da encadernação e nas quinas, em verde-acinzentado e castanho apagados; satélites pequenos e bolor no couro perto da
+  lombada;
+- **o couro** mais escuro, gasto nas quinas e nas beiras, sem o canto de baixo da esquerda (onde as folhas se foram).
+
+**O dano na escrita:** a página escreve a pauta e a tinta por cima (como na base) e recebe uma máscara do próprio
+desenho (`mascara-capela-<lado>.png`): onde falta papel, a pauta e a tinta somem junto (0); sob o bolor e a água,
+desbotam. A máscara é do bloco que rola, então o dano fica preso à página. No texto real, o rasgo tira o pé do "n" de
+"nem" (5%) e o alto de "do" (26%); Ilse, Sigilo, Turvo, Igreja, Fenda, guardiã e água ficam intactas, e as mesmas
+letras são tocadas a 1920 e a 1280 (as quebras são as mesmas: o bloco tem a mesma largura nas duas).
+
+**Conferido** (no jogo real, cenário `capela`, a 1920×945 e a 1280×720):
+- `auxiliares/dano.mjs`: letra a letra, quanto o dano tira de cada palavra; no texto real, as essenciais intactas;
+  em todos (também nos textos de teste maiores, rolando), nenhuma palavra perde mais de 40% e nenhuma some; fotos
+  `capturas/dano-*.png`. **Limite:** o dano é da página, então um texto novo pode cair num rasgo (o teste rolado
+  toca 4% de um "Sigilo" de prova): quando o texto do livro mudar, rode o `dano.mjs` e ajuste o rasgo ou o texto;
+- `auxiliares/pauta.mjs` com `PROPOSTA=capela`: a linha de base na pauta em toda linha (desvio 0) e a rolagem com a
+  pauta junto, como na base;
+- `auxiliares/gestos.mjs`: foco, Esc, Enter, véu, as teclas do menu isoladas, as mesmas pistas e o mesmo cartão.
+
+**A comparação:** `folha-capela.png` (base × capela a 1920 em tamanho real, as telas de 1280 a metade e os três
+rasgos ampliados 3×). **Demonstração:** `demo.bat`, http://127.0.0.1:8767/ (as linhas "A refinada (a base aprovada)"
+e "Capela (deteriorado, candidata)").
+
+## A refinada (a base aprovada)
 
 **O que fica da A:** as duas páginas, a Fondamento, a pauta (o mesmo passo de 33 px, a mesma cor, a mesma largura) e
 a margem, o couro castanho com as mesmas medidas, a diferença discreta de tinta entre as entradas, o traço de pena e o

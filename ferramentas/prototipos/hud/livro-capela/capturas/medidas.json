@@ -291,6 +291,58 @@
     }
    ],
    "fonte": true
+  },
+  "1920-capela": {
+   "livro": [
+    870,
+    510
+   ],
+   "quadro": [
+    525,
+    176,
+    870,
+    593
+   ],
+   "dentroDaJanela": true,
+   "pags": [
+    {
+     "cabe": true,
+     "sobra": 0,
+     "letra": "Fondamento, Alegreya, Georgia, serif, serif"
+    },
+    {
+     "cabe": true,
+     "sobra": 0,
+     "letra": "Fondamento, Alegreya, Georgia, serif, serif"
+    }
+   ],
+   "fonte": true
+  },
+  "1280-capela": {
+   "livro": [
+    870,
+    510
+   ],
+   "quadro": [
+    205,
+    64,
+    870,
+    593
+   ],
+   "dentroDaJanela": true,
+   "pags": [
+    {
+     "cabe": true,
+     "sobra": 0,
+     "letra": "Fondamento, Alegreya, Georgia, serif, serif"
+    },
+    {
+     "cabe": true,
+     "sobra": 0,
+     "letra": "Fondamento, Alegreya, Georgia, serif, serif"
+    }
+   ],
+   "fonte": true
   }
  },
  "erros": []
