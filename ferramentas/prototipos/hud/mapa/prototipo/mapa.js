@@ -27,10 +27,10 @@ const MapaPx = (() => {
   const cache = {};
   const { BAYER4, rgb, misturar } = Sprites;
   const P = Object.assign({ mini: 32, grande: 40, pos: "b", nativo: "", nativoGrande: "" }, window.__MAPA || {});  // a variante em avaliação
-  // os símbolos refeitos em grade nativa (só a vila e a floresta, em avaliação): P.nativo no minimapa ("n32") e
+  // os símbolos refeitos em grade nativa (os cinco da campanha; a vila e a floresta aprovadas): P.nativo no minimapa ("n32") e
   // P.nativoGrande no mapa grande ("n32", o mesmo desenho 1:1, ou "n48", a adaptação à mão); os outros lugares ficam
   // com os ícones antigos da família
-  const NATIVOS = new Set(["vila", "floresta"]);
+  const NATIVOS = new Set(P.lugaresNativos || ["vila", "floresta", "pantano", "ruinas", "planicie"]);
   function simbolo(n, grande, ladoAntigo) {
     const s = sprite(n), v = grande ? P.nativoGrande : P.nativo;
     if (v && NATIVOS.has(s)) return { lado: Number(v.slice(1)), html: `<img class="sprite desenho pixel" src="${PECA(`lugar-${s}-${v}`)}" alt="">` };
@@ -333,29 +333,51 @@ const MapaPx = (() => {
     return caixa;
   }
 
-  /** O nome de cada lugar: embaixo do símbolo, como no jogo; se ali ele sai da caixa ou invade o símbolo, o botão, a
-   *  plaqueta, as marcas ou o nome de outro lugar, tenta em cima, à esquerda (antes da plaqueta, quando ela está à
-   *  esquerda) e à direita, no primeiro lugar livre e dentro do mapa. Sem nenhum livre, faz como o jogo: desliza para
-   *  dentro da borda e desce até sair de cima de outro nome. A posição muda só no desenho; a área de clique é o botão. */
+  /** O nome de cada lugar: embaixo do símbolo, como no jogo; senão em cima, e nos dois casos deslizando para os lados até
+   *  ficar livre (ainda sob ou sobre o próprio símbolo); senão à esquerda (antes da plaqueta, quando ela está à esquerda)
+   *  ou à direita. Entre as livres, a mais longe dos outros lugares. Livre quer dizer dentro do mapa, longe (FOLGAS px) do símbolo, do botão e do tracejado dos outros
+   *  lugares, e fora da plaqueta, das marcas e dos outros nomes: o nome fica claramente do próprio lugar. Sem nenhum
+   *  livre, faz como o jogo. Só o desenho muda; a área de clique é o botão. */
   function encaixarRotulos(caixa) {
     if (!caixa.isConnected) return;
+    const FOLGAS = [12, 4, 0], LONGE = 30;  // a folga dos outros lugares conta do botão; o tracejado passa 2 px dele
     const c = caixa.getBoundingClientRect();
     const cruza = (a, b) => a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom;
     const ret = (el) => el.getBoundingClientRect();
+    const larga = (r, f) => ({ left: r.left - f, right: r.right + f, top: r.top - f, bottom: r.bottom + f });
     const mover = (b, dx, dy) => ({ left: b.left + dx, right: b.right + dx, top: b.top + dy, bottom: b.bottom + dy });
     const dentro = (r) => r.left >= c.left + 2 && r.right <= c.right - 2 && r.top >= c.top + 1 && r.bottom <= c.bottom - 1;
     const postos = [];
     [...caixa.querySelectorAll(".rotulo-mapa")].sort((a, b) => a.offsetTop - b.offsetTop).forEach((r) => {
       const id = r.dataset.id, b = ret(r);
       const proprio = (el) => el.dataset.id === id;
-      const obst = [...caixa.querySelectorAll(".no-btn, .simbolo-lugar, .pos-heroi, .peca-mapa.marca")]
-        .filter((el) => !(proprio(el) && (el.classList.contains("no-btn") || el.classList.contains("simbolo-lugar")))).map(ret).concat(postos);
+      const caixas = [...caixa.querySelectorAll(".no-btn, .simbolo-lugar")].filter((el) => !proprio(el)).map(ret);
+      const fixos = [...caixa.querySelectorAll(".pos-heroi, .peca-mapa.marca")].map(ret).concat(postos);
       const sim = caixa.querySelector(`.simbolo-lugar[data-id="${id}"]`), pl = caixa.querySelector(`.pos-heroi[data-id="${id}"]`);
       const s = sim ? ret(sim) : b, meio = s.top + s.height / 2 - b.height / 2 - b.top;
       const esq = pl && pl.classList.contains("lado") && !pl.classList.contains("dir") ? ret(pl).left : s.left;
       const dir = pl && pl.classList.contains("dir") ? ret(pl).right : s.right;
-      const opcoes = [[0, 0], [0, s.top - 2 - b.bottom], [esq - 4 - b.right, meio], [dir + 4 - b.left, meio]];
-      const livre = opcoes.find(([dx, dy]) => { const m = mover(b, dx, dy); return dentro(m) && !obst.some((o) => cruza(m, o)); });
+      // embaixo e em cima, do centro para os lados, enquanto o nome ainda cobre parte do símbolo na horizontal
+      const lados = [0];
+      for (let d = 2; d <= b.width / 2 + s.width / 2 - 8; d += 2) lados.push(d, -d);
+      const opcoes = [...lados.map((dx) => [dx, 0]), ...lados.map((dx) => [dx, s.top - 2 - b.bottom]),
+        [esq - 4 - b.right, meio], [dir + 4 - b.left, meio]];
+      const longe = (m) => Math.min(LONGE, ...caixas.map((o) => Math.hypot(Math.max(0, o.left - m.right, m.left - o.right),
+        Math.max(0, o.top - m.bottom, m.top - o.bottom))));
+      // entre as posições livres de cima e de baixo, a mais longe dos outros lugares (até LONGE px), e, empatando, a mais
+      // centrada no próprio símbolo; os lados só sem nenhuma livre em cima ou embaixo. A folga dos outros lugares baixa em
+      // degraus (FOLGAS) quando nenhuma posição cabe com a maior
+      let livre = null;
+      for (const folga of FOLGAS) {
+        const obst = caixas.map((r) => larga(r, folga)).concat(fixos);
+        const ok = ([dx, dy]) => { const m = mover(b, dx, dy); return dentro(m) && !obst.some((o) => cruza(m, o)); };
+        const verticais = opcoes.slice(0, -2).filter(ok);
+        livre = verticais.length ? verticais.reduce((x, y) => {
+          const lx = longe(mover(b, ...x)), ly = longe(mover(b, ...y));
+          return ly > lx || (ly === lx && Math.abs(y[0]) < Math.abs(x[0])) ? y : x;
+        }) : opcoes.slice(-2).find(ok);
+        if (livre) break;
+      }
       let [dx, dy] = livre || [b.right > c.right - 4 ? c.right - 4 - b.right : b.left < c.left + 4 ? c.left + 4 - b.left : 0, 0];
       if (!livre) {
         for (let k = 0; k < 4; k++) {

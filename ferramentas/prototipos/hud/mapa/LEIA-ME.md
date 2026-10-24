@@ -16,6 +16,7 @@ descoberta e progressão não mudam. Produção consultada: **1.199.3**.
 - **`origem-lugares.png`**: de onde vêm os ícones de lugar de 32 e 40 (a referência, o recorte, as duas reduções).
 - **`presenca-lugares.png`**: o mapa grande com o 40 aprovado e com um 48 pelo mesmo processo.
 - **`nativos.png`**: a vila e a floresta em grade nativa (32 e 48), antigo × novo, e o nome perto da borda.
+- **`cinco.png`**: os cinco símbolos da campanha em grade nativa, antigo × novo de dia e à noite, e o nome do Bosque.
 - As capturas inteiras, a 1920×945: `capturas/atual/`, `capturas/proposta-b/` (a escolhida, com o 40),
   `capturas/proposta-b48/` (com o 48 no mapa grande) e `capturas/proposta-a/` (a alternativa); para cada situação:
   `-pagina`, `-mundo`, `-mini`, `-mapa`, `-grande`, `-janela`, com o `registro.json` de cada bateria (o canvas nativo e
@@ -162,6 +163,51 @@ com a "selada" da descrição; a legenda lista os nove desenhos dos dois modos; 
 `saida` da campanha; `GLIFO_TIPO`/`GLIFO_BIOMA` (`rpg/mapa.py`, a interface de texto) e o `covil` de `estado.py`. Ao
 retirar o procedural, isso sai ou muda junto; a campanha precisa de um desenho e de um estado próprios para a saída (o
 `fechado` existe no motor, `campanha.py`, mas não chega à tela como campo: o protótipo o reconhece pela descrição).
+
+## Os cinco símbolos da campanha (23/10/2026): a vila e a floresta aprovadas, os três restantes em avaliação
+
+**Aprovadas pelo Jean, sem retoques:** a vila e a floresta nativas da rodada anterior, **o 32 no minimapa e o 48 no mapa
+grande**, do commit **`094bb80a`**. As fontes escolhidas: `fontes/lugar-vila-n32.aseprite`, `fontes/lugar-vila-n48.aseprite`,
+`fontes/lugar-floresta-n32.aseprite` e `fontes/lugar-floresta-n48.aseprite` (as grades em `auxiliares/lugares.py`); os
+PNGs em `proposta/` (MD5: vila-n32 `5fabc101…`, vila-n48 `483eea70…`, floresta-n32 `883b4290…`, floresta-n48
+`fa053fa5…`), conferidos iguais depois desta rodada (as fontes não foram remontadas).
+
+**Os três restantes** (`lugar-pantano-n32/n48`, `lugar-ruinas-n32/n48`, `lugar-planicie-n32/n48`), à mão, como a vila e
+a floresta: a forma construída na grade de cada tamanho (o 48 escrito para a grade de 48, não o 32 esticado), cores
+agrupadas por material, contorno de 1 px, a luz da esquerda; fontes em camadas pelo Aseprite em lote (pântano: água,
+juncos, árvore e contorno; ruínas: pedra, musgo e contorno; planície: morros, campo e contorno), 0 diferentes na
+releitura, o exportado igual à grade, o `@2x` por duplicação exata.
+
+- **Os usos compartilhados, conferidos antes:** o pântano serve ao Charco dos Juncos e aos pântanos do procedural; as
+  ruínas, à Capela Afogada e às ruínas do procedural; a planície, à Estrada de Varn (a saída da campanha, que cai no
+  bioma) e às planícies do procedural. Por isso os três são de bioma, sem nada só de um lugar: nem a capela nem a
+  água da Ilse nas ruínas, nem estrada ou placa na planície. **A barricada não entra no desenho da planície:** é a
+  marca separada da saída fechada, desenhada pelo mapa só onde a regra bloqueia.
+- **O pântano:** a poça de água (quatro azuis-esverdeados, os reflexos em cima), as taboas e os juncos à esquerda e à
+  direita, a árvore seca no meio, torta, com dois galhos e gravetos. No 48, uma primeira passada com hastes demais lia
+  como cerca; ficaram as taboas e os tufos.
+- **As ruínas:** o arco quebrado à esquerda (o pilar inteiro e o começo da arcada), o pilar partido do meio, a parede
+  alta à direita com a fresta de janela e as fiadas de pedra, o entulho e o musgo na base; a pedra clara de contorno
+  escuro, legível no roxo escuro da Capela, de dia e à noite. No 48, o pilar do meio tinha saído pontudo (como um
+  obelisco) e foi quebrado reto. **A minha ressalva:** o arco novo lê mais como pilares quebrados do que como arcada; a
+  curva do antigo era mais evidente.
+- **A planície/saída:** o morro do fundo mais escuro, o da frente, a faixa clara do campo aberto com pontos de flor e
+  duas moitas; larga e baixa, como a antiga.
+- **O nome do Bosque** (à noite, colado no quadrado do Vau): o encaixe dos nomes agora exige folga dos outros lugares
+  (12 px do botão, que o tracejado passa em 2), e, entre as posições livres embaixo e em cima (deslizando para os lados
+  enquanto o nome ainda cobre o próprio símbolo), escolhe a mais longe dos outros lugares, e, empatando, a mais
+  centrada. Quando nada cabe com 12, tenta com 4 e com 0 antes do comportamento do jogo. Resultado: o nome do Bosque
+  fica sob as próprias árvores, deslocado para longe do Vau, sem depender da plaqueta; a Capela continua com "nome ·
+  plaqueta · ruínas" na mesma linha.
+- **As fotos** (`capturas/cinco-antigo`, os ícones antigos, e `capturas/cinco-novo`, os cinco nativos; as duas com a
+  plaqueta B, a cancela de madeira e o encaixe novo dos nomes): o Vau de manhã, o Bosque à noite, a Capela à tarde e
+  depois da praça; os mesmos lugares, destinos, estados, botões e rótulos acessíveis do jogo; nenhum erro ou aviso no
+  console. A folha **`cinco.png`**: os cinco juntos (32 e 48, a 1× e ampliados), o antigo × novo dos três novos com a
+  grade e o tamanho exibido, o minimapa de manhã, à noite e à tarde, o mapa grande de dia e à noite com os recortes do
+  Charco, da Capela e da Estrada de Varn, e o nome do Bosque antes e depois.
+- **Para a integração** (do conjunto aprovado): os cinco por lugar no lugar dos ícones antigos no mapa e no minimapa,
+  e o campo de bloqueio vindo da regra real da viagem (`loc["fechado"]`), não da descrição. Fora deste lote: os
+  símbolos só do procedural (a montanha, a cidadela, o covil, o vencido).
 
 ## A vila e a floresta em grade nativa (23/10/2026; pedido do Jean; só as duas, para validar o acabamento)
 
