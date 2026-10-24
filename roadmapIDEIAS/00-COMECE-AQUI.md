@@ -6948,3 +6948,37 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Aguardando o Jean:** a planície refinada e as duas propostas. Depois, a integração do conjunto na produção, com o
   campo de bloqueio da regra real da viagem; em seguida, a etapa 2 do plano.
 
+### 23/10/2026 (data do computador local) — A 1E.4 integrada (1.200.0): o mapa, a Viagem e o Diário na linguagem nova, com o bloqueio da regra da viagem
+
+- **Estado conferido:** a branch em `a452794b`, igual ao remoto antes do lote; o `caido-avatar-512.png` fora dos commits;
+  os estudos e a seta A preservados no protótipo (`ferramentas/prototipos/hud/mapa/`).
+- **No jogo (1.200.0):**
+  - **o bloqueio pela regra da viagem:** `mapa.bloqueio(g, loc)` ("fechado", o `fechado` da campanha, nunca pelo nome;
+    "selada", a cidadela sem os três Sigilos), usado pela viagem (na mesma ordem: a saída antes da confirmação do
+    perigo, a cidadela depois) e pela tela (o campo `bloqueio` de cada lugar). `tests/test_bloqueio.py`. **O gabarito
+    mudou só por esse campo novo** no estado da tela (as 9 partidas "web"): sem ele, as 24 transcrições saem idênticas
+    às guardadas, e o campo só aparece como null nelas;
+  - **as peças:** as fontes aprovadas em `ferramentas/arte/aseprite/mapa-*` (a vila e a floresta de `094bb80a`; o
+    pântano e as ruínas de `c7bd2348`; a planície refinada de `05af61c5`; a plaqueta, a de lado, as marcas e a cancela
+    do protótipo), exportadas para `hud/icones/mapa-*` pelo `exportar_aseprite.py` (a plaqueta a 2× como derivado
+    exato); as 20 iguais, pixel a pixel, às propostas, os @2x exatos, o `--conferir` igual;
+  - **o mapa (`mapa.js`):** a escala inteira (×2 no minimapa, ×3 no mapa grande e no da Viagem), os cinco símbolos em 32
+    e 48, a plaqueta do herói (de lado perto da borda), as marcas, a cancela e o destino bloqueado sem o convite, as
+    estradas por estado, os nomes no lugar livre (em duas linhas quando aperta; menores no minimapa estreito), a
+    legenda só com o que existe; as opções de destino e o Diário (e o mural, o mesmo cartaz) com o símbolo de 32 e as
+    marcas no lugar do "!"; o contrato com "2 trechos · Nv.1" na segunda linha.
+- **Conferido** (`ferramentas/prototipos/hud/mapa/capturas/producao*`, a folha `integracao.png`): com os arquivos de
+  produção, a 1920×945, de dia e à noite, com as três classes; a Capela na borda; a missão e o contrato no lugar atual e
+  em outros; os nomes; os botões alinhados aos símbolos; o mapa grande, o minimapa, a Viagem, o Diário e o mural; o
+  zoom de 125% e a janela de 1280×720; o procedural funcionando. Os mesmos lugares, destinos, estados, botões e rótulos
+  acessíveis do jogo anterior; sem erro no console. O fotógrafo julga o `/responder` pelo fetch na página (o Chromium
+  marca o 204 desse POST como ERR_ABORTED mesmo quando ele termina bem, também no jogo anterior); as outras falhas de
+  rede contam.
+- **Verificações sobre o código final:** `unittest` (689, 1 pulado: a fumaça, rodada à parte), o gabarito (atualizado só
+  pelo campo `bloqueio`, explicado acima), o pyflakes (só os avisos conhecidos de `rpg/eventos/__init__.py`) e a fumaça
+  inteira ("tudo certo", 378 ok; o teste da marca do contrato no texto agora confere a peça do mapa, o cursor normal e
+  a dica; uma primeira rodada pegou o cursor da marca nova, corrigido no CSS).
+- **Pendências reais:** a lista de Caminhos do painel com os ícones de lugar antigos (fora do pedido aprovado); os
+  símbolos só do procedural (os antigos); o zoom não inteiro do navegador.
+- **Agora:** a etapa 2. O primeiro lote recomendado: a subida de nível com as celebrações e a raridade (o escopo no
+  item 1.12 do plano 23). Nada começado.
