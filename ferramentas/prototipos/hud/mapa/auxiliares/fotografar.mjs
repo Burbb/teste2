@@ -24,6 +24,8 @@ const SITUACOES = [
   { nome: "capela-tarde", cenario: "tutorial", amb: { ...BASE, CLASSE: "arqueiro", LUGAR: "capela", PERIODO: "1", ETAPA: "capela" } },
   // depois da praça: tudo visitado menos a Estrada de Varn (fechada); as estradas percorridas
   { nome: "praca-tudo", cenario: "praca", amb: {} },
+  // no Charco à noite, com o Arqueiro: o contrato no lugar atual (a marca ao lado da plaqueta)
+  { nome: "charco-noite", cenario: "tutorial", amb: { ...BASE, CLASSE: "arqueiro", LUGAR: "charco", PERIODO: "3", CONTRATO: "aceito", CONTRATO_EM: "charco" } },
   // o procedural (fora da prioridade): só para ver o que ele compartilha com a campanha (o covil, a cidadela, a legenda)
   { nome: "procedural-covil", cenario: "covil", amb: { CLASSE: "guerreiro", PERIODO: "0" } },
   // as telas que mostram o lugar fora do mapa (no Bosque, a missão na Capela e um contrato no Charco): a Viagem (o mapa
@@ -34,7 +36,12 @@ const SITUACOES = [
     tela: [{ clicar: "Viajar" }] },
   { nome: "diario", cenario: "tutorial", amb: { ...BASE, LUGAR: "bosque", PERIODO: "0", ETAPA: "capela", CONTRATO: "aceito", CONTRATO_EM: "charco" },
     tela: [{ tecla: "d" }] },
-].filter((s) => (so ? so.split(",").includes(s.nome) : !s.tela));
+  // o Diário com um nome de lugar longo no contrato (o contrato no Charco, renomeado só na tela de teste: NOME_LUGAR)
+  { nome: "diario-longo", cenario: "tutorial", amb: { ...BASE, CLASSE: "mago", LUGAR: "bosque", PERIODO: "3", ETAPA: "capela", CONTRATO: "aceito", CONTRATO_EM: "charco" },
+    tela: [{ tecla: "d" }], nomeLongo: "Charco dos Juncos Afogados do Velho Moinho" },
+  // o mural da vila (o mesmo cartaz do contrato, antes de aceitar)
+  { nome: "mural", cenario: "tutorial", amb: { ...BASE, LUGAR: "vau", PERIODO: "1" }, tela: [{ clicar: "Mural" }] },
+].filter((s) => (so ? so.split(",").includes(s.nome) : !s.tela && s.nome !== "charco-noite"));
 const prototipo = process.env.PROTOTIPO ? readFileSync(path.join(AQUI, "../prototipo/mapa.js"), "utf8") : null;
 // NATIVO e NATIVO_GRANDE ("n32", "n48"): a vila e a floresta refeitas em grade nativa, no minimapa e no mapa grande
 const variante = { mini: Number(process.env.MINI || 32), grande: Number(process.env.GRANDE || 40), pos: process.env.POS || "b",
@@ -49,13 +56,27 @@ for (const sit of SITUACOES) {
   let url = null; proc.stdout.on("data", (d) => { const m = String(d).match(/http:\S+/); if (m) url = m[0]; });
   for (let k = 0; k < 300 && !url; k++) await espera(100);
   try {
-    const p = await b.newPage({ viewport: { width: 1920, height: 945 } });
+    // JANELA=1280x720 (a janela menor) e ESCALA=1.25 (o zoom de 125% do navegador: 1536×756 a 1,25 px por px)
+    const [vw, vh] = (process.env.JANELA || "1920x945").split("x").map(Number);
+    const p = await b.newPage({ viewport: { width: vw, height: vh }, deviceScaleFactor: Number(process.env.ESCALA || 1) });
     const erros = [], avisos = [];
     p.on("pageerror", (e) => erros.push(String(e)));
     p.on("console", (m) => { if (m.type() === "error" || m.type() === "warning") avisos.push(m.text()); });
-    // a espera longa do /responder, abortada quando a foto fecha a página (acontece igual no jogo), não é falha
-    p.on("requestfailed", (r) => { if (!(r.url().endsWith("/responder") && /ABORTED/.test((r.failure() || {}).errorText || "")))
-      erros.push(`falhou: ${r.url()} ${(r.failure() || {}).errorText}`); });
+    // As falhas de rede contam todas, menos a do /responder: o Chromium marca como ERR_ABORTED a resposta 204 (sem corpo)
+    // desse POST, mesmo quando o fetch do jogo termina bem (conferido: o fetch recebe o 204 e o jogo segue; acontece
+    // igual no jogo de antes). O /responder é julgado na própria página, pelo resultado do fetch: rejeitado ou com status
+    // de erro, conta; só o corte provocado pelo roteiro ao fechar a página (fechando) não conta.
+    let fechando = false;
+    p.on("requestfailed", (r) => { if (!r.url().endsWith("/responder")) erros.push(`falhou: ${r.url()} ${(r.failure() || {}).errorText}`); });
+    await p.addInitScript(() => {
+      const original = window.fetch;
+      window.__respostas = [];
+      window.fetch = (...args) => original(...args).then((r) => {
+        if (String(args[0]).includes("/responder") && !r.ok) window.__respostas.push(`status ${r.status}`);
+        return r;
+      }, (e) => { if (String(args[0]).includes("/responder")) window.__respostas.push(`rejeitado: ${e}`); throw e; });
+    });
+    const respostasRuins = async () => { if (fechando) return; for (const x of await p.evaluate(() => window.__respostas || [])) erros.push(`/responder: ${x}`); };
     if (prototipo) {
       await p.addInitScript((v) => { window.__MAPA = v; }, variante);
       await p.route("**/static/mapa.js", (rota) => rota.fulfill({ contentType: "application/javascript", body: prototipo }));
@@ -91,14 +112,23 @@ for (const sit of SITUACOES) {
     const fotos = [];
     if (sit.tela) {  // uma tela da página: os passos e a foto inteira
       for (const passo of sit.tela) {
-        if (passo.clicar) await p.locator("button", { hasText: passo.clicar }).first().click();
+        if (passo.clicar) {  // o botão com o texto; sem botão, o primeiro elemento com ele (o prédio do cenário)
+          const botao = p.locator("button", { hasText: passo.clicar }).first();
+          await ((await botao.count()) ? botao : p.getByText(passo.clicar, { exact: true }).first()).click();
+        }
         if (passo.tecla) await p.keyboard.press(passo.tecla);
         await espera(1800);
+      }
+      if (sit.nomeLongo) {  // um nome de lugar longo só na tela aberta (o texto do cartaz), para conferir a quebra
+        await p.evaluate((nome) => document.querySelectorAll(".contrato-nome").forEach((el) => { el.firstChild.textContent = nome; }), sit.nomeLongo);
+        await espera(300);
       }
       await p.screenshot({ path: path.join(saida, `${sit.nome}-pagina.png`) });
       registro[sit.nome] = { erros, avisos, fotos: ["pagina"], simbolos: await p.evaluate(() => [...document.querySelectorAll("img.simbolo-texto, img.marca-texto")]
         .map((i) => `${i.getAttribute("src").split("/").pop()} ${i.naturalWidth}→${i.getBoundingClientRect().width}`)),
         medidas: await medir() };
+      await respostasRuins();
+      fechando = true;
       await p.close();
       continue;
     }
@@ -113,7 +143,9 @@ for (const sit of SITUACOES) {
     await p.screenshot({ path: path.join(saida, `${sit.nome}-mapa.png`) }); fotos.push("mapa");
     await p.locator("#mapa-grande .mapa-px").screenshot({ path: path.join(saida, `${sit.nome}-grande.png`) }); fotos.push("grande");
     await p.locator("#sobre-mapa .sobre-caixa").screenshot({ path: path.join(saida, `${sit.nome}-janela.png`) }); fotos.push("janela");
+    await respostasRuins();
     registro[sit.nome] = { erros, avisos, fotos, medidas: [...mini, ...(await medir()).filter((m) => m.onde === "mapa grande")] };
+    fechando = true;
     await p.close();
   } finally { proc.kill(); }
 }

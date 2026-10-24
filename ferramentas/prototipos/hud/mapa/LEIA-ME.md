@@ -165,7 +165,19 @@ com a "selada" da descrição; a legenda lista os nove desenhos dos dois modos; 
 retirar o procedural, isso sai ou muda junto; a campanha precisa de um desenho e de um estado próprios para a saída (o
 `fechado` existe no motor, `campanha.py`, mas não chega à tela como campo: o protótipo o reconhece pela descrição).
 
-## A planície refinada e os usos fora do mapa: Viagem e Diário (23/10/2026; em avaliação)
+## Integrado na 1.200.0 (23/10/2026)
+
+O conjunto aprovado entrou no jogo (o registro no plano 23, item 1.12, e na continuidade): as fontes em
+`ferramentas/arte/aseprite/mapa-*`, os PNGs em `rpg/web/static/hud/icones/mapa-*`, o `rpg/web/static/mapa.js` de
+produção (feito a partir de `prototipo/mapa.js`, com a configuração escolhida fixa), as opções de destino, o Diário e o
+mural, e o bloqueio da regra da viagem (`mapa.bloqueio`). O protótipo continua aqui com as alternativas (a seta A, os
+40/48 antigos, as rodadas anteriores). As fotos da integração, com os arquivos de produção: `capturas/producao`
+(1920×945), `capturas/producao-1280` (1280×720) e `capturas/producao-zoom125` (o zoom de 125%); a folha
+`integracao.png`. O `auxiliares/fotografar.mjs` sem `PROTOTIPO` fotografa o jogo; com `JANELA` e `ESCALA`, outras
+janelas; o `/responder` é julgado pelo fetch na página (o Chromium marca o 204 dele como ERR_ABORTED mesmo quando
+termina bem); o corte ao fechar a página não conta.
+
+## A planície refinada e os usos fora do mapa: Viagem e Diário (23/10/2026; aprovados)
 
 **Aprovados pelo Jean, sem retoques:** o pântano e as ruínas nativos, 32 e 48, do commit **`c7bd2348`** (fontes
 `fontes/lugar-pantano-n32.aseprite`, `lugar-pantano-n48`, `lugar-ruinas-n32`, `lugar-ruinas-n48`; MD5 dos PNGs:

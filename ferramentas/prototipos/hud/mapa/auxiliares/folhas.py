@@ -11,7 +11,8 @@ uma redução só onde a legenda diz, para caber a página inteira.
   - presenca-lugares.png: o mapa grande com o 40 aprovado e com um 48 pelo mesmo processo (capturas/proposta-b48);
   - nativos.png: a vila e a floresta refeitas em grade nativa (32 e 48), antigo × novo, e o nome perto da borda;
   - cinco.png: os cinco símbolos da campanha em grade nativa, antigo × novo de dia e à noite, e o nome do Bosque;
-  - lote3.png: a planície refinada (antes × depois) e os usos fora do mapa, a Viagem e o Diário (antes × proposta).
+  - lote3.png: a planície refinada (antes × depois) e os usos fora do mapa, a Viagem e o Diário (antes × proposta);
+  - integracao.png: a 1E.4 integrada (1.200.0), com os arquivos de produção.
     python folhas.py [nativos ...]   # sem nomes, todas
     python folhas.py
 """
@@ -434,8 +435,42 @@ def lote3():
     f.gravar(PASTA / "lote3.png")
 
 
+def integracao():
+    """A integração da 1E.4 (1.200.0), com os arquivos de produção: as peças, o minimapa e o mapa grande (dia, noite, as
+    três classes, a borda, a missão e o contrato), a Viagem, o Diário (com nome longo), o mural, a janela de 1280×720 e
+    o zoom de 125%."""
+    jogo = lambda n: Image.open(ICONES / f"{n}.png").convert("RGBA")  # noqa: E731
+    f = Folha(1960)
+    f.texto("1E.4 integrada (1.200.0) — o mapa, a Viagem e o Diário com os arquivos de produção", 22, OURO, True)
+    f.texto("Capturas do jogo (sem protótipo), a 1920×945 salvo onde se diz; ampliações por vizinho mais próximo.", 14, TEXTO2)
+    f.espaco()
+    lugares = ("vila", "floresta", "pantano", "ruinas", "planicie")
+    f.imagens([(nicho(jogo(f"mapa-{n}-32"), 36, 1), f"{n} 32") for n in lugares] + [(nicho(jogo(f"mapa-{n}-48"), 52, 1), "48") for n in lugares] +
+              [(nicho(jogo(n), 46, 1), n.replace("mapa-", "")) for n in ("mapa-posicao-20", "mapa-posicao-40", "mapa-posicao_lado-22",
+                                                                          "mapa-missao-9", "mapa-missao-11", "mapa-contrato-9", "mapa-contrato-11", "mapa-cancela-13", "mapa-cancela-19")],
+              gap=10, legenda=12)
+    f.texto("O minimapa, 2×: o Vau de manhã (Guerreiro, a missão no lugar atual), o Bosque à noite (Mago), a Capela à tarde "
+            "(Arqueiro, na borda: a plaqueta de lado), o Charco à noite (o contrato no lugar atual)", 16, TEXTO, True)
+    f.imagens([(amplia(abrir(CAP / f"producao/{s}-mini.png"), 2), s) for s in ("vau-manha", "bosque-noite", "capela-tarde")], gap=16)
+    f.imagens([(amplia(abrir(CAP / f"producao/{s}-mini.png"), 2), s) for s in ("charco-noite", "praca-tudo", "procedural-covil")], gap=16)
+    f.texto("O mapa grande, 1× (×3 inteiro; os símbolos de 48)", 16, TEXTO, True)
+    f.imagens([(abrir(CAP / f"producao/{s}-grande.png"), s) for s in ("vau-manha", "bosque-noite")], gap=20)
+    f.imagens([(abrir(CAP / f"producao/{s}-grande.png"), s) for s in ("capela-tarde", "procedural-covil")], gap=20)
+    f.texto("A Viagem (o mapa da página e os destinos), o Diário, o nome longo no contrato e o mural, 1×", 16, TEXTO, True)
+    f.imagens([(abrir(CAP / "producao/viagem-dia-pagina.png").crop((560, 200, 1310, 800)), "Viagem de dia"),
+               (abrir(CAP / "producao/viagem-noite-pagina.png").crop((560, 200, 1310, 800)), "Viagem à noite")], gap=20)
+    f.imagens([(abrir(CAP / "producao/diario-pagina.png").crop((585, 250, 1300, 860)), "Diário"),
+               (abrir(CAP / "producao/diario-longo-pagina.png").crop((585, 540, 900, 860)), "o nome longo no contrato")], gap=20)
+    f.imagens([(abrir(CAP / "producao/mural-pagina.png").crop((560, 130, 1480, 640)), "o mural (o mesmo cartaz)")], gap=20)
+    f.texto("A janela de 1280×720 (o minimapa de 224 px, os nomes em 13 px e em duas linhas quando aperta) e o zoom de 125%", 16, TEXTO, True)
+    f.imagens([(amplia(abrir(CAP / f"producao-1280/{s}-mini.png"), 2), f"1280: {s}, 2×") for s in ("vau-manha", "capela-tarde", "charco-noite", "bosque-noite")], gap=12)
+    f.imagens([(reduz(abrir(CAP / "producao-1280/capela-tarde-mapa.png"), 0.7), "1280: o mapa grande (reduzido a 70% só aqui)"),
+               (reduz(abrir(CAP / "producao-zoom125/vau-manha-pagina.png"), 0.4), "zoom 125%: a página (reduzida a 40% só aqui)")], gap=20)
+    f.gravar(PASTA / "integracao.png")
+
+
 if __name__ == "__main__":
     import sys
-    pedidas = sys.argv[1:] or ["levantamento", "pecas", "comparacao", "origem", "presenca", "nativos", "cinco", "lote3"]
+    pedidas = sys.argv[1:] or ["levantamento", "pecas", "comparacao", "origem", "presenca", "nativos", "cinco", "lote3", "integracao"]
     for nome in pedidas:
         globals()[nome]()
