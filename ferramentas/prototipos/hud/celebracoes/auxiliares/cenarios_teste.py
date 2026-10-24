@@ -6,6 +6,11 @@ momento a fotografar. Ficam fora de tests/ (não são testes do jogo) e do jogo.
     python cenarios_teste.py nivel          # TESTE: a vitória sobre dois lobos leva do nível 1 ao 2 (habilidade nova)
     python cenarios_teste.py dois_niveis    # TESTE: o espólio da Capela (a Ilse, nível 3, e dois afogados) leva do 1 ao 3
     python cenarios_teste.py raridades      # TESTE: quatro achados seguidos, um de cada raridade (comum a lendário)
+    python cenarios_teste.py nivel4         # TESTE: do 3 ao 4, o nível da encruzilhada (o aviso da especialização)
+    python cenarios_teste.py sigilo         # TESTE: o Sigilo de um guardião (receber_sigilo, como no rito da Ilse)
+    python cenarios_teste.py especializacao # TESTE: no nível 4, a especialização escolhida (especializar)
+    python cenarios_teste.py limites        # SIMULAÇÃO: dados fora do jogo para testar os limites da tela (nomes e
+                                            # textos longos, seis ganhos de dois dígitos); não acontece nas regras
 
 CLASSE (guerreiro, mago, arqueiro). Imprime o endereço na primeira linha, como tests/navegador/cenarios.py.
 Para a demonstração (demo.py): PROTOTIPO=1 serve as cópias de ../prototipo/ no lugar de telas/celebracoes.js e
@@ -29,8 +34,9 @@ from rpg.web.ponte import WebUI  # noqa: E402
 from rpg.web.servidor import Servidor  # noqa: E402
 
 
-def heroi(ui):
-    """A campanha no Vau, de manhã, com o herói a 25 de 30 XP do nível 1 (falta pouco para o 2)."""
+def heroi(ui, niveis=0, titulo="Cenário de teste da etapa 2"):
+    """A campanha no Vau, de manhã, com o herói a 5 XP do próximo nível (25 de 30 no nível 1). `niveis`: quantos níveis
+    ele sobe antes de a página abrir (pelo caminho do jogo; essas festas chegam sem cerimônia)."""
     g = Jogo(ui, seed=int(os.environ.get("SEMENTE", "5")), pasta_saves=tempfile.mkdtemp(), hardcore=False)
     ui.jogo = g
     g.iniciar("Jean", os.environ.get("CLASSE", "guerreiro"), "turvo")
@@ -39,10 +45,12 @@ def heroi(ui):
     g.mundo["abertura"].update(despensa="feita", caneca=False)
     g.mundo["abertura"]["vistas"] = ["combate", "V1"]
     g.periodo, g.clima = 0, "limpo"
-    g.j.xp = 25
+    for _ in range(niveis):
+        g.subir_nivel()
+    g.j.xp = g.j.xp_proximo() - 5
     # TESTE: uma pergunta de partida, para a festa acontecer com a página aberta (a que chega antes de a página
     # conectar é reposta sem cerimônia, de propósito)
-    g.menu("Cenário de teste da etapa 2", [("Começar o teste", True)])
+    g.menu(titulo, [("Começar o teste", True)])
     return g
 
 
@@ -83,24 +91,63 @@ def raridades(ui):
     rodar(g)
 
 
-CENARIOS = {"nivel": nivel, "dois_niveis": dois_niveis, "raridades": raridades}
-PROTOTIPO = pathlib.Path(__file__).resolve().parents[1] / "prototipo"
+def nivel4(ui):
+    g = heroi(ui, niveis=2)
+    espolio(g, [g.inimigo("lobo", nivel=3)])
+    rodar(g)
+
+
+def sigilo(ui):
+    g = heroi(ui)
+    g.receber_sigilo("pantano", "Ilse")
+    rodar(g)
+
+
+ESPECIALIZACAO = {"guerreiro": "paladino", "mago": "piromante", "arqueiro": "sombra"}  # sem a escolha do companheiro
+
+
+def especializacao(ui):
+    g = heroi(ui, niveis=3)
+    g.especializar(ESPECIALIZACAO[g.j.classe])
+    rodar(g)
+
+
+def limites(ui):
+    """SIMULAÇÃO (não acontece nas regras): a festa e o achado com textos no limite, para ver a tela aguentar."""
+    g = heroi(ui, titulo="SIMULAÇÃO de limites (dados fora das regras)")
+    g.ui.celebrar("nivel", {"nivel": 12, "pontos": 3, "especializacao": True,
+                            "ganhos": {"Vida": 14, g.j.nome_recurso: 11, "Ataque": 12, "Defesa": 10, "Agilidade": 10, "Poder": 13},
+                            "habilidades": [{"nome": "Lâmina do Juramento Partido", "desc": "Golpe de 180% de dano que, se acertar um inimigo sangrando, espalha o sangramento para os vizinhos e devolve 15% do dano como vida."},
+                                            {"nome": "Grito da Muralha Antiga", "desc": "Por 3 turnos, os aliados recebem 25% menos dano e você atrai os ataques."}]})
+    it = gerar_equip(random.Random(4), g.j.classe, 3, raridade="lendario")
+    it["nome"] = "Égide Rachada do Último Guardião das Margens do Turvo"
+    g.oferecer_equip(it)
+    rodar(g)
+
+
+CENARIOS = {"nivel": nivel, "dois_niveis": dois_niveis, "raridades": raridades, "nivel4": nivel4, "sigilo": sigilo,
+            "especializacao": especializacao, "limites": limites}
+PROTOTIPOS = pathlib.Path(__file__).resolve().parents[1]
 TROCADOS = {"telas/celebracoes.js": "celebracoes.js", "telas/achado.js": "achado.js"}
 
 
 def demonstracao(srv, nome):
     """Só na demonstração: as cópias da proposta no lugar das telas do jogo (PROTOTIPO=1) e a faixa do painel no canto
     da página (PAINEL). Troca o método de arquivos do servidor deste processo; nada é gravado no jogo."""
-    proposta, painel = bool(os.environ.get("PROTOTIPO")), os.environ.get("PAINEL")
+    # PROTOTIPO=1 (ou "brilho"): a primeira proposta (../prototipo/); o nome de uma direção da segunda rodada:
+    # ../prototipo-v2/<direção>/ (montada por montar_v2.py)
+    qual, painel = os.environ.get("PROTOTIPO", ""), os.environ.get("PAINEL")
+    proposta = bool(qual)
+    pasta = PROTOTIPOS / ("prototipo" if qual in ("1", "brilho") else f"prototipo-v2/{qual}")
     h = srv.httpd.RequestHandlerClass
     original = h._arquivo
 
     def _arquivo(self, relativo):
         if proposta and relativo in TROCADOS:
-            return self._responder(200, (PROTOTIPO / TROCADOS[relativo]).read_bytes(), "text/javascript; charset=utf-8")
+            return self._responder(200, (pasta / TROCADOS[relativo]).read_bytes(), "text/javascript; charset=utf-8")
         if painel and relativo == "index.html":
             pagina = (pathlib.Path(sys.modules[Servidor.__module__].PASTA) / "index.html").read_text(encoding="utf-8")
-            versao = "proposta (protótipo)" if proposta else "jogo atual"
+            versao = os.environ.get("ROTULO") or ("proposta (protótipo)" if proposta else "jogo atual")
             repetir = html.escape(f"{painel}iniciar?{os.environ.get('REPETIR', '')}", quote=True)
             faixa = (f'<div id="demo-faixa" style="position:fixed;left:8px;bottom:6px;z-index:99999;font:12px/1.4 sans-serif;'
                      f'background:#000c;color:#e8dcbe;border:1px solid #6b5a3a;padding:3px 8px;border-radius:3px">'

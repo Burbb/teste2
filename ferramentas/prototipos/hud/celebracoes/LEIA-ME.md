@@ -1,20 +1,119 @@
-# Etapa 2, primeiro lote: subida de nível, celebrações e raridade (protótipo, 23/10/2026)
+# Etapa 2, primeiro lote: subida de nível, celebrações e raridade (protótipo)
 
-**Nada disto está no jogo.** As cópias em `prototipo/` substituem `telas/celebracoes.js` e `telas/achado.js` só nas
-páginas do fotógrafo (`page.route`); o jogo nunca lê `ferramentas/`. A base é a 1.200.1.
+**Nada disto está no jogo.** O jogo nunca lê `ferramentas/`; as propostas só existem nas páginas do servidor de teste
+(a demonstração) e nas do fotógrafo. A base é a 1.200.1.
 
 ## Testar no navegador (a demonstração)
 
-`demo.bat` (ou `python ferramentas/prototipos/hud/celebracoes/auxiliares/demo.py`) abre o painel em
-**http://127.0.0.1:8765/**: os três cenários, cada um na proposta ou no jogo atual. Cada botão encerra o cenário
-anterior e sobe outro do zero (um processo com saves temporários: o save do jogo não é tocado); na página, "Começar o
-teste"; no canto de baixo, "repetir" e "painel". A proposta é servida por esse servidor de teste (`PROTOTIPO=1` em
-`cenarios_teste.py` troca `telas/celebracoes.js` e `telas/achado.js` pelas cópias de `prototipo/`); a faixa do canto
-só existe na demonstração. Movimento reduzido: no Chrome/Edge, F12 → ⋮ → More tools → Rendering → "Emulate CSS media
-feature prefers-reduced-motion" → reduce, e repetir o cenário (ou o "Mostrar animações" desligado no Windows, que vale
-para o sistema todo).
+`demo.bat` (ou `python ferramentas/prototipos/hud/celebracoes/auxiliares/demo.py`) monta as direções e abre o painel em
+**http://127.0.0.1:8765/**. Cada cenário abre em **A · Relicário**, **B · Estouro**, **C · Estandarte**, no **jogo
+atual** ou na **1ª proposta** (o histórico, abaixo); um formulário troca a classe. Cada botão encerra o cenário anterior e
+sobe outro do zero, num processo com saves temporários (o save do jogo não é tocado); na página, "Começar o teste"; no
+canto de baixo, "repetir" e "painel" (essa faixa só existe na demonstração). O servidor de teste (`cenarios_teste.py`,
+`PROTOTIPO=<direção>`) serve `telas/celebracoes.js` e `telas/achado.js` montados em `prototipo-v2/<direção>/`.
+Movimento reduzido: no Chrome/Edge, F12 → ⋮ → More tools → Rendering → "Emulate CSS media feature
+prefers-reduced-motion" → reduce, e "repetir" (ou "Mostrar animações" desligado no Windows, para o sistema todo).
 
-## O levantamento (o que existe hoje)
+## Segunda rodada (24/10/2026): três direções
+
+O Jean achou a primeira proposta contida demais: gostava dos feixes girando atrás, o problema era o acabamento de
+vetor. Pedido: três direções completas, mais carregadas, em pixel art, com o modal livre para ser refeito.
+
+### Referências vistas (imagens reais; nada copiado)
+
+- **Vampire Survivors**, o baú (miniaturas de vídeos de jogo): feixes largos saindo em leque do baú, moedas voando e o
+  prêmio subindo pelo feixe. Ensina que a luz pode nascer de onde o prêmio vem, que o excesso funciona se a moldura
+  segura o centro, e que o ritmo cresce em degraus (quanto mais prêmios, mais fanfarra), sempre pulável.
+- **Sea of Stars**, a subida de nível (captura da IGN): tela inteira escura, o título em cima, medalhões com halo em
+  pixel e uma barra de números embaixo com os "+N" coloridos. Ensina a hierarquia título → símbolos → números, e que o
+  fundo escuro deixa o brilho ser lido sem ofuscar o texto.
+- **Diablo III**, o lendário (imagem do Diablo Wiki): uma coluna de luz da cor da raridade. Ensina que a raridade se
+  lê de longe pela cor e pela forma (a coluna), antes do texto.
+- **Pokémon (Gold/Silver/Crystal)**, a evolução (miniatura): raios de luz em volta do sprite, o momento cerimonial
+  que segura a atenção e revela. Ensina o centro como altar e a luz como moldura.
+- **Octopath Traveler**, o resultado da batalha: a cena continua visível e a lista dos ganhos fica de lado, em
+  tipografia contida. Ensina a não esconder o mundo e a ler os números numa coluna.
+- **Blasphemous**, o item recebido: uma faixa escura atravessando a tela com o nome em fonte gótica. Ensina a
+  apresentação de "título de ato", sóbria e solene, que combina com o tom do The Unquiet.
+- A busca no Game UI Database pedia verificação anti-robô; ficou de fora.
+
+### As três direções
+
+Todas usam o mesmo motor de efeitos (`v2/fx.js`): um palco de baixa resolução (texels de 3 px, ampliado sem
+suavização, 15 quadros por segundo), só cores da paleta do jogo, degradê só por pontilhado ordenado e faixas de cor, e
+partículas desenhadas à mão como grades de texto (cruz, estrela, brilho, lasca, caco, brasa). O comum de cada uma
+(`v2/festas.js`): os gestos, a janela do achado e os textos (os ganhos com os ícones da HUD, o ponto de talento com o
+atalho, a raridade num selo próprio e fora da linha do tipo). `auxiliares/montar_v2.py` junta tudo com os arquivos de
+produção em `prototipo-v2/<direção>/`.
+
+- **A · Relicário (cerimonial).** O ganho posto num altar: uma medalha em pixel com o número (ou o item, ampliado 2×)
+  no centro de um sol de raios que gira devagar enquanto a janela está aberta (raios largos e finos em sentidos
+  contrários, os que descem mais curtos), e embaixo uma placa com a moldura da HUD. Entrada: o clarão na medalha, o
+  sol se abrindo, as faíscas; depois só o giro e um cintilar. Raridade = tamanho do sol: comum, só o halo; mágico, oito
+  raios frios; raro, doze de ouro; lendário, dois sóis de brasa, o clarão e as brasas subindo.
+- **B · Estouro (explosivo).** O ganho chega como um golpe: clarão de dois quadros, a tela treme, anéis de choque
+  correm, linhas de velocidade e estilhaços voam e caem; o número bate (carimbo em quatro quadros) no meio de uma
+  estrela de pontas, com uma fita vermelha atravessada. Ganhos em fichas grossas que estalam uma a uma. Depois, a
+  estrela respira e solta brasas. Raridade = força do golpe: comum, poeira; mágico, anel e faíscas; raro, uma coluna
+  de luz cai no item e quebra; lendário, a coluna larga, a tela pisca e treme, dois anéis e a chuva de cacos.
+- **C · Estandarte (apresentação de palco).** Uma faixa de lado a lado da tela, como o título de um ato: abre de um
+  corte de luz, barras de cinema escurecem o alto e o pé, e holofotes em pixel nascem atrás da faixa e varrem para
+  cima e para baixo, cruzando-se; a luz vaza pelos fios. Na faixa: quem (o retrato do herói em 160 px, ou o item no
+  pedestal sob a coluna de luz), o quê (o nível; o nome e a raridade) e o quanto (os ganhos; os números e a
+  comparação). Raridade = luz do palco: comum, a faixa sem luz; mágico, uma coluna fria; raro, a coluna e dois
+  holofotes; lendário, a coluna de brasa, cinco holofotes, as barras, o corte e as brasas.
+
+### O que vale nas três
+
+- **Ler sem esperar:** o nível, os ganhos, o item, a raridade e a comparação estão na tela desde o primeiro quadro; o
+  efeito é em volta. Na B, só o desenho do item raro e lendário espera a coluna bater (160 ms).
+- **Gestos:** o Continuar, o Enter, o Espaço e o Esc fecham a festa a qualquer momento; um clique fora durante a
+  entrada a completa; não contam o toque que começou antes da festa, o 2º clique de um clique duplo nem a tecla
+  segurada; o gesto não atravessa para a festa seguinte nem seleciona texto. No achado, um clique ou tecla durante a
+  entrada a encurta e não escolhe nada (os botões ainda não estão lá).
+- **Os botões do achado** chegam quando a entrada termina: medidos na página (1920×945, do cartão aos botões),
+  comum / mágico / raro / lendário: A 0,22 / 0,34 / 0,49 / 0,64 s; B 0,21 / 0,28 / 0,43 / 0,57 s; C 0,23 / 0,32 /
+  0,44 / 0,58 s; o jogo atual 0,55 / 0,55 / 2,3 / 2,7 s. Um clique logo que o cartão surge leva os botões a ~0,09 s
+  nas três (medido na página: o fotógrafo clica tarde demais para mostrar isso).
+- **Movimento reduzido:** a mesma composição parada (os raios, a estrela, os holofotes num quadro só), sem clarão,
+  tremor, partículas nem entrada.
+- **Telas baixas (1280×720):** A e B compactam a medalha, a estrela e as caixas; a janela rola se ainda faltar espaço.
+
+### Cenários
+
+`auxiliares/cenarios_teste.py`. **Casos reais** (pelos caminhos do jogo, sem mudar regras): um nível (dois lobos),
+dois níveis seguidos (a Ilse e dois afogados), as quatro raridades (`gerar_equip` com a raridade pedida), o nível 4
+da encruzilhada, o Sigilo (`receber_sigilo`) e a especialização (`especializar`). **Simulação** (identificada assim
+no jogo e no painel): `limites`, uma festa de nível 12 com seis ganhos de dois dígitos e duas habilidades de nome e
+texto longos, e um lendário de nome longo; não acontece nas regras, só testa a tela.
+
+### Capturas
+
+`capturas-v2/`: `folha-v2.png` (cada momento: o jogo atual, A, B e C), `folha-v2-ritmo.png` (o nível e o lendário em
+seis instantes), `folha-v2-apertados.png` (1280×720 e movimento reduzido); por direção, `1920/` (vídeos `.webm` do
+ciclo e os quadros), `1280/`, `reduzido/` e `rapido/` (o clique rápido). Refazer: `auxiliares/fotografar.mjs` com
+`PROTOTIPO=<direção>` e `PULAR_TEXTO=1` (o texto de abertura adiantado por uma tecla), depois `auxiliares/folhas_v2.py`.
+
+### Limitações vistas
+
+- **Som:** é o atual (subir, achado, achado raro, fanfarra), tocado no primeiro quadro (na B, no impacto da coluna).
+  Não foi ouvido nesta máquina; o sincronismo foi conferido pelos tempos do código, não pelo ouvido.
+- **A entrada nas fotos:** o fotógrafo pega a janela 0,1 a 0,2 s depois de ela abrir; o clarão e os primeiros quadros
+  só aparecem nos vídeos e na demonstração.
+- **A:** o sol cobre a tela inteira, a HUD inclusive (de propósito); o comum tem só um halo discreto e pode parecer
+  pouco ao lado do resto.
+- **B:** o tremor move a tela inteira por ~0,4 s no nível e no lendário (no raro, menos); pode cansar se os níveis
+  vierem em sequência. A fita vermelha e as fichas grossas puxam para um tom mais de fliperama que o resto do jogo.
+- **C:** os holofotes que descem passam sobre o texto da página (escurecido); em 1920 a faixa fica larga e vazia nas
+  laterais; o retrato é o busto do herói ampliado 2× (fator inteiro).
+- **As formas grandes** (o sol, a estrela, os holofotes) são geradas por regra em baixa resolução; as partículas são
+  desenhadas à mão. Se uma direção for aprovada, a medalha ou a estrela podem virar peças desenhadas no Aseprite.
+- **Dois níveis seguidos:** cada nível tem a sua festa inteira; a segunda não é mais curta.
+- **Fora deste lote:** a vitória, os contratos, o mestre caçador e as faixas continuam como no jogo.
+- **Desempenho:** ~5 ms por quadro no pior caso (A, no navegador de teste, sem placa de vídeo); não medido numa
+  máquina fraca.
+
+## O levantamento (o que existe hoje; vale para as duas rodadas)
 
 - **Como o jogador avança:** o XP vem das lutas (o quadro do espólio, `Jogo.abrir_espolio`/`ganhar_xp`), dos contratos
   e das missões; cada nível dá vida, recurso e atributos pela classe, um ponto de talento e, em alguns níveis, uma
@@ -30,7 +129,13 @@ para o sistema todo).
 - **O quadro do espólio:** já segue a regra do gesto (`Gesto`) e não muda neste lote.
 - **Movimento reduzido:** quase não tratado (os raios e as partículas continuavam).
 
-## A proposta
+
+# Primeira rodada (23/10/2026): o Brilho (histórico)
+
+Recusada como contida demais (24/10/2026); fica como referência no painel ("1ª proposta"), em `prototipo/` e em
+`capturas/`.
+
+## A proposta da primeira rodada
 
 Uma direção só: **o efeito em pixel da HUD (o Brilho) e o ganho legível na primeira olhada**.
 

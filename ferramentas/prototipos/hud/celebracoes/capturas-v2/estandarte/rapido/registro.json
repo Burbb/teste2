@@ -1,0 +1,37 @@
+{
+ "rapido": {
+  "erros": [],
+  "avisos": [],
+  "linha": [
+   "comum: clique rápido fora em 2697 ms",
+   "comum: depois do clique rápido, a janela continua: true",
+   "comum: apareceu em 2839 ms",
+   "comum: fechado (deixar) em 3524 ms",
+   "magico: clique rápido fora em 3715 ms",
+   "magico: depois do clique rápido, a janela continua: true",
+   "magico: apareceu em 3972 ms",
+   "magico: fechado (deixar) em 4868 ms",
+   "raro: clique rápido fora em 4929 ms",
+   "raro: depois do clique rápido, a janela continua: true",
+   "raro: apareceu em 5065 ms",
+   "raro: fechado (deixar) em 6221 ms",
+   "lendario: clique rápido fora em 6269 ms",
+   "lendario: depois do clique rápido, a janela continua: true",
+   "lendario: apareceu em 6405 ms",
+   "lendario: fechado (deixar) em 7891 ms",
+   "achados: botões 260, 327, 421, 569 ms depois do cartão"
+  ]
+ },
+ "rapido-nivel": {
+  "erros": [],
+  "avisos": [],
+  "linha": [
+   "espolio: apareceu em 1143 ms",
+   "espolio: fechado (clique) em 1957 ms",
+   "nivel: clique rápido fora em 2328 ms",
+   "nivel: depois do clique rápido, a janela continua: true",
+   "nivel: apareceu em 2467 ms",
+   "nivel: fechado (tecla) em 3047 ms"
+  ]
+ }
+}
