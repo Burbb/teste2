@@ -36,13 +36,26 @@ def glifo(g, loc):
     return GLIFO_BIOMA[loc["bioma"]]
 
 
-def descricao(g, loc):
+def bloqueio(g, loc):
+    """Por que a viagem não chega a este lugar agora, ou None: "fechado", a saída da campanha que ainda não leva a lugar
+    nenhum (o `fechado` do lugar, com o porquê, de campanha.REGIOES); "selada", a cidadela do mundo gerado sem os três
+    Sigilos. A viagem (Navegacao._viajar) e a tela (web/estado.py) perguntam aqui: o mesmo motivo para recusar e para
+    desenhar. O lugar só conhecido, o que não é vizinho e o perigoso não são bloqueio."""
     if loc.get("fechado"):
+        return "fechado"
+    if loc["tipo"] == "cidadela" and len(g.j.sigilos) < 3:
+        return "selada"
+    return None
+
+
+def descricao(g, loc):
+    motivo = bloqueio(g, loc)
+    if motivo == "fechado":
         return "saída, fechada por enquanto"
     if loc["tipo"] == "vila":
         tipo = "vila"
     elif loc["tipo"] == "cidadela":
-        tipo = "CIDADELA" + ("" if len(g.j.sigilos) >= 3 else " (selada)")
+        tipo = "CIDADELA" + (" (selada)" if motivo == "selada" else "")
     else:
         tipo = BIOMAS[loc["bioma"]]["nome"]
         if covil_conhecido(g, loc):

@@ -213,6 +213,9 @@ def mapa_conhecido(g):
             # numa vila, o dos arredores (as estradas por onde se chega e se sai); a saída fechada não tem
             "nivel": None if loc.get("fechado") else nivel_regiao(loc),
             "covil": ("vencido" if loc["guardiao"]["derrotado"] else "ativo") if covil else None,
+            # a viagem não chega lá agora ("fechado", a saída da campanha; "selada", a cidadela sem os Sigilos): a mesma
+            # regra que a viagem usa para recusar (mapa.bloqueio); o mapa desenha a cancela e tira o convite de viagem
+            "bloqueio": mapa.bloqueio(g, loc),
         })
         for vid in loc["con"]:
             outro = int(vid)

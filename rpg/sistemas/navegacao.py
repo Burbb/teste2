@@ -27,7 +27,7 @@ class Navegacao:
             numero = f"[{loc['id'] + 1}] {mapa.glifo(self, loc)} " if self.ui.numerar_destinos else ""
             texto = f"{numero}{loc['nome']} — {mapa.descricao(self, loc)}"
             nv = nivel_regiao(loc)
-            if loc.get("fechado"):  # a saída que ainda não leva a lugar nenhum (campanha): sem nível nem perigo
+            if mapa.bloqueio(self, loc) == "fechado":  # a saída que ainda não leva a lugar nenhum (campanha): sem nível nem perigo
                 opcoes.append((texto, (loc, dist), {"local": loc["id"]}))
                 continue
             texto += f" · arredores Nv.{nv}" if loc["tipo"] == "vila" else f" · Nv.{nv}"
@@ -44,7 +44,8 @@ class Navegacao:
         if not destino:
             return
         loc, dist = destino
-        if loc.get("fechado"):
+        motivo = mapa.bloqueio(self, loc)  # o mesmo motivo que a tela desenha (a cancela, o destino sem convite)
+        if motivo == "fechado":
             self.dizer(loc["fechado"], "cinza")
             self.pausar()
             return
@@ -57,7 +58,7 @@ class Navegacao:
                                   f"Lá, quase qualquer encontro pode te matar.",
                                   [("Não ir", False), ("Ir mesmo assim", True)], perigo=True):
                 return
-        if loc["tipo"] == "cidadela" and len(self.j.sigilos) < 3:
+        if motivo == "selada":  # depois da confirmação do perigo, como sempre
             self.dizer(f"Uma muralha de sombras bloqueia o caminho. Você precisa dos três Sigilos "
                        f"({len(self.j.sigilos)}/3).", "magenta")
             return
