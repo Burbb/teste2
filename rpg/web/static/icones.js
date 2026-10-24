@@ -234,6 +234,7 @@ const Icones = (() => {
                      dragao_de_gelo: "retrato-dragao-de-gelo",  // 1.193.0: a cabeça em cunha de perfil, pelo id do guardião
                      senhor_da_guerra: "retrato-senhor-da-guerra",  // 1.194.0: o veterano caolho, pelo id do guardião
                      espantalho: "retrato-espantalho",  // 1.195.0: o saco de estopa com chapéu, pela origem (os números da árvore desperta)
+                     urso: "retrato-urso",  // 1.201.5: o Urso Pardo inimigo (o do abrigo), pela origem: a cabeça do urso do patrulheiro
                      servo_esqueletico: "retrato-servo-esqueletico",  // 1.196.0: o crânio nu do Erguer Servo, pelo retrato que o motor dá ao invocado
                      hidra_do_brejo: "retrato-hidra-do-brejo",  // 1.197.0: as três cabeças para a esquerda, pelo id da guardiã
                      profeta_das_cinzas: "retrato-profeta-das-cinzas",  // 1.198.0: o cego de venda sob o capuz, pelo id do guardião

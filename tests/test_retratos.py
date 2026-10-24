@@ -407,6 +407,52 @@ class TestRetratos(unittest.TestCase):
                 self.assertTrue((ESTATICO / f"hud/icones/retrato-espantalho-{lado}{sufixo}.png").exists(), (lado, sufixo))
         self.assertFalse((ESTATICO / "hud/icones/retrato-espantalho-48.png").exists())  # sem derivado sem uso
 
+    def test_urso_pardo_do_abrigo_pela_origem(self):
+        # 1.201.5: o Urso Pardo do abrigo da tempestade é um javali robusto com outro nome (a família, os números e as
+        # habilidades do javali); o retrato vinha da família e mostrava o javali. Pela origem que o evento marca, ele tem
+        # a cabeça do urso (o arquivo do urso do patrulheiro); o sapo do pântano, o javali comum e o urso aliado não mudam
+        import random
+        from rpg.eventos.biomas import abrigo_da_tempestade
+        from rpg.inimigos import criar
+
+        class Jogo:  # o bastante do evento: a sorte, o lugar e a luta, que só guarda o inimigo
+            def __init__(self, bioma):
+                self.rng, self.bioma, self.lutas = random.Random(4), bioma, []
+                self.j = type("J", (), {"nivel": 3, "spec": None, "max_hp": 40})()
+
+            def dizer(self, *a, **k):
+                pass
+
+            def chance(self, p):
+                return True
+
+            def inimigo(self, familia, afixo=None):
+                return criar(self.rng, familia, 3, afixo)
+
+            def combate(self, inimigos, **k):
+                self.lutas.append(inimigos[0])
+
+        g = Jogo("floresta")
+        abrigo_da_tempestade(g)
+        urso = g.lutas[0]
+        self.assertEqual((urso.nome, urso.familia, urso.origem), ("Urso Pardo", "javali", "urso"))
+        self.assertEqual(retrato(urso.tracos, urso.familia, urso.chave, urso.guardiao, urso.origem), "urso")
+        javali = criar(random.Random(4), "javali", 3, "robusto")  # os mesmos números do javali robusto de antes
+        self.assertEqual((urso.max_hp, urso.atk, urso.agi, urso.tracos, urso.habilidades),
+                         (javali.max_hp, javali.atk, javali.agi, javali.tracos, javali.habilidades))
+        self.assertEqual(retrato(javali.tracos, javali.familia, javali.chave, javali.guardiao, javali.origem), "javali")
+        g = Jogo("pantano")
+        abrigo_da_tempestade(g)
+        sapo = g.lutas[0]
+        self.assertEqual((sapo.familia, sapo.origem), ("sapo", None))
+        self.assertEqual(retrato(sapo.tracos, sapo.familia, sapo.chave, sapo.guardiao, sapo.origem), "sapo")
+        icones = (ESTATICO / "icones.js").read_text(encoding="utf-8")
+        self.assertIn('urso: "retrato-urso"', re.search(r"const CRIATURA = \{([^}]*)\}", icones).group(1))
+        self.assertIn('urso: "retrato-urso"', re.search(r"const ANIMAL = \{([^}]*)\}", icones).group(1))
+        for lado in (16, 32):
+            for sufixo in ("", "@2x"):
+                self.assertTrue((ESTATICO / f"hud/icones/retrato-urso-{lado}{sufixo}.png").exists(), (lado, sufixo))
+
     def test_hidra_do_brejo_pelo_guardiao(self):
         # 1.197.0: a Hidra do Brejo pelo id da guardiã, em qualquer nome próprio; o sapo e a sanguessuga (os outros do
         # pântano) continuam com os deles, e a fera sem retrato próprio no sprite do traço

@@ -183,7 +183,8 @@ RETRATO_GUARDIAO = {"rei_troll": "rei_troll", "rainha_aracnidea": "rainha_aracni
                     "profeta_das_cinzas": "profeta_das_cinzas",  # 1.198.0: o Profeta das Cinzas (a profeta-t)
                     "lich_menor": "lich_menor"}  # 1.199.0: o Lich Menor (o N16), também na fase etérea
 RETRATO_ORIGEM = {"mimico": "mimico",  # 1.192.0: o Mímico (os números do golem), pela origem que o evento marca
-                  "espantalho": "espantalho"}  # 1.195.0: o Espantalho Possuído (os números da árvore desperta)
+                  "espantalho": "espantalho",  # 1.195.0: o Espantalho Possuído (os números da árvore desperta)
+                  "urso": "urso"}  # 1.201.5: o Urso Pardo do abrigo da tempestade (os números do javali robusto)
 RETRATO_FAMILIA = {"afogado": "afogado", "lobo": "lobo", "bandido": "bandido", "troll": "troll", "aranha": "aranha",
                    "sapo": "sapo", "sanguessuga": "sanguessuga", "cultista": "cultista", "bruxa_brejo": "bruxa", "rato": "rato",
                    "javali": "javali", "carnical": "carnical", "espectro": "espectro",

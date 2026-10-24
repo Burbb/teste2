@@ -289,6 +289,7 @@ def abrigo_da_tempestade(g):
         if fam == "javali":
             e.nome = "Urso Pardo"
             e.desc = "um urso pardo"
+            e.origem = "urso"  # os números do javali, o retrato do urso (não o do javali, pela família)
         g.combate([e])
     else:
         g.dizer("Você acende uma fogueira e espera. Nas paredes, desenhos antigos de caçadores e feras.", "cinza")
