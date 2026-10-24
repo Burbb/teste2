@@ -7133,3 +7133,41 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   comparativas e uma demonstração no navegador.
 - **Agora:** a escolha do Jean entre A e B (nada integrado). Não começados: o livro da capela, as outras telas, a
   retirada do procedural.
+
+### 24/10/2026 (data do computador local) — Correções de interface, o d20 integrado, as dicas e o baú em avaliação (1.201.1 a 1.202.1)
+
+- **Retomada noutra conta:** a branch `claude/tender-einstein-tx3tjl` limpa e igual ao remoto (`17957e17`); o PNG
+  pessoal `ferramentas/arte/referencias/icones/caido-avatar-512.png`, não rastreado, preservado.
+- **Correções no jogo:**
+  - 1.201.1, a lista de saves: o Voltar entrava 40 ms por opção contando os cartões dos saves (com 38 saves, 1,5 s
+    invisível); agora conta só os botões à vista, e o Esc volta na lista de saves e na escolha da classe;
+  - 1.201.2, o selo de raridade vazio: o CSS do Relicário, carregado junto, pintava o texto do selo do Estouro na cor
+    do fundo; as regras dele valem só nele. **Mágico passa a se chamar Incomum** (Comum → Incomum → Raro → Lendário;
+    o id `magico` fica, sem migração; "Incomum" não tinha uso);
+  - 1.201.3, a janela antiga piscando ao Guardar/Equipar: a janela perdia o id `#sobre-achado` no começo do
+    esmaecer e voltava ao desenho antigo por ~230 ms; agora sai com o id, sem receber cliques;
+  - 1.201.4, a ficha do achado sem nada no espaço: o tipo e os números num bloco debaixo do nome (sem a área larga);
+    a comparação em três colunas sem mudança;
+  - 1.201.5, o Urso Pardo do abrigo da tempestade (um javali robusto renomeado) com o retrato do urso pela `origem`
+    (o mesmo caminho do Espantalho e do Mímico); números, família e comportamento do javali robusto.
+- **O d20 (1.202.0):** as três apresentações aprovadas pelo Jean, o **Clássico (o padrão)**, o **Marfim** e o
+  **Vidro**, à escolha na **Ajuda (F1), "Dado dos testes"**; guardada também em disco (`preferencias/tela.json`, ao
+  lado dos saves: a porta muda a cada abertura e o armazenamento do navegador com ela), volta ao reabrir o jogo; sem
+  escolha válida, o Clássico. **O seletor é provisório e vai para o menu de configurações** quando ele existir.
+  Independe de Estouro/Relicário. De passagem: Enter e Espaço nos botões da Ajuda apertam o botão (antes, com uma
+  pergunta de opção única atrás, respondiam a pergunta).
+- **As dicas (1.202.1):** revisão focada nos textos de orientação (a dica da vida bloqueada, os ferimentos, a noite,
+  o achado e as linhas da Ajuda), sem diálogos nem lore.
+- **O baú em avaliação (só no protótipo):** `ferramentas/prototipos/hud/bau/` (LEIA-ME, `folha-propostas.png`,
+  `folha-contexto.png`): A, a identidade de sempre; B, o baú trancado com o cadeado. Esperando a escolha.
+- **Preferência permanente de entrega (Jean):** sem vídeos, salvo pedido explícito; capturas compactas, poucas folhas
+  com os mesmos dados no antes e depois, e uma demonstração no navegador quando a interação precisa ser testada.
+- **Verificações:** o `unittest` (o teste de estilo pegou o `21-d20.css`, que estende a rolagem aprovada e foi para
+  `FORA_DA_TRAVA`), o gabarito (atualizado duas vezes, só nos textos: "Incomum" e as dicas, conferido trocando os
+  textos antigos pelos novos), o pyflakes e a fumaça (693 testes ok, 1 pulado; fumaça "tudo certo"). A fumaça pediu
+  dois ajustes no roteiro: a janela do achado que sai agora esmaece com o id, então o roteiro ignora a `.saindo` (o
+  jogador também não clica nela); e a frase nova da noite (N1). As telas a 1920×945 e 1280×720 e o movimento reduzido.
+- **Achado registrado, sem mexer:** a velocidade do texto, o som e o "Destacar interações" ficam só no navegador; como a
+  porta muda a cada abertura, eles também não voltam ao reabrir o jogo. Levar para o arquivo de preferências junto do
+  menu de configurações.
+- **Não começados:** o livro da capela, a retirada do procedural e outras frentes.

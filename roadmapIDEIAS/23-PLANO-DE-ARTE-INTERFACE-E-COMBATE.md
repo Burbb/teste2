@@ -1253,6 +1253,18 @@ ou mudanças de dados por iniciativa do agente.
   lado, a dificuldade do outro). As duas: a mesma mensagem do motor, o mesmo tempo, os sons, as faixas de resultado
   aprovadas e uma nota só quando o 20 ou o 1 natural decidiu contra a conta. A recomendação: A. Nada de regras,
   sorteios, bônus ou dificuldades mudou.
+- **O d20 integrado na 1.202.0 (24/10/2026): as três apresentações aprovadas pelo Jean, à escolha.** O jogo atual
+  (o **Clássico**, que continua o padrão), **A · Marfim** e **B · Vidro** (`d20/dado.js`, `d20/dados.js`,
+  `21-d20.css`). A escolha é uma preferência da tela, provisória na Ajuda (F1), "Dado dos testes"; guardada no
+  navegador e em disco (`preferencias/tela.json`, ao lado dos saves), volta ao reabrir o jogo; sem escolha válida, o
+  Clássico. **Depois:** o seletor vai para o menu de configurações do jogo (junto da futura opção Estouro/Relicário,
+  que é outra escolha, independente). Regras, sorteios, bônus, dificuldade, ritmo e comandos sem mudança.
+- **O baú em avaliação (24/10/2026, só no protótipo):** duas propostas para o Baú Trancado em
+  `ferramentas/prototipos/hud/bau/` (A, a identidade de sempre; B, o baú trancado com o cadeado), o 32 desenhado à mão
+  e o 48 da pilha como o 32 centrado (um 48 próprio depois da escolha, se o Jean quiser). O jogo segue com o
+  placeholder. Esperando a escolha.
+- **Entregas, como preferência permanente do Jean:** sem vídeos, salvo pedido explícito; capturas compactas, folhas
+  com os mesmos dados no antes e depois e, quando a interação precisa ser testada, uma demonstração no navegador.
 - **Dependências do procedural** (para o levantamento da retirada): o covil, o vencido, a cidadela e a "selada" só
   existem lá; a legenda fixa dos nove desenhos; `MapaPx.sprite` cai no bioma para a `saida` da campanha; os glifos de
   `rpg/mapa.py`; o `fechado` da campanha não chega à tela como campo.
@@ -1424,8 +1436,9 @@ volta à pauta quando essa expansão exigir; não é uma migração de engine.
    item 1.12); o Jean escolheu refinar A e B (24/10/2026) e depois manter as duas como apresentações disponíveis, o
    Estouro como padrão pretendido (a troca vai para as opções do jogo); A3, B3 e o Piromante aprovados (24/10/2026);
    B4, A4, Piromante, Necromante, Sombra e Patrulheiro aprovados; o sangue A do Berserker e a luz B (vitral) do Paladino
-   escolhidos; **integrado na 1.201.0 (24/10/2026)**. O próximo lote da etapa 2, o redesenho do d20, em avaliação
-   (24/10/2026, só no protótipo). Histórico: **1E.4, em avaliação (23/10/2026):** o levantamento e o primeiro lote de protótipos (a posição, os caminhos, os
+   escolhidos; **integrado na 1.201.0 (24/10/2026)**. O d20: as três apresentações aprovadas (o Clássico, padrão, o
+   Marfim e o Vidro) **integradas na 1.202.0**, à escolha na Ajuda até o menu de configurações. O baú em avaliação
+   (duas propostas, só no protótipo). Histórico: **1E.4, em avaliação (23/10/2026):** o levantamento e o primeiro lote de protótipos (a posição, os caminhos, os
    símbolos e as marcas; detalhes em "A 1E.4 em 23/10/2026", no item 1.12). O Jean escolheu a direção B (a A fica como
    alternativa); aprovados como base a plaqueta B, a cancela, os caminhos e as marcas; a vila e a floresta nativas
    aprovadas (`094bb80a`: 32 no minimapa, 48 no mapa grande); o pântano e as ruínas aprovados (`c7bd2348`); em
