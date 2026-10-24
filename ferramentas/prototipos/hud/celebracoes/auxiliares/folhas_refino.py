@@ -27,5 +27,23 @@ def main():
     folha(["A2 · 1280×720", "B2 · 1280×720"], linhas, REF / "folha-refino-1280.png")
 
 
+def rodada3():
+    """A terceira rodada: A2 × A3 e B2 × B3 (1920, 1200 ms) e as duas em 1280×720 e com movimento reduzido."""
+    R3 = BASE / "capturas-r3"
+    meio = (360, 0, 1560, 945)
+    momentos = [("dois-niveis", "nivel2", "Nível (real)"), ("especializacao", "spec", "Piromante (real)"), ("sigilo", "sigilo", "Sigilo (real)"),
+                ("raridades", "comum", "Comum (real)"), ("raridades", "magico", "Mágico (real)"), ("raridades", "raro", "Raro (real)"),
+                ("raridades", "lendario", "Lendário (real)"), ("limites", "lendario", "SIMULAÇÃO: nome longo")]
+    linhas = [(rot, [quadro(REF / "relicario2" / "1920" / f"{s}-{f}-1200.png", meio, 0.36), quadro(R3 / "relicario3" / "1920" / f"{s}-{f}-1200.png", meio, 0.36),
+                     quadro(REF / "estouro2" / "1920" / f"{s}-{f}-1200.png", meio, 0.36), quadro(R3 / "estouro3" / "1920" / f"{s}-{f}-1200.png", meio, 0.36)])
+              for s, f, rot in momentos]
+    folha(["A2 · anterior", "A3 · Relicário", "B2 · anterior", "B3 · Estouro"], linhas, R3 / "folha-r3.png")
+    linhas = [(rot, [quadro(R3 / d / "1280" / f"{s}-{f}-1200.png", None, 0.42) for d in ("relicario3", "estouro3")] +
+               [quadro(R3 / d / "reduzido" / f"{s}-{f}-1200.png", meio, 0.3) for d in ("relicario3", "estouro3")])
+              for s, f, rot in momentos if (R3 / "relicario3" / "1280" / f"{s}-{f}-1200.png").exists()]
+    folha(["A3 · 1280×720", "B3 · 1280×720", "A3 · reduzido", "B3 · reduzido"], linhas, R3 / "folha-r3-apertados.png")
+
+
 if __name__ == "__main__":
-    main()
+    import sys
+    rodada3() if "r3" in sys.argv else main()

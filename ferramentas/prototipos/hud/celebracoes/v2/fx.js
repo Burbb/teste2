@@ -218,6 +218,16 @@ const FX = (() => {
       }
   }
 
+  /** O clarão concentrado na origem: um halo claro que abre e apaga em `dur` ms em volta de (cx, cy), e só um
+   *  pontilhado baixo (`espalha`, 0 a 16) na tela inteira nos dois primeiros quadros. O prêmio e a leitura continuam
+   *  reconhecíveis. */
+  function claraoLocal(p, { cx, cy, r, t, dur = 180, espalha = 2, pal = ["W", "W", "Y", "O"] }) {
+    if (t > dur) return;
+    const u = t / dur;
+    if (t < 140 && espalha) clarao(p, espalha, "W");
+    halo(p, { cx, cy, r: Math.round(r * (0.7 + u * 0.6)), pal, vis: Math.round(15 * (1 - u)) });
+  }
+
   // ------------------------------------------------------------------ partículas desenhadas à mão
   // Cada grade: "a" é a cor da idade da partícula, "b" a um tom mais claro; "." vazio.
   const DESENHOS = {
@@ -278,6 +288,6 @@ const FX = (() => {
   const rampa = (t, de, ms, a = 0, b = 1) => (t <= de ? a : t >= de + ms ? b : a + (b - a) * (1 - Math.pow(1 - (t - de) / ms, 3)));
   const aleatorio = (a, b) => a + Math.random() * (b - a);
 
-  return { cor, reduzido, FPS, QUADRO, PALETAS, DESENHOS, palco, animar, raios, feixes, halo, anel, coluna, clarao, estrela, poco,
+  return { cor, reduzido, FPS, QUADRO, PALETAS, DESENHOS, palco, animar, raios, feixes, halo, anel, coluna, clarao, claraoLocal, estrela, poco,
     enxame, tremer, rampa, aleatorio };
 })();

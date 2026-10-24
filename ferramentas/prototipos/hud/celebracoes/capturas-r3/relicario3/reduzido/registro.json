@@ -1,0 +1,33 @@
+{
+ "raridades": {
+  "erros": [],
+  "avisos": [],
+  "linha": [
+   "comum: apareceu em 626 ms",
+   "comum: fechado (deixar) em 2075 ms",
+   "magico: apareceu em 2899 ms",
+   "magico: fechado (deixar) em 4340 ms",
+   "raro: apareceu em 5139 ms",
+   "raro: fechado (deixar) em 6556 ms",
+   "lendario: apareceu em 7351 ms",
+   "lendario: fechado (deixar) em 8860 ms",
+   "achados: botões 251, 340, 483, 623 ms depois do cartão"
+  ]
+ },
+ "sigilo": {
+  "erros": [],
+  "avisos": [],
+  "linha": [
+   "sigilo: apareceu em 1006 ms",
+   "sigilo: fechado (clique) em 2406 ms"
+  ]
+ },
+ "especializacao": {
+  "erros": [],
+  "avisos": [],
+  "linha": [
+   "spec: apareceu em 992 ms",
+   "spec: fechado (clique) em 2354 ms"
+  ]
+ }
+}

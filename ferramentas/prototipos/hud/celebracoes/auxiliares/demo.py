@@ -31,9 +31,9 @@ CENARIOS = [("nivel", "Um nível (do 1 ao 2, dois lobos)", "guerreiro"),
             ("nivel_especializacao", "Sequência: nível 4 e, em seguida, a especialização (a dos vídeos)", "mago"),
             ("raridades_sigilo", "Sequência: as quatro raridades e o Sigilo (a dos vídeos)", "arqueiro")]
 # as versões: o valor de PROTOTIPO (vazio: o jogo como está) e o rótulo
-VERSOES = [("relicario2", "A2 · Relicário refinado"), ("estouro2", "B2 · Estouro refinado"), ("", "Jogo atual"),
-           ("relicario", "A · 1ª versão"), ("estouro", "B · 1ª versão"), ("estandarte", "C · reservada"),
-           ("brilho", "1ª proposta")]
+VERSOES = [("estouro3", "B3 · Estouro (padrão pretendido)"), ("relicario3", "A3 · Relicário"), ("", "Jogo atual"),
+           ("estouro2", "B2 · anterior"), ("relicario2", "A2 · anterior"), ("relicario", "A · 1ª versão"),
+           ("estouro", "B · 1ª versão"), ("estandarte", "C · reservada"), ("brilho", "1ª proposta")]
 NOMES = dict(VERSOES)
 CLASSES = ["guerreiro", "mago", "arqueiro"]
 trava = threading.Lock()
@@ -74,7 +74,7 @@ def pagina():
     linhas = []
     for cid, rotulo, classe in CENARIOS:
         botoes = " ".join(
-            f'<a class="b{" p" if v in ("relicario2", "estouro2") else " h" if v in ("relicario", "estouro", "estandarte", "brilho") else ""}" href="/iniciar?{html.escape(urlencode({"cenario": cid, "versao": v, "classe": classe}))}">{nome}</a>'
+            f'<a class="b{" p" if v in ("relicario3", "estouro3") else " h" if v else ""}" href="/iniciar?{html.escape(urlencode({"cenario": cid, "versao": v, "classe": classe}))}">{nome}</a>'
             for v, nome in VERSOES)
         linhas.append(f"<tr><td>{html.escape(rotulo)}<br><small>classe: {classe}</small></td><td>{botoes}</td></tr>")
     opcoes = "".join(f"<option>{c}</option>" for c in CLASSES)
@@ -90,8 +90,8 @@ a.b.p{{border-color:#f2c94c;color:#f2c94c;font-weight:bold}} a.b.h{{color:#8a807
 <h1>Demonstração da etapa 2 (protótipo, nada no jogo)</h1>
 <p class="nota">Cada botão encerra o cenário anterior e começa outro do zero, numa partida de teste com saves
 temporários (o seu save não é tocado). Na página, clique em "Começar o teste"; no canto de baixo, "repetir" e "painel".
-A2 e B2 são as versões refinadas (em destaque); "A · 1ª versão", "B · 1ª versão", "C · reservada" e "1ª proposta"
-são o histórico, em cinza. Movimento
+B3 (Estouro, o padrão pretendido) e A3 (Relicário) são as duas apresentações desta rodada, em destaque; a
+especialização do mago (Piromante) traz a identidade de fogo. As outras são o histórico, em cinza. Movimento
 reduzido: F12 → ⋮ → More tools → Rendering → prefers-reduced-motion: reduce, e "repetir".</p>
 <table>{''.join(linhas)}</table>
 <form action="/iniciar">Outra classe: <select name="cenario">{cens}</select> <select name="classe">{opcoes}</select>

@@ -1,0 +1,28 @@
+{
+ "raridades": {
+  "erros": [],
+  "avisos": [],
+  "linha": [
+   "comum: apareceu em 1103 ms",
+   "comum: fechado (deixar) em 2469 ms",
+   "magico: apareceu em 3289 ms",
+   "magico: fechado (deixar) em 4632 ms",
+   "raro: apareceu em 5442 ms",
+   "raro: fechado (deixar) em 6783 ms",
+   "lendario: apareceu em 7598 ms",
+   "lendario: fechado (deixar) em 8951 ms",
+   "achados: botões 233, 315, 441, 593 ms depois do cartão"
+  ]
+ },
+ "limites": {
+  "erros": [],
+  "avisos": [],
+  "linha": [
+   "nivel: apareceu em 783 ms",
+   "nivel: fechado (clique) em 2110 ms",
+   "lendario: apareceu em 2468 ms",
+   "lendario: fechado (deixar) em 3809 ms",
+   "achados: botões 592 ms depois do cartão"
+  ]
+ }
+}

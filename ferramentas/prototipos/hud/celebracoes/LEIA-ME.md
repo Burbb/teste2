@@ -6,13 +6,64 @@
 ## Testar no navegador (a demonstração)
 
 `demo.bat` (ou `python ferramentas/prototipos/hud/celebracoes/auxiliares/demo.py`) monta as direções e abre o painel em
-**http://127.0.0.1:8765/**. Cada cenário abre em **A · Relicário**, **B · Estouro**, **C · Estandarte**, no **jogo
-atual** ou na **1ª proposta** (o histórico, abaixo); um formulário troca a classe. Cada botão encerra o cenário anterior e
+**http://127.0.0.1:8765/**. Cada cenário abre em **B3 · Estouro** (o padrão pretendido) e **A3 · Relicário** (as
+apresentações desta rodada, em destaque), no **jogo atual** ou no histórico (B2, A2, A, B, C reservada, 1ª proposta, em
+cinza); um formulário troca a classe (o mago chega ao Piromante). Cada botão encerra o cenário anterior e
 sobe outro do zero, num processo com saves temporários (o save do jogo não é tocado); na página, "Começar o teste"; no
 canto de baixo, "repetir" e "painel" (essa faixa só existe na demonstração). O servidor de teste (`cenarios_teste.py`,
 `PROTOTIPO=<direção>`) serve `telas/celebracoes.js` e `telas/achado.js` montados em `prototipo-v2/<direção>/`.
 Movimento reduzido: no Chrome/Edge, F12 → ⋮ → More tools → Rendering → "Emulate CSS media feature
 prefers-reduced-motion" → reduce, e "repetir" (ou "Mostrar animações" desligado no Windows, para o sistema todo).
+
+## Terceira rodada (24/10/2026): duas apresentações e a identidade do Piromante
+
+**A decisão do Jean:** Relicário e Estouro ficam como duas apresentações disponíveis, com o **Estouro como padrão
+pretendido**; a troca entre elas fica registrada para as futuras opções do jogo. Nada integrado nesta rodada. As
+versões novas são cópias da A2 e da B2 (`v2/relicario3.js`, `v2/estouro3.js`); A2 e B2 ficam como histórico.
+
+**Apresentação × identidade.** A apresentação (Relicário ou Estouro) faz a composição e a entrada; a identidade
+(`v2/identidade.js`) diz as cores e o comportamento visual de uma especialização. Piloto só com o **Piromante**, nas
+duas apresentações: o nome em ouro quente e laranja, em faixas duras, com a borda incandescente (o contorno vermelho e
+brasa piscando em dois tons) e uma sombra escura; chamas pequenas desenhadas à mão (grades em cinco idades) nascem do
+contorno de cima das letras (o texto desenhado num canvas com a mesma fonte, para achar os topos) e sobem pouco; um
+poço escuro logo atrás do nome, com o calor de brasa na borda; os raios (Relicário) ou o estouro (Estouro) na paleta do
+fogo, tremulando; brasas subindo. O corpo das letras fica parado; as chamas não descem sobre a descrição nem os
+botões. Com o movimento reduzido, um quadro parado das chamas. As raridades, as outras especializações e as subidas
+de nível seguintes não mudam; Patrulheiro, Sombra e as outras ficam para depois da avaliação do piloto e da conferência
+do catálogo. A festa da especialização manda o nome, não o id: o piloto escolhe a identidade pelo nome; na integração,
+o id vem do motor.
+
+**O acabamento das duas:**
+- **Clarão de entrada concentrado na origem** (`FX.claraoLocal`): um halo claro em volta do item ou do selo e só um
+  pontilhado baixo na tela inteira por dois quadros (antes, a tela quase toda branca apagava o prêmio); no lendário, um
+  escuro logo em volta do sprite. Vale para o lendário das duas e para o golpe do Estouro (o nível e o Sigilo).
+- **Botões** (só nestas apresentações): ferro escuro com aresta de latão, sem o cinza em degradê; a tecla em destaque;
+  mouse por cima, a aresta acende; o foco do teclado num anel claro; a área, os estados e os atalhos iguais.
+- **Mágico:** um acento azul parado junto do item (o fio com o losango, em azul) além do brilho breve, sem aura.
+- **Estouro, o título do nível:** a faixa de linhas douradas virou uma base preta irregular (o mesmo poço em
+  pontilhado do Relicário); a estrela e o impacto ficam.
+- **Estouro, o item no selo:** o miolo do selo é quase preto e maior, com um escuro em volta do sprite; as pontas e a
+  energia ficam. O comum e o mágico também ganham um escuro atrás do item (ele caía sobre o texto da página).
+- Em 1280×720, o Estouro abre mais espaço entre o selo e um título longo.
+
+Os ícones antigos das habilidades (os sprites do Grimório) ficam registrados para a etapa do Grimório; não foram
+redesenhados.
+
+**Conferido:** 1920×945 e 1280×720 (nível, as quatro raridades, Sigilo, Piromante e a simulação de textos longos);
+a leitura durante o clarão (os instantes de 60 e 200 ms) e durante as chamas; o movimento reduzido (a composição e o
+fogo parados). Gestos, por `auxiliares/gestos.mjs` (na página, nas duas): a tecla segurada não fecha; Esc fecha o
+nível 2 e o 3 abre; o clique duplo fecha uma festa só e não atravessa; nenhuma escolha mandada pelo clique que fecha
+(nível e Sigilo, até 1,5 s depois); o clique e o Enter rápidos no achado levam os botões a ~85 ms sem escolher; os
+palcos dos efeitos saem ao fechar (nenhum acumulado); a tela não fica deslocada pelo tremor; sem erros na página.
+
+**Vídeos** (`para-avaliacao/`, sem áudio; os anteriores ficam): `r3-1-relicario-nivel-e-piromante.webm`,
+`r3-2-relicario-raridades-e-sigilo.webm`, `r3-3-estouro-nivel-e-piromante.webm`, `r3-4-estouro-raridades-e-sigilo.webm`.
+Folhas em `capturas-r3/`: `folha-r3.png` (A2, A3, B2 e B3 lado a lado) e `folha-r3-apertados.png` (1280×720 e reduzido).
+
+**Limitações vistas:** o som não foi ouvido; no Estouro, os estilhaços da entrada da especialização passam por trás
+da descrição durante ~1 s (atrás do texto, não por cima); seis ganhos ainda quebram em duas linhas; a identidade é
+escolhida pelo nome da especialização (no protótipo); as chamas dependem da fonte carregada (sem ela, nascem do
+contorno da fonte de reserva).
 
 ## Refinamento (24/10/2026): A2 · Relicário refinado e B2 · Estouro refinado
 

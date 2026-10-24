@@ -12,7 +12,7 @@ AQUI = pathlib.Path(__file__).resolve().parent
 RAIZ = AQUI.parents[4]
 V2 = AQUI.parent / "v2"
 SAIDA = AQUI.parent / "prototipo-v2"
-DIRECOES = ["relicario", "estouro", "estandarte", "relicario2", "estouro2"]  # as de número 2: a rodada de refinamento
+DIRECOES = ["relicario", "estouro", "estandarte", "relicario2", "estouro2", "relicario3", "estouro3"]  # as de número 2: a rodada de refinamento
 
 
 def trocar(s, a, b):
@@ -30,7 +30,7 @@ def main():
     fim = celebracoes.index("  /** Contratos cumpridos:")
     celebracoes = (celebracoes[:ini] + "    return Festa.celebrar(m, caixa, instantaneo);  // PROTÓTIPO: a direção\n  }\n\n"
                    + celebracoes[fim:])
-    base = (V2 / "fx.js").read_text(encoding="utf-8") + "\n" + (V2 / "festas.js").read_text(encoding="utf-8") + "\n"
+    base = "\n".join((V2 / f).read_text(encoding="utf-8") for f in ("fx.js", "festas.js", "identidade.js")) + "\n"
     for nome in DIRECOES:
         fonte = V2 / f"{nome}.js"
         if not fonte.exists():
