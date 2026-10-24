@@ -22,7 +22,7 @@ sys.argv.append(f"--fontes={AQUI / 'fontes'}")
 import exportar_aseprite as ex  # noqa: E402
 import montar_fontes  # noqa: E402
 
-PROPOSTAS = {"bau-a": "grades_a.py", "bau-b": "grades_b.py"}
+PROPOSTAS = {"bau-a": "grades_a.py", "bau-b": "grades_b.py", "bau-a2": "grades_a2.py"}
 
 
 def carregar(nome):
@@ -32,10 +32,11 @@ def carregar(nome):
     return m
 
 
-def imagem(m):
-    n = len(m.G32)
+def imagem(m, grade=None):
+    grade = grade or m.G32
+    n = len(grade)
     im = Image.new("RGBA", (n, n), (0, 0, 0, 0))
-    for y, linha in enumerate(m.G32):
+    for y, linha in enumerate(grade):
         assert len(linha) == n, (y, len(linha))
         for x, c in enumerate(linha):
             if c != ".":
@@ -43,11 +44,12 @@ def imagem(m):
     return im
 
 
-def listas(m, pasta):
+def listas(m, pasta, grade=None):
     """Uma lista por camada (o material de cada caractere), no formato do pintar.lua; de baixo para cima."""
+    grade = grade or m.G32
     pasta.mkdir(parents=True, exist_ok=True)
     for camada, chars in m.CAMADAS.items():
-        px = [f"{x},{y},{m.PALETA[c][1:].upper()}" for y, l in enumerate(m.G32) for x, c in enumerate(l) if c in chars]
+        px = [f"{x},{y},{m.PALETA[c][1:].upper()}" for y, l in enumerate(grade) for x, c in enumerate(l) if c in chars]
         (pasta / f"{camada}.lua").write_text(f'return "{";".join(px)}"\n', encoding="utf-8")
     (pasta / "ordem.txt").write_text(",".join(m.CAMADAS) + "\n", encoding="utf-8")
 
@@ -63,17 +65,23 @@ for peca, arq in PROPOSTAS.items():
     saida = AQUI / "propostas" / peca
     saida.mkdir(parents=True, exist_ok=True)
     salvar(base, saida, "bau-32")
-    centro = Image.new("RGBA", (48, 48), (0, 0, 0, 0))
-    centro.paste(base, (8, 8))
-    salvar(centro, saida, "bau-48")
+    if hasattr(m, "G48"):  # a A2: o 48 próprio, desenhado na grade de 48 com a construção do 32
+        salvar(imagem(m, m.G48), saida, "bau-48")
+    else:  # A e B: o 32 centrado com margem
+        centro = Image.new("RGBA", (48, 48), (0, 0, 0, 0))
+        centro.paste(base, (8, 8))
+        salvar(centro, saida, "bau-48")
     salvar(base.resize((64, 64), Image.NEAREST), saida, "bau-64")
+    grades = {32: m.G32, **({48: m.G48} if hasattr(m, "G48") else {})}
     with tempfile.TemporaryDirectory() as tmp:
-        lst = pathlib.Path(tmp) / f"{peca}-32"
-        listas(m, lst)
+        for lado, grade in grades.items():
+            listas(m, pathlib.Path(tmp) / f"{peca}-{lado}", grade)
         montar_fontes.montar(peca, pathlib.Path(tmp))
-        fonte = AQUI / "fontes" / peca / f"{peca}-32.aseprite"
-        png = pathlib.Path(tmp) / "conferir.png"
-        subprocess.run([ex.aseprite(), "-b", str(fonte), "--save-as", str(png)], check=True, capture_output=True)
-        igual = ImageChops.difference(Image.open(png).convert("RGBA"), base).getbbox() is None
-    cores = len({p for p in base.getdata() if p[3]})
-    print(f"{peca}: {cores} cores; a fonte em camadas exporta igual à grade: {igual}")
+        for lado, grade in grades.items():
+            fonte = AQUI / "fontes" / peca / f"{peca}-{lado}.aseprite"
+            png = pathlib.Path(tmp) / f"conferir-{lado}.png"
+            subprocess.run([ex.aseprite(), "-b", str(fonte), "--save-as", str(png)], check=True, capture_output=True)
+            igual = ImageChops.difference(Image.open(png).convert("RGBA"), imagem(m, grade)).getbbox() is None
+            im = imagem(m, grade)
+            print(f"{peca} {lado}: {len({p for p in im.getdata() if p[3]})} cores, ocupa {im.getchannel('A').getbbox()}; "
+                  f"a fonte em camadas exporta igual à grade: {igual}")

@@ -1,4 +1,27 @@
-# O baú: duas propostas para a arte do Baú Trancado (protótipo, 24/10/2026)
+# O baú: as propostas para a arte do Baú Trancado (protótipo, 24/10/2026)
+
+**A rodada atual: a A2, a candidata refinada do A** (o Jean escolheu o A como direção, ainda não como arte final). A, B
+e o placeholder ficam como histórico. Nada no jogo; aguarda a avaliação.
+
+## A2 · o refino do A
+
+O pedido: o A tinha boa leitura da madeira, das cintas e da fechadura, mas saiu quadrado e frontal demais; o
+placeholder tinha uma tampa mais convincente e mais volume. A A2 (`grades_a2.py`, as fontes
+`fontes/bau-a2/bau-a2-32.aseprite` e `-48.aseprite`, os PNGs em `propostas/bau-a2/`):
+
+- **a tampa abaulada:** a cumeeira mais curta e os cantos do alto caindo; o tampo com a luz mais forte no alto e a
+  junta das tábuas, a borda da tampa pegando a luz;
+- **a três quartos evidente:** a ponta direita bem à vista e recuando (a emenda e as tábuas subindo com a
+  perspectiva), com o arco da tampa claro em cima da emenda; as duas cintas das pontas acompanham o perfil da tampa;
+- **os planos de luz:** o tampo claro, a frente média, a ponta escura; os materiais separados (madeira, ferro com
+  cravos, o espelho de latão com o furo vertical);
+- **o 48 próprio:** a pilha de vários baús abertos voltou à presença do antigo. Medido antes: o antigo ocupa 26×23 no
+  32 e 40×35 no 48; o A centrado no 48 ocupava só 29×23. A A2 ocupa 28×23 no 32 e 39×33 no 48, desenhada na grade de
+  48 com a mesma construção do 32 (as mesmas partes, a mesma emenda inclinada, as mesmas tábuas). O 64 continua o 32 ×2
+  (sem lugar no jogo).
+- **Conferido:** as fontes em camadas exportam iguais às grades (32 e 48); a bolsa e a pilha no jogo, a 1920×945 e a
+  1280×720, ao lado do A e do antigo: `folha-a2.png`.
+
 
 **Nada disto está no jogo.** O jogo continua com o baú de hoje (o placeholder da família de ferro, em
 `rpg/web/static/hud/icones/bau-*.png`). Aguarda a escolha do Jean.
@@ -22,7 +45,7 @@ O desenho é o do consumível `bau` (o Baú Trancado), por `Icones.consumivel("b
   1.192.0), o Salvar da doca (`atalho-salvar`, o baú aberto com a seta) e o baú da sacristia (a cena da capela,
   `telas/cenas.js`).
 
-## As propostas
+## A primeira rodada: A e B (histórico)
 
 Desenhadas à mão, uma grade de texto por proposta (um caractere por pixel: `grades_a.py`, `grades_b.py`), na luz de
 sempre (de cima e da esquerda) e com o contorno de 1 px. As fontes em camadas (uma por material) em
