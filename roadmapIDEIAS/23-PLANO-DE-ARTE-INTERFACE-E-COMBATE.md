@@ -1222,6 +1222,9 @@ ou mudanças de dados por iniciativa do agente.
   avaliação, duas propostas para Paladino, Berserker, Patrulheiro, Sombra e Necromante (Luz do alto / Asas; O nome
   sangra / Garras; Vendaval / Clareira; Corte / Invisível; Erguer / Almas), com símbolos desenhados à mão, nas duas
   apresentações; uma por especialização será escolhida antes da integração.
+- **As candidatas finais (24/10/2026, nada no jogo):** escolhidas as bases (Paladino, a luz com as penas; Berserker,
+  as garras; Sombra, o invisível com o corte; Patrulheiro, o vendaval; Necromante, o erguer), refinadas numa versão
+  final de cada, nas duas apresentações (`estouro5c`, `relicario5c`); as identidades 1 e 2 ficam como histórico.
 - **Dependências do procedural** (para o levantamento da retirada): o covil, o vencido, a cidadela e a "selada" só
   existem lá; a legenda fixa dos nove desenhos; `MapaPx.sprite` cai no bioma para a `saida` da campanha; os glifos de
   `rpg/mapa.py`; o `fechado` da campanha não chega à tela como campo.
@@ -1392,7 +1395,7 @@ volta à pauta quando essa expansão exigir; não é uma migração de engine.
    avaliação, segunda rodada** (três direções da subida de nível com as celebrações e a raridade, só no protótipo;
    item 1.12); o Jean escolheu refinar A e B (24/10/2026) e depois manter as duas como apresentações disponíveis, o
    Estouro como padrão pretendido (a troca vai para as opções do jogo); A3, B3 e o Piromante aprovados (24/10/2026);
-   B4, A4 e o Piromante aprovados; em avaliação, duas identidades para cada uma das outras cinco especializações;
+   B4, A4 e o Piromante aprovados; as bases das outras cinco escolhidas e as candidatas finais em avaliação;
    depois, a integração. Histórico: **1E.4, em avaliação (23/10/2026):** o levantamento e o primeiro lote de protótipos (a posição, os caminhos, os
    símbolos e as marcas; detalhes em "A 1E.4 em 23/10/2026", no item 1.12). O Jean escolheu a direção B (a A fica como
    alternativa); aprovados como base a plaqueta B, a cancela, os caminhos e as marcas; a vila e a floresta nativas

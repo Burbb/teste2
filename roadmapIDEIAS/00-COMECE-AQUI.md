@@ -7074,3 +7074,14 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   Almas. Direção, referências e limitações no LEIA-ME.
 - **Para avaliar:** o painel (`demo.bat`, http://127.0.0.1:8765/); os vídeos `r5-*.webm` sem áudio em
   `para-avaliacao/`; as folhas em `capturas-r5/`. Esperando a escolha de uma identidade por especialização.
+
+### 24/10/2026 (data do computador local) — Etapa 2: as candidatas finais das especializações (protótipo)
+
+- **Aprovado (preservado):** o Estouro B4 e o Relicário A4 como apresentações; o Piromante nas duas.
+- **Escolhidas pelo Jean como base:** Paladino, a luz da 1 com as penas da 2; Berserker, a 2 (Garras); Sombra, a 2
+  com o corte da 1; Patrulheiro, a 1 (Vendaval); Necromante, a 1 (Erguer).
+- **Candidatas finais (nada integrado):** a versão "c" de `v2/identidades2.js`, em `estouro5c` e `relicario5c`: a luz
+  do Paladino em faixas amplas translúcidas, o sangue líquido do Berserker, a sequência da Sombra (olhos → nome → corte
+  → recomposição), o Patrulheiro todo em verde (a origem do castanho, corrigida) e a fumaça escura do Necromante.
+- **Para avaliar:** o painel (`demo.bat`, http://127.0.0.1:8765/), os vídeos `r6-*.webm` sem áudio em
+  `para-avaliacao/`, as folhas em `capturas-r6/`.
