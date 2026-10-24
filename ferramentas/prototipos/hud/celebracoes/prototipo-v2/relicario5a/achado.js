@@ -1364,8 +1364,8 @@ const Identidades2 = (() => {
   const NECROMANTE = {
     a: {
       ...TUMULO, atenua: 4, classe: "idv-almas-a", semClarao: true,
-      quadro({ p, r, t, q, parado, ex, dados }) {
-        FX.poco(p, { cx: r.x, cy: r.y, rx: Math.round(r.rx * 1.6), ry: Math.round(r.ry * 4), forca: 12, c: "N" });
+      quadro({ p, r, t, q, parado, ex, dados, semFundo }) {
+        if (!semFundo) FX.poco(p, { cx: r.x, cy: r.y, rx: Math.round(r.rx * 1.6), ry: Math.round(r.ry * 4), forca: 12, c: "N" });
         if (!dados.caveiras) dados.caveiras = Array.from({ length: 6 }, (_, i) => {
           const f = i / 5, x = Math.round(r.esq - 30 + f * (r.dir - r.esq + 60)), alto = r.topo - 26 - Math.round(Math.sin(Math.PI * f) * 16);
           return { x, alto, de: 220 + [3, 1, 5, 0, 4, 2][i] * 110 };
@@ -1379,7 +1379,7 @@ const Identidades2 = (() => {
           pintar(p, CAVEIRA, k.x - 7, y, { k: "k", b: "G", e: aceso && !pisca ? (t - k.de < 520 ? "W" : "E") : "k" }, 2);
           if (u < 1) for (let w = 1; w < 12; w++) if (pt(k.x, y + 18 + w, 14 - w)) p.por(k.x + (w % 2 ? -1 : 1), y + 18 + w, C("e"));  // o rastro de quem sobe
         }
-        poco(p, r, 12, 16);
+        if (!semFundo) poco(p, r, 12, 16);
         circulo(p, r, t, parado, q);
         if (!parado && t > 500 && q % 2 === 0) ex.soltar(1, () => ({ tipo: "fio", x: r.x + Math.round(al(-r.rx, r.rx)), y: r.base - 2, vy: al(-0.8, -0.4), vida: Math.round(al(10, 18)) }));
       },
@@ -1422,10 +1422,250 @@ const Identidades2 = (() => {
     },
   };
 
+  // ================================================================ AS CANDIDATAS FINAIS (versão "c", 24/10/2026)
+  // As direções escolhidas pelo Jean, refinadas: o Paladino com a luz do alto em faixas amplas e as penas caindo; o
+  // Berserker das garras com o sangue líquido; a Sombra do invisível com o corte; o Patrulheiro do vendaval em verde;
+  // o Necromante das caveiras com a fumaça escura saindo das letras.
+
+  // ---- PALADINO: a luz sagrada numa camada própria, translúcida (faixas amplas de marfim e ouro pálido, poucos níveis,
+  // pontilhado só nas transições, sem contorno nem base reta) e as penas caindo devagar
+  const hash = (n) => { const x = Math.sin(n * 127.1) * 43758.5453; return x - Math.floor(x); };
+  const FAIXAS = [  // ângulo a partir da vertical, meia abertura, cor
+    [-0.33, 0.05, "#fff1d6"], [-0.2, 0.075, "#f2cf8a"], [-0.07, 0.05, "#fff1d6"], [0.05, 0.085, "#f2cf8a"], [0.18, 0.05, "#fff1d6"], [0.31, 0.065, "#f2cf8a"],
+  ];
+  function luzSagrada(lp, r, t, parado, rot) {
+    const ox = r.x, oy = -lp.t(260), desce = parado ? 1 : rampa(t, 0, 460), fundo = r.base - 2;
+    const x0 = Math.max(0, Math.floor(r.x - r.rx * 2.4)), x1 = Math.min(lp.W - 1, Math.ceil(r.x + r.rx * 2.4));
+    const mexe = (i) => (parado ? 0 : Math.sin(t / 2700 + i * 1.7) * 0.012);
+    for (let y = 0; y < Math.min(lp.H, Math.round(fundo * desce) + 16); y++) for (let x = x0; x <= x1; x++) {
+      // o pé de cada coluna é irregular e apaga em pontilhado (sem base reta)
+      const pe = fundo - Math.round(hash(x >> 2) * 10), falta = pe - y;
+      if (falta < -12) continue;
+      // o nome e o rótulo ficam no escuro: a luz contorna os dois
+      const ex = (x - r.x) / (r.rx + 16), ey = (y - r.y) / (r.ry + 14), dn = ex * ex + ey * ey;
+      if (dn < 1) continue;
+      if (rot) { const lx = (x - rot.x) / (rot.rx + 12), ly = (y - rot.y) / (rot.ry + 6); if (lx * lx + ly * ly < 1) continue; }
+      const a = Math.atan2(x - ox, y - oy);
+      let cor = null, n = 0;
+      for (let i = 0; i < FAIXAS.length; i++) {
+        const [ai, wi, ci] = FAIXAS[i], d = Math.abs(a - ai - mexe(i));
+        if (d > wi) continue;
+        n++;
+        if (!cor || d < wi * 0.6) cor = ci;
+        if (d > wi * 0.78 && !pt(x, y, 8)) { n--; if (n === 0) cor = null; }  // a borda da faixa: um pontilhado só
+      }
+      if (!cor) continue;
+      if (falta < 0 && !pt(x, y, Math.round(14 + falta))) continue;  // o pé apagando
+      if (dn < 1.2 && !pt(x, y, 9)) continue;  // a transição para o escuro em volta do nome
+      lp.por(x, y, C(n > 1 ? "#fffbe6" : cor));
+    }
+    // a camada inteira respira devagar (poucos níveis de transparência)
+    const op = parado ? 0.5 : t < 700 ? 0.5 + Math.round(6 * (1 - t / 700)) * 0.02 : 0.47 + Math.round(2 + 2 * Math.sin(t / 1100)) * 0.01;
+    lp.el.style.opacity = op.toFixed(2);
+  }
+  PALADINO.c = {
+    ...LUZ, pal: ["W", "w", "Y", "w", "G"], atenua: 9, classe: "idv-luz-a", semClarao: true, claros: ["W", "w"],
+    luz: luzSagrada,
+    quadro({ p, r, t, q, parado, ex, dados }) {
+      poco(p, r, 16, 16);
+      if (!parado && t > 380 && t < 920) {  // o pouso da luz: um anel de marfim rente ao nome
+        const u = (t - 380) / 540;
+        FX.anel(p, { cx: r.x, cy: r.y, r: Math.round(r.rx * (0.9 + u * 0.55)), esp: 1, pal: ["W", "w", "G"], achata: 0.3, rastro: 3, vis: Math.round(13 * (1 - u)) });
+      }
+      if (parado) return;
+      if (!dados.soltou && t > 300) {  // as primeiras penas, soltas quando a luz chega
+        dados.soltou = true;
+        ex.soltar(9, () => penaCaindo(r.x + Math.round(al(-r.rx * 1.7, r.rx * 1.7)), Math.round(al(-10, r.topo * 0.6)), r.base + 6, al(0.3, 0.5)));
+      }
+      if (q % 6 === 0) ex.soltar(1, () => penaCaindo(r.x + Math.round(al(-r.rx * 1.9, r.rx * 1.9)), -8, r.base + 6));
+      if (q % 3 === 0) motes(ex, r, 1, t);
+    },
+    desenhar(p, s) {
+      if (s.tipo === "pena") return desenharPena(p, s);
+      const k = s.idade / s.vida; if (pt(Math.round(s.x), Math.round(s.y), Math.round(12 * (1 - k)))) p.por(Math.round(s.x), Math.round(s.y), C(k < 0.5 ? "W" : "w"));
+    },
+    parado: 10,
+  };
+
+  // ---- BERSERKER: as garras e o ritmo da identidade 2, com o sangue líquido: acumula em pontos das letras, estica num
+  // fio fino, se desprende e cai; poucas gotas ao mesmo tempo, cada uma no seu tempo; vermelho fundo, quase sem brilho
+  // a gota: corpo vermelho fundo, um só ponto de luz (sem rosado); presa ela é curta, caindo se alonga
+  const GOTA_PRESA = [".b.", "bcb", "bbb", ".b."], GOTA_CAINDO = [".b.", "bcb", "bbb", "bbb", ".b."];
+  const COR_GOTA = { b: "r", c: "R" };
+  function pontosDeSangue(c, r) {
+    const bases = basesBaixas(c, r).sort((m, n) => m.x - n.x);
+    if (!bases.length) return null;
+    const n = 7, pts = [];
+    for (let i = 0; i < n; i++) { const o = bases[Math.min(bases.length - 1, Math.floor(((i + al(0.2, 0.8)) / n) * bases.length))];
+      pts.push({ x: o.x, y: o.y + 1, estado: "espera", ate: 300 + Math.round(al(0, 1700)), L: 0, Lmax: 0, inchaco: 0, gy: 0, vy: 0 }); }
+    return pts;
+  }
+  function moverSangue(pt0, t, dados) {
+    const s = pt0;
+    if (s.estado === "espera") { if (t >= s.ate) { s.estado = "acumula"; s.inchaco = 0; s.Lmax = Math.round(al(5, 15)); s.lenta = al(0.18, 0.4); } return; }
+    if (s.estado === "acumula") { s.inchaco += 0.08; if (s.inchaco >= 1) { s.estado = "estica"; s.L = 1; } return; }
+    if (s.estado === "estica") { s.L += s.lenta; s.lenta *= 1.04; if (s.L >= s.Lmax) { s.estado = "cai"; s.gy = s.y + s.L; s.vy = 0.6; } return; }
+    if (s.estado === "cai") {
+      s.vy += 0.32; s.gy += s.vy; s.L = Math.max(0, s.L - 1.5);  // o fio volta para a letra
+      if (s.gy >= dados.chao) {
+        dados.poca.set(s.x, Math.min(2, (dados.poca.get(s.x) || 0) + 1)); dados.poca.set(s.x + 1, Math.min(2, (dados.poca.get(s.x + 1) || 0) + 1));
+        dados.respingos.push({ x: s.x, y: dados.chao, idade: 0 });
+        s.estado = "espera"; s.ate = t + Math.round(al(500, 2200));
+      }
+    }
+  }
+  function desenharSangue(p, s) {
+    if (s.estado === "espera") return;
+    if (s.estado === "acumula") {  // o sangue junta embaixo da letra: uma lâmina que engrossa e vira gota
+      p.por(s.x - 1, s.y, C("r")); p.por(s.x, s.y, C("r")); p.por(s.x + 1, s.y, C("D"));
+      if (s.inchaco > 0.4) p.por(s.x, s.y + 1, C("r"));
+      if (s.inchaco > 0.75) pintar(p, GOTA_PRESA, s.x - 1, s.y, COR_GOTA);
+      return;
+    }
+    const L = Math.round(s.L);
+    for (let i = 0; i < L; i++) p.por(s.x, s.y + i, C("r"));  // o fio: fino, mais grosso junto da letra
+    if (L > 1) { p.por(s.x + 1, s.y, C("r")); p.por(s.x - 1, s.y, C("D")); }
+    if (s.estado === "estica") pintar(p, GOTA_PRESA, s.x - 1, s.y + L - 1, COR_GOTA);
+    else pintar(p, s.vy > 2 ? GOTA_CAINDO : GOTA_PRESA, s.x - 1, Math.round(s.gy), COR_GOTA);
+  }
+  function chaoFundo(p, dados) {
+    for (const [x, n] of dados.poca) for (let k = 0; k < n; k++) p.por(x, dados.chao + 1 - k, C(k === n - 1 ? "r" : "D"));
+    for (let i = dados.respingos.length - 1; i >= 0; i--) {
+      const s = dados.respingos[i]; s.idade++;
+      if (s.idade > 3) { dados.respingos.splice(i, 1); continue; }
+      p.por(s.x - 1 - s.idade, s.y - 1, C("r")); p.por(s.x + 1 + s.idade, s.y - 1, C("r"));
+    }
+  }
+  BERSERKER.c = {
+    ...SANGUE, atenua: 4, classe: "idv-sangue-b",
+    quadro({ p, r, c, t, q, parado, ex, dados }) {
+      iniciarSangue(r, dados);
+      veias(p, t, parado);
+      if (!dados.garras) dados.garras = garras(r);
+      poco(p, r, 10, 16);
+      const u = parado ? 1 : rampa(t, 170, 200);
+      if (u > 0) dados.garras.forEach((g, i) => desenharGarra(p, g, Math.min(1, u * 1.3 - i * 0.15)));
+      chaoFundo(p, dados);
+      if (!dados.pontos && c.bases.length) dados.pontos = pontosDeSangue(c, r);
+      if (dados.pontos) for (const s of dados.pontos) { if (!parado) moverSangue(s, t, dados); desenharSangue(p, s); }
+      // as feridas das garras vertem pouco: uma gota de cada vez, escorrendo pela borda de baixo
+      if (!parado && t > 500 && q % 7 === 0) ex.soltar(1, () => { const g = sorteio(dados.garras), f = al(0.2, 0.8);
+        return { tipo: "verte", x: Math.round(g.x0 + (g.x1 - g.x0) * f) + 3, y: Math.round(g.y0 + (g.y1 - g.y0) * f), g: 0.12, vy: 0.2, vida: 12 }; });
+    },
+    desenhar(p, s) { pintar(p, s.vy > 1.2 ? GOTA_CAINDO : GOTA_PRESA, Math.round(s.x) - 1, Math.round(s.y), COR_GOTA); },
+    parado: 3,
+  };
+
+  // ---- SOMBRA: o invisível com o corte. Olhos no escuro → o nome aparece aos pedaços → um instante inteiro → o corte
+  // (uma vez) → as metades se afastam e se recompõem → os efeitos discretos do invisível continuam
+  const CORTE_MS = 1050;
+  SOMBRA_ID.c = {
+    ...SOMBRA, atenua: 8, classe: "idv-sombra-c", semClarao: true,
+    nome(el) {
+      const texto = el.textContent, letras = [...texto], ordem = letras.map((_, i) => i).sort(() => Math.random() - 0.5);
+      const atraso = letras.map((_, i) => (0.3 + (ordem.indexOf(i) / letras.length) * 0.42).toFixed(2));
+      const camada = (cls, oculto) => `<span class="idv-camada ${cls}"${oculto ? ' aria-hidden="true"' : ""}>${letras.map((ch, i) => `<span class="idv-letra" style="--d:${atraso[i]}s">${ch}</span>`).join("")}</span>`;
+      el.innerHTML = camada("idv-cima") + camada("idv-baixo", true);
+      el.setAttribute("aria-label", texto);
+      return el.querySelector(".idv-cima");
+    },
+    quadro({ p, r, t, q, parado, ex, dados }) {
+      FX.poco(p, { cx: r.x, cy: r.y, rx: Math.round(r.rx * 1.7), ry: Math.round(r.ry * 4), forca: 15 });
+      poco(p, r, 26, 16);
+      const l = dados.l || (dados.l = linhaCorte(r));
+      const olhos = (x, y, fechado) => { pintar(p, fechado ? OLHO_FECHADO : OLHO, x - 10, y, { o: "Y", k: "k" }, 2); pintar(p, fechado ? OLHO_FECHADO : OLHO, x + 4, y, { o: "Y", k: "k" }, 2); };
+      if (!parado && t < 330) olhos(r.x, r.y - 2, t > 200 && t < 250);  // os olhos antes do nome
+      if (parado || t > CORTE_MS + 80) desenharLinha(p, l, 1, ["x", "K"], 0);  // a cicatriz que fica
+      if (!parado && t >= CORTE_MS - 30 && t < CORTE_MS + 100) desenharLinha(p, l, Math.min(1, (t - CORTE_MS + 30) / 60), ["W", "G"], 1);  // o golpe
+      if (!parado && t >= CORTE_MS + 40 && t < CORTE_MS + 260) desenharLinha(p, l, 1, ["G", "m"], 1, 0.15);
+      // depois, olhos nas laterais do escuro, de vez em quando
+      const cl = (t - 2300) % 3200;
+      if (parado) { olhos(r.esq - 34, r.y - 6, false); olhos(r.dir + 34, r.y + 2, true); }
+      else if (t > 2300 && cl < 900) { if (!dados.lado || cl < 70) dados.lado = Math.random() < 0.5 ? { x: r.esq - Math.round(al(26, 46)), y: r.y + Math.round(al(-10, 6)) } : { x: r.dir + Math.round(al(26, 46)), y: r.y + Math.round(al(-10, 6)) };
+        olhos(dados.lado.x, dados.lado.y, cl > 420 && cl < 500); }
+      if (parado) return;
+      if (!dados.golpe && t >= CORTE_MS) {
+        dados.golpe = true;
+        for (const [x, y] of [[l.x0, l.y0], [l.x1, l.y1]]) ex.soltar(8, () => ({ tipo: "faisca", x, y, vx: al(-2.5, 2.5), vy: al(-2.5, 1.5), g: 0.2, vida: Math.round(al(5, 9)) }));
+        ex.soltar(22, () => { const f = Math.random(); return fumo(l.x0 + (l.x1 - l.x0) * f, l.y0 + (l.y1 - l.y0) * f, al(-0.8, 0.8), al(-1, 0.3)); });
+      }
+      const cg = (t - 2600) % 3000;  // o brilho que corre pela cicatriz, só nas pontas de fora do nome
+      if (t > 2600 && cg < 500) { const f = cg / 500, x = l.x0 + (l.x1 - l.x0) * f, y = l.y0 + (l.y1 - l.y0) * f;
+        if (x < r.esq - 2 || x > r.dir + 2) pintar(p, FX.DESENHOS.cruz, Math.round(x) - 1, Math.round(y) - 1, { a: "G", b: "W" }); }
+      if (t < 800) ex.soltar(t < 350 ? 4 : 2, () => fumo(r.x + al(-r.rx, r.rx), r.y + al(-r.ry, r.ry), al(-1.2, 1.2), al(-0.6, 0.4)));  // a névoa sai enquanto o nome aparece
+      else if (q % 3 === 0) ex.soltar(1, () => { const lado = Math.random() < 0.5 ? -1 : 1; return fumo(lado < 0 ? r.esq - 4 : r.dir + 4, r.y + al(-r.ry, r.ry), lado * al(0.3, 0.8), al(-0.4, 0)); });
+    },
+    desenhar(p, s) {
+      if (s.tipo === "faisca") { p.por(Math.round(s.x), Math.round(s.y), C(s.idade < 3 ? "W" : "G")); return; }
+      desenharFumo(p, s);
+    },
+    parado: 12,
+  };
+
+  // ---- PATRULHEIRO: o vendaval, em verde. O fundo da composição em verde quase negro (o céu do cenário não aparece
+  // pelos vãos do pontilhado), os raios em verde de folhagem e os pontos de luz em verde pálido; sem dourado
+  const VERDE_PALIDO = "#dcefb4";
+  PATRULHEIRO.c = {
+    ...PATRULHEIRO.a, pal: [VERDE_PALIDO, "E", "e", "f", "f"], cacos: ["E", "e", "e", "f", "f"], semClarao: true, claros: [VERDE_PALIDO, "E"], classe: "idv-folhas-a",
+    antes({ p, r }) {  // por baixo dos raios da apresentação: o fundo verde-escuro da composição
+      FX.poco(p, { cx: r.x, cy: r.y - r.ry * 3, rx: Math.round(r.rx * 2.4), ry: Math.round(r.ry * 9), forca: 16, c: "#07100a" });
+      FX.halo(p, { cx: r.x, cy: r.y - r.ry, r: Math.round(r.rx * 1.8), achata: 0.55, pal: ["#10261a", "#10261a", "#10261a"], vis: 5 });
+    },
+    quadro(ctx) {
+      const { p, r, t, q, parado, ex } = ctx;
+      PATRULHEIRO.a.quadro(ctx);
+      if (!parado && t < 220) FX.claraoLocal(p, { cx: r.x, cy: r.y, r: r.ry * 2.6, t, dur: 220, espalha: 0, pal: [VERDE_PALIDO, VERDE_PALIDO, "E", "e"] });
+      if (!parado && q % 4 === 0) ex.soltar(1, () => ({ tipo: "luz", x: r.x + Math.round(al(-r.rx * 1.5, r.rx * 1.5)), y: r.y + Math.round(al(-r.ry * 3, r.ry * 0.5)), vy: -0.15, vida: Math.round(al(18, 30)) }));
+    },
+    desenhar(p, s) {
+      if (s.tipo === "luz") { const k = s.idade / s.vida; if (pt(Math.round(s.x), Math.round(s.y), Math.round(14 * (1 - k)))) p.por(Math.round(s.x), Math.round(s.y), C(k < 0.5 ? VERDE_PALIDO : "E")); return; }
+      PATRULHEIRO.a.desenhar(p, s);
+    },
+  };
+
+  // ---- NECROMANTE: as caveiras e o círculo, com a fumaça escura saindo das letras em massas que crescem e sobem
+  const FUMO_BORDA = "#365a3e", FUMO_MEIO = "#1a2c1f", FUMO_FUNDO = "#0e1711";
+  function fumacaNegra(p, dados, r, c, t, q, parado) {
+    const lista = dados.fumaca || (dados.fumaca = []);
+    if (!parado && c.todos.length && t > 250) {
+      // as massas saem do alto e dos lados das letras; algumas rastejam do círculo para fora
+      if (q % 2 === 0) { const o = sorteio(c.topos.length && Math.random() < 0.7 ? c.topos : c.lados.length ? c.lados : c.todos);
+        lista.push({ x: o.x, y: o.y, vx: ((o.x - r.x) / r.rx) * al(0.15, 0.45), vy: al(-0.55, -0.25), raio: 1.5, max: al(4, 8), idade: 0, vida: Math.round(al(26, 42)) }); }
+      if (q % 5 === 0) { const lado = Math.random() < 0.5 ? -1 : 1;
+        lista.push({ x: r.x + lado * r.rx * al(0.6, 1.05), y: r.base - 3, vx: lado * al(0.35, 0.7), vy: al(-0.12, -0.03), raio: 1.5, max: al(4, 7), idade: 0, vida: Math.round(al(26, 40)) }); }
+    }
+    for (let i = lista.length - 1; i >= 0; i--) {
+      const s = lista[i];
+      if (!parado) { s.idade++; s.x += s.vx; s.y += s.vy; s.raio = Math.min(s.max, s.raio + 0.22); if (s.idade > s.vida) { lista.splice(i, 1); continue; } }
+      const k = s.idade / s.vida, R = s.raio, nivel = Math.round(16 * Math.min(1, (1 - k) * 2.2));
+      for (let y = Math.floor(-R - 1); y <= R + 1; y++) for (let x = Math.floor(-R - 1); x <= R + 1; x++) {
+        const d = Math.sqrt(x * x + y * y);
+        if (d > R + 0.5) continue;
+        const px = Math.round(s.x) + x, py = Math.round(s.y) + y;
+        if (!pt(px, py, nivel)) continue;
+        p.por(px, py, C(d > R - 0.8 ? (y < 0 ? FUMO_BORDA : FUMO_MEIO) : d < R * 0.45 ? FUMO_FUNDO : FUMO_MEIO));
+      }
+    }
+  }
+  NECROMANTE.c = {
+    ...NECROMANTE.a, semClarao: true, claros: ["E", "e"],
+    quadro(ctx) {
+      const { p, r, c, t, q, parado, dados } = ctx;
+      // a ordem: o escuro em volta, a fumaça saindo das letras, e então as caveiras e o círculo por cima dela
+      FX.poco(p, { cx: r.x, cy: r.y, rx: Math.round(r.rx * 1.6), ry: Math.round(r.ry * 4), forca: 12, c: "N" });
+      poco(p, r, 12, 16);
+      fumacaNegra(p, dados, r, c, t, q, parado);
+      NECROMANTE.a.quadro({ ...ctx, semFundo: true });
+    },
+    parado: 8,
+  };
+
   const CONCEITOS = { luz: PALADINO, sangue: BERSERKER, folhas: PATRULHEIRO, sombra: SOMBRA_ID, almas: NECROMANTE };
   const NOMES = {
     luz: { a: "Luz do alto", b: "Asas" }, sangue: { a: "O nome sangra", b: "Garras" }, folhas: { a: "Vendaval", b: "Clareira" },
     sombra: { a: "Corte", b: "Invisível" }, almas: { a: "Erguer", b: "Almas" },
+    // as candidatas finais
+    final: { luz: "Luz e penas", sangue: "Garras, sangue líquido", folhas: "Vendaval verde", sombra: "Invisível com o corte", almas: "Erguer com a fumaça" },
   };
 
   /** A identidade `id` na versão `v` ("a" ou "b") para o nome `el`; a apresentação chama `quadro(p, t, q, parado)`
@@ -1436,10 +1676,12 @@ const Identidades2 = (() => {
     el.className = el.className.replace(/\bidn-\S+/g, "").trim() + ` idv ${conc.classe}`;
     const alvoContorno = conc.nome ? conc.nome(el) : el;
     const ex = enxame(), dados = {}, rotulo = el.closest(".festa")?.querySelector(".fa2-sobre, .fb2-faixa span");
-    let c = null, pronto = false;
+    let c = null, pronto = false, luz = null;
     const vazio = { topos: [], bases: [], lados: [], todos: [] };
     return {
-      id, versao: v, pal: conc.pal, cacos: conc.cacos, atenua: conc.atenua || 0, semClarao: !!conc.semClarao,
+      id, versao: v, pal: conc.pal, cacos: conc.cacos, atenua: conc.atenua || 0, semClarao: !!conc.semClarao, claros: conc.claros || null,
+      /** Chamado pela apresentação antes do fundo dela (os raios): o que fica por baixo de tudo. */
+      antes(p, t, q, parado) { if (conc.antes) conc.antes({ p, r: p.de(el), t, q, parado }); },
       treme: () => 0,
       quadro(p, t, q, parado) {
         const r = p.de(el);
@@ -1452,6 +1694,10 @@ const Identidades2 = (() => {
           while (ex.lista.length > (conc.parado ?? 12)) ex.lista.splice(Math.floor(Math.random() * ex.lista.length), 1);
         }
         conc.quadro({ p, r, c: c || vazio, t: parado ? 3000 : t, q, parado, ex, dados });
+        if (conc.luz) {  // a luz numa camada própria, translúcida, logo acima do palco (abaixo do texto)
+          if (!luz) { luz = FX.palco(p.el.parentElement); p.el.after(luz.el); }
+          luz.limpar(); conc.luz(luz, r, parado ? 3000 : t, parado, rotulo ? luz.de(rotulo) : null); luz.mostrar();
+        }
         if (!parado) avancar();
         for (const s of ex.lista) conc.desenhar(p, s, parado);
         if (rotulo) { const l = p.de(rotulo); FX.poco(p, { cx: l.x, cy: l.y, rx: l.rx + 10, ry: l.ry + 5, forca: 16 }); }
@@ -1509,6 +1755,15 @@ const Identidades2 = (() => {
   .idv-sombra-b .idv-letra.idv-falha { animation: idv-surge 0.5s var(--d) steps(1) both, idv-falha 0.45s 1.25s steps(1) both; }
   @keyframes idv-surge { 0% { opacity: 0; } 20% { opacity: 0.25; } 40% { opacity: 0; } 60% { opacity: 0.55; } 80%, 100% { opacity: 1; } }
   @keyframes idv-falha { 0% { opacity: 1; } 20% { opacity: 0.15; } 45% { opacity: 0; } 70% { opacity: 0.5; } 85%, 100% { opacity: 1; } }
+  /* SOMBRA, a final: o invisível (as letras aos pedaços) dentro das duas metades do corte, que se separam uma vez */
+  :root body .idv.idv-sombra-c { display: inline-grid; animation: none !important; background: none; filter: ${borda("#08090a", "#3a3448", "#08090a")}; }
+  .idv-sombra-c > .idv-camada { grid-area: 1 / 1; }
+  .idv-sombra-c .idv-letra { display: inline-block; ${faixas("#e2ddd2", "#b0a898", "#7a7080")} animation: idv-surge-c 0.36s var(--d) steps(1) both; }
+  @keyframes idv-surge-c { 0% { opacity: 0; } 25% { opacity: 0.3; } 50% { opacity: 0.1; } 75% { opacity: 0.7; } 100% { opacity: 1; } }
+  .idv-sombra-c > .idv-cima { clip-path: polygon(-5% -20%, 105% -20%, 105% 30%, -5% 78%); animation: idv-corte-c-cima 1.6s steps(1) both; }
+  .idv-sombra-c > .idv-baixo { clip-path: polygon(-5% 78%, 105% 30%, 105% 120%, -5% 120%); animation: idv-corte-c-baixo 1.6s steps(1) both; }
+  @keyframes idv-corte-c-cima { 0%, 65% { translate: 0 0; } 66%, 69% { translate: -7px -3px; } 70%, 84% { translate: -14px -6px; } 85%, 88% { translate: -4px -2px; } 89%, 91% { translate: 1px 0; } 92%, 100% { translate: 0 0; } }
+  @keyframes idv-corte-c-baixo { 0%, 65% { translate: 0 0; } 66%, 69% { translate: 7px 3px; } 70%, 84% { translate: 14px 6px; } 85%, 88% { translate: 4px 2px; } 89%, 91% { translate: -1px 0; } 92%, 100% { translate: 0 0; } }
   /* NECROMANTE: verde de túmulo, profundo, com o claro só no alto das letras */
   .idv-almas-a, .idv-almas-b { ${faixas("#e6f2d8", "#a8d48a", "#4f9a5b")} filter: ${borda("#0d2a14", "#4f9a5b", "#050a06")}; }
   :root body .idv.idv-almas-b { animation: idv-almas 1.2s 0.2s steps(6) both !important; }
@@ -1587,20 +1842,23 @@ const Identidades2 = (() => {
       const p = FX.palco(caixa), enx = FX.enxame(), centro = el.querySelector(".fa2-centro"), inf = el.querySelector(".fa2-info");
       const nome = el.querySelector(".fa2-titulo"), ident = identidade ? (Identidades2.suporta(identidade) && typeof IDENTIDADE_VARIANTE !== "undefined" ? Identidades2.criar(identidade, nome, IDENTIDADE_VARIANTE) : Identidades.criar(identidade, nome)) : null;
       App.som(som);
+      const claros = (ident && ident.claros) || ["W", "Y"];
+      if (ident && ident.versao === "c") pal = ident.pal;  // as finais trazem a paleta delas (as antigas tinham marrom e roxo)
       const ctl = FX.animar(p, (t, q, parado) => {
+        if (ident && ident.antes) ident.antes(p, t, q, parado);
         const m = p.de(centro), R = titulo ? Math.round(Math.min(m.rx, m.ry) * 0.5) : Math.round(m.rx * 0.92);
         const r1 = Math.max(R + 10, p.t(Math.min(innerHeight * 0.7, 600))), abre = parado ? 1 : FX.rampa(t, 0, 520);
         // o fogo: os raios tremulam (um nível a menos de vez em quando) e o calor fica atrás do nome
         const treme = ident && !parado ? ident.treme(q) : 0;
         sol(p, { cx: m.x, cy: m.y, R, r1: R + (r1 - R) * abre, ang: parado ? 0.12 : q * (ident && ident.id === "fogo" ? 0.045 : 0.035), pal, vis: vivo(t, parado) - treme - (ident ? Math.round((ident.atenua || 0) * 1.5) : 0) });  // no Relicário, o sol baixa mais: a identidade conduz
-        if (!parado && t < 330) FX.halo(p, { cx: m.x, cy: m.y, r: R * (2.6 - (t / 330) * 1.2), pal: ["W", "W", "Y", pal[1]], vis: Math.round(16 * (1 - t / 330)) });
+        if (!parado && t < 330) FX.halo(p, { cx: m.x, cy: m.y, r: R * (2.6 - (t / 330) * 1.2), pal: [claros[0], claros[0], claros[1], pal[1]], vis: Math.round(16 * (1 - t / 330)) });
         poco(p, inf);
         poco(p, el.querySelector(".fa2-sobre"), 50, 16);  // o rótulo de cima, legível sobre os raios
         if (!titulo) medalha(p, m.x, m.y, R, pal);
         if (ident) ident.quadro(p, t, q, parado);  // a identidade da especialização, em volta do nome
         if (parado) return;
-        if (q === 1) faiscas(enx, m.x, m.y, R, 18, ["W", "Y", pal[2], pal[3]]);
-        if (q > 10 && q % 5 === 0) cintilar(enx, m.x, m.y, R, r1, ["W", "Y", pal[2]]);
+        if (q === 1) faiscas(enx, m.x, m.y, R, 18, [...claros, pal[2], pal[3]]);
+        if (q > 10 && q % 5 === 0) cintilar(enx, m.x, m.y, R, r1, [...claros, pal[2]]);
         enx.passo(); enx.desenhar(p);
       });
       return { parar: ctl.parar, revelar: () => { ctl.pular(520); el.classList.add("pulou"); } };

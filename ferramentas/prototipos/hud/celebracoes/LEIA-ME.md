@@ -6,8 +6,8 @@
 ## Testar no navegador (a demonstração)
 
 `demo.bat` (ou `python ferramentas/prototipos/hud/celebracoes/auxiliares/demo.py`) monta as direções e abre o painel em
-**http://127.0.0.1:8765/**. Em destaque, as candidatas da quinta rodada: **Estouro · identidade 1 / 2** e
-**Relicário · identidade 1 / 2** (só a especialização muda); o **jogo atual**; e o histórico em cinza (B4 e A4
+**http://127.0.0.1:8765/**. Em destaque, as candidatas finais: **Estouro · final candidata** e **Relicário · final
+candidata** (só a especialização muda); o **jogo atual**; e o histórico em cinza (as identidades 1 e 2, B4 e A4
 aprovados, B3, A3, B2, A2, A, B, C reservada, 1ª proposta). Um formulário troca a classe; cada especialização tem a
 sua linha, já na classe certa. Cada botão encerra o cenário anterior e
 sobe outro do zero, num processo com saves temporários (o save do jogo não é tocado); na página, "Começar o teste"; no
@@ -15,6 +15,54 @@ canto de baixo, "repetir" e "painel" (essa faixa só existe na demonstração). 
 `PROTOTIPO=<direção>`) serve `telas/celebracoes.js` e `telas/achado.js` montados em `prototipo-v2/<direção>/`.
 Movimento reduzido: no Chrome/Edge, F12 → ⋮ → More tools → Rendering → "Emulate CSS media feature
 prefers-reduced-motion" → reduce, e "repetir" (ou "Mostrar animações" desligado no Windows, para o sistema todo).
+
+## Sexta rodada (24/10/2026): as candidatas finais das cinco especializações
+
+**Aprovado** (preservado): o Estouro B4 e o Relicário A4 como apresentações e o Piromante nas duas. **Escolhidas pelo
+Jean** como base: do Paladino, a luz da identidade 1 com as penas da 2 (sem as asas); do Berserker, a 2 (Garras); da
+Sombra, a 2 (Invisível) com o corte da 1; do Patrulheiro, a 1 (Vendaval); do Necromante, a 1 (Erguer). As
+**candidatas finais** são a versão "c" de `v2/identidades2.js`, nas montagens `estouro5c` e `relicario5c`; as
+identidades 1 e 2 ficam como histórico.
+
+- **Paladino · luz do alto com penas:** a luz numa camada própria, translúcida, logo acima do palco: seis faixas
+  amplas de marfim e ouro pálido, poucos níveis (a camada respira entre ~47% e 51%), o pontilhado só nas bordas das
+  faixas e na transição para o escuro em volta do nome; sem contorno dourado; o pé de cada faixa é irregular e apaga
+  em pontilhado. A luz contorna o nome e o rótulo (eles ficam no escuro, legíveis); um anel de marfim marca o pouso;
+  penas brancas caem devagar pela composição. Sem o clarão branco do Estouro.
+- **Berserker · garras, sangue líquido:** as garras, a queda do nome e as veias pulsando da 2. O sangue junta em sete
+  pontos da base das letras (uma lâmina que engrossa), estica num fio fino com a gota na ponta, se desprende e cai; o
+  fio volta para a letra; a gota cai no chão logo abaixo do nome e mancha. Cada ponto tem o seu tempo (0,3 a 2 s de
+  espera, fios de 5 a 15 texels), então poucas gotas ao mesmo tempo. Vermelho fundo, um só ponto de luz na gota, sem
+  rosado. As feridas das garras vertem pouco.
+- **Sombra · invisível com o corte:** olhos no escuro (0 a 0,33 s) → o nome aparece aos pedaços (0,3 a 0,9 s) → um
+  instante inteiro → o corte, uma vez, aos 1,05 s: as duas metades (cada uma com as letras que apareceram) se afastam
+  e se recompõem até 1,5 s → depois só os efeitos discretos do invisível (a névoa nas bordas, olhos nas laterais de vez
+  em quando, o brilho na cicatriz fora do nome). A palavra não some de novo. Sem o clarão branco.
+- **Patrulheiro · vendaval em verde:** a rajada e as folhas atravessam a palavra inteira. O castanho e o dourado
+  vinham da paleta antiga que a apresentação ainda usava para os raios (com marrom e amarelo), dos brilhos dourados do
+  Relicário e do céu do cenário aparecendo pelos vãos do pontilhado. Agora: um fundo verde quase negro por baixo de
+  tudo (`antes`, chamado pelas apresentações antes dos raios), os raios em verde de folhagem, os pontos de luz em verde
+  pálido (#dcefb4), os brilhos das apresentações na cor da identidade (`claros`) e a entrada sem o clarão dourado.
+- **Necromante · erguer com fumaça:** as caveiras e o círculo de runas da 1, com fumaça escura saindo do alto e dos
+  lados das letras em massas que crescem, sobem e se afastam (e algumas rastejando do círculo para fora), em negro
+  esverdeado com a borda de cima um tom mais clara para aparecer no escuro. A ordem: o escuro, a fumaça, as caveiras e
+  o círculo por cima. Os raios do Relicário, que vinham em roxo da paleta antiga, agora são verdes.
+
+**Conferido:** as cinco nas duas montagens, em 1920×945 (0,2; 0,7; 1,2 e 3,5 s) e 1280×720 (as palavras inteiras),
+e no movimento reduzido (cada uma com o seu quadro parado: a luz e as penas paradas, os fios em vários estágios, o nome
+inteiro com a cicatriz e os olhos, as folhas pela largura, as caveiras e a fumaça). `auxiliares/gestos.mjs`: 18
+verificações em cada uma, nenhuma falha. A sequência da Sombra foi conferida quadro a quadro (os pedaços, o nome
+inteiro, o corte, a recomposição, o nome estável).
+
+**Vídeos** (`para-avaliacao/`, sem áudio; os anteriores ficam): `r6-1-paladino-final-estouro-e-relicario.webm`,
+`r6-2-berserker-…`, `r6-3-patrulheiro-…`, `r6-4-sombra-…`, `r6-5-necromante-…`: cada um com o Estouro e, em seguida,
+o Relicário (a faixa do canto diz qual), da entrada até uns 4,5 s de leitura. Folhas em `capturas-r6/`:
+`folha-r6-finais.png` e `folha-r6-apertados.png`.
+
+**Limitações vistas:** o som não foi ouvido; a luz do Paladino, por ser translúcida, fica um pouco acinzentada sobre o
+céu azul-escuro do cenário; as gotas do Berserker são pequenas no tamanho real (de propósito: líquido, não contas);
+no Estouro, Paladino e Berserker ainda têm o anel de pulso da apresentação durante a leitura; os ícones das
+habilidades continuam os antigos; a identidade é escolhida pelo nome da especialização.
 
 ## Quinta rodada (24/10/2026): duas identidades para cada especialização
 

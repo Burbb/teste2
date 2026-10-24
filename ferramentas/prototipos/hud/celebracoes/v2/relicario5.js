@@ -64,20 +64,23 @@
       const p = FX.palco(caixa), enx = FX.enxame(), centro = el.querySelector(".fa2-centro"), inf = el.querySelector(".fa2-info");
       const nome = el.querySelector(".fa2-titulo"), ident = identidade ? (Identidades2.suporta(identidade) && typeof IDENTIDADE_VARIANTE !== "undefined" ? Identidades2.criar(identidade, nome, IDENTIDADE_VARIANTE) : Identidades.criar(identidade, nome)) : null;
       App.som(som);
+      const claros = (ident && ident.claros) || ["W", "Y"];
+      if (ident && ident.versao === "c") pal = ident.pal;  // as finais trazem a paleta delas (as antigas tinham marrom e roxo)
       const ctl = FX.animar(p, (t, q, parado) => {
+        if (ident && ident.antes) ident.antes(p, t, q, parado);
         const m = p.de(centro), R = titulo ? Math.round(Math.min(m.rx, m.ry) * 0.5) : Math.round(m.rx * 0.92);
         const r1 = Math.max(R + 10, p.t(Math.min(innerHeight * 0.7, 600))), abre = parado ? 1 : FX.rampa(t, 0, 520);
         // o fogo: os raios tremulam (um nível a menos de vez em quando) e o calor fica atrás do nome
         const treme = ident && !parado ? ident.treme(q) : 0;
         sol(p, { cx: m.x, cy: m.y, R, r1: R + (r1 - R) * abre, ang: parado ? 0.12 : q * (ident && ident.id === "fogo" ? 0.045 : 0.035), pal, vis: vivo(t, parado) - treme - (ident ? Math.round((ident.atenua || 0) * 1.5) : 0) });  // no Relicário, o sol baixa mais: a identidade conduz
-        if (!parado && t < 330) FX.halo(p, { cx: m.x, cy: m.y, r: R * (2.6 - (t / 330) * 1.2), pal: ["W", "W", "Y", pal[1]], vis: Math.round(16 * (1 - t / 330)) });
+        if (!parado && t < 330) FX.halo(p, { cx: m.x, cy: m.y, r: R * (2.6 - (t / 330) * 1.2), pal: [claros[0], claros[0], claros[1], pal[1]], vis: Math.round(16 * (1 - t / 330)) });
         poco(p, inf);
         poco(p, el.querySelector(".fa2-sobre"), 50, 16);  // o rótulo de cima, legível sobre os raios
         if (!titulo) medalha(p, m.x, m.y, R, pal);
         if (ident) ident.quadro(p, t, q, parado);  // a identidade da especialização, em volta do nome
         if (parado) return;
-        if (q === 1) faiscas(enx, m.x, m.y, R, 18, ["W", "Y", pal[2], pal[3]]);
-        if (q > 10 && q % 5 === 0) cintilar(enx, m.x, m.y, R, r1, ["W", "Y", pal[2]]);
+        if (q === 1) faiscas(enx, m.x, m.y, R, 18, [...claros, pal[2], pal[3]]);
+        if (q > 10 && q % 5 === 0) cintilar(enx, m.x, m.y, R, r1, [...claros, pal[2]]);
         enx.passo(); enx.desenhar(p);
       });
       return { parar: ctl.parar, revelar: () => { ctl.pular(520); el.classList.add("pulou"); } };

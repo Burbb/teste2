@@ -66,7 +66,10 @@
       const ident = identidade ? (Identidades2.suporta(identidade) && typeof IDENTIDADE_VARIANTE !== "undefined" ? Identidades2.criar(identidade, alvo, IDENTIDADE_VARIANTE) : Identidades.criar(identidade, alvo)) : null;
       App.som(som);
       FX.tremer(8);
+      const claros = (ident && ident.claros) || ["W", "Y"];
+      if (ident && ident.versao === "c") pal = ident.pal;  // as finais trazem a paleta delas (as antigas tinham marrom e roxo)
       const ctl = FX.animar(p, (t, q, parado) => {
+        if (ident && ident.antes) ident.antes(p, t, q, parado);
         const c = p.de(alvo), baixa = innerHeight < 760;
         const re = titulo ? Math.round(c.rx * 0.6) : p.t(baixa ? 100 : 128);
         if (titulo) {  // a especialização: o estouro atrás do nome, sem o selo
@@ -82,7 +85,7 @@
         if (q === 1) estilhacos(enx, c.x, c.y, (titulo ? c.ry : re) * 0.8, 40, ident ? ident.cacos : ["W", "Y", pal[2], "o", "r", "D"]);
         if (ident && ident.id === "fogo" && q > 4 && q % 2 === 0) brasas(enx, c.x, c.y + Math.round(c.ry * 0.9), c.rx, ident.cacos);
         if (q > 8 && q % 3 === 0 && (!ident || ident.id === "fogo")) brasas(enx, c.x, c.y + Math.round((titulo ? c.ry : re) * 0.7), titulo ? c.rx : re, ["Y", "O", "o", "r", "D"]);
-        if (q > 12 && q % 9 === 0) { const a = FX.aleatorio(0, Math.PI * 2), rr = titulo ? c.rx * 0.8 : re; enx.soltar(1, () => ({ x: c.x + Math.cos(a) * rr, y: c.y + (titulo ? -Math.abs(Math.sin(a)) * rr * 0.5 : Math.sin(a) * rr), vx: 0, vy: 0, vida: 7, desenho: "brilho", pal: ["W", "Y", pal[2]] })); }
+        if (q > 12 && q % 9 === 0) { const a = FX.aleatorio(0, Math.PI * 2), rr = titulo ? c.rx * 0.8 : re; enx.soltar(1, () => ({ x: c.x + Math.cos(a) * rr, y: c.y + (titulo ? -Math.abs(Math.sin(a)) * rr * 0.5 : Math.sin(a) * rr), vx: 0, vy: 0, vida: 7, desenho: "brilho", pal: [...claros, pal[2]] })); }
         enx.passo(); enx.desenhar(p);
       });
       return { parar: ctl.parar, revelar: () => { ctl.pular(700); el.classList.add("pulou"); } };

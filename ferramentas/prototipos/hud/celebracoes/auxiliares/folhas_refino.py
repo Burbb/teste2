@@ -89,6 +89,24 @@ def rodada5():
           linhas, R5 / "folha-r5-apertados.png")
 
 
+def rodada6():
+    """A sexta rodada: as candidatas finais, no Estouro e no Relicário (a entrada, o corte da Sombra, a permanência), e
+    1280×720 e o movimento reduzido."""
+    R6 = BASE / "capturas-r6"
+    meio = (480, 0, 1440, 600)
+    specs = [("paladino", "Paladino · luz do alto com penas"), ("berserker", "Berserker · garras, sangue líquido"),
+             ("patrulheiro", "Patrulheiro · vendaval em verde"), ("sombra", "Sombra · invisível com o corte"),
+             ("necromante", "Necromante · erguer com fumaça")]
+    linhas = [(rot, [quadro(R6 / d / "1920" / f"spec-{k}-{k}-{ms}.png", meio, 0.3) for d in ("estouro5c", "relicario5c") for ms in ("0200", "1200", "3500")])
+              for k, rot in specs]
+    folha(["Estouro · 0,2 s", "Estouro · 1,2 s", "Estouro · 3,5 s", "Relicário · 0,2 s", "Relicário · 1,2 s", "Relicário · 3,5 s"],
+          linhas, R6 / "folha-r6-finais.png")
+    linhas = [(rot, [quadro(R6 / d / "1280" / f"spec-{k}-{k}-1600.png", None, 0.36) for d in ("estouro5c", "relicario5c")] +
+               [quadro(R6 / d / "reduzido" / f"spec-{k}-{k}-1600.png", meio, 0.3) for d in ("estouro5c", "relicario5c")])
+              for k, rot in specs]
+    folha(["Estouro · 1280", "Relicário · 1280", "Estouro · reduzido", "Relicário · reduzido"], linhas, R6 / "folha-r6-apertados.png")
+
+
 if __name__ == "__main__":
     import sys
-    rodada5() if "r5" in sys.argv else rodada4() if "r4" in sys.argv else rodada3() if "r3" in sys.argv else main()
+    rodada6() if "r6" in sys.argv else rodada5() if "r5" in sys.argv else rodada4() if "r4" in sys.argv else rodada3() if "r3" in sys.argv else main()

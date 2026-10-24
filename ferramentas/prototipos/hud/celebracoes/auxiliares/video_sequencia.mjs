@@ -11,7 +11,8 @@ const [raiz, saida, lista] = process.argv.slice(2);
 const AQUI = path.dirname(fileURLToPath(import.meta.url));
 const PERMANECE = Number(process.env.PERMANECE || 4500);
 const ROTULOS = { estouro3: "B3 · antes", estouro4: "B4 · depois", relicario4: "A4 · Relicário", "": "jogo atual",
-  estouro5a: "Estouro · identidade 1", estouro5b: "Estouro · identidade 2", relicario5a: "Relicário · identidade 1", relicario5b: "Relicário · identidade 2" };
+  estouro5a: "Estouro · identidade 1", estouro5b: "Estouro · identidade 2", relicario5a: "Relicário · identidade 1", relicario5b: "Relicário · identidade 2",
+  estouro5c: "Estouro · final candidata", relicario5c: "Relicário · final candidata" };
 const espera = (ms) => new Promise((r) => setTimeout(r, ms));
 const pasta = path.join(path.dirname(saida), "_video"); mkdirSync(pasta, { recursive: true });
 const b = await chromium.launch();
