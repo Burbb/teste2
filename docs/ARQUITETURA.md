@@ -634,7 +634,7 @@ id, `ficha_guardiao`; os contratos por `contratos.desc_caca` e `desc_alvo`, os m
   (`Icones.equipamento`): a família de ferro pintada sai de `ferramentas/arte/familia_ferro.py` (as peças aprovadas em
   `familia-ferro/`, o mesmo processo dos tamanhos de sempre: a escala do grupo e a redução "paleta"; `--conferir`
   refaz todos e compara com os do jogo) e o escudo das regras dele. As peças do grupo que passaram para fontes no
-  Aseprite (a aljava, a tocha) continuam na conta da escala, mas saem e são conferidas pelo `exportar_aseprite.py`. O que não tem arquivo de 40 (os sprites 16×16 das armas
+  Aseprite (a aljava, a tocha, o baú desde a 1.203.0) continuam na conta da escala, mas saem e são conferidas pelo `exportar_aseprite.py`. O que não tem arquivo de 40 (os sprites 16×16 das armas
   e peças de couro) fica em 32 px, nítido e centrado no mesmo espaço. As silhuetas
   dos espaços vazios, a bolsa, a ficha, os atributos, a doca, o mercado e a luta continuam em 32.
 - `desenhos.js` (`Desenhos`): os itens desenhados em código, pelo mesmo método (desde a 1.93.0): o martelo e a Pena de

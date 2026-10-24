@@ -153,6 +153,9 @@ DERIVADOS = {
     # do herói juntas, pixel a pixel); a de lado, para o lugar sem espaço acima. Não são quadradas: o lado é a largura
     "mapa-posicao": {40: (20, 2)},
     "mapa-posicao_lado": {44: (22, 2)},
+    # 1.203.0: o Baú Trancado (o A da primeira rodada, aprovado sem retoque; a A2, o B e o placeholder ficam em
+    # ferramentas/prototipos/hud/bau/ e em familia-ferro/): o 48 da pilha é o 32 centrado, o 64 é o 32 ×2
+    "bau": {48: (32, CENTRO), 64: (32, 2)},
 }
 # O martelo (1.149.0) só tem fontes do 40 e do 48 (aseprite/martelo/): o 32 e o 64 são a grade de desenhos.js, no
 # jogo, e não saem daqui.

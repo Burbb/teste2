@@ -1,7 +1,14 @@
 # O baú: as propostas para a arte do Baú Trancado (protótipo, 24/10/2026)
 
-**A rodada atual: a A2, a candidata refinada do A** (o Jean escolheu o A como direção, ainda não como arte final). A, B
-e o placeholder ficam como histórico. Nada no jogo; aguarda a avaliação.
+**Decisão final (Jean, 24/10/2026): o A original da primeira rodada, integrado na 1.203.0 sem retoque.** A A2 (o
+refino) não foi aprovada; ela, o B e o placeholder ficam como histórico. No jogo: `rpg/web/static/hud/icones/bau-*.png`,
+exportados de `ferramentas/arte/aseprite/bau/bau-32.aseprite` (a cópia de `fontes/bau-a/bau-a-32.aseprite`; o 48 é o
+32 centrado e o 64 o 32 ×2, `DERIVADOS` no `exportar_aseprite.py`). Os seis arquivos saem iguais, pixel a pixel, aos de
+`propostas/bau-a/`; o 48 da pilha fica menor que o do placeholder, como aceito. A conferência no jogo (a bolsa e a
+pilha "Baús abertos ×3", a 1920×945 e a 1280×720, só com os arquivos de produção): `folha-integracao.png`. O
+placeholder continua refazível pela fonte em `ferramentas/arte/familia-ferro/`.
+
+**A rodada anterior: a A2, a candidata refinada do A** (histórico; não aprovada).
 
 ## A2 · o refino do A
 
@@ -23,8 +30,7 @@ placeholder tinha uma tampa mais convincente e mais volume. A A2 (`grades_a2.py`
   1280×720, ao lado do A e do antigo: `folha-a2.png`.
 
 
-**Nada disto está no jogo.** O jogo continua com o baú de hoje (o placeholder da família de ferro, em
-`rpg/web/static/hud/icones/bau-*.png`). Aguarda a escolha do Jean.
+A A2 não entrou no jogo (a decisão no alto).
 
 ## O levantamento: onde o baú aparece
 

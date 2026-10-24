@@ -7192,3 +7192,20 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Verificações:** o `unittest` (695 ok, 1 pulado), o gabarito (atualizado só nos textos da vida bloqueada e da
   bandagem, conferido trocando os textos antigos pelos novos), o pyflakes e a fumaça.
 - **Não começados:** o livro da capela e a retirada do procedural.
+
+### 24/10/2026 (data do computador local) — O baú A integrado (1.203.0)
+
+- **Retomada noutra conta:** a branch `claude/tender-einstein-tx3tjl` limpa e igual ao remoto (`77f959db`, a 1.202.4);
+  o PNG pessoal `ferramentas/arte/referencias/icones/caido-avatar-512.png`, não rastreado, preservado. Os trabalhos da
+  1.202.2 a 1.202.4 (as preferências, as dicas, o lendário) conferidos nos registros, sem refazer.
+- **Decisão do Jean:** o **A original da primeira rodada** (`a997955e`: a tampa abaulada em três quartos, as cintas de
+  ferro, o espelho de latão). A A2, o refino, **não foi aprovada**; ela, o B e o placeholder ficam como histórico.
+- **No jogo (1.203.0):** `rpg/web/static/hud/icones/bau-*.png`, exportados da fonte copiada sem retoque para
+  `ferramentas/arte/aseprite/bau/bau-32.aseprite`; o 48 da pilha é o 32 centrado (menor que o do placeholder, como
+  aceito) e o 64 o 32 ×2 (`DERIVADOS`). Saiu sozinho da conferência da família de ferro (tem fonte no Aseprite).
+- **Conferido:** os seis arquivos iguais, pixel a pixel, aos de `ferramentas/prototipos/hud/bau/propostas/bau-a/`;
+  `exportar_aseprite.py todas --conferir` e `familia_ferro.py --conferir` sem diferença; no jogo (o cenário `baus`), a
+  bolsa (32) e a pilha "Baús abertos ×3" (48), a 1920×945 e a 1280×720, só com os arquivos de `/static/hud/icones/`
+  (nenhum pedido ao protótipo, nenhum erro): `ferramentas/prototipos/hud/bau/folha-integracao.png`.
+- **Sem mudança:** o Mímico, o quadro do espólio, as regras e o sorteio dos baús.
+- **O próximo da etapa 2:** o livro narrativo da capela (o levantamento, separado desta entrega).

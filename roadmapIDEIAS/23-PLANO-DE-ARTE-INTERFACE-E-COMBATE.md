@@ -37,9 +37,8 @@ Não iniciar todo o plano numa única tarefa. As etapas técnicas A–I e a vali
   A relação do que falta
   está em "A frente de criaturas em 22/10/2026", no item 1.12. O Bandido do chapéu está reservado como conceito de um possível chefe, fora do jogo.
 - **A 1E concluída para a campanha (1.200.0):** a 1E.4 integrada; da 1E.3, só restam os retratos do modo procedural (o substituto da Bruxa nos covis e o antagonista), suspensos com a direção de ficar só com a campanha. **Etapa 2, o primeiro lote integrado na 1.201.0 (24/10/2026):** a subida de nível, as celebrações e a raridade
-(o Estouro como padrão, o Relicário guardado como alternativa, as seis identidades de especialização). **Agora: o
-redesenho do d20 em avaliação** (24/10/2026, nada no jogo: duas propostas, A Marfim e B Vidro, em
-`ferramentas/prototipos/hud/d20/`; aguardando a escolha do Jean). Histórico: **1E.3, as demais criaturas, os chefes e as invocações** (as outras ainda saem dos traços: o `fera`, o
+(o Estouro como padrão, o Relicário guardado como alternativa, as seis identidades de especialização); o d20 na
+1.202.0 e o baú (o A original) na 1.203.0. **Agora: o livro narrativo da capela.** Histórico: **1E.3, as demais criaturas, os chefes e as invocações** (as outras ainda saem dos traços: o `fera`, o
   `humano`, a caveira e os outros sprites de 16×16; o levantamento em `ferramentas/prototipos/hud/criaturas/`).
   **1E.4 começada (23/10/2026, a direção agora é só a campanha):** o levantamento e o primeiro lote de protótipos em
   `ferramentas/prototipos/hud/mapa/` (nada no jogo; aguardando o Jean). Em seguida, as **etapas 2–9** como estão
@@ -1261,7 +1260,12 @@ ou mudanças de dados por iniciativa do agente.
   que é outra escolha, independente). Regras, sorteios, bônus, dificuldade, ritmo e comandos sem mudança.
 - **Preferências da tela (1.202.2):** a velocidade, o som e o destaque no mesmo arquivo do d20; o menu de
   configurações, quando existir, lê e grava por ele (`servidor.PREFERENCIAS`, `preferir`).
-- **O baú, a A2 em avaliação (24/10/2026, só no protótipo):** o A escolhido como direção; a A2 refina a tampa, a três
+- **O baú integrado na 1.203.0 (24/10/2026): o A original da primeira rodada, sem retoque.** A A2 não foi aprovada;
+  ela, o B e o placeholder ficam como histórico (`ferramentas/prototipos/hud/bau/`). Fonte em
+  `ferramentas/arte/aseprite/bau/` (o 48 da pilha é o 32 centrado, menor que o do placeholder, como aceito; o 64, o
+  32 ×2). O Mímico, o quadro do espólio e as regras dos baús sem mudança. **O próximo da etapa 2: o livro narrativo
+  da capela.**
+- **O baú, a A2 em avaliação (24/10/2026, só no protótipo; histórico):** o A escolhido como direção; a A2 refina a tampa, a três
   quartos e o volume, com um 48 próprio para a pilha. A, B e o placeholder como histórico.
 - **O baú em avaliação, primeira rodada (24/10/2026, só no protótipo):** duas propostas para o Baú Trancado em
   `ferramentas/prototipos/hud/bau/` (A, a identidade de sempre; B, o baú trancado com o cadeado), o 32 desenhado à mão
@@ -1441,8 +1445,8 @@ volta à pauta quando essa expansão exigir; não é uma migração de engine.
    Estouro como padrão pretendido (a troca vai para as opções do jogo); A3, B3 e o Piromante aprovados (24/10/2026);
    B4, A4, Piromante, Necromante, Sombra e Patrulheiro aprovados; o sangue A do Berserker e a luz B (vitral) do Paladino
    escolhidos; **integrado na 1.201.0 (24/10/2026)**. O d20: as três apresentações aprovadas (o Clássico, padrão, o
-   Marfim e o Vidro) **integradas na 1.202.0**, à escolha na Ajuda até o menu de configurações. O baú: a A2 (o refino do A) em avaliação,
-   só no protótipo. Histórico: **1E.4, em avaliação (23/10/2026):** o levantamento e o primeiro lote de protótipos (a posição, os caminhos, os
+   Marfim e o Vidro) **integradas na 1.202.0**, à escolha na Ajuda até o menu de configurações. O baú: o A original **integrado na 1.203.0**
+   (a A2 não aprovada). O próximo: o livro narrativo da capela. Histórico: **1E.4, em avaliação (23/10/2026):** o levantamento e o primeiro lote de protótipos (a posição, os caminhos, os
    símbolos e as marcas; detalhes em "A 1E.4 em 23/10/2026", no item 1.12). O Jean escolheu a direção B (a A fica como
    alternativa); aprovados como base a plaqueta B, a cancela, os caminhos e as marcas; a vila e a floresta nativas
    aprovadas (`094bb80a`: 32 no minimapa, 48 no mapa grande); o pântano e as ruínas aprovados (`c7bd2348`); em

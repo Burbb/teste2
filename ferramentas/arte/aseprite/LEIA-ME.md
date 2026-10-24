@@ -114,6 +114,7 @@ nada daqui: só os PNGs exportados para `rpg/web/static/hud/icones/`.
 | sandalia (a Sandália do Mago, o par) | `sandalia/sandalia-32.aseprite`, `-40`, `-48`; **o 64 é o 32 ampliado 2×** | tras_sola, tras_palmilha, tras_tiras, frente_sola, frente_palmilha, frente_tiras, contorno | 1.142.0 |
 | amuleto (o amuleto: Amuleto, Talismã, Pingente e Medalhão; o vazio) | `amuleto/amuleto-32.aseprite`, `-40`, `-48`; **o 64 é o 32 ampliado 2×** | cordao, argola, engaste, pedra, brilho, contorno | 1.140.0 |
 | antidoto (o Antídoto) | `antidoto/antidoto-16.aseprite`, `-32` | vidro, liquido, rolha, brilho, contorno | 1.139.0 |
+| bau (o Baú Trancado: a bolsa, o chip do espólio e a pilha dos baús abertos; o Mímico, o Salvar da doca e o baú da sacristia são outros desenhos): o A da primeira rodada de `ferramentas/prototipos/hud/bau/`, sem retoque (a A2, o B e o placeholder da família de ferro ficam como histórico) | `bau/bau-32.aseprite`; **o 48 é o 32 centrado, o 64 o 32 ampliado 2×** | madeira, ferro, latao, contorno | 1.203.0 |
 | frasco_vazio (o topo sem poções) | `frasco_vazio/frasco_vazio-24.aseprite` | vidro, rolha, brilho, contorno | 1.139.0 |
 | tocha_apagada (o topo sem tochas e o risco "Sem luz") | `tocha_apagada/tocha_apagada-16.aseprite`, `-24` | cabo, pano, queimado, contorno, fumaca | 1.136.0 |
 | atalho-salvar (o Salvar da doca) | `atalho-salvar/atalho-salvar-36.aseprite`, `-32` | tampa, corpo, latao, seta, contorno | 1.129.0 |
