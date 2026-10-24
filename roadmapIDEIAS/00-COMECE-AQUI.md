@@ -6930,3 +6930,21 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Aguardando o Jean:** avaliar os três símbolos novos; depois, a integração do conjunto com o campo de bloqueio da
   regra real da viagem. Os símbolos só do procedural ficam fora.
 
+### 23/10/2026 (data do computador local) — A 1E.4: a planície refinada e a Viagem e o Diário com o mesmo desenho (nada no jogo)
+
+- **Estado conferido:** a branch em `c42a6343`, igual ao remoto; o `caido-avatar-512.png` fora dos commits; nenhum
+  arquivo do jogo mudou (produção **1.199.3**).
+- **Aprovados pelo Jean, sem retoques:** o pântano e as ruínas nativos, 32 e 48, do commit `c7bd2348` (as fontes
+  `lugar-pantano-n32/n48` e `lugar-ruinas-n32/n48` em `ferramentas/prototipos/hud/mapa/fontes/`); a vila e a floresta
+  continuam aprovadas (`094bb80a`). Os oito PNGs conferidos iguais.
+- **Feito** (o LEIA-ME do mapa e `lote3.png`): a planície refinada à mão em 32 e 48 (`lugar-planicie-n32b/n48b`, a
+  anterior preservada): os morros em planos, a passagem de terra em curva, duas árvores folhosas espaçadas. E os dois
+  itens seguintes da 1E.4, escolhidos por serem os usos pendentes do lugar fora do mapa: **a Viagem** (o mapa da página
+  na linguagem nova; as opções "Para onde?" com o símbolo de 32 e as marcas) e **o Diário** (a missão e o contrato com
+  o símbolo de 32 e as marcas do mapa no lugar do "!"), em cópias das telas servidas só nas fotos.
+- **Verificações:** o jogo não mudou desde a bateria completa (unittest, gabarito, pyflakes, fumaça "tudo certo"); nas
+  fotos, cliques, destinos, estados e rótulos iguais ao jogo, sem erro no console; as peças novas conferidas pixel a
+  pixel.
+- **Aguardando o Jean:** a planície refinada e as duas propostas. Depois, a integração do conjunto na produção, com o
+  campo de bloqueio da regra real da viagem; em seguida, a etapa 2 do plano.
+
