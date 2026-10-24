@@ -616,7 +616,7 @@ def _f1(g, a):
         return None
     f = j.ferimentos[0]
     sara = ("Não sara com descanso: use unguento ou vá à Curandeira." if f["id"] == "infeccao" else
-            "Sara com descanso ou na Curandeira.")
+            f"Sara depois de {tx.plural(f['dias'], 'dia')} de descanso, ou na hora, na Curandeira.")
     return {"id": "F1", "texto": f"**{FERIMENTOS[f['id']]['nome']}**\n{_efeito_ferimento(f['id'], j.nome_recurso)}."
                                  f"\n{sara}",
             "ancora": f"ferimento:{f['id']}", "entendi": True}
@@ -801,9 +801,10 @@ def ajuda(g):
             ("T1", "Herói", "**Talentos**, na barra de baixo, abre a árvore quando há ponto para gastar."),
             ("N1", "Estrada", f"À noite, os inimigos vêm {bal.NOITE_NIVEL} nível acima e batem mais forte, com ou sem "
                               "tocha. Sem tocha no escuro, a surpresa fica mais provável (nas salas da capela, certa)."),
-            ("F1", "Ferimentos", "Ferimentos ficam depois da luta (o sangramento, não) e tiram parte da vida máxima, do "
-                                 f"{r} máximo ou de atributos até sarar. Saram com descanso ou na **Curandeira**; a infecção, só "
-                                 "com unguento ou na Curandeira."),
+            ("F1", "Ferimentos", "Ferimentos ficam depois da luta (o sangramento, não) e reduzem a vida máxima, o "
+                                 f"{r} máximo ou atributos até sarar: depois de alguns dias de descanso (a cama conta "
+                                 "dobrado; com fome, não saram), ou na hora, na **Curandeira**. A infecção não sara com "
+                                 "descanso: só com unguento ou na Curandeira."),
             ("F2", "Ferimentos", "A bandagem enfaixa uma ferida aberta (corte, mordida, queimadura), a primeira da "
                                  "lista, e a protege contra infecção. Não recupera vida nem cura infecção."),
             ("F3", "Vila", "A **Curandeira** trata ferimentos; o **Templo** recupera vida."

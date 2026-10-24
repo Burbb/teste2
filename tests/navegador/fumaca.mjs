@@ -2269,7 +2269,7 @@ async function cenarioFeridas(browser) {
     const { proc, url } = await subir("tutorial", { LUGAR: "charco", VISTAS: "A1,A0,AL,N1,V5", FERIMENTOS: "corte", BANDAGENS: "2", VIDA: "0.5" });
     const { page, erros } = await abrir(browser, url);
     try {
-      conferir(await ate(page, /^Corte profundo −10% de vida máxima\. Sara com descanso ou na Curandeira\./) && (await pontaNoAlvo(page)) <= 2,
+      conferir(await ate(page, /^Corte profundo −10% de vida máxima\. Sara depois de 4 dias de descanso, ou na hora, na Curandeira\./) && (await pontaNoAlvo(page)) <= 2,
         "F1: o nome, o efeito real e o que faz sarar, a seta no ferimento");
       await page.click(".orientacao-entendi");
       await page.click('#doca .atalho[data-rotulo="Inventário"]');

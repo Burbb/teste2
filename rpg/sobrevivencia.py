@@ -106,18 +106,27 @@ def vida_bloqueio(jogador):
     if fontes:
         fontes[-1]["perda"] += (saudavel - jogador.max_hp) - sum(f["perda"] for f in fontes)
     bloqueado = saudavel - jogador.max_hp
-    # o que devolve cada parte (as regras de hoje: o ferimento sara com descanso ou na Curandeira, que devolve a parte
-    # dele também como vida; a bandagem só evita a infecção; a fome passa comendo)
+    # o que reduz e como volta (as regras de hoje: o ferimento sara com dias de descanso, a cama contando dobrado e a
+    # fome parando a conta, ou na hora na Curandeira; a fome passa comendo). A bandagem não devolve nada: isso fica na
+    # dica dela, onde se consulta a bandagem
+    feridas = sum(1 for f in fontes if f["nome"] != "Fome")
+    fome = any(f["nome"] == "Fome" for f in fontes)
+    quem = [("Um ferimento" if feridas == 1 else "Ferimentos")] if feridas else []
+    if fome:
+        quem.append("a fome" if quem else "A fome")
+    reduz = "reduz" if len(quem) == 1 and feridas <= 1 else "reduzem"
     devolve = []
-    if any(f["nome"] != "Fome" for f in fontes):
-        devolve.append("A parte de um ferimento volta quando ele sara (descanso ou Curandeira); a bandagem não "
-                       "devolve.")
-    if any(f["nome"] == "Fome" for f in fontes):
-        devolve.append("A da fome volta quando você come.")
+    if feridas:
+        devolve.append(("O limite volta quando o ferimento sara" if feridas == 1 else
+                        "O limite volta conforme os ferimentos saram") +
+                       ": depois de alguns dias de descanso, ou na hora, na Curandeira.")
+    if fome:
+        devolve.append("A parte da fome volta quando você come.")
     return {"saudavel": saudavel, "limite": jogador.max_hp, "bloqueado": bloqueado, "fontes": fontes,
             "causas": tx.lista_natural([f["nome"] if f["nome"] != "Fome" else "a fome" for f in fontes]),
-            "dica": [f"Curas param em {jogador.max_hp}.",
-                     f"Saudável: {saudavel}. {' '.join(devolve)}"]}
+            "dica": [f"{' e '.join(quem)} {reduz} sua vida máxima de {saudavel} para {jogador.max_hp}. Curas param "
+                     f"em {jogador.max_hp}.",
+                     " ".join(devolve)]}
 
 
 def tem(jogador, fid):

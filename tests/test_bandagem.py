@@ -94,7 +94,7 @@ class TestBandagem(unittest.TestCase):
 
     def test_nao_estanca_nem_serve_em_aliado(self):
         self.assertNotIn("bandagem", EM_ALIADO)
-        self.assertNotIn("vida", CONSUMIVEIS["bandagem"]["desc"].replace("Não recupera vida", ""))
+        self.assertNotIn("vida", CONSUMIVEIS["bandagem"]["desc"].replace("Não recupera vida nem a vida máxima", ""))
         g = jogo()
         g.j.aplicar("sangramento", 2, 2)
         g.j.hp = 10

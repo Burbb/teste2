@@ -206,7 +206,7 @@ function desenharHud(h, antes) {
   // e as barras não mudam de tamanho quando o bloqueio entra ou sai) e na dica da vida.
   const vb = h.vida_bloqueio, vidaMax = vb ? vb.saudavel : h.max_hp;
   const dicaVida = () => (vb ? Telas.dica(`<b>Vida ${h.hp} de ${vb.limite}</b><div>${esc(vb.dica[0])}</div>` +
-    `<div class="bonus pior">${vb.bloqueado} bloqueados na vida máxima:<br>${vb.fontes.map((f) => `${esc(f.nome)} −${f.pct}% (−${f.perda})`).join("<br>")}</div>` +
+    `<div class="bonus pior">${vb.fontes.map((f) => `${esc(f.nome)} −${f.pct}% (−${f.perda})`).join("<br>")}</div>` +
     `<div class="rodape">${esc(vb.dica[1])}</div>`) : Telas.dica("Vida", true));
   const bloqueioVida = vb ? `<span class="condicao bloqueio-vida" ${dicaVida()}><i class="amostra"></i>${spr("cadeado", 1)}−${vb.bloqueado} de vida máxima</span>` : "";
   const feridas = h.ferimentos.length ? `<div class="recurso alerta" data-rec="feridas" ${Telas.dica(h.ferimentos.map((f) => `<b>${esc(f.nome)}</b><div class="bonus pior">${esc((f.explica || [""])[0])}</div>`).join("") + '<div class="rodape">Detalhes no painel do herói, à esquerda.</div>')}><div class="icones">${spr("gota", 2)}</div><div class="qtd">${h.ferimentos.length}</div></div>`

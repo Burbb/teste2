@@ -18,7 +18,7 @@ def _c(nome, preco, desc, icone, luta=None, fora=False, em_aliado=False, mercado
 
 CONSUMIVEIS = {
     "tocha": _c("Tocha", 4, "Luz para uma ação no escuro (noite, ruínas, cidadela).", "tocha", hud="tochas"),
-    "bandagem": _c("Bandagem", 10, "Enfaixa uma ferida aberta e a protege contra infecção. Não recupera vida.",
+    "bandagem": _c("Bandagem", 10, "Enfaixa uma ferida aberta e a protege contra infecção. Não recupera vida nem a vida máxima: o ferimento continua até sarar.",
                    "bandagem", luta=4, fora=True, hud="bandagens"),
     "unguento": _c("Unguento de Prata", 30, "Cura uma infecção.", "unguento", fora=True),
     "pocao_vida": _c("Poção de Vida", 40, f"Recupera {round(bal.POCAO_VIDA * 100)}% da vida. Gosto de ferrugem.",

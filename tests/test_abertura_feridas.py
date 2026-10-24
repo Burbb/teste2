@@ -38,14 +38,14 @@ class TestFerimento(unittest.TestCase):
         o = ab.atual(g)
         self.assertEqual((o["id"], o["ancora"]), ("F1", "ferimento:costelas"))
         self.assertEqual(o["texto"], "**Costelas quebradas**\n−25% de Defesa e −15% de Vigor máximo.\n"
-                                     "Sara com descanso ou na Curandeira.")
+                                     "Sara depois de 8 dias de descanso, ou na hora, na Curandeira.")
         self.assertNotIn("bandagem", o["texto"].lower())  # fratura: a bandagem não trata
 
     def test_f1_corte_com_os_numeros_reais(self):
         g = depois_da_despensa("mago")
         ferir(g, "corte")
         self.assertEqual(ab.atual(g)["texto"], "**Corte profundo**\n−10% de vida máxima.\n"
-                                               "Sara com descanso ou na Curandeira.")
+                                               "Sara depois de 4 dias de descanso, ou na hora, na Curandeira.")
         g = depois_da_despensa("mago")
         ferir(g, "concussao")
         self.assertIn("−25% de Poder e −15% de Mana máxima.", ab.atual(g)["texto"])
