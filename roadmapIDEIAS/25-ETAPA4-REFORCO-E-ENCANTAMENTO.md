@@ -141,40 +141,33 @@ Os atuais Ataque, Poder, Agilidade e Defesa não são uma lista definitiva de at
 
 A decisão de Agilidade definir a iniciativa inicial fixa continua válida; discutir nomes ou derivações não autoriza ordem dinâmica nem ações extras.
 
-#### Complemento acordado: capacidades, potência e liberdade de build
+#### Revisão após o primeiro teste — decisões de 25/10/2026
 
-As capacidades levantadas resultaram na lista inicial de sete atributos abaixo, aceita para teste após o debate. A decisão atual substitui o estado anterior de lista apenas ilustrativa. Não fundir capacidades apenas para reduzir a lista; distinguir características de conhecimentos/práticas aprendidas quando isso produzir escolhas úteis.
+O primeiro protótipo foi entregue e jogado por Jean. **As decisões abaixo ainda não foram implementadas nele.** Substituem a direção anterior de concentrar atributos em efeitos indiretos e as funções da primeira lista de teste; a produção continua intacta.
 
-**Princípio acordado:** atributos devem favorecer maneiras diferentes de jogar, evitando que um único atributo obrigatório concentre quase todo o investimento de uma classe.
+**Potência e atributos:** atributos ofensivos devem contribuir diretamente para o dano correspondente, junto com arma/equipamento, nível e habilidade. Um investimento ofensivo precisa resultar numa melhora compreensível no combate. Não é obrigatório que todo atributo ou todo item aumente dano: sobrevivência, suporte e utilidade continuam valiosos. Evitar tanto um atributo que concentre todas as funções quanto distribuições diferentes que sejam indistinguíveis ao jogar. Especializar-se é válido; não se promete desempenho equivalente de qualquer distribuição.
 
-A direção aceita para aprofundar é obter a potência básica das habilidades, do nível e do equipamento, com atributos influenciando aspectos específicos de seu uso. Isso ainda não fixa fórmula, peso de cada fonte ou elimina qualquer contribuição de atributos ao dano. Intelecto não deve se tornar automaticamente o atributo universal de toda magia, cura e invocação, apenas renomeando o Poder atual.
+**Sem desbloqueios por atingir X de atributo.** Retirar as regras do primeiro teste como Força 5 conceder imunidade a atordoamento, Constituição 5 encurtar sangramento, Percepção 5 ativar bônus de ponto fraco ou Vontade 5 transformar terror em outro efeito. Cada ponto deve contribuir gradualmente para a capacidade correspondente. Tetos de segurança não são desbloqueios; arredondamento não deve criar degraus artificiais de identidade nem esconder o benefício do investimento.
 
-Aplicar o mesmo critério a personagens físicos e sobrenaturais: não exigir que o guerreiro invista quase tudo em Força para funcionar enquanto o mago recebe sua potência sem custo equivalente. Comparar alternativas reais de construção, incluindo personagens mais resistentes, perceptivos ou disciplinados. A intenção é permitir variações viáveis sem eliminar especialização nem tornar todas as distribuições equivalentes.
+Mudanças de comportamento, imunidades temporárias e transformações de habilidades pertencem principalmente a habilidades, talentos e propriedades especiais de equipamentos. Não concedê-las automaticamente por pontuação de atributo.
 
-#### Lista inicial e funções aceitas para teste
-
-| Atributo | Combate | Aventura |
+| Capacidade | Direção atual | O que permanece aberto |
 |---|---|---|
-| Força | Pressão física, romper proteção e resistir a efeitos de domínio corporal | Erguer, remover obstáculos, arrombar e realizar esforço físico |
-| Agilidade | Iniciativa inicial fixa, sem ações extras | Equilíbrio, furtividade, coordenação e reação a perigos |
-| Constituição | Vida e resistência a condições corporais | Suportar doença, veneno, esforço e condições hostis |
-| Intelecto | Uso eficiente dos recursos das habilidades | Conhecimento, mecanismos, medicina e compreensão do sobrenatural |
-| Percepção | Golpes precisos e identificação de vulnerabilidades | Pistas, armadilhas, rastros e detalhes observáveis |
-| Vontade | Resistência a medo, confusão e influências; sustentação de ações que exijam concentração | Terror, tentação, pressão e contato com o Vazio |
-| Presença | Liderança, incentivo e intimidação quando fizerem parte do kit | Persuasão, negociação, liderança, ameaça e engano |
+| Força | Potência física apropriada e esforço físico na aventura | Fórmula, peso e relação com armas/habilidades e rompimento de proteção |
+| Agilidade | Ordem inicial fixa e capacidades físicas de coordenação na aventura | Outros usos precisam de justificativa; não acumular dano, crítico, esquiva e iniciativa automaticamente |
+| Constituição | Vida e resistência corporal graduais | Pesos e tratamento de sangramento, veneno e doença |
+| Intelecto | Participação na potência sobrenatural correspondente e compreensão/conhecimento | Mapeamento de magia, cura e invocações; não concentrar automaticamente dano, cura, eficiência e controle no mesmo atributo |
+| Percepção | Precisão/vulnerabilidades e observação na aventura | Função ofensiva distinta e gradual, sem esconder ameaças essenciais |
+| Vontade | Candidata ligada a determinação e resistência a controle | Precisa justificar sua utilidade; fórmula, abrangência e permanência ainda em validação |
+| Presença | **Somente cenário, interações e situações fora do combate** | Distribuição/progressão e relação com o orçamento dos atributos de combate |
 
-São papéis para testar, não uma autorização para implementar todos os exemplos como novos subsistemas. Romper proteção não obriga criar uma barra de armadura; concentração não obriga adotar as regras de D&D; golpes precisos não aprovam um sistema universal de erro/acerto.
+**Presença não escala dano, cura, buffs, Grito de Comando ou qualquer outro efeito de combate.** Pode servir à persuasão, negociação, intimidação e liderança narrativa, sem impor personalidade nem bloquear todo diálogo por um único teste. Não obrigar a comprar acesso narrativo sacrificando eficácia de luta sem uma decisão explícita sobre os orçamentos. No próximo teste, mantê-la fora do orçamento de combate; isso não fecha o sistema final de progressão social.
 
-Cuidados acordados:
-- Não atrelar automaticamente crítico, esquiva e dano à Agilidade para torná-la útil.
-- Não deixar Intelecto reduzir custos sem limites ou prolongar automaticamente todo efeito de controle.
-- Percepção não pode esconder informações essenciais para responder a ameaças: a preparação perigosa continua comunicada para todos.
-- Presença e Percepção devem provar sua utilidade real; não criar efeitos artificiais só para justificar a lista.
-- A potência ofensiva básica vem principalmente de habilidades, nível e equipamento; atributos modulam seu uso, sem eliminar especialização ou prometer equivalência de todas as distribuições.
-- Equipamentos podem melhorar valores de combate diretamente. Uma espada não precisa conceder Força para aumentar a capacidade ofensiva.
-- A ficha mostra os resultados relevantes de forma direta, como vida, recurso, proteção, iniciativa e previsão da habilidade, sem exigir contas manuais.
+**Tenacidade:** direção a testar como chance de resistir a controles, com teto inferior à imunidade. Distinguir chance de resistir, redução de duração e resistência corporal; não juntar tudo num único benefício. Definir aplicação pelo atacante e resistência do alvo, mostrar a chance final e não contá-la duas vezes. Vontade é candidata a contribuir, não uma fórmula aprovada. A defesa contra uma ameaça não deve depender só de vencer um sorteio: proteger, defender ou outra resposta deliberada continua necessária.
 
-Exemplos de combinações como guerreiro de Força/Constituição, Agilidade/Percepção ou Vontade/Presença e mago de Intelecto/Vontade, Agilidade/Percepção ou Constituição/Vontade são casos para validar variedade, não arquétipos finais nem promessa de viabilidade sem habilidades que os sustentem.
+**Duração:** não dar aumento percentual universal de duração por atributo. Em rodadas discretas, passar de duas para três é um salto grande. Um turno extra pode ser modificador explícito de uma habilidade, talento ou item especial, com alcance e custo próprios; não significa implementar esses efeitos agora.
+
+**Leitura da build:** mostrar o resultado real da distribuição: dano previsto por habilidade, cura/proteção quando cabível, vida, recurso/custos, iniciativa, crítico e resistências. Informar a origem dos ganhos e comparar com a mesma arma, nível e alvo. Mudar atributos e não conseguir perceber a diferença é um problema do teste, mesmo quando as fórmulas estão corretas.
 
 #### Contribuição dos companheiros fora da luta — acordada
 
@@ -184,7 +177,17 @@ Um companheiro pode interpretar uma inscrição ou ajudar numa tarefa quando a s
 
 Não implementar agora revisão geral de diálogos, testes ou campanha. O protótipo pode demonstrar o princípio em exemplos isolados, identificados como provisórios; integração narrativa depende de trabalho posterior.
 
-**Antes de enviar o próximo prompt ao Claude**, concluir o alinhamento necessário sobre atributos. O protótipo isolado de combate permanece como próxima entrega pretendida, mas o prompt preparado anteriormente ainda não foi enviado e precisa incorporar esta direção. Esta revisão não autoriza implementar atributos novos.
+#### Retorno do teste e próxima iteração
+
+Jean achou a luta divertida e aceitou o aumento de duração. Usou bastante ataque básico para reservar recurso a ameaças e cura; não percebeu claramente as diferenças entre as builds. Isso é diagnóstico de experiência, não aprovação dos custos ou prova de equilíbrio. Comparações de poucas partidas também sofrem influência de aprendizagem.
+
+A próxima entrega é uma **segunda versão isolada do protótipo**, preservando a primeira para comparação. Deve testar potência ligada a atributos, benefícios graduais, Presença fora do combate e melhor leitura das builds. Rever a economia de recurso para permitir habilidades proativas e respostas de emergência sem transformar o básico numa espera obrigatória; não eliminar a necessidade de escolher quando gastar.
+
+Jean reafirmou a intenção de selecionar habilidades com um orçamento de pontos, custos por tier e no máximo uma ultimate. Quantidade de pontos, tiers, limite de espaços (até seis continua hipótese), habilidades disponíveis e custos não estão fechados. Pontos de montar o kit, pontos de aprender/desenvolver e recurso gasto durante a luta são conceitos distintos.
+
+**Hipótese operacional para esta iteração:** Ataque básico, Defender e Usar item são comandos básicos fora dos slots e pontos do kit; continuam consumindo a ação principal. Isso permite avaliar Defender sem cobrar uma vaga de habilidade. O protótipo não deve tratar essa configuração como catálogo definitivo. Um montador pequeno de kit pode testar pontos/tiers com poucas habilidades, incluindo opções baratas e fortes, sem construir ainda árvores completas ou o Grimório.
+
+Preservar as decisões de turnos, companheiros, ameaças e ressurreição. A derrota imediata quando o protagonista cai, os desempates e a inserção de invocados do primeiro teste são hipóteses operacionais, não novas aprovações implícitas. Nenhuma revisão autoriza integração no jogo, reforço/encantamento completo ou expansão da campanha.
 
 ## 4. Vida útil das peças — direção acordada
 
@@ -237,7 +240,7 @@ Na conversa, **Battle Brothers** acrescentou o exemplo de materiais de criaturas
 
 As generalizações do apêndice sobre aleatoriedade, destruição e satisfação são avaliações da pesquisa inicial, não leis de design nem prova de que uma mecânica só funciona em determinado gênero. Verificar versões e fontes antes de usar mudanças de outros jogos como justificativa decisiva.
 
-**Próximo passo acordado:** testar primeiro um protótipo isolado do combate definido nesta revisão, antes de implementar reforço e encantamento. A entrega ao Claude será um cenário jogável pequeno com herói, dois companheiros controláveis, iniciativa fixa, rodadas, defesa, atordoamento e ameaças anunciadas. Habilidades e valores de teste são provisórios, não um catálogo final. Não iniciar o protótipo de forja do apêndice nem alterar regras de produção. Jean e ChatGPT continuam definindo a identidade dos demais sistemas.
+**Próximo passo acordado:** revisar o protótipo isolado de combate após o teste de Jean, conforme as seções 3.1, 3.6 e 3.7. O primeiro já foi entregue; a segunda versão deve incorporar as novas decisões sem alterar a produção. Só depois da avaliação avançar nas dependências de reforço e encantamento. Não iniciar o protótipo de forja do apêndice.
 
 Depois de definida a direção suficiente, o Claude poderá verificar implicações técnicas, testar hipóteses numéricas e construir um protótipo isolado e pequeno. O catálogo e o combate atuais servirão de casos de teste, sem limitar as possibilidades futuras.
 
@@ -256,7 +259,7 @@ Depois de definida a direção suficiente, o Claude poderá verificar implicaç�
 | Sem morte permanente de companheiros por batalha | Acordado; exceção somente narrativa |
 | Retorno à luta por ressurreição de alto custo ou item escasso | Acordado; números e limites abertos |
 | Retorno na posição original, sem recuperar turnos perdidos | Acordado |
-| Próxima entrega: protótipo isolado de combate antes da forja | Acordado; sem integração na produção. Entregue em 25/10/2026 para avaliação ([LEIA-ME](../ferramentas/prototipos/combate-atributos/LEIA-ME.md)); fórmulas e valores de teste |
+| Protótipo isolado de combate antes da forja | Primeira versão entregue e jogada; próxima entrega é a revisão pós-teste ([LEIA-ME](../ferramentas/prototipos/combate-atributos/LEIA-ME.md)), sem integração |
 | Turnos individuais intercalados e ordem próxima visível | Acordado |
 | Agilidade define a ordem inicial | Acordado; desempates e detalhes de leitura abertos |
 | Ordem fixa durante toda a batalha | Acordado; sem ações extras por Agilidade |
@@ -267,10 +270,15 @@ Depois de definida a direção suficiente, o Claude poderá verificar implicaç�
 | Atributos para capacidades dentro e fora do combate | Direção acordada |
 | Valores derivados para leitura clara do desempenho em combate | Direção acordada |
 | Força, Agilidade, Constituição, Intelecto, Percepção, Vontade e Presença | Lista inicial aceita para teste; permanência final sujeita à validação |
-| Funções dos sete atributos | Papéis aceitos para teste; fórmulas, valores e pontos abertos |
+| Funções dos atributos | Revisadas após teste na seção 3.7; Presença somente fora do combate, Vontade em validação |
 | Contribuição contextual de companheiros na aventura | Acordado; sem substituir decisões pessoais do protagonista |
 | Evitar atributo único obrigatório por classe | Princípio acordado, aplicado a físicos e sobrenaturais |
-| Potência básica por habilidade, nível e equipamento; atributos modulam o uso | Direção aceita para aprofundar; fórmulas e pesos abertos |
+| Atributos ofensivos contribuindo diretamente para dano | Acordado; fórmulas e pesos provisórios no próximo teste |
+| Desbloqueios ou imunidades por atingir X de atributo | Rejeitados; retirar do protótipo |
+| Presença somente no cenário e nas interações | Acordado; sem efeito de combate |
+| Tenacidade gradual com teto, sem imunidade automática | Direção de teste; fórmula e vínculo com Vontade abertos |
+| Comandos básicos fora dos slots e pontos do kit | Hipótese operacional da próxima iteração; consomem ação |
+| Orçamento de seleção de habilidades por tier, até uma ultimate | Direção acordada; valores e catálogo provisórios |
 | Kit limitado e investimento seletivo | Direção acordada |
 | Cinco habilidades + uma ultimate | Hipótese, não número fechado |
 | Caminhos curtos de modificadores por habilidade | Direção acordada; três passos é hipótese |
@@ -279,7 +287,7 @@ Depois de definida a direção suficiente, o Claude poderá verificar implicaç�
 | Reforço, encantamento e propriedade excepcional com papéis distintos | Direção acordada |
 | Arquitetura A anterior, 20%, +5, preços e 17 essências | Proposta histórica, não aprovada em bloco |
 | Transferência, recuperação, desmanche e receitas | Em debate |
-| Nova interface, efeitos e implementação | Aguardar definição; não autorizados por este registro |
+| Produção, arte final e sistemas completos | Não autorizados nesta rodada; somente segunda versão do protótipo e sua interface de teste |
 
 ## Apêndice — pesquisa e proposta inicial, preservadas como histórico
 
