@@ -316,3 +316,55 @@ barba, o corpo): é o centro da cena, e o mercador do mercado também tem mais c
 - A luz da G é feita por cima com transparência (como nas cenas do jogo): as cores finais não ficam presas à paleta.
 - A espada virando na pausa continua sutil.
 - **Aguarda a avaliação do Jean; nada integrado.**
+
+## A H: o ferreiro no estilo das figuras do jogo, o corpo inteiro animado, a candidata (25/10/2026; protótipo)
+
+Na G, o Jean viu as pernas descoladas e a metade de cima do corpo subindo e descendo por cima da de baixo (o corte no
+cotovelo aparecia), e pediu uma animação de corpo de verdade e o ferreiro conferido com o estilo do mercador, da Ilse
+e do resto do jogo. A G fica como estava; a H mora em `h/` e `forja-h.js`, na oficina da G (`h/oficina_h.py`, a mesma).
+Folhas: `folha-forja-h.png` (G × H no jogo, com os mesmos dados, nas duas janelas), `folha-estilo-h.png` (o ferreiro
+ao lado do mercador e da Ilse, os pixels da tela a 1920; a H ao lado das cenas aprovadas), `folha-corpo-h.png` (G × H
+nos mesmos quadros: o corpo no alto, no golpe e no rebote; as pernas e as botas) e `folha-movimento-h.png`. A
+demonstração: `demo.bat` (o botão H vem primeiro).
+
+### O estilo
+
+O código do mercador (`telas/mercado.js`, a FIGURA e as cores) e a Ilse mostram o padrão das figuras do jogo: cada
+material em três tons chapados (luz, meio, sombra), **sem contorno**, o olho de um pixel escuro, a barba em dois ou
+três tons, as mãos em bloco. O ferreiro da F e da G tinha contorno escuro em volta de tudo, muitos tons e a barba em
+fios miúdos: estava fora. O da H (`h/ferreiro_h.py`) segue o padrão, com as cores de pele do mercador um pouco mais
+quentes pela fornalha; continua o mesmo homem (careca, gordo e forte, a barba ruiva afunilando numa trança com a
+presilha, o avental de couro).
+
+### A animação do corpo
+
+Cada pose é desenhada inteira a partir dos apoios, que ficam parados: as botas no chão e a luva fechada na tenaz, que
+prende a espiga na bigorna. O resto se acomoda a eles, sem nenhuma parte deslizando por cima de outra:
+
+- **no golpe** os joelhos dobram e o quadril desce, o tronco inclina para a frente e para baixo, a barriga achata e
+  alarga, a cabeça e a barba vão junto e a ponta da trança balança para a frente;
+- **no alto** as pernas estendem, o quadril sobe, o peito sobe e recua, a trança volta;
+- **no rebote** o corpo continua embaixo, a trança ainda balançando; no repouso tudo assenta;
+- o braço da tenaz dobra ou estica o cotovelo para a mão ficar onde está; as coxas saem da cintura, o joelho fica
+  para fora (a base firme), a canela afina até o cano da bota, onde a calça entra.
+
+Correções do Jean no caminho: a perna "quadrada" por cima da bota (só 4 px de calça reta entre a barra do avental e a
+bota; agora a canela afunila, o joelho abre e a calça entra no cano) e o bloco azul atrás do avental (a túnica descia
+até o quadril e se emendava na coxa; agora fecha na cintura e a coxa sai arredondada).
+
+O ritmo é o da R (53 quadros de 100 ms); o martelo bate sempre no mesmo ponto da lâmina; os apoios da G (a tenaz presa,
+a lâmina parada, as botas longe do toco) continuam.
+
+### Conferido
+
+`h/exportar_h.py --conferir` (53 de 53 iguais ao desenho em código); `fotografar.mjs` (VERSOES=g,h), **as duas janelas,
+tudo certo** (os nomes, os cartões, o reforço, a saída e a volta, o Esc, sem relógio novo, o movimento reduzido);
+`ciclo_f.mjs` (VERSAO=h): dois ciclos quadro a quadro, um relógio só a 100 ms; sem rolagem vazia a 1280.
+
+### O que continua
+
+- **A escala:** o ferreiro tem ~55 px de altura no quadro (a da referência); a Ilse e o mercador são bem menores na
+  tela. O estilo agora é o mesmo; o tamanho é uma decisão sua (diminuir o ferreiro mudaria o enquadramento da oficina).
+- O corpo é montado por partes com a luz em três tons (como as figuras do jogo, que são grades e retângulos); o rosto,
+  a barba e a trança são grades à mão.
+- **Aguarda a avaliação do Jean; nada integrado.**

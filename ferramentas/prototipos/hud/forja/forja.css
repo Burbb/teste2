@@ -17,7 +17,7 @@ html[data-forja] #cena.com-ambiente .forja .servicos { grid-template-columns: re
 html[data-forja] #cena.com-ambiente .forja .servico { grid-template-columns: 52px 1fr auto; gap: 0 10px; }
 /* A F (a transposição fiel): o quadro dela tem 96 de altura (o das paisagens, 72), na proporção da referência; a vista
    cresce na mesma proporção, sem esticar a arte, com o teto de 36% da altura da janela. */
-html[data-forja] #cena.com-ambiente:has(#pontos-cena:is([data-cena="forja_f"], [data-cena="forja_g"])) #vista { height: calc(min(100cqw * 96 / 320, 36vh) + var(--P) * 12); }
+html[data-forja] #cena.com-ambiente:has(#pontos-cena:is([data-cena="forja_f"], [data-cena="forja_g"], [data-cena="forja_h"])) #vista { height: calc(min(100cqw * 96 / 320, 36vh) + var(--P) * 12); }
 /* Com o quadro de 96 (F e G), a 1280×720 o respiro de baixo da folha deixava 15 px de página vazia para rolar: a forja
    com ambiente fica sem ele, como o mercado (#folha:has(.tela.loja)). */
 html[data-forja] #folha:has(.forja) { padding-bottom: 0; }
