@@ -7427,3 +7427,26 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **A etapa 2 não está encerrada.** Próximo passo: o Jean avalia a R2; aprovada, integrar a criação; depois, a proposta
   dos cartões dos saves e a revisão por evidência dos componentes antigos restantes; então a forja. Não começados (sem
   pedido): a forja, o reforço/encantamento, o Grimório, a expansão narrativa.
+
+### 25/10/2026 (data do computador local) — A criação em etapas no jogo (1.208.0); o "Carregar jogo" em avaliação
+
+- **Integrada na 1.208.0, aprovada pelo Jean, sem retoques:** a criação em etapas (R2). O motor manda tudo numa
+  pergunta só (`rpg/criacao.py`; as frases curtas em `classes.py`) e confere a resposta; a tela (`app/criacao.js`,
+  `css/24-criacao.css`) anda por Nome → Classe → Modo e responde uma vez, no "Começar campanha". O texto e o robô
+  (gabarito, testes) seguem com as perguntas de sempre. Saíram as adaptações da demonstração e a caixa marcável da tela
+  gráfica (sem uso). A espera por tempo do Avançar saiu: a tecla segurada passa pelo `Gesto` e o clique duplo pelo
+  `detail`; um Enter novo responde na hora. Sem escolha de gênero; os nomes das classes como estão.
+- **Conferido:** `criacao.mjs` (protótipo das telas iniciais) no jogo, 1920×945 e 1280×720: as três classes, os dois
+  modos, o tutorial ligado e desligado, o nome longo com acento, avançar/voltar/preservar, o Enter segurado, o clique
+  duplo, uma resposta só ao motor, a campanha com o que se escolheu, e salvar e carregar a campanha criada. Testes novos
+  em `tests/test_criacao.py`; `test_web` responde à pergunta nova; a fumaça passa pela criação nova. Gabarito sem
+  mudança (as partidas usam `iniciar`, não a criação).
+- **"Carregar jogo" (protótipo, aguardando a aprovação visual do Jean):** o levantamento e a proposta R em
+  `ferramentas/prototipos/hud/carregar-jogo/` (a pasta não se chama `saves/` porque o `.gitignore` protege as pastas de
+  saves pessoais; `folha-saves.png`; `demo.bat`, porta 8772, saves temporários e simulados, identificados). A janela da
+  família da criação, uma coluna que rola, o Voltar no rodapé junto com a lista, a especialização e a missão em
+  andamento, o que não abre dito em texto, o teclado pelos cartões.
+- **Pendências reais da etapa 2:** a aprovação e a integração do "Carregar jogo"; o tempo da lista que cresce com o
+  número de saves (~9 ms por save, a leitura do motor), registrado; a revisão por evidência dos componentes antigos
+  restantes. O "Continuar" da subida de nível fica fora, por decisão do Jean. Não começados (sem pedido): a forja, o
+  reforço/encantamento, o Grimório, a expansão narrativa.
