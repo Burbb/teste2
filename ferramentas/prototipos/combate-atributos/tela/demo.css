@@ -1,0 +1,201 @@
+/* PROTÓTIPO do combate e dos atributos (25/10/2026; nada no jogo). Os materiais (m-painel, m-janela), a paleta
+   (--p-*) e as fontes vêm do jogo (01-base.css, 11-tipografia.css); aqui só a montagem da demo. Referência: 1920×945
+   (a área do jogo no monitor do Jean); a 1280×720 tudo cabe sem rolar a página. */
+body {
+  background: var(--fumo-fundo) 0 0 / calc(var(--P) * 128), var(--tx-fundo) 0 0 / calc(var(--P) * 128), var(--fundo);
+  display: flex; flex-direction: column; height: 100vh; gap: 6px; padding: 6px 10px 8px;
+  font-size: 16px;
+}
+h1, h2, h3, h4 { margin: 0; font-weight: 400; }
+.botao, #abas button, .seletor button, .editor button {
+  font: 16px var(--texto); color: var(--tinta); background: var(--p-A); border: var(--borda) solid var(--p-J); padding: 3px 12px 4px;
+  cursor: pointer;
+}
+.botao:is(:hover, :focus-visible), #abas button:is(:hover, :focus-visible) { border-color: var(--ouro); color: var(--ouro); outline: none; }
+.botao[disabled] { opacity: 0.45; cursor: default; }
+kbd { margin-left: 6px; }
+.nota { color: var(--tinta-2); font-size: 15px; margin: 4px 0 8px; }
+
+/* ---------------------------------------------------------------- topo */
+body > * { flex-shrink: 0; }
+#topo { display: flex; align-items: center; gap: 12px; padding: 4px 12px; }
+#topo h1 { font: calc(var(--px, 1px) * 32) var(--titulo); color: var(--ouro); text-shadow: var(--contorno); line-height: 1; }
+#topo h1 small { font: 15px var(--texto); color: var(--tinta-2); text-shadow: none; margin-left: 6px; }
+#topo label { color: var(--tinta-2); font-size: 15px; display: flex; gap: 6px; align-items: center; }
+#topo select { font: 16px var(--texto); color: var(--tinta); background: var(--p-A); border: var(--borda) solid var(--p-J); padding: 2px 4px; max-width: 300px; }
+#topo .espaco { flex: 1; }
+#topo > *, #topo label { white-space: nowrap; flex-shrink: 0; }
+#topo label { flex-shrink: 1; min-width: 0; }
+#topo select { min-width: 0; }
+#teste { padding: 3px 12px; background: var(--p-R); color: var(--p-w); font-size: 15px; border: var(--borda) solid var(--sangue); }
+#teste::before { content: "TESTE · "; font-weight: 700; }
+
+/* ---------------------------------------------------------------- a faixa: objetivo e ordem */
+#faixa { display: grid; gap: 4px; }
+#objetivo { margin: 0; color: var(--tinta-2); font-size: 15px; }
+#objetivo b { color: var(--ouro); font-weight: 600; margin-right: 6px; }
+#ordem { display: flex; align-items: stretch; gap: 4px; flex-wrap: wrap; }
+#ordem .rodada { display: grid; place-items: center; padding: 0 10px; background: var(--p-A); border: var(--borda) solid var(--p-J); }
+#ordem .rodada span { font-size: 13px; color: var(--tinta-2); }
+#ordem .rodada b { font: calc(var(--px, 1px) * 32) var(--titulo); color: var(--ouro); line-height: 0.9; }
+.passo { position: relative; display: grid; grid-template-columns: 32px auto; grid-template-rows: auto auto; column-gap: 6px; align-items: center;
+  padding: 3px 8px 3px 4px; background: var(--p-A); border: var(--borda) solid var(--p-J); min-width: 104px; }
+.passo .pos { position: absolute; left: -1px; top: -1px; font-size: 12px; line-height: 1; padding: 1px 3px; background: var(--p-J); color: var(--tinta-2); }
+.passo > img, .passo > .sem-retrato { grid-row: 1 / 3; }
+.passo .nome { font-size: 15px; white-space: nowrap; }
+.passo .nota { font-size: 13px; color: var(--tinta-2); min-height: 1em; }
+.passo.inimigo { border-color: var(--p-R); }
+.passo.passou { opacity: 0.5; }
+.passo.atual { border-color: var(--ouro); background: var(--p-C); box-shadow: 0 0 0 var(--P) var(--p-k); }
+.passo.atual .nota { color: var(--ouro); }
+.passo.fora { opacity: 0.35; }
+.passo.fora .nome { text-decoration: line-through; }
+.passo.espera { border-style: dashed; }
+.passo .perigo { position: absolute; left: 30px; top: -2px; font: 700 15px var(--texto); color: var(--p-w); background: var(--sangue); padding: 0 4px; line-height: 1.1; }
+.fim-rodada { display: grid; place-items: center; text-align: center; padding: 0 8px; font-size: 13px; color: var(--tinta-2);
+  border-left: calc(var(--P) * 2) solid var(--p-J); line-height: 1.15; }
+.sem-retrato { display: inline-grid; place-items: center; width: calc(var(--s) * 1px); height: calc(var(--s) * 1px); background: var(--p-J); color: var(--tinta); }
+
+/* ---------------------------------------------------------------- o campo */
+#campo { flex: 1 1 0; position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) clamp(320px, 24vw, 440px); gap: 8px; min-height: 0; }
+#grupo, #frente { display: flex; flex-direction: column; gap: 6px; min-height: 0; overflow: auto; padding: 2px; }
+.carta { position: relative; padding: 6px 10px 8px; background: var(--painel); border: var(--borda) solid var(--p-J); display: grid; gap: 4px; }
+.carta .cab { display: flex; gap: 10px; align-items: center; }
+.carta h3 { font: 18px var(--texto); font-weight: 600; color: var(--tinta); display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+.carta .papel { margin: 0; color: var(--tinta-2); font-size: 14px; }
+.carta.ativo { border-color: var(--ouro); box-shadow: 0 0 0 var(--P) var(--p-k), inset 0 0 0 var(--P) var(--p-C); }
+.carta.caido { opacity: 0.7; }
+.carta.caido > .cab img { filter: grayscale(1) brightness(0.6); }
+.caido-nota { margin: 0; font-size: 14px; color: var(--sangue); }
+.tag { font: 13px var(--texto); padding: 0 5px; background: var(--p-J); color: var(--tinta-2); }
+.tag.vez { background: var(--ouro); color: var(--p-k); }
+.delta { margin-left: auto; font: 600 18px var(--texto); padding: 0 6px; }
+.delta.perde { color: var(--sangue); }
+.delta.ganha { color: var(--bom); }
+.carta.inimigo { border-color: var(--p-R); }
+.carta.preparando { border-color: var(--sangue); }
+.carta[data-alvo] { cursor: pointer; border-color: var(--ouro); }
+.carta[data-alvo]::after { content: attr(data-alvo); position: absolute; right: 6px; top: 4px; font: 700 18px var(--texto); color: var(--p-k);
+  background: var(--ouro); padding: 0 7px; }
+.carta[data-alvo]:hover { background: var(--p-C); }
+.tags { margin: 0; font-size: 14px; color: var(--tinta-2); }
+.caidos { color: var(--tinta-2); font-size: 14px; margin: 2px 0; grid-column: 1 / -1; }
+
+.barra { position: relative; height: 20px; background: var(--p-k); border: var(--borda) solid var(--p-J); display: flex; align-items: center; }
+.barra > span { position: absolute; inset: 0 auto 0 0; background: var(--sangue-2); }
+.barra.vida > span { background: var(--sangue); }
+.barra.recurso > span { background: var(--frio); }
+.barra.r-vigor > span { background: var(--brasa); }
+.barra.r-fé > span { background: var(--ouro-2); }
+.barra.guarda > span { background: var(--p-g); }
+.barra em, .barra b { position: relative; font: 14px var(--texto); color: var(--p-w); text-shadow: var(--contorno); padding: 0 6px; font-style: normal; }
+.barra b { margin-left: auto; font-weight: 600; }
+
+.estados { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 4px; }
+.estados li { display: grid; grid-template-columns: auto 1fr; column-gap: 4px; align-items: center; padding: 1px 6px 2px; background: var(--p-A);
+  border: var(--borda) solid var(--p-J); font-size: 13px; }
+.estados li img { grid-row: 1 / 3; }
+.estados li b { font-weight: 600; color: var(--tinta); }
+.estados li span { color: var(--tinta-2); }
+.estados .est-atordoado, .estados .est-aterrorizado, .estados .est-sangramento { border-color: var(--sangue); }
+.estados .est-defesa, .estados .est-escudo, .estados .est-protegido, .estados .est-protegendo { border-color: var(--frio); }
+.estados .est-comando, .estados .est-marca { border-color: var(--ouro-2); }
+
+.ameaca { border: var(--borda) solid var(--sangue); background: var(--p-R); padding: 4px 8px 6px; }
+.ameaca p { margin: 0; font-size: 14px; }
+.ameaca .titulo { font-weight: 700; font-size: 15px; color: var(--p-w); }
+.ameaca .titulo::before { content: "Prepara: "; color: var(--p-Y); }
+.ameaca b { color: var(--p-Y); }
+.ameaca .efeito, .ameaca .quando { color: var(--p-W); }
+.ameaca ul { margin: 0; padding-left: 18px; font-size: 14px; }
+
+/* ---------------------------------------------------------------- o lado: registro e ficha */
+#lado { display: grid; grid-template-rows: auto minmax(0, 1fr); min-height: 0; padding: 6px 8px; }
+#abas { display: flex; gap: 4px; margin-bottom: 6px; }
+#abas button.atual, .seletor button.atual { border-color: var(--ouro); color: var(--ouro); }
+#registro, #ficha { overflow: auto; min-height: 0; font-size: 14px; }
+#registro h4 { font: 15px var(--texto); font-weight: 700; color: var(--ouro); margin: 8px 0 2px; }
+#registro .ev { margin: 0 0 3px; line-height: 1.3; }
+#registro .ev small { display: block; color: var(--tinta-3); font-size: 12px; }
+#registro .ev-prepara, #registro .ev-queda, #registro .ev-resolve { color: var(--p-Y); }
+#registro .ev-interrompe, #registro .ev-retorno { color: var(--bom); }
+#registro .ev-perde, #registro .ev-pula { color: var(--tinta-2); font-style: italic; }
+#registro .ev-expira { color: var(--tinta-3); }
+#registro .ev.novo { border-left: var(--P) solid var(--ouro); padding-left: 6px; animation: chega 220ms both; animation-delay: calc(var(--i) * 90ms); }
+@keyframes chega { from { opacity: 0; translate: -6px 0; } }
+.seletor { display: flex; gap: 4px; }
+#ficha h4 { font: 15px var(--texto); font-weight: 700; color: var(--ouro); margin: 6px 0 2px; }
+#ficha ul { list-style: none; margin: 0; padding: 0; }
+.atributos { display: grid; grid-template-columns: 1fr 1fr; column-gap: 12px; }
+.atributos li { display: flex; justify-content: space-between; border-bottom: var(--px) solid var(--p-J); padding: 1px 0; }
+.atributos b { color: var(--ouro); }
+.derivados li { display: grid; grid-template-columns: 1fr auto; padding: 2px 0; border-bottom: var(--px) solid var(--p-J); }
+.derivados b { color: var(--tinta); font-weight: 600; text-align: right; }
+.derivados small { grid-column: 1 / -1; color: var(--tinta-2); font-size: 12px; }
+
+/* ---------------------------------------------------------------- a doca: quem age e o que pode fazer */
+#doca { display: flex; gap: 10px; align-items: stretch; padding: 6px 10px; min-height: 92px; }
+#doca .quem { display: grid; justify-items: center; align-content: center; gap: 2px; min-width: 84px; font-size: 13px; color: var(--tinta-2); }
+#doca .quem b { color: var(--ouro); font-size: 16px; }
+#doca .acoes { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 6px; flex: 1; }
+.acao { position: relative; display: block; text-align: left; padding: 4px 8px 6px 24px; background: var(--p-A);
+  border: var(--borda) solid var(--p-J); cursor: pointer; font: 14px var(--texto); color: var(--tinta); }
+.acao .tecla { position: absolute; left: 0; top: 0; padding: 0 5px; background: var(--p-J); color: var(--tinta-2); font-size: 13px; }
+.acao img { float: right; margin: 2px 0 0 4px; }
+.acao b { display: inline; font-size: 16px; font-weight: 600; margin-right: 6px; }
+.acao .custo { color: var(--ouro-2); font-size: 13px; white-space: nowrap; }
+.acao .desc { display: block; color: var(--tinta-2); font-size: 13px; line-height: 1.25; }
+.acao:not(.nao):is(:hover, :focus-visible) { border-color: var(--ouro); outline: none; background: var(--p-C); }
+.acao.nao { cursor: not-allowed; opacity: 0.55; }
+.acao.nao .desc { color: var(--sangue); opacity: 1; }
+body.ocupado .acao { pointer-events: none; }
+.escolha-alvo { display: flex; align-items: center; gap: 12px; flex: 1; }
+.escolha-alvo p { margin: 0; font-size: 16px; }
+.escolha-alvo kbd { margin-left: 0; }
+#doca .aviso { color: var(--sangue); margin: auto 0; }
+
+/* ---------------------------------------------------------------- o fim e as janelas */
+#fim { position: absolute; inset: 0; display: grid; place-items: center; background: rgba(0, 0, 0, 0.55); }
+#fim > div { padding: 18px 26px; max-width: 640px; }
+#fim h2, #modal h2 { font: calc(var(--px, 1px) * 32) var(--titulo); color: var(--ouro); text-shadow: var(--contorno); }
+#fim .botoes { display: flex; gap: 10px; margin-top: 10px; }
+#modal { position: fixed; inset: 0; display: grid; place-items: center; background: rgba(0, 0, 0, 0.6); z-index: 5; }
+#modal .caixa { position: relative; background: var(--painel); padding: 14px 20px 18px; max-width: min(1240px, 96vw); max-height: 92vh; overflow: auto; }
+#modal .fechar { position: absolute; right: 8px; top: 4px; font-size: 24px; background: none; border: 0; color: var(--tinta-2); cursor: pointer; }
+#modal table { border-collapse: collapse; font-size: 14px; }
+#modal th, #modal td { padding: 3px 10px; border-bottom: var(--px) solid var(--p-J); text-align: left; vertical-align: top; }
+#modal thead th { color: var(--ouro); }
+#modal tbody tr:not(.difere) :is(th, td) { color: var(--tinta-3); }
+#modal tr.difere td { color: var(--tinta); font-weight: 600; }
+#modal tr.difere th { box-shadow: inset var(--P) 0 0 var(--ouro); }
+#modal td.ordem { font-size: 12px; max-width: 220px; }
+.comparar { display: flex; gap: 18px; align-items: flex-start; }
+.editor { padding: 8px 12px; min-width: 250px; }
+.editor h3 { font: 17px var(--texto); font-weight: 700; color: var(--ouro); }
+.editor ul { list-style: none; padding: 0; margin: 6px 0; }
+.editor li { display: grid; grid-template-columns: 1fr 28px 28px 28px; align-items: center; gap: 4px; padding: 1px 0; }
+.editor li b { text-align: center; color: var(--ouro); }
+.editor li button { padding: 0; height: 24px; }
+.editor .ok { color: var(--bom); } .editor .falta { color: var(--sangue); }
+.prosa { font: 19px/1.5 var(--prosa); max-width: 720px; }
+.opcoes { list-style: none; padding: 0; display: grid; gap: 8px; }
+.opcoes li { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.req.ok { color: var(--bom); } .req.falta { color: var(--sangue); }
+.resultado { font: 18px var(--prosa); max-width: 720px; }
+.resultado small { display: block; color: var(--tinta-2); font: 14px var(--texto); }
+.resultados .acoes-usadas { font-size: 12px; max-width: 280px; }
+
+/* 1280×720 e menores: tudo mais justo */
+@media (max-height: 800px), (max-width: 1400px) {
+  body { gap: 4px; padding: 4px 8px 6px; }
+  .passo { min-width: 92px; }
+  .carta { padding: 4px 8px 6px; gap: 3px; }
+  .acao .desc { font-size: 12px; }
+  #topo { gap: 8px; }
+  #topo h1 small, #topo h1 span { display: none; }
+  #topo select { max-width: 230px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
