@@ -7531,3 +7531,15 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Conferido no jogo** nas duas janelas (tudo certo; um relógio só; sem rolagem vazia). **Em aberto, decisão do
   Jean:** o ferreiro (~55 px, a escala da referência) é bem maior na tela que a Ilse e o mercador. **Aguarda o Jean;
   nada integrado.** Não começados: o reforço/encantamento, outros interiores, o Grimório, a expansão narrativa.
+
+### 25/10/2026 (data do computador local) — A forja H aprovada em parte, a H2 (o olho) e a skill de interiores
+
+- **O Jean aprovou na H** a oficina, o enquadramento, o corpo, a barriga, o estilo e o movimento, e manteve a escala do
+  ferreiro. **A H2** (`ferramentas/prototipos/hud/forja/h2/`, `forja-h2.js`, `folha-rosto-h2.png`; `demo.bat`, o botão
+  H2 primeiro) ajusta só o olho: um pixel mais para trás, a órbita entre a ponte do nariz e o olho, decidido no tamanho
+  real nas poses do alto, do golpe e do rebote. Conferida no jogo nas duas janelas. **Aguarda o Jean; nada integrado.**
+- **A skill `arte-cenas-fenda`** (`.claude/skills/arte-cenas-fenda/SKILL.md` e `forja.md`): o processo dos interiores e
+  dos personagens animados de cena (as três aprovações, o levantamento, a referência de composição separada da de
+  acabamento, a construção do ambiente, a escala por enquadramento, a animação pelos apoios, as fontes e a validação,
+  os erros da forja). A skill de itens aponta para ela. A taverna é um uso futuro; a ordem do plano não mudou (depois
+  da forja, a etapa 4, o reforço e o encantamento).
