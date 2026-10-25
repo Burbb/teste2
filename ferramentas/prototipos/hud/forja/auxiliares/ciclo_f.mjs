@@ -1,4 +1,4 @@
-// O ciclo da F no jogo de verdade (cenario_forja.py com PROPOSTA=f): entra na forja e fotografa a arte do topo logo
+// O ciclo da F (ou da G, com VERSAO=g) no jogo de verdade (cenario_forja.py): entra na forja e fotografa a arte do topo logo
 // depois de cada passo do relógio da vista, por dois ciclos (106 fotos), a 1920×945 e a 1280×720, e confere que há um
 // relógio só, a 100 ms (a animação não acumula nem acelera). A foto leva tempo: umas chegam um passo depois (o desenho
 // de cada quadro, um a um, é conferido no exportar_f.py --conferir). Grava as 53 primeiras em
@@ -14,6 +14,7 @@ const SAIDA = path.join(aqui, "..", "capturas");
 mkdirSync(SAIDA, { recursive: true });
 const espera = (ms) => new Promise((r) => setTimeout(r, ms));
 const PY = process.env.PYTHON || (process.platform === "win32" ? "python" : "python3");
+const VERSAO = process.env.VERSAO || "f";  // f ou g
 let falhas = 0;
 const conferir = (ok, msg) => { console.log(`  ${ok ? "ok" : "FALHOU"}  ${msg}`); if (!ok) falhas++; };
 
@@ -22,7 +23,7 @@ for (const [jan, W, H] of [["1920", 1920, 945], ["1280", 1280, 720]]) {
   console.log(`== ${jan}`);
   // uma campanha nova por janela (a outra ficou dentro da forja)
   const proc = spawn(PY, [path.join(aqui, "cenario_forja.py")], { cwd: raiz,
-    env: { ...process.env, VELOCIDADE: "rapido", PYTHONPATH: raiz, PYTHONIOENCODING: "utf-8", PROPOSTA: "f" } });
+    env: { ...process.env, VELOCIDADE: "rapido", PYTHONPATH: raiz, PYTHONIOENCODING: "utf-8", PROPOSTA: VERSAO } });
   let url = null;
   proc.stdout.on("data", (d) => { const m = String(d).match(/http:\S+/); if (m) url = m[0]; });
   for (let k = 0; k < 400 && !url; k++) await espera(100);
@@ -51,7 +52,7 @@ for (const [jan, W, H] of [["1920", 1920, 945], ["1280", 1280, 720]]) {
   }
   const saltos = fotos.slice(1).filter((f) => f.salto !== 1).length;
   console.log(`   ${saltos} de 105 fotos chegaram depois de mais de um passo (a foto leva tempo; o desenho de cada quadro é conferido no exportar_f.py)`);
-  fotos.forEach((f, i) => { if (i < 53) writeFileSync(path.join(SAIDA, `ciclo-${jan}-${String(i).padStart(3, "0")}.png`), f.img); });
+  fotos.forEach((f, i) => { if (i < 53) writeFileSync(path.join(SAIDA, `ciclo-${VERSAO === "f" ? "" : VERSAO + "-"}${jan}-${String(i).padStart(3, "0")}.png`), f.img); });
   const intervalos = await p.evaluate(() => window.__passos.slice(-60).map((t, i, a) => (i ? t - a[i - 1] : 0)).slice(1));
   const medio = intervalos.reduce((a, x) => a + x, 0) / intervalos.length;
   conferir(Math.abs(medio - 100) < 15, `um relógio só, a 100 ms (média ${medio.toFixed(1)} ms)`);

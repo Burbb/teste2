@@ -12,7 +12,8 @@
   window.__CENAS.forja_a = window.ForjaArte.a;
   window.__CENAS.forja_b = window.ForjaArte.b;
   if (window.ForjaArte.r) window.__CENAS.forja_r = window.ForjaArte.r;  // a B refinada (forja-r.js)
-  if (window.ForjaArte.f) window.__CENAS.forja_f = window.ForjaArte.f;  // a transposição fiel (forja-f.js), a candidata
+  if (window.ForjaArte.f) window.__CENAS.forja_f = window.ForjaArte.f;  // a transposição fiel (forja-f.js)
+  if (window.ForjaArte.g) window.__CENAS.forja_g = window.ForjaArte.g;  // a F corrigida, na arte do jogo (forja-g.js), a candidata
 
   // O ponto do ferreiro não tem uma ação só (são até três peças): o clique, o Enter ou o espaço nele levam o foco ao
   // primeiro cartão de reforço que se pode pagar (ou ao primeiro), com a página rolando até ele. Só no protótipo: na

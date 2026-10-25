@@ -239,3 +239,80 @@ linha do tempo e as faíscas).
   têm a borda da redução, não um contorno escolhido); o remendo atrás do ferreiro, que só aparece entre as poses, é
   pedra lisa; a espada virando na pausa continua sutil (como na R). **Aguarda a aprovação do Jean; a forja não foi
   integrada.**
+
+## A G: a F corrigida, na arte do jogo, a candidata (25/10/2026; protótipo, nada no jogo)
+
+A F não foi aprovada. O Jean manteve o design do ferreiro, pediu os apoios e as ligações da animação corrigidos e o
+cenário reconstruído na linguagem dos ambientes aprovados do jogo (a imagem gerada continua só como composição).
+A F fica como estava (`f/`, `forja-f.js`); a G mora em `g/` e `forja-g.js`. Folhas: `folha-forja-g.png` (F × G no jogo,
+com os mesmos dados, nas duas janelas), `folha-estilo-g.png` (a G ao lado da capela, da prisão da Ilse, da cidade e do
+mercado, como o jogo os mostra a 1920), `folha-correcoes-g.png` (F × G nos mesmos quadros: os pés, as pernas, a mão, a
+tenaz e a espiga) e `folha-movimento-g.png`. A demonstração: `demo.bat` (o botão G vem primeiro).
+
+### Os defeitos da animação: as causas e as correções
+
+Reproduzidos na F, quadro a quadro (`folha-correcoes-g.png`, a coluna F):
+
+- **As pernas se descolavam no alto:** o tronco inteiro subia 1 px (`tronco: -1`) e as pernas ficavam; abria uma linha
+  vazia entre o avental e a calça. **Correção:** o tronco se divide no cotovelo (`CORTE_TRONCO`, y 52): de lá para cima
+  (os ombros, o bíceps, o peito, a cabeça e a barba) acompanha o golpe; de lá para baixo (o antebraço, a luva, a
+  barriga, o avental) fica. No golpe a linha do cotovelo se sobrepõe; no alto ela se repete. O corpo absorve o
+  movimento e as pernas nunca se separam.
+- **O pé atravessava o toco e os pés eram grandes:** a bota da frente tinha 13 px e começava em x 152, por cima da
+  borda do toco (x 153). **Correção:** as pernas redesenhadas com o tornozelo e botas de 9 e 10 px; a da frente começa
+  em x 155, ao lado do toco, sem cobri-lo. Os pés não saem do chão em nenhuma pose.
+- **A espiga subia com o balanço e a mão não segurava a tenaz:** a tenaz era desenhada em `59 + tronco` (subia e descia
+  com o tronco, e as garras saíam da espiga) e terminava no contorno da luva. **Correção:** a tenaz é do ferreiro,
+  parada: as garras fechadas na espiga (x 148) e as hastes entrando na luva, com os dedos por cima e por baixo
+  (`tenaz` em `ferreiro_g.py`); a lâmina fica deitada na bigorna. Na pausa, a espada vira de lado com as garras nela,
+  separada do balanço dos golpes.
+- O martelo encosta na lâmina no mesmo ponto em todos os golpes, e as faíscas nascem ali (x 141, y 58).
+
+O ritmo continua o da R (53 quadros de 100 ms). Nenhum deslocamento precisou mudar além desses.
+
+### O cenário: o que foi reconstruído
+
+Antes, as cenas aprovadas foram fotografadas no jogo, no tamanho real (`auxiliares/estilo.mjs`). O que elas
+compartilham, e a G segue: a pedra em blocos regulares com as juntas um tom abaixo (quase sem textura); a madeira, o
+ferro e o tijolo em dois ou três tons chapados (a aresta acesa, o lado escuro, o brilho de um pixel); os objetos lidos
+pela silhueta e pelo valor, quase sem contorno preto; a luz feita por cima (o halo quente em anéis em volta da fonte e
+a sala escurecendo em degraus pontilhados longe dela, como a tocha do ossuário e a lanterna da sacristia); uma paleta
+escura e pouco saturada com o acento quente do fogo. Uma particularidade de uma cena só ficou de fora: o céu da cidade e
+a água da Ilse.
+
+**Tudo o que é fundo foi redesenhado em `g/oficina_g.py`, nada vem da redução:** a parede em blocos, o teto, o chão de
+lajes; o esteio grande com as duas mãos-francesas subindo até a viga, o esteio e o batente da porta; a porta com o dia
+frio (a torre com a cruz, os telhados, a neve) e a folha aberta com as ferragens; a prateleira com a vela e os potes, a
+tenaz e a argola penduradas, o barril com o bloco de ferro, o atiçador e a pá, a tina do carvão com as brasas; a
+fornalha (a chaminé e a coifa simétricas no eixo da boca, a borda rebitada, o tijolo, as aduelas do arco, a fuligem, o
+parapeito), o balde com as tenazes e a corrente; o suporte de ferramentas e a prateleira dos cabos; a lanterna presa ao
+esteio; a tina de têmpera com a água e a tenaz; as prateleiras do armazém (as caixas, o baú, os lingotes, o elmo, a
+caixa), o cavalete das espadas apoiado na bancada (os montantes, a trave e o trilho), a bancada com o martelo, as
+barras e o pano, o saco e o barril embaixo; as silhuetas da frente (o jarro, as caixas, o rebolo, a roda). As
+correções pedidas no caminho: a coifa estava torta (a chaminé e a coifa em outro eixo que a borda), havia objetos no
+ar e encostados (o cavalete sem os pés, as barras tocando as pontas das espadas, uma ripa e uma roldana soltas) e as
+mãos-francesas não faziam sentido (uma descia até o suporte de ferramentas).
+
+**O ferreiro, a bigorna e o toco** passaram para o contorno escuro quente da oficina (não o preto), e a bigorna e o toco
+para as cores da oficina; o desenho deles é o da F. O ferreiro continua com mais tons que o resto da cena (o rosto, a
+barba, o corpo): é o centro da cena, e o mercador do mercado também tem mais cuidado que a banca em volta.
+
+### Conferido
+
+- `g/exportar_g.py --conferir`: os 53 quadros montados das camadas exportadas da fonte (`g/aseprite/forja-g.aseprite`)
+  iguais ao desenho em código.
+- `auxiliares/fotografar.mjs` (VERSOES=f,g), **as duas janelas, tudo certo**: os nomes Ferreiro e Saída à vista, fora
+  do ferreiro e da ação; os três cartões; o Ferreiro levando ao cartão; o Tab; um reforço de verdade; a Saída e a
+  volta; entrar de novo sem relógio novo; o Esc; sem erros; o movimento reduzido parado.
+- `auxiliares/ciclo_f.mjs` (VERSAO=g): dois ciclos inteiros fotografados no jogo, um por passo do relógio, nas duas
+  janelas: um relógio só, a 100 ms.
+- **Sem rolagem vazia:** a 1280×720, a F e a G deixavam 15 px de página para rolar abaixo dos cartões (o respiro de
+  baixo da folha). A forja com ambiente fica sem ele, como o mercado (`forja.css`); agora 0 px nas duas.
+
+### O que continua
+
+- Nada do fundo vem da redução. O ferreiro e a bigorna foram desenhados à mão sobre a leitura da referência (na F) e
+  continuam assim.
+- A luz da G é feita por cima com transparência (como nas cenas do jogo): as cores finais não ficam presas à paleta.
+- A espada virando na pausa continua sutil.
+- **Aguarda a avaliação do Jean; nada integrado.**
