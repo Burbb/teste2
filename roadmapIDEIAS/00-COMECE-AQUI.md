@@ -7471,3 +7471,17 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   trabalho e B · o interior da oficina, no jogo pelo sistema de ambientes da capela (`ferramentas/prototipos/hud/forja/`,
   `folha-forja.png`, `demo.bat` na porta 8775, campanha temporária). Recomendação: B. Sem integração; o reforço e o
   encantamento (etapa 4), outros interiores, o Grimório e a expansão narrativa não começaram.
+
+### 25/10/2026 (data do computador local) — A forja: a B refinada (R), com o ferreiro forjando (protótipo)
+
+- **O Jean escolheu desenvolver a B** (A e B ficam como histórico). A candidata R em
+  `ferramentas/prototipos/hud/forja/forja-r.js` (LEIA-ME, seção "A B refinada (R)"; `folha-forja-r.png`, B × R no jogo;
+  `folha-movimento.png`, as poses e o ciclo; `demo.bat`, porta 8775): a oficina por zonas (a entrada fria, a tina, a
+  bigorna e os martelos, a fornalha com o carvão, as tenazes e a fuligem, o armazém) e o ferreiro novo, gordo, de barba
+  grande e cabelo grisalho, forjando uma espada num ciclo de 5,3 s (o alto segurado, a descida rápida, o golpe com o
+  tronco afundando, as faíscas no contato, o rebote, a pausa da tenaz); com movimento reduzido, a pose parada.
+- **Pesquisa:** o André de Dark Souls (um GIF do Tenor) e o Blacksmith Craft da Craftpix, observados quadro a quadro;
+  as outras referências só pela página, registradas como tal.
+- **Conferido no jogo** nas duas janelas (os pontos, os cartões, o reforço, a saída e a volta, sem relógio novo ao
+  entrar de novo, o movimento reduzido). **Aguarda o Jean; nada integrado.** Não começados: o reforço/encantamento,
+  outros interiores, o Grimório, a expansão narrativa; a etapa 2 segue concluída.

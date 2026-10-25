@@ -1390,6 +1390,11 @@ interação. Começar com as regras existentes. A arte não depende de aprovar p
 da saída) e duas direções no jogo, A · a bancada de trabalho e B · o interior da oficina, pelo sistema de ambientes da
 capela (o quadro de cima e os pontos Ferreiro e Saída), com o balcão e o reforço de hoje embaixo. Recomendação: B.
 Só no protótipo (`ferramentas/prototipos/hud/forja/`), aguardando o Jean; nada integrado.
+**O Jean escolheu desenvolver a B (25/10/2026):** a B refinada (R), a candidata, em `forja-r.js`: a oficina
+reconstruída por zonas e um ferreiro novo (gordo, a barba grande, o cabelo grisalho, concentrado) forjando uma espada
+num ciclo animado com o ritmo observado no André de Dark Souls (o alto segurado, a descida rápida, o peso no golpe, as
+faíscas no contato, a pausa da tenaz); com movimento reduzido, a pose parada. A e B ficam como histórico. Folhas:
+`folha-forja-r.png` (B × R no jogo) e `folha-movimento.png` (as poses). Aguardando o Jean; nada integrado.
 
 ## 4. Protótipo do reforço e encantamento
 
@@ -1540,8 +1545,9 @@ volta à pauta quando essa expansão exigir; não é uma migração de engine.
    revisão narrativa e a expansão (etapa 9). **Opcional:** a dica "qualquer tecla adianta o texto" e o fio de
    leitura. A lista de saves (~9 ms por save no motor) fica sem índice, por decisão do Jean. **A etapa 3 começou**
    (item 3): o levantamento da forja e duas direções, A (a bancada de trabalho) e B (o interior da oficina),
-   recomendação B, só no protótipo (`ferramentas/prototipos/hud/forja/`, `folha-forja.png`, `demo.bat` na porta
-   8775), **aguardando a aprovação do Jean**. O reforço e encantamento (etapa 4), outros interiores, o Grimório e a
+   recomendação B; o Jean escolheu desenvolver a B: **a B refinada (R), com o ferreiro forjando uma espada em animação,
+   aguardando a aprovação do Jean**, só no protótipo (`ferramentas/prototipos/hud/forja/`, `folha-forja-r.png`,
+   `folha-movimento.png`, `demo.bat` na porta 8775). O reforço e encantamento (etapa 4), outros interiores, o Grimório e a
    expansão narrativa não começam antes do pedido.
 5. **Retomar a etapa 2** e **seguir 3–7**, como na sequência abaixo; **etapa 8** com habilidades, talentos, Grimório e
    árvore no mesmo ciclo; **etapa 9**, a campanha; **depois do plano**, a avaliação de refatoração.
