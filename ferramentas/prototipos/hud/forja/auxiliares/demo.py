@@ -26,7 +26,7 @@ CASOS = {"ouro": ("O Vau com 300 de ouro (os três reforços pagáveis)", "Cliqu
 
 PORTA = int(os.environ.get("DEMO_PORTA", "8775"))
 PAINEL = f"http://127.0.0.1:{PORTA}/"
-VERSOES = ["r", "b", "a", ""]
+VERSOES = ["f", "r", "b", "a", ""]
 trava = threading.Lock()
 atual = {"proc": None, "rotulo": ""}
 

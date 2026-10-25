@@ -15,3 +15,6 @@ html[data-forja] #cena.com-ambiente .forja .loja-topo .lore { font-size: 16px; }
 html[data-forja] #cena.com-ambiente .forja h4 { margin-top: 0.6em; }
 html[data-forja] #cena.com-ambiente .forja .servicos { grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); }
 html[data-forja] #cena.com-ambiente .forja .servico { grid-template-columns: 52px 1fr auto; gap: 0 10px; }
+/* A F (a transposição fiel): o quadro dela tem 96 de altura (o das paisagens, 72), na proporção da referência; a vista
+   cresce na mesma proporção, sem esticar a arte, com o teto de 36% da altura da janela. */
+html[data-forja="f"] #cena.com-ambiente:has(#pontos-cena[data-cena="forja_f"]) #vista { height: calc(min(100cqw * 96 / 320, 36vh) + var(--P) * 12); }

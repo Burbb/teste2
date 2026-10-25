@@ -149,3 +149,93 @@ iguais). Na bancada (`auxiliares/bancada-r.html`), o ciclo inteiro e as poses.
   postura leem a 1920; a 1280 a barba fica pequena, mas a silhueta e o golpe continuam legíveis. A cabeça de perfil
   sobre o corpo a três quartos é uma escolha de leitura. A parede entre a porta e a bigorna fica calma de propósito.
 - **Aguarda a aprovação do Jean; a forja não foi integrada.**
+
+## A transposição fiel (F), a candidata (25/10/2026; protótipo, nada no jogo)
+
+O Jean gostou da fluidez, do ritmo e da sensação de trabalho da R, mas não do desenho do ferreiro (a anatomia e as
+proporções estranhas, a barba como um saco no rosto, o corpo caricato) e mandou uma imagem gerada como a referência
+principal da aparência (`ferramentas/arte/referencias/forja/`, com a origem e o hash). A F transpõe essa imagem: a
+mesma oficina, o mesmo ferreiro (careca, gordo e forte, a barba trançada com a presilha) e o **ritmo da R sem mudança**
+(a mesma linha do tempo: 53 quadros de 100 ms). A R, a A e a B ficam como histórico. Folhas: `folha-forja-f.png` (a
+referência × a F, a sobreposição das duas, a R × a F no jogo nas duas janelas, a F em tamanho real) e
+`folha-movimento-f.png` (os estados ampliados, o ciclo inteiro como o jogo mostrou, o movimento reduzido). A
+demonstração: `demo.bat` (o botão F vem primeiro).
+
+### O quadro mais alto (96)
+
+A referência é 3 × 1; nos 320×72 das paisagens, o ferreiro e a fornalha não cabiam sem cortar a composição. A F usa
+**320×96** (a redução de 320×107 sem as 4 linhas de cima, só a viga, e as 7 de baixo, a ponta das silhuetas). O pixel
+continua o do jogo (320 de largura; 3,33 a 1920, 2,22 a 1280); só a altura da vista cresce, na mesma proporção, sem
+esticar: **343 px a 1920×945** (a R: 232) e **236 px a 1280×720** (a R: 182). Os cartões continuam à vista sem rolar
+nas duas; a 1280 sobram 15 px de página para rolar abaixo deles (o fim dos cartões em 606, o da página em 627; a R não
+rolava). Só no cenário da demonstração, `cenario_forja.py` faz a vista (`vista.js`) usar a altura do ambiente à vista
+(cada troca conferida: se o `vista.js` mudar, o cenário para) e `forja.css` dá a altura nova só com o ambiente da F
+(`:has(... forja_f)`); na integração, a vista ganharia isso de verdade.
+
+### Como a arte é feita (as fontes e o fluxo)
+
+Em `f/`: `paleta_f.py` (as rampas por material), `base_f.py` (o fundo), `ambiente_f.py` (a bigorna, a espada, a tenaz,
+o fogo, o primeiro plano), `ferreiro_f.py` (o ferreiro e as poses), `cena_f.py` (a cena montada quadro a quadro, a
+linha do tempo e as faíscas).
+
+- **O fundo** é a referência reduzida por área à grade do jogo, realçada (a média por bloco tira contraste e cor), em
+  superpixels (os planos inteiros, as bordas no lugar) e mapeada na paleta. Antes da redução, a área do ferreiro é
+  repintada na resolução da referência com a pedra e o chão de perto, para o remendo ter a mesma textura; o suporte de
+  ferramentas continua atrás da cabeça dele, desenhado. **É a parte que mais deve à redução**: a porta, a fornalha, as
+  vigas, as prateleiras e a bancada vêm da referência assim, limpas pelos superpixels, sem redesenho objeto a objeto.
+- **À mão:** o ferreiro inteiro (as grades da cabeça e da barba, do tronco com o avental e o braço de perto, das
+  pernas; o braço do martelo em cada pose), lido na referência ampliada com a grade do jogo por cima; a bigorna e o
+  toco; a lâmina e a tenaz. **Em código, com desenho escolhido:** o martelo (um objeto rígido: o cabo e a cabeça
+  atravessada, a face virada para a luz mais clara), o fogo (o fundo da boca, seis línguas que mudam de altura e
+  balanço em 4 quadros, o leito de brasas) e as faíscas (a mesma conta da R).
+- **A fonte em camadas:** `python f/desenhar_f.py` gera `f/aseprite/forja-f.aseprite` (320×96; as camadas fundo, fogo,
+  bigorna, espada, ferreiro e frente; um quadro por estado, com a tag: repouso, sobe1, sobe2, alto, desce, golpe, volta,
+  ajuste, ajuste_virada). **Daqui em diante a fonte é o .aseprite:** os retoques se fazem nele, e o script se recusa a
+  sobrescrevê-lo sem `--refazer`. `python f/exportar_f.py` tira dele as camadas do jogo (`f/camadas/`: fundo, bigorna,
+  frente, e as tiras fogo, espada e ferreiro); `--conferir` monta os 53 quadros com elas e compara com `cena_f.py`
+  (hoje: 53 de 53 iguais; depois de um retoque, as diferenças serão o retoque). As faíscas ficam no código.
+- **No jogo:** `forja-f.js` só escolhe o quadro de cada camada pelo relógio das cenas e desenha as faíscas.
+
+### O ferreiro e o golpe
+
+- **Da referência:** a cabeça careca (11 px de largura, com o nariz), o rosto à mostra e separado da barba (a
+  sobrancelha pesada, o olho, o nariz, a orelha), a barba com raiz nas bochechas e no queixo, mais larga que o rosto,
+  em mechas, afunilando numa trança com a presilha de ferro e a ponta solta; o pescoço e o trapézio, o ombro enorme e o
+  bíceps do braço de perto, nu; a braçadeira e a luva segurando a tenaz; a barriga redonda sob o avental, que acompanha
+  o corpo; a túnica escura nas costas com a amarra do avental; as pernas firmes e as botas grandes. Escala de
+  personagem no ambiente: **~55 px dos pés ao alto da cabeça**, o martelo no alto a 70 (a R: 44).
+- **As mãos são simples, sem dedos**, no padrão das da Ilse e do mercador (pedido do Jean durante esta entrega); os
+  dois dedos que faltam continuam no texto do balcão. O antebraço da tenaz tem o porte do bíceps (~8 px; também pedido
+  dele: estava fino).
+- **O ciclo:** o da R, quadro a quadro (o repouso na lâmina, sobe em dois tempos, o alto segurado de 200 a 400 ms, a
+  descida num quadro com o rastro, o golpe com o tronco afundando 1 px e as faíscas no contato, o rebote 3 px acima, o
+  repouso variando; quatro golpes e a pausa de 600 ms em que a tenaz vira a espada). As poses foram refeitas para o
+  corpo novo: em cada uma, o punho fechado no cabo, a braçadeira, o cotovelo e o bíceps entrando atrás da barba (no
+  golpe e no rebote, o antebraço desce do lado da barba até o punho). A cabeça e a barba descem um quadro depois do
+  tronco no rebote; o avental vai com o tronco; os pés não saem do lugar. A face do martelo encosta na lâmina sempre no
+  mesmo ponto, onde as faíscas nascem. Movimento reduzido: a pose do alto, parada, o fogo parado.
+
+### Conferido
+
+- `auxiliares/fotografar.mjs` (VERSOES=r,f; o jogo de verdade, campanha temporária), **as duas janelas, tudo certo**:
+  a arte no topo; os nomes Ferreiro e Saída à vista e dentro da arte (o Ferreiro na parede à direita dele, longe da
+  cabeça, da barba, do martelo e da espada; a Saída na porta); os três cartões à vista; o Ferreiro levando o foco ao
+  cartão; o Tab nos pontos; um reforço de verdade (300 → 260); a arte depois do reforço; a Saída e a volta; entrar de
+  novo sem relógio novo; o Esc; sem erros; o movimento reduzido parado (duas fotos iguais).
+- `auxiliares/ciclo_f.mjs`: dois ciclos inteiros (106 quadros) fotografados no jogo, um por passo do relógio, nas duas
+  janelas: **um relógio só, a 100 ms**; as 53 primeiras fotos estão na folha do movimento. Regras, preços, o reforço até
+  +5 e os serviços não mudaram; não há som novo.
+
+### A avaliação (o que se preservou e o que se simplificou)
+
+- **Preservado:** a composição inteira da referência (a porta fria, a fornalha atrás e à esquerda, o ferreiro no meio
+  voltado para a espada, a bigorna no toco, o armazém e a bancada, as silhuetas da frente; a sobreposição na folha mostra
+  os planos no mesmo lugar), o contraste do fogo com o escuro, as proporções do ferreiro (a cabeça, a barba trançada, o
+  ombro, a barriga, as pernas) e o ritmo da R.
+- **Simplificado:** as texturas miúdas (as pedras, as tábuas, as ferramentas da parede) ficam na resolução do jogo, como
+  manchas limpas; as mãos são blocos; a barba tem as mechas e a trança, não cada fio; o braço do martelo no alto é menor
+  e menos musculoso que o da referência; a bigorna e o toco são mais simples (a face sem a textura).
+- **Os limites:** o fundo vem da redução (limpa, mas não redesenhada objeto a objeto: a porta, a coifa e as prateleiras
+  têm a borda da redução, não um contorno escolhido); o remendo atrás do ferreiro, que só aparece entre as poses, é
+  pedra lisa; a espada virando na pausa continua sutil (como na R). **Aguarda a aprovação do Jean; a forja não foi
+  integrada.**
