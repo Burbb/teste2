@@ -141,6 +141,16 @@ Os atuais Ataque, Poder, Agilidade e Defesa não são uma lista definitiva de at
 
 A decisão de Agilidade definir a iniciativa inicial fixa continua válida; discutir nomes ou derivações não autoriza ordem dinâmica nem ações extras.
 
+#### Complemento acordado: capacidades, potência e liberdade de build
+
+As capacidades levantadas para organizar o debate são força física, agilidade, resistência corporal, conhecimento, percepção, vontade e presença social. **Não são sete atributos aprovados.** Quantidade, nomes e a divisão entre atributos e perícias continuam abertos. Não fundir capacidades apenas para reduzir a lista; distinguir características naturais de conhecimentos/práticas aprendidas quando isso produzir escolhas úteis.
+
+**Princípio acordado:** atributos devem favorecer maneiras diferentes de jogar, evitando que um único atributo obrigatório concentre quase todo o investimento de uma classe.
+
+A direção aceita para aprofundar é obter a potência básica das habilidades, do nível e do equipamento, com atributos influenciando aspectos específicos de seu uso. Isso ainda não fixa fórmula, peso de cada fonte ou elimina qualquer contribuição de atributos ao dano. Intelecto não deve se tornar automaticamente o atributo universal de toda magia, cura e invocação, apenas renomeando o Poder atual.
+
+Aplicar o mesmo critério a personagens físicos e sobrenaturais: não exigir que o guerreiro invista quase tudo em Força para funcionar enquanto o mago recebe sua potência sem custo equivalente. Comparar alternativas reais de construção, incluindo personagens mais resistentes, perceptivos ou disciplinados. A intenção é permitir variações viáveis sem eliminar especialização nem tornar todas as distribuições equivalentes.
+
 **Antes de enviar o próximo prompt ao Claude**, concluir o alinhamento necessário sobre atributos. O protótipo isolado de combate permanece como próxima entrega pretendida, mas o prompt preparado anteriormente ainda não foi enviado e precisa incorporar esta direção. Esta revisão não autoriza implementar atributos novos.
 
 ## 4. Vida útil das peças — direção acordada
@@ -224,6 +234,8 @@ Depois de definida a direção suficiente, o Claude poderá verificar implicaç�
 | Atributos para capacidades dentro e fora do combate | Direção acordada |
 | Valores derivados para leitura clara do desempenho em combate | Direção acordada |
 | Lista, nomes, quantidade e fórmulas dos atributos | Em debate; exemplos não são catálogo aprovado |
+| Evitar atributo único obrigatório por classe | Princípio acordado, aplicado a físicos e sobrenaturais |
+| Potência básica por habilidade, nível e equipamento; atributos modulam o uso | Direção aceita para aprofundar; fórmulas e pesos abertos |
 | Kit limitado e investimento seletivo | Direção acordada |
 | Cinco habilidades + uma ultimate | Hipótese, não número fechado |
 | Caminhos curtos de modificadores por habilidade | Direção acordada; três passos é hipótese |
