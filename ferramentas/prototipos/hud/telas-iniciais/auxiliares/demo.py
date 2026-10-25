@@ -1,6 +1,6 @@
 """DEMONSTRAÇÃO das telas iniciais (protótipo, 24/10/2026; nada no jogo): um painel local para ver o título, os saves
-e a criação do personagem no jogo de verdade, hoje e com a criação em cartões (R), sem tocar nos seus saves (cada
-versão roda num processo próprio, com uma pasta de saves temporária).
+e a criação do personagem no jogo de verdade, hoje, com a criação em cartões (R) e em etapas (R2, a candidata), sem
+tocar nos seus saves (cada versão roda num processo próprio, com uma pasta de saves temporária).
 
     python ferramentas/prototipos/hud/telas-iniciais/auxiliares/demo.py      # painel em http://127.0.0.1:8770/
 
@@ -25,7 +25,7 @@ CASOS = {"telas": ("O título, os saves (um da campanha, um do mundo gerado) e a
 
 PORTA = int(os.environ.get("DEMO_PORTA", "8770"))
 PAINEL = f"http://127.0.0.1:{PORTA}/"
-VERSOES = ["", "r"]
+VERSOES = ["", "r", "r2"]
 trava = threading.Lock()
 atual = {"proc": None, "rotulo": ""}
 
@@ -71,8 +71,10 @@ a.b.p{{border-color:#f2c94c;color:#f2c94c;font-weight:bold}} a.b:hover{{backgrou
 <h1>Demonstração das telas iniciais (protótipo, nada no jogo)</h1>
 <p class="nota">Cada botão começa do zero, numa pasta de saves temporária (os seus saves não são tocados). No título,
 "Carregar jogo" mostra os dois saves: o do mundo gerado está marcado e, ao abrir, explica que não abre mais. "Novo
-jogo" leva à criação: na R, a classe e o modo em cartões (as teclas 1, 2, 3 e o Esc continuam). No canto de baixo:
-"repetir" e "painel".</p>
+jogo" leva à criação: na R, a classe e o modo em cartões (as teclas 1, 2, 3 e o Esc continuam); na R2, a
+candidata, a criação em etapas (Nome → Classe → Modo): o clique, as teclas 1–3 e as setas só escolhem; Avançar (ou
+Enter) passa à etapa seguinte; Voltar (ou Esc) revisa sem perder nada; "Começar campanha" começa o jogo. No canto de
+baixo: "repetir" e "painel".</p>
 <table>{''.join(linhas)}</table>
 <p class="nota">Rodando agora: {rodando}</p></body></html>"""
 
