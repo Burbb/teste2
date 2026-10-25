@@ -87,7 +87,7 @@ class TestContrato(unittest.TestCase):
         self.assertIsNone(ab.atual(g))  # sem um vizinho adequado, o quadro espera outra oferta
         self.assertEqual(g.mundo["locais"][capela["local"]]["chave"], "capela_afogada")  # nada muda no contrato
 
-    def test_k1_no_mundo_gerado_tambem_pelo_grafo(self):
+    def test_k1_pelo_grafo(self):
         for seed in range(6):
             g = Jogo(Jogador(), seed=seed, pasta_saves=tempfile.mkdtemp(), hardcore=False)
             g.iniciar("Teste", "guerreiro")

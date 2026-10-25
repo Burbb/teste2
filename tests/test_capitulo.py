@@ -80,7 +80,7 @@ class TestCena(unittest.TestCase):
         missoes.cena_pendente(g)
         self.assertNotIn("Vó Berta", texto(g))
 
-    def test_mundo_gerado_nao_tem_capitulo(self):
+    def test_campanha_nova_sem_capitulo(self):
         g = Jogo(Roteiro(), seed=5, pasta_saves=tempfile.mkdtemp())
         g.iniciar("Teste", "guerreiro")
         self.assertFalse(capitulo.concluido(g))

@@ -105,7 +105,7 @@ class TestCriacao(unittest.TestCase):
         ui.extra_resposta = {"i": 0}  # sem a caixa na resposta, vale como estava (marcada)
         self.assertTrue(ui.ler_caixa())
 
-    def test_mundo_gerado_e_save_antigo_sem_despensa(self):
+    def test_save_antigo_sem_despensa(self):
         g = Jogo(Jogador(), seed=3, pasta_saves=tempfile.mkdtemp())
         g.iniciar("Teste", "guerreiro")
         self.assertIsNone(abertura.estado(g))

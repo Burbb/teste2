@@ -48,7 +48,7 @@ class TestVariantes(unittest.TestCase):
             depois = [(e.nivel, e.max_hp, e.afixo) for e in fn(g)] + [g.rng.random()]
             self.assertEqual(antes, depois)
 
-    def test_mundo_gerado_sem_variante(self):
+    def test_fora_da_capela_sem_variante(self):
         g = Jogo(Roteiro(), seed=5, pasta_saves=tempfile.mkdtemp())
         g.iniciar("Teste", "guerreiro")
         for familia in ("esqueleto", "afogado"):
@@ -125,7 +125,7 @@ class TestFicha(unittest.TestCase):
         self.assertIn(f"  ⚠ {missoes.GOLPE_PREPARADO}", g.ui.ditos)
         g.combate_ativo = None
 
-    def test_ficha_do_mundo_gerado_sem_nota(self):
+    def test_ficha_fora_da_capela_sem_nota(self):
         g = Jogo(Roteiro(), seed=5, pasta_saves=tempfile.mkdtemp())
         g.iniciar("Teste", "guerreiro")
         luta(g, g.grupo("esqueleto", n=2))

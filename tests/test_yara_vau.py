@@ -203,7 +203,7 @@ class TestForaDoVau(unittest.TestCase):
             g = decidida(postura, yara="grupo")
             self.assertEqual(cm.junto(g), [cm.membro(g, "yara")], postura)
 
-    def test_procedural_sem_ausencia(self):
+    def test_sem_a_vigilia_sem_ausencia(self):
         g = Jogo(Roteiro(), seed=5, pasta_saves=tempfile.mkdtemp())
         g.iniciar("Teste", "guerreiro")
         m = cm.recrutar(g, "yara")
