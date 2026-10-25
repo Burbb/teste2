@@ -1,0 +1,60 @@
+/* Os quadros de orientação da abertura guiada, duas propostas (protótipo, 24/10/2026; nada no jogo). Só o acabamento:
+   o posicionamento (encostado, na faixa da luta, acima ou abaixo do controle), a seta (--seta e as classes seta-*),
+   o contorno do controle, os véus, a sequência, os textos e os gestos continuam os de app/orientacao.js. As regras
+   valem com html[data-orientacao="a"] ou "b" (cenarios_orientacao.py, PROPOSTA=a ou b), por cima das de 06. */
+
+/* ---------------------------------------------------------------- A · o quadro da HUD
+   Uma caixa compacta no ferro já aprovado (a face e o fio claro dos botões da HUD), sem moldura grossa: o aro de 1 px,
+   a sombra dura. O "Entendi" é o botão da HUD (a família do Continuar, menor); "Encerrar tutorial", o secundário,
+   em texto, à esquerda. A seta é um degrau de ferro com o fio de latão. */
+html[data-orientacao="a"] .orientacao { max-width: 340px; padding: 10px 12px 9px; font-size: 16px; line-height: 1.4; color: #e8dcc0;
+  background: linear-gradient(#26272c 0 1px, #1c1d21 1px 100%); border: 1px solid #6e5a2c; box-shadow: 0 0 0 1px #000, 3px 3px 0 1px #000; }
+html[data-orientacao="a"] .orientacao b { color: var(--latao-claro); font-weight: 700; }
+html[data-orientacao="a"] .orientacao::before { border-width: 7px; }
+html[data-orientacao="a"] .orientacao.seta-direita::before { left: -15px; top: calc(var(--seta) - 7px); border-right-color: #a88a45; }
+html[data-orientacao="a"] .orientacao.seta-esquerda::before { right: -15px; top: calc(var(--seta) - 7px); border-left-color: #a88a45; }
+html[data-orientacao="a"] .orientacao.seta-baixo::before { top: -15px; left: calc(var(--seta) - 7px); border-bottom-color: #a88a45; }
+html[data-orientacao="a"] .orientacao.seta-cima::before { bottom: -15px; left: calc(var(--seta) - 7px); border-top-color: #a88a45; }
+html[data-orientacao="a"] .orientacao-botoes { justify-content: space-between; gap: 14px; margin-top: 9px; }
+html[data-orientacao="a"] .orientacao-encerrar { order: 1; font-size: 13px; color: #a89e8c; text-decoration: underline; text-underline-offset: 2px; }
+html[data-orientacao="a"] .orientacao-encerrar:is(:hover, :focus-visible) { color: #e8dcc0; }
+html[data-orientacao="a"] .orientacao-encerrar:focus-visible { outline: 2px solid var(--latao-claro); outline-offset: 2px; }
+html[data-orientacao="a"] .orientacao-entendi { order: 2; margin-left: auto; padding: 4px 14px 5px; font-family: var(--texto); font-size: 15px; font-weight: 700;
+  color: #eadbb4; text-shadow: 0 1px 0 #000; background: linear-gradient(#2e3036 0 50%, #24262b 50% 100%); border: 1px solid #8a7038;
+  box-shadow: inset 0 1px 0 #4a4232, 0 1px 0 #000; filter: none; }
+html[data-orientacao="a"] .orientacao-entendi:is(:hover, :focus-visible) { border-color: var(--latao-claro); color: #fff3d6; }
+html[data-orientacao="a"] .orientacao-entendi:focus-visible { outline: 2px solid var(--latao-claro); outline-offset: 2px; }
+html[data-orientacao="a"] .orientacao .o-nota { font-size: 14px; color: #b8ae9c; }
+html[data-orientacao="a"] .orientacao-haste { width: 2px; background: #a88a45; box-shadow: 1px 0 0 #000, -1px 0 0 #000; }
+html[data-orientacao="a"] .orientacao-anel { border: 2px solid var(--latao-claro); }  /* o pulso devagar de hoje fica */
+
+/* ---------------------------------------------------------------- B · a chamada contextual
+   Mais leve: a base escura sem aro, uma barra de latão do lado de onde está o controle (a ligação com ele) e a seta
+   cheia da mesma cor, encostando no controle. O "Entendi" continua um botão (a chamada é interativa, não uma dica de
+   mouse); "Encerrar tutorial" em texto. */
+html[data-orientacao="b"] .orientacao { max-width: 340px; padding: 9px 13px 9px 15px; font-size: 16px; line-height: 1.4; color: #ede2c8;
+  background: #0f0d0b; border: 0; box-shadow: 3px 3px 0 #000; }
+html[data-orientacao="b"] .orientacao b { color: var(--ouro); font-weight: 700; }
+/* a barra de ligação: do lado da seta (a seta a mostra o controle; a barra, o quadro que fala dele) */
+html[data-orientacao="b"] .orientacao::after { content: ""; position: absolute; background: #c9a14a; }
+html[data-orientacao="b"] .orientacao.seta-direita::after { left: 0; top: 0; bottom: 0; width: 3px; }
+html[data-orientacao="b"] .orientacao.seta-esquerda::after { right: 0; top: 0; bottom: 0; width: 3px; }
+html[data-orientacao="b"] .orientacao.seta-baixo::after { left: 0; right: 0; top: 0; height: 3px; }
+html[data-orientacao="b"] .orientacao.seta-cima::after { left: 0; right: 0; bottom: 0; height: 3px; }
+html[data-orientacao="b"] .orientacao:is(.seta-nenhuma, :not([class*="seta-"]))::after { left: 0; top: 0; bottom: 0; width: 3px; }  /* sem controle (o AL): a barra à esquerda */
+html[data-orientacao="b"] .orientacao::before { border-width: 8px; }
+html[data-orientacao="b"] .orientacao.seta-direita::before { left: -16px; top: calc(var(--seta) - 8px); border-right-color: #c9a14a; }
+html[data-orientacao="b"] .orientacao.seta-esquerda::before { right: -16px; top: calc(var(--seta) - 8px); border-left-color: #c9a14a; }
+html[data-orientacao="b"] .orientacao.seta-baixo::before { top: -16px; left: calc(var(--seta) - 8px); border-bottom-color: #c9a14a; }
+html[data-orientacao="b"] .orientacao.seta-cima::before { bottom: -16px; left: calc(var(--seta) - 8px); border-top-color: #c9a14a; }
+html[data-orientacao="b"] .orientacao-botoes { justify-content: space-between; gap: 14px; margin-top: 8px; }
+html[data-orientacao="b"] .orientacao-encerrar { order: 1; font-size: 13px; color: #a89e8c; text-decoration: underline; text-underline-offset: 2px; }
+html[data-orientacao="b"] .orientacao-encerrar:is(:hover, :focus-visible) { color: #ede2c8; }
+html[data-orientacao="b"] .orientacao-encerrar:focus-visible { outline: 2px solid var(--ouro); outline-offset: 2px; }
+html[data-orientacao="b"] .orientacao-entendi { order: 2; margin-left: auto; padding: 3px 14px 4px; font-family: var(--texto); font-size: 15px; font-weight: 700;
+  color: #1a1209; background: var(--ouro); border: 1px solid #000; box-shadow: 2px 2px 0 #000; filter: none; }
+html[data-orientacao="b"] .orientacao-entendi:hover { background: #f6dc8c; }
+html[data-orientacao="b"] .orientacao-entendi:focus-visible { outline: 2px solid #fff3d6; outline-offset: 2px; }
+html[data-orientacao="b"] .orientacao .o-nota { font-size: 14px; color: #b8ae9c; }
+html[data-orientacao="b"] .orientacao-haste { width: 3px; background: #c9a14a; box-shadow: 1px 0 0 #000; }
+html[data-orientacao="b"] .orientacao-anel { border: 2px solid #c9a14a; }

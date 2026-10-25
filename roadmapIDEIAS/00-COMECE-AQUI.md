@@ -7365,3 +7365,16 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   no máximo uma faixa inteira por vez; cliques e teclas não atravessam; o movimento reduzido. `unittest` (696 ok, 1
   pulado), gabarito sem atualizar (nenhuma diferença), pyflakes e fumaça.
 - **Continua pendente, à parte:** o adiantar das faixas (só a queda olha o `pular`).
+
+### 24/10/2026 (data do computador local) — Os quadros de orientação: duas propostas (protótipo, nada no jogo)
+
+- **Onde:** `ferramentas/prototipos/hud/orientacao/` (LEIA-ME com o levantamento; `folha-orientacao.png`; `demo.bat`,
+  painel em http://127.0.0.1:8769/, com estado temporário: os seus saves e o tutorial deles não são tocados).
+- **O levantamento:** os quadros por grupo (a abertura, a luta guiada, a vila, os contratos, o achado e os outros,
+  feridas e fogueira), o alvo de cada um, onde moram, os controles ("Entendi" nas informativas, "Encerrar tutorial"
+  em todos) e quando reaparecem.
+- **As propostas (só o acabamento, por CSS):** A · o quadro da HUD; B · a chamada contextual. Os nove casos nas três
+  versões, a 1920×945 e a 1280×720: dentro da janela, cobrindo 0 px do controle; os gestos iguais aos de hoje.
+- **Recomendação:** B (a ligação com o controle mais clara). Registrados à parte: a ordem do Tab contrária à leitura
+  (como hoje) e o N1 a 1280 de hoje sobre o nome do lugar.
+- **Agora:** a escolha do Jean; nada integrado. Não começados: o menu inicial, a retirada do procedural, o Grimório.

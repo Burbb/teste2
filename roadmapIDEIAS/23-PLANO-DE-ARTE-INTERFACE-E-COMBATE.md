@@ -1325,7 +1325,14 @@ ou mudanças de dados por iniciativa do agente.
   `telas/celebracoes.js`, `css/23-faixas.css`). Os tempos, os sons, os gatilhos e a ordem de sempre (medidos na
   sequência real: os mesmos de antes); a troca do Guardião para o Mestre limpa. A colisão de nome resolvida: os
   rótulos da luta passam a usar `faixa-acao`, com o desenho que já se via (90 instantes medidos, iguais antes e
-  depois). A original, A e B ficam como histórico. **O próximo: os quadros de orientação do tutorial.**
+  depois). A original, A e B ficam como histórico.
+- **Os quadros de orientação, duas propostas em avaliação (24/10/2026, só no protótipo):** em
+  `ferramentas/prototipos/hud/orientacao/` (LEIA-ME com o levantamento dos quadros, gatilhos, alvos, controles e
+  reaparecimento; `folha-orientacao.png`; `demo.bat`). A · o quadro da HUD (a face de ferro, o "Entendi" da família do
+  Continuar) e B · a chamada contextual (a base escura, a barra e a seta douradas do lado do controle). Só o acabamento:
+  a posição, a seta, a sequência, os textos e os gestos são os de hoje. Conferido nos nove casos (no alto, nas
+  laterais, embaixo, na página, no achado, na luta), a 1920×945 e a 1280×720: dentro da janela e sem cobrir o
+  controle; Tab, Enter, clique e "Encerrar tutorial" sem acionar o jogo. Recomendação: B. Aguarda o Jean.
 - **O baú, a A2 em avaliação (24/10/2026, só no protótipo; histórico):** o A escolhido como direção; a A2 refina a tampa, a três
   quartos e o volume, com um 48 próprio para a pilha. A, B e o placeholder como histórico.
 - **O baú em avaliação, primeira rodada (24/10/2026, só no protótipo):** duas propostas para o Baú Trancado em

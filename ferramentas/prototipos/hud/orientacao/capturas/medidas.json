@@ -1,0 +1,1049 @@
+{
+ "medidas": {
+  "1920-atual-a1": {
+   "texto": "Ajuste a velocidade do texto aqui. Atalho: V.",
+   "seta": "seta-baixo",
+   "caixa": [
+    1620,
+    42,
+    290,
+    68
+   ],
+   "alvo": [
+    1747,
+    3,
+    106,
+    34
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 15,
+   "entendi": true,
+   "encerrar": true
+  },
+  "1920-atual-b1": {
+   "texto": "Clique no baú para abrir.",
+   "seta": "seta-baixo",
+   "caixa": [
+    106,
+    686,
+    278,
+    59
+   ],
+   "alvo": null,
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 15,
+   "entendi": false,
+   "encerrar": true
+  },
+  "1920-atual-k2": {
+   "texto": "Clique neste contrato para viajar até Bosque do Moinho.",
+   "seta": "seta-cima",
+   "caixa": [
+    1496,
+    426,
+    318,
+    88
+   ],
+   "alvo": [
+    1509,
+    519,
+    292,
+    79
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 15,
+   "entendi": true,
+   "encerrar": true
+  },
+  "1920-atual-v4": {
+   "texto": "Comitiva abre quem anda com você (Morel): conversar, ver a confiança e mandar para o acampamento.",
+   "seta": "seta-cima",
+   "caixa": [
+    683,
+    732,
+    330,
+    109
+   ],
+   "alvo": [
+    803,
+    846,
+    90,
+    78
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 15,
+   "entendi": true,
+   "encerrar": true
+  },
+  "1920-atual-t1": {
+   "texto": "Você tem 1 ponto de talento. Talentos, na barra de baixo, abre a árvore.",
+   "seta": "seta-cima",
+   "caixa": [
+    473,
+    753,
+    330,
+    88
+   ],
+   "alvo": null,
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 15,
+   "entendi": true,
+   "encerrar": true
+  },
+  "1920-atual-n1": {
+   "texto": "À noite, os inimigos ficam mais fortes, com ou sem tocha. Sem tocha, ser pego de surpresa fica mais provável.",
+   "seta": "seta-baixo",
+   "caixa": [
+    1496,
+    216,
+    318,
+    109
+   ],
+   "alvo": [
+    1509,
+    153,
+    292,
+    58
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 15,
+   "entendi": true,
+   "encerrar": true
+  },
+  "1920-atual-e1": {
+   "texto": "Na troca mostra o que muda (▲ ganha, ▼ perde). Equipar veste o novo e guarda o antigo na mochila; Guardar leva o novo para a mochila.",
+   "seta": "seta-baixo",
+   "caixa": [
+    1027,
+    612,
+    330,
+    100
+   ],
+   "alvo": [
+    1041,
+    458,
+    302,
+    77
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 15,
+   "entendi": false,
+   "encerrar": true
+  },
+  "1920-atual-v2": {
+   "texto": "O Templo recupera sua vida. Seu primeiro atendimento é grátis.",
+   "seta": "seta-baixo",
+   "caixa": [
+    815,
+    410,
+    330,
+    80
+   ],
+   "alvo": [
+    930,
+    143,
+    99,
+    192
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 15,
+   "entendi": false,
+   "encerrar": true
+  },
+  "1920-atual-al": {
+   "texto": "Clique na tela para acelerar a animação.",
+   "seta": "seta-nenhuma",
+   "caixa": [
+    807,
+    321,
+    266,
+    68
+   ],
+   "alvo": null,
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 15,
+   "entendi": true,
+   "encerrar": true
+  },
+  "1920-a-a1": {
+   "texto": "Ajuste a velocidade do texto aqui. Atalho: V.",
+   "seta": "seta-baixo",
+   "caixa": [
+    1600,
+    42,
+    310,
+    84
+   ],
+   "alvo": [
+    1747,
+    3,
+    106,
+    34
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": true,
+   "encerrar": true
+  },
+  "1920-b-a1": {
+   "texto": "Ajuste a velocidade do texto aqui. Atalho: V.",
+   "seta": "seta-baixo",
+   "caixa": [
+    1598,
+    42,
+    312,
+    78
+   ],
+   "alvo": [
+    1747,
+    3,
+    106,
+    34
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": true,
+   "encerrar": true
+  },
+  "1920-a-v2": {
+   "texto": "O Templo recupera sua vida. Seu primeiro atendimento é grátis.",
+   "seta": "seta-baixo",
+   "caixa": [
+    810,
+    410,
+    340,
+    93
+   ],
+   "alvo": [
+    930,
+    143,
+    99,
+    192
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": false,
+   "encerrar": true
+  },
+  "1920-b-v2": {
+   "texto": "O Templo recupera sua vida. Seu primeiro atendimento é grátis.",
+   "seta": "seta-baixo",
+   "caixa": [
+    810,
+    410,
+    340,
+    89
+   ],
+   "alvo": [
+    930,
+    143,
+    99,
+    192
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": false,
+   "encerrar": true
+  },
+  "1920-a-b1": {
+   "texto": "Clique no baú para abrir.",
+   "seta": "seta-baixo",
+   "caixa": [
+    106,
+    686,
+    278,
+    71
+   ],
+   "alvo": null,
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": false,
+   "encerrar": true
+  },
+  "1920-b-b1": {
+   "texto": "Clique no baú para abrir.",
+   "seta": "seta-baixo",
+   "caixa": [
+    106,
+    686,
+    278,
+    67
+   ],
+   "alvo": null,
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": false,
+   "encerrar": true
+  },
+  "1920-a-k2": {
+   "texto": "Clique neste contrato para viajar até Bosque do Moinho.",
+   "seta": "seta-cima",
+   "caixa": [
+    1496,
+    407,
+    318,
+    107
+   ],
+   "alvo": [
+    1509,
+    519,
+    292,
+    79
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": true,
+   "encerrar": true
+  },
+  "1920-b-k2": {
+   "texto": "Clique neste contrato para viajar até Bosque do Moinho.",
+   "seta": "seta-cima",
+   "caixa": [
+    1496,
+    413,
+    318,
+    101
+   ],
+   "alvo": [
+    1509,
+    519,
+    292,
+    79
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": true,
+   "encerrar": true
+  },
+  "1920-a-v4": {
+   "texto": "Comitiva abre quem anda com você (Morel): conversar, ver a confiança e mandar para o acampamento.",
+   "seta": "seta-cima",
+   "caixa": [
+    678,
+    712,
+    340,
+    129
+   ],
+   "alvo": [
+    803,
+    846,
+    90,
+    78
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": true,
+   "encerrar": true
+  },
+  "1920-b-v4": {
+   "texto": "Comitiva abre quem anda com você (Morel): conversar, ver a confiança e mandar para o acampamento.",
+   "seta": "seta-cima",
+   "caixa": [
+    678,
+    718,
+    340,
+    123
+   ],
+   "alvo": [
+    803,
+    846,
+    90,
+    78
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": true,
+   "encerrar": true
+  },
+  "1920-a-t1": {
+   "texto": "Você tem 1 ponto de talento. Talentos, na barra de baixo, abre a árvore.",
+   "seta": "seta-cima",
+   "caixa": [
+    468,
+    734,
+    340,
+    107
+   ],
+   "alvo": null,
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": true,
+   "encerrar": true
+  },
+  "1920-b-t1": {
+   "texto": "Você tem 1 ponto de talento. Talentos, na barra de baixo, abre a árvore.",
+   "seta": "seta-cima",
+   "caixa": [
+    468,
+    740,
+    340,
+    101
+   ],
+   "alvo": null,
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": true,
+   "encerrar": true
+  },
+  "1920-a-n1": {
+   "texto": "À noite, os inimigos ficam mais fortes, com ou sem tocha. Sem tocha, ser pego de surpresa fica mais provável.",
+   "seta": "seta-baixo",
+   "caixa": [
+    1496,
+    216,
+    318,
+    129
+   ],
+   "alvo": [
+    1509,
+    153,
+    292,
+    58
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": true,
+   "encerrar": true
+  },
+  "1920-b-n1": {
+   "texto": "À noite, os inimigos ficam mais fortes, com ou sem tocha. Sem tocha, ser pego de surpresa fica mais provável.",
+   "seta": "seta-baixo",
+   "caixa": [
+    1496,
+    216,
+    318,
+    123
+   ],
+   "alvo": [
+    1509,
+    153,
+    292,
+    58
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": true,
+   "encerrar": true
+  },
+  "1920-a-e1": {
+   "texto": "Na troca mostra o que muda (▲ ganha, ▼ perde). Equipar veste o novo e guarda o antigo na mochila; Guardar leva o novo para a mochila.",
+   "seta": "seta-baixo",
+   "caixa": [
+    1022,
+    612,
+    340,
+    115
+   ],
+   "alvo": [
+    1041,
+    458,
+    302,
+    77
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": false,
+   "encerrar": true
+  },
+  "1920-b-e1": {
+   "texto": "Na troca mostra o que muda (▲ ganha, ▼ perde). Equipar veste o novo e guarda o antigo na mochila; Guardar leva o novo para a mochila.",
+   "seta": "seta-baixo",
+   "caixa": [
+    1022,
+    612,
+    340,
+    134
+   ],
+   "alvo": [
+    1041,
+    458,
+    302,
+    77
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": false,
+   "encerrar": true
+  },
+  "1280-atual-a1": {
+   "texto": "Ajuste a velocidade do texto aqui. Atalho: V.",
+   "seta": "seta-baixo",
+   "caixa": [
+    980,
+    42,
+    290,
+    68
+   ],
+   "alvo": [
+    1119,
+    3,
+    100,
+    34
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 15,
+   "entendi": true,
+   "encerrar": true
+  },
+  "1280-a-a1": {
+   "texto": "Ajuste a velocidade do texto aqui. Atalho: V.",
+   "seta": "seta-baixo",
+   "caixa": [
+    960,
+    42,
+    310,
+    84
+   ],
+   "alvo": [
+    1119,
+    3,
+    100,
+    34
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": true,
+   "encerrar": true
+  },
+  "1280-b-a1": {
+   "texto": "Ajuste a velocidade do texto aqui. Atalho: V.",
+   "seta": "seta-baixo",
+   "caixa": [
+    958,
+    42,
+    312,
+    78
+   ],
+   "alvo": [
+    1119,
+    3,
+    100,
+    34
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": true,
+   "encerrar": true
+  },
+  "1280-atual-v2": {
+   "texto": "O Templo recupera sua vida. Seu primeiro atendimento é grátis.",
+   "seta": "seta-baixo",
+   "caixa": [
+    492,
+    328,
+    330,
+    80
+   ],
+   "alvo": [
+    623,
+    138,
+    68,
+    130
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 15,
+   "entendi": false,
+   "encerrar": true
+  },
+  "1280-a-v2": {
+   "texto": "O Templo recupera sua vida. Seu primeiro atendimento é grátis.",
+   "seta": "seta-baixo",
+   "caixa": [
+    487,
+    328,
+    340,
+    93
+   ],
+   "alvo": [
+    623,
+    138,
+    68,
+    130
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": false,
+   "encerrar": true
+  },
+  "1280-b-v2": {
+   "texto": "O Templo recupera sua vida. Seu primeiro atendimento é grátis.",
+   "seta": "seta-baixo",
+   "caixa": [
+    487,
+    328,
+    340,
+    89
+   ],
+   "alvo": [
+    623,
+    138,
+    68,
+    130
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": false,
+   "encerrar": true
+  },
+  "1280-atual-b1": {
+   "texto": "Clique no baú para abrir.",
+   "seta": "seta-cima",
+   "caixa": [
+    14,
+    525,
+    238,
+    59
+   ],
+   "alvo": null,
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 15,
+   "entendi": false,
+   "encerrar": true
+  },
+  "1280-a-b1": {
+   "texto": "Clique no baú para abrir.",
+   "seta": "seta-cima",
+   "caixa": [
+    14,
+    513,
+    238,
+    71
+   ],
+   "alvo": null,
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": false,
+   "encerrar": true
+  },
+  "1280-b-b1": {
+   "texto": "Clique no baú para abrir.",
+   "seta": "seta-cima",
+   "caixa": [
+    14,
+    517,
+    238,
+    67
+   ],
+   "alvo": null,
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": false,
+   "encerrar": true
+  },
+  "1280-atual-k2": {
+   "texto": "Clique neste contrato para viajar até Bosque do Moinho.",
+   "seta": "seta-cima",
+   "caixa": [
+    1008,
+    407,
+    258,
+    88
+   ],
+   "alvo": [
+    1021,
+    500,
+    232,
+    99
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 15,
+   "entendi": true,
+   "encerrar": true
+  },
+  "1280-a-k2": {
+   "texto": "Clique neste contrato para viajar até Bosque do Moinho.",
+   "seta": "seta-cima",
+   "caixa": [
+    1008,
+    388,
+    258,
+    107
+   ],
+   "alvo": [
+    1021,
+    500,
+    232,
+    99
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": true,
+   "encerrar": true
+  },
+  "1280-b-k2": {
+   "texto": "Clique neste contrato para viajar até Bosque do Moinho.",
+   "seta": "seta-cima",
+   "caixa": [
+    1008,
+    394,
+    258,
+    101
+   ],
+   "alvo": [
+    1021,
+    500,
+    232,
+    99
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": true,
+   "encerrar": true
+  },
+  "1280-atual-v4": {
+   "texto": "Comitiva abre quem anda com você (Morel): conversar, ver a confiança e mandar para o acampamento.",
+   "seta": "seta-cima",
+   "caixa": [
+    381,
+    510,
+    330,
+    109
+   ],
+   "alvo": [
+    505,
+    624,
+    82,
+    77
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 15,
+   "entendi": true,
+   "encerrar": true
+  },
+  "1280-a-v4": {
+   "texto": "Comitiva abre quem anda com você (Morel): conversar, ver a confiança e mandar para o acampamento.",
+   "seta": "seta-cima",
+   "caixa": [
+    376,
+    490,
+    340,
+    129
+   ],
+   "alvo": [
+    505,
+    624,
+    82,
+    77
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": true,
+   "encerrar": true
+  },
+  "1280-b-v4": {
+   "texto": "Comitiva abre quem anda com você (Morel): conversar, ver a confiança e mandar para o acampamento.",
+   "seta": "seta-cima",
+   "caixa": [
+    376,
+    496,
+    340,
+    123
+   ],
+   "alvo": [
+    505,
+    624,
+    82,
+    77
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": true,
+   "encerrar": true
+  },
+  "1280-atual-t1": {
+   "texto": "Você tem 1 ponto de talento. Talentos, na barra de baixo, abre a árvore.",
+   "seta": "seta-cima",
+   "caixa": [
+    280,
+    531,
+    330,
+    88
+   ],
+   "alvo": null,
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 15,
+   "entendi": true,
+   "encerrar": true
+  },
+  "1280-a-t1": {
+   "texto": "Você tem 1 ponto de talento. Talentos, na barra de baixo, abre a árvore.",
+   "seta": "seta-cima",
+   "caixa": [
+    280,
+    512,
+    340,
+    107
+   ],
+   "alvo": null,
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": true,
+   "encerrar": true
+  },
+  "1280-b-t1": {
+   "texto": "Você tem 1 ponto de talento. Talentos, na barra de baixo, abre a árvore.",
+   "seta": "seta-cima",
+   "caixa": [
+    280,
+    518,
+    340,
+    101
+   ],
+   "alvo": null,
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": true,
+   "encerrar": true
+  },
+  "1280-atual-n1": {
+   "texto": "À noite, os inimigos ficam mais fortes, com ou sem tocha. Sem tocha, ser pego de surpresa fica mais provável.",
+   "seta": "seta-cima",
+   "caixa": [
+    1008,
+    69,
+    258,
+    109
+   ],
+   "alvo": [
+    1021,
+    183,
+    232,
+    74
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 15,
+   "entendi": true,
+   "encerrar": true
+  },
+  "1280-a-n1": {
+   "texto": "À noite, os inimigos ficam mais fortes, com ou sem tocha. Sem tocha, ser pego de surpresa fica mais provável.",
+   "seta": "seta-baixo",
+   "caixa": [
+    1008,
+    262,
+    258,
+    152
+   ],
+   "alvo": [
+    1021,
+    183,
+    232,
+    74
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": true,
+   "encerrar": true
+  },
+  "1280-b-n1": {
+   "texto": "À noite, os inimigos ficam mais fortes, com ou sem tocha. Sem tocha, ser pego de surpresa fica mais provável.",
+   "seta": "seta-baixo",
+   "caixa": [
+    1008,
+    262,
+    258,
+    146
+   ],
+   "alvo": [
+    1021,
+    183,
+    232,
+    74
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": true,
+   "encerrar": true
+  },
+  "1280-atual-al": {
+   "texto": "Clique na tela para acelerar a animação.",
+   "seta": "seta-nenhuma",
+   "caixa": [
+    497,
+    319,
+    266,
+    68
+   ],
+   "alvo": null,
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 15,
+   "entendi": true,
+   "encerrar": true
+  },
+  "1280-a-al": {
+   "texto": "Clique na tela para acelerar a animação.",
+   "seta": "seta-nenhuma",
+   "caixa": [
+    488,
+    319,
+    284,
+    84
+   ],
+   "alvo": null,
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": true,
+   "encerrar": true
+  },
+  "1280-atual-e1": {
+   "texto": "Na troca mostra o que muda (▲ ganha, ▼ perde). Equipar veste o novo e guarda o antigo na mochila; Guardar leva o novo para a mochila.",
+   "seta": "seta-baixo",
+   "caixa": [
+    707,
+    496,
+    330,
+    100
+   ],
+   "alvo": [
+    721,
+    342,
+    302,
+    77
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 15,
+   "entendi": false,
+   "encerrar": true
+  },
+  "1280-a-e1": {
+   "texto": "Na troca mostra o que muda (▲ ganha, ▼ perde). Equipar veste o novo e guarda o antigo na mochila; Guardar leva o novo para a mochila.",
+   "seta": "seta-baixo",
+   "caixa": [
+    702,
+    496,
+    340,
+    115
+   ],
+   "alvo": [
+    721,
+    342,
+    302,
+    77
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": false,
+   "encerrar": true
+  },
+  "1280-b-e1": {
+   "texto": "Na troca mostra o que muda (▲ ganha, ▼ perde). Equipar veste o novo e guarda o antigo na mochila; Guardar leva o novo para a mochila.",
+   "seta": "seta-baixo",
+   "caixa": [
+    702,
+    496,
+    340,
+    134
+   ],
+   "alvo": [
+    721,
+    342,
+    302,
+    77
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": false,
+   "encerrar": true
+  },
+  "1920-a-al": {
+   "texto": "Clique na tela para acelerar a animação.",
+   "seta": "seta-nenhuma",
+   "caixa": [
+    798,
+    321,
+    284,
+    84
+   ],
+   "alvo": null,
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": true,
+   "encerrar": true
+  },
+  "1920-b-al": {
+   "texto": "Clique na tela para acelerar a animação.",
+   "seta": "seta-nenhuma",
+   "caixa": [
+    797,
+    321,
+    286,
+    78
+   ],
+   "alvo": null,
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": true,
+   "encerrar": true
+  },
+  "1280-b-al": {
+   "texto": "Clique na tela para acelerar a animação.",
+   "seta": "seta-nenhuma",
+   "caixa": [
+    487,
+    319,
+    286,
+    78
+   ],
+   "alvo": null,
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": true,
+   "encerrar": true
+  }
+ },
+ "erros": []
+}
