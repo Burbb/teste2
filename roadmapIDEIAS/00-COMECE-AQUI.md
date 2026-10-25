@@ -7518,3 +7518,16 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Conferido no jogo** nas duas janelas (os pontos, os cartões, o reforço, a saída e a volta, o Esc, sem relógio novo,
   o movimento reduzido; dois ciclos quadro a quadro, um relógio só a 100 ms; sem rolagem vazia a 1280). **Aguarda o
   Jean; nada integrado.** Não começados: o reforço/encantamento, outros interiores, o Grimório, a expansão narrativa.
+
+### 25/10/2026 (data do computador local) — A forja H: o ferreiro no estilo do jogo, o corpo inteiro animado (protótipo)
+
+- **O pedido:** na G, as pernas se descolavam e a metade de cima deslizava sobre a de baixo; o Jean pediu uma animação
+  de corpo de verdade e o ferreiro conferido com o estilo do mercador e da Ilse.
+- **A candidata H** (`ferramentas/prototipos/hud/forja/h/`, `forja-h.js`; LEIA-ME da forja, seção "A H"; as folhas
+  `folha-forja-h.png`, `folha-estilo-h.png`, `folha-corpo-h.png`, `folha-movimento-h.png`; `demo.bat`, o botão H
+  primeiro): o ferreiro em três tons chapados sem contorno (o padrão da FIGURA do mercador), cada pose redesenhada
+  inteira a partir dos apoios parados (as botas, a luva na tenaz): os joelhos dobram, o quadril desce, o tronco inclina,
+  a barriga achata, a trança balança. Correções do Jean no caminho: a perna quadrada sobre a bota e o bloco da túnica.
+- **Conferido no jogo** nas duas janelas (tudo certo; um relógio só; sem rolagem vazia). **Em aberto, decisão do
+  Jean:** o ferreiro (~55 px, a escala da referência) é bem maior na tela que a Ilse e o mercador. **Aguarda o Jean;
+  nada integrado.** Não começados: o reforço/encantamento, outros interiores, o Grimório, a expansão narrativa.
