@@ -171,7 +171,7 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
 
 ## Saves
 
-`rpg/sistemas/persistencia.py` grava JSON (como `<região>_<nome>.json`, com `mundo.campanha`; sem esse campo, é um save do mundo gerado, o modo que saiu na 1.206.0: `resumo_save` o marca `incompativel` e `carregar` recusa com `SaveIncompativel`, sem apagar o arquivo. Save da campanha sem `mundo.missoes`, de antes da 1.50, ganha a missão na primeira etapa ao carregar: `campanha.ajustar_save`); `rpg/migracoes.py` leva saves antigos para a versão atual
+`rpg/sistemas/persistencia.py` grava JSON (como `<região>_<nome>.json`, com `mundo.campanha`; sem esse campo, é um save do mundo gerado, o modo que saiu na 1.206.0: `resumo_save` o marca `incompativel` e `carregar` recusa com `SaveIncompativel`, sem apagar o arquivo. O cartão do Carregar jogo (`telas/saves.js`, 1.209.0) recebe do `resumo_save` também a especialização e a missão em andamento. Save da campanha sem `mundo.missoes`, de antes da 1.50, ganha a missão na primeira etapa ao carregar: `campanha.ajustar_save`); `rpg/migracoes.py` leva saves antigos para a versão atual
 (`VERSAO_SAVE`). Toda mudança de formato ganha uma migração. Um nome de espécie ou de guardião que muda também (o save
 guarda texto: o nome do guardião, os rumores, a descrição dos contratos): na 1.181.0, o ent jovem virou a árvore
 desperta e o Ent Ancião, a Árvore Anciã; os ids ficam, e o v5 → v6 refaz esses textos pelo catálogo (o guardião pelo

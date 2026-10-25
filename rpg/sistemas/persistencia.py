@@ -31,11 +31,32 @@ def resumo_save(caminho):
         regiao = d["mundo"].get("campanha")
         if regiao:  # a tela diz a região e o modo
             resumo["campanha"] = nome_campanha(regiao) or regiao
+            resumo.update(_progresso(j, d["mundo"]))
         else:
             resumo["incompativel"] = True
     except (OSError, ValueError, KeyError, IndexError, TypeError):
         resumo["ilegivel"] = True
     return resumo
+
+
+def _progresso(j, mundo):
+    """O que o cartão do save diz além do básico: a especialização e a missão em andamento, com o nome que o rastreador
+    mostra (a primeira não concluída que já foi apresentada) ou o fim do capítulo, quando todas acabaram."""
+    from ..classes import SPECS
+    from ..missoes import MISSOES
+    extra = {}
+    if j.get("spec") in SPECS:
+        extra["spec_nome"] = SPECS[j["spec"]]["nome"]
+    ms = mundo.get("missoes") or {}
+    if ms and all(m.get("concluida") for m in ms.values()):
+        extra["progresso"] = "Primeiro capítulo concluído"
+    else:
+        for mid, m in ms.items():
+            etapa = MISSOES.get(mid, {}).get("etapas", {}).get(m.get("etapa"), {})
+            if not m.get("concluida") and etapa.get("objetivo"):
+                extra["progresso"] = MISSOES[mid]["nome"]
+                break
+    return extra
 
 
 class Persistencia:

@@ -172,6 +172,22 @@ class TestCampanha(unittest.TestCase):
         r = resumo_save(caminho)
         self.assertEqual((r["campanha"], r["hardcore"], r["lugar"]), ("Vale do Turvo", True, "Bosque do Moinho"))
 
+    def test_cartao_do_save_diz_especializacao_e_missao(self):
+        """O Carregar jogo (1.209.0): o cartão diz a especialização e a missão em andamento (o nome como o rastreador
+        mostra); com as duas missões do Vale concluídas, o fim do capítulo; sem especialização, nada."""
+        pasta = tempfile.mkdtemp()
+        c = nova_campanha("guerreiro", pasta=pasta)
+        c.salvar(silencioso=True)
+        r = resumo_save(c.caminho_save())
+        self.assertNotIn("spec_nome", r)
+        self.assertEqual(r["progresso"], "A Febre do Turvo")
+        c.j.spec = "paladino"
+        for m in c.mundo["missoes"].values():
+            m["concluida"] = True
+        c.salvar(silencioso=True)
+        r = resumo_save(c.caminho_save())
+        self.assertEqual((r["spec_nome"], r["progresso"]), ("Paladino", "Primeiro capítulo concluído"))
+
     def test_save_do_mundo_gerado_fica_e_nao_abre(self):
         """O save do modo que saiu: o cartão diz que não abre, carregar recusa com uma mensagem curta, e o arquivo
         continua lá, sem ser sobrescrito pela campanha do mesmo nome."""

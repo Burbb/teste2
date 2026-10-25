@@ -28,9 +28,10 @@ PENDENTES_JS = {"talentos.js"}  # filtros de cor em animações feitas pelo JS (
 # segue o mesmo acabamento: a sombra suave atrás do título e das opções, sem caixa.
 # O d20 do Marfim e do Vidro (21, 1.202.0) estende a rolagem (20): a mesma poça translúcida e a sombra atrás do dado,
 # como no protótipo aprovado; o dado em si é pixel art (canvas). A criação do personagem (24, 1.208.0) é uma janela
-# principal da HUD de ferro: a moldura, o véu, os botões da família do Continuar.
+# principal da HUD de ferro: a moldura, o véu, os botões da família do Continuar; o Carregar jogo (25, 1.209.0), da
+# mesma família.
 FORA_DA_TRAVA = {"14-hud.css", "15-hud-luta.css", "16-hud-telas.css", "17-titulo.css", "18-seletor-habilidades.css", "19-turnos.css",
-                 "20-rolagem.css", "21-d20.css", "24-criacao.css"}
+                 "20-rolagem.css", "21-d20.css", "24-criacao.css", "25-carregar.css"}
 
 FILTRO = r"\b(grayscale|sepia|hue-rotate|brightness|saturate|contrast|invert|opacity|drop-shadow)\(|filter\s*:\s*url\("
 PROIBIDO = {

@@ -9,16 +9,17 @@ CASO (os saves da pasta temporária):
     varias  dez partidas: as três classes, níveis e especializações, dias e lugares, os dois modos, uma do capítulo
             concluído, dois nomes longos, dois saves do mundo gerado (que não abrem) e um danificado
     muitas  as dez e mais doze campanhas (a lista rola)
+    recente_ruim  as dez, com o save do mundo gerado como o mais recente (o foco vai à campanha seguinte)
+    so_ruins      só os que não abrem: dois do mundo gerado e um danificado (o foco vai ao Voltar)
 SIMULAÇÃO: o nível, a especialização, o dia, o lugar, a etapa das missões e a data dos saves são escritos direto no
 jogo antes de salvar (sem jogar até lá); o save danificado é um arquivo cortado ao meio; os do mundo gerado são o save
 de uma campanha sem a `campanha` no mundo (tests/navegador/cenarios.py). Os saves são de verdade: carregam pelo jogo.
 
-PROPOSTA=r: o "Carregar jogo" proposto (saves.css e saves.js do protótipo); a lista recebe do motor, só neste processo,
-também a especialização e a missão em andamento (`resumo_do_save`, o que a integração faria em resumo_save). Vazia:
-o de hoje. PAINEL=<endereço> põe a faixa da demonstração no canto.
+PROPOSTA=r ou vazia: o jogo como está (a R integrada na 1.209.0: telas/saves.js, css/25-carregar.css; a especialização
+e a missão em resumo_save). Os arquivos saves.css e saves.js daqui ficam como o registro da candidata.
+PAINEL=<endereço> põe a faixa da demonstração no canto.
 """
 import html
-import json
 import os
 import pathlib
 import random
@@ -31,9 +32,10 @@ RAIZ = pathlib.Path(__file__).resolve().parents[5]
 sys.path.insert(0, str(RAIZ))
 PROTO = pathlib.Path(__file__).resolve().parents[1]
 TIPOS = {".css": "text/css; charset=utf-8", ".js": "text/javascript; charset=utf-8"}
-ROTULOS = {"": "o Carregar jogo de hoje", "r": "R · a proposta"}
+ROTULOS = {"": "o Carregar jogo (a R, no jogo)", "r": "o Carregar jogo (a R, no jogo)"}
 CASOS = {"vazia": "nenhum save", "uma": "uma campanha", "varias": "dez partidas (duas do mundo gerado, uma danificada)",
-         "muitas": "22 partidas (a lista rola)"}
+         "muitas": "22 partidas (a lista rola)", "recente_ruim": "dez, a mais recente do mundo gerado",
+         "so_ruins": "só saves que não abrem"}
 HORA = 3600
 # (nome, classe, nível, especialização, dia, lugar, hardcore, etapa da Febre, capítulo concluído, há quantas horas)
 VARIAS = [
@@ -71,7 +73,7 @@ def montar(caso):
     pasta = tempfile.mkdtemp(prefix="saves-prototipo-")
     if caso == "vazia":
         return pasta
-    linhas = VARIAS[:1] if caso == "uma" else list(VARIAS)
+    linhas = [] if caso == "so_ruins" else VARIAS[:1] if caso == "uma" else list(VARIAS)
     if caso == "muitas":
         nomes = ["Abel", "Bia", "Caio", "Dora", "Elias", "Fia", "Gil", "Hilda", "Ivo", "Joana", "Lino", "Mira"]
         for k, n in enumerate(nomes):
@@ -79,13 +81,13 @@ def montar(caso):
                            "canal", False, 300 + 24 * k))
     for k, linha in enumerate(linhas):
         _salvar(pasta, *linha, seed=10 + k)
-    if caso in ("varias", "muitas"):
-        for nome, classe, horas in (("Jean", "guerreiro", 400), ("Rafaela", "mago", 900)):
+    if caso in ("varias", "muitas", "recente_ruim", "so_ruins"):
+        for nome, classe, horas in (("Jean", "guerreiro", 0 if caso == "recente_ruim" else 400), ("Rafaela", "mago", 900)):
             caminho = save_do_mundo_gerado(pasta, nome, classe)
             t = time.time() - horas * HORA
             os.utime(caminho, (t, t))
         danificado = os.path.join(pasta, "turvo_gabriel.json")  # SIMULAÇÃO: um save cortado ao meio
-        with open(os.path.join(pasta, os.listdir(pasta)[0]), encoding="utf-8") as f:
+        with open(os.path.join(pasta, sorted(os.listdir(pasta))[0]), encoding="utf-8") as f:
             texto = f.read()
         with open(danificado, "w", encoding="utf-8") as f:
             f.write(texto[: len(texto) // 2])
@@ -94,34 +96,11 @@ def montar(caso):
     return pasta
 
 
-def resumo_do_save(caminho):
-    """O resumo de hoje (resumo_save) e, só no protótipo, a especialização e a missão em andamento: o nome dela como o
-    rastreador mostra (a primeira não concluída, já apresentada) ou o fim do capítulo. Na integração, em resumo_save."""
-    from rpg import missoes
-    from rpg.classes import SPECS
-    from rpg.sistemas.persistencia import resumo_save
-    r = resumo_save(caminho)
-    if r.get("ilegivel") or r.get("incompativel"):
-        return r
-    with open(caminho, encoding="utf-8") as f:
-        d = json.load(f)
-    spec = d["jogador"].get("spec")
-    if spec in SPECS:
-        r["spec_nome"] = SPECS[spec]["nome"]
-    ms = d["mundo"].get("missoes") or {}
-    if ms and all(m.get("concluida") for m in ms.values()):
-        r["progresso"] = "Primeiro capítulo concluído"
-    else:
-        for mid, m in ms.items():
-            if not m.get("concluida") and missoes.MISSOES[mid]["etapas"][m["etapa"]]["objetivo"]:
-                r["progresso"] = missoes.MISSOES[mid]["nome"]
-                break
-    return r
-
-
 def demonstracao(srv, caso):
     from rpg.web.servidor import Servidor
     proposta, painel = os.environ.get("PROPOSTA", ""), os.environ.get("PAINEL")
+    rotulo = ROTULOS[proposta]
+    proposta = ""  # a R está no jogo desde a 1.209.0: as duas versões servem o jogo como está
     h = srv.httpd.RequestHandlerClass
     original = h._arquivo
     pasta = pathlib.Path(sys.modules[Servidor.__module__].PASTA)
@@ -144,7 +123,7 @@ def demonstracao(srv, caso):
                 repetir = html.escape(f"{painel}iniciar?{os.environ.get('REPETIR', '')}", quote=True)
                 faixa = (f'<div id="demo-faixa" style="position:fixed;left:8px;bottom:6px;z-index:99999;font:12px/1.4 sans-serif;'
                          f'background:#000c;color:#e8dcbe;border:1px solid #6b5a3a;padding:3px 8px;border-radius:3px">'
-                         f'Carregar jogo: {html.escape(CASOS[caso])} · {html.escape(ROTULOS[proposta])} · '
+                         f'Carregar jogo: {html.escape(CASOS[caso])} · {html.escape(rotulo)} · '
                          f'<a href="{repetir}" style="color:#f2c94c">repetir</a> · '
                          f'<a href="{html.escape(painel, quote=True)}" style="color:#f2c94c">painel</a></div>')
                 pagina = pagina.replace("</body>", faixa + "</body>")
@@ -158,9 +137,6 @@ def main():
     import argparse
     caso = os.environ.get("CASO", "varias")
     pasta = montar(caso)
-    if os.environ.get("PROPOSTA") == "r":
-        import rpg.__main__ as principal
-        principal.resumo_save = resumo_do_save  # só neste processo: a lista com a especialização e a missão
     from rpg.__main__ import menu_principal
     from rpg.web.ponte import WebUI
     from rpg.web.servidor import Servidor

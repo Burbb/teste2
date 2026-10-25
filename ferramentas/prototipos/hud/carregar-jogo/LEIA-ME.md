@@ -66,4 +66,20 @@ vezes, por isso a lista dele chega ~10% mais tarde que a de hoje).
 nomes dos saves danificados são o do arquivo (não há outro dado). A missão em andamento repete "A Febre do Turvo" na
 maioria das partidas de hoje (o Vale tem uma missão principal); o lugar e o dia é que as distinguem.
 
-**Aguarda a aprovação visual do Jean antes de integrar.**
+## A R integrada na 1.209.0 (25/10/2026)
+
+O Jean aprovou a R; ela entrou sem redesenho: `telas/saves.js`, `css/25-carregar.css` (o CSS da candidata com a mesma
+especificidade), a especialização e a missão em `resumo_save` (uma leitura só do arquivo). **Os dois ajustes pedidos:**
+o nome cortado ganha a dica com ele inteiro, no mouse e no foco do teclado (o sistema de dicas, como no mercado; quando
+a lista rola, a dica do cartão com o foco volta no lugar novo); o foco começa na partida mais recente que abre (as que
+não abrem continuam acessíveis e dizem o motivo; sem nenhuma, o foco começa no Voltar, e nada carrega). **Uma correção
+achada na conferência:** depois de abrir um save que não abre, a janela ficava na página e empurrava a mensagem e o
+Continuar para fora da vista; agora, respondida a lista, ela sai da página. Sem índice ou resumo paralelo dos saves:
+a leitura segue ~9 ms por save. `cenarios_saves.py` serve o jogo como está (com `PROPOSTA` ou sem); `saves.css` e
+`saves.js` daqui ficam como registro.
+
+**Conferido no jogo** (`auxiliares/conferir.mjs`, 1920×945 e 1280×720, tudo certo): sem saves, uma, dez e 22 partidas,
+a mais recente do mundo gerado e nenhuma que abre; o Voltar usável junto com a lista; a janela sem rolar a página; o foco
+inicial; o Tab, Shift+Tab, as setas, Home/End; a dica do nome cortado no foco e no mouse (e nenhuma no nome que cabe); o
+Esc; o save que não abre (a mensagem, nada carrega); o clique duplo e dois Enter carregando uma vez. Criar, salvar e
+carregar uma campanha nova pela lista: `telas-iniciais/auxiliares/criacao.mjs`, nas duas janelas.

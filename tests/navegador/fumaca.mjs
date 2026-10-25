@@ -169,9 +169,9 @@ async function cenarioTitulo(browser) {
     conferir(!!(await esperar('#prompt .escolha:has-text("Carregar")')), "o menu principal oferece carregar");
     await (await page.$('#prompt .escolha:has-text("Carregar")')).click();
     conferir(!(await page.$('#prompt .escolha:has-text("Como jogar")')), "o menu não tem mais Como jogar");
-    const cartao = await esperar('.save-cartao:has-text("Jean")');
+    const cartao = await esperar('.sv-cartao:has-text("Jean")');
     conferir(!!cartao, "os saves aparecem como cartões");
-    conferir(!!(await page.$('#prompt .escolha:has-text("Voltar")')), "dá para voltar da lista de saves");
+    conferir(!!(await page.$(".sv .sv-voltar")), "dá para voltar da lista de saves (o Voltar no rodapé da janela)");
     await cartao.click();
     conferir(!!(await esperar(".atalhos .atalho")), "o save carrega e o lugar aparece com a doca de atalhos");
     conferir((await page.$$(".atalhos .doca-sep")).length >= 1, "a doca separa os atalhos em grupos");
@@ -418,10 +418,11 @@ async function cenarioCampanha(browser) {
     conferir(titulo.length === 3 && /Novo jogo/.test(titulo[0]) && /Carregar/.test(titulo[1]) && /Sair/.test(titulo[2]),
       `o título oferece só o novo jogo, carregar e sair (${titulo.join(" | ")})`);
     await (await page.$('#prompt .escolha:has-text("Carregar")')).click();
-    const maria = await esperar('.save-cartao:has-text("Maria")');
-    conferir(!!maria && /Vale do Turvo · resgate/.test(await maria.textContent()), "o save da campanha diz a região e o modo");
-    const jean = await page.$('.save-cartao:has-text("Jean")');
-    conferir(!!jean && /mundo gerado · não abre mais/.test(await jean.textContent()) && !/Vale do Turvo/.test(await jean.textContent()),
+    const maria = await esperar('.sv-cartao:has-text("Maria")');
+    conferir(!!maria && /Vau do Turvo · Dia 1/.test(await maria.textContent()) && /Resgate/.test(await maria.textContent()),
+      "o save da campanha diz o lugar, o dia e o modo");
+    const jean = await page.$('.sv-cartao:has-text("Jean")');
+    conferir(!!jean && /Não abre/.test(await jean.textContent()) && /mundo gerado/.test(await jean.textContent()) && !/Vau do Turvo/.test(await jean.textContent()),
       "o save do mundo gerado aparece na lista, marcado como incompatível");
     await jean.click();
     conferir(!!(await esperar('#texto :text("Este save não abre")', 8000)) && /mundo gerado/.test(await page.textContent("#texto")),
@@ -542,7 +543,7 @@ async function cenarioRecarga(browser) {
   const inteira = (t, nome) => !t.titulo && !t.semHeroi && t.estado && t.heroi.includes(nome) && t.doca >= 5 && t.mapa;
   const carregar = async (nome) => {
     await (await page.waitForSelector('#prompt .escolha:has-text("Carregar")', { timeout: 20000 })).click();
-    await (await page.waitForSelector(`.save-cartao:has-text("${nome}")`)).click();
+    await (await page.waitForSelector(`.sv-cartao:has-text("${nome}")`)).click();
     await page.waitForSelector('#prompt .escolha:has-text("Viajar"), #predios .predio', { timeout: 20000 });
     return tela();  // logo que as opções aparecem, sem clicar em nada
   };
@@ -620,7 +621,7 @@ async function cenarioCapela(browser) {
       await page.waitForTimeout(200);
     }
     await (await page.waitForSelector(`${MENU}:has-text("Carregar")`, { timeout: 20000 })).click();
-    await (await page.waitForSelector(".save-cartao")).click();
+    await (await page.waitForSelector(".sv-cartao")).click();
     await page.waitForSelector(`${MENU}:has-text("Descer ao ossuário")`, { timeout: 20000 });
     conferir(!(await page.$(`${MENU}:has-text("Atravessar o salão")`)) && /ossuário/.test(await objetivo()) && (await baus()) === bausDepois
       && !!(await page.$("#doca .atalho")) && !(await page.evaluate(() => document.body.classList.contains("sem-heroi"))),
@@ -644,7 +645,7 @@ async function cenarioCapela(browser) {
       await page.waitForTimeout(200);
     }
     await (await page.waitForSelector(`${MENU}:has-text("Carregar")`, { timeout: 20000 })).click();
-    await (await page.waitForSelector(".save-cartao")).click();
+    await (await page.waitForSelector(".sv-cartao")).click();
     await page.waitForSelector(`${MENU}:has-text("Descer ao ossuário")`, { timeout: 20000 });
     conferir((await baus()) === bausDepois + 1 && !(await page.$(`${MENU}:has-text("Recolher o baú")`)),
       "carregado depois de recolher: o baú não volta ao canto nem à bolsa");
@@ -1086,7 +1087,7 @@ async function cenarioGuardia(browser) {
       await page.waitForTimeout(200);
     }
     await (await page.waitForSelector(`${MENU}:has-text("Carregar")`)).click();
-    await (await page.waitForSelector(".save-cartao")).click();
+    await (await page.waitForSelector(".sv-cartao")).click();
     await page.waitForSelector(`${MENU}:has-text("Subir ao ossuário")`, { timeout: 20000 });  // carregado, no fundo
     m = await missao();
     conferir(m.desfecho === "descansada" && !(await page.$(`${MENU}:has-text("Descer ao fundo")`)) && (await page.evaluate(() => estado.heroi.sigilos)) === 1,
@@ -1169,7 +1170,7 @@ async function cenarioRetorno(browser) {
       await page.waitForTimeout(200);
     }
     await (await page.waitForSelector(`${MENU}:has-text("Carregar")`)).click();
-    await (await page.waitForSelector(".save-cartao")).click();
+    await (await page.waitForSelector(".sv-cartao")).click();
     await page.waitForSelector('#predios .predio[data-predio="taverna"]', { timeout: 20000 });
     await page.waitForTimeout(600);
     conferir(!/De Volta ao Vau|A Praça/.test(await page.textContent("#cena-cab .cena-titulo")) && (await ativas()) === "vigilia_de_caspar"
@@ -1383,7 +1384,7 @@ async function cenarioYara(browser) {
       await page.waitForTimeout(200);
     }
     await (await page.waitForSelector(`${MENU}:has-text("Carregar")`)).click();
-    await (await page.waitForSelector(".save-cartao")).click();
+    await (await page.waitForSelector(".sv-cartao")).click();
     await page.waitForSelector(`${MENU}:has-text("Explorar")`, { timeout: 20000 });
     await page.waitForTimeout(600);
     conferir(!/A Moça do Charco/.test(await page.textContent("#cena-cab .cena-titulo"))

@@ -74,9 +74,9 @@ async function salvarECarregar(p, nome, classe, modo, jan) {
   if (!(await p.$(carregar))) await p.screenshot({ path: path.join(SAIDA, `${jan}-r2-erro-sair.png`) });
   await p.waitForSelector(carregar, { timeout: 5000 });
   await p.click('#prompt .escolha:has-text("Carregar")');
-  const cartao = await p.waitForSelector(`.save-cartao:has-text("${nome.slice(0, 12)}")`, { timeout: 15000 });
+  const cartao = await p.waitForSelector(`.sv-cartao:has-text("${nome.slice(0, 12)}")`, { timeout: 15000 });
   const texto = (await cartao.textContent()).replace(/\s+/g, " ");
-  conferir(new RegExp(`Vale do Turvo · ${modo}`).test(texto), `o cartão do save diz a região e o modo (${modo})`);
+  conferir(/Vau do Turvo · Dia \d+/.test(texto) && new RegExp(modo, "i").test(texto), `o cartão do save diz o lugar, o dia e o modo (${modo})`);
   await p.screenshot({ path: path.join(SAIDA, `${jan}-r2-7-saves-${modo}.png`) });
   await cartao.click();
   await p.waitForFunction((n) => document.querySelector("#heroi .heroi-nome")?.innerText === n, nome, { timeout: 20000 });

@@ -88,8 +88,9 @@
       };
       el.addEventListener("mouseenter", (ev) => mostrar(ev, false));
       el.addEventListener("mouseleave", esconderDica);
-      // No mercado, o foco do teclado também abre a dica (o motivo inteiro de um cartão que não se compra mora nela).
-      if (el.closest(".tela.loja")) {
+      // No mercado e no Carregar jogo, o foco do teclado também abre a dica (o motivo inteiro de um cartão que não se
+      // compra; o nome inteiro de um save, quando ele não cabe no cartão).
+      if (el.closest(".tela.loja, .sv")) {
         el.addEventListener("focus", (ev) => { if (el.matches(":focus-visible")) mostrar(ev, true); });
         el.addEventListener("blur", () => { if (caixa._dono === el) esconderDica(); });
       }
