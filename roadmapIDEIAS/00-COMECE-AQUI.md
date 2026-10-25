@@ -7557,3 +7557,19 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   rolagem vazia); as outras cenas com a altura de sempre; a suíte; o gabarito (as 9 partidas da tela gráfica mudaram só
   pelo painel novo da cena da forja: tirando essas linhas, batem com o gravado; atualizado); a fumaça.
 - **Próximo:** a etapa 4 (reforço e encantamento), começando pela pesquisa e pela proposta de design, sem regra nova.
+
+### 25/10/2026 (data do computador local) — A etapa 4 começada: a pesquisa e a proposta do reforço e do encantamento
+
+- **O documento:** [25 — Etapa 4](25-ETAPA4-REFORCO-E-ENCANTAMENTO.md). O jogo de hoje (confirmado no código): o
+  reforço em 3 espaços, +1 a +5, sem falha, sempre **+1 por nível** no intervalo da campanha, 1.283 de ouro por peça
+  (a partida do Jean que fechou a região terminou com ~400), perdido ao trocar ou vender; nenhum encantamento ou
+  material. A pesquisa (cinco jogos e o Místico do Diablo III, com as fontes e as versões) e a satisfação sem alegação
+  neurológica.
+- **A recomendação (arquitetura A):** o reforço melhora a base inteira da peça (hipótese 20% por nível, mín. +1),
+  garantido, mais barato (hipótese 25–140), e passa para a peça nova do mesmo espaço; o encantamento grava uma
+  essência escolhida (os 11 afixos que já existem, tirados de desmanchar peças incomuns e raras, mais 6 de
+  especialização achados na campanha), uma por peça, trocável, contando uma vez só no corpo. Sem falha, destruição ou
+  perda.
+- **Aguarda as decisões do Jean** (seção 9: a arquitetura, os espaços, a regra do ganho, a passagem do reforço, o
+  desmanche, as essências de especialização, onde mora o encantamento, os custos). Nada implementado; nenhum número
+  integrado; outros interiores não começaram.

@@ -63,6 +63,7 @@ Para uma nova conta ou sessão, começar por [00 — Comece aqui: continuidade](
 | [21-DIAGNOSTICO-ATAQUES-EM-AREA.md](21-DIAGNOSTICO-ATAQUES-EM-AREA.md) | Os ataques em área dos inimigos: quem tem (só a Varredura dos guardiões) e quando usa, como os inimigos escolhem o alvo, o que protege o grupo hoje, quanto a comitiva apanha (medido), os candidatos coerentes e a recomendação de habilidade anunciada; só diagnóstico (1.82.0) |
 | [22-HISTORIA-ILSE-E-A-AGUA-RASCUNHO.md](22-HISTORIA-ILSE-E-A-AGUA-RASCUNHO.md) | Discussão futura de Ilse, água e responsabilidade da vila; rascunho, sem mudança de cânone |
 | [23-PLANO-DE-ARTE-INTERFACE-E-COMBATE.md](23-PLANO-DE-ARTE-INTERFACE-E-COMBATE.md) | Plano operacional atual: itens/ícones, clareza do combate, telas, serviços, cenários, habilidades e campanha; estados e próxima sequência |
+| [25-ETAPA4-REFORCO-E-ENCANTAMENTO.md](25-ETAPA4-REFORCO-E-ENCANTAMENTO.md) | Etapa 4: o reforço e os itens de hoje, a pesquisa de cinco sistemas, satisfação e expectativa, as arquiteturas, a proposta recomendada (base + essências), a jornada e o primeiro protótipo; decisões pendentes |
 
 ## Estados e evidências
 
