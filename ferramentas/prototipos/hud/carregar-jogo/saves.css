@@ -1,0 +1,72 @@
+/* O "Carregar jogo" proposto, a candidata R (protótipo, 25/10/2026; nada no jogo). Vale com html[data-saves="r"]
+   (cenarios_saves.py; o desenho e o teclado em saves.js). A mesma família da criação (24-criacao.css): a moldura das
+   janelas principais sobre a paisagem do título, o carvão com a aresta de ferro nos cartões, o latão nos destaques.
+   Uma coluna de partidas que rola dentro da janela; o cabeçalho e o Voltar ficam fora da rolagem. Material da HUD de
+   ferro (como 14 a 16 e 24). */
+
+/* com a lista aberta, o título grande e as opções do título saem da frente (o Voltar mora no rodapé da janela) */
+html[data-saves="r"] body.sv-aberto #cena-cab, html[data-saves="r"] body.sv-aberto #prompt { display: none; }
+html[data-saves="r"] body.sv-aberto #folha { max-width: none; justify-content: center; }
+html[data-saves="r"] body.sv-aberto :is(#heroi, #mundo) { display: none; }
+html[data-saves="r"] body.sv-aberto #mesa { grid-template-columns: minmax(0, 1fr); }
+
+html[data-saves="r"] .sv { box-sizing: border-box; width: min(980px, 100%); margin: 0 auto; padding: 14px 24px 14px;
+  display: flex; flex-direction: column; max-height: calc(100vh - 124px);
+  border: 12px solid transparent; border-image: var(--m-principal) 24 / 24px round;
+  background: var(--veu-superficie), var(--t-painel) 0 0 / 128px; background-clip: padding-box;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.8); color: #e6dbc2; font-family: var(--texto); text-align: left; }
+html[data-saves="r"] .sv-cab { flex: none; display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; padding: 0 2px 12px; box-shadow: var(--hud-fio); }
+html[data-saves="r"] .sv-cab h1 { margin: 0; font-family: var(--titulo); font-size: calc(var(--px) * 32); font-weight: 400; line-height: 1;
+  color: var(--latao-claro); text-shadow: 2px 2px 0 #000; }
+html[data-saves="r"] .sv-cab span { font-size: 14px; color: var(--sec); }
+
+/* a lista: uma coluna, os cartões com a altura de sempre (nada aperta), a rolagem dentro dela */
+html[data-saves="r"] .sv-lista { flex: 1 1 auto; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 8px;
+  margin: 12px 0 0; padding: 2px 8px 4px 2px; scrollbar-width: thin; scrollbar-color: #6e5a2c #0b0a09; }
+html[data-saves="r"] .sv-vazia { margin: 30px 0; text-align: center; font-size: 16px; color: var(--sec); }
+
+/* o cartão: o carvão com o fio de cima e a aresta de ferro (como os da criação). Mouse: a aresta de latão escuro e a
+   face um degrau mais clara; foco do teclado: o anel claro por fora. */
+html[data-saves="r"] .sv-cartao { flex: none; display: grid; grid-template-columns: auto minmax(0, 1fr) minmax(0, 300px); align-items: center;
+  gap: 16px; margin: 0; padding: 8px 16px 8px 8px; font: inherit; text-align: left; color: inherit; cursor: pointer;
+  background: linear-gradient(#24211c 0 1px, #12110e 1px 100%); border: 1px solid #34312b; border-radius: 2px; box-shadow: 0 1px 0 #000; }
+html[data-saves="r"] .sv-cartao:hover { border-color: #8a7038; background: linear-gradient(#3a3428 0 1px, #1a1814 1px 100%); }
+html[data-saves="r"] .sv-cartao:focus-visible { outline: 2px solid var(--latao-claro); outline-offset: 2px; border-color: #8a7038; }
+html[data-saves="r"] .sv-busto { width: 72px; height: 72px; padding: 3px; line-height: 0; border: 1px solid var(--aresta); background: #0c0b0a; }
+html[data-saves="r"] .sv-busto :is(img, picture) { display: block; width: 72px; height: 72px; }
+html[data-saves="r"] .sv-quem { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+html[data-saves="r"] .sv-nome { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--titulo); font-size: calc(var(--px) * 32);
+  font-weight: 400; line-height: 1.05; color: var(--latao-claro); text-shadow: 2px 2px 0 #000; }
+html[data-saves="r"] .sv-classe { font-size: 16px; font-weight: 700; color: #eadbb4; }
+html[data-saves="r"] .sv-onde { display: flex; flex-direction: column; gap: 3px; min-width: 0; padding-left: 16px; border-left: 1px solid #2c2a26;
+  font-size: 15px; line-height: 1.3; color: #b8ae9c; }
+html[data-saves="r"] .sv-onde > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+html[data-saves="r"] .sv-onde small { font-size: 13px; color: var(--sec); }
+html[data-saves="r"] .sv-modo { margin-right: 6px; padding: 0 5px; font-style: normal; font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: #cfc5ae; border: 1px solid #4a4232; }
+
+/* o que não abre: a aresta tracejada, o retrato apagado e, em texto, "Não abre" e o motivo (não só a cor) */
+html[data-saves="r"] .sv-nao-abre { border-style: dashed; border-color: #4a463e; background: #0e0d0b; }
+html[data-saves="r"] .sv-nao-abre .sv-busto { opacity: 0.45; }
+html[data-saves="r"] .sv-nao-abre .sv-nome { color: #a39880; }
+html[data-saves="r"] .sv-nao-abre .sv-classe { font-weight: 400; color: var(--sec); }
+html[data-saves="r"] .sv-nao-abre .sv-onde > span { white-space: normal; }
+html[data-saves="r"] .sv-aviso { font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #d9a86a; }
+html[data-saves="r"] .sv-aviso i { font-style: normal; }
+
+/* o rodapé: o Voltar (o da criação) e a dica do teclado */
+html[data-saves="r"] .sv-rodape { flex: none; display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-top: 12px; padding-top: 12px;
+  box-shadow: inset 0 1px 0 #000, inset 0 2px 0 #1f2023; }
+html[data-saves="r"] .sv-voltar { display: flex; align-items: center; gap: 6px; padding: 6px 12px; font: inherit; font-size: 15px; color: var(--tinta);
+  border: 1px solid var(--aresta-face); border-radius: 2px; background: var(--hud-face); box-shadow: var(--hud-relevo); cursor: pointer; }
+html[data-saves="r"] .sv-voltar:is(:hover, :focus-visible) { border-color: var(--aresta-viva); background: var(--hud-face-viva); color: #fff7e6; }
+html[data-saves="r"] .sv-voltar:focus-visible { outline: 2px solid var(--latao-claro); outline-offset: 2px; }
+html[data-saves="r"] .sv-voltar kbd { border: 1px solid #4a4d53; background: #0b0c0e; color: var(--sec); }
+html[data-saves="r"] .sv-dica { font-size: 14px; color: var(--sec); }
+
+/* a 1280×720: a janela encosta mais e o retrato encolhe um degrau (mais partidas à vista) */
+@media (max-height: 760px) {
+  html[data-saves="r"] .sv { padding: 10px 20px 10px; max-height: calc(100vh - 118px); }
+  html[data-saves="r"] .sv-cartao { grid-template-columns: auto minmax(0, 1fr) minmax(0, 270px); padding: 6px 14px 6px 6px; }
+  html[data-saves="r"] .sv-busto, html[data-saves="r"] .sv-busto :is(img, picture) { width: 56px; height: 56px; }
+}
