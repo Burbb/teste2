@@ -69,8 +69,10 @@ class TestSimulacao(unittest.TestCase):
         g.j.reputacao = rng.choice([-30, 0, 30])
         g.clima = rng.choice(["limpo", "chuva", "nevoa", "tempestade", "neve"])
         g.periodo = rng.choice([0, 3])
-        tipos = ["vila"] if set(contextos) <= {"vila", "taverna"} else ["selvagem", "covil", "cidadela"]
+        tipos = ["vila"] if set(contextos) <= {"vila", "taverna"} else ["selvagem"]
         g.mundo["atual"] = rng.choice([l for l in g.mundo["locais"] if l["tipo"] in tipos])["id"]
+        if g.loc["tipo"] == "selvagem":  # os biomas que a campanha de hoje não visita também (o conteúdo fica)
+            g.loc["bioma"] = rng.choice(["floresta", "pantano", "montanha", "planicie", "ruinas"])
         aqui = g.loc["id"]
         vila = next(l for l in g.mundo["locais"] if l["tipo"] == "vila")
         for sid, dados in [("viajante_grato", dict(nome="Ana", g="f", prof="pastora")),
@@ -90,12 +92,6 @@ class TestSimulacao(unittest.TestCase):
             {"id": 2, "tipo": "alvo", "local": aqui, "familia": "lobo", "nome": "Uivo", "chave": "alvo:2",
              "ouro": 40, "xp": 30, "desc": "Caçar Uivo."},
         ]
-        arma = rng.choice([None, g.j.equip["arma"]])
-        heroi = {"nome": "Aldric", "classe": classe, "spec": None, "nome_classe": "Guerreiro", "nivel": 7, "dia": 20,
-                 "resultado": rng.choice(["morte", "corrupcao", "vitoria"]), "causa": "Você tombou diante de Lobo.",
-                 "arma": arma, "antagonista": "Zor, o Rei", "sigilos": 2}
-        g.lendas = [heroi]
-        g.marcar("tumulo", dict(heroi, local=aqui))
         g.dia = 6
         if rng.random() < 0.85:  # uma comitiva em algum ponto da história
             for cid in rng.sample(list(comitiva.COMPANHEIROS), 2):
@@ -292,7 +288,7 @@ class TestSimulacao(unittest.TestCase):
                 g.j.nivel = nivel
                 niveis = [nivel_regiao(g.mundo["locais"][c["local"]])
                           for c in (g.gerar_contrato() for _ in range(40)) if c["tipo"] != "entrega"]
-                existentes = {nivel_regiao(l) for l in g.mundo["locais"] if l["tipo"] in ("selvagem", "covil")}
+                existentes = {nivel_regiao(l) for l in g.mundo["locais"] if l["tipo"] == "selvagem"}
                 if any(-1 <= n - nivel <= 2 for n in existentes):
                     self.assertTrue(all(-1 <= n - nivel <= 2 for n in niveis), (nivel, niveis))
             # Contrato mais difícil paga mais.
@@ -471,12 +467,11 @@ class TestSimulacao(unittest.TestCase):
                     self.assertTrue(it["bonus"])
 
     def test_mundo_conectado(self):
-        from rpg.mundo import _distancias, gerar_mundo
-        for seed in range(200):
-            m = gerar_mundo(random.Random(seed))
-            dist = _distancias(m["locais"])
-            self.assertEqual(len(dist), len(m["locais"]), f"mundo desconexo com seed {seed}")
-            self.assertEqual(sum(1 for l in m["locais"] if l["tipo"] == "covil"), 3)
+        from rpg.campanha import REGIOES, montar_mundo
+        from rpg.mundo import _distancias
+        for regiao in REGIOES:
+            m = montar_mundo(regiao)
+            self.assertEqual(len(_distancias(m["locais"])), len(m["locais"]), f"região desconexa: {regiao}")
 
 
 if __name__ == "__main__":

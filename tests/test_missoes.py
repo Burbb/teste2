@@ -3,7 +3,6 @@ da tela, o exame da fonte nova, o canal no Bosque do Moinho, a Capela Afogada po
 ossuário, soltar as correntes), as visitas antecipadas, o save e os saves da campanha de antes das missões."""
 
 import json
-import os
 import random
 import tempfile
 import unittest
@@ -480,23 +479,6 @@ class TestMissao(unittest.TestCase):
         texto = " ".join(ui.ditos)
         self.assertIn("O que você já fez:", texto)  # sem saber de Ilse, o rito ainda não aparece
         self.assertIn(missoes.MISSOES[MID]["preparos"]["corpo_solto"], texto)
-
-    def test_procedural_nao_tem_missao(self):
-        pasta = tempfile.mkdtemp()
-        ui = Roteiro(["Fechar"])
-        g = Jogo(ui, seed=5, pasta_saves=pasta)
-        g.iniciar("Teste", "guerreiro")
-        self.assertNotIn("missoes", g.mundo)
-        self.assertNotIn("missoes", estado(g))
-        self.assertFalse(missoes.cena_pendente(g))
-        self.assertEqual(missoes.opcoes(g), [])
-        g.diario()
-        self.assertNotIn("missoes", ui.paineis[-1][1])
-        g.salvar(silencioso=True)
-        h = Jogo.carregar(Roteiro(), g.caminho_save(), pasta)
-        self.assertNotIn("missoes", h.mundo)
-        self.assertTrue(os.path.exists(g.caminho_save()))
-
 
 if __name__ == "__main__":
     unittest.main()

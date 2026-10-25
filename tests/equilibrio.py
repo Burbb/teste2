@@ -51,10 +51,11 @@ def heroi(classe, spec, nivel, semente, com_comitiva=True):
 
 
 def regioes(g):
-    """Lugares de luta do mundo (fora vilas e a cidadela), um de cada bioma."""
+    """Lugares de luta da campanha (fora a vila), um de cada bioma: o pântano, a floresta, as ruínas e a planície (a da
+    Estrada de Varn, fechada no jogo, entra pelo bioma). Desde a 1.206.0 não há montanha: o mundo gerado saiu."""
     vistos, lista = set(), []
     for l in g.mundo["locais"]:
-        if l["tipo"] not in ("vila", "cidadela") and l["bioma"] not in vistos:
+        if l["tipo"] != "vila" and l["bioma"] not in vistos:
             vistos.add(l["bioma"])
             lista.append(l)
     return lista

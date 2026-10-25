@@ -1,7 +1,7 @@
 """Contratos cumpridos e o resgate (E9, a partida da Quibia): quem acorda na vila depois de uma queda recebe os
 contratos cumpridos como quem chega viajando, uma vez só, depois da cobrança do resgate e sem viagem nem evento de
-chegada. Vale para a campanha (combate, fome, infecção), para o mundo gerado no modo brando e para os saves feitos na
-vila com contrato cumprido e ainda não pago."""
+chegada. Vale para as três quedas da campanha (combate, fome, infecção) e para os saves feitos na vila com contrato
+cumprido e ainda não pago."""
 
 import random
 import tempfile
@@ -140,19 +140,6 @@ class TestCampanha(unittest.TestCase):
         cumpridos(g, 1)
         menu(g)
         self.assertEqual((g.j.ouro, len(g.contratos)), (100, 2))
-
-
-class TestMundoGerado(unittest.TestCase):
-    def test_resgate_brando_tambem_paga(self):
-        g = Jogo(Roteiro(), seed=5, pasta_saves=tempfile.mkdtemp(), hardcore=False)
-        g.iniciar("Teste", "guerreiro")
-        g.mundo["atual"] = next(l for l in g.mundo["locais"] if l["tipo"] == "selvagem")["id"]
-        g.j.ouro = 100
-        ouro, _, aberto = cumpridos(g, 2)
-        g.resgate("combate")
-        self.assertEqual((g.loc["tipo"], g.j.ouro), ("vila", 70))  # a derrota custa como antes
-        menu(g)
-        self.assertEqual((g.j.ouro, g.contratos), (70 + ouro, [aberto]))
 
 
 if __name__ == "__main__":

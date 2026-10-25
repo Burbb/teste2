@@ -252,19 +252,3 @@ class TestCartao(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-
-
-class TestSemFuga(unittest.TestCase):
-    def test_guardiao_do_procedural_diz_a_regra_na_opcao(self):
-        """A regra (sem fuga) fica na nota da opção de lutar, não na frase da cena; recuar não gasta nada."""
-        from rpg import texto as tx
-        ui = Roteiro(["Recuar por enquanto"])
-        g = Jogo(ui, seed=5, pasta_saves=tempfile.mkdtemp())
-        g.iniciar("Teste", "guerreiro")
-        covil = next(l for l in g.mundo["locais"] if l["tipo"] == "covil")
-        g.mundo["atual"] = covil["id"]
-        antes = (g.rng.getstate(), g.periodo, g.j.hp)
-        g.enfrentar_guardiao()
-        self.assertEqual(ui.ofertas[-1], [f"Lutar! — {tx.SEM_FUGA}", "Recuar por enquanto"])
-        self.assertEqual((g.rng.getstate(), g.periodo, g.j.hp), antes)
-        self.assertFalse(covil["guardiao"]["derrotado"])

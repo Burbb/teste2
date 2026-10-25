@@ -158,7 +158,7 @@ class Servicos:
     def templo_gratis(self):
         """O primeiro atendimento do herói no templo, de graça, uma vez por personagem, na campanha (com as orientações
         ligadas ou não). Só se gasta quando a cura acontece; salvar, carregar ou religar o tutorial não o renova."""
-        return bool(self.campanha) and not self.flag("templo_gratis_usado")
+        return not self.flag("templo_gratis_usado")
 
     def opcoes_templo(self):
         """O templo cuida de cada um pelo que falta a cada um: você e quem anda com você (desacordado também), cada um

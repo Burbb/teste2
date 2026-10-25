@@ -1,13 +1,11 @@
 """O bloqueio de um destino (1.200.0): a mesma regra para a viagem recusar e para a tela desenhar (mapa.bloqueio, o
-campo `bloqueio` de cada lugar no mapa da tela). A saída fechada da campanha vem do `fechado` do lugar, não do nome; a
-cidadela do mundo gerado, dos três Sigilos, depois da confirmação do perigo, como sempre. O lugar só conhecido, o que
-não é vizinho e o perigoso não são bloqueio."""
+campo `bloqueio` de cada lugar no mapa da tela). A saída fechada da campanha vem do `fechado` do lugar, não do nome. O
+lugar só conhecido, o que não é vizinho e o perigoso não são bloqueio."""
 
 import random
 import tempfile
 import unittest
 
-from rpg import mapa
 from rpg.jogo import Jogo
 from rpg.ui import BotUI
 from rpg.web.estado import mapa_conhecido
@@ -88,25 +86,6 @@ class TestBloqueio(unittest.TestCase):
         del lugar(g, "estrada_de_varn")["fechado"]
         self.assertIsNone(nos(g)["Estrada de Varn"]["bloqueio"])
 
-    def test_a_cidadela_selada_pelos_sigilos(self):
-        """Mundo gerado: a cidadela é bloqueio sem os três Sigilos; a viagem pergunta do perigo antes, como sempre."""
-        ui = Roteiro(["CIDADELA", "Ir mesmo assim"])
-        g = Jogo(ui, seed=8, pasta_saves=tempfile.mkdtemp(), hardcore=False)
-        g.iniciar("Teste", "guerreiro")
-        cid = next(l for l in g.mundo["locais"] if l["tipo"] == "cidadela")
-        self.assertEqual(mapa.bloqueio(g, cid), "selada")
-        vizinho = next(l for l in g.mundo["locais"] if str(cid["id"]) in l["con"])
-        vizinho["visitado"] = True
-        g.mundo["atual"] = vizinho["id"]
-        self.assertEqual(nos(g)[cid["nome"]]["bloqueio"], "selada")
-        g.viajar()
-        self.assertEqual(g.loc["id"], vizinho["id"])  # não foi
-        perguntas = [o for oferta in ui.ofertas for o in oferta if "Ir mesmo assim" in o]
-        self.assertTrue(perguntas, "a confirmação do perigo vem antes do bloqueio")
-        self.assertTrue(any("muralha de sombras" in d for d in ui.ditos))
-        g.j.sigilos += ["a", "b", "c"]
-        self.assertIsNone(mapa.bloqueio(g, cid))
-        self.assertIsNone(nos(g)[cid["nome"]]["bloqueio"])
 
 
 if __name__ == "__main__":

@@ -1,5 +1,6 @@
-"""A campanha escrita (protótipo da E2): o Vale do Turvo como mapa fixo, a viagem, a saída fechada, os eventos que
-ficam de fora e o save. O mundo gerado continua igual (o gabarito confere)."""
+"""A campanha escrita (protótipo da E2): o Vale do Turvo como mapa fixo, a viagem, a saída fechada e o save. Desde a
+1.206.0 é o único modo: o título começa a campanha, e um save do mundo gerado (o modo que saiu) é recusado com uma
+mensagem, sem ser apagado."""
 
 import os
 import random
@@ -65,7 +66,6 @@ class TestCampanha(unittest.TestCase):
             self.assertEqual(g.loc["chave"], "vau_do_turvo")
             self.assertEqual(g.loc["tipo"], "vila")
             self.assertTrue(g.loc["visitado"])
-            self.assertIsNone(g.antagonista)
             self.assertEqual({l["chave"] for l in g.mundo["locais"]},
                              {"vau_do_turvo", "charco_dos_juncos", "bosque_do_moinho", "capela_afogada",
                               "estrada_de_varn"})
@@ -129,17 +129,13 @@ class TestCampanha(unittest.TestCase):
         no = next(n for n in mapa_conhecido(g)["nos"] if n["nome"] == "Estrada de Varn")
         self.assertIsNone(no["nivel"])
 
-    def test_eventos_do_mundo_gerado_que_ficam_de_fora(self):
-        g = nova_campanha()
-        for contexto in ("explorar", "viagem", "acampamento", "vila", "taverna"):
-            ids = {ev.id for ev, _ in motor.candidatos(g, contexto)}
-            self.assertFalse(ids & campanha.EVENTOS_FORA, contexto)
+    def test_sem_os_eventos_do_vilao_e_dos_covis(self):
+        # os que só existiam pelo vilão sorteado, pelo covil ou pela cidadela saíram com o mundo gerado (1.206.0)
         ids = {ev.id for ev in motor.REGISTRO}
-        self.assertLessEqual(campanha.EVENTOS_FORA, ids)  # todo id da lista existe
-        procedural = Jogo(Roteiro(), seed=5, pasta_saves=tempfile.mkdtemp())
-        procedural.iniciar("Teste", "guerreiro")
-        self.assertIsNone(procedural.campanha)
-        self.assertEqual(procedural.eventos_fora(), frozenset())
+        self.assertFalse(ids & {"visao_do_vazio", "veterano_cicatrizes", "sonho_profetico", "sussurros_do_vazio",
+                                "pregador_do_vazio", "eco_do_vazio", "sinais_do_guardiao"})
+        g = nova_campanha()
+        self.assertEqual(g.campanha, "turvo")
 
     def test_rumores_e_contratos_ficam_no_vale(self):
         g = nova_campanha()
@@ -176,31 +172,38 @@ class TestCampanha(unittest.TestCase):
         r = resumo_save(caminho)
         self.assertEqual((r["campanha"], r["hardcore"], r["lugar"]), ("Vale do Turvo", True, "Bosque do Moinho"))
 
-    def test_save_do_mundo_gerado_nao_e_sobrescrito(self):
+    def test_save_do_mundo_gerado_fica_e_nao_abre(self):
+        """O save do modo que saiu: o cartão diz que não abre, carregar recusa com uma mensagem curta, e o arquivo
+        continua lá, sem ser sobrescrito pela campanha do mesmo nome."""
+        import json
+        from rpg.migracoes import SaveIncompativel
         pasta = tempfile.mkdtemp()
-        p = Jogo(Roteiro(), seed=5, pasta_saves=pasta)
-        p.iniciar("Teste", "guerreiro")
-        p.salvar(silencioso=True)
         c = nova_campanha("arqueiro", pasta=pasta)
         c.salvar(silencioso=True)
-        self.assertNotEqual(p.caminho_save(), c.caminho_save())
+        with open(c.caminho_save(), encoding="utf-8") as f:
+            dados = json.load(f)
+        dados["mundo"].pop("campanha")  # como o save de um mundo gerado
+        velho = os.path.join(pasta, "teste.json")
+        with open(velho, "w", encoding="utf-8") as f:
+            json.dump(dados, f)
+        r = resumo_save(velho)
+        self.assertTrue(r["incompativel"])
+        self.assertEqual(r["classe"], "arqueiro")
+        with self.assertRaises(SaveIncompativel) as erro:
+            Jogo.carregar(Roteiro(), velho, pasta)
+        self.assertIn("mundo gerado", str(erro.exception))
         self.assertEqual(sorted(os.listdir(pasta)), ["teste.json", "turvo_teste.json"])
-        r = resumo_save(p.caminho_save())
-        self.assertNotIn("campanha", r)
-        self.assertEqual(r["classe"], "guerreiro")
-        self.assertIsNone(Jogo.carregar(Roteiro(), p.caminho_save(), pasta).campanha)
 
-    def test_titulo_oferece_a_campanha(self):
+    def test_titulo_comeca_a_campanha(self):
         import argparse
-        from rpg.__main__ import CAMPANHA, menu_principal
+        from rpg.__main__ import menu_principal
         pasta = tempfile.mkdtemp()
-        ui = Roteiro([CAMPANHA, "Guerreiro", "Resgate"])
+        ui = Roteiro(["Novo jogo", "Guerreiro", "Resgate"])
         ui.max_decisoes = 30
         with mock.patch.object(Jogo, "rodar", side_effect=FimDeJogo), mock.patch.object(Roteiro, "interativo", False):
             ui.roteiro.append("Sair")  # depois de começar, volta ao título e sai
-            menu_principal(ui, argparse.Namespace(seed=3, saves=pasta, brando=False, dev=None))
-        self.assertIn(CAMPANHA, ui.ofertas[0])
-        self.assertIn("Novo jogo", ui.ofertas[0])
+            menu_principal(ui, argparse.Namespace(seed=3, saves=pasta, dev=None))
+        self.assertEqual(ui.ofertas[0], ["Novo jogo", "Sair"])
 
     def test_robo_atravessa_o_vale(self):
         """O robô joga ao acaso (eventos, lutas, vila, resgate): nada quebra e ninguém para na saída fechada."""
@@ -213,7 +216,6 @@ class TestCampanha(unittest.TestCase):
                 except LimiteBot:
                     pass
                 self.assertNotEqual(g.loc["tipo"], "saida")
-                self.assertFalse(set(g.contagem) & campanha.EVENTOS_FORA)
 
 
 if __name__ == "__main__":

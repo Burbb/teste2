@@ -409,20 +409,28 @@ async function cenarioVila(browser) {
 }
 
 async function cenarioCampanha(browser) {
-  console.log("cenário: campanha (protótipo do Vale do Turvo)");
+  console.log("cenário: campanha (o título de um modo só e o save do mundo gerado)");
   const { proc, url } = await subir("campanha");
   const { page, erros, esperar } = await abrir(browser, url);
   try {
-    conferir(!!(await esperar('#prompt .escolha:has-text("Campanha")')) && !!(await page.$('#prompt .escolha:has-text("Novo jogo")')),
-      "o título oferece o novo jogo e a campanha");
+    await esperar('#prompt .escolha:has-text("Novo jogo")');
+    const titulo = await page.$$eval("#prompt .escolhas:not(.escolhido) .escolha", (bs) => bs.map((b) => b.textContent.replace(/\s+/g, " ").trim()));
+    conferir(titulo.length === 3 && /Novo jogo/.test(titulo[0]) && /Carregar/.test(titulo[1]) && /Sair/.test(titulo[2]),
+      `o título oferece só o novo jogo, carregar e sair (${titulo.join(" | ")})`);
     await (await page.$('#prompt .escolha:has-text("Carregar")')).click();
     const maria = await esperar('.save-cartao:has-text("Maria")');
     conferir(!!maria && /Vale do Turvo · resgate/.test(await maria.textContent()), "o save da campanha diz a região e o modo");
     const jean = await page.$('.save-cartao:has-text("Jean")');
-    conferir(!!jean && /brando/.test(await jean.textContent()) && !/Vale do Turvo/.test(await jean.textContent()),
-      "o save do mundo gerado continua como era");
-    await (await page.$('#prompt .escolha:has-text("Voltar")')).click();
-    await (await esperar('#prompt .escolha:has-text("Campanha")')).click();
+    conferir(!!jean && /mundo gerado · não abre mais/.test(await jean.textContent()) && !/Vale do Turvo/.test(await jean.textContent()),
+      "o save do mundo gerado aparece na lista, marcado como incompatível");
+    await jean.click();
+    conferir(!!(await esperar('#texto :text("Este save não abre")', 8000)) && /mundo gerado/.test(await page.textContent("#texto")),
+      "abrir o save do mundo gerado dá uma mensagem curta, sem travar");
+    for (let t = 0; t < 40 && !(await page.$('#prompt .escolhas:not(.escolhido) .escolha:has-text("Novo jogo")')); t++) {
+      const c = await page.$("#prompt .continuar"); if (c) await c.click().catch(() => {});
+      await page.waitForTimeout(200);
+    }
+    await (await esperar('#prompt .escolha:has-text("Novo jogo")')).click();
     // Sem `esperar` aqui: ele clica em qualquer .continuar, e o "Confirmar" do nome também é um. Se o botão chegasse
     // um instante antes do campo, o teste confirmava o nome padrão sozinho (a falha que aparecia às vezes).
     await (await page.waitForSelector(".entrada-texto input", { timeout: 20000 })).fill("Ana");
@@ -556,7 +564,7 @@ async function cenarioRecarga(browser) {
     conferir(inteira(t, "Maria") && /Capela Afogada/.test(t.missao), "recarregar a página mantém a tela inteira");
     await sairSalvando();
     t = await carregar("Jean");
-    conferir(inteira(t, "Jean") && !t.missao, "o save do mundo gerado também carrega inteiro, sem missão");
+    conferir(inteira(t, "Jean") && !!t.missao, "o outro save, no Vau, também carrega inteiro, com a missão");
   } finally {
     conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
     await page.close();
@@ -829,7 +837,8 @@ async function cenarioCustosEExausto(browser) {
     await page.close();
     proc.kill();
   }
-  ({ proc, url } = await subir("covil", { PERIODO: "3", LUGAR: "selvagem", SEMENTE: "9" }));
+  // a semente em que o Explorar da noite no Charco cai num evento que se recusa com uma frase de fim (o duelo)
+  ({ proc, url } = await subir("covil", { PERIODO: "3", LUGAR: "selvagem", SEMENTE: "31" }));
   ({ page, erros } = await abrir(browser, url));
   try {
     await (await page.waitForSelector(`${MENU}:has-text("Explorar")`, { timeout: 20000 })).click();
@@ -2436,7 +2445,8 @@ async function cenarioBaus(browser) {
     const passo = () => {
       const j = document.querySelector("#sobre-achado:not(.saindo) .janela-achado");
       if (j) { const r = j.getBoundingClientRect(), n = j.querySelector(".achado-cartao.novo b").textContent;
-        (window.__janelas[n] = window.__janelas[n] || new Set()).add(`${Math.round(r.width)}x${Math.round(r.height)}@${Math.round(r.left)},${Math.round(r.top)}`); }
+        const q = (window.__janelas[n] = window.__janelas[n] || { tam: new Set(), x: [], y: [] });
+        q.tam.add(`${Math.round(r.width)}x${Math.round(r.height)}`); q.x.push(r.left); q.y.push(r.top); }
       requestAnimationFrame(passo);
     };
     requestAnimationFrame(passo);
@@ -2473,7 +2483,9 @@ async function cenarioBaus(browser) {
     conferir(vistos.join("|") === resumo.equips.join("|"), "depois do resumo, cada equipamento vem na janela dele, na mesma ordem");
     await page.waitForTimeout(600);
     const fim = await page.evaluate(() => ({ festas: window.__festas, baus: (App.estado.heroi.bolsa.find((b) => b.id === "bau") || {}).qtd || 0,
-      instaveis: Object.entries(window.__janelas).filter(([, s]) => s.size !== 1).map(([n]) => n) }));
+      // o tamanho fixo; a posição, até o tremor do Estouro de um item raro (1.201.0: poucos pixels em volta do lugar)
+      instaveis: Object.entries(window.__janelas).filter(([, q]) => q.tam.size !== 1 || Math.max(...q.x) - Math.min(...q.x) > 12
+        || Math.max(...q.y) - Math.min(...q.y) > 12).map(([n]) => n) }));
     conferir(fim.festas === 1 && fim.baus === 0, `um quadro de espólio só e a pilha vazia (${fim.festas} quadro, ${fim.baus} baús)`);
     conferir(!fim.instaveis.length, "a moldura de cada item fica estável" + (fim.instaveis.length ? `: ${fim.instaveis.join(", ")}` : ""));
   } finally {

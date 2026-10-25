@@ -448,16 +448,6 @@ def cadaver_aventureiro(g):
             g.dizer("Um sussurro agradecido sai da terra. O espírito te concede um pouco de sua força.", "magenta")
             g.bonus_permanente("poder", 1)
             g.j.recalcular()
-    vivos = [l for l in g.mundo["locais"] if l["tipo"] == "covil" and not l["guardiao"]["derrotado"]
-             and not g.flag(f"fraqueza:guardiao:{l['id']}")]
-    if vivos and g.chance(0.6):
-        alvo = g.sortear(vivos)
-        gu = alvo["guardiao"]
-        g.dizer(f"Num diário manchado de sangue: \"...{gu['nome']} em {alvo['nome']}... descobri o ponto fraco, "
-                f"preciso avisar alguém...\" As anotações são detalhadas.", "verde+negrito")
-        g.marcar(f"fraqueza:guardiao:{alvo['id']}")
-        g.marcar(f"conhecido:{alvo['id']}")
-        g.dizer(f"(Você causará +25% de dano em {gu['nome']}.)", "verde")
     g.ganhar_ouro(g.rng.randint(5, 20))
     if g.chance(0.4):
         g.oferecer_equip(gerar_equip(g.rng, g.j.classe, g.j.nivel))
@@ -512,25 +502,6 @@ def jogo_de_dados(g):
         g.perder_ouro(aposta)
     else:
         g.dizer("Empate. Vocês riem e dividem uma bebida.", "cinza")
-
-
-@evento(peso=4, cooldown=12, cond=lambda g: g.nivel_local() >= 5)
-def visao_do_vazio(g):
-    a = g.antagonista
-    g.dizer("O mundo perde a cor. Por um instante você está em outro lugar: um trono rachado, um céu sem estrelas, "
-            f"e {a['curto']} olhando diretamente para você.", "magenta+negrito")
-    g.dizer(f"\"Eu vejo você, {g.j.nome}.\"", "magenta")
-    if g.teste("vontade", 13):
-        g.dizer("Você sustenta o olhar. Algo se rompe do outro lado — você viu mais do que deveria.", "verde")
-        g.ganhar_xp(15 + 5 * g.j.nivel)
-        vivos = [l for l in g.mundo["locais"] if l["tipo"] == "covil" and not l["guardiao"]["derrotado"]]
-        if vivos:
-            l = g.sortear(vivos)
-            g.marcar(f"conhecido:{l['id']}")
-            g.dizer(f"Na visão, você viu onde {tx.aposto(l['guardiao']['nome'])} se esconde: {l['nome']}.", "verde")
-    else:
-        g.dizer("Você cai de joelhos, sangrando pelo nariz.", "vermelho")
-        g.ferir(g.j.max_hp * 0.2, " com a visão")
 
 
 @evento(peso=50, cooldown=2, cond=lambda g: g.semente("ladrao_fugitivo"))
@@ -595,30 +566,6 @@ def pacote_suspeito(g):
     else:
         g.dizer("\"Que pena.\" Ele assobia. Dois capangas saem do mato.", "vermelho")
         g.combate([g.inimigo("bandido"), g.inimigo("bandido")])
-
-
-@evento(peso=12, cooldown=6, cond=lambda g: g.loc["tipo"] == "covil" and not g.loc["guardiao"]["derrotado"])
-def sinais_do_guardiao(g):
-    gu = g.loc["guardiao"]
-    sinais = {
-        "Rainha Aracnídea": "Casulos do tamanho de homens pendem das árvores. Alguns ainda se mexem.",
-        "Árvore Anciã": "As árvores aqui têm rostos. Todos virados na mesma direção.",
-        "Hidra do Brejo": "Escamas do tamanho de escudos boiam na água. E três trilhas paralelas de lodo.",
-        "Bruxa Afogada": "Uma canção de ninar ecoa sobre a água. Ninguém à vista.",
-        "Rei Troll": "Ossos roídos empilhados formando uma espécie de... muralha.",
-        "Dragão de Gelo": "Uma faixa de gelo corta a rocha, como se algo tivesse soprado inverno puro.",
-        "Senhor da Guerra": "Estacas com elmos espetados marcam a trilha. Um aviso.",
-        "Profeta das Cinzas": "Cinzas caem do céu limpo. Cânticos distantes.",
-        "Lich Menor": "Esqueletos montam guarda imóveis, lanças erguidas, esperando ordens.",
-        "Golem Primordial": "O chão treme em intervalos regulares. Passos.",
-    }
-    g.dizer(sinais.get(gu["base"], "Algo enorme vive aqui."), "magenta")
-    if not g.flag(f"fraqueza:guardiao:{g.loc['id']}") and g.teste("percepcao", 14):
-        g.dizer(f"Você estuda os sinais com cuidado e entende como {gu['nome']} se move. Um ponto fraco!",
-                "verde+negrito")
-        g.marcar(f"fraqueza:guardiao:{g.loc['id']}")
-    else:
-        g.combate(g.grupo(n=1))
 
 
 @evento(peso=6, cooldown=10)
@@ -732,37 +679,3 @@ def mercador_raro(g):
         g.oferecer_equip(esc)
 
 
-# ---------------------------------------------------------------------- legado de partidas anteriores
-@evento(contextos=("explorar", "viagem"), peso=80, cooldown=0, unico=True,
-        cond=lambda g: g.flag("tumulo") and g.flag("tumulo")["local"] == g.loc["id"])
-def tumulo_do_heroi(g):
-    t = g.flag("tumulo")
-    if t["resultado"] == "corrupcao":  # partidas de antes da 1.16, quando o reino podia cair
-        causa = "quando a sombra engoliu o mundo"
-    else:
-        causa = t["causa"].replace("Você tombou diante de", "diante de").rstrip(".")
-    g.dizer(f"Uma lápide tosca, coberta de musgo. Alguém gravou com a ponta de uma faca: \"{t['nome']}, "
-            f"{t['nome_classe'].lower()} de nível {t['nivel']}. Caiu {causa}, no dia {t['dia']}.\"", "magenta")
-    g.dizer("Este mundo não é o mesmo daquele herói... e ainda assim, aqui está. Ecos atravessam a Fenda.",
-            "magenta")
-    op = g.menu("O que faz?", [
-        ("Prestar homenagem", "honrar"),
-        ("Cavar e pegar o que ficou com o corpo", "cavar"),
-    ])
-    if op == "honrar":
-        g.dizer(f"Você se ajoelha. Por um instante, sente a mão de {t['nome']} no seu ombro.", "verde")
-        g.ganhar_xp(20 + 10 * g.j.nivel)
-        g.mudar_reputacao(2)
-        return
-    arma = t.get("arma")
-    if arma and arma.get("classe") == g.j.classe:
-        item = gerar_equip(g.rng, g.j.classe, g.j.nivel + 1, slot="arma", qualidade=1)
-        item["nome"] = f"{arma['nome'].split(' ')[0]} de {t['nome']}"
-    else:
-        item = gerar_equip(g.rng, g.j.classe, g.j.nivel + 1, slot="amuleto", qualidade=1)
-        item["nome"] = f"Medalhão de {t['nome']}"
-    g.dizer("Entre os ossos, algo ainda brilha.", "amarelo")
-    g.oferecer_equip(item)
-    if g.chance(0.4):
-        g.dizer("Um frio sobe pelos seus braços. Os mortos não gostam de ser roubados.", "vermelho")
-        g.combate([g.inimigo("espectro", afixo="anciao")])

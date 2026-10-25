@@ -1,8 +1,7 @@
-"""Legado entre partidas e o bestiário."""
+"""O bestiário."""
 
 from .. import texto as tx
 from ..dados import FAMILIAS, LORE, TRACOS_FICHA, retrato
-from .. import legado
 
 
 def _eficacias_familia(fam):
@@ -16,30 +15,7 @@ def _eficacias_familia(fam):
 
 
 class Bestiario:
-    # ================================================================ legado e bestiário
-    def preparar_legado(self):
-        """Heróis de partidas anteriores deixam marcas neste mundo."""
-        self.lendas = legado.carregar(self.pasta_saves)[-6:]
-        if not self.lendas:
-            return
-        ultimo = self.lendas[-1]
-        if ultimo["resultado"] == "vitoria":
-            self.marcar("estatua", ultimo)
-            self.j.reputacao += 5
-        else:
-            selvagens = [l for l in self.mundo["locais"] if l["tipo"] == "selvagem"]
-            self.marcar("tumulo", dict(ultimo, local=self.sortear(selvagens)["id"]))
-
-    def registrar_legado(self, resultado, causa):
-        if self.campanha:  # o legado marca os próximos mundos gerados; a campanha escrita não entra nele
-            return
-        j = self.j
-        legado.registrar(self.pasta_saves, {
-            "nome": j.nome, "classe": j.classe, "spec": j.spec, "nome_classe": j.nome_classe, "nivel": j.nivel,
-            "dia": self.dia, "resultado": resultado, "causa": causa, "arma": j.equip["arma"],
-            "antagonista": self.antagonista["nome"], "sigilos": len(j.sigilos),
-        })
-
+    # ================================================================ bestiário
     def ver_criatura(self, familia):
         if familia in FAMILIAS:
             b = self.bestiario.setdefault(familia, {"vistos": 0, "abates": 0})

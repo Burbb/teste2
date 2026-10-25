@@ -1,22 +1,21 @@
-"""A campanha escrita: regiões de mapa fixo, que o motor percorre como percorre o mundo gerado.
+"""A campanha: regiões de mapa fixo (E2, roadmapIDEIAS/11-E1-REGIAO-INICIAL.md). Hoje, o Vale do Turvo. Desde a
+1.206.0 é o único modo do jogo (o mundo gerado saiu: roadmapIDEIAS/24-RETIRADA-DO-PROCEDURAL.md).
 
-Protótipo da E2 (roadmapIDEIAS/11-E1-REGIAO-INICIAL.md): só o Vale do Turvo, com início, viagem, descoberta e save.
-Missão, cenas escritas, encontros fixos da comitiva e finais ainda não existem aqui.
-
-O mundo montado tem o mesmo formato do procedural (mundo.gerar_mundo): lugares com id numérico pela posição na lista,
-`con` com as estradas, `visitado`, `perigo`, x/y no mapa. Cada lugar ganha também uma `chave` estável (o id narrativo,
-para missões e falas futuras) e um `nivel` fixo. O mundo leva `campanha` (o id da região) e `antagonista` vazio: o vilão
-da campanha ainda não foi decidido.
+O mundo montado: lugares com id numérico pela posição na lista, `con` com as estradas, `visitado`, `perigo`, x/y no
+mapa, uma `chave` estável (o id narrativo, para missões e falas) e um `nivel` fixo. O mundo leva `campanha` (o id da
+região) e as missões dela.
 """
 
 from . import caspar, missoes
+
+INICIO = "turvo"  # a região em que a campanha começa
 
 REGIOES = {
     "turvo": dict(
         nome="Vale do Turvo",
         inicio="vau_do_turvo",
         # (chave, nome, tipo, bioma, nível, perigo, x, y). Nível: o dos inimigos (numa vila, o dos arredores). Perigo:
-        # a mesma escala do procedural (afixos, criaturas da Fenda), coerente com o nível.
+        # de 1 a 5 (afixos, criaturas da Fenda), coerente com o nível.
         lugares=[
             ("vau_do_turvo", "Vau do Turvo", "vila", "planicie", 1, 1, 0.40, 0.55),
             ("charco_dos_juncos", "Charco dos Juncos", "selvagem", "pantano", 1, 1, 0.14, 0.40),
@@ -39,17 +38,6 @@ REGIOES = {
     ),
 }
 
-# Eventos do mundo gerado que não cabem na campanha (falam do vilão sorteado, que a campanha ainda não tem). Os
-# outros eventos (ambiente, bioma, classe, comitiva, contratos do mural) continuam valendo.
-EVENTOS_FORA = frozenset({
-    "visao_do_vazio",       # o vilão sorteado e os covis dos guardiões
-    "veterano_cicatrizes",  # ouvir as histórias fala do vilão sorteado
-    "sonho_profetico",      # o covil e o trono do vilão sorteado
-    "sussurros_do_vazio",   # a voz do vilão sorteado na fogueira
-    "pregador_do_vazio",    # o vilão sorteado (o pregador da campanha vem na E3)
-})
-
-
 def montar_mundo(regiao):
     """O mundo de uma região escrita, no formato do procedural. O lugar de início é o id 0."""
     r = REGIOES[regiao]
@@ -65,14 +53,14 @@ def montar_mundo(regiao):
     for a, b, trechos in r["estradas"]:
         locais[ids[a]]["con"][str(ids[b])] = trechos
         locais[ids[b]]["con"][str(ids[a])] = trechos
-    return {"locais": locais, "antagonista": None, "atual": 0, "campanha": regiao,
+    return {"locais": locais, "atual": 0, "campanha": regiao,
             "missoes": missoes.estado_inicial(regiao)}
 
 
 def ajustar_save(g):
     """Saves da campanha de antes das missões (1.48–1.49): a missão entra na primeira etapa, sem cenas vistas. Nada do
     que já existe muda (personagem, bolsa, mapa descoberto, lugar); a cena de abertura toca na próxima vez em que a
-    pessoa estiver no Vau do Turvo. O mundo gerado não tem missões."""
+    pessoa estiver no Vau do Turvo."""
     if g.campanha and "missoes" not in g.mundo:
         g.mundo["missoes"] = missoes.estado_inicial(g.campanha)
     elif g.campanha:
@@ -87,8 +75,3 @@ def ajustar_save(g):
 
 def nome(regiao):
     return REGIOES[regiao]["nome"] if regiao in REGIOES else None
-
-
-def eventos_fora(g):
-    """Os ids de evento que não valem nesta partida: nenhum no procedural."""
-    return EVENTOS_FORA if g.campanha else frozenset()

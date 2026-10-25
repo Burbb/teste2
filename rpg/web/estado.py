@@ -205,15 +205,13 @@ def mapa_conhecido(g):
     for loc in locais:
         if loc["id"] not in vistos:
             continue
-        covil = mapa.covil_conhecido(g, loc)
         nos.append({
             "id": loc["id"], "n": loc["id"] + 1, "nome": loc["nome"], "x": loc["x"], "y": loc["y"],
             "tipo": loc["tipo"], "bioma": loc["bioma"], "visitado": loc["visitado"], "atual": loc["id"] == atual,
             "distancia": vizinhos.get(loc["id"]), "descricao": mapa.descricao(g, loc),
             # numa vila, o dos arredores (as estradas por onde se chega e se sai); a saída fechada não tem
             "nivel": None if loc.get("fechado") else nivel_regiao(loc),
-            "covil": ("vencido" if loc["guardiao"]["derrotado"] else "ativo") if covil else None,
-            # a viagem não chega lá agora ("fechado", a saída da campanha; "selada", a cidadela sem os Sigilos): a mesma
+            # a viagem não chega lá agora ("fechado", a saída que ainda não leva a lugar nenhum): a mesma
             # regra que a viagem usa para recusar (mapa.bloqueio); o mapa desenha a cancela e tira o convite de viagem
             "bloqueio": mapa.bloqueio(g, loc),
         })
@@ -359,6 +357,6 @@ def estado(g):
         "glossario": glossario(),
         "itens": itens.para_tela(),  # ícone e contador de cada consumível e recurso
         "contratos": [g.cartao_contrato(c) for c in g.contratos],
-        **({"missoes": missoes.cartoes(g)} if g.campanha else {}),  # a missão da campanha (o mundo gerado não tem)
+        "missoes": missoes.cartoes(g),  # a missão da campanha
         **({"capitulo": capitulo.para_tela(g)} if capitulo.concluido(g) else {}),  # o fim do capítulo, no rastreador
     }

@@ -126,28 +126,6 @@ def duelo_de_honra(g):
         g.mudar_reputacao(3)
 
 
-@evento(peso=5, cooldown=20, cond=_classe("guerreiro"), max_vezes=2)
-def veterano_cicatrizes(g):
-    g.dizer("Um velho de uma perna só pesca à beira do rio. Ao ver sua espada, ele sorri sem dentes. "
-            "\"Lutei na Primeira Fenda. Quer aprender algo que nenhum mestre ensina?\"", "amarelo")
-    op = g.menu("O que faz?", [
-        ("Treinar com ele a tarde toda", "treinar"),
-        ("Ouvir as histórias dele", "ouvir"),
-        ("Agradecer e seguir", "nao"),
-    ])
-    if op == "treinar":
-        g.avancar_periodo()
-        g.dizer("Ele te derruba onze vezes. Na décima segunda, você entende.", "verde")
-        g.bonus_permanente("atk", 1)
-        g.bonus_permanente("defesa", 1)
-        g.j.recalcular()
-    elif op == "ouvir":
-        a = g.antagonista  # "Ele" é o veterano; o "conhecido" é o antagonista, no gênero do título
-        g.dizer(f"Ele fala sobre {a['curto']} como quem fala de "
-                f"{'uma velha conhecida' if a['g'] == 'f' else 'um velho conhecido'}.", "cinza")
-        g.ganhar_xp(15 + 3 * g.j.nivel)
-
-
 @evento(peso=6, cooldown=14, cond=lambda g: g.j.classe == "guerreiro" and g.j.equip["arma"] is not None)
 def ferreiro_itinerante(g):
     arma = g.j.equip["arma"]
@@ -357,7 +335,7 @@ def falcao_mensageiro(g):
     if not ok:
         g.dizer("O falcão desvia e some entre as nuvens.", "cinza")
         return
-    alvos = [l for l in g.mundo["locais"] if l["tipo"] in ("selvagem", "covil") and l["id"] != g.loc["id"]]
+    alvos = [l for l in g.mundo["locais"] if l["tipo"] == "selvagem" and l["id"] != g.loc["id"]]
     alvo = g.sortear(alvos)
     g.dizer(f"A mensagem é de um cultista: \"O dízimo da Fenda está guardado em {alvo['nome']}. Que ninguém "
             f"o encontre.\"", "verde+negrito")
@@ -485,12 +463,6 @@ def contrato_da_irmandade(g):
         g.dizer(f"{alvo['nome']} entrega o nome de um cultista importante e foge. A Irmandade não vai gostar.",
                 "amarelo")
         g.ganhar_xp(30)
-        vivos = [l for l in g.mundo["locais"] if l["tipo"] == "covil" and not l["guardiao"]["derrotado"]]
-        if vivos:
-            l = g.sortear(vivos)
-            g.marcar(f"fraqueza:guardiao:{l['id']}")
-            g.marcar(f"conhecido:{l['id']}")
-            g.dizer(f"Entre os documentos: o ponto fraco de {l['guardiao']['nome']}!", "verde+negrito")
         g.plantar("irmandade_cobra", 8)
 
 
@@ -552,7 +524,7 @@ def anomalia_arcana(g):
         g.dizer("A energia te rejeita com violência.", "vermelho")
         g.ferir(g.j.max_hp * 0.3)
     elif resultado == "teleporte":
-        destino = g.sortear([l for l in g.mundo["locais"] if l["tipo"] not in ("cidadela", "saida")])
+        destino = g.sortear([l for l in g.mundo["locais"] if l["tipo"] != "saida"])
         g.dizer(f"Um clarão... e você está em {destino['nome']}!", "magenta+negrito")
         g.mundo["atual"] = destino["id"]
         destino["visitado"] = True

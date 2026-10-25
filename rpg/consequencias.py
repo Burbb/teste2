@@ -11,7 +11,7 @@ Marta está de cama; Marta depois que a água limpa) e o que o Diário diz da Fo
                     "limpando" até o 3º dia e depois "limpa"
 
 A comporta ainda não existe como ação: nenhum caminho aqui supõe que ela foi fechada (11-E1, seção 4: com ela fechada,
-destruir não teria a noite pior). O mundo gerado não tem nada disto.
+destruir não teria a noite pior).
 """
 
 from . import missoes
@@ -27,7 +27,7 @@ FONTE = {
 
 
 def _missao(g):
-    return missoes.registro(g, MISSAO) if g.campanha else None
+    return missoes.registro(g, MISSAO)
 
 
 def estado_fonte(g):
@@ -123,7 +123,7 @@ def frase_da_vila(g):
 
 def ambiente(g, frase):
     """A frase de ambiente da vila (jogo.menu_vila; a frase sorteada vem pronta, o sorteio segue igual). No Vau da
-    campanha: depois do desfecho, a da Fonte e da praça; antes, a sorteada, trocada quando o mundo gerado contradiz o
+    campanha: depois do desfecho, a da Fonte e da praça; antes, a sorteada, trocada quando a frase genérica contradiz o
     Vau (a febre não é peste, a capela não tem padre que fugiu, o pregador da praça é Caspar e fala da bruxa)."""
     if not no_vau(g):
         return frase

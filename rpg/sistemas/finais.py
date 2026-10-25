@@ -1,4 +1,4 @@
-"""Resumo, morte, vitória e o retrato final do herói para o registro."""
+"""Resumo, morte e o retrato final do herói para o registro."""
 
 import os
 from .. import texto as tx
@@ -29,17 +29,17 @@ class Finais:
         self.dizer(f"Inimigos derrotados: {e['abates']}  ·  Guardiões: {e['chefes']}  ·  "
                    f"Eventos vividos: {e['eventos']}  ·  Ouro ganho: {e['ouro_ganho']}  ·  "
                    f"Quedas: {e.get('quedas', 0)}", "ciano")
-        self.dizer(f"Semente do mundo: {self.seed} (use --seed para jogar o mesmo reino de novo)", "cinza")
+        self.dizer(f"Semente: {self.seed} (use --seed para repetir o sorteio)", "cinza")
         caminho = telemetria.exportar(self)
         if caminho:
             self.dizer(f"Registro da partida salvo em: {caminho} (e o .jsonl ao lado). "
                        f"Mande esses arquivos para análise de equilíbrio.", "ciano")
 
     def cair_sem_luta(self, causa, motivo):
-        """A fome ou a infecção zerou a vida (causa: "fome" ou "infeccao"). Na campanha com resgate, é uma queda como
-        a do combate: o resgate vem quando a noite termina (Tempo.novo_dia). No hardcore e no mundo gerado, a partida
-        acaba, como sempre (motivo: o texto da morte)."""
-        if not self.campanha or self.hardcore:
+        """A fome ou a infecção zerou a vida (causa: "fome" ou "infeccao"). Com o resgate, é uma queda como a do
+        combate: o resgate vem quando a noite termina (Tempo.novo_dia). No hardcore, a partida acaba (motivo: o texto
+        da morte)."""
+        if self.hardcore:
             self.fim_de_jogo(motivo)
         if self.resgatando:  # nos dias do próprio resgate o tratamento segura: não há queda dentro da queda
             self.j.hp = max(1, self.j.hp)
@@ -48,7 +48,6 @@ class Finais:
         self.queda_pendente = self.queda_pendente or causa
 
     def fim_de_jogo(self, motivo):
-        self.registrar_legado("morte", motivo)
         self.estatisticas["causa"] = motivo
         registrar(self, "fim", resultado="morte", causa=motivo, **self._retrato_final())
         if self.hardcore:  # morte permanente de verdade: o save vai junto
@@ -65,32 +64,6 @@ class Finais:
             "O próximo a tentar encontrará seus ossos — e talvez aprenda com eles.",
         ])
         self.narrar(epitafio, "cinza")
-        self.resumo()
-        self.pausar()
-        raise FimDeJogo()
-
-    def vitoria(self):
-        j = self.j
-        a = self.antagonista
-        self.registrar_legado("vitoria", f"derrotou {a['nome']}")
-        self.estatisticas["venceu"] = True
-        registrar(self, "fim", resultado="vitoria", causa=f"derrotou {a['nome']}", **self._retrato_final())
-        self.ui.cena("Vitória", f"dia {self.dia}", "vitoria")
-        self.narrar(f"{tx.maiuscula(a['curto'])} se desfaz como cinza ao vento. A Fenda se fecha com um "
-                    f"suspiro que ecoa por todo o reino.", "amarelo")
-        epilogos = {
-            "paladino": "Os templos acendem velas em seu nome. Você se torna o escudo do reino.",
-            "berserker": "Bardos cantam sobre a fúria que nem o Vazio conseguiu conter.",
-            "patrulheiro": "Você volta às matas, onde cada árvore parece saudar seu retorno.",
-            "sombra": "Ninguém sabe ao certo quem salvou o reino. É exatamente como você prefere.",
-            "piromante": "Por anos, o céu sobre a Fenda brilha em tons de brasa. Sua marca.",
-            "necromante": "Os vivos te temem, os mortos te agradecem. Você aprendeu a conviver com os dois.",
-        }
-        self.narrar(epilogos.get(j.spec, "Você volta para casa, mais velho do que os dias de viagem explicam."))
-        if j.reputacao >= 20:
-            self.narrar("Em cada vila por onde passa, crianças brincam de ser você.")
-        elif j.reputacao <= -20:
-            self.narrar("O reino está salvo, mas as portas se fecham quando você passa. Heróis nem sempre são amados.")
         self.resumo()
         self.pausar()
         raise FimDeJogo()

@@ -78,7 +78,7 @@ class TestQuedaSemLuta(unittest.TestCase):
         g = no_charco()
         self.assertIsNone(cair_de_noite(g))
 
-    def test_hardcore_e_mundo_gerado_morrem_como_antes(self):
+    def test_hardcore_morre_como_antes(self):
         pasta = tempfile.mkdtemp()
         g = Jogo(Roteiro(), seed=5, pasta_saves=pasta, hardcore=True)
         g.iniciar("Teste", "guerreiro", "turvo")
@@ -87,13 +87,6 @@ class TestQuedaSemLuta(unittest.TestCase):
         with self.assertRaises(FimDeJogo):
             g.novo_dia(descanso=1)
         self.assertFalse(any(f.endswith(".json") for f in os.listdir(pasta)))  # o hardcore apaga
-        g = Jogo(Roteiro(), seed=5, pasta_saves=tempfile.mkdtemp(), hardcore=False)
-        g.iniciar("Teste", "guerreiro")
-        for preparar in (faminto, infeccionado):
-            preparar(g)
-            with self.assertRaises(FimDeJogo):
-                g.novo_dia(descanso=1)
-            self.assertIsNone(g.queda_pendente)
 
     def test_rodar_leva_a_causa_ao_resgate(self):
         g = faminto(no_charco())

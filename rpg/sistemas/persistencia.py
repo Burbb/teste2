@@ -6,12 +6,17 @@ import re
 from ..campanha import ajustar_save, nome as nome_campanha
 from ..entidades import Jogador
 from .. import telemetria
-from ..migracoes import CAMPOS_SAVE, VERSAO_SAVE, migrar
+from ..migracoes import CAMPOS_SAVE, VERSAO_SAVE, SaveIncompativel, migrar
 from ..regras import FimDeJogo
 
 
+# O save do modo que saiu na 1.206.0 (o mundo gerado, sem `campanha` no mundo): a lista mostra, carregar recusa.
+SAVE_DO_MUNDO_GERADO = "é do mundo gerado, um modo que saiu do jogo. O arquivo continua na pasta dos saves."
+
+
 def resumo_save(caminho):
-    """O que a tela de carregar mostra de um save, sem montar o jogo: nome, classe, nível, dia e lugar."""
+    """O que a tela de carregar mostra de um save, sem montar o jogo: nome, classe, nível, dia e lugar. `incompativel`:
+    o save do mundo gerado (não abre mais)."""
     from ..classes import CLASSES
     nome = os.path.splitext(os.path.basename(caminho))[0]
     resumo = {"arquivo": nome, "nome": nome, "modificado": os.path.getmtime(caminho)}
@@ -24,8 +29,10 @@ def resumo_save(caminho):
                       nivel=j["nivel"], dia=d.get("dia"), lugar=locais[d["mundo"]["atual"]]["nome"],
                       hardcore=d.get("hardcore", True))
         regiao = d["mundo"].get("campanha")
-        if regiao:  # save da campanha escrita: a tela diz qual (e o modo dela); o do mundo gerado fica como sempre foi
+        if regiao:  # a tela diz a região e o modo
             resumo["campanha"] = nome_campanha(regiao) or regiao
+        else:
+            resumo["incompativel"] = True
     except (OSError, ValueError, KeyError, IndexError, TypeError):
         resumo["ilegivel"] = True
     return resumo
@@ -48,10 +55,8 @@ class Persistencia:
 
     def caminho_save(self):
         slug = re.sub(r"[^a-z0-9]+", "_", self.j.nome.lower()).strip("_") or "heroi"
-        # A campanha escrita grava com o nome da região na frente: um herói da campanha nunca sobrescreve o save de
-        # um herói do mundo gerado com o mesmo nome.
-        prefixo = f"{self.campanha}_" if self.campanha else ""
-        return os.path.join(self.pasta_saves, f"{prefixo}{slug}.json")
+        # Com o nome da região na frente: o save de um herói do mundo gerado (o modo que saiu) com o mesmo nome fica.
+        return os.path.join(self.pasta_saves, f"{self.campanha}_{slug}.json")
 
     def salvar(self, silencioso=False):
         os.makedirs(self.pasta_saves, exist_ok=True)
@@ -79,9 +84,12 @@ class Persistencia:
     @classmethod
     def carregar(cls, ui, caminho, pasta_saves="saves"):
         """Lê um save de qualquer versão: as migrações o trazem até o formato atual antes de montar o jogo.
-        Levanta migracoes.SaveIncompativel se o arquivo for de uma versão mais nova (ou não for um save)."""
+        Levanta migracoes.SaveIncompativel se o arquivo for de uma versão mais nova, do mundo gerado ou não for um
+        save."""
         with open(caminho, encoding="utf-8") as f:
             dados = migrar(json.load(f))
+        if not dados.get("mundo", {}).get("campanha"):
+            raise SaveIncompativel(SAVE_DO_MUNDO_GERADO)
         g = cls(ui, dados["seed"], pasta_saves)
         r = dados["rng"]
         g.rng.setstate((r[0], tuple(r[1]), r[2]))
@@ -89,5 +97,5 @@ class Persistencia:
         for campo in CAMPOS_SAVE:  # só o que o jogo conhece; campos estranhos no arquivo são ignorados
             if campo in dados:
                 setattr(g, campo, dados[campo])
-        ajustar_save(g)  # campanha de antes das missões: a missão começa (campanha.py)
+        ajustar_save(g)  # saves de antes das missões: a missão começa (campanha.py)
         return g

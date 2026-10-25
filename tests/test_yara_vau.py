@@ -286,16 +286,11 @@ class TestTextos(unittest.TestCase):
         yara_na_fogueira(g)
         return ui
 
-    def test_fogueira_fala_da_fonte_na_campanha_e_do_poco_no_mundo_gerado(self):
+    def test_fogueira_fala_da_fonte(self):
         ui = self.fogueira(campanha())
         opcoes = ui.ofertas[0]
         self.assertTrue(any(o.startswith("\"A febre vem da água da fonte nova, não dela.\" (Carisma") for o in opcoes))
         self.assertIn("Você fala da fonte nova", " ".join(ui.ditos))
-        g = Jogo(Roteiro(), seed=5, pasta_saves=tempfile.mkdtemp())
-        g.iniciar("Teste", "guerreiro")
-        ui = self.fogueira(g)
-        self.assertTrue(any(o.startswith("\"A febre vem do poço, não dela.\" (Carisma") for o in ui.ofertas[0]))
-        self.assertIn("moleiro que desviou o riacho", " ".join(ui.ditos))
 
     def test_ambiente_do_vau_sem_padre_nem_peste(self):
         g = campanha()
@@ -307,14 +302,6 @@ class TestTextos(unittest.TestCase):
         self.assertEqual(consequencias.ambiente(g, AMBIENTE_VILA[1]), AMBIENTE_VILA[1])  # o que cabe, fica
         g = resolvida("descansada", dias=5)
         self.assertEqual(consequencias.ambiente(g, AMBIENTE_VILA[2]), consequencias.frase_da_vila(g))
-
-    def test_ambiente_do_mundo_gerado_igual(self):
-        g = Jogo(Roteiro(), seed=5, pasta_saves=tempfile.mkdtemp())
-        g.iniciar("Teste", "guerreiro")
-        g.mundo["atual"] = next(l for l in g.mundo["locais"] if l["tipo"] == "vila")["id"]
-        for frase in AMBIENTE_VILA:
-            self.assertEqual(consequencias.ambiente(g, frase), frase)
-
 
 if __name__ == "__main__":
     unittest.main()

@@ -12,7 +12,7 @@ Duas partes, separadas de propósito:
   abertura, as recompensas e o sorteio são os mesmos: nada aqui sorteia, e o que se marca como visto (a ação que a
   orientação ensina aconteceu, ou a ocasião dela passou) não depende da caixa.
 
-O estado mora em `g.mundo["abertura"]` (vai no save com o mundo). Um save sem ele (de antes, ou do mundo gerado) não
+O estado mora em `g.mundo["abertura"]` (vai no save com o mundo). Um save sem ele (de antes da abertura) não
 tem despensa; a Ajuda pode ligar as orientações nele também.
 """
 
@@ -39,7 +39,7 @@ def comecar(g, tutorial):
 
 
 def _registro(g):
-    """O estado, criado vazio se ainda não há (um save de antes, o mundo gerado): sem despensa."""
+    """O estado, criado vazio se ainda não há (um save de antes da abertura): sem despensa."""
     return g.mundo.setdefault("abertura", {"tutorial": False, "vistas": [], "lutas_sem_habilidade": 0})
 
 
@@ -62,7 +62,7 @@ def visto(g, oid):
 
 # ------------------------------------------------------------------ a despensa
 def _no_vau(g):
-    return (bool(g.campanha) and g.loc.get("chave") == VAU and g.combate_ativo is None and not g.na_estrada)
+    return (g.loc.get("chave") == VAU and g.combate_ativo is None and not g.na_estrada)
 
 
 def cena_pendente(g):
@@ -644,7 +644,7 @@ def _f2(g, a):
 def curandeira_gratis(g):
     """O primeiro tratamento de um ferimento do herói na curandeira, de graça, uma vez por personagem, na campanha
     (com as orientações ligadas ou não). Só se gasta com o tratamento feito; separado do grátis do templo."""
-    return bool(g.campanha) and not g.flag("curandeira_gratis_usado")
+    return not g.flag("curandeira_gratis_usado")
 
 
 def _f3(g, a):

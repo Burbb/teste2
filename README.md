@@ -6,8 +6,8 @@ aparece assim nos registros antigos. A Fenda continua sendo a do mundo do jogo.*
 RPG de texto **offline**, em português. O motor é escrito em **Python puro**, e a tela é uma
 interface em HTML que roda localmente, sem internet.
 Um RPG **hardcore** e sombrio, no espírito de Diablo: aqui você não é o escolhido.
-A fome mata, feridas infeccionam, a noite cega e a morte é permanente. Cada partida gera
-um reino diferente: mapa, nomes, chefes, eventos e consequências.
+A fome mata, feridas infeccionam e a noite cega. A campanha começa no Vale do Turvo, uma região
+escrita, e cada partida muda nos encontros, nos inimigos, nos eventos e nas consequências.
 
 ![O dado de Percepção falha, um lobo gélido surge e a luta começa no palco sobre a paisagem](docs/interface.png)
 
@@ -56,9 +56,10 @@ Precisa do Python 3.8 ou mais novo. Não precisa instalar nada:
 python jogar.py          # ou: python -m rpg
 ```
 
-No título, **Novo jogo** gera um reino novo, como sempre. **Campanha** abre o protótipo da campanha escrita:
-o Vale do Turvo, de mapa fixo (vila, charco, bosque e uma capela afundada), com viagem e save; a história e a
-missão da região ainda vão chegar. Na campanha você escolhe o modo: resgate (padrão) ou hardcore.
+No título, **Novo jogo** começa a campanha: o Vale do Turvo, de mapa fixo (vila, charco, bosque e uma capela
+afundada), com a missão da região, contratos, comitiva e o fim do primeiro capítulo. Na criação você escolhe o modo,
+resgate (padrão) ou hardcore, e se quer as orientações do tutorial. (O modo do reino gerado ao acaso saiu na 1.206.0;
+um save dele aparece na lista como incompatível e não abre, mas o arquivo continua na pasta.)
 
 O jogo abre no navegador. Ele roda **no seu computador**: o servidor escuta só em
 `127.0.0.1` e cada sessão tem uma chave própria. Para jogar numa **janela própria**, como
@@ -74,8 +75,7 @@ pip install -r requirements.txt   # pywebview (janela própria) e textual (modo 
 | `--sem-abrir` | Não abre nada sozinho, só mostra o endereço |
 | `--terminal` | Joga dentro do terminal, com painéis (precisa do `textual`) |
 | `--classico` | Terminal simples, sem cores especiais e sem dependências |
-| `--seed 1234` | Gera sempre o mesmo reino (bom para comparar partidas) |
-| `--brando` | Modo brando: ao cair em combate você é resgatado (perde ouro e dois dias) |
+| `--seed 1234` | Fixa o sorteio (bom para comparar partidas) |
 | `--velocidade lento\|normal\|rapido\|instantaneo` | Velocidade com que o texto surge |
 | `--saves PASTA` | Onde salvar (padrão: `~/.cronicas_da_fenda`) |
 
@@ -266,7 +266,7 @@ papel: a gótica **Jacquard 24** nos títulos e nomes; **Jersey 15** nos número
 | clique no mapa | Viajar para aquele destino |
 | qualquer tecla durante o texto | Mostrar o texto inteiro |
 | `Espaço`/`Enter` | Continuar ▸ |
-| `M` | Mapa do reino |
+| `M` | Mapa |
 | `H` ou `F2` | Histórico completo da partida |
 | `V` ou `F3` | Velocidade do texto |
 | `S` | Liga/desliga o som |
@@ -301,8 +301,7 @@ Você não precisa caminhar sozinho, e talvez não deva. Três companheiros pode
   só se abre com confiança.
 - **Missões pessoais em três atos**, com escolhas que mudam o companheiro para sempre: a
   mãe de um acólito morto, um tenente que sobreviveu à Varn Bridge, um círculo de pedras
-  negras onde uma porta pode ser fechada ou aberta de vez. Algumas dessas escolhas mudam
-  quem estará ao seu lado (ou contra você) no salão do trono.
+  negras onde uma porta pode ser fechada ou aberta de vez.
 - **Discussões** entre companheiros: às vezes você vai ter que tomar partido.
 - **O acampamento.** Quem sai da comitiva não some: vai **esperar no acampamento**. Quando
   você acampa à noite, abre a cena da **fogueira**: você e a comitiva em volta do fogo e quem
@@ -315,17 +314,14 @@ Você não precisa caminhar sozinho, e talvez não deva. Três companheiros pode
 
 ## O objetivo
 
-Uma Fenda para o Vazio se abriu no reino. Três **guardiões** guardam os **Sigilos**
-que abrem o caminho até a Cidadela, onde o vilão (gerado a cada partida) espera.
+O Vale do Turvo adoece: uma febre que veio com a água. A missão da região leva do Vau do Turvo ao charco, ao
+bosque e à capela afundada, atrás de onde a febre nasce, e termina o primeiro capítulo. A história continua nas
+próximas partes da campanha (a Estrada de Varn, ao sul, ainda não leva a lugar nenhum).
 
-- O **nível dos inimigos depende da região**, não do seu. Quanto mais longe da vila
-  inicial, mais perigoso (o mapa mostra o "Nv." de cada lugar). Os guardiões têm nível
-  fixo e o chefe final é nível 11. Correr direto para os chefes não funciona:
-  é preciso evoluir, equipar-se, aprender fraquezas e recrutar aliados.
-- **Quanto mais perto da Fenda**, a leste, rumo à Cidadela, mais criaturas dela (caídos, cães
-  infernais, crias do Vazio, abominações) e mais feras tocadas pelo Vazio.
-- **A morte é permanente.** (No modo `--brando`, alguém te resgata e você acorda numa
-  vila, perdendo ouro e dois dias.)
+- O **nível dos inimigos depende do lugar**, não do seu (o mapa mostra o "Nv." de cada um). Correr para o que é forte
+  demais não funciona: é preciso evoluir, equipar-se, aprender fraquezas e recrutar aliados.
+- **Hardcore:** a morte é permanente e o save é apagado. **Resgate:** se você cair (em combate, de fome ou de
+  infecção), alguém da vila te encontra e cuida de você, ao custo de parte do ouro e de dois dias.
 
 ## Sobrevivência
 
@@ -336,7 +332,7 @@ que abrem o caminho até a Cidadela, onde o vilão (gerado a cada partida) esper
   braço fraturado, perna torcida, cortes, queimaduras...) e reduzem seus atributos.
   Feridas abertas precisam ser enfaixadas com bandagem, ou podem **infeccionar**. A infecção causa febre
   e mata se não for tratada com unguento ou por um curandeiro.
-- **Escuridão:** à noite, nas ruínas e na Cidadela, você precisa de tochas. Sem luz, você
+- **Escuridão:** à noite e nas ruínas, você precisa de tochas. Sem luz, você
   fica pior em percepção e destreza e é emboscado com mais facilidade.
 - **Cura lenta:** acampar recupera 30% da vida (18% na chuva, neve ou tempestade); a
   taverna, 35%; para voltar inteiro, o templo cobra. Poções são caras e o mercado de cada vila tem
@@ -360,24 +356,15 @@ na janela dele, para comparar, equipar, guardar ou deixar.
 
 ## Mapa
 
-O reino é gerado no espaço: regiões de bioma contínuas e estradas que não se cruzam.
-O mapa mostra o que você já descobriu (o resto fica na névoa):
-
-```
-   ⌂1─────────@5───          @ você   ⌂ vila   ♣ floresta   ≈ pântano
-              ╲  ╲──Π4        ▲ montanha   ∴ planície   Π ruínas
-               ╲              ☠ covil   ✓ covil vencido   ♜ cidadela
-                ∴7─────☠9
-```
-
-Os números do mapa são os mesmos do menu de viagem, que avisa quando um destino é
+O mapa mostra a região: os lugares que você já descobriu e as estradas até eles (o resto fica na névoa), com o
+nível dos inimigos de cada lugar. Os números do mapa são os mesmos do menu de viagem, que avisa quando um destino é
 perigoso demais para o seu nível.
 
 ## Árvore de talentos
 
 Cada classe tem uma árvore em 3 colunas: o **tronco comum** no meio e, nas laterais,
 talentos que **só funcionam com uma das especializações**. Você ganha 1 ponto por nível
-e 1 por guardião derrotado (não dá para pegar tudo):
+e 1 pelo Sigilo de um guardião (não dá para pegar tudo):
 
 ```
             ← PALADINO          TRONCO COMUM          BERSERKER →
@@ -420,9 +407,7 @@ Novas habilidades chegam nos níveis 2, 3, 4 e 7 (a habilidade suprema da especi
 
 ## O que deixa as jornadas diferentes
 
-- **Mundo procedural:** mapa em grafo com vilas, regiões selvagens, covis e a Cidadela.
-  Nomes de lugares, NPCs, guardiões e do vilão são gerados a cada partida.
-- **88 eventos** com pesos dinâmicos. O que pode acontecer depende de classe,
+- **90 eventos** com pesos dinâmicos. O que pode acontecer depende de classe,
   especialização, bioma, clima, período do dia, reputação, perigo do lugar e das suas escolhas
   anteriores. Eventos vistos recentemente perdem peso, para não repetir.
 - **Eventos de classe e especialização:** caçar, fabricar flechas, derrubar um falcão
@@ -432,16 +417,12 @@ Novas habilidades chegam nos níveis 2, 3, 4 e 7 (a habilidade suprema da especi
 - **Consequências que voltam:** quem você ajuda (ou rouba) pode reaparecer dias depois:
   um viajante grato com um presente, um bandido poupado que vira aliado (ou traidor), um
   ladrão que fugiu com seu ouro, a família da criança perdida...
-- **Aliados na batalha final:** muitas boas ações recrutam ajuda para o confronto final.
 - **Nêmesis:** se você fugir de uma criatura de elite, ela volta mais forte para te caçar.
-- **Rumores:** nas tavernas você ouve sobre tesouros, feras lendárias, mercadores raros e
-  pontos fracos dos guardiões (+25% de dano). Alguns rumores são falsos.
+- **Rumores:** nas tavernas você ouve sobre tesouros, feras lendárias e mercadores raros. Alguns
+  rumores são falsos.
 - **Bestiário:** fraquezas e habilidades de cada criatura só aparecem depois de você
   derrotar algumas (magos estudam à primeira vista). Com 5 abates você vira mestre
   caçador daquela criatura (+10% de dano).
-- **Legado entre partidas:** heróis anteriores deixam marcas no próximo mundo: o túmulo
-  de quem caiu (com a arma dele e um espírito aliado), a estátua de quem venceu e
-  baladas nas tavernas.
 - **Inimigos com afixos** (feroz, ancião, corrompido, flamejante...), **traços**
   (voador, blindado, etéreo, morto-vivo...) e **fraquezas**. Passe o mouse na carta do
   inimigo (ou use *Analisar inimigos* no terminal).
@@ -465,8 +446,8 @@ rpg/
     tempo.py         clima, períodos, dias, descanso, acampamento e taverna
     recompensas.py   ouro, XP, vida, itens, reputação, sementes e rumores
     testes.py        testes de atributo (d20 + bônus contra a dificuldade)
-    navegacao.py     viagem e mapa · chefes.py guardiões e batalha final
-    bestiario.py     legado e bestiário · servicos.py ferreiro, curandeiro, rumores
+    navegacao.py     viagem e mapa · chefes.py o Sigilo dos guardiões
+    bestiario.py     bestiário · servicos.py ferreiro, curandeiro, rumores
     finais.py        morte, vitória e resumo · persistencia.py salvar, carregar, sair
   balanceamento.py todos os números de dificuldade e generosidade, num lugar só
   migracoes.py     versão do save e as migrações de saves antigos
@@ -490,7 +471,7 @@ rpg/
   habilidades.py   habilidades como dados: blocos que executam na luta e se descrevem no Grimório
   grimorio.py      o livro de habilidades e a conta de crítico (a mesma do combate e da ficha)
   classes.py, inimigos.py, itens.py, talentos.py, dados.py, mundo.py, mapa.py, texto.py,
-  legado.py, sobrevivencia.py, telemetria.py
+  sobrevivencia.py, telemetria.py
   eventos/         motor de eventos e os eventos (comuns, biomas, classe, noite, vila, comitiva)
 tests/
   test_simulacao.py  robôs jogando, sistemas, saves antigos

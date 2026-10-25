@@ -48,7 +48,6 @@ def com_yara(g, onde="grupo"):
     return g
 
 
-
 def ate_o_ossuario(g):
     """Da porta da capela até o ossuário, pelas salas já vencidas (1.79.0: a sala em que se está conta)."""
     for sala in ("salao", "sacristia", "ossuario"):
@@ -304,14 +303,6 @@ class TestSaves(unittest.TestCase):
         missoes.ir_na_capela(h, "fundo")
         self.assertEqual([o[1][2] for o in missoes.opcoes(h)], ["lodo"])
 
-    def test_procedural_sem_caspar(self):
-        g = Jogo(Roteiro(), seed=5, pasta_saves=tempfile.mkdtemp())
-        g.iniciar("Teste", "guerreiro")
-        self.assertTrue(caspar.fogueira_possivel(g))
-        self.assertFalse(caspar.yara_barrada(g))
-        self.assertNotIn("missoes", g.mundo)
-
-
 class TestMesmoDia(unittest.TestCase):
     """Voltando ao Vau no mesmo dia do confronto, nenhum texto conta uma noite que ainda não veio."""
 
@@ -346,7 +337,7 @@ class TestDiarioConcluidas(unittest.TestCase):
 
     def texto(self, g):
         g.ui.ditos = []
-        g._diario_texto(None)
+        g._diario_texto()
         return g.ui.ditos
 
     def test_ativa_pendencia_e_concluida(self):

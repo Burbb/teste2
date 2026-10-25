@@ -42,7 +42,7 @@ class Contratos:
 
     def gerar_contrato(self):
         j = self.j
-        selvagens = [l for l in self.mundo["locais"] if l["tipo"] in ("selvagem", "covil")]
+        selvagens = [l for l in self.mundo["locais"] if l["tipo"] == "selvagem"]
         vilas = [l for l in self.mundo["locais"] if l["tipo"] == "vila" and l["id"] != self.loc["id"]]
         tipo = self.sortear(["caca", "caca", "alvo", "alvo", "entrega"])
         cid = self.novo_id()
@@ -223,10 +223,8 @@ class Contratos:
     def diario(self):
         while True:
             self.ui.cena("Diário", f"dia {self.dia}", "menu")
-            a = self.antagonista
             n = self.nemesis
             dados = {
-                "antagonista": {"nome": a["nome"], "origem": a["origem"]} if a else None,
                 "sigilos": len(self.j.sigilos),
                 "dia": self.dia,
                 "contratos": [self.cartao_contrato(c) for c in self.contratos], "limite": 3,
@@ -234,12 +232,11 @@ class Contratos:
                 "rumores": [{"texto": r["texto"], "expira": r["expira"] - self.dia} for r in self.rumores],
                 "nemesis": {"nome": n["nome"], "familia": FAMILIAS[n["familia"]]["nome"]} if n else None,
             }
-            if self.campanha:  # a missão da campanha, no alto do diário (missoes.py)
-                dados["missoes"] = missoes.cartoes(self, todas=True)  # as concluídas também ficam no Diário
-                dados["capitulo"] = capitulo.para_tela(self)  # o fim do capítulo, acima das missões
+            dados["missoes"] = missoes.cartoes(self, todas=True)  # a missão no alto; as concluídas também ficam
+            dados["capitulo"] = capitulo.para_tela(self)  # o fim do capítulo, acima das missões
             web = self.ui.painel("diario", dados)
             if not web:
-                self._diario_texto(a)
+                self._diario_texto()
             pendentes = [c for c in self.contratos if not c.get("concluido")]
             if not pendentes and not web:
                 self.pausar()
@@ -250,11 +247,9 @@ class Contratos:
                 return
             self.abandonar_contrato(c)
 
-    def _diario_texto(self, a):
-        if a:  # a campanha escrita ainda não tem vilão
-            self.dizer(f"Inimigo final: {a['nome']}, {a['origem']}.", "magenta")
-        cartoes = missoes.cartoes(self, todas=True) if self.campanha else []
-        fim = capitulo.para_tela(self) if self.campanha else None
+    def _diario_texto(self):
+        cartoes = missoes.cartoes(self, todas=True)
+        fim = capitulo.para_tela(self)
         if fim:
             self.dizer(f"{fim['nome']}: {fim['texto']} {fim['nota']}", "amarelo+negrito")
         ativas, feitas = [m for m in cartoes if not m["concluida"]], [m for m in cartoes if m["concluida"]]

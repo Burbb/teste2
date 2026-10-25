@@ -10,8 +10,6 @@ from .migracoes import SaveIncompativel
 from .sistemas.persistencia import resumo_save
 from .ui import UI
 
-CAMPANHA = "Campanha"  # o protótipo do Vale do Turvo, a região escrita (campanha.py)
-
 def escolher_save(ui, saves):
     """A lista de saves: na tela gráfica, cartões com classe, nível, dia e lugar; no texto, os nomes.
     Devolve o caminho escolhido ou None (voltar)."""
@@ -32,17 +30,15 @@ def menu_principal(ui, args):
         ui.cena("The Unquiet", None, "titulo")
         saves = sorted((s for s in glob.glob(os.path.join(args.saves, "*.json"))
                         if os.path.basename(s) != "legado.json"), key=os.path.getmtime, reverse=True)
-        # A campanha escrita (protótipo do Vale do Turvo) é outra forma de começar; o "Novo jogo" segue no mundo gerado.
-        opcoes = ["Novo jogo", CAMPANHA] + (["Carregar jogo"] if saves else []) + ["Sair"]
+        # Só a campanha (o mundo gerado saiu na 1.206.0): o modo (resgate ou hardcore) se escolhe na criação.
+        opcoes = ["Novo jogo"] + (["Carregar jogo"] if saves else []) + ["Sair"]
         esc = opcoes[ui.escolher("", opcoes)]
         try:
-            if esc in ("Novo jogo", CAMPANHA):
-                regiao = "turvo" if esc == CAMPANHA else None
-                # Na campanha, o modo (resgate ou hardcore) se escolhe na criação do personagem.
-                jogo = Jogo(ui, seed=args.seed, pasta_saves=args.saves, hardcore=not args.brando and not regiao)
+            if esc == "Novo jogo":
+                jogo = Jogo(ui, seed=args.seed, pasta_saves=args.saves)
                 jogo.autosalvar = ui.interativo
                 ui.jogo = jogo
-                if not jogo.novo_jogo(regiao):
+                if not jogo.novo_jogo():
                     ui.jogo = None
                     continue
                 if getattr(args, "dev", None):
@@ -55,7 +51,7 @@ def menu_principal(ui, args):
                     try:
                         jogo = Jogo.carregar(ui, caminho, args.saves)
                     except (SaveIncompativel, ValueError, KeyError) as erro:
-                        ui.dizer(f"Não deu para abrir esse save: {erro}", "vermelho")
+                        ui.dizer(f"Este save não abre: {erro}", "vermelho")
                         ui.pausar()
                         continue
                     jogo.autosalvar = ui.interativo
@@ -72,7 +68,7 @@ def menu_principal(ui, args):
 
 def main():
     parser = argparse.ArgumentParser(description="The Unquiet — RPG de texto offline")
-    parser.add_argument("--seed", type=int, help="semente do mundo (o mesmo número gera o mesmo reino)")
+    parser.add_argument("--seed", type=int, help="semente do sorteio (o mesmo número repete a partida)")
     parser.add_argument("--terminal", action="store_true",
                         help="joga dentro do terminal, com painéis (precisa do textual)")
     parser.add_argument("--classico", action="store_true",
@@ -82,9 +78,6 @@ def main():
     parser.add_argument("--sem-abrir", dest="abrir", action="store_false",
                         help="não abre o navegador sozinho (só mostra o endereço)")
     parser.add_argument("--porta", type=int, default=0, help="porta local da interface (padrão: qualquer livre)")
-    parser.add_argument("--brando", action="store_true",
-                        help="modo brando: ao cair em combate você é resgatado (sem morte permanente)")
-    parser.add_argument("--hardcore", action="store_true", help=argparse.SUPPRESS)  # já é o padrão
     parser.add_argument("--dev", type=int, metavar="N", choices=range(2, NIVEL_MAXIMO + 1),
                         help="teste: o jogo novo começa no nível N, com equipamento de acordo e pontos de talento")
     parser.add_argument("--sem-cor", action="store_true", help="desativa as cores (interface clássica)")

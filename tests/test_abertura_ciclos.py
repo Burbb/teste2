@@ -56,11 +56,8 @@ class TestTemplo(unittest.TestCase):
         ab.ligar(h, True)
         self.assertFalse(h.templo_gratis())
 
-    def test_igual_com_e_sem_tutorial_e_so_na_campanha(self):
+    def test_igual_com_e_sem_tutorial(self):
         self.assertTrue(depois_da_despensa(tutorial=False).templo_gratis())
-        g = Jogo(Jogador(), seed=3, pasta_saves=tempfile.mkdtemp(), hardcore=False)
-        g.iniciar("Teste", "mago")  # o mundo gerado: preços de sempre
-        self.assertFalse(g.templo_gratis())
 
 
 class TestContrato(unittest.TestCase):

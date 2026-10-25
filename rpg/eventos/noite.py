@@ -86,24 +86,6 @@ def ladrao_redimido(g):
     g.dar("bomba_fumaca")
 
 
-@evento(contextos=ACAMP, peso=6, cooldown=10)
-def sonho_profetico(g):
-    g.dizer("Você sonha com um lugar que nunca viu, mas reconhece.", "magenta")
-    vivos = [l for l in g.mundo["locais"] if l["tipo"] == "covil" and not l["guardiao"]["derrotado"]]
-    if vivos:
-        l = g.sortear(vivos)
-        g.dizer(f"{tx.aposto(l['guardiao']['nome'])} dorme em {l['nome']}. No sonho, você vê uma cicatriz antiga na "
-                f"criatura — um ponto fraco.", "magenta")
-        g.marcar(f"conhecido:{l['id']}")
-        if g.teste("vontade", 12):
-            g.marcar(f"fraqueza:guardiao:{l['id']}")
-            g.dizer("Você acorda lembrando de cada detalhe.", "verde")
-        else:
-            g.dizer("Ao acordar, os detalhes escorrem da memória.", "cinza")
-    else:
-        g.dizer(f"No sonho, {g.antagonista['curto']} te espera num trono. Você acorda suando frio.", "magenta")
-
-
 @evento(contextos=ACAMP, peso=8, cooldown=6, cond=lambda g: g.clima in ("limpo", "nublado"))
 def ceu_estrelado(g):
     g.dizer("O céu está limpo e coalhado de estrelas. Por algumas horas, o mundo parece em paz.", "azul")
@@ -111,25 +93,6 @@ def ceu_estrelado(g):
     if g.chance(0.3):
         g.dizer("Uma estrela cadente risca o céu. Você faz um pedido.", "azul")
         g.ganhar_xp(5 + g.j.nivel)
-
-
-@evento(contextos=ACAMP, peso=3, cooldown=8, cond=lambda g: g.nivel_local() >= 5)
-def sussurros_do_vazio(g):
-    g.dizer(f"Uma voz dentro da fogueira, com o timbre de {g.antagonista['curto']}: \"Para que lutar? "
-            f"Junte-se a mim e nunca mais terá medo.\"", "magenta+negrito")
-    op = g.menu("O que faz?", [("Recusar (Vontade)", "recusar"), ("Ouvir mais um pouco...", "ouvir")])
-    if op == "recusar" and g.teste("vontade", 14):
-        g.dizer("Você joga terra no fogo. A voz se cala.", "verde")
-        g.ganhar_xp(15)
-        return
-    g.dizer("Você escuta. É fácil escutar. A voz te ensina coisas — e cobra caro.", "magenta")
-    stat = "poder" if g.j.classe == "mago" else "atk"
-    g.bonus_permanente(stat, 2)
-    g.j.base["max_hp"] -= 6  # o preço não tem teto
-    g.j.recalcular()
-    g.mudar_reputacao(-3)
-    g.dizer(f"(+2 {'Poder' if stat == 'poder' else 'Ataque'}, mas −6 de vida máxima: a voz levou um pedaço de você)",
-            "magenta")
 
 
 @evento(contextos=ACAMP, peso=10, cooldown=6, cond=lambda g: g.j.companheiro is not None)

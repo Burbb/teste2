@@ -204,8 +204,7 @@ BAU_COMUM = 0.03
 BAU_OURO = (12, 24)           # sorteado, mais BAU_OURO_POR_NIVEL × nível (e o mundo é pobre: OURO_MUNDO)
 BAU_OURO_POR_NIVEL = 5
 BAU_EQUIP = 0.5               # chance de um equipamento (qualidade 1: incomum ou melhor mais vezes)
-BAU_SUPRIMENTOS = (1, 2)      # quantos suprimentos um baú dá no mundo gerado (sorteado)
-BAU_SUPRIMENTOS_CAMPANHA = 1  # na campanha, um só: o volume de suprimentos era alto (roadmapIDEIAS/16, P1)
+BAU_SUPRIMENTOS_CAMPANHA = 1  # um só: o volume de suprimentos era alto (roadmapIDEIAS/16, P1)
 
 # ---------------------------------------------------------------- contratos
 # O mundo é pobre: de todo ouro achado (saque, eventos), fica esta fração. O contrato já nasce com ela na conta,

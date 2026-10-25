@@ -78,7 +78,10 @@ class TestOrdemDasReacoes(unittest.TestCase):
         g.combate_ativo = cb
         ui.ev.clear()
         lobo.hp = 1
-        cb.atacar(g.j, lobo, 1.0)
+        for _ in range(20):  # até acertar (o sorteio depende do mundo montado antes)
+            cb.atacar(g.j, lobo, 1.0)
+            if not lobo.vivo:
+                break
         curas = [d for t, d in ui.ev if t == "cura"]
         self.assertEqual(len(curas), 1)
         self.assertEqual((curas[0]["em"], curas[0]["valor"], curas[0]["modo"]), ("j", 5, "cura"))

@@ -266,7 +266,7 @@ O desenho da criatura sai dos traços (`TRACOS_FICHA`: `retrato`, na ordem de `R
 também mora lá (`tipo` e `alcance`, multiplicando na ordem do catálogo).
 
 Um **afixo** (`AFIXOS`) declara onde cai (`sorteio`: "elite", "campeoes", "unico"). Um **guardião** (`GUARDIOES`) tem
-`id` fixo: o covil guarda o id no save.
+`id` fixo (o save do covil do mundo gerado guardava o id; o catálogo fica para a expansão).
 
 Conferir: `python -m unittest tests.test_conteudo` (habilidades, famílias, escoltas, traços, lore, ids e desenhos).
 

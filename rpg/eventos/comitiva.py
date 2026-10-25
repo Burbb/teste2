@@ -7,13 +7,9 @@ from ..comitiva import conversa
 from .motor import evento
 
 
-def _vivos_covis(g):
-    return [l for l in g.mundo["locais"] if l["tipo"] == "covil" and not l["guardiao"]["derrotado"]]
-
-
 # ====================================================================== ODETE
 @evento(contextos=("explorar", "viagem"), peso=lambda g: 16 if g.dia <= 8 else 6, cooldown=0, unico=True,
-        cond=lambda g: g.dia >= 2 and cm.disponivel(g, "odete") and g.loc["tipo"] != "cidadela")
+        cond=lambda g: g.dia >= 2 and cm.disponivel(g, "odete"))
 def odete_na_estrada(g):
     g.dizer("À beira da estrada, uma mulher de roupas chamuscadas está ajoelhada ao lado de um homem com a barriga "
             "aberta. Ela aperta a ferida com as próprias mãos. Não tem bandagens. Não tem mais nada.")
@@ -375,24 +371,20 @@ def morel_conversa_final(g, m):
 def yara_na_fogueira(g):
     g.dizer("Fumaça e gritos atrás das árvores. Numa clareira, aldeões com forcados e tochas cercam uma pilha de lenha. "
             "Amarrada a um poste no meio dela, uma moça de cabelo sujo de lama encara a multidão sem chorar.")
-    quem = "o Irmão Caspar, o homem de batina remendada" if g.campanha else "um homem de batina remendada"
-    pregador = "Caspar" if g.campanha else "o pregador"  # na campanha, o homem tem nome: o texto não o troca por outro
-    g.dizer(f"\"BRUXA!\", grita {quem}. \"O gado morreu, o poço secou, as crianças têm febre! "
+    g.dizer("\"BRUXA!\", grita o Irmão Caspar, o homem de batina remendada. \"O gado morreu, o poço secou, as crianças têm febre! "
             "Foi ela!\"", "vermelho")
     g.dizer("A moça vê você. Não pede ajuda. Só olha.", "cinza")
     op = g.menu("O que faz?", [
         ("\"Soltem a moça.\" (Força)", "forca"),
-        # Na campanha, a febre do Vau veio com a fonte nova (o poço só secou): a frase fala da água que a vila bebe.
-        ("\"A febre vem da água da fonte nova, não dela.\" (Carisma)" if g.campanha else
-         "\"A febre vem do poço, não dela.\" (Carisma)", "falar"),
+        # A febre do Vau veio com a fonte nova (o poço só secou): a frase fala da água que a vila bebe.
+        ("\"A febre vem da água da fonte nova, não dela.\" (Carisma)", "falar"),
         ("Assustá-los com magia (Arcano)", "magia") if g.j.classe == "mago" else None,
         ("\"Eu levo a bruxa daqui. Vinte moedas pelo incômodo.\"", "comprar") if g.j.ouro >= 20 else None,
         ("Deixar que façam justiça", "deixar"),
     ])
     if op == "deixar":
         g.narrar("A lenha pega rápido. Ela não grita. É isso que você vai lembrar depois: ela não gritou.", "vermelho")
-        g.narrar("Quando o fogo baixa, os aldeões rezam e voltam para casa. " + (
-            "No Vau, a febre continua." if g.campanha else "O poço continua seco."), "cinza")
+        g.narrar("Quando o fogo baixa, os aldeões rezam e voltam para casa. No Vau, a febre continua.", "cinza")
         cm.reagir(g, "fanatismo", "crueldade")
         g.marcar("comitiva:yara", "morto")
         return
@@ -414,13 +406,12 @@ def yara_na_fogueira(g):
     elif op == "falar":
         if g.teste("carisma", 13):
             g.dizer("Você fala da fonte nova, que brotou quando o poço secou, e da febre que começou junto com ela: "
-                    "a água, não uma moça do Charco dos Juncos. Um a um, os forcados baixam. Caspar é o último a ir embora." if g.campanha else
-                    "Você fala do moleiro que desviou o riacho, da água parada, das crianças que bebem dela. Um a um, "
-                    "os forcados baixam. O pregador é o último a ir embora.", "verde")
+                    "a água, não uma moça do Charco dos Juncos. Um a um, os forcados baixam. Caspar é o último a ir embora.",
+                    "verde")
             simpatia = 10
             cm.reagir(g, "diplomacia")
         else:
-            g.dizer(f"\"Outro bruxo!\", grita {pregador}. Mas ninguém se mexe, e você corta as cordas enquanto "
+            g.dizer("\"Outro bruxo!\", grita Caspar. Mas ninguém se mexe, e você corta as cordas enquanto "
                     "discutem.", "amarelo")
             simpatia = 6
     elif op == "magia":
@@ -434,7 +425,7 @@ def yara_na_fogueira(g):
             simpatia = 6
     else:
         g.perder_ouro(20)
-        g.dizer(f"{pregador[0].upper() + pregador[1:]} conta as moedas e abençoa você. A moça é desamarrada como se "
+        g.dizer("Caspar conta as moedas e abençoa você. A moça é desamarrada como se "
                 "fosse uma cabra vendida.", "cinza")
         simpatia = -2
         cm.reagir(g, "pragmatismo")
@@ -511,13 +502,6 @@ def yara_sonambula(g):
     if op == "seguir":
         g.dizer("Você a encontra ajoelhada diante de uma rachadura no chão, de onde sobe uma luz que não ilumina. Ela "
                 "fala. E alguma coisa responde.", "magenta")
-        vivos = _vivos_covis(g)
-        if vivos:
-            l = g.sortear(vivos)
-            g.marcar(f"conhecido:{l['id']}")
-            g.marcar(f"fraqueza:guardiao:{l['id']}")
-            g.dizer(f"Você ouve a voz falar de {l['guardiao']['nome']}: onde dorme ({l['nome']}), o que teme, onde "
-                    "sangra. (Você causará +25% de dano nele.)", "verde")
         g.dizer("Ao amanhecer, Yara volta para o acampamento como se nada tivesse acontecido. Você não diz nada. Ela "
                 "também não.", "cinza")
     elif op == "acordar":

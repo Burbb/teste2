@@ -79,8 +79,8 @@ def _inimigo(g, x):
     """Refaz um inimigo do registro com as regras de agora."""
     if x["familia"] == "guardiao":
         return _guardiao(x["nome"], x["nivel"])
-    if x["familia"] == "antagonista":
-        return fab.instanciar_antagonista(g.antagonista, x["nivel"])
+    if x["familia"] == "antagonista":  # das partidas do mundo gerado (o catálogo segue para a expansão)
+        return fab.instanciar_antagonista({"nome": x["nome"], "g": x.get("g", "m")}, x["nivel"])
     unico = None
     if ", " in x["nome"]:
         unico = x["nome"].split(", ")[0]

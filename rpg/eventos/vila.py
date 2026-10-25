@@ -10,35 +10,15 @@ VILA = ("vila",)
 
 # ---------------------------------------------------------------------- rumores
 def ouvir_rumor(g, preferir=None):
-    """Gera um rumor procedural. Alguns são falsos; outros ativam eventos em lugares específicos."""
-    locais = g.mundo["locais"]
-    selvagens = [l for l in locais if l["tipo"] in ("selvagem", "covil")]
-    covis = [l for l in locais if l["tipo"] == "covil" and not l["guardiao"]["derrotado"]]
+    """Gera um rumor sorteado. Alguns são falsos; outros ativam eventos em lugares específicos."""
+    selvagens = [l for l in g.mundo["locais"] if l["tipo"] == "selvagem"]
     p = g.npc()
     fonte = f"{p['um'].capitalize()} {p['prof']} {p['traco']}"
-    tipos = ["tesouro", "fera", "mercador"] + (["lore"] if g.antagonista else []) + ["fofoca"]  # a campanha ainda não tem vilão
-    if g.lendas:
-        tipos.append("lenda")
-    if covis:
-        tipos += ["fraqueza", "covil", "fraqueza"]
+    tipos = ["tesouro", "fera", "mercador", "fofoca"]
     tipo = preferir if preferir in tipos else g.sortear(tipos)
     falso = g.chance(0.15) and tipo in ("tesouro", "fera", "mercador")
 
-    if tipo == "fraqueza":
-        l = g.sortear(covis)
-        gu = l["guardiao"]
-        g.dizer(f"{fonte} baixa a voz: \"Meu avô enfrentou {tx.aposto(gu['nome'])} e voltou vivo. Ele dizia que a criatura "
-                f"tem uma ferida antiga que nunca fechou...\"", "amarelo")
-        g.marcar(f"fraqueza:guardiao:{l['id']}")
-        g.marcar(f"conhecido:{l['id']}")
-        g.dizer(f"(Você causará +25% de dano em {gu['nome']}, que vive em {l['nome']}.)", "verde")
-    elif tipo == "covil":
-        l = g.sortear(covis)
-        g.dizer(f"{fonte} diz: \"Ninguém mais passa por {l['nome']}. Dizem que {tx.aposto(l['guardiao']['nome'])} fez "
-                f"seu covil lá.\"", "amarelo")
-        g.marcar(f"conhecido:{l['id']}")
-        g.rumores.append({"texto": f"{tx.aposto(l['guardiao']['nome'])} vive em {l['nome']}.", "expira": g.dia + 30})
-    elif tipo == "tesouro":
+    if tipo == "tesouro":
         l = g.sortear(selvagens)
         g.dizer(f"{fonte} jura: \"Um contrabandista enterrou seu ouro em {l['nome']}, perto de uma pedra com "
                 f"três riscos. Morreu antes de voltar.\"", "amarelo")
@@ -58,22 +38,6 @@ def ouvir_rumor(g, preferir=None):
         g.dizer(f"{fonte} comenta: \"Vi uma tenda de seda roxa em {l['nome']}. O vendedor tinha olhos de ouro "
                 f"e coisas que não se acham em mercado nenhum.\"", "amarelo")
         _registrar(g, f"Um mercador estranho em {l['nome']}.", "mercador_raro", l, falso)
-    elif tipo == "lenda":
-        h = g.sortear(g.lendas)
-        if h["resultado"] == "vitoria":
-            feito = f"derrotou {h['antagonista']} e fechou a Fenda"
-        elif h["resultado"] == "corrupcao":  # partidas de antes da 1.16, quando o reino podia cair
-            feito = f"chegou a reunir {h.get('sigilos', 0)} Sigilos antes de a sombra vencer"
-        else:
-            feito = "caiu lutando, sem nunca recuar"
-        g.dizer(f"{fonte} canta uma balada antiga sobre {h['nome']}, {h['nome_classe'].lower()} que {feito}. "
-                f"A taverna inteira faz silêncio no último verso.", "amarelo")
-        g.ganhar_xp(5)
-    elif tipo == "lore":
-        a = g.antagonista
-        g.dizer(f"{fonte} conta a velha história de {a['nome']}, {a['origem']}. Dizem que "
-                f"{'ela' if a['g'] == 'f' else 'ele'} ainda sente falta de quem foi.", "amarelo")
-        g.ganhar_xp(5)
     else:
         fofoca = g.sortear([
             "o coveiro cobra o dobro agora, porque precisa enterrar os mortos duas vezes",
@@ -156,29 +120,6 @@ def festival(g):
         ouvir_rumor(g, preferir="fraqueza")
 
 
-@evento(contextos=VILA, peso=3, cooldown=12, cond=lambda g: g.loc["perigo"] >= 2)
-def pregador_do_vazio(g):
-    a = g.antagonista
-    g.dizer(f"Na praça, um homem de olhos fundos grita para a multidão: \"{tx.maiuscula(a['curto'])} não é "
-            f"o fim, é o começo! Abram-se ao Vazio!\" Algumas pessoas escutam com atenção demais.", "magenta")
-    op = g.menu("O que faz?", [
-        ("Desmascarar o pregador diante de todos (Carisma)", "debater"),
-        ("Segui-lo depois do sermão", "seguir"),
-        ("Ignorar", "nao"),
-    ])
-    if op == "debater":
-        if g.teste("carisma", 13):
-            g.dizer("Você expõe as contradições dele. A multidão o expulsa da vila.", "verde")
-            g.mudar_reputacao(4)
-        else:
-            g.dizer("A multidão vaia — você.", "vermelho")
-            g.mudar_reputacao(-2)
-    elif op == "seguir":
-        g.dizer("Ele te leva até um porão onde outros cultistas se reúnem.", "vermelho")
-        if g.combate([g.inimigo("cultista"), g.inimigo("cultista", afixo="corrompido")]) == "vitoria":
-            g.mudar_reputacao(5)
-
-
 @evento(contextos=VILA, peso=50, cooldown=2, cond=lambda g: g.semente("familia_grata")
         and g.semente("familia_grata")["dados"]["vila"] == g.loc["id"])
 def familia_grata(g):
@@ -236,7 +177,7 @@ def guarda_desconfiado(g):
 @evento(contextos=VILA, peso=6, cooldown=14)
 def pedido_de_socorro(g):
     p = g.npc()
-    l = g.lugar_para_contrato([x for x in g.mundo["locais"] if x["tipo"] in ("selvagem", "covil")])
+    l = g.lugar_para_contrato([x for x in g.mundo["locais"] if x["tipo"] == "selvagem"])
     g.dizer(f"{p['nome']}, {p['um']} {p['prof']} {p['traco']}, te puxa pelo braço: \"Meu irmão foi para "
             f"{l['nome']} há três dias e não voltou. Por favor!\"", "amarelo")
     if g.menu("Aceitar?", [("Prometer procurar", True), ("Dizer que não pode", False)]):

@@ -3,15 +3,15 @@
     python -m tests.navegador.cenarios combate   # mago em luta, com contrato de caça no lugar (FEITO)
     python -m tests.navegador.cenarios titulo    # menu principal com um save de dia para carregar
     python -m tests.navegador.cenarios vila      # guerreiro acha um item raro e abre o mural de contratos (ACHADO, ARMA)
-    python -m tests.navegador.cenarios campanha  # menu principal com saves dos dois modos; começar a campanha
+    python -m tests.navegador.cenarios campanha  # menu principal com um save da campanha e um do mundo gerado (não abre)
     python -m tests.navegador.cenarios baus      # vila com três baús na bolsa (BAUS): a pilha abre inteira
     python -m tests.navegador.cenarios missao    # campanha no Bosque do Moinho, na etapa de seguir o canal
-    python -m tests.navegador.cenarios recarga   # título com um save da campanha (Bosque, à noite) e um do mundo gerado
+    python -m tests.navegador.cenarios recarga   # título com dois saves da campanha (o Bosque à noite e o Vau)
     python -m tests.navegador.cenarios capela    # herói na Capela Afogada (CLASSE, ESPEC, ETAPA, SALA, DESFECHO, NIVEL, PREPARO, LUGAR, SEMENTE, PRISAO, PERIODO, TOCHAS)
     python -m tests.navegador.cenarios retorno   # chegando ao Vau com Ilse resolvida (DESFECHO, DIAS, LODO, YARA)
     python -m tests.navegador.cenarios praca     # depois da resposta a Caspar (POSTURA, YARA, LUGAR); no Vau, abre no fim do capítulo
     python -m tests.navegador.cenarios encruzilhada  # a escolha de especialização, comparando (CLASSE, NIVEL)
-    python -m tests.navegador.cenarios covil        # mundo gerado, no covil de um guardião (CLASSE, EVENTO, SEMENTE)
+    python -m tests.navegador.cenarios covil        # a campanha num lugar selvagem, para eventos e lutas (CLASSE, EVENTO, SEMENTE)
     python -m tests.navegador.cenarios tiro_duplo    # Patrulheiro contra três lobos feridos de jeitos diferentes (NIVEL, VIDAS)
     python -m tests.navegador.cenarios broquel       # Guerreiro nv 4 com o Broquel contra três lobos; repete com/sem o Revide (LUTA, ESPEC, NIVEL)
     python -m tests.navegador.cenarios resgate       # a recuperação: fome ou infecção no Charco, à noite (CLASSE, CAUSA, COMITIVA, CONTRATOS)
@@ -95,6 +95,7 @@ def combate(ui):
     g = Jogo(ui, seed=21, pasta_saves=tempfile.mkdtemp())
     ui.jogo = g
     g.iniciar("Jean", "mago")
+    ja_comecada(g)
     loc = next(l for l in g.mundo["locais"] if l["tipo"] == "selvagem" and l["bioma"] == "floresta")
     g.mundo["atual"] = loc["id"]
     loc["visitado"] = True
@@ -136,10 +137,11 @@ def titulo(ui):
     pasta = tempfile.mkdtemp()
     g = Jogo(BotUI(random.Random(1), max_decisoes=10), seed=4, pasta_saves=pasta)
     g.iniciar("Jean", "guerreiro")
+    ja_comecada(g)
     g.mundo["atual"] = next(l for l in g.mundo["locais"] if l["tipo"] == "selvagem")["id"]
     g.periodo, g.clima = 1, "limpo"
     g.salvar(silencioso=True)
-    menu_principal(ui, argparse.Namespace(seed=1, saves=pasta, brando=False))
+    menu_principal(ui, argparse.Namespace(seed=1, saves=pasta))
 
 
 def vila(ui):
@@ -151,6 +153,7 @@ def vila(ui):
     g = Jogo(ui, seed=8, pasta_saves=tempfile.mkdtemp())
     ui.jogo = g
     g.iniciar("Jean", os.environ.get("CLASSE", "guerreiro"))
+    ja_comecada(g)
     g.mundo["atual"] = next(l for l in g.mundo["locais"] if l["tipo"] == "vila")["id"]
     g.periodo, g.clima = 1, "limpo"
     g.j.ouro = 300
@@ -187,18 +190,44 @@ def vila(ui):
         pass
 
 
+def ja_comecada(g):
+    """A campanha já começada: a cena de abertura da missão vista e os primeiros atendimentos grátis usados. Os cenários
+    que abriam numa vila do mundo gerado (o modo que saiu na 1.206.0) abrem no Vau como abriam lá: sem a cena da missão
+    na frente nem o preço zero do templo e da curandeira."""
+    from rpg import missoes
+    missoes.registro(g, "febre_do_turvo")["cenas"].append("abertura")
+    g.marcar("templo_gratis_usado")
+    g.marcar("curandeira_gratis_usado")
+
+
+def save_do_mundo_gerado(pasta, nome, classe):
+    """Um save como o do mundo gerado (o modo que saiu na 1.206.0): o de uma campanha sem a `campanha` no mundo, com o
+    nome sem a região na frente. A lista mostra, carregar recusa com uma mensagem."""
+    import json
+    from rpg.ui import BotUI
+    g = Jogo(BotUI(random.Random(1), max_decisoes=10), seed=4, pasta_saves=pasta, hardcore=False)
+    g.iniciar(nome, classe)
+    g.salvar(silencioso=True)
+    with open(g.caminho_save(), encoding="utf-8") as f:
+        dados = json.load(f)
+    os.remove(g.caminho_save())
+    dados["mundo"].pop("campanha")
+    caminho = os.path.join(pasta, f"{nome.lower()}.json")
+    with open(caminho, "w", encoding="utf-8") as f:
+        json.dump(dados, f, ensure_ascii=False)
+    return caminho
+
+
 def campanha(ui):
-    """Menu principal com um save do mundo gerado (brando) e um da campanha (resgate), para criar outra campanha."""
+    """Menu principal com um save do mundo gerado (não abre mais) e um da campanha (resgate), para criar outra."""
     from rpg.__main__ import menu_principal
     from rpg.ui import BotUI
     pasta = tempfile.mkdtemp()
-    g = Jogo(BotUI(random.Random(1), max_decisoes=10), seed=4, pasta_saves=pasta, hardcore=False)
-    g.iniciar("Jean", "guerreiro")
-    g.salvar(silencioso=True)
+    save_do_mundo_gerado(pasta, "Jean", "guerreiro")
     c = Jogo(BotUI(random.Random(1), max_decisoes=10), seed=6, pasta_saves=pasta, hardcore=False)
     c.iniciar("Maria", "arqueiro", "turvo")
     c.salvar(silencioso=True)
-    menu_principal(ui, argparse.Namespace(seed=1, saves=pasta, brando=False))
+    menu_principal(ui, argparse.Namespace(seed=1, saves=pasta))
 
 
 def baus(ui):
@@ -212,6 +241,7 @@ def baus(ui):
     def montar(u, seed):
         g = Jogo(u, seed=seed, pasta_saves=tempfile.mkdtemp())
         g.iniciar("Jean", "guerreiro")
+        ja_comecada(g)
         g.mundo["atual"] = next(l for l in g.mundo["locais"] if l["tipo"] == "vila")["id"]
         g.periodo, g.clima = 1, "limpo"
         g.j.nivel = 4
@@ -263,7 +293,7 @@ def missao(ui):
 
 def recarga(ui):
     """Título com dois saves para carregar: a campanha no Bosque do Moinho (etapa "capela", noite de chuva, dia 25) e
-    um do mundo gerado. Para conferir que o lugar carregado aparece com a tela inteira, antes de qualquer ação."""
+    outra no Vau, no começo. Para conferir que o lugar carregado aparece com a tela inteira, antes de qualquer ação."""
     from rpg import missoes
     from rpg.__main__ import menu_principal
     from rpg.ui import BotUI
@@ -278,9 +308,10 @@ def recarga(ui):
     c.salvar(silencioso=True)
     g = Jogo(BotUI(random.Random(1), max_decisoes=10), seed=4, pasta_saves=pasta, hardcore=False)
     g.iniciar("Jean", "mago")
+    ja_comecada(g)
     g.salvar(silencioso=True)
-    os.utime(g.caminho_save(), (1, 1))  # o da campanha fica primeiro na lista
-    menu_principal(ui, argparse.Namespace(seed=1, saves=pasta, brando=False))
+    os.utime(g.caminho_save(), (1, 1))  # o do Bosque fica primeiro na lista
+    menu_principal(ui, argparse.Namespace(seed=1, saves=pasta))
 
 
 def capela(ui):
@@ -346,7 +377,7 @@ def capela(ui):
     except FimDeJogo:
         pass
     ui.jogo = None
-    menu_principal(ui, argparse.Namespace(seed=1, saves=pasta, brando=False))  # depois de Sair: o título, para carregar
+    menu_principal(ui, argparse.Namespace(seed=1, saves=pasta))  # depois de Sair: o título, para carregar
 
 
 def retorno(ui):
@@ -380,7 +411,7 @@ def retorno(ui):
     except FimDeJogo:
         pass
     ui.jogo = None
-    menu_principal(ui, argparse.Namespace(seed=1, saves=pasta, brando=False))
+    menu_principal(ui, argparse.Namespace(seed=1, saves=pasta))
 
 
 def praca(ui):
@@ -418,7 +449,7 @@ def praca(ui):
     except FimDeJogo:
         pass
     ui.jogo = None
-    menu_principal(ui, argparse.Namespace(seed=1, saves=pasta, brando=False))
+    menu_principal(ui, argparse.Namespace(seed=1, saves=pasta))
 
 
 def resgate(ui):
@@ -466,7 +497,7 @@ def resgate(ui):
     except FimDeJogo:
         pass
     ui.jogo = None
-    menu_principal(ui, argparse.Namespace(seed=1, saves=pasta, brando=False))
+    menu_principal(ui, argparse.Namespace(seed=1, saves=pasta))
 
 
 def encruzilhada(ui):
@@ -488,7 +519,7 @@ def encruzilhada(ui):
     except FimDeJogo:
         pass
     ui.jogo = None
-    menu_principal(ui, argparse.Namespace(seed=1, saves=pasta, brando=False))
+    menu_principal(ui, argparse.Namespace(seed=1, saves=pasta))
 
 
 def tiro_duplo(ui):
@@ -558,7 +589,7 @@ def abertura(ui):
     except FimDeJogo:
         pass
     ui.jogo = None
-    menu_principal(ui, argparse.Namespace(seed=1, saves=pasta, brando=False))
+    menu_principal(ui, argparse.Namespace(seed=1, saves=pasta))
 
 
 def gelo(ui):
@@ -593,8 +624,8 @@ def gelo(ui):
 
 
 def covil(ui):
-    """Mundo gerado, CLASSE (padrão guerreiro) no nível 1, no covil de um guardião ainda vivo (ou no primeiro lugar do
-    tipo LUGAR: vila, selvagem), no PERIODO (0 manhã ... 3 noite; padrão 0). BOLSA: "bandagem=0,pocao_vida=2" acerta a
+    """A campanha, CLASSE (padrão guerreiro) no nível 1, no primeiro lugar selvagem do mapa (o Charco dos Juncos; ou no
+    primeiro do tipo LUGAR: vila, selvagem), no PERIODO (0 manhã ... 3 noite; padrão 0). BOLSA: "bandagem=0,pocao_vida=2" acerta a
     bolsa; OURO, o ouro; FERIMENTOS, os do herói; RECOLHER, a chance de cada flecha gasta voltar (1 ou 0). PROTECAO (mendigo, santuario ou 1) dá a proteção; LUTA (uma família: lobo, troll, aranha...) começa uma luta com o
     herói quase sem vida (VIDA, NIVEL_LUTA e QUANTOS mudam isso). Com EVENTO (o nome da função: crianca_perdida, madeira_para_flechas, os_enfermos, odete_na_estrada,
     mendigo_misterioso...), o evento toca antes do menu. EFEITOS e EFEITOS_INIMIGO ("firme:2,guarda:2:0.3": o estado, os turnos e o
@@ -608,7 +639,9 @@ def covil(ui):
     g = Jogo(ui, seed=int(os.environ.get("SEMENTE", "8")), pasta_saves=tempfile.mkdtemp(), hardcore=False)
     ui.jogo = g
     g.iniciar("Jean", os.environ.get("CLASSE", "guerreiro"))
-    loc = next(l for l in g.mundo["locais"] if l["tipo"] == "covil")
+    ja_comecada(g)
+    # (o nome do cenário ficou do mundo gerado, quando ele abria num covil: os roteiros de foto o chamam assim)
+    loc = next(l for l in g.mundo["locais"] if l["tipo"] == "selvagem")
     g.mundo["atual"], loc["visitado"] = loc["id"], True
     g.periodo, g.clima = int(os.environ.get("PERIODO", "0")), "limpo"
     for fam, abates in (x.split(":") for x in os.environ.get("BESTIARIO", "").split(",") if x):  # o Bestiário já com
@@ -738,13 +771,15 @@ def reacoes(ui):
 
 
 def relatorio(ui):
-    """Mundo gerado, guerreiro forte num lugar selvagem: cada Explorar (VEZES, padrão 2) cai no EVENTO (padrão
-    encontro_hostil, uma luta comum), para o relatório da luta e o que vem depois dele."""
+    """A campanha, guerreiro forte num lugar selvagem: cada Explorar (VEZES, padrão 2) cai no EVENTO (padrão
+    encontro_hostil, uma luta comum), para o relatório da luta e o que vem depois dele. A última luta sobe o nível (o XP
+    fica a um ponto da subida antes dela), para a subida vir depois do relatório."""
     import rpg.eventos as eventos
     from rpg.eventos.motor import disparar_id
     g = Jogo(ui, seed=int(os.environ.get("SEMENTE", "4")), pasta_saves=tempfile.mkdtemp(), hardcore=False)
     ui.jogo = g
     g.iniciar("Jean", "guerreiro")
+    ja_comecada(g)
     loc = next(l for l in g.mundo["locais"] if l["tipo"] == "selvagem")
     g.mundo["atual"], loc["visitado"] = loc["id"], True
     g.periodo, g.clima = int(os.environ.get("PERIODO", "0")), "limpo"
@@ -757,6 +792,8 @@ def relatorio(ui):
         if contexto != "explorar" or not vezes[0]:
             return original(g2, contexto)
         vezes[0] -= 1
+        if not vezes[0]:
+            g2.j.xp = g2.j.xp_proximo() - 1
         return disparar_id(g2, os.environ.get("EVENTO", "encontro_hostil"), contexto) or True
     eventos.disparar = forcado
     try:
@@ -825,7 +862,7 @@ def fogueira(ui):
     except FimDeJogo:
         pass
     ui.jogo = None
-    menu_principal(ui, argparse.Namespace(seed=1, saves=pasta, brando=False))
+    menu_principal(ui, argparse.Namespace(seed=1, saves=pasta))
 
 
 def tutorial(ui):
@@ -992,7 +1029,7 @@ def tutorial(ui):
     except FimDeJogo:
         pass
     ui.jogo = None
-    menu_principal(ui, argparse.Namespace(seed=1, saves=pasta, brando=False))
+    menu_principal(ui, argparse.Namespace(seed=1, saves=pasta))
 
 
 def mercado(ui):
@@ -1008,6 +1045,7 @@ def mercado(ui):
     ui.jogo = g
     classe = os.environ.get("CLASSE", "arqueiro")
     g.iniciar("Jean", classe)
+    ja_comecada(g)
     g.mundo["atual"] = next(l for l in g.mundo["locais"] if l["tipo"] == "vila")["id"]
     g.periodo, g.clima = int(os.environ.get("PERIODO", "1")), "limpo"
     g.j.ouro = int(os.environ.get("OURO", "300"))
@@ -1042,6 +1080,7 @@ def aneis(ui):
     g = Jogo(ui, seed=8, pasta_saves=tempfile.mkdtemp())
     ui.jogo = g
     g.iniciar("Jean", "guerreiro")
+    ja_comecada(g)
     g.mundo["atual"] = next(l for l in g.mundo["locais"] if l["tipo"] == "vila")["id"]
     g.periodo, g.clima = 1, "limpo"
     g.j.ouro = int(os.environ.get("OURO", "300"))

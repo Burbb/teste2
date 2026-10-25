@@ -102,22 +102,6 @@ BIOMAS = {
     },
 }
 
-# Nomes de lugar, como as localizações profissionais fazem: o que descreve é traduzido e soa como lugar de
-# verdade ("Bosque do Lobo Branco", "Vau de Pedra"); nome inventado (Kalra, Varn, Ulook) fica como está.
-SUFIXOS_LUGAR = [
-    "do Corvo", "dos Lamentos", "da Lua Velha", "do Rei Caído", "dos Ossos", "de Prata",
-    "das Cinzas", "do Lobo Branco", "dos Sussurros", "da Névoa", "do Juramento",
-    "das Mil Vozes", "dos Ecos", "da Serpente", "dos Enforcados", "da Última Vigília",
-    "do Sino Partido", "das Bruxas", "do Gigante", "da Aurora",
-]
-
-# Vilas: um lugar (com gênero) e o que o qualifica (masculino, feminino): "Grota Fria", "Vigia do Corvo".
-VILA_QUALIFICA = [("de Pedra", "de Pedra"), ("Branco", "Branca"), ("Negro", "Negra"), ("Cinzento", "Cinzenta"),
-                  ("Frio", "Fria"), ("Velho", "Velha"), ("das Cinzas", "das Cinzas"), ("do Carvalho", "do Carvalho"),
-                  ("do Corvo", "do Corvo"), ("Dourado", "Dourada")]
-VILA_LUGARES = [("Vau", "m"), ("Vale", "m"), ("Grota", "f"), ("Vigia", "f"), ("Abrigo", "m"), ("Herdade", "f"),
-                ("Charneca", "f"), ("Ribeira", "f"), ("Cascata", "f"), ("Portela", "f")]
-
 # Criaturas da Fenda e o perigo mínimo do lugar para elas aparecerem fora do bioma delas (nesta ordem).
 CRIATURAS_DA_FENDA = ((3, "caido"), (4, "cao_infernal"), (4, "cria_vazio"), (5, "abominacao"))
 
@@ -478,7 +462,6 @@ ORIGENS_ANTAGONISTA = [
      "a bispa que abriu as catacumbas da catedral procurando Deus e encontrou outra coisa"),
     ("que abriu a Fenda há cem anos e agora quer atravessá-la por completo, arrastando o mundo junto",) * 2,
 ]
-NOMES_CIDADELA = ["Torre Negra", "Cidadela Partida", "Trono do Vazio", "Bastião das Cinzas", "Coroa de Obsidiana"]
 
 # Anotações do bestiário (reveladas ao encontrar cada criatura).
 # O que o bestiário conta de cada espécie (o lore mora na ficha da família; quem não tem, como o servo invocado, não

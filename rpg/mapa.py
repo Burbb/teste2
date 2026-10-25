@@ -1,4 +1,4 @@
-"""Desenho do mapa do reino em caracteres.
+"""Desenho do mapa da região em caracteres.
 
 `renderizar` devolve uma lista de linhas; cada linha é uma lista de pedaços
 (texto, cor). A interface clássica pinta com ANSI e a interface Textual
@@ -9,7 +9,7 @@ from .dados import BIOMAS
 from .mundo import nivel_regiao
 
 GLIFO_BIOMA = {"floresta": "♣", "pantano": "≈", "montanha": "▲", "planicie": "∴", "ruinas": "Π", "cidadela": "♜"}
-GLIFO_TIPO = {"vila": "⌂", "cidadela": "♜"}
+GLIFO_TIPO = {"vila": "⌂"}
 COR_BIOMA = {"floresta": "verde", "pantano": "ciano", "montanha": "branco", "planicie": "amarelo",
              "ruinas": "magenta", "cidadela": "vermelho"}
 
@@ -24,27 +24,19 @@ def conhecidos(g):
     return ids
 
 
-def covil_conhecido(g, loc):
-    return loc["tipo"] == "covil" and (loc["visitado"] or g.flag(f"conhecido:{loc['id']}"))
-
-
 def glifo(g, loc):
     if loc["tipo"] in GLIFO_TIPO:
         return GLIFO_TIPO[loc["tipo"]]
-    if covil_conhecido(g, loc):
-        return "✓" if loc["guardiao"]["derrotado"] else "☠"
     return GLIFO_BIOMA[loc["bioma"]]
 
 
 def bloqueio(g, loc):
-    """Por que a viagem não chega a este lugar agora, ou None: "fechado", a saída da campanha que ainda não leva a lugar
-    nenhum (o `fechado` do lugar, com o porquê, de campanha.REGIOES); "selada", a cidadela do mundo gerado sem os três
-    Sigilos. A viagem (Navegacao._viajar) e a tela (web/estado.py) perguntam aqui: o mesmo motivo para recusar e para
-    desenhar. O lugar só conhecido, o que não é vizinho e o perigoso não são bloqueio."""
+    """Por que a viagem não chega a este lugar agora, ou None: "fechado", a saída que ainda não leva a lugar nenhum (o
+    `fechado` do lugar, com o porquê, de campanha.REGIOES). A viagem (Navegacao._viajar) e a tela (web/estado.py)
+    perguntam aqui: o mesmo motivo para recusar e para desenhar. O lugar só conhecido, o que não é vizinho e o
+    perigoso não são bloqueio."""
     if loc.get("fechado"):
         return "fechado"
-    if loc["tipo"] == "cidadela" and len(g.j.sigilos) < 3:
-        return "selada"
     return None
 
 
@@ -52,15 +44,7 @@ def descricao(g, loc):
     motivo = bloqueio(g, loc)
     if motivo == "fechado":
         return "saída, fechada por enquanto"
-    if loc["tipo"] == "vila":
-        tipo = "vila"
-    elif loc["tipo"] == "cidadela":
-        tipo = "CIDADELA" + (" (selada)" if motivo == "selada" else "")
-    else:
-        tipo = BIOMAS[loc["bioma"]]["nome"]
-        if covil_conhecido(g, loc):
-            tipo += ", covil" + (" derrotado" if loc["guardiao"]["derrotado"] else f" de {loc['guardiao']['nome']}")
-    return tipo
+    return "vila" if loc["tipo"] == "vila" else BIOMAS[loc["bioma"]]["nome"]
 
 
 def _posicao(loc, largura, altura):
@@ -132,9 +116,7 @@ def renderizar(g, largura=66, altura=18):
             simbolo, cor = "@", "amarelo+negrito"
         else:
             simbolo = glifo(g, loc)
-            if loc["tipo"] == "covil" and covil_conhecido(g, loc) and not loc["guardiao"]["derrotado"]:
-                cor = "vermelho+negrito"
-            elif loc["tipo"] == "vila":
+            if loc["tipo"] == "vila":
                 cor = "ciano+negrito"
             else:
                 cor = COR_BIOMA[loc["bioma"]] if loc["visitado"] else "cinza"
@@ -186,4 +168,4 @@ def legenda(g, apenas_vizinhos=False):
     return saida
 
 
-SIMBOLOS = "@ você  ⌂ vila  ♣ floresta  ≈ pântano  ▲ montanha  ∴ planície  Π ruínas  ☠ covil  ✓ covil vencido  ♜ cidadela"
+SIMBOLOS = "@ você  ⌂ vila  ♣ floresta  ≈ pântano  ▲ montanha  ∴ planície  Π ruínas"

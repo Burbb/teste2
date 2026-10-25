@@ -203,11 +203,6 @@ class TestCurandeiraGratis(unittest.TestCase):
         g.curandeiro()
         self.assertEqual(([f["id"] for f in g.j.ferimentos], g.j.ouro), (["corte"], 0))
 
-    def test_so_na_campanha(self):
-        g = Jogo(Jogador([]), seed=3, pasta_saves=tempfile.mkdtemp(), hardcore=False)
-        g.iniciar("Teste", "mago")
-        self.assertFalse(ab.curandeira_gratis(g))
-
     def test_f4_no_cartao_e_passa_ao_responder(self):
         g = depois_da_despensa()
         ferir(g, "corte")

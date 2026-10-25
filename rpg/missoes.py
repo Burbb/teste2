@@ -17,7 +17,7 @@ nome não prepara nada: o rito pede a verdade (sacristia e Vó Berta), a fita e 
 "descansada", uma vez só; com ele vêm o Sigilo e a recompensa, e `dia_desfecho` (de onde sai o estado da fonte nova).
 `concluida`: o dia em que a missão terminou (a cena de volta ao Vau); concluída, ela sai do rastreador e do mapa e fica no
 Diário. A herança de Berta continua valendo depois da conclusão, até ser entregue.
-O mundo gerado não tem missões. Cenas e ações declaram a campanha (pela missão), o lugar (`chave` do lugar) e as
+Cenas e ações declaram a campanha (pela missão), o lugar (`chave` do lugar) e as
 etapas em que valem; o jogo só as oferece no menu do lugar, nunca no meio de uma luta, de uma viagem ou de um evento.
 Passar antes por um lugar não adianta nem gasta nada: a cena ou a ação esperam a etapa delas.
 """
@@ -546,7 +546,7 @@ def dar_broquel(g):
 
 def broquel_no_ferreiro(g):
     """O save de Guerreiro que já venceu o ossuário e ainda não viu o broquel (pelo estado da missão e pela marca)."""
-    if not g.campanha or g.j.classe != "guerreiro" or g.flag(MARCA_BROQUEL) or g.loc.get("chave") != "vau_do_turvo":
+    if g.j.classe != "guerreiro" or g.flag(MARCA_BROQUEL) or g.loc.get("chave") != "vau_do_turvo":
         return False
     m = registro(g, "febre_do_turvo")
     return bool(m) and (m["etapa"] in ("fundo", "retorno") or bool(m.get("desfecho")))
@@ -600,7 +600,7 @@ SALA_DA_ETAPA = {"sacristia": "salao", "ossuario": "sacristia", "fundo": "ossuar
 
 
 def na_capela(g):
-    return bool(g.campanha) and g.loc.get("chave") == "capela_afogada" and registro(g, "febre_do_turvo") is not None
+    return g.loc.get("chave") == "capela_afogada" and registro(g, "febre_do_turvo") is not None
 
 
 def sala_atual(g):
@@ -1349,8 +1349,6 @@ def _encerrar(g, d):
 
 def cena_pendente(g):
     """Toca a cena de missão que vale aqui e agora e ainda não foi vista. Devolve True se tocou uma."""
-    if not g.campanha:
-        return False
     for d in CENAS:
         if _vale(g, d) and d["id"] not in registro(g, d["missao"])["cenas"]:
             antes = _retrato(g)
@@ -1364,8 +1362,6 @@ def cena_pendente(g):
 
 def opcoes(g):
     """As ações de missão que valem no lugar e na etapa de agora, como opções do menu do lugar."""
-    if not g.campanha:
-        return []
     validas = sorted((d for d in ACOES if _vale(g, d)), key=lambda d: bool(d.get("avanca")))  # estável: o resto na ordem
     return [(d["rotulo"](g) if callable(d["rotulo"]) else d["rotulo"], ("missao", d["missao"], d["id"]),
              {**d.get("meta", {}), "missao": d["missao"], "acao_missao": d["id"], **({"abre": True} if d.get("abre") else {}),
@@ -1382,7 +1378,7 @@ def _nota_sala(g, d):
 
 def tem_salas(g):
     """O lugar de agora tem lutas de sala (a capela da campanha): o painel do lugar fala delas no escuro."""
-    return bool(g.campanha) and any(d.get("sala") and d["lugar"] == g.loc.get("chave") for d in ACOES)
+    return any(d.get("sala") and d["lugar"] == g.loc.get("chave") for d in ACOES)
 
 
 def executar(g, mid, aid):

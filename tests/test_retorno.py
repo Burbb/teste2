@@ -168,16 +168,6 @@ class TestFonteEMarta(unittest.TestCase):
             # quem chega já saudável vê a fala de chegada, no prédio fechado
             self.assertEqual(estado(g)["local"]["predios_fechados"]["curandeiro"], consequencias.atendente(g)["fechado"])
 
-    def test_procedural_sem_consequencias(self):
-        g = Jogo(Roteiro(), seed=5, pasta_saves=tempfile.mkdtemp())
-        g.iniciar("Teste", "guerreiro")
-        g.mundo["atual"] = next(l for l in g.mundo["locais"] if l["tipo"] == "vila")["id"]
-        self.assertIsNone(consequencias.estado_fonte(g))
-        self.assertIsNone(consequencias.atendente(g))
-        self.assertIsNone(consequencias.frase_da_vila(g))
-        self.assertNotIn("atendentes", estado(g)["local"])
-
-
 class TestSaves(unittest.TestCase):
     def test_save_preserva_conclusao_fonte_e_heranca_pendente(self):
         pasta = tempfile.mkdtemp()

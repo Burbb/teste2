@@ -3,7 +3,6 @@
 from .. import abertura
 from .. import missoes
 from .. import eventos
-from .. import texto as tx
 from .. import mapa
 from .. import sobrevivencia
 from ..dados import BIOMAS
@@ -107,18 +106,11 @@ class Navegacao:
             self.dizer(f"Você chega a {loc['nome']}.", "amarelo+negrito")
         if primeira and loc["tipo"] != "vila":
             self.dizer(self.ambiente(), "cinza")
-        if loc["tipo"] == "covil" and not loc["guardiao"]["derrotado"]:
-            g = loc["guardiao"]
-            self.dizer(f"Este é o covil de {g['nome']} (Nv.{self.nivel_guardiao(loc)}). Um dos Sigilos está aqui.",
-                       "magenta")
         if perigo:
             self.dizer("A vila tem muros, mas as estradas em volta são de criaturas muito mais fortes do que você."
                        if loc["tipo"] == "vila" else
                        "Um arrepio sobe pela espinha. As criaturas daqui são muito mais fortes do que você.",
                        "vermelho+negrito")
-        if loc["tipo"] == "cidadela":
-            self.dizer(f"Os três Sigilos ardem em sua mão e a muralha de sombras se abre. "
-                       f"{tx.maiuscula(self.antagonista['curto'])} sabe que você chegou.", "magenta+negrito")
         if loc["tipo"] == "vila":
             self.receber_contratos()
             if self.chance(0.35):
@@ -127,13 +119,10 @@ class Navegacao:
 
     @staticmethod
     def descrever_lugar(loc):
-        """"Vila", "Floresta", "Covil · Ruínas", "Cidadela": o que o lugar é, numa linha."""
-        bioma = BIOMAS[loc["bioma"]]["nome"] if loc.get("bioma") in BIOMAS else ""
+        """"Vila", "Floresta", "Ruínas": o que o lugar é, numa linha."""
         if loc["tipo"] == "vila":
             return "Vila"
-        if loc["tipo"] == "cidadela":
-            return "Cidadela"
-        return " · ".join(x for x in ("Covil" if loc["tipo"] == "covil" else "", bioma) if x)
+        return BIOMAS[loc["bioma"]]["nome"] if loc.get("bioma") in BIOMAS else ""
 
     def mapa(self):
         self.ui.cena("Mapa do reino", self.contexto_cena(), "menu")

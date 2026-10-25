@@ -117,11 +117,14 @@ def transcrever(seed, classe, web=False):
     combate._SERIE[0] = 0  # numeração dos combates (ids das cartas): cada partida começa do zero
     with tempfile.TemporaryDirectory() as pasta:
         ui = (GravadorWeb if web else Gravador)(random.Random(seed * 7 + 1), web=web, pasta=pasta)
-        # A semente 3 joga no hardcore (morte permanente); as outras no modo brando, para partidas mais longas.
+        # A campanha, como o jogo começa (a abertura no Vau; as orientações ligadas nas partidas da tela gráfica). A
+        # semente 3 joga no hardcore (morte permanente); as outras com o resgate, para partidas mais longas.
+        from rpg import abertura
         g = Jogo(ui, seed=seed, pasta_saves=pasta, hardcore=seed == 3)
         if web:
             ui.jogo, ui._vistos = g, {}
         g.iniciar("Robô", classe)
+        abertura.comecar(g, web)
         try:
             g.rodar()
         except LimiteBot:

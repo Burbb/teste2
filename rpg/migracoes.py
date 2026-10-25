@@ -10,7 +10,7 @@ VERSAO_SAVE = 6
 # Tudo o que o estado da partida guarda além do jogador, da semente e do gerador aleatório.
 CAMPOS_SAVE = ("mundo", "dia", "periodo", "clima", "passos", "flags", "historico", "contagem",
                "impulsos", "sementes", "rumores", "contratos", "ofertas", "lojas", "nemesis", "forcados",
-               "proximo_id", "estatisticas", "hardcore", "bestiario", "lendas", "registro",
+               "proximo_id", "estatisticas", "hardcore", "bestiario", "registro",
                "arquivo_run", "comitiva", "reserva")
 
 ESPACOS_EQUIP = ("cabeca", "amuleto", "armadura", "maos", "arma", "secundaria", "pernas", "pes", "anel1", "anel2")
@@ -132,10 +132,10 @@ MIGRACOES = {1: _v1_para_v2, 2: _v2_para_v3, 3: _v3_para_v4, 4: _v4_para_v5, 5: 
 def migrar(dados):
     """Leva um save de qualquer versão antiga até VERSAO_SAVE."""
     if not isinstance(dados, dict) or "jogador" not in dados or "seed" not in dados:
-        raise SaveIncompativel("Este arquivo não é um save de The Unquiet.")
+        raise SaveIncompativel("o arquivo não é um save de The Unquiet.")
     versao = dados.get("versao", 1)
     if versao > VERSAO_SAVE:
-        raise SaveIncompativel(f"Este save é de uma versão mais nova do jogo (formato {versao}; "
+        raise SaveIncompativel(f"é de uma versão mais nova do jogo (formato {versao}; "
                                f"este jogo lê até o {VERSAO_SAVE}). Atualize o jogo para continuar.")
     while versao < VERSAO_SAVE:
         dados = MIGRACOES[versao](dados)

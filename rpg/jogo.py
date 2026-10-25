@@ -3,6 +3,7 @@
 import random
 
 from . import campanha
+from .campanha import INICIO
 from . import abertura, consequencias, missoes
 from . import eventos
 from . import texto as tx
@@ -14,7 +15,6 @@ from . import comitiva
 from . import sobrevivencia
 from . import telemetria
 from .telemetria import registrar
-from .mundo import gerar_mundo
 from .regras import (AMBIENTE_VILA, LIMITE_MOCHILA, NIVEL_MAXIMO, NOMES_SLOT, NOMES_TESTE,
                      Derrota, FimDeJogo)
 from .migracoes import VERSAO_SAVE
@@ -91,7 +91,6 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
         self.registro = []
         self.arquivo_run = None
         self.bestiario = {}
-        self.lendas = []
         self.estatisticas = {"abates": 0, "eventos": 0, "ouro_ganho": 0, "chefes": 0, "quedas": 0}
 
     # ================================================================ atalhos
@@ -108,16 +107,9 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
         return self.periodo >= 3
 
     @property
-    def antagonista(self):
-        return self.mundo["antagonista"]
-
-    @property
     def campanha(self):
-        """O id da região escrita ("turvo"), ou None no mundo gerado."""
+        """O id da região da campanha ("turvo"); None antes de o jogo começar."""
         return self.mundo.get("campanha") if self.mundo else None
-
-    def eventos_fora(self):
-        return campanha.eventos_fora(self)
 
     def dizer(self, texto="", cor=None):
         self.ui.dizer(texto, cor)
@@ -214,9 +206,9 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
         return self.sortear(BIOMAS[self.bioma]["ambiente"])
 
     # ================================================================ início
-    def novo_jogo(self, regiao=None):
-        """Criação do personagem. Devolve False se a pessoa voltou ao título. regiao: começa a campanha escrita
-        daquela região (campanha.py) em vez do mundo gerado; a pessoa escolhe também o modo (resgate ou hardcore)."""
+    def novo_jogo(self, regiao=INICIO):
+        """Criação do personagem: nome, classe, o modo (resgate ou hardcore) e a caixa do tutorial; a campanha começa
+        na região dada (campanha.py). Devolve False se a pessoa voltou ao título."""
         self.ui.cena("Criação de personagem", campanha.nome(regiao), "menu")
         nome = self.ui.perguntar("Qual é o seu nome, aventureiro(a)?", "Aventureiro", voltar=True)
         if nome is None:
@@ -234,10 +226,6 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
             classe = self.menu("Sua classe:", [(CLASSES[c]["nome"], c) for c in classes] + [("Voltar", None, {"voltar": True})])
             if classe is None:
                 return False
-            if not regiao:
-                self.iniciar(nome, classe)
-                self.introducao()
-                return True
             # A caixa "Mostrar tutorial", marcada, junto da escolha do modo (na tela gráfica, uma linha marcável; no texto,
             # uma pergunta depois): liga só as orientações; a abertura é a mesma.
             self.ui.caixa = {"id": "tutorial", "rotulo": "Mostrar tutorial", "marcada": True,
@@ -259,18 +247,16 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
         self.introducao_campanha()
         return True
 
-    def iniciar(self, nome, classe, regiao=None):
+    def iniciar(self, nome, classe, regiao=INICIO):
         self.j = Jogador(nome, classe)
-        self.mundo = campanha.montar_mundo(regiao) if regiao else gerar_mundo(self.rng)
+        self.mundo = campanha.montar_mundo(regiao)
         self.loc["visitado"] = True
         self.rolar_clima()
         self.j.equip["arma"] = gerar_equip(self.rng, classe, 1, "arma", qualidade=-2)
         self.j.recalcular()
         self.j.hp = self.j.max_hp
-        if not regiao:  # o legado (túmulo, estátua, baladas) é do mundo gerado
-            self.preparar_legado()
         registrar(self, "inicio", nome=nome, classe=classe, seed=self.seed, hardcore=self.hardcore,
-                  stats=telemetria.instantaneo(self.j), **({"campanha": regiao} if regiao else {}))
+                  stats=telemetria.instantaneo(self.j), campanha=regiao)
 
     def introducao_campanha(self):
         """Prólogo provisório do protótipo: diz onde se está, o modo escolhido e o que ainda não existe. A história
@@ -291,34 +277,6 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
         self.dizer("Dica: compre provisões e tochas antes de sair e trate feridas abertas com bandagens.", "cinza")
         self.ui.continuar()
 
-    def introducao(self):
-        a = self.antagonista
-        self.ui.cena("O reino à beira do Vazio", "prólogo", "evento")
-        self.narrar("Não houve profecia. Não há escolhido. Há cem anos uma Fenda se abriu sob a catedral, e desde "
-                    "então o reino apodrece devagar, como um corpo que ainda não percebeu que morreu.", "cinza")
-        self.narrar(f"Do outro lado fala {a['nome']}, {a['origem']}.")
-        self.narrar("Três guardiões, deformados pela Fenda, guardam os Sigilos que selam o caminho até "
-                    f"a {self.mundo['locais'][-1]['nome']}. Cavaleiros melhores que você já tentaram. Os corvos "
-                    "ainda se lembram do gosto deles.")
-        self.narrar(f"Você, {self.j.nome}, {self.j.nome_classe.lower()}, parte de {self.loc['nome']} com "
-                    f"{tx.plural(self.j.provisoes, 'dia')} de comida, {tx.plural(self.j.ouro, 'moeda')} e nenhuma "
-                    "garantia de voltar.")
-        self.dizer("A fome mata. Feridas infeccionam. A noite cega. E a morte é permanente.", "vermelho+negrito")
-        estatua = self.flag("estatua")
-        if estatua:
-            self.narrar(f"Na praça da vila há uma estátua nova: {estatua['nome']}, {estatua['nome_classe'].lower()}, "
-                        f"que derrotou {estatua['antagonista']} em outra era. O povo olha para você com "
-                        f"esperança. (reputação +5)", "amarelo")
-        elif self.flag("tumulo"):
-            t = self.flag("tumulo")
-            self.narrar(f"Dizem que, em algum lugar destas terras, está o túmulo de {t['nome']}, quem tentou "
-                        f"antes de você.", "cinza")
-        self.dizer("Dica: compre provisões e tochas antes de sair, trate feridas abertas com bandagens e não vá "
-                   "aonde o mapa diz que os inimigos são fortes demais. Suas escolhas voltarão para você.", "cinza")
-        # O prólogo termina num Continuar: tocado, a página limpa e a vila aparece sozinha (antes, as ações da vila
-        # vinham embaixo da história, na mesma página).
-        self.ui.continuar()
-
     # ================================================================ ciclo principal
     def rodar(self):
         try:
@@ -331,36 +289,11 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
             return
 
     def resgate(self, causa="combate"):
-        """Fora do modo hardcore, cair custa ouro e tempo. causa (Derrota.causa): "combate" ou, na campanha, também
-        "fome" e "infeccao". Na campanha, o resgate também encerra a emergência (resgate_campanha)."""
-        j = self.j
+        """Fora do modo hardcore, cair custa ouro e tempo. causa (Derrota.causa): "combate", "fome" ou "infeccao". O
+        resgate também encerra a emergência (resgate_campanha)."""
         self.estatisticas["quedas"] += 1
         missoes.saiu_da_capela(self)  # quem volta à capela depois do resgate chega por fora
-        if self.campanha:
-            self.resgate_campanha(causa)
-            return
-        locais = self.mundo["locais"]
-        from .mundo import _distancias
-        dist = _distancias(locais, self.loc["id"])
-        vila = min((l for l in locais if l["tipo"] == "vila"), key=lambda l: dist.get(l["id"], 99))
-        p = self.npc()
-        self.ui.cena("Tudo escurece...", None, "evento")
-        self.narrar(f"Você acorda numa cama de palha em {vila['nome']}, com o corpo enfaixado. {p['um'].capitalize()} "
-                    f"{p['prof']} {p['traco']} te encontrou desacordado na estrada e te arrastou até "
-                    f"aqui. Dois dias se passaram.", "cinza")
-        perda = self.perder_ouro(j.ouro * 0.3, destino="resgate")
-        if perda:
-            self.dizer("Parte do seu ouro sumiu enquanto você estava desacordado.", "cinza")
-        self.mundo["atual"] = vila["id"]
-        vila["visitado"] = True
-        j.efeitos = {}
-        j.rec = j.max_rec
-        if j.companheiro:
-            j.companheiro["hp"] = j.companheiro["max_hp"]
-        j.hp = max(j.hp, int(j.max_hp * 0.4))
-        self.novo_dia(descanso=0)
-        self.novo_dia(descanso=1)
-        self.pausar()
+        self.resgate_campanha(causa)
 
     # A queda que a campanha explica: a fome e a infecção (a de combate já disse diante de quem o herói tombou).
     QUEDA_SEM_LUTA = {
@@ -370,7 +303,7 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
 
     def resgate_campanha(self, causa):
         """A queda na campanha (combate, fome ou infecção): alguém do Vau acha o herói e o leva para a casa de Marta.
-        Custa o mesmo que no mundo gerado: 30% do ouro e dois dias. Mas os dois dias encerram a emergência: o herói e
+        Custa 30% do ouro e dois dias. Mas os dois dias encerram a emergência: o herói e
         a comitiva comem lá (as provisões da bolsa ficam), a fome passa, a infecção é tratada e as feridas abertas,
         enfaixadas (não infeccionam). Os outros ferimentos seguem as regras de sempre. Quem cuida é Marta, se a água
         já limpou e ela está de pé; senão, Pita (consequencias.marta_de_pe). Uma queda, uma recuperação, uma
@@ -433,8 +366,7 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
         j = self.j
         loc = self.loc
         ui = self.ui
-        tipo = {"vila": "Vila", "selvagem": BIOMAS[loc["bioma"]]["nome"], "covil": BIOMAS[loc["bioma"]]["nome"],
-                "cidadela": "Cidadela"}[loc["tipo"]]
+        tipo = "Vila" if loc["tipo"] == "vila" else BIOMAS[loc["bioma"]]["nome"]
         # O nível-base da região; à noite, o que ela soma vem ao lado, sem trocar o número (seção 8 do 18).
         perigo = ("" if loc["tipo"] == "vila" else f" • inimigos Nv.{self.nivel_local()}"
                   + (f" (+{bal.NOITE_NIVEL} à noite)" if self.noite else ""))
@@ -553,15 +485,9 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
         acoes[op]()
 
     def menu_selvagem(self):
-        loc = self.loc
         missoes.mostrar_cena(self)  # na capela, o ambiente desenhado no topo (tela gráfica): antes de qualquer texto
-        opcoes = []
-        if loc["tipo"] == "covil" and not loc["guardiao"]["derrotado"]:
-            opcoes.append((f"Enfrentar {loc['guardiao']['nome']} (guardião)", "chefe"))
-        if loc["tipo"] == "cidadela":
-            opcoes.append((f"Invadir o salão do trono e enfrentar {self.antagonista['curto']}", "final"))
-        # Primeiro o que a missão pede aqui (campanha), depois os contratos, depois o de sempre: a tela marca cada grupo.
-        opcoes += missoes.opcoes(self)
+        # Primeiro o que a missão pede aqui, depois os contratos, depois o de sempre: a tela marca cada grupo.
+        opcoes = missoes.opcoes(self)
         for c in self.contratos_aqui():
             if c["tipo"] == "alvo":
                 rotulo = f"Rastrear {c['nome']} (contrato)"
@@ -590,10 +516,6 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
             missoes.executar(self, op[1], op[2])
         elif isinstance(op, tuple) and op[0] == "capela":
             missoes.ir_na_capela(self, op[1])
-        elif op == "chefe":
-            self.enfrentar_guardiao()
-        elif op == "final":
-            self.batalha_final()
         elif op == "explorar":
             self.explorar()
         elif op == "acampar":

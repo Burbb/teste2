@@ -157,11 +157,12 @@ class TestRetratos(unittest.TestCase):
         # tem o traço etéreo continua no "etereo"
         import random
         from rpg.inimigos import _invocar, criar, instanciar_antagonista
-        from rpg.mundo import gerar_mundo
         for afixo in (None, "feroz"):
             e = criar(random.Random(8), "cria_vazio", 4, afixo)
             self.assertEqual(retrato(e.tracos, e.familia, e.chave), "cria_vazio", afixo)
-        ant = instanciar_antagonista(gerar_mundo(random.Random(5))["antagonista"], 6)
+        # um do catálogo (guardado para a expansão desde a retirada do mundo gerado)
+        ant = instanciar_antagonista({"nome": "Vharuk, o Rei Enforcado", "curto": "o Rei Enforcado", "g": "m",
+                                      "origem": "um herói que voltou errado"}, 6)
         self.assertEqual(retrato(ant.tracos, ant.familia, getattr(ant, "chave", None)), "humano")
 
         class Luta:

@@ -81,14 +81,14 @@ def conhece_yara(g):
 
 def yara_barrada(g):
     """Apoiada, a vigília de Caspar não deixa a Yara entrar no Vau: ela espera do lado de fora (continua no grupo)."""
-    m = registro(g) if g.campanha else None
+    m = registro(g)
     return bool(m and m.get("desfecho") == "apoiar" and situacao_yara(g) in ("grupo", "reserva"))
 
 
 def _fora_do_vau(g, m):
     """A regra de ausência (comitiva.fora): barrada, a Yara que anda com você espera do lado de fora enquanto você está
     no Vau. Na estrada, ela volta para o seu lado; continua na comitiva o tempo todo."""
-    if m["id"] != "yara" or g.na_estrada or not g.campanha or g.loc.get("chave") != "vau_do_turvo":
+    if m["id"] != "yara" or g.na_estrada or g.loc.get("chave") != "vau_do_turvo":
         return None
     if cm.membro(g, "yara") is not m or not yara_barrada(g):
         return None
@@ -101,8 +101,8 @@ cm.AUSENCIAS.append(_fora_do_vau)
 
 def fogueira_possivel(g):
     """O evento da fogueira (eventos/comitiva.py: o pregador queima a moça no brejo) só cabe enquanto Caspar tem a
-    praça: depois de denunciado (aceito ou não, a vigília acabou), ele não acontece mais. No mundo gerado, sempre."""
-    m = registro(g) if g.campanha else None
+    praça: depois de denunciado (aceito ou não, a vigília acabou), ele não acontece mais."""
+    m = registro(g)
     return not (m and m.get("desfecho") in ("denunciado", "denuncia_falhou"))
 
 
@@ -187,7 +187,7 @@ FRASE_PRACA = {
 
 def frase_da_praca(g):
     """A frase da praça depois da decisão, e a da Yara barrada, se for o caso (consequencias.frase_da_vila)."""
-    m = registro(g) if g.campanha else None
+    m = registro(g)
     if not m or not m.get("desfecho"):
         return None
     frase = FRASE_PRACA[m["desfecho"]]
@@ -471,7 +471,7 @@ RESPOSTAS_PRACA = {
 
 
 def _quer_falar_da_praca(g, m):
-    c = registro(g) if g.campanha else None
+    c = registro(g)
     if not c or not c.get("desfecho"):
         return False
     # Quem a conheceu depois da praça (no Charco, na fogueira) fala dela num outro dia, não junto com a apresentação.
