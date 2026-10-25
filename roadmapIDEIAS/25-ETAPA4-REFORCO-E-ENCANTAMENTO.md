@@ -93,7 +93,7 @@ Os exemplos conversados (consumir queimadura, sacrificar servo, preparar contra-
 - O caminho exato de experiência, desbloqueios, escolhas de desenvolvimento e redistribuição ainda será definido. Evitar que deixar alguém fora do grupo o torne inviável ou exija repetir batalhas fracas para recuperá-lo; o mecanismo de recuperação não está decidido.
 - Controle de animais e invocações é uma decisão separada. Ordens simples, comportamento automático ou comandos coletivos são possibilidades, ainda sem escolha.
 
-**Morte e consequências:** companheiros não morrem permanentemente por uma derrota ou queda em batalha. Morte permanente pode ocorrer por rumo da história e consequências narrativas das decisões do jogador. Essa exceção não autoriza transformar uma queda comum em batalha em morte permanente. Incapacitação durante a luta, retorno, recuperação, ferimentos e custos após a batalha continuam em aberto. Esta decisão trata dos companheiros; não altera por si só as regras de morte do protagonista ou dos modos de dificuldade.
+**Morte e consequências:** companheiros não morrem permanentemente por uma derrota ou queda em batalha. Morte permanente pode ocorrer por rumo da história e consequências narrativas das decisões do jogador. Essa exceção não autoriza transformar uma queda comum em batalha em morte permanente. Durante a luta, o companheiro caído fica incapacitado e deixa de agir. Só retorna por uma habilidade de ressurreição de alto custo ou por um item realmente escasso; sem isso, permanece incapacitado até o fim da batalha. Ao retornar, conserva sua posição original na ordem e não recupera turnos perdidos. Valores, vida ao retornar, limites de uso e o caso de retornar antes ou depois da própria vez precisam ser especificados no teste. Recuperação, ferimentos e custos após a batalha continuam em aberto. Esta decisão trata dos companheiros; não altera por si só as regras de morte do protagonista ou dos modos de dificuldade.
 
 ### 3.5 Ordem das ações, turnos e rodadas — acordados
 
@@ -173,7 +173,7 @@ Na conversa, **Battle Brothers** acrescentou o exemplo de materiais de criaturas
 
 As generalizações do apêndice sobre aleatoriedade, destruição e satisfação são avaliações da pesquisa inicial, não leis de design nem prova de que uma mecânica só funciona em determinado gênero. Verificar versões e fontes antes de usar mudanças de outros jogos como justificativa decisiva.
 
-**Próximo passo acordado:** Jean e ChatGPT continuam debatendo a identidade e as decisões antes de passar uma especificação ao Claude. Não iniciar automaticamente o protótipo descrito no apêndice, criar habilidades ou alterar regras de produção a partir desta atualização.
+**Próximo passo acordado:** testar primeiro um protótipo isolado do combate definido nesta revisão, antes de implementar reforço e encantamento. A entrega ao Claude será um cenário jogável pequeno com herói, dois companheiros controláveis, iniciativa fixa, rodadas, defesa, atordoamento e ameaças anunciadas. Habilidades e valores de teste são provisórios, não um catálogo final. Não iniciar o protótipo de forja do apêndice nem alterar regras de produção. Jean e ChatGPT continuam definindo a identidade dos demais sistemas.
 
 Depois de definida a direção suficiente, o Claude poderá verificar implicações técnicas, testar hipóteses numéricas e construir um protótipo isolado e pequeno. O catálogo e o combate atuais servirão de casos de teste, sem limitar as possibilidades futuras.
 
@@ -190,6 +190,9 @@ Depois de definida a direção suficiente, o Claude poderá verificar implicaç�
 | Controle direto dos companheiros principais | Acordado |
 | Níveis e desenvolvimento de habilidades dos companheiros | Direção acordada; regras e valores abertos |
 | Sem morte permanente de companheiros por batalha | Acordado; exceção somente narrativa |
+| Retorno à luta por ressurreição de alto custo ou item escasso | Acordado; números e limites abertos |
+| Retorno na posição original, sem recuperar turnos perdidos | Acordado |
+| Próxima entrega: protótipo isolado de combate antes da forja | Acordado; sem integração na produção |
 | Turnos individuais intercalados e ordem próxima visível | Acordado |
 | Agilidade define a ordem inicial | Acordado; desempates e detalhes de leitura abertos |
 | Ordem fixa durante toda a batalha | Acordado; sem ações extras por Agilidade |
