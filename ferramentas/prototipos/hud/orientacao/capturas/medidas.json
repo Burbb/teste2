@@ -1043,6 +1043,984 @@
    "letra": 16,
    "entendi": true,
    "encerrar": true
+  },
+  "1920-r-v1": {
+   "texto": "Clique no mural para ver os contratos disponíveis.",
+   "seta": "seta-baixo",
+   "caixa": [
+    537,
+    410,
+    340,
+    92
+   ],
+   "alvo": [
+    671,
+    269,
+    73,
+    66
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": false,
+   "encerrar": true
+  },
+  "1920-r-c1": {
+   "texto": "Clique em Habilidades (tecla 2).",
+   "seta": "seta-baixo",
+   "caixa": [
+    645,
+    351,
+    237,
+    70
+   ],
+   "alvo": [
+    695,
+    127,
+    156,
+    48
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": false,
+   "encerrar": true
+  },
+  "1920-r-c2": {
+   "texto": "Clique em Golpe Pesado (tecla 1).",
+   "seta": "seta-baixo",
+   "caixa": [
+    552,
+    377,
+    243,
+    70
+   ],
+   "alvo": [
+    439,
+    310,
+    492,
+    62
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": false,
+   "encerrar": true
+  },
+  "1920-r-c3": {
+   "texto": "Clique num inimigo para escolher o alvo (ou a tecla do número dele).",
+   "seta": "seta-baixo",
+   "caixa": [
+    1128,
+    340,
+    340,
+    92
+   ],
+   "alvo": [
+    1223,
+    118,
+    216,
+    56
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": false,
+   "encerrar": true
+  },
+  "1920-r-c4": {
+   "texto": "Golpe Pesado −10 Vigor Atacar não gasta Vigor. Ao acertar, +2 Vigor.",
+   "seta": "seta-baixo",
+   "caixa": [
+    424,
+    321,
+    298,
+    130
+   ],
+   "alvo": [
+    487,
+    186,
+    173,
+    21
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": true,
+   "encerrar": true
+  },
+  "1920-r-a1": {
+   "texto": "Ajuste a velocidade do texto aqui. Atalho: V.",
+   "seta": "seta-baixo",
+   "caixa": [
+    1597,
+    42,
+    313,
+    83
+   ],
+   "alvo": [
+    1747,
+    3,
+    106,
+    34
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": true,
+   "encerrar": true
+  },
+  "1920-atual-v1": {
+   "texto": "Clique no mural para ver os contratos disponíveis.",
+   "seta": "seta-baixo",
+   "caixa": [
+    542,
+    420,
+    330,
+    59
+   ],
+   "alvo": [
+    671,
+    269,
+    73,
+    66
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 15,
+   "entendi": false,
+   "encerrar": true
+  },
+  "1920-b-v1": {
+   "texto": "Clique no mural para ver os contratos disponíveis.",
+   "seta": "seta-baixo",
+   "caixa": [
+    537,
+    410,
+    340,
+    89
+   ],
+   "alvo": [
+    671,
+    269,
+    73,
+    66
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": false,
+   "encerrar": true
+  },
+  "1920-r-v2": {
+   "texto": "O Templo recupera sua vida. Seu primeiro atendimento é grátis.",
+   "seta": "seta-baixo",
+   "caixa": [
+    810,
+    410,
+    340,
+    92
+   ],
+   "alvo": [
+    930,
+    143,
+    99,
+    192
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": false,
+   "encerrar": true
+  },
+  "1920-r-b1": {
+   "texto": "Clique no baú para abrir.",
+   "seta": "seta-baixo",
+   "caixa": [
+    106,
+    686,
+    278,
+    70
+   ],
+   "alvo": null,
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": false,
+   "encerrar": true
+  },
+  "1920-r-k2": {
+   "texto": "Clique neste contrato para viajar até Bosque do Moinho.",
+   "seta": "seta-cima",
+   "caixa": [
+    1496,
+    408,
+    318,
+    106
+   ],
+   "alvo": [
+    1509,
+    519,
+    292,
+    79
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": true,
+   "encerrar": true
+  },
+  "1920-r-v4": {
+   "texto": "Comitiva abre quem anda com você (Morel): conversar, ver a confiança e mandar para o acampamento.",
+   "seta": "seta-cima",
+   "caixa": [
+    678,
+    713,
+    340,
+    128
+   ],
+   "alvo": [
+    803,
+    846,
+    90,
+    78
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": true,
+   "encerrar": true
+  },
+  "1920-r-t1": {
+   "texto": "Você tem 1 ponto de talento. Talentos, na barra de baixo, abre a árvore.",
+   "seta": "seta-cima",
+   "caixa": [
+    468,
+    735,
+    340,
+    106
+   ],
+   "alvo": null,
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": true,
+   "encerrar": true
+  },
+  "1920-r-n1": {
+   "texto": "À noite, os inimigos ficam mais fortes, com ou sem tocha. Sem tocha, ser pego de surpresa fica mais provável.",
+   "seta": "seta-baixo",
+   "caixa": [
+    1496,
+    216,
+    318,
+    128
+   ],
+   "alvo": [
+    1509,
+    153,
+    292,
+    58
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": true,
+   "encerrar": true
+  },
+  "1920-r-al": {
+   "texto": "Clique na tela para acelerar a animação.",
+   "seta": "seta-nenhuma",
+   "caixa": [
+    797,
+    321,
+    287,
+    83
+   ],
+   "alvo": null,
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": true,
+   "encerrar": true
+  },
+  "1920-r-e1": {
+   "texto": "Na troca mostra o que muda (▲ ganha, ▼ perde). Equipar veste o novo e guarda o antigo na mochila; Guardar leva o novo para a mochila.",
+   "seta": "seta-baixo",
+   "caixa": [
+    1022,
+    612,
+    340,
+    137
+   ],
+   "alvo": [
+    1041,
+    458,
+    302,
+    77
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": false,
+   "encerrar": true
+  },
+  "1920-atual-c1": {
+   "texto": "Clique em Habilidades (tecla 2).",
+   "seta": "seta-baixo",
+   "caixa": [
+    654,
+    348,
+    218,
+    59
+   ],
+   "alvo": [
+    695,
+    127,
+    156,
+    48
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 15,
+   "entendi": false,
+   "encerrar": true
+  },
+  "1920-b-c1": {
+   "texto": "Clique em Habilidades (tecla 2).",
+   "seta": "seta-baixo",
+   "caixa": [
+    645,
+    350,
+    236,
+    67
+   ],
+   "alvo": [
+    695,
+    127,
+    156,
+    48
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": false,
+   "encerrar": true
+  },
+  "1920-atual-c2": {
+   "texto": "Clique em Golpe Pesado (tecla 1).",
+   "seta": "seta-baixo",
+   "caixa": [
+    561,
+    377,
+    224,
+    59
+   ],
+   "alvo": [
+    439,
+    310,
+    492,
+    62
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 15,
+   "entendi": false,
+   "encerrar": true
+  },
+  "1920-b-c2": {
+   "texto": "Clique em Golpe Pesado (tecla 1).",
+   "seta": "seta-baixo",
+   "caixa": [
+    552,
+    377,
+    242,
+    67
+   ],
+   "alvo": [
+    439,
+    310,
+    492,
+    62
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": false,
+   "encerrar": true
+  },
+  "1920-atual-c3": {
+   "texto": "Clique num inimigo para escolher o alvo (ou a tecla do número dele).",
+   "seta": "seta-baixo",
+   "caixa": [
+    1138,
+    337,
+    330,
+    80
+   ],
+   "alvo": [
+    1223,
+    118,
+    216,
+    56
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 15,
+   "entendi": false,
+   "encerrar": true
+  },
+  "1920-b-c3": {
+   "texto": "Clique num inimigo para escolher o alvo (ou a tecla do número dele).",
+   "seta": "seta-baixo",
+   "caixa": [
+    1128,
+    339,
+    340,
+    89
+   ],
+   "alvo": [
+    1223,
+    118,
+    216,
+    56
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": false,
+   "encerrar": true
+  },
+  "1920-atual-c4": {
+   "texto": "Golpe Pesado −10 Vigor Atacar não gasta Vigor. Ao acertar, +2 Vigor.",
+   "seta": "seta-baixo",
+   "caixa": [
+    427,
+    321,
+    293,
+    112
+   ],
+   "alvo": [
+    487,
+    186,
+    173,
+    21
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 15,
+   "entendi": true,
+   "encerrar": true
+  },
+  "1920-b-c4": {
+   "texto": "Golpe Pesado −10 Vigor Atacar não gasta Vigor. Ao acertar, +2 Vigor.",
+   "seta": "seta-baixo",
+   "caixa": [
+    425,
+    321,
+    297,
+    125
+   ],
+   "alvo": [
+    487,
+    186,
+    173,
+    21
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": true,
+   "encerrar": true
+  },
+  "1280-r-a1": {
+   "texto": "Ajuste a velocidade do texto aqui. Atalho: V.",
+   "seta": "seta-baixo",
+   "caixa": [
+    957,
+    42,
+    313,
+    83
+   ],
+   "alvo": [
+    1119,
+    3,
+    100,
+    34
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": true,
+   "encerrar": true
+  },
+  "1280-atual-v1": {
+   "texto": "Clique no mural para ver os contratos disponíveis.",
+   "seta": "seta-baixo",
+   "caixa": [
+    310,
+    338,
+    330,
+    59
+   ],
+   "alvo": [
+    450,
+    222,
+    50,
+    46
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 15,
+   "entendi": false,
+   "encerrar": true
+  },
+  "1280-b-v1": {
+   "texto": "Clique no mural para ver os contratos disponíveis.",
+   "seta": "seta-baixo",
+   "caixa": [
+    305,
+    328,
+    340,
+    89
+   ],
+   "alvo": [
+    450,
+    222,
+    50,
+    46
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": false,
+   "encerrar": true
+  },
+  "1280-r-v1": {
+   "texto": "Clique no mural para ver os contratos disponíveis.",
+   "seta": "seta-baixo",
+   "caixa": [
+    305,
+    328,
+    340,
+    92
+   ],
+   "alvo": [
+    450,
+    222,
+    50,
+    46
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": false,
+   "encerrar": true
+  },
+  "1280-r-v2": {
+   "texto": "O Templo recupera sua vida. Seu primeiro atendimento é grátis.",
+   "seta": "seta-baixo",
+   "caixa": [
+    487,
+    328,
+    340,
+    92
+   ],
+   "alvo": [
+    623,
+    138,
+    68,
+    130
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": false,
+   "encerrar": true
+  },
+  "1280-r-b1": {
+   "texto": "Clique no baú para abrir.",
+   "seta": "seta-cima",
+   "caixa": [
+    14,
+    514,
+    238,
+    70
+   ],
+   "alvo": null,
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": false,
+   "encerrar": true
+  },
+  "1280-r-k2": {
+   "texto": "Clique neste contrato para viajar até Bosque do Moinho.",
+   "seta": "seta-cima",
+   "caixa": [
+    1008,
+    389,
+    258,
+    106
+   ],
+   "alvo": [
+    1021,
+    500,
+    232,
+    99
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": true,
+   "encerrar": true
+  },
+  "1280-r-v4": {
+   "texto": "Comitiva abre quem anda com você (Morel): conversar, ver a confiança e mandar para o acampamento.",
+   "seta": "seta-cima",
+   "caixa": [
+    376,
+    491,
+    340,
+    128
+   ],
+   "alvo": [
+    505,
+    624,
+    82,
+    77
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": true,
+   "encerrar": true
+  },
+  "1280-r-t1": {
+   "texto": "Você tem 1 ponto de talento. Talentos, na barra de baixo, abre a árvore.",
+   "seta": "seta-cima",
+   "caixa": [
+    280,
+    513,
+    340,
+    106
+   ],
+   "alvo": null,
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": true,
+   "encerrar": true
+  },
+  "1280-r-n1": {
+   "texto": "À noite, os inimigos ficam mais fortes, com ou sem tocha. Sem tocha, ser pego de surpresa fica mais provável.",
+   "seta": "seta-baixo",
+   "caixa": [
+    1008,
+    262,
+    258,
+    151
+   ],
+   "alvo": [
+    1021,
+    183,
+    232,
+    74
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": true,
+   "encerrar": true
+  },
+  "1280-r-al": {
+   "texto": "Clique na tela para acelerar a animação.",
+   "seta": "seta-nenhuma",
+   "caixa": [
+    487,
+    319,
+    287,
+    83
+   ],
+   "alvo": null,
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": true,
+   "encerrar": true
+  },
+  "1280-r-e1": {
+   "texto": "Na troca mostra o que muda (▲ ganha, ▼ perde). Equipar veste o novo e guarda o antigo na mochila; Guardar leva o novo para a mochila.",
+   "seta": "seta-baixo",
+   "caixa": [
+    702,
+    496,
+    340,
+    137
+   ],
+   "alvo": [
+    721,
+    342,
+    302,
+    77
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": false,
+   "encerrar": true
+  },
+  "1280-atual-c1": {
+   "texto": "Clique em Habilidades (tecla 2).",
+   "seta": "seta-baixo",
+   "caixa": [
+    522,
+    346,
+    218,
+    59
+   ],
+   "alvo": [
+    563,
+    125,
+    156,
+    48
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 15,
+   "entendi": false,
+   "encerrar": true
+  },
+  "1280-b-c1": {
+   "texto": "Clique em Habilidades (tecla 2).",
+   "seta": "seta-baixo",
+   "caixa": [
+    513,
+    348,
+    236,
+    67
+   ],
+   "alvo": [
+    563,
+    125,
+    156,
+    48
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": false,
+   "encerrar": true
+  },
+  "1280-r-c1": {
+   "texto": "Clique em Habilidades (tecla 2).",
+   "seta": "seta-baixo",
+   "caixa": [
+    513,
+    349,
+    237,
+    70
+   ],
+   "alvo": [
+    563,
+    125,
+    156,
+    48
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": false,
+   "encerrar": true
+  },
+  "1280-atual-c2": {
+   "texto": "Clique em Golpe Pesado (tecla 1).",
+   "seta": "seta-baixo",
+   "caixa": [
+    340,
+    375,
+    224,
+    59
+   ],
+   "alvo": [
+    307,
+    308,
+    314,
+    62
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 15,
+   "entendi": false,
+   "encerrar": true
+  },
+  "1280-b-c2": {
+   "texto": "Clique em Golpe Pesado (tecla 1).",
+   "seta": "seta-baixo",
+   "caixa": [
+    331,
+    375,
+    242,
+    67
+   ],
+   "alvo": [
+    307,
+    308,
+    314,
+    62
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": false,
+   "encerrar": true
+  },
+  "1280-r-c2": {
+   "texto": "Clique em Golpe Pesado (tecla 1).",
+   "seta": "seta-baixo",
+   "caixa": [
+    331,
+    375,
+    243,
+    70
+   ],
+   "alvo": [
+    307,
+    308,
+    314,
+    62
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": false,
+   "encerrar": true
+  },
+  "1280-atual-c3": {
+   "texto": "Clique num inimigo para escolher o alvo (ou a tecla do número dele).",
+   "seta": "seta-baixo",
+   "caixa": [
+    650,
+    335,
+    330,
+    80
+   ],
+   "alvo": [
+    735,
+    116,
+    216,
+    56
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 15,
+   "entendi": false,
+   "encerrar": true
+  },
+  "1280-b-c3": {
+   "texto": "Clique num inimigo para escolher o alvo (ou a tecla do número dele).",
+   "seta": "seta-baixo",
+   "caixa": [
+    640,
+    337,
+    340,
+    89
+   ],
+   "alvo": [
+    735,
+    116,
+    216,
+    56
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": false,
+   "encerrar": true
+  },
+  "1280-r-c3": {
+   "texto": "Clique num inimigo para escolher o alvo (ou a tecla do número dele).",
+   "seta": "seta-baixo",
+   "caixa": [
+    640,
+    338,
+    340,
+    92
+   ],
+   "alvo": [
+    735,
+    116,
+    216,
+    56
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": false,
+   "encerrar": true
+  },
+  "1280-atual-c4": {
+   "texto": "Golpe Pesado −10 Vigor Atacar não gasta Vigor. Ao acertar, +2 Vigor.",
+   "seta": "seta-baixo",
+   "caixa": [
+    295,
+    319,
+    293,
+    112
+   ],
+   "alvo": [
+    355,
+    184,
+    173,
+    21
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 15,
+   "entendi": true,
+   "encerrar": true
+  },
+  "1280-b-c4": {
+   "texto": "Golpe Pesado −10 Vigor Atacar não gasta Vigor. Ao acertar, +2 Vigor.",
+   "seta": "seta-baixo",
+   "caixa": [
+    293,
+    319,
+    297,
+    125
+   ],
+   "alvo": [
+    355,
+    184,
+    173,
+    21
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": true,
+   "encerrar": true
+  },
+  "1280-r-c4": {
+   "texto": "Golpe Pesado −10 Vigor Atacar não gasta Vigor. Ao acertar, +2 Vigor.",
+   "seta": "seta-baixo",
+   "caixa": [
+    292,
+    319,
+    298,
+    130
+   ],
+   "alvo": [
+    355,
+    184,
+    173,
+    21
+   ],
+   "naJanela": true,
+   "cobreAlvo": 0,
+   "letra": 16,
+   "entendi": true,
+   "encerrar": true
   }
  },
  "erros": []

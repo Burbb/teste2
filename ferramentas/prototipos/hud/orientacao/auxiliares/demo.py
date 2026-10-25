@@ -1,5 +1,5 @@
 """DEMONSTRAÇÃO dos quadros de orientação (protótipo, 24/10/2026; nada no jogo): um painel local para ver os quadros no jogo
-de verdade, os de hoje e as propostas A e B, em cada caso, sem preparar partida e sem tocar no save (nem no tutorial dele)
+de verdade, os de hoje, a proposta B e a B refinada (R), em cada caso, sem preparar partida e sem tocar no save (nem no tutorial dele)
 (cada caso roda num processo próprio, com uma pasta de saves temporária).
 
     python ferramentas/prototipos/hud/orientacao/auxiliares/demo.py      # painel em http://127.0.0.1:8769/
@@ -23,7 +23,7 @@ from cenarios_orientacao import CASOS, ROTULOS  # noqa: E402
 
 PORTA = int(os.environ.get("DEMO_PORTA", "8769"))
 PAINEL = f"http://127.0.0.1:{PORTA}/"
-VERSOES = ["", "a", "b"]
+VERSOES = ["", "b", "r"]
 trava = threading.Lock()
 atual = {"proc": None, "rotulo": ""}
 
@@ -70,8 +70,8 @@ a.b.p{{border-color:#f2c94c;color:#f2c94c;font-weight:bold}} a.b:hover{{backgrou
 <p class="nota">Cada botão encerra o caso anterior e começa outro do zero, numa partida de teste com estado temporário
 (os seus saves e o tutorial deles não são tocados). O quadro aparece quando o texto da cena termina. Experimente o Tab
 até o "Entendi" e o "Encerrar tutorial", Enter e espaço no "Entendi", e clicar no quadro (nada é escolhido no jogo). Na
-luta (AL), ataque: o quadro aparece enquanto os inimigos agem. As duas propostas só mudam o acabamento: a posição, a
-seta, a sequência e os textos são os de hoje. No canto de baixo: "repetir" e "painel".</p>
+luta (AL), ataque: o quadro aparece enquanto os inimigos agem. Na luta guiada (C1–C4), siga o quadro: Habilidades, a habilidade, o alvo. As propostas só mudam o acabamento (e a R,
+a ordem do Tab): a posição, a seta, a sequência e os textos são os de hoje. No canto de baixo: "repetir" e "painel".</p>
 <table>{''.join(linhas)}</table>
 <p class="nota">Rodando agora: {rodando}</p></body></html>"""
 

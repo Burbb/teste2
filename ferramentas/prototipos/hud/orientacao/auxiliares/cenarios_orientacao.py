@@ -5,7 +5,9 @@ caso só monta o estado em que ele aparece (as orientações já vistas, o lugar
 
     python cenarios_orientacao.py <caso>        # sobe o servidor e imprime o endereço na primeira linha
 
-PROPOSTA=a ou b põe orientacao.css do protótipo e marca a página (html[data-orientacao]); vazia: os quadros de hoje.
+PROPOSTA=a, b ou r põe orientacao.css do protótipo e marca a página (html[data-orientacao]); vazia: os quadros de hoje.
+Com r, a página recebe também app/orientacao.js com o "Encerrar tutorial" antes do "Entendi" no código (a ordem do
+Tab igual à da leitura); o arquivo do jogo não muda.
 PAINEL=<endereço> põe a faixa da demonstração no canto. Nada é gravado no jogo.
 """
 import html
@@ -19,8 +21,9 @@ RAIZ = pathlib.Path(__file__).resolve().parents[5]
 sys.path.insert(0, str(RAIZ))
 PROTO = pathlib.Path(__file__).resolve().parents[1]
 
-# id: (rótulo, onde o quadro mora, o ambiente do cenário `tutorial`). O V1 (o mural) e a luta guiada (C1–C4) não
-# entram: o cenário `tutorial` já parte com eles vistos.
+# id: (rótulo, onde o quadro mora, o ambiente do cenário `tutorial`). O V1 (o mural) e a luta guiada (C1–C4) trocam
+# as orientações com que o cenário parte (JA_VISTAS); o C2–C4 avançam pela ação (fotografar.mjs, PASSOS).
+LUTA_GUIADA = {"JA_VISTAS": "", "VISTAS": "A1", "LUTA": "lobo", "QUANTOS": "2", "LUTA_APOS_ESCOLHA": "1"}
 CASOS = {
     "a1": ("A1 · a velocidade do texto (no alto, o botão Texto)", "alto", {}),
     "v2": ("V2 · o Templo (um prédio da vila, na faixa abaixo do cenário)", "página", {"VISTAS": "A1", "VIDA": "0.5"}),
@@ -32,8 +35,17 @@ CASOS = {
     "al": ("AL · na luta, acelerar a animação (a faixa abaixo da arena, sem seta)", "luta",
            {"VISTAS": "A1", "LUTA": "lobo", "QUANTOS": "3", "NIVEL_LUTA": "2", "LUTA_APOS_ESCOLHA": "1"}),
     "e1": ("E1 · o item achado (abaixo da janela do achado)", "janela", {"VISTAS": "A1,V1", "ITEM": "1"}),
+    "v1": ("V1 · o mural (um prédio da vila, na faixa abaixo do cenário)", "página", {"JA_VISTAS": "combate"}),
+    "c1": ("C1 · a luta guiada: Habilidades (a roda, na faixa abaixo da arena)", "luta", LUTA_GUIADA),
+    "c2": ("C2 · a luta guiada: escolher a habilidade (ao lado da janelinha)", "luta", LUTA_GUIADA),
+    "c3": ("C3 · a luta guiada: o alvo (a carta do inimigo)", "luta", LUTA_GUIADA),
+    "c4": ("C4 · a luta guiada: o que a habilidade gastou (a barra do herói)", "luta", LUTA_GUIADA),
 }
-ROTULOS = {"": "os quadros de hoje", "a": "A · quadro da HUD", "b": "B · chamada contextual"}
+ROTULOS = {"": "os quadros de hoje", "a": "A · quadro da HUD", "b": "B · chamada contextual",
+           "r": "B refinada (R)"}
+# R: o "Encerrar tutorial" antes do "Entendi" no código, como na tela (à esquerda): a ordem do Tab segue a leitura
+BOTOES_HOJE = """${entendi ? '<button type="button" class="orientacao-entendi">Entendi</button>' : ""}${ENCERRAR}"""
+BOTOES_R = """${ENCERRAR}${entendi ? '<button type="button" class="orientacao-entendi">Entendi</button>' : ""}"""
 TIPOS = {".css": "text/css; charset=utf-8", ".js": "text/javascript; charset=utf-8", ".png": "image/png"}
 
 
@@ -46,6 +58,10 @@ def demonstracao(srv, caso):
     pasta = pathlib.Path(sys.modules[Servidor.__module__].PASTA)
 
     def _arquivo(self, relativo):
+        if relativo == "app/orientacao.js" and proposta == "r":
+            js = (pasta / "app" / "orientacao.js").read_text(encoding="utf-8")
+            assert BOTOES_HOJE in js, "orientacao.js mudou: não achei a ordem dos botões"
+            return self._responder(200, js.replace(BOTOES_HOJE, BOTOES_R).encode("utf-8"), TIPOS[".js"])
         if relativo.startswith("prototipo-orientacao/"):
             alvo = (PROTO / relativo.split("/", 1)[1]).resolve()
             if PROTO in alvo.parents and alvo.suffix in TIPOS and alvo.is_file():

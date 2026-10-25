@@ -834,7 +834,8 @@ def tutorial(ui):
     manhã ... 3 noite). VIDA e REC: a fração da vida e do recurso (0.5...). OURO, PROVISOES, TOCHAS, PONTOS (de
     talento). COMITIVA: quem anda junto ("morel,odete"); RESERVA: quem espera no acampamento; FERIDO. ITEM=1: um
     item da arma para comparar logo na chegada. BAUS=n na bolsa. CONTRATO=aceito ou feito: um contrato de caça no
-    CONTRATO_EM (bosque, padrão, ou charco). LUTA=família (QUANTOS, NIVEL_LUTA): uma luta logo na chegada. VISTAS: as orientações já vistas, além da luta e do Mural ("V3,N1").
+    CONTRATO_EM (bosque, padrão, ou charco). LUTA=família (QUANTOS, NIVEL_LUTA): uma luta logo na chegada. VISTAS: as orientações já vistas, além da luta e do Mural ("V3,N1");
+    JA_VISTAS troca essas duas (JA_VISTAS=combate: o Mural pendente; JA_VISTAS= vazio: também a luta guiada C1–C4).
     HARDCORE=1: morte definitiva. PENA=n (Penas de Fênix) e PROTECAO=mendigo: o que levanta o herói na luta.
     FERIMENTOS=corte,costelas (do herói, sem tratar), BANDAGENS=n, FOME=n (dias sem comer). GRATIS_USADO=templo,curandeira:
     o primeiro atendimento ou tratamento grátis já usado. NOME: o nome do herói (padrão Jean; para conferir nome longo).
@@ -858,7 +859,8 @@ def tutorial(ui):
     ab.comecar(g, os.environ.get("TUTORIAL", "1") != "0")
     a = g.mundo["abertura"]
     a.update(despensa="feita", caneca=False)
-    a["vistas"] = ["combate", "V1"] + [v for v in os.environ.get("VISTAS", "").split(",") if v]
+    a["vistas"] = [v for v in os.environ.get("JA_VISTAS", "combate,V1").split(",") if v] + [
+        v for v in os.environ.get("VISTAS", "").split(",") if v]
     g.contagem["morel_na_taverna"] = 1
     for c in [c for c in os.environ.get("RESERVA", "").split(",") if c] + [c for c in os.environ.get("COMITIVA", "").split(",") if c]:
         cm.recrutar(g, c)

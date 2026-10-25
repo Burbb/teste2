@@ -1,7 +1,7 @@
-# Os quadros de orientação do tutorial: levantamento e duas propostas (etapa 2, 24/10/2026; protótipo, nada no jogo)
+# Os quadros de orientação do tutorial: levantamento, duas propostas e a B refinada (etapa 2, 24/10/2026; protótipo)
 
 Os quadros de hoje continuam no jogo. As propostas são só o acabamento (`orientacao.css`, por cima das regras de
-`06-talentos-avisos.css`, valendo com `html[data-orientacao="a"]` ou `"b"`): a posição, a seta, o contorno do controle,
+`06-talentos-avisos.css`, valendo com `html[data-orientacao="a"]`, `"b"` ou `"r"`): a posição, a seta, o contorno do controle,
 os véus, a sequência, os textos e os gestos são os de `app/orientacao.js` e `rpg/abertura.py`, sem mudança. A folha
 comparativa: `folha-orientacao.png` (tamanho real). A demonstração: `demo.bat`.
 
@@ -68,5 +68,44 @@ px; o contorno do controle mais firme (2 px), com o pulso devagar de hoje; nenhu
 
 - A ordem do Tab segue o código (o "Entendi" primeiro), enquanto na tela, nas duas propostas, o "Encerrar tutorial"
   fica à esquerda: a leitura e o Tab andam em sentidos contrários (hoje acontece o mesmo, com o "Entendi" à direita).
+  Resolvido na R (segunda rodada, abaixo).
 - A 1280×720, o N1 de hoje abre acima da coluna e cobre o nome do lugar; nas propostas (um pouco mais altas) ele
   desce para baixo dos riscos. É o posicionamento de sempre escolhendo pelo espaço, não um defeito novo.
+
+## Segunda rodada: a B refinada (R), a candidata
+
+O Jean escolheu a direção B e pediu uma candidata só, refinada, comparada com a B original no mesmo cenário. A A fica
+como histórico (as regras dela seguem no `orientacao.css`; a folha da primeira rodada, no histórico do git).
+
+**R · o que muda da B.** A composição leve fica (uma base escura, sem caixa de ferro, a ligação do lado do controle). O
+acabamento vem para a linguagem aprovada:
+- o fundo escuro com o fio de cima (o do ferro dos botões, sem a face de ferro) e a borda preta de 1 px;
+- o ouro envelhecido (`#b8913f`) só onde aponta: a seta, um traço curto (2 × 26 px) junto dela, dentro da borda, a
+  haste e o contorno do controle; a barra inteira da B saiu (somava dourado demais numa coluna cheia, o N1 e o K2);
+- os nomes em destaque em ouro claro envelhecido;
+- o "Entendi" é o botão principal da HUD (a família do Continuar, menor: a face de ferro, a aresta de latão, acende
+  com o mouse e o foco) no lugar do botão dourado chapado;
+- o "Encerrar tutorial", texto sublinhado à esquerda, **vem antes no código**: a ordem do Tab segue a leitura (na
+  integração, a troca da ordem em `botoes()` de `app/orientacao.js`; no protótipo, o cenário serve o arquivo com a
+  troca). No C4, o foco continua indo sozinho para o "Entendi"; o Shift+Tab volta ao "Encerrar tutorial".
+Textos, gatilhos, sequência, posição e o pulso do contorno: os de hoje.
+
+**Os casos que faltavam.** O V1 (o mural) e a luta guiada (C1–C4) entram pelo cenário `tutorial` com
+`JA_VISTAS` (as orientações com que ele parte; `tests/navegador/cenarios.py`), numa partida de teste com saves
+temporários; o C2–C4 avançam pela ação (`fotografar.mjs`, `PASSOS`; `gestos.mjs` faz o mesmo caminho até o C4).
+
+**Conferido.** `fotografar.mjs`: os 14 casos (A1, V1, V2, B1, K2, V4, T1, N1, AL, E1, C1–C4) em hoje, B e R, a 1920×945
+e a 1280×720: o quadro dentro da janela em todos e cobrindo 0 px do controle explicado em todos (depois da correção
+abaixo). `gestos.mjs` (hoje, B, R): o clique no quadro não escolhe nada; o Tab chega aos dois botões, com o foco
+visível; Enter no "Entendi" fecha só o quadro; "Encerrar tutorial" some sem escolher nada; no C4 o foco já está no
+"Entendi". Só na R a ordem do Tab segue a leitura (hoje e na B, o "Entendi" vem primeiro e fica à direita). A folha:
+`folha-orientacao.png` (hoje × B × R).
+
+**Corrigido no jogo (defeito demonstrado nesta rodada).** No C2 (escolher a habilidade), a janelinha de Habilidades é
+larga demais para o quadro caber de qualquer lado; empurrado para dentro da faixa, ele cobria a parte de baixo da linha
+explicada (cerca de 20 px, nos de hoje e nas propostas, nas duas janelas). Agora, sem lado com espaço, o quadro desce
+para logo abaixo da linha, com a seta para ela (`app/orientacao.js`).
+
+**Avaliação.** O ganho: a mesma leitura imediata da B, sem a barra que somava dourado, e um "Entendi" que é visivelmente
+o botão do jogo. A limitação: com o ouro só na seta, a ligação com o controle depende mais dela; nos quadros de seta
+longa até o alvo (o C1, o C3), a seta é o único ponto dourado, como hoje.

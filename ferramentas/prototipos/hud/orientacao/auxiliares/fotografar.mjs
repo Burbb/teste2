@@ -3,7 +3,7 @@
 // janela, se cobre o controle explicado (o contorno), o tamanho da letra e o foco no "Entendi" pelo Tab. Guarda
 // ../capturas/<janela>-<versão>-<caso>.png e ../capturas/medidas.json.
 //   PLAYWRIGHT_MODULO=<caminho do playwright>/index.mjs node ferramentas/prototipos/hud/orientacao/auxiliares/fotografar.mjs
-// (VERSOES=atual,a,b; CASOS=a1,v1,...; JANELAS=1920,1280)
+// (VERSOES=atual,b,r; CASOS=a1,v1,c1,...; JANELAS=1920,1280). Na luta guiada, o C2–C4 avançam pela ação (PASSOS).
 import { spawn } from "child_process";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import { fileURLToPath } from "url";
@@ -14,7 +14,10 @@ const SAIDA = path.join(aqui, "..", "capturas");
 mkdirSync(SAIDA, { recursive: true });
 const espera = (ms) => new Promise((r) => setTimeout(r, ms));
 const PY = process.env.PYTHON || (process.platform === "win32" ? "python" : "python3");
-const CASOS = (process.env.CASOS || "a1,v2,b1,k2,v4,t1,n1,al,e1").split(",");
+const CASOS = (process.env.CASOS || "a1,v1,v2,b1,k2,v4,t1,n1,al,e1,c1,c2,c3,c4").split(",");
+// a luta guiada: o que clicar, a partir do C1, até o quadro do caso (cada clique cumpre um passo)
+const HAB = '#roda .roda-botao[data-slot="habilidades"]', LINHA = ".roda-janela .rj-linha[data-hab]", ALVO = "#arena .carta.alvejavel";
+const PASSOS = { c2: [HAB], c3: [HAB, LINHA], c4: [HAB, LINHA, ALVO] };
 
 async function subir(caso, proposta) {
   const proc = spawn(PY, [path.join(aqui, "cenarios_orientacao.py"), caso],
@@ -26,12 +29,23 @@ async function subir(caso, proposta) {
   return { proc, url };
 }
 const MENU = "#prompt .escolhas:not(.escolhido) .escolha";
-async function ateQuadro(p) {
+const textoQuadro = (p) => p.evaluate(() => document.querySelector(".orientacao:not([hidden]) .orientacao-texto")?.innerText || "");
+async function ateQuadro(p, caso) {
+  const guiada = caso.startsWith("c");
   for (let k = 0; k < 60; k++) {
-    if (await p.$(".orientacao:not([hidden])")) return true;
+    if (await p.$(".orientacao:not([hidden])")) {
+      for (const sel of PASSOS[caso] || []) {
+        const antes = await textoQuadro(p);
+        await p.click(sel);
+        let mudou = false;
+        for (let i = 0; i < 80 && !mudou; i++) { await espera(200); const t = await textoQuadro(p); mudou = !!t && t !== antes; }
+        if (!mudou) return false;
+      }
+      return true;
+    }
     const luta = await p.$(`${MENU}:has-text("Começar a luta")`); if (luta) await luta.click().catch(() => {});
     // na luta (AL): agir para os outros agirem (o quadro vale enquanto a animação deles corre)
-    const at = await p.$('#roda .roda-botao[data-slot="atacar"]'); if (at) { await at.click().catch(() => {}); const alvo = await p.$("#arena .carta.alvejavel"); if (alvo) await alvo.click().catch(() => {}); }
+    const at = !guiada && await p.$('#roda .roda-botao[data-slot="atacar"]'); if (at) { await at.click().catch(() => {}); const alvo = await p.$("#arena .carta.alvejavel"); if (alvo) await alvo.click().catch(() => {}); }
     await espera(300);
   }
   return false;
@@ -54,13 +68,13 @@ const b = await chromium.launch(process.env.CHROMIUM ? { executablePath: process
 for (const jan of (process.env.JANELAS || "1920,1280").split(",")) {
   const [W, H] = jan === "1920" ? [1920, 945] : [1280, 720];
   for (const caso of CASOS) {
-    for (const v of (process.env.VERSOES || "atual,a,b").split(",")) {
+    for (const v of (process.env.VERSOES || "atual,b,r").split(",")) {
       const { proc, url } = await subir(caso, v === "atual" ? "" : v);
       const p = await b.newPage({ viewport: { width: W, height: H } });
       p.on("pageerror", (e) => erros.push(`${jan}-${v}-${caso}: ${e}`));
       try {
         await p.goto(url);
-        if (!(await ateQuadro(p))) throw new Error("o quadro não apareceu");
+        if (!(await ateQuadro(p, caso))) throw new Error("o quadro não apareceu");
         await espera(700);
         await p.mouse.move(2, 2);
         await p.screenshot({ path: path.join(SAIDA, `${jan}-${v}-${caso}.png`) });

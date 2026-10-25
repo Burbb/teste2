@@ -1,6 +1,8 @@
-// Confere os gestos dos quadros de orientação no jogo de verdade (cenarios_orientacao.py), nos de hoje e nas propostas
-// A e B, a 1920×945 (as propostas só mudam o acabamento: os gestos têm de sair iguais aos de hoje):
-// - o Tab chega ao "Entendi" e ao "Encerrar tutorial", e o foco se vê (um contorno);
+// Confere os gestos dos quadros de orientação no jogo de verdade (cenarios_orientacao.py), nos de hoje, na proposta B
+// e na B refinada (R), a 1920×945 (as propostas só mudam o acabamento: os gestos têm de sair iguais aos de hoje):
+// - o Tab chega ao "Entendi" e ao "Encerrar tutorial", e o foco se vê (um contorno); na R, na ordem da leitura (o da
+//   esquerda primeiro); nas outras, a ordem só é anotada;
+// - no C4 (a luta guiada), o foco já está no "Entendi" e o Shift+Tab volta ao "Encerrar tutorial";
 // - Enter no "Entendi" fecha só o quadro: a pergunta do menu continua a mesma (nada escolhido);
 // - um clique no texto do quadro não escolhe nada no jogo;
 // - "Encerrar tutorial" desliga as orientações (o quadro some e não volta na mesma tela).
@@ -24,6 +26,7 @@ async function abrir(b, caso, proposta) {
   const p = await b.newPage({ viewport: { width: 1920, height: 945 } });
   const erros = []; p.on("pageerror", (e) => erros.push(String(e)));
   await p.goto(url);
+  if (caso.startsWith("c")) await p.click('#prompt .escolhas:not(.escolhido) .escolha:has-text("Começar a luta")', { timeout: 30000 });
   await p.waitForSelector(".orientacao:not([hidden])", { timeout: 30000 });
   await espera(600);
   return { p, proc, erros };
@@ -32,7 +35,7 @@ const estadoMenu = (p) => p.evaluate(() => ({ id: (typeof pergunta !== "undefine
   quadro: !!document.querySelector(".orientacao:not([hidden])") }));
 
 const b = await chromium.launch(process.env.CHROMIUM ? { executablePath: process.env.CHROMIUM } : {});
-for (const v of (process.env.VERSOES || "atual,a,b").split(",")) {
+for (const v of (process.env.VERSOES || "atual,b,r").split(",")) {
   console.log(`== ${v}`);
   // A1: um quadro com "Entendi" (informativo)
   let { p, proc, erros } = await abrir(b, "a1", v === "atual" ? "" : v);
@@ -45,12 +48,15 @@ for (const v of (process.env.VERSOES || "atual,a,b").split(",")) {
   for (let k = 0; k < 40 && focados.length < 2; k++) {
     await p.keyboard.press("Tab");
     const f = await p.evaluate(() => { const e = document.activeElement; if (!e?.closest(".orientacao")) return null;
-      const cs = getComputedStyle(e); return { classe: e.className, contorno: cs.outlineStyle !== "none" && parseFloat(cs.outlineWidth) > 0 }; });
+      const cs = getComputedStyle(e); return { classe: e.className, x: e.getBoundingClientRect().left, contorno: cs.outlineStyle !== "none" && parseFloat(cs.outlineWidth) > 0 }; });
     if (f && !focados.some((x) => x.classe === f.classe)) focados.push(f);
   }
   conferir(focados.some((f) => /entendi/.test(f.classe)) && focados.some((f) => /encerrar/.test(f.classe)),
     `o Tab chega aos dois botões (${focados.map((f) => f.classe).join(", ")})`);
   conferir(focados.length > 0 && focados.every((f) => f.contorno), "o foco se vê nos dois (um contorno)");
+  const naLeitura = focados.length === 2 && focados[0].x < focados[1].x;
+  if (v === "r") conferir(naLeitura, "o Tab segue a leitura (o da esquerda primeiro)");
+  else console.log(`  (anotado) o Tab ${naLeitura ? "segue" : "não segue"} a leitura`);
   await p.focus(".orientacao-entendi");
   await p.keyboard.press("Enter");
   await espera(400);
@@ -65,6 +71,22 @@ for (const v of (process.env.VERSOES || "atual,a,b").split(",")) {
   await espera(800);
   const depoisB = await estadoMenu(p);
   conferir(!depoisB.quadro && depoisB.id === antesB.id, "Encerrar tutorial: o quadro some e nada é escolhido");
+  await p.close(); proc.kill();
+  // C4: o foco vai sozinho ao "Entendi"; Shift+Tab, ao "Encerrar tutorial"
+  ({ p, proc, erros } = await abrir(b, "c1", v === "atual" ? "" : v));
+  const texto = () => p.evaluate(() => document.querySelector(".orientacao:not([hidden]) .orientacao-texto")?.innerText || "");
+  for (const sel of ['#roda .roda-botao[data-slot="habilidades"]', ".roda-janela .rj-linha[data-hab]", "#arena .carta.alvejavel"]) {
+    const antes = await texto(); await p.click(sel);
+    for (let i = 0; i < 80; i++) { await espera(200); const t = await texto(); if (t && t !== antes) break; }
+  }
+  await espera(400);
+  const c4 = await p.evaluate(() => document.activeElement?.className || "");
+  conferir(/entendi/.test(c4), `no C4 o foco já está no Entendi (${c4})`);
+  await p.keyboard.press("Shift+Tab");
+  const volta = await p.evaluate(() => document.activeElement?.className || "");
+  if (v === "r") conferir(/encerrar/.test(volta), `Shift+Tab volta ao Encerrar tutorial (${volta})`);
+  else console.log(`  (anotado) Shift+Tab no C4 vai a: ${volta}`);
+  conferir(erros.length === 0, "sem erros na página");
   await p.close(); proc.kill();
 }
 await b.close();
