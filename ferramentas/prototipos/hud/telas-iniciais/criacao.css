@@ -1,0 +1,27 @@
+/* A criação do personagem em cartões, a candidata R (protótipo, 24/10/2026; nada no jogo). Vale com
+   html[data-telas="r"] (cenarios_telas.py). Os cartões são os botões da página de sempre (a face de ferro, a aresta
+   que acende, o número da tecla), dispostos lado a lado: a classe com o busto da ficha, o ataque da roda, o recurso e
+   as duas especializações; o modo em dois cartões. Cores sólidas e degraus duros (a trava do estilo). */
+html[data-telas="r"] #prompt .escolhas:is(.criacao-classes, .criacao-modo) { display: grid; gap: 10px; }
+html[data-telas="r"] #prompt .escolhas.criacao-classes { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+html[data-telas="r"] #prompt .escolhas.criacao-modo { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+html[data-telas="r"] #prompt .escolhas:is(.criacao-classes, .criacao-modo) > li:not(.criacao-cartao) { grid-column: 1 / -1; }
+html[data-telas="r"] #prompt .criacao-cartao { display: flex; }
+html[data-telas="r"] #prompt .criacao-cartao .escolha { position: relative; flex: 1; flex-direction: column; align-items: stretch;
+  gap: 0; padding: 12px 14px 13px; text-align: left; }
+html[data-telas="r"] #prompt .criacao-cartao .escolha .tecla { position: absolute; top: 8px; left: 8px; width: 24px; height: 24px; font-size: 15px; }
+html[data-telas="r"] #prompt .criacao-cartao .rotulo { display: flex; flex-direction: column; gap: 4px; }
+html[data-telas="r"] #prompt .criacao-cartao .op-texto { font-family: var(--titulo); font-size: 28px; line-height: 1; color: var(--latao-claro); }
+html[data-telas="r"] #prompt .criacao-classes .op-texto { align-self: center; margin-top: 6px; }
+html[data-telas="r"] #prompt .criacao-modo .op-texto { padding-left: 32px; }
+html[data-telas="r"] #prompt .criacao-cartao .op-nota { margin-top: 6px; font-size: 15px; line-height: 1.35; color: #cfc5ae; }
+/* o busto da ficha, no mesmo nicho dela */
+html[data-telas="r"] #prompt .cc-busto { align-self: center; padding: 4px; border: 1px solid var(--aresta); background: #0c0b0a; line-height: 0; }
+html[data-telas="r"] #prompt .cc-busto img { width: 80px; height: 80px; }
+html[data-telas="r"] #prompt .cc-linha { display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 15px; color: var(--sec); }
+html[data-telas="r"] #prompt .cc-ataque { display: inline-grid; line-height: 0; }
+html[data-telas="r"] #prompt .cc-specs { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: center; gap: 2px 7px;
+  padding: 6px 0 4px; border-top: 1px solid #2c2a26; border-bottom: 1px solid #2c2a26; font-size: 16px; font-weight: 700; color: #eadbb4; }
+html[data-telas="r"] #prompt .cc-specs small { flex-basis: 100%; text-align: center; font-size: 11px; font-weight: 600; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--sec); }
+html[data-telas="r"] #prompt .cc-specs i { font-style: normal; color: var(--latao); }
