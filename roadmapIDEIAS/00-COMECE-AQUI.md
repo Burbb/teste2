@@ -7336,3 +7336,18 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   não encurta as faixas (só a queda olha o `pular`); hoje, o Guardião e o Mestre ficam ~0,1 s um sobre o outro.
 - **Agora:** a escolha do Jean; nada integrado. Não começados: os quadros do tutorial, o menu inicial, o Grimório e a
   retirada do procedural.
+
+### 24/10/2026 (data do computador local) — As faixas: a original refinada (protótipo, nada no jogo)
+
+- **A decisão do Jean:** a faixa de hoje fica como base; A e B, histórico (não aprovadas para integração).
+- **A candidata R** (`ferramentas/prototipos/hud/faixas/`, LEIA-ME no topo, `folha-original-refinada.png`, a linha "R"
+  na demonstração): a mesma tarja larga atravessando a tela, o título de 80 px, os tempos, os sons e as partículas de
+  hoje; o subtítulo de 15–17 para 20–21 px, com espaço e quebra de linha; a espada aprovada (espelhada à direita) e o
+  "Sair" da doca; a tarja em pixel, com as pontas em degraus de borda dura (sem pontilhado sobre o texto das colunas);
+  o acento breve do marco na entrada; a queda e o cansaço entrando descendo; a troca limpa (a anterior sai em 100 ms).
+  A caveira e a lua continuam as de hoje (não há aprovados que correspondam).
+- **Conferido** no jogo, a 1920×945 e a 1280×720: os mesmos tempos da de hoje na sequência real (Guardião → Mestre →
+  espólio → nível → achado); no máximo uma faixa inteira por vez (hoje, duas); cliques e teclas não atravessam; o
+  movimento reduzido com a faixa inteira e parada. `unittest` e pyflakes; o jogo não mudou.
+- **Pendências separadas:** o adiantar das faixas; as duas `@keyframes faixa` com o mesmo nome (`03` e `06`).
+- **Agora:** a avaliação do Jean; nada integrado.

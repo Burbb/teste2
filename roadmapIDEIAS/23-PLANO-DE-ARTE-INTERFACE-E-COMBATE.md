@@ -1313,7 +1313,14 @@ ou mudanças de dados por iniciativa do agente.
   joia com o símbolo); as duas dentro do palco, o subtítulo legível, quatro pesos (comum, marco, peso, passagem) pela
   forma e pelo movimento. Os tempos, os sons e a ordem são os de hoje (conferido na sequência real: Guardião → Mestre
   caçador → espólio → nível → achado, com os mesmos tempos nas três). Recomendação: A. À parte: o adiantar não encurta
-  as faixas (só a queda olha o `pular`). Aguarda o Jean.
+  as faixas (só a queda olha o `pular`).
+- **As faixas: a original refinada em avaliação (24/10/2026, só no protótipo).** O Jean preferiu a faixa de hoje; A e B
+  ficam como histórico. A R parte da original (a tarja larga de lado a lado, o título de 80 px, os tempos e os sons de
+  hoje): o subtítulo de 15–17 para 20–21 px com quebra de linha (o título não diminui), a espada aprovada e o "Sair" da
+  doca nos símbolos, a tarja em pixel (as pontas em degraus de borda dura), um acento breve no marco, a queda e o
+  cansaço entrando descendo, e a troca limpa (a anterior sai em 100 ms: hoje o Guardião e o Mestre ficam ~0,1 s juntos).
+  Os mesmos tempos medidos na sequência real até o achado. Comparação em `faixas/folha-original-refinada.png`. O
+  adiantar continua pendência separada. Aguarda o Jean.
 - **O baú, a A2 em avaliação (24/10/2026, só no protótipo; histórico):** o A escolhido como direção; a A2 refina a tampa, a três
   quartos e o volume, com um 48 próprio para a pilha. A, B e o placeholder como histórico.
 - **O baú em avaliação, primeira rodada (24/10/2026, só no protótipo):** duas propostas para o Baú Trancado em

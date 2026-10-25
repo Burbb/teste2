@@ -54,7 +54,7 @@ async function faixa(p, texto, depois = 520) {
   return p.evaluate((el) => {
     if (!el.isConnected) return null;
     const r = el.getBoundingClientRect(), c = document.getElementById("cena").getBoundingClientRect();
-    const tit = el.querySelector("b"), sub = el.querySelector(".fa-sub, .fb-sub, .faixa-festa > span");
+    const tit = el.querySelector("b"), sub = el.querySelector(".fa-sub, .fb-sub, .fr-sub, .faixa-festa > span");
     return { caixa: [r.left, r.top, r.width, r.height].map(Math.round), palco: [c.left, c.width].map(Math.round),
       dentro: r.left >= c.left - 1 && r.right <= c.right + 1,
       tituloUmaLinha: tit ? tit.getBoundingClientRect().height < parseFloat(getComputedStyle(tit).fontSize) * 1.6 : null,

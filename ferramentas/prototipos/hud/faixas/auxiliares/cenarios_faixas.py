@@ -5,7 +5,7 @@ de a página abrir chega sem animação ("replay"), por isso tudo começa depois
 
     python cenarios_faixas.py <caso>        # sobe o servidor e imprime o endereço na primeira linha
 
-PROPOSTA=a ou b põe faixas.css e faixas.js do protótipo depois de telas/celebracoes.js (vazia: as faixas de hoje);
+PROPOSTA=r (a original refinada), a ou b põe faixas.css e faixas.js do protótipo depois de telas/celebracoes.js (vazia: as faixas de hoje);
 PAINEL=<endereço> põe a faixa da demonstração no canto. Nada é gravado no jogo.
 """
 import html
@@ -39,7 +39,8 @@ CASOS = {
     "exausto_capela": ("Exausto dentro da capela (a saída exausta, o texto do caminho)", "Começar"),
     "saindo": ("Saindo da capela (do fundo: o texto mais longo, 155 letras)", "Sair e acampar"),
 }
-ROTULOS = {"": "as faixas de hoje", "a": "A · faixa integrada ao palco", "b": "B · emblema e anúncio"}
+ROTULOS = {"": "as faixas de hoje", "r": "R · a original refinada (candidata)", "a": "A · faixa no palco (histórico)",
+           "b": "B · emblema (histórico)"}
 TIPOS = {".css": "text/css; charset=utf-8", ".js": "text/javascript; charset=utf-8", ".png": "image/png"}
 
 

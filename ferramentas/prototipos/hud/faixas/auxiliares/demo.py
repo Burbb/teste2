@@ -23,7 +23,7 @@ from cenarios_faixas import CASOS, ROTULOS  # noqa: E402
 
 PORTA = int(os.environ.get("DEMO_PORTA", "8768"))
 PAINEL = f"http://127.0.0.1:{PORTA}/"
-VERSOES = ["", "a", "b"]
+VERSOES = ["", "r", "a", "b"]
 trava = threading.Lock()
 atual = {"proc": None, "rotulo": ""}
 

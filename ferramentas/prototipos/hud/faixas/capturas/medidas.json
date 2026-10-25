@@ -863,6 +863,230 @@
    "tituloUmaLinha": true,
    "tituloPx": 32,
    "subPx": 18
+  },
+  "1920-r-vitoria": {
+   "caixa": [
+    0,
+    359,
+    1920,
+    112
+   ],
+   "palco": [
+    408,
+    1064
+   ],
+   "dentro": false,
+   "tituloUmaLinha": true,
+   "tituloPx": 80,
+   "subPx": null
+  },
+  "1920-r-guardiao": {
+   "caixa": [
+    0,
+    359,
+    1920,
+    112
+   ],
+   "palco": [
+    408,
+    1064
+   ],
+   "dentro": false,
+   "tituloUmaLinha": true,
+   "tituloPx": 80,
+   "subPx": null
+  },
+  "1920-r-mestre": {
+   "caixa": [
+    0,
+    359,
+    1920,
+    153
+   ],
+   "palco": [
+    408,
+    1064
+   ],
+   "dentro": false,
+   "tituloUmaLinha": true,
+   "tituloPx": 80,
+   "subPx": 21
+  },
+  "1920-r-queda": {
+   "caixa": [
+    0,
+    359,
+    1920,
+    124
+   ],
+   "palco": [
+    408,
+    1064
+   ],
+   "dentro": false,
+   "tituloUmaLinha": true,
+   "tituloPx": 80,
+   "subPx": null
+  },
+  "1920-r-exausto": {
+   "caixa": [
+    0,
+    359,
+    1920,
+    153
+   ],
+   "palco": [
+    408,
+    1064
+   ],
+   "dentro": false,
+   "tituloUmaLinha": true,
+   "tituloPx": 80,
+   "subPx": 21
+  },
+  "1920-r-saindo": {
+   "caixa": [
+    0,
+    359,
+    1920,
+    179
+   ],
+   "palco": [
+    408,
+    1064
+   ],
+   "dentro": false,
+   "tituloUmaLinha": true,
+   "tituloPx": 80,
+   "subPx": 20
+  },
+  "1920-r-comitiva": {
+   "caixa": [
+    0,
+    359,
+    1920,
+    153
+   ],
+   "palco": [
+    408,
+    1064
+   ],
+   "dentro": false,
+   "tituloUmaLinha": true,
+   "tituloPx": 80,
+   "subPx": 21
+  },
+  "1280-r-vitoria": {
+   "caixa": [
+    0,
+    274,
+    1280,
+    112
+   ],
+   "palco": [
+    276,
+    708
+   ],
+   "dentro": false,
+   "tituloUmaLinha": true,
+   "tituloPx": 80,
+   "subPx": null
+  },
+  "1280-r-guardiao": {
+   "caixa": [
+    0,
+    274,
+    1280,
+    112
+   ],
+   "palco": [
+    276,
+    708
+   ],
+   "dentro": false,
+   "tituloUmaLinha": true,
+   "tituloPx": 80,
+   "subPx": null
+  },
+  "1280-r-mestre": {
+   "caixa": [
+    0,
+    274,
+    1280,
+    153
+   ],
+   "palco": [
+    276,
+    708
+   ],
+   "dentro": false,
+   "tituloUmaLinha": true,
+   "tituloPx": 80,
+   "subPx": 21
+  },
+  "1280-r-queda": {
+   "caixa": [
+    0,
+    274,
+    1280,
+    124
+   ],
+   "palco": [
+    276,
+    708
+   ],
+   "dentro": false,
+   "tituloUmaLinha": true,
+   "tituloPx": 80,
+   "subPx": null
+  },
+  "1280-r-exausto": {
+   "caixa": [
+    0,
+    274,
+    1280,
+    153
+   ],
+   "palco": [
+    276,
+    708
+   ],
+   "dentro": false,
+   "tituloUmaLinha": true,
+   "tituloPx": 80,
+   "subPx": 21
+  },
+  "1280-r-saindo": {
+   "caixa": [
+    0,
+    274,
+    1280,
+    179
+   ],
+   "palco": [
+    276,
+    708
+   ],
+   "dentro": false,
+   "tituloUmaLinha": true,
+   "tituloPx": 80,
+   "subPx": 20
+  },
+  "1280-r-comitiva": {
+   "caixa": [
+    0,
+    274,
+    1280,
+    153
+   ],
+   "palco": [
+    276,
+    708
+   ],
+   "dentro": false,
+   "tituloUmaLinha": true,
+   "tituloPx": 80,
+   "subPx": 21
   }
  },
  "erros": []

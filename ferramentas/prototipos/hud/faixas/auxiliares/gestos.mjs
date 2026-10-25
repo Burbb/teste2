@@ -1,10 +1,11 @@
 // Confere o ritmo e os gestos das faixas no jogo de verdade (cenarios_faixas.py), nas faixas de hoje e nas propostas
-// A e B, a 1920×945:
+// (VERSOES=atual,r, o padrão; atual,a,b para as da rodada anterior), a 1920×945:
 // - a sequência real (o lobo guardião, o quinto lobo, o herói a 1 XP de subir): a ordem dos acontecimentos na tela
 //   (Guardião derrotado → Mestre caçador → o quadro do espólio → a subida de nível → o achado) e os tempos entre eles,
 //   iguais nas três (nenhuma espera a mais);
 // - cliques e a tecla "1" durante as faixas não escolhem nada na tela seguinte (o achado continua esperando);
-// - as faixas não recebem cliques (pointer-events) e saem sozinhas; o movimento reduzido mostra a mesma faixa, parada.
+// - as faixas não recebem cliques (pointer-events) e saem sozinhas; o movimento reduzido mostra a mesma faixa, parada;
+// - nas propostas, cada anúncio sai antes do próximo (hoje, o Guardião e o Mestre ficam juntos ~0,1 s).
 //   PLAYWRIGHT_MODULO=<caminho do playwright>/index.mjs node ferramentas/prototipos/hud/faixas/auxiliares/gestos.mjs
 import { spawn } from "child_process";
 import { fileURLToPath } from "url";
@@ -36,15 +37,17 @@ async function escolher(p, texto) {
 // o que a tela mostra a cada 50 ms, como uma linha do tempo de marcos
 const MARCOS = () => {
   const vis = (e) => !!e && e.getClientRects().length > 0;
-  const faixa = [...document.querySelectorAll(".faixa-festa, .fx-faixa")].map((e) => e.querySelector("b")?.textContent.trim()).join("|");
-  return { faixa, roda: !!document.querySelector('#roda .roda-botao[data-slot="atacar"]'),
+  const todas = [...document.querySelectorAll(".faixa-festa, .fx-faixa")];
+  const faixa = todas.filter((e) => !e.classList.contains("troca")).map((e) => e.querySelector("b")?.textContent.trim()).join("|");
+  return { faixa, juntas: todas.filter((e) => !e.classList.contains("troca")).length, saindo: todas.filter((e) => e.classList.contains("troca")).length, roda: !!document.querySelector('#roda .roda-botao[data-slot="atacar"]'),
     espolio: vis(document.querySelector("#celebracao .festa-espolio")),
     achado: vis(document.querySelector("#sobre-achado:not(.saindo)")), nivel: vis(document.querySelector(".festa.fb2, .festa.fa2")) };
 };
 
 const b = await chromium.launch(process.env.CHROMIUM ? { executablePath: process.env.CHROMIUM } : {});
 const linhas = {};
-for (const v of ["atual", "a", "b"]) {
+const VERS = (process.env.VERSOES || "atual,r").split(",");
+for (const v of VERS) {
   console.log(`== ${v}`);
   const { proc, url } = await subir("sequencia", v === "atual" ? "" : v);
   const p = await b.newPage({ viewport: { width: 1920, height: 945 } });
@@ -52,7 +55,7 @@ for (const v of ["atual", "a", "b"]) {
   await p.goto(url);
   await escolher(p, "Começar");
   const ordem = [], t = {};
-  let t0 = null, clicou = false, esperouAchado = false;
+  let t0 = null, clicou = false, esperouAchado = false, juntas = 0, trocaMs = 0;
   const fim = Date.now() + 40000;
   while (Date.now() < fim) {
     const m = await p.evaluate(MARCOS);
@@ -62,6 +65,8 @@ for (const v of ["atual", "a", "b"]) {
       await espera(50);
       continue;
     }
+    juntas = Math.max(juntas, m.juntas);
+    if (m.saindo) trocaMs += 50;
     for (const f of m.faixa.split("|").filter(Boolean)) if (!(("faixa:" + f) in t)) { t["faixa:" + f] = Date.now() - t0; ordem.push("faixa:" + f); }
     for (const k of ["espolio", "nivel", "achado"]) if (m[k] && !(k in t)) { t[k] = Date.now() - t0; ordem.push(k); }
     // durante a primeira faixa: três cliques no palco e a tecla 1 (a primeira opção de uma tela de menu)
@@ -88,6 +93,8 @@ for (const v of ["atual", "a", "b"]) {
     await espera(50);
   }
   linhas[v] = { ordem, t };
+  console.log(`    faixas inteiras juntas, no máximo: ${juntas}; a anterior saindo durante a troca: ~${trocaMs} ms`);
+  if (v !== "atual") conferir(juntas <= 1 && trocaMs <= 200, "cada anúncio sai antes do próximo (a troca do Guardião para o Mestre, limpa)");
   console.log("    ordem:", ordem.join(" → "));
   console.log("    tempos (ms desde a primeira faixa):", JSON.stringify(t));
   conferir(ordem[0]?.startsWith("faixa:Guardião") && ordem.some((o) => o.startsWith("faixa:Mestre")), "Guardião derrotado e depois Mestre caçador");
@@ -98,12 +105,12 @@ for (const v of ["atual", "a", "b"]) {
 }
 // os mesmos tempos nas três (a fila é a de hoje; a faixa nova só desenha): a diferença fica no ruído do roteiro
 const chave = (v, k) => linhas[v].t[k];
-for (const k of ["faixa:Mestre caçador", "espolio"]) {
-  const vs = ["atual", "a", "b"].map((v) => chave(v, k));
-  conferir(vs.every((x) => typeof x === "number") && Math.max(...vs) - Math.min(...vs) <= 250, `"${k}" chega no mesmo tempo nas três (${vs.join(", ")} ms)`);
+for (const k of ["faixa:Mestre caçador", "espolio", "nivel", "achado"]) {
+  const vs = VERS.map((v) => chave(v, k));
+  conferir(vs.every((x) => typeof x === "number") && Math.max(...vs) - Math.min(...vs) <= 250, `"${k}" chega no mesmo tempo em todas (${vs.join(", ")} ms)`);
 }
 // o movimento reduzido: a mesma faixa, parada, no mesmo tempo
-for (const v of ["a", "b"]) {
+for (const v of VERS.filter((x) => x !== "atual")) {
   const { proc, url } = await subir("comitiva", v);
   const p = await b.newPage({ viewport: { width: 1280, height: 720 }, reducedMotion: "reduce" });
   await p.goto(url); await escolher(p, "Começar");

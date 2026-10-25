@@ -9,6 +9,10 @@
 //
 //   FaixasProto.usar("a")   A · a faixa integrada ao palco: horizontal, contida no palco, base escura de beiras rasgadas
 //   FaixasProto.usar("b")   B · emblema e anúncio: uma placa compacta, o símbolo e o título no centro
+//   FaixasProto.usar("r")   R · a ORIGINAL refinada (a direção escolhida pelo Jean, 24/10/2026; A e B ficam como
+//                           histórico): a mesma tarja larga atravessando a tela, o título de 80 px no centro, os
+//                           tempos de hoje; o subtítulo legível, os ícones aprovados, a tarja em pixel art e a troca
+//                           limpa de uma faixa para a próxima
 //
 // Os quatro pesos (a mesma regra nas duas): "comum" (a Vitória: curta, boa de repetir), "marco" (o Guardião, o Mestre
 // caçador, quem se junta à comitiva: mais presença), "peso" (Você caiu ou morreu, Exausto: sem cara de festa) e
@@ -121,6 +125,79 @@
     return el;
   }
 
+  // ------------------------------------------------------------------ R · a original refinada
+  // O que a original já tem e fica: a tarja de lado a lado a 38% da altura, o título na letra de título a 80 px, com a
+  // sombra dura, os símbolos dos dois lados, a abertura na vertical e a duração de cada uma (1,6 s; 2,4 s as sombrias;
+  // 2,6 s a queda). O que muda: o subtítulo (maior, com espaço e quebra de linha; o título nunca diminui por causa
+  // dele), os símbolos aprovados quando há um que corresponde, a tarja desenhada em pixel (as pontas em pontilhado
+  // ordenado em vez do degradê liso, um fio de beira discreto) e o acento de cada peso.
+  const DURA_R = { comum: 1600, marco: 1600, peso: 2400, passagem: 2400, derrota: 2600 };
+  const espelhado = (html) => html.replace("<img ", '<img style="transform:scaleX(-1)" ');
+  function iconesR(m) {
+    const d = m.dados || {}, { S } = Telas;
+    if (m.tipo === "vitoria") { const e = Icones.item("espada", 48); return [e, espelhado(e)]; }  // a espada aprovada
+    if (m.tipo === "mestre") { const c = Icones.criatura(d.retrato, 48) || S("caveira", 3); return [c, espelhado(c)]; }
+    if (m.tipo === "comitiva") { const c = Icones.cabeca(d.id, 48); return c ? [c, espelhado(c)] : ["", ""]; }  // o retrato, em 48 (o tamanho dele)
+    if (m.tipo === "derrota") return [S("caveira", 3), S("caveira", 3)];  // sem um aprovado que corresponda: o de sempre
+    if (m.tipo === "exausto" || (m.tipo === "retirada" && d.exausto)) return [S("lua", 3), S("lua", 3)];
+    if (m.tipo === "retirada") { const a = Icones.atalho("Sair", 36); return [a, a]; }  // o Sair da doca (a passagem e a seta)
+    return ["", ""];
+  }
+  // as cores da tarja por peso: o miolo e o fio de cima (quase o miolo: só uma beira, nada de contorno); no marco, o
+  // acento é o brilho que corre pelo fio na entrada e some
+  const TARJA = {
+    comum: { miolo: [13, 11, 10], cima: [27, 23, 18] },
+    marco: { miolo: [13, 11, 10], cima: [40, 33, 21], acento: [242, 210, 122] },
+    derrota: { miolo: [30, 7, 6], cima: [50, 15, 12] },
+    peso: { miolo: [12, 12, 15], cima: [27, 28, 33] },
+    passagem: { miolo: [13, 11, 10], cima: [24, 21, 17] },
+  };
+  // a transparência da tarja, como a original (0,94 no miolo), mas em degraus de borda dura nas pontas, em vez do
+  // degradê liso: escurece por igual o que está embaixo (as colunas, o texto delas), sem pontilhado que o picote
+  const DEGRAUS = [0.14, 0.3, 0.46, 0.62, 0.78, 0.94];
+  /** A tarja em pixel (texels de 3 px): o miolo, as pontas em seis degraus ao longo de `ponta` (fração da largura), o
+   *  fio de cima só no miolo. O acento do marco (`t` em ms): dois brilhos curtos que correm do centro para as pontas
+   *  pelo fio de cima, na entrada, e somem. */
+  function tarja(cv, chave, t = null) {
+    const c = TARJA[chave], W = cv.width, H = cv.height, g = cv.getContext("2d"), img = g.createImageData(W, H), b = img.data;
+    const ponta = chave === "derrota" || chave === "peso" ? 0.24 : 0.2;
+    const por = (x, y, [r, gg, bb], a) => { const i = (y * W + x) * 4; b[i] = r; b[i + 1] = gg; b[i + 2] = bb; b[i + 3] = Math.round(a * 255); };
+    for (let x = 0; x < W; x++) {
+      const u = Math.min(x, W - 1 - x) / (W * ponta);
+      const a = u >= 1 ? DEGRAUS[DEGRAUS.length - 1] : DEGRAUS[Math.min(DEGRAUS.length - 1, Math.floor(u * DEGRAUS.length))];
+      const fio = Math.min(x, W - 1 - x) > W * 0.3;
+      for (let y = 0; y < H; y++) por(x, y, y === 0 && fio ? c.cima : c.miolo, a);
+    }
+    if (c.acento && t !== null && t < 480) {
+      const meio = W >> 1, alcance = Math.round((t / 480) * W * 0.32), vis = 1 - t / 480;
+      for (let k = -3; k <= 3; k++) for (const x of [meio - alcance + k, meio + alcance + k]) if (x >= 0 && x < W) {
+        const base = c.cima, ac = c.acento, f = (Math.abs(k) <= 1 ? 1 : 0.5) * vis;
+        por(x, 0, base.map((v, i) => Math.round(v + (ac[i] - v) * f)), 0.94);
+      }
+    }
+    g.putImageData(img, 0, 0);
+  }
+
+  function desenharR(f, m) {
+    const chave = m.tipo === "derrota" ? "derrota" : f.peso;
+    const [esq, dir] = iconesR(m);
+    const el = document.createElement("div");
+    el.className = `fx-faixa fr peso-${f.peso} ${m.tipo === "derrota" ? "fr-derrota" : ""}`;
+    el.setAttribute("role", "status");
+    el.innerHTML = `<canvas class="fr-tarja"></canvas><b class="fr-titulo">${esq ? `<span class="fr-icone">${esq}</span>` : ""}${h(f.titulo)}${dir ? `<span class="fr-icone">${dir}</span>` : ""}</b>
+      ${f.sub ? `<div class="fr-sub">${h(f.sub)}</div>` : ""}`;
+    document.body.appendChild(el);
+    el.style.setProperty("--dura", (DURA_R[chave] || 1600) + "ms");
+    const cv = el.querySelector(".fr-tarja"), r = el.getBoundingClientRect();
+    cv.width = Math.ceil(r.width / 3); cv.height = Math.ceil(r.height / 3);
+    if (TARJA[chave].acento && !reduzido()) {  // o acento do marco anima o fio na entrada (15 quadros por segundo)
+      const t0 = performance.now();
+      const passo = () => { const t = performance.now() - t0; tarja(cv, chave, t); if (t < 520 && el.isConnected) setTimeout(passo, 66); };
+      passo();
+    } else tarja(cv, chave);
+    return { el, vida: DURA_R[chave] || 1600 };
+  }
+
   // ------------------------------------------------------------------ os efeitos (FX das celebrações, só lidos)
   // Num palco de pixel recortado na coluna do meio: nada passa por cima das laterais.
   function efeitos(f, el, pal, vida) {
@@ -152,8 +229,17 @@
   function mostrar(m) {
     const f = ler(m);
     if (!f) return;
+    // a troca limpa: a faixa que ainda estiver na tela sai num instante (100 ms) enquanto a nova abre; nenhuma pausa a
+    // mais (a nova já leva ~240 ms para aparecer, e a anterior some antes disso)
+    document.querySelectorAll(".fx-faixa").forEach((e) => { e.classList.add("troca"); setTimeout(() => e.remove(), 110); });
+    if (versao === "r") {
+      const { el } = desenharR(f, m);
+      if (reduzido()) el.classList.add("parada");
+      const dura = parseFloat(el.style.getPropertyValue("--dura"));
+      setTimeout(() => el.remove(), dura + 40);
+      return;
+    }
     const pal = palco(), vida = SEGURA[f.chave] || 1500;
-    document.querySelectorAll(".fx-faixa").forEach((e) => e.remove());
     const el = versao === "b" ? desenharB(f, pal) : desenharA(f, pal);
     el.dataset.chave = f.chave;
     if (!reduzido()) el.classList.add("entra");
@@ -169,7 +255,7 @@
     for (const r of ms) for (const n of r.addedNodes) {
       if (!(n instanceof HTMLElement) || !atual) continue;
       if (n.classList.contains("faixa-festa")) { n.remove(); mostrar(atual); }
-      else if (n.classList.contains("particula") && atual.tipo === "vitoria") n.remove();
+      else if (n.classList.contains("particula") && atual.tipo === "vitoria" && versao !== "r") n.remove();  // a R fica com as da original
     }
   }).observe(document.body, { childList: true });
 
