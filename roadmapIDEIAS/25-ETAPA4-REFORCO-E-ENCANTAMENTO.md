@@ -1,3 +1,153 @@
+# 25 — Etapa 4: reforço, encantamento e identidade da progressão
+
+Atualizado em 25/10/2026 após o debate com Jean. **Documento de direção de design; nenhuma regra nova foi implementada por esta revisão.** A forja H2 integrada na 1.210.0 encerra a etapa 3. A etapa 4 está em definição.
+
+Esta revisão substitui a recomendação de aprovar a arquitetura A em bloco. A pesquisa, o levantamento da versão 1.210.0 e as propostas anteriores estão preservados no apêndice histórico. **Em caso de conflito, prevalecem as decisões e os estados descritos abaixo.** Números, receitas e fluxos do apêndice não são especificação de implementação.
+
+## 1. Orientação geral do projeto — acordada com Jean
+
+**O que existe no código mostra como o jogo funciona hoje, não determina como ele deverá funcionar no futuro.** Boa parte dos sistemas nasceu como uma base inicial para permitir jogar e testar. Ainda precisa de identidade, revisão e desenvolvimento.
+
+Isso vale, entre outros, para:
+
+- habilidades, talentos, especializações e sua progressão;
+- atributos, prefixos, sufixos, afixos, propriedades de equipamento e sua variedade;
+- reforço, encantamento, raridades, recompensas e economia;
+- passagem do tempo, manhã, noite, turnos de dia e suas consequências;
+- “Explorar região” e “Passear pela vila”, ainda muito preliminares;
+- Bestiário e outros sistemas cuja presença no jogo não significa design definitivo.
+
+Não preservar uma mecânica apenas porque ela já foi implementada. Não limitar novas propostas aos modificadores que o motor já suporta. Espinhos, regeneração e os demais efeitos atuais são exemplos disponíveis, não uma lista obrigatória, completa ou intocável.
+
+Ao propor mudanças, distinguir:
+1. funcionamento atual, confirmado no código;
+2. identidade e experiência desejadas;
+3. hipótese de design;
+4. decisão expressamente aprovada;
+5. implementação e validação.
+
+**Abertura de design não é autorização para redesenhar tudo agora.** As revisões seguem o escopo combinado. Aprovações específicas de arte, interface e comportamento continuam valendo até serem revistas explicitamente; esta orientação não reabre automaticamente entregas aprovadas.
+
+## 2. A campanha atual não é o tamanho-alvo
+
+A primeira campanha continuará girando em torno da Ilse, mas acontecimentos, caminhos entre eles, dificuldades, atividades e duração serão ampliados e revistos. Jean relata concluir a versão atual em cerca de meia hora ou menos; isso é uma observação pessoal sobre o estado atual, não uma duração-alvo nem uma medida de jogador novo.
+
+Não dimensionar toda a progressão para os atuais níveis, dias, locais, quantidade de lutas ou saldo final do Vale. Também não inventar uma duração futura como se estivesse aprovada.
+
+Os dados atuais servem como diagnóstico e ponto de comparação. O orçamento futuro deverá considerar entradas e gastos de recursos ao longo da progressão, oportunidades de melhoria e necessidades concorrentes. **Saldo final de ouro não equivale a ouro total obtido nem a capacidade total de investimento.**
+
+## 3. Camadas de construção do personagem — direção acordada
+
+| Camada | Papel desejado |
+|---|---|
+| Classe e habilidades | Definir as ações e ferramentas disponíveis durante a luta. |
+| Kit equipado | Escolher quais habilidades aprendidas levar e como elas se complementam. |
+| Talentos e desenvolvimento de habilidades | Investir numa maneira de jogar e modificar o uso das habilidades. |
+| Equipamento e suas propriedades | Oferecer descobertas, combinações e possibilidades de build. |
+| Reforço | Aumentar a potência e prolongar a utilidade de uma peça escolhida, dentro do potencial a definir para ela. |
+| Encantamento | Adaptar uma peça à maneira de lutar ou a um desafio. |
+| Propriedade excepcional de item | Dar à descoberta rara uma identidade que possa orientar ou transformar uma build. |
+
+Essas camadas podem compartilhar atributos e interagir. A intenção é evitar que todas repitam o mesmo aumento numérico sem decisões distintas. Não se exige que todo efeito seja complexo: ferramentas simples, baratas e confiáveis também têm valor.
+
+### 3.1 Kit limitado e investimentos
+
+**Acordado como direção:** o jogador escolhe um conjunto limitado de habilidades e onde investir seus pontos; não terá acesso simultâneo e irrestrito a tudo.
+
+**Hipótese a definir:** até seis habilidades, incluindo uma ultimate. A interpretação inicial é cinco habilidades e uma ultimate, mas o número, a reserva desse espaço e as regras da ultimate ainda não estão fechados.
+
+Aprender/desenvolver e equipar são decisões distintas. Aprender uma habilidade não deve significar obrigação de mantê-la no kit para sempre. Onde e com que condições o kit pode ser trocado continua aberto; troca fora de combate em lugar seguro é uma sugestão, não uma regra aprovada.
+
+O limite de espaços sozinho não resolve equilíbrio: habilidades precisam competir por utilidades diferentes, custos, condições, confiabilidade e sinergias. A proposta permite habilidades fortes e divertidas, mas exige escolhas de kit e investimento; não garante equilíbrio apenas por limitar a quantidade.
+
+### 3.2 Pequenos caminhos por habilidade
+
+Jean propôs caminhos curtos de investimento associados a habilidades: avançar uma casa por vez, com modificadores que podem alterar sua utilização e favorecer conjuntos diferentes de habilidades.
+
+**Hipótese:** até três melhorias numa sequência por habilidade. Ainda não estão definidos quantidade, custos, requisitos, disponibilidade de pontos, ramificações alternativas ou possibilidade de redistribuição. Não transformar automaticamente todas as habilidades em árvores idênticas de três casas.
+
+A habilidade inicial deve ser funcional. Investimentos podem aprofundar sua proposta e mudar decisões em combate, sem fazer todos os caminhos serem uma taxa obrigatória para a habilidade começar a funcionar. Algumas habilidades podem exigir pouco investimento e servir de apoio; outras podem concentrar a build.
+
+A ultimate terá sua identidade discutida: aquisição, disponibilidade, preparação, custo e oportunidade de uso. Nada disso está definido.
+
+## 4. Vida útil das peças — direção acordada
+
+O caminho escolhido é **um meio-termo entre substituição constante e levar qualquer peça indefinidamente**, com espaço para apego a boas descobertas.
+
+Distinguir três situações de uso, sem criar novas raridades automaticamente:
+
+- **Peça de passagem:** atende à necessidade atual e depois é substituída.
+- **Boa peça especializada:** combina propriedades úteis e pode justificar investimento por várias aventuras.
+- **Peça excepcional:** traz uma linha ou modificador particular capaz de orientar a seleção de habilidades, talentos e outros equipamentos.
+
+**As peças capazes de sustentar esse apego longo precisam ser de fato raras.** Nem toda peça deve acompanhar a campanha indefinidamente apenas por ter recebido reforços. Uma descoberta excepcional pode justificar meios especiais ou mais caros de continuar relevante; a mecânica desses meios está aberta.
+
+A raridade exata dessas descobertas, suas fontes e sua correspondência com as categorias atuais ainda serão definidas. Não confundir “rara” no sentido de pouco frequente com uma decisão automática sobre o tier chamado Raro.
+
+A build deve poder começar a funcionar com habilidades e talentos. Um item excepcional pode transformá-la ou abrir uma variação desejada, sem obrigar o jogador a esperar por um drop específico para conseguir jogar sua proposta básica.
+
+## 5. Consequências para reforço e encantamento
+
+A separação de papéis está acordada; as regras da antiga arquitetura A não estão aprovadas em bloco.
+
+- Reforçar desenvolve a potência da peça e sua utilidade; não implica tornar toda peça inicial equivalente às melhores.
+- Encantar oferece adaptação escolhida; não deve apagar facilmente a identidade das descobertas excepcionais.
+- Propriedades excepcionais podem conversar com habilidades e seus modificadores. Não ficam limitadas aos onze afixos ou aos seis bônus de especialização existentes.
+- Materiais, conhecimentos e melhorias podem estar ligados a exploração, personagens, missões e inimigos especiais. Desmanchar é uma possibilidade de obtenção, não uma fonte exclusiva já aprovada.
+- Reutilizar código é uma decisão de implementação posterior, não o critério que determina quais efeitos o jogo merece ter.
+- As melhorias devem produzir escolhas compreensíveis e satisfação pelo resultado no jogo. Arte, animação e som reforçarão essas decisões depois.
+
+**Transferência do reforço, reembolso, recuperação de essência e receitas permanentes permanecem em aberto.** Transferir tudo automaticamente pode tornar as peças intercambiáveis; perder tudo pode desestimular investimento e substituição. A regra será escolhida conforme a diferença desejada entre peças provisórias e excepcionais.
+
+Também continuam abertos: espaços atendidos, limite de reforço, fórmula de ganho, relação com raridade/material/nível, custos, materiais, quantidade de encantamentos, regras de acúmulo, remoção e substituição, fontes, desbloqueios e local do serviço. O +5 existente e os 20% propostos não são limites de design definitivos.
+
+## 6. Pontos que a proposta anterior precisa resolver
+
+1. **Arredondamento e ganho:** incremento percentual arredondado a cada nível pode deixar atributos pequenos sem crescer; mínimo +1 pode causar ganho relativo excessivo. Comparar resultados acumulados e exemplos de bases diferentes antes de escolher fórmula.
+2. **Consumo de encantamento:** perder uma essência rara ao trocar equipamento pode recriar o receio de investir. Remover gratuitamente não significa experimentar gratuitamente se a essência é destruída.
+3. **Economia:** considerar fluxo de ganhos e gastos, não só saldo de uma partida. Não usar o robô aleatório como representação da experiência humana.
+4. **Espaços e acúmulo:** resolver a abrangência dos serviços e evitar escolhas sem benefício, como aplicar um segundo efeito que não conta sem explicação prévia.
+5. **Variedade:** não aprovar dezessete essências apenas porque há código para elas. Primeiro definir experiências e escolhas desejadas; depois selecionar exemplos para teste. Um protótipo pequeno não limita o catálogo final.
+6. **Gestos:** um clique duplo ou tecla segurada não pode comprar duas melhorias, mesmo que ainda existam recursos. Uma segunda compra requer nova ação deliberada, preservando compras sucessivas intencionais.
+7. **Comparação de builds:** verificar escolhas dominantes e interações entre kit, talentos e equipamento; não depender apenas de reduzir valores de efeitos existentes.
+
+## 7. Referências e método de decisão
+
+A pesquisa original permanece útil como repertório, não como arquitetura obrigatória. ARPGs e MMOs podem inspirar aspectos específicos, mas não determinam o volume de loot, materiais, repetição ou ritmo da nossa campanha por turnos.
+
+Incluir referências de escopo e ritmo mais próximos, como RPGs por turnos com preparação, exploração e recursos limitados. Não exigir correspondência exata de estética ou gênero para aproveitar uma ideia.
+
+Na conversa, **Battle Brothers** acrescentou o exemplo de materiais de criaturas associados a melhorias com funções específicas. Fonte primária: [Dev Blog #103: Crafting](https://battlebrothersgame.com/dev-blog-103-crafting/). A aplicação sugerida ao nosso projeto é ligar descobertas e melhorias à aventura, sem copiar seu sistema completo. **Stoneshard** foi indicado como referência a aprofundar, não como sistema já escolhido.
+
+As generalizações do apêndice sobre aleatoriedade, destruição e satisfação são avaliações da pesquisa inicial, não leis de design nem prova de que uma mecânica só funciona em determinado gênero. Verificar versões e fontes antes de usar mudanças de outros jogos como justificativa decisiva.
+
+**Próximo passo acordado:** Jean e ChatGPT continuam debatendo a identidade e as decisões antes de passar uma especificação ao Claude. Não iniciar automaticamente o protótipo descrito no apêndice, criar habilidades ou alterar regras de produção a partir desta atualização.
+
+Depois de definida a direção suficiente, o Claude poderá verificar implicações técnicas, testar hipóteses numéricas e construir um protótipo isolado e pequeno. O catálogo e o combate atuais servirão de casos de teste, sem limitar as possibilidades futuras.
+
+## 8. Estado das decisões
+
+| Assunto | Estado |
+|---|---|
+| Sistemas existentes como rascunhos, não limites definitivos | Acordado; orientação geral do projeto |
+| Expansão e revisão da campanha centrada na Ilse | Direção acordada; duração e conteúdo por definir |
+| Kit limitado e investimento seletivo | Direção acordada |
+| Cinco habilidades + uma ultimate | Hipótese, não número fechado |
+| Caminhos curtos de modificadores por habilidade | Direção acordada; três passos é hipótese |
+| Peças de passagem e descobertas excepcionais duradouras | Direção acordada |
+| Peças que orientam builds serem realmente pouco frequentes | Direção acordada; taxas e tiers abertos |
+| Reforço, encantamento e propriedade excepcional com papéis distintos | Direção acordada |
+| Arquitetura A anterior, 20%, +5, preços e 17 essências | Proposta histórica, não aprovada em bloco |
+| Transferência, recuperação, desmanche e receitas | Em debate |
+| Nova interface, efeitos e implementação | Aguardar definição; não autorizados por este registro |
+
+## Apêndice — pesquisa e proposta inicial, preservadas como histórico
+
+O texto abaixo registra o levantamento e as hipóteses anteriores à revisão com Jean. Seus trechos “recomendo”, “para nós”, “primeiro protótipo” e “o que depende do Jean” pertencem àquela rodada e não substituem o estado atual acima. Os dados de código são um retrato da 1.210.0; os exemplos numéricos não são o alvo futuro da campanha.
+
+<details>
+<summary>Abrir levantamento, fontes e arquitetura inicial (histórico)</summary>
+
 # 25 — Etapa 4: reforço e encantamento (pesquisa e proposta)
 
 25/10/2026. Pesquisa e proposta de design, **sem implementação**: nada aqui mudou regra, número ou tela do jogo. Os
@@ -436,3 +586,5 @@ Validação:
 
 Nada disso foi implementado. Depois das decisões, o protótipo da seção 8, e só depois a aparência e o ritmo do
 resultado.
+
+</details>
