@@ -1,5 +1,11 @@
 # Os quadros de orientação do tutorial: levantamento, duas propostas e a B refinada (etapa 2, 24/10/2026; protótipo)
 
+**Integrada na 1.207.0 (25/10/2026):** a R aprovada pelo Jean está no jogo (`06-talentos-avisos.css` e a ordem dos
+botões em `app/orientacao.js`). Conferido com os mesmos roteiros: os 14 casos nas duas janelas com as medidas iguais às
+da R (posição, seta, tamanho, 0 px sobre o controle) e os quadros iguais pixel a pixel (as diferenças das fotos são o
+pulso do contorno, a luta correndo e, na ficha, o aviso de talento novo); `gestos.mjs` passa com o Tab na ordem da
+leitura. Desde então, "hoje" nos roteiros é a R; `PROPOSTA=r` serve o jogo como está.
+
 Os quadros de hoje continuam no jogo. As propostas são só o acabamento (`orientacao.css`, por cima das regras de
 `06-talentos-avisos.css`, valendo com `html[data-orientacao="a"]`, `"b"` ou `"r"`): a posição, a seta, o contorno do controle,
 os véus, a sequência, os textos e os gestos são os de `app/orientacao.js` e `rpg/abertura.py`, sem mudança. A folha

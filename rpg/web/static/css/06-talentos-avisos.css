@@ -280,30 +280,43 @@ body.derrotado #predios { visibility: hidden; }
 .arvore-base-titulo small { display: block; font-family: var(--texto); font-size: 12px; color: var(--tinta-3); text-shadow: none; margin-top: 2px; }
 
 /* ---------------------------------------------------------------- as orientações da abertura (orientacao.js) */
-/* O quadro: pequeno, com a seta discreta apontando o controle. Na luta, mora numa faixa reservada abaixo da arena (não
-   cobre cartas, barras, ações nem a página) e não acompanha a animação das cartas. */
-.orientacao { position: fixed; z-index: 18; max-width: 330px; padding: 8px 11px 7px; font-size: 15px; line-height: 1.35;
-  color: var(--tinta); background: #17110c; border: 1px solid #b8943f; box-shadow: 3px 3px 0 #000; }
-.orientacao b { color: var(--ouro); font-weight: 600; }
-.orientacao::before { content: ""; position: absolute; width: 0; height: 0; border: 6px solid transparent; }
-.orientacao.seta-direita::before { left: -12px; top: calc(var(--seta) - 6px); border-right-color: #b8943f; }
-.orientacao.seta-esquerda::before { right: -12px; top: calc(var(--seta) - 6px); border-left-color: #b8943f; }
-.orientacao.seta-baixo::before { top: -12px; left: calc(var(--seta) - 6px); border-bottom-color: #b8943f; }
-.orientacao.seta-cima::before { bottom: -12px; left: calc(var(--seta) - 6px); border-top-color: #b8943f; }
-.orientacao-botoes { display: flex; align-items: center; justify-content: flex-end; gap: 12px; margin-top: 6px; }
-.orientacao-encerrar { padding: 0; font: inherit; font-size: 12px; color: var(--tinta-2); background: none; border: 0;
-  text-decoration: underline; cursor: pointer; }
-.orientacao-encerrar:hover, .orientacao-encerrar:focus-visible { color: var(--tinta); }
-.orientacao-entendi { order: 2; padding: 2px 12px; font: inherit; font-size: 14px; font-weight: 600; color: #1a1209;
-  background: var(--ouro); border: 1px solid #000; box-shadow: 2px 2px 0 #000; cursor: pointer; }
-.orientacao-entendi:hover { filter: brightness(1.08); }
-.orientacao-entendi:focus-visible { outline: 1px solid var(--tinta); outline-offset: 2px; }
+/* O quadro: pequeno, com a seta apontando o controle. Na luta, mora numa faixa reservada abaixo da arena (não cobre
+   cartas, barras, ações nem a página) e não acompanha a animação das cartas. A chamada leve (a R, 1.207.0): o fundo
+   escuro com o fio de cima, sem caixa de ferro; o ouro envelhecido só onde aponta (a seta, um traço curto junto dela,
+   a haste, o contorno do controle) e nos nomes em destaque; o "Entendi" é o botão da HUD (a família do Continuar,
+   menor). O "Encerrar tutorial" vem antes no código e fica à esquerda: o Tab segue a leitura. */
+.orientacao { position: fixed; z-index: 18; max-width: 340px; padding: 9px 13px 9px 14px; font-size: 16px; line-height: 1.4;
+  color: #e6dbc2; background: linear-gradient(#262119 0 1px, #12100d 1px 100%); border: 1px solid #000; box-shadow: 3px 3px 0 #000; }
+.orientacao b { color: #e2c272; font-weight: 700; }
+.orientacao::before { content: ""; position: absolute; width: 0; height: 0; border: 8px solid transparent; }
+.orientacao.seta-direita::before { left: -17px; top: calc(var(--seta) - 8px); border-right-color: #b8913f; }
+.orientacao.seta-esquerda::before { right: -17px; top: calc(var(--seta) - 8px); border-left-color: #b8913f; }
+.orientacao.seta-baixo::before { top: -17px; left: calc(var(--seta) - 8px); border-bottom-color: #b8913f; }
+.orientacao.seta-cima::before { bottom: -17px; left: calc(var(--seta) - 8px); border-top-color: #b8913f; }
+/* o traço de ligação: 2 px de ouro envelhecido, 26 px de comprido, centrado na seta, por dentro da borda do lado dela */
+.orientacao::after { content: ""; position: absolute; background: #b8913f; }
+.orientacao.seta-direita::after { left: 0; top: calc(var(--seta) - 13px); width: 2px; height: 26px; }
+.orientacao.seta-esquerda::after { right: 0; top: calc(var(--seta) - 13px); width: 2px; height: 26px; }
+.orientacao.seta-baixo::after { top: 0; left: calc(var(--seta) - 13px); height: 2px; width: 26px; }
+.orientacao.seta-cima::after { bottom: 0; left: calc(var(--seta) - 13px); height: 2px; width: 26px; }
+.orientacao-botoes { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-top: 9px; }
+.orientacao-encerrar { padding: 0; font: inherit; font-size: 13px; color: #a39880; background: none; border: 0;
+  text-decoration: underline; text-underline-offset: 2px; cursor: pointer; }
+.orientacao-encerrar:hover, .orientacao-encerrar:focus-visible { color: #e6dbc2; }
+.orientacao-encerrar:focus-visible { outline: 2px solid var(--latao-claro); outline-offset: 2px; }
+.orientacao-entendi { margin-left: auto; padding: 4px 16px 5px; font: inherit; font-family: var(--texto); font-size: 15px; font-weight: 700;
+  color: #eadbb4; text-shadow: 0 1px 0 #000; background: linear-gradient(#3a3428 0 1px, #2a2b30 1px 50%, #212227 50% 100%);
+  border: 1px solid #8a7038; border-radius: 2px; box-shadow: 0 1px 0 #000; cursor: pointer; }
+.orientacao-entendi:hover { border-color: var(--latao-claro); color: #fff3d6;
+  background: linear-gradient(#4a4232 0 1px, #34363c 1px 50%, #2a2b31 50% 100%); }
+.orientacao-entendi:focus-visible { border-color: var(--latao-claro); color: #fff3d6; outline: 2px solid var(--latao-claro); outline-offset: 2px; }
+.orientacao-entendi:active { translate: 0 1px; background: #18191c; }
 /* A haste da seta, do quadro na faixa da luta até o ícone de efeito na carta (a ponta encosta nele). */
-.orientacao-haste { position: fixed; z-index: 18; width: 2px; pointer-events: none; background: #b8943f; box-shadow: 1px 0 0 #000; }
+.orientacao-haste { position: fixed; z-index: 18; width: 2px; pointer-events: none; background: #b8913f; box-shadow: 1px 0 0 #000, -1px 0 0 #000; }
 /* A linha de baixo do ícone de efeito (a duração, dita uma vez): um pouco mais baixa e apagada. */
 /* O quadro do ícone de efeito é estreito: cabe ao lado da janelinha de Habilidades aberta, sem cobri-la. */
 .orientacao.efeito { max-width: 250px; }
-.orientacao .o-nota { margin-top: 3px; font-size: 14px; color: var(--tinta-2); }
+.orientacao .o-nota { margin-top: 3px; font-size: 14px; color: #b3a990; }
 /* O C4 em linhas curtas: o nome, os custos (ícone e cor do recurso, o nome escrito) e o Atacar. */
 .orientacao.c4 { max-width: 360px; }
 .o-nome { font-weight: 600; color: var(--ouro); }
@@ -320,9 +333,9 @@ body.derrotado #predios { visibility: hidden; }
 .o-atacar .o-valor { margin: 0; }
 /* A faixa reservada da luta guiada, entre a arena e a página: só espaço (o quadro fica por cima dela). */
 .orientacao-faixa { flex: none; }
-/* O destaque: um contorno fino com o formato do controle e um brilho que pulsa devagar; com movimento reduzido, só o
+/* O destaque: um contorno de 2 px com o formato do controle e um brilho que pulsa devagar; com movimento reduzido, só o
    contorno. Acompanha o controle (o quadro, não). */
-.orientacao-anel { position: fixed; z-index: 18; pointer-events: none; border: 1px solid rgba(255, 214, 120, 0.95);
+.orientacao-anel { position: fixed; z-index: 18; pointer-events: none; border: 2px solid #c9a14a;
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.6), 0 0 4px rgba(255, 206, 96, 0.25); animation: orientacao-brilho 2.4s ease-in-out infinite; }
 @keyframes orientacao-brilho { 50% { box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.6), 0 0 9px rgba(255, 206, 96, 0.55); } }
 .orientacao-veu { position: fixed; z-index: 17; pointer-events: none; background: rgba(0, 0, 0, 0.25); }

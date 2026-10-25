@@ -256,8 +256,9 @@ const Orientacao = (() => {
   }
 
   const ENCERRAR = '<button type="button" class="orientacao-encerrar" title="Desliga todas as orientações; a Ajuda (F1) religa">Encerrar tutorial</button>';
+  // O "Encerrar tutorial" antes do "Entendi", como na tela (à esquerda): a ordem do Tab segue a leitura.
   function botoes(html, entendi = false) {
-    return `<div class="orientacao-texto">${html}</div><div class="orientacao-botoes">${entendi ? '<button type="button" class="orientacao-entendi">Entendi</button>' : ""}${ENCERRAR}</div>`;
+    return `<div class="orientacao-texto">${html}</div><div class="orientacao-botoes">${ENCERRAR}${entendi ? '<button type="button" class="orientacao-entendi">Entendi</button>' : ""}</div>`;
   }
 
   /** O C4 em linhas curtas: o nome da habilidade; os custos com o ícone e a cor do recurso; o Atacar. */

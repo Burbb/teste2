@@ -60,7 +60,8 @@ def demonstracao(srv, caso):
     def _arquivo(self, relativo):
         if relativo == "app/orientacao.js" and proposta == "r":
             js = (pasta / "app" / "orientacao.js").read_text(encoding="utf-8")
-            assert BOTOES_HOJE in js, "orientacao.js mudou: não achei a ordem dos botões"
+            # desde a 1.207.0 o jogo já tem a ordem da R (a troca não acha nada e o arquivo vai como está)
+            assert BOTOES_HOJE in js or BOTOES_R in js, "orientacao.js mudou: não achei a ordem dos botões"
             return self._responder(200, js.replace(BOTOES_HOJE, BOTOES_R).encode("utf-8"), TIPOS[".js"])
         if relativo.startswith("prototipo-orientacao/"):
             alvo = (PROTO / relativo.split("/", 1)[1]).resolve()

@@ -37,7 +37,8 @@ def demonstracao(srv):
     def _arquivo(self, relativo):
         if relativo == "app/paineis.js" and proposta == "r":
             js = (pasta / "app" / "paineis.js").read_text(encoding="utf-8")
-            assert AVISO_HOJE in js, "paineis.js mudou: não achei o aviso de talento"
+            # desde a 1.207.0 o jogo já tem o aviso da R (a troca não acha nada e o arquivo vai como está)
+            assert AVISO_HOJE in js or AVISO_R in js, "paineis.js mudou: não achei o aviso de talento"
             return self._responder(200, js.replace(AVISO_HOJE, AVISO_R).encode("utf-8"), "text/javascript; charset=utf-8")
         if relativo == "prototipo-aviso/aviso.css":
             return self._responder(200, (PROTO / "aviso.css").read_bytes(), "text/css; charset=utf-8")

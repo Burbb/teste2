@@ -1,4 +1,10 @@
-# O aviso de ponto de talento na ficha: conferência e uma candidata (24/10/2026; protótipo, nada no jogo)
+# O aviso de ponto de talento na ficha: conferência e uma candidata (24/10/2026; protótipo)
+
+**Integrada na 1.207.0 (25/10/2026):** a R aprovada pelo Jean está no jogo (o `<button>` em `app/paineis.js`, as regras
+em `14-hud.css`; saíram a estrela pulsando, a seta de fora, o brilho que atravessa e o sprite `seta_esq`). Conferido no
+jogo: com 1, 3 e 12 pontos o texto cabe numa linha nas duas janelas; sem pontos o aviso não aparece; o Tab chega com o
+foco visível; Enter e o clique abrem os Talentos. As fotos ficam na mesma posição das da R (só a suavização das letras
+difere: subpixel no jogo). Desde então, "hoje" nos roteiros é a R.
 
 O aviso fica na coluna do herói, logo abaixo da experiência, quando há ponto de talento para gastar
 (`app/paineis.js`, `.talento-aviso`; regras em `05-paineis.css` e `14-hud.css`). O Jean achou que ele estava no

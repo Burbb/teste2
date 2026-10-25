@@ -237,10 +237,26 @@
 /* a experiência: sem divisória própria (o fio do título "Atributos", logo abaixo, já separa) */
 :root body #heroi .xp-linha { margin-top: 10px; background: none; padding-bottom: 2px; }
 :root body #heroi .legenda-linha { font-size: 14px; color: var(--sec); }
-/* o aviso de talento: a placa de latão (é destaque) */
-:root body #heroi .talento-aviso { border: 1px solid #6b5426; border-image: none; background: rgba(201, 161, 74, 0.07);
-  color: var(--latao-claro); text-shadow: none; }
-:root body #heroi .talento-aviso:is(:hover, :focus-visible) { border-color: var(--latao-claro); }
+/* o aviso de talento (1.207.0): o botão principal da HUD (a família do Continuar, na altura de uma linha da ficha), um
+   <button> de verdade (Enter e espaço abrem os Talentos, como o clique e a tecla T). O ícone é o dos Talentos da doca, o
+   do lugar para onde leva; o número em latão claro; a seta pequena dentro avança devagar em dois passos: o ponto
+   continua chamando o olho, sem piscar o texto; parada com o movimento reduzido. Cabe numa linha a 1280×720. */
+:root body #heroi .talento-aviso { flex: 1; display: flex; align-items: center; gap: 8px; min-width: 0; margin: 0;
+  padding: 3px 10px 3px 6px; font-family: var(--texto); font-size: 15px; font-weight: 700; line-height: 1.2; text-align: left;
+  color: #eadbb4; text-shadow: 0 1px 0 #000; cursor: pointer;
+  background: linear-gradient(#3a3428 0 1px, #2a2b30 1px 50%, #212227 50% 100%); border: 1px solid #8a7038;
+  border-radius: 2px; box-shadow: 0 1px 0 #000; }
+:root body #heroi .talento-aviso .estrela { flex: none; display: grid; }
+:root body #heroi .talento-aviso .estrela img { display: block; margin: -4px 0; }
+:root body #heroi .talento-aviso .talento-texto { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+:root body #heroi .talento-aviso .talento-texto b { color: var(--latao-claro); }
+:root body #heroi .talento-aviso .talento-abrir { flex: none; font-size: 14px; color: var(--latao); animation: talento-abrir 1.6s steps(1) infinite; }
+@keyframes talento-abrir { 50% { translate: 3px 0; color: var(--latao-claro); } }
+:root body #heroi .talento-aviso:hover { border-color: var(--latao-claro); color: #fff3d6;
+  background: linear-gradient(#4a4232 0 1px, #34363c 1px 50%, #2a2b31 50% 100%); }
+:root body #heroi .talento-aviso:focus-visible { border-color: var(--latao-claro); color: #fff3d6; outline: 2px solid var(--latao-claro); outline-offset: 2px; }
+:root body #heroi .talento-aviso:active { translate: 0 1px; background: #18191c; }
+@media (prefers-reduced-motion: reduce) { :root body #heroi .talento-aviso .talento-abrir { animation: none; } }
 
 /* atributos: sem caixas, duas colunas, na superfície do painel, com um fio claro entre as colunas e entre as linhas.
    Em cada um: o ícone de 24 px, o nome discreto, o valor em destaque e a penalidade ao lado dele (do motor) */

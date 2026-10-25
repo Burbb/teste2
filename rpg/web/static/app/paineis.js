@@ -300,7 +300,7 @@ function desenharHeroi(h, antes) {
     <div class="identidade"><div class="retrato-grande">${Icones.retrato(h.classe, "Retrato do herói") || spr(h.classe, 3)}</div>
       <div><div class="heroi-nome">${esc(h.nome)}</div><div class="heroi-titulo">${esc(h.titulo)} • nível&nbsp;${h.nivel}</div></div></div>
     <div class="xp-linha"><div class="legenda-linha"><span>Experiência</span><span>${h.xp}/${h.xp_proximo}</span></div>${barra("xp", h.xp, h.xp_proximo, antes && antes.nivel === h.nivel ? antes.xp : undefined, antes && antes.nivel === h.nivel ? "xp" : undefined)}</div>
-    ${h.pontos_talento ? `<div class="talento-linha"><div class="talento-aviso" role="button" tabindex="0" data-atalho="Talentos"><span class="estrela">${spr("estrela", 2)}</span><span>${Texto.plural(h.pontos_talento, "ponto de talento", "pontos de talento")}</span></div><span class="seta-pendencia" aria-hidden="true">${spr("seta_esq", 2)}</span></div>` : ""}
+    ${h.pontos_talento ? `<div class="talento-linha"><button type="button" class="talento-aviso" data-atalho="Talentos"><span class="estrela">${Icones.atalho("Talentos", 32) || spr("estrela", 2)}</span><span class="talento-texto">${Texto.plural(h.pontos_talento, "ponto de talento", "pontos de talento").replace(/^\d+/, (n) => `<b>${n}</b>`)}</span><span class="talento-abrir" aria-hidden="true">▸</span></button></div>` : ""}
     <div class="secao"><h3>Atributos</h3><div class="atributos">${attrs}</div>${Telas.testesHtml(h)}</div>
     <div class="secao"><h3>Equipado</h3><div class="equip-mini">${Object.keys(Telas.AREA).map(slot).join("")}</div></div>
     ${comitiva}

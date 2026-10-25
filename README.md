@@ -184,7 +184,7 @@ papel: a gótica **Jacquard 24** nos títulos e nomes; **Jersey 15** nos número
   perto do fogo e, clicando nele, dá para **fazer carinho** (corações; uma vez por noite, e ele
   entra na primeira luta do dia seguinte **animado**, com +15% de dano) ou dar poção.
   Ele não come das provisões: caça a própria comida.
-- **Clique que não se perde:** clicar num atalho (o ponto de talento piscando, Talentos, Inventário,
+- **Clique que não se perde:** clicar num atalho (o aviso de ponto de talento, Talentos, Inventário,
   ou a tecla dele) enquanto o texto ainda corre ou uma cena espera não é mais ignorado: o texto
   corre de uma vez, o "Continuar" é aceito, um aviso diz que a tela abre assim que a cena terminar,
   e ela abre sozinha quando o lugar voltar. Escolhas da cena (um evento, o item encontrado) vêm
