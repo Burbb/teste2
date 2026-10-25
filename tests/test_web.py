@@ -89,11 +89,15 @@ class TestWeb(unittest.TestCase):
                 self.responder(m["id"], None)
             elif m["t"] == "pergunta":
                 self.responder(m["id"], "Teste")
+            elif m["t"] == "criacao":  # a criação numa tela só (criacao.py): tudo junto, no "Começar campanha"
+                self.assertEqual([c["id"] for c in m["classes"]], ["guerreiro", "arqueiro", "mago"])
+                self.responder(m["id"], {"nome": "Teste", "classe": rng.choice(["guerreiro", "arqueiro", "mago"]),
+                                         "modo": "resgate", "tutorial": True})
             if decisoes >= 150 or m["t"] == "fim":
                 break
         self.assertGreaterEqual(decisoes, 150)
         self.assertGreater(estados, 5)
-        self.assertTrue({"nova_cena", "texto", "opcoes", "estado", "escolhido"} <= vistos, vistos)
+        self.assertTrue({"nova_cena", "texto", "opcoes", "estado", "escolhido", "criacao"} <= vistos, vistos)
 
     def test_recarregar_repete_a_cena(self):
         primeira = eventos(self.base, self.srv.token)

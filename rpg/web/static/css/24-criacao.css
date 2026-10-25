@@ -1,0 +1,140 @@
+/* A criação do personagem em etapas (a R2 aprovada pelo Jean, 1.208.0; o desenho e os gestos em app/criacao.js, os
+   dados em criacao.py). Uma área própria, no centro, sobre o cenário do título (a paisagem e as brasas continuam
+   atrás): a moldura das janelas principais, o carvão da superfície, os cartões de ferro com a aresta de latão, os botões
+   da família do Continuar. O título, as etapas, a escolha, o resumo e o botão que avança formam um conjunto; a altura
+   não pula entre as etapas. Material da HUD de ferro (como 14 a 16). */
+
+/* a tela do título sai da frente: fica a paisagem; a criação mora no lugar das opções */
+:root body.criando #cena-cab, :root body.criando #texto { display: none; }
+:root body.criando #prompt { max-width: none; width: 100%; margin: 0 auto; text-align: left; }
+:root body.criando #folha { max-width: none; justify-content: center; }
+/* a área central inteira para ela: as colunas do herói e do mundo (vazias e apagadas no título) saem da grade */
+:root body.criando :is(#heroi, #mundo) { display: none; }
+:root body.criando #mesa { grid-template-columns: minmax(0, 1fr); }
+
+:root body .cr { --cr-carvao: #12110e; --cr-ferro: #34312b; --cr-ferro-vivo: #8a7038; --cr-tinta: #e6dbc2;
+  box-sizing: border-box; width: min(1100px, 100%); margin: 0 auto; padding: 14px 26px 16px;
+  border: 12px solid transparent; border-image: var(--m-principal) 24 / 24px round;
+  background: var(--veu-superficie), var(--t-painel) 0 0 / 128px; background-clip: padding-box;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.8); color: var(--cr-tinta); font-family: var(--texto); }
+
+/* o cabeçalho: o título e a região à esquerda, as etapas à direita; o fio embaixo */
+:root body .cr-cab { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; padding: 0 2px 12px; box-shadow: var(--hud-fio); }
+:root body .cr-titulo h1 { margin: 0; font-family: var(--titulo); font-size: calc(var(--px) * 32); font-weight: 400; line-height: 1;
+  color: var(--latao-claro); text-shadow: 2px 2px 0 #000; }
+:root body .cr-titulo span { display: block; margin-top: 6px; font-size: 12px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--sec); }
+:root body .cr-etapas { display: flex; align-items: center; gap: 10px; margin: 0; padding: 0 0 2px; list-style: none; font-size: 15px; color: #6f6a60; }
+:root body .cr-etapas li { display: flex; align-items: center; gap: 7px; }
+:root body .cr-etapas button { display: flex; align-items: center; gap: 7px; padding: 0; font: inherit; color: #bdb3a0; background: none; border: 0; cursor: pointer; }
+:root body .cr-etapas button:hover { color: var(--cr-tinta); text-decoration: underline; text-underline-offset: 3px; }
+:root body .cr-n { display: inline-grid; place-items: center; width: 20px; height: 20px; font-family: var(--num, var(--texto)); font-size: 12px; font-weight: 700;
+  border: 1px solid #3a3630; color: inherit; background: #0b0a09; }
+:root body .cr-etapas .feita .cr-n { border-color: #6e5a2c; color: var(--latao); }
+:root body .cr-etapas .atual { color: var(--latao-claro); font-weight: 700; }
+:root body .cr-etapas .atual .cr-n { border-color: var(--latao); background: var(--latao); color: #15100a; }
+:root body .cr-etapas .cr-seta { color: #4a463e; }
+
+/* o corpo: as três etapas na mesma célula (a da vez à vista), com a altura da maior; o conteúdo curto no meio dela */
+:root body .cr-corpo { display: grid; padding: 16px 0 4px; }
+:root body .cr-etapa { grid-area: 1 / 1; display: flex; flex-direction: column; justify-content: center; min-width: 0; }
+:root body .cr-etapa:not(.atual) { visibility: hidden; }
+:root body .cr-pergunta { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin: 0 2px 12px; }
+:root body .cr-pergunta h2 { margin: 0; font-size: 19px; font-weight: 700; color: #eadbb4; }
+:root body .cr-dica { font-size: 14px; color: var(--sec); }
+
+/* o nome */
+:root body .cr-nome { display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; }
+:root body .cr-nome label { font-size: 20px; font-weight: 700; color: #eadbb4; }
+:root body .cr-nome input { width: min(460px, 100%); padding: 9px 14px; font: inherit; font-size: 22px; color: #f4e9cc;
+  background: #0b0a09; border: 1px solid #4a4232; border-radius: 2px; box-shadow: inset 0 1px 0 #000; }
+:root body .cr-nome input::placeholder { color: #6f6a60; }
+:root body .cr-nome input:focus { border-color: var(--latao-claro); outline: 2px solid var(--latao-claro); outline-offset: 2px; }
+:root body .cr-nome small { font-size: 14px; color: var(--sec); }
+
+/* os cartões: o carvão com o fio de cima e a aresta de ferro. Passagem do mouse: a aresta de latão escuro e a face um
+   degrau mais clara. Escolhido: a aresta de latão em dobro, a face aquecida, o número aceso e "Escolhida" no canto (fica
+   depois que o mouse sai). Foco do teclado: o anel claro por fora, como nos outros botões. */
+:root body .cr-grade { display: grid; gap: 16px; }
+:root body .cr-grade-classes { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+:root body .cr-grade-modos { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+:root body .cr-cartao { position: relative; display: flex; flex-direction: column; align-items: center; min-width: 0; margin: 0;
+  padding: 16px 18px 14px; font: inherit; text-align: center; color: var(--cr-tinta); cursor: pointer;
+  background: linear-gradient(#24211c 0 1px, var(--cr-carvao) 1px 100%); border: 1px solid var(--cr-ferro); border-radius: 2px; box-shadow: 0 1px 0 #000; }
+:root body .cr-cartao:hover { border-color: var(--cr-ferro-vivo); background: linear-gradient(#3a3428 0 1px, #1a1814 1px 100%); }
+:root body .cr-cartao[aria-checked="true"] { border-color: var(--latao); box-shadow: inset 0 0 0 1px var(--latao), 0 1px 0 #000;
+  background: linear-gradient(#5a4a28 0 1px, #1f1b13 1px 100%); }
+:root body .cr-cartao:focus-visible { outline: 2px solid var(--latao-claro); outline-offset: 3px; }
+:root body .cr-tecla { position: absolute; top: 8px; left: 8px; display: grid; place-items: center; width: 22px; height: 22px;
+  font-family: var(--num, var(--texto)); font-size: 13px; font-weight: 700; color: #bdb3a0; background: #0b0a09; border: 1px solid #4a4232; }
+:root body .cr-cartao[aria-checked="true"] .cr-tecla { color: #15100a; background: var(--latao); border-color: var(--latao); }
+:root body .cr-marca { position: absolute; top: 9px; right: 10px; visibility: hidden; font-size: 11px; font-weight: 700; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--latao-claro); }
+:root body .cr-etapa.atual .cr-cartao[aria-checked="true"] .cr-marca { visibility: visible; }
+:root body .cr-titulo-cartao { font-family: var(--titulo); font-size: calc(var(--px) * 32); line-height: 1; color: var(--latao-claro); text-shadow: 2px 2px 0 #000; }
+
+/* a classe: 1. o retrato e o nome; 2. a frase; 3. o ataque e o recurso; 4. as especializações, discretas */
+:root body .cr-busto { margin: 2px 0 10px; padding: 4px; line-height: 0; border: 1px solid var(--aresta); background: #0c0b0a; }
+:root body .cr-busto :is(img, picture) { display: block; width: 80px; height: 80px; }
+:root body .cr-classe .cr-titulo-cartao { margin-bottom: 8px; }
+:root body .cr-frase { min-height: 2.8em; font-size: 16px; line-height: 1.4; color: var(--cr-tinta); }
+:root body .cr-dados { align-self: stretch; display: flex; flex-direction: column; gap: 7px; margin-top: 12px; padding-top: 11px;
+  border-top: 1px solid #2c2a26; text-align: left; }
+:root body .cr-dado { display: flex; align-items: center; gap: 9px; font-size: 15px; line-height: 1.25; color: #b8ae9c; }
+:root body .cr-dado > :is(img, picture, canvas) { flex: none; width: 24px; height: 24px; object-fit: contain; }
+:root body .cr-dado b { color: #eadbb4; font-weight: 700; }
+:root body .cr-specs { align-self: stretch; margin-top: 11px; padding-top: 9px; border-top: 1px solid #2c2a26; font-size: 14px; color: var(--sec); }
+
+/* o modo: o nome e as consequências da queda, à esquerda; o tutorial logo abaixo, numa faixa própria */
+:root body .cr-modo { align-items: flex-start; padding: 16px 20px 16px 44px; text-align: left; }
+:root body .cr-modo .cr-titulo-cartao { margin: 0 0 10px; }
+:root body .cr-linhas { display: flex; flex-direction: column; gap: 4px; font-size: 16px; line-height: 1.4; color: var(--cr-tinta); }
+:root body .cr-tutorial { display: flex; align-items: flex-start; gap: 12px; margin-top: 14px; padding: 12px 16px; cursor: pointer;
+  background: #0e0d0b; border: 1px solid #2c2a26; border-radius: 2px; }
+/* a caixa no ferro dos cartões (a nativa, desmarcada, era um quadrado branco no escuro): marcada, o latão com o visto */
+:root body .cr-tutorial input { flex: none; appearance: none; display: grid; place-items: center; width: 20px; height: 20px; margin: 1px 0 0;
+  border: 1px solid #8a7038; border-radius: 2px; background: #0b0a09; box-shadow: inset 0 1px 0 #000; cursor: pointer; }
+:root body .cr-tutorial input:checked { border-color: var(--latao); background: var(--latao); }
+:root body .cr-tutorial input:checked::after { content: "✓"; font-size: 15px; font-weight: 700; line-height: 1; color: #15100a; }
+:root body .cr-tutorial:hover input { border-color: var(--latao-claro); }
+:root body .cr-tutorial input:focus-visible { outline: 2px solid var(--latao-claro); outline-offset: 2px; }
+:root body .cr-tutorial b { display: block; font-size: 16px; color: #eadbb4; }
+:root body .cr-tutorial small { display: block; margin-top: 2px; font-size: 14px; color: var(--sec); }
+
+/* o rodapé: o Voltar, o resumo do que já se escolheu e o botão que avança, na mesma linha (da altura do Começar
+   campanha, o maior, em todas as etapas) */
+:root body .cr-rodape { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; grid-template-rows: minmax(46px, auto); align-items: center; gap: 18px;
+  margin-top: 14px; padding-top: 14px; box-shadow: inset 0 1px 0 #000, inset 0 2px 0 #1f2023; }
+:root body .cr-voltar { display: flex; align-items: center; gap: 6px; padding: 6px 12px; font: inherit; font-size: 15px; color: var(--tinta);
+  border: 1px solid var(--aresta-face); border-radius: 2px; background: var(--hud-face); box-shadow: var(--hud-relevo); cursor: pointer; }
+:root body .cr-voltar:is(:hover, :focus-visible) { border-color: var(--aresta-viva); background: var(--hud-face-viva); color: #fff7e6; }
+:root body .cr-voltar:focus-visible { outline: 2px solid var(--latao-claro); outline-offset: 2px; }
+:root body .cr :is(.cr-voltar, .cr-avancar) kbd { border: 1px solid #4a4d53; background: #0b0c0e; color: var(--sec); }
+:root body .cr-resumo { display: flex; justify-content: flex-end; align-items: baseline; min-width: 0; font-size: 17px; font-weight: 700; color: #eadbb4; white-space: nowrap; }
+:root body .cr-resumo span { overflow: hidden; text-overflow: ellipsis; }
+:root body .cr-resumo span:first-child { max-width: 24em; }
+:root body .cr-resumo i { flex: none; margin: 0 9px; font-style: normal; color: var(--latao); }
+/* o Avançar e o Começar campanha: o botão principal da HUD (a família do Continuar); o último, um pouco maior */
+:root body .cr-avancar { display: flex; align-items: center; gap: 6px; min-width: 168px; justify-content: center; padding: 7px 18px 8px 22px;
+  border: 1px solid #8a7038; border-radius: 2px; font-family: var(--texto); font-size: 18px; font-weight: 700; line-height: 1.2; letter-spacing: 0.02em;
+  color: #eadbb4; text-shadow: 0 1px 0 #000; cursor: pointer;
+  background: linear-gradient(rgba(242, 210, 122, 0.07), rgba(255, 255, 255, 0.02) 46%, rgba(0, 0, 0, 0.2)),
+    linear-gradient(rgba(36, 37, 42, 0.92), rgba(24, 25, 29, 0.96)), var(--t-botao) 0 0 / 128px; background-clip: padding-box;
+  box-shadow: inset 0 1px 0 rgba(242, 210, 122, 0.16), inset 0 -1px 0 rgba(0, 0, 0, 0.55), 0 1px 0 #000, 0 2px 4px rgba(0, 0, 0, 0.45); }
+:root body .cr-avancar > span { font-size: 14px; color: var(--latao); transition: translate 0.12s ease-out; }
+:root body .cr-avancar:not(:disabled):hover { border-color: var(--latao-claro); color: #fff3d6;
+  background: linear-gradient(rgba(242, 210, 122, 0.14), rgba(255, 255, 255, 0.05) 46%, rgba(0, 0, 0, 0.12)),
+    linear-gradient(rgba(48, 50, 56, 0.92), rgba(34, 35, 40, 0.96)), var(--t-botao) 0 0 / 128px; background-clip: padding-box; }
+:root body .cr-avancar:not(:disabled):is(:hover, :focus-visible) > span { translate: 3px 0; color: var(--latao-claro); }
+:root body .cr-avancar:focus-visible { border-color: var(--latao-claro); color: #fff3d6; outline: 2px solid var(--latao-claro); outline-offset: 2px; }
+:root body .cr-avancar:not(:disabled):active { translate: 0 1px; box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.85); }
+:root body .cr-avancar:disabled { cursor: default; color: #77705f; border-color: #3a3630; box-shadow: 0 1px 0 #000; }
+:root body .cr-avancar:disabled :is(span, kbd) { color: #5a5446; }
+:root body .cr-comecar { padding: 9px 22px 10px 26px; font-size: 20px; }
+@media (prefers-reduced-motion: reduce) { :root body .cr-avancar > span { transition: none; } }
+
+/* a 1280×720: o painel encosta mais nas bordas e o corpo encolhe um pouco (a classe ainda numa tela, sem rolar) */
+@media (max-height: 760px) {
+  :root body .cr { padding: 10px 22px 12px; }
+  :root body .cr-corpo { padding-top: 12px; }
+  :root body .cr-cartao { padding-top: 12px; }
+}

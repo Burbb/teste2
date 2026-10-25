@@ -191,8 +191,14 @@ id, `ficha_guardiao`; os contratos por `contratos.desc_caca` e `desc_alvo`, os m
   nas colunas, no topo ou no Mural, encostado no controle, com a ponta da seta nele, acompanhando a rolagem; o ícone de
   efeito numa carta, com uma haste da seta até ele) e um véu leve só nas colunas laterais e na doca; tudo sem receber clique,
   menos os botões do quadro ("Entendi" no C4, que fecha só ele, e "Encerrar tutorial"). A Ajuda (topo, F1) lista o que já foi visto e liga ou desliga, pela rota `/orientacao`
-  (fora da fila das perguntas). Uma caixa marcável pode ir junto de uma escolha (`caixa` na pergunta; a resposta vem
-  como `{"i", "caixa"}`; no texto, `UI.ler_caixa` faz uma pergunta de sim ou não).
+  (fora da fila das perguntas).
+- `app/criacao.js` a criação do personagem numa tela só (1.208.0): o motor manda a pergunta `criacao` com tudo o que ela
+  mostra (`rpg/criacao.py`: os textos, as classes com o ataque, o recurso e as especializações, os modos, o tutorial); a
+  tela anda por Nome → Classe → Modo guardando as escolhas (escolher não avança; Avançar ou Enter, sim; Voltar ou Esc
+  revisa) e responde uma vez, no "Começar campanha" (`{"nome", "classe", "modo", "tutorial"}`) ou no Voltar da primeira
+  etapa (`{"voltar": true}`); `criacao.conferir` confere. A tecla segurada e o clique duplo passam pelo `Gesto`, sem
+  espera por tempo. A interface de texto (`UI.criacao_na_tela` falso) pergunta uma coisa por vez, com o tutorial numa
+  caixa (`UI.ler_caixa`, uma pergunta de sim ou não).
 - `app/vila.js` a vila como lugar: os serviços moram nos prédios da paisagem. O motor marca cada opção da vila com
   `predio` (e `curto`, `tempo`) e diz, no estado (`local.predios_fechados`), por que um prédio está sem serviço
   agora; `vista.js` desenha os prédios e registra a área de cada um e o ponto do balão (`Vista.predios()`), acende as

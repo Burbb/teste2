@@ -96,15 +96,6 @@ class TestCriacao(unittest.TestCase):
             self.assertEqual(abertura.tutorial(g), ligado)
             self.assertIn(["Sim", "Não"], ui.ofertas)
 
-    def test_caixa_na_tela_grafica(self):
-        from rpg.web.ponte import WebUI
-        ui = WebUI()
-        ui.caixa = {"id": "tutorial", "rotulo": "Mostrar tutorial", "marcada": True, "pergunta": "?"}
-        ui.extra_resposta = {"i": 0, "caixa": False}
-        self.assertFalse(ui.ler_caixa())
-        ui.extra_resposta = {"i": 0}  # sem a caixa na resposta, vale como estava (marcada)
-        self.assertTrue(ui.ler_caixa())
-
     def test_save_antigo_sem_despensa(self):
         g = Jogo(Jogador(), seed=3, pasta_saves=tempfile.mkdtemp())
         g.iniciar("Teste", "guerreiro")

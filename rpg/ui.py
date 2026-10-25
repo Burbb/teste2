@@ -50,8 +50,9 @@ class UI:
     extra_resposta = None  # dados extras que a interface mandou junto da escolha (ex.: quantidade)
     meta_opcoes = None  # dados extras de cada opção (local de viagem, talento...), para interfaces gráficas
     # Uma caixa marcável que acompanha a próxima escolha ({"id", "rotulo", "marcada", "pergunta"}): "Mostrar tutorial"
-    # na criação da campanha. Lida com ler_caixa depois da escolha.
+    # na criação da campanha, no texto. Lida com ler_caixa depois da escolha.
     caixa = None
+    criacao_na_tela = False  # a criação do personagem numa tela só (criar_personagem, criacao.py), não pergunta a pergunta
     notas_proprias = False  # a interface mostra a `nota` de uma opção à parte (senão o jogo a junta ao rótulo)
 
     # O que a interface sabe fazer. O motor pergunta por isto, nunca "que tela é esta?".

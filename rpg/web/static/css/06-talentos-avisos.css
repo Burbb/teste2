@@ -342,9 +342,6 @@ body.derrotado #predios { visibility: hidden; }
 @media (prefers-reduced-motion: reduce) { .orientacao-anel { animation: none; } }
 /* No item achado (E1), o quadro e o contorno ficam acima da janela dele. */
 .orientacao.sobre-janela, .orientacao-anel.sobre-janela { z-index: 31; }
-/* A caixa marcável que vai junto de uma escolha ("Mostrar tutorial", na criação da campanha). */
-.caixa-escolha { display: flex; align-items: center; gap: 8px; margin: 10px 0 0 6px; font-size: 16px; color: var(--tinta); cursor: pointer; }
-.caixa-escolha input { width: 18px; height: 18px; accent-color: var(--ouro); cursor: pointer; }
 /* A Ajuda (F1): as orientações já vistas e a chave do tutorial. */
 .ajuda-caixa { width: min(560px, 92vw); max-height: 80vh; overflow: auto; }
 #ajuda-corpo { padding: 4px 14px 14px; }

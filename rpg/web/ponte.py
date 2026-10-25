@@ -295,11 +295,16 @@ class WebUI(InterfaceGrafica, UI):
         """Chamado pelo servidor quando o navegador responde."""
         self.respostas.put((pid, valor))
 
-    def ler_caixa(self):
-        """A caixa marcável veio junto da escolha ({"i": 0, "caixa": true}); sem ela, vale como estava."""
-        if not self.caixa:
-            return None
-        return bool((self.extra_resposta or {}).get("caixa", self.caixa["marcada"]))
+    criacao_na_tela = True
+
+    def criar_personagem(self, dados):
+        """A criação numa tela só (app/criacao.js, com os dados de criacao.py): a tela anda pelas etapas e responde uma
+        vez, com {"nome", "classe", "modo", "tutorial"} no "Começar campanha" ou {"voltar": true} na primeira etapa.
+        Quem confere é o motor (criacao.conferir)."""
+        resposta = self._perguntar("criacao", **dados)
+        self.escolhas_na_cena += 1
+        self.novo_desde_escolha = False
+        return resposta
 
     def orientacao(self, acao):
         """A tela pediu para dispensar ou religar as orientações (o quadro, a Ajuda), ou deu "Entendi" num quadro
@@ -331,7 +336,7 @@ class WebUI(InterfaceGrafica, UI):
                 item["meta"] = meta
             itens.append(item)
         while True:
-            i = self._perguntar("opcoes", pergunta=pergunta, opcoes=itens, **({"caixa": self.caixa} if self.caixa else {}))
+            i = self._perguntar("opcoes", pergunta=pergunta, opcoes=itens)
             self.extra_resposta = None
             if isinstance(i, dict):  # {"i": 3, "qtd": 5}: a escolha e o que veio junto
                 self.extra_resposta = i

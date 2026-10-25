@@ -109,3 +109,22 @@ inventado aqui). Os números do recurso são os do nível 1 (talentos mudam a re
 com a hora do título (o mesmo desenho do menu). O nome mora numa etapa curta dentro da altura da classe: fica um vazio
 em volta do campo, de propósito (o painel não pula). O Enter também começa a campanha na última etapa (solto e
 apertado de novo, depois da espera).
+
+## A R2 integrada na 1.208.0 (25/10/2026)
+
+O Jean aprovou a R2; ela entrou no jogo sem retoques: `rpg/criacao.py` (os dados que a tela mostra e a conferência da
+resposta), `Jogo.novo_jogo` (a tela gráfica numa pergunta só, `WebUI.criar_personagem`; o texto e o robô com as
+perguntas de sempre), as frases curtas em `classes.py`, `app/criacao.js` e `css/24-criacao.css` (o mesmo CSS, com a
+mesma especificidade). Saíram as adaptações da demonstração: a troca do motor no cenário, o `nucleo.js` servido, o log
+`[criacao]`, as frases no cenário; e, sem uso, a caixa marcável da tela gráfica. **Uma diferença pedida pelo Jean:** a
+espera por tempo do Avançar e do Começar saiu; a tecla segurada e as repetições passam pelo `Gesto` do jogo (a tecla que
+vinha apertada da etapa anterior não vale até ser solta) e o segundo clique de um clique duplo (`detail` 2) não avança:
+um Enter novo responde na hora.
+
+**Conferido no jogo** (`folha-criacao-integrada.png`; `auxiliares/criacao.mjs`, antes `criacao_r2.mjs`, nas duas janelas, tudo certo): o mesmo
+desenho da candidata (as fotos iguais às da folha), as três classes, os dois modos, o tutorial ligado e desligado, o
+nome longo com acento, avançar, voltar e preservar, o Enter segurado, o clique duplo no Avançar e no Começar, dois
+Enter seguidos (soltos) respondendo em ~15 ms, uma resposta só ao motor (o que a página manda ao `/responder`), a
+campanha começando com o que se escolheu (o estado do jogo) e, depois da abertura, salvar e sair pela doca e carregar
+o save pela lista (o cartão com a região e o modo; a ficha do mesmo herói). `PROPOSTA=r2` serve o jogo como está; a R
+(cartões no painel) ainda roda, sem a caixa do tutorial (saiu da tela gráfica): o registro dela é a folha.

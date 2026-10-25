@@ -4,7 +4,7 @@ import random
 
 from . import campanha
 from .campanha import INICIO
-from . import abertura, consequencias, missoes
+from . import abertura, consequencias, criacao, missoes
 from . import eventos
 from . import texto as tx
 from .classes import CLASSES, SPECS
@@ -207,12 +207,35 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
 
     # ================================================================ início
     def novo_jogo(self, regiao=INICIO):
-        """Criação do personagem: nome, classe, o modo (resgate ou hardcore) e a caixa do tutorial; a campanha começa
-        na região dada (campanha.py). Devolve False se a pessoa voltou ao título."""
+        """Criação do personagem: nome, classe, o modo (resgate ou hardcore) e o tutorial; a campanha começa na região
+        dada (campanha.py). Na tela gráfica, numa tela só (criacao.py); no texto, uma pergunta por vez. Devolve False se
+        a pessoa voltou ao título."""
+        escolha = self._criacao_na_tela(regiao) if self.ui.criacao_na_tela else self._criacao_em_perguntas(regiao)
+        if escolha is None:
+            return False
+        nome, classe, self.hardcore, tutorial = escolha
+        self.iniciar(nome, classe, regiao)
+        abertura.comecar(self, tutorial)
+        self.introducao_campanha()
+        return True
+
+    def _criacao_na_tela(self, regiao):
+        """A tela anda pelas etapas e devolve tudo junto; o motor confere (a resposta que não serve volta à tela)."""
+        d = criacao.dados(regiao)
+        while True:
+            resposta = self.ui.criar_personagem(d)
+            if isinstance(resposta, dict) and resposta.get("voltar"):
+                return None
+            escolha = criacao.conferir(resposta)
+            if escolha:
+                return escolha
+
+    def _criacao_em_perguntas(self, regiao):
+        """No texto: o nome, a classe e o modo, com o tutorial numa pergunta depois (ler_caixa)."""
         self.ui.cena("Criação de personagem", campanha.nome(regiao), "menu")
         nome = self.ui.perguntar("Qual é o seu nome, aventureiro(a)?", "Aventureiro", voltar=True)
         if nome is None:
-            return False
+            return None
         self.dizer()
         self.dizer(f"Escolha sua classe. No nível {bal.NIVEL_ESPECIALIZACAO} ela se ramifica em uma de duas "
                    "especializações:", "ciano")
@@ -225,9 +248,9 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
         while True:
             classe = self.menu("Sua classe:", [(CLASSES[c]["nome"], c) for c in classes] + [("Voltar", None, {"voltar": True})])
             if classe is None:
-                return False
-            # A caixa "Mostrar tutorial", marcada, junto da escolha do modo (na tela gráfica, uma linha marcável; no texto,
-            # uma pergunta depois): liga só as orientações; a abertura é a mesma.
+                return None
+            # A caixa "Mostrar tutorial", marcada, junto da escolha do modo (no texto, uma pergunta depois): liga só as
+            # orientações; a abertura é a mesma.
             self.ui.caixa = {"id": "tutorial", "rotulo": "Mostrar tutorial", "marcada": True,
                              "pergunta": "Mostrar as orientações do tutorial?"}
             try:
@@ -240,12 +263,7 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
             finally:
                 self.ui.caixa = None
             if modo:
-                break
-        self.hardcore = modo == "hardcore"
-        self.iniciar(nome, classe, regiao)
-        abertura.comecar(self, tutorial)
-        self.introducao_campanha()
-        return True
+                return nome, classe, modo == "hardcore", tutorial
 
     def iniciar(self, nome, classe, regiao=INICIO):
         self.j = Jogador(nome, classe)

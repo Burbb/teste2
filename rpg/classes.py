@@ -21,6 +21,8 @@ CLASSES = {
         "artigo_recurso": "o",  # "metade do Vigor"
         "cor": "vermelho",
         "desc": "Muita vida e defesa. Luta corpo a corpo e aguenta o tranco. Vigor regenera rápido.",
+        # o cartão da criação (criacao.py): a desc sem o que as linhas do ataque e do recurso já dizem
+        "frase": "Muita vida e defesa: aguenta o tranco.",
         "base": dict(max_hp=60, atk=9, defesa=6, agi=3, poder=1, max_rec=30, regen=6),
         "cresc": dict(max_hp=9, atk=2.0, defesa=1.2, agi=0.4, poder=0.3, max_rec=2),
         "habilidades": [(1, "golpe_pesado"), (1, "erguer_escudo"), (2, "investida"), (3, "grito_guerra")],
@@ -34,6 +36,7 @@ CLASSES = {
         "artigo_recurso": "o",  # "metade do Foco"
         "cor": "verde",
         "desc": "Ágil e preciso, ataca à distância. Gasta flechas (que podem acabar!) e é ótimo contra voadores.",
+        "frase": "Ágil e preciso, ótimo contra voadores. As flechas podem acabar.",
         "base": dict(max_hp=52, atk=8, defesa=4, agi=8, poder=2, max_rec=25, regen=5),
         "cresc": dict(max_hp=8, atk=2.0, defesa=1.1, agi=1.2, poder=0.4, max_rec=2),
         "habilidades": [(1, "tiro_certeiro"), (1, "marcar_presa"), (2, "chuva_flechas"), (3, "passo_agil")],
@@ -48,6 +51,7 @@ CLASSES = {
         "artigo_recurso": "a",  # "metade da Mana"
         "cor": "azul",
         "desc": "Frágil, mas devastador. Magias elementais exploram fraquezas. Mana regenera devagar.",
+        "frase": "Frágil, mas devastador: magias elementais exploram fraquezas.",
         "base": dict(max_hp=42, atk=3, defesa=3, agi=4, poder=11, max_rec=40, regen=3),
         "cresc": dict(max_hp=8, atk=0.5, defesa=0.8, agi=0.6, poder=2.0, max_rec=5),
         "habilidades": [(1, "bola_fogo"), (1, "meditar"), (2, "lanca_gelo"), (3, "barreira")],

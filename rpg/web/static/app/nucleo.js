@@ -94,8 +94,6 @@ async function responder(id, valor) {
   // A opção indisponível (falta o item que ela gasta) não se escolhe: nem clique, nem tecla, nem atalho.
   if (pergunta.tipo === "opcoes" && typeof valor === "number" && pergunta.opcoes && pergunta.opcoes[valor]
       && pergunta.opcoes[valor].meta && pergunta.opcoes[valor].meta.indisponivel) return;
-  // A caixa que acompanha a escolha ("Mostrar tutorial", na criação da campanha) vai junto dela.
-  if (pergunta.caixa && typeof valor === "number") valor = { i: valor, caixa: pergunta.caixa.checked };
   Orientacao.aoResponder();
   pergunta = null;
   ultimaResposta = performance.now();
@@ -213,6 +211,7 @@ function ritmo(ms) { return instantaneo() ? 0 : ms * (velocidade === "lento" ? 1
 
 async function tratar(m) {
   Cenas.conferirPendente(m);  // a página virou e o que veio não é o ambiente da capela: a paisagem volta ao topo
+  Criacao.aoMensagem(m);  // a abertura da campanha (ou o título de novo) desmonta a tela da criação
   switch (m.t) {
     case "estado": aplicarEstado(m.estado); break;
     case "sincronizado": replay = false; break;
@@ -261,6 +260,7 @@ async function tratar(m) {
     case "escolhido": eco(m); break;
     case "opcoes": Gesto.novaTela(); Cenas.aoMenu(); Telas.fimDaQueda(); mostrarOpcoes(m); soltarRolagem(); Telas.atualizarGrimorio(); break;
     case "continuar": Gesto.novaTela(); Cenas.aoMenu(); mostrarContinuar(m); soltarRolagem(); break;
+    case "criacao": Gesto.novaTela(); Criacao.mostrar(m); break;
     case "pergunta": Gesto.novaTela(); Cenas.aoMenu(); mostrarPergunta(m); soltarRolagem(); break;
     case "erro": anexar(el("p", "erro", "Algo deu errado: " + esc(m.texto))); break;
     case "fim": $("#aviso-fim").hidden = false; break;

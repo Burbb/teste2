@@ -431,18 +431,22 @@ async function cenarioCampanha(browser) {
       await page.waitForTimeout(200);
     }
     await (await esperar('#prompt .escolha:has-text("Novo jogo")')).click();
-    // Sem `esperar` aqui: ele clica em qualquer .continuar, e o "Confirmar" do nome também é um. Se o botão chegasse
-    // um instante antes do campo, o teste confirmava o nome padrão sozinho (a falha que aparecia às vezes).
-    await (await page.waitForSelector(".entrada-texto input", { timeout: 20000 })).fill("Ana");
+    // A criação numa tela só (app/criacao.js): Nome → Classe → Modo; escolher não avança, o Avançar sim.
+    await (await page.waitForSelector(".cr #cr-campo", { timeout: 20000 })).fill("Ana");
     await page.keyboard.press("Enter");
-    await (await esperar('#prompt .escolha:has-text("Arqueiro")')).click();
-    const resgate = await esperar('#prompt .escolha:has-text("Resgate")');
-    conferir(!!resgate && !!(await page.$('#prompt .escolha:has-text("Hardcore")')), "a criação pergunta o modo: resgate ou hardcore");
-    const caixa = await page.$("#prompt .caixa-escolha input");
-    conferir(!!caixa && (await caixa.isChecked()) && /Mostrar tutorial/.test(await page.textContent("#prompt .caixa-escolha")),
-      "junto do modo, a caixa \"Mostrar tutorial\", marcada");
+    await page.waitForSelector('.cr-etapa.atual .cr-classe[data-valor="arqueiro"]', { timeout: 10000 });
+    conferir(await page.$eval(".cr-avancar", (b) => b.disabled), "a classe chega sem escolha, com o Avançar desligado");
+    await page.click('.cr-classe[data-valor="arqueiro"]');
+    conferir(await page.$eval(".cr-etapas [aria-current]", (e) => e.textContent.includes("Classe")), "escolher a classe não avança");
+    await page.click(".cr-avancar");
+    await page.waitForSelector('.cr-etapa.atual .cr-modo[data-valor="resgate"][aria-checked="true"]', { timeout: 10000 });
+    conferir(!!(await page.$('.cr-etapa.atual .cr-modo[data-valor="hardcore"]')) && /Ana · Arqueiro · Resgate/.test((await page.innerText(".cr-resumo")).replace(/\s+/g, " ")),
+      "o modo: resgate (escolhido) ou hardcore, com o resumo Ana · Arqueiro · Resgate");
+    const caixa = await page.$("#cr-tutorial");
+    conferir(!!caixa && (await caixa.isChecked()) && /Mostrar tutorial/.test(await page.textContent(".cr-tutorial")),
+      "junto do modo, \"Mostrar tutorial\", marcada");
     await caixa.click();  // esta campanha segue sem orientações (a abertura é a mesma)
-    await resgate.click();
+    await page.click(".cr-comecar");
     conferir(!!(await esperar('#texto :text("Resgate: se você cair")', 8000)), "o prólogo diz o modo escolhido");
     // A abertura da missão pede confirmação: o texto termina num Continuar e a página não vira sozinha.
     conferir(!!(await esperar('#cena-cab .cena-titulo:has-text("A Febre do Turvo")', 10000)), "a abertura da missão toca depois do prólogo");
