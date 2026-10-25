@@ -492,9 +492,9 @@ def fundo():
     parede_esquerda(px)
     fornalha(px)
     suporte(px)
-    tina(px)
     armazem(px)
     esteios(px)
+    tina(px)  # a tina fica na frente do esteio (mais perto de quem olha): vem depois dele
     lanterna(px)
     porta(px)
     luz(t)

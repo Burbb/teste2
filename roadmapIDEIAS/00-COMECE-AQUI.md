@@ -7573,3 +7573,10 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Aguarda as decisões do Jean** (seção 9: a arquitetura, os espaços, a regra do ganho, a passagem do reforço, o
   desmanche, as essências de especialização, onde mora o encantamento, os custos). Nada implementado; nenhum número
   integrado; outros interiores não começaram.
+
+### 25/10/2026 (data do computador local) — A forja: a tina na frente do esteio (1.210.1)
+
+- O Jean notou o esteio do meio passando na frente da tina d'água, que está mais perto de quem olha. Causa: no fundo, a
+  tina era desenhada antes dos esteios. Corrigida a ordem na fonte (`h2/oficina_h2.py`), a fonte refeita
+  (`desenhar_h2.py --refazer`, sem retoque no Aseprite a perder) e as camadas do jogo reexportadas (`exportar_h2.py
+  --conferir --jogo`, 53 de 53). Conferido no jogo; suíte, gabarito, pyflakes e fumaça. Só a arte do fundo mudou.
