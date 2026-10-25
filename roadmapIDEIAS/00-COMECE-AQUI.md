@@ -7580,3 +7580,32 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   tina era desenhada antes dos esteios. Corrigida a ordem na fonte (`h2/oficina_h2.py`), a fonte refeita
   (`desenhar_h2.py --refazer`, sem retoque no Aseprite a perder) e as camadas do jogo reexportadas (`exportar_h2.py
   --conferir --jogo`, 53 de 53). Conferido no jogo; suíte, gabarito, pyflakes e fumaça. Só a arte do fundo mudou.
+
+### 25/10/2026 (data do computador local) — O protótipo isolado do combate e dos atributos
+
+- **O que é:** uma luta jogável com a direção das seções 1 a 8 do [25](25-ETAPA4-REFORCO-E-ENCANTAMENTO.md), em
+  `ferramentas/prototipos/combate-atributos/` (`demo.bat`, porta 8781). O jogo não carrega nada dele (um teste confere);
+  as regras de produção, a forja e a campanha não mudaram. Detalhes, fórmulas e achados no
+  [LEIA-ME](../ferramentas/prototipos/combate-atributos/LEIA-ME.md).
+- **As regras testadas:** Jean, Odette e Morel controlados diretamente; ordem pela Agilidade calculada uma vez
+  (desempate: Percepção, aliado, entrada); uma ação por turno; rodada fechando depois de todos, inclusive quem perdeu a
+  vez; Defender até o início do próximo turno; ameaças anunciadas numa vez do inimigo e resolvidas na seguinte, com
+  alvo, dano previsto e quando; caído pulado, volta por Reerguer ou Pena de Fênix na mesma posição, sem recuperar a
+  vez; invocações no fim da ordem, agindo na rodada seguinte.
+- **Os atributos (provisórios):** escala 1–8, 24 pontos do protagonista, limiar 5. Nenhum soma dano direto (a
+  potência é arma + nível × habilidade): Força rompe guarda e aguenta atordoar; Agilidade só a ordem; Constituição
+  vida e sangramento; Intelecto custo; Percepção crítico e ponto fraco; Vontade defesa e terror; Presença o Comando.
+  Três construções (A Força/Constituição, B Agilidade/Percepção, C Vontade/Presença) e uma livre, com o mesmo nível,
+  equipamento e companheiros; Comparar e Resultados mostram o que mudou.
+- **Conteúdo:** três encontros com semente (os lobos e o Bote; o Bruto e o Golpe Esmagador com dois besteiros; o
+  xamã com afogados e o Grito de Terror, e o Soldado Morto com guarda), quatro casos de teste com a condição
+  artificial na tela (atordoado, retorno antes e depois da posição, inimigo derrubado antes da preparação) e uma
+  situação fora da luta com a contribuição dos companheiros.
+- **Conferido:** 26 testes dirigidos; o roteiro do navegador a 1920×945 e a 1280×720 (sem rolagem nem corte,
+  teclado, tecla segurada, clique duplo, reinício, movimento reduzido) com as capturas e a `folha.png`; o encontro 2
+  jogado à mão com a B e os três medidos por um jogador automático em três estilos.
+- **Achados para o Jean avaliar:** a ameaça anunciada abre várias respostas reais; o Golpe no Joelho era dominante a
+  20 e foi a 30; o recurso decide quando gastar; C sofre no encontro 2 se não defender e comandar na hora; o encontro
+  3 é o mais leve. Nada disso é balanceamento.
+- **A etapa 4 não está concluída.** Aguarda a avaliação do Jean do protótipo e as decisões do 25 antes de reforço e
+  encantamento; nada a integrar.
