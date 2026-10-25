@@ -7450,3 +7450,24 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   número de saves (~9 ms por save, a leitura do motor), registrado; a revisão por evidência dos componentes antigos
   restantes. O "Continuar" da subida de nível fica fora, por decisão do Jean. Não começados (sem pedido): a forja, o
   reforço/encantamento, o Grimório, a expansão narrativa.
+
+### 25/10/2026 (data do computador local) — O Carregar jogo no jogo (1.209.0); a etapa 2 concluída; a forja começada
+
+- **Integrado na 1.209.0, aprovado pelo Jean, sem redesenho:** o Carregar jogo R (`telas/saves.js`,
+  `css/25-carregar.css`; a especialização e a missão em andamento em `resumo_save`). Os dois ajustes pedidos: o nome
+  cortado com a dica inteira no mouse e no foco do teclado; o foco inicial na partida mais recente que abre (sem
+  nenhuma, no Voltar). Sem índice paralelo dos saves (~9 ms por save no motor, decisão do Jean). Os saves pessoais, os do
+  mundo gerado e os danificados: tratados como antes, nada apagado nem convertido.
+- **Conferido:** `carregar-jogo/auxiliares/conferir.mjs` nas duas janelas (sem saves, uma, dez, 22, a mais recente que
+  não abre, nenhuma que abre; Tab, setas, Home/End, Esc, Enter, clique duplo, a dica do nome); criar, salvar e carregar
+  uma campanha nova pela lista (`telas-iniciais/auxiliares/criacao.mjs`). `unittest` (689), gabarito sem mudança,
+  pyflakes, fumaça.
+- **A etapa 2, concluída no escopo acordado** (`ferramentas/prototipos/hud/revisao-etapa2/LEIA-ME.md`): as entregas da
+  1.201.0 à 1.209.0; os dois defeitos achados (a janela de saves escondendo a mensagem do save que não abre; a dica
+  sumindo na rolagem), corrigidos na 1.209.0. **Exceções explícitas:** adiados por decisão do Jean (o "Continuar" da
+  subida de nível, os tempos e o adiantar das faixas, o menu de configurações, a migração dos saves do mundo gerado);
+  reservados (o Grimório e os Talentos, etapa 8; a narrativa, etapa 9); opcional (a dica de adiantar e o fio de leitura).
+- **A etapa 3 começada (protótipo, aguardando o Jean):** o levantamento da forja e duas direções, A · a bancada de
+  trabalho e B · o interior da oficina, no jogo pelo sistema de ambientes da capela (`ferramentas/prototipos/hud/forja/`,
+  `folha-forja.png`, `demo.bat` na porta 8775, campanha temporária). Recomendação: B. Sem integração; o reforço e o
+  encantamento (etapa 4), outros interiores, o Grimório e a expansão narrativa não começaram.

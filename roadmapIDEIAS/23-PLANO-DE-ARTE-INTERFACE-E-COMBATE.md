@@ -13,7 +13,7 @@ Não iniciar todo o plano numa única tarefa. As etapas técnicas A–I e a vali
 
 ## Estado de referência — 21/10/2026
 
-- Produção: **1.208.0** na branch `claude/tender-einstein-tx3tjl` (25/10/2026: **a criação em etapas R2 integrada na 1.208.0**; o "Carregar jogo" R aguardando o Jean, só no protótipo; **o tutorial R e o aviso de ponto de talento R integrados na 1.207.0**; 24/10/2026: a retirada do modo procedural na 1.206.0, o quadro do C2 na 1.205.1, as faixas de passagem na 1.205.0; 23/10/2026: **a lista de Caminhos do painel com os símbolos nativos na 1.200.1**, fechando a pendência da 1E.4; **a 1E.4 integrada na 1.200.0** — os cinco símbolos de lugar da campanha em grade nativa, a plaqueta do herói, as marcas, a cancela, as estradas por estado, os nomes no lugar livre, a Viagem e o Diário com o mesmo desenho, e o bloqueio vindo da regra da viagem; a família `esqueleto_servo` removida na 1.199.1, o antagonista no gênero do título na 1.199.2 e a Ilse com a ficha dela na 1.199.3; o Barqueiro do Charco preparado na branch `claude/barqueiro-do-charco`, fora da produção; o Lich Menor N16 pelo id do guardião na 1.199.0; o Profeta das Cinzas (`profeta-t`) pelo id do guardião na 1.198.0; a Hidra do Brejo N16D2 pelo id da guardiã na 1.197.0; o servo esquelético N16B na 1.196.0; o Espantalho Possuído N16R2 pela origem na 1.195.0; o Senhor da Guerra N16 pelo id do guardião na 1.194.0; o Dragão de Gelo N16 pelo id do guardião na 1.193.0; o Mímico M1 pela origem na 1.192.0; o Golem Primordial R1b pelo id do guardião na 1.191.0; a Árvore Anciã R2b pelo id da guardiã na 1.190.0; a Árvore Desperta T1 e o Golem G2 pelas famílias na 1.189.0; 22/10/2026: a Abominação C3 pela família na 1.188.0; o Cavaleiro Sombrio P3 pela família, com o Último Guarda, na 1.187.0; o Cão infernal P1 pela família na 1.186.0; a Cria do Vazio A2 pela família na 1.185.0; a Harpia T2 e o Xamã Caído X1r2 pela família na 1.184.0; o Grifo GA3 pela família na 1.183.0; 23/10/2026: o Caído CA pela família, com os que o
+- Produção: **1.209.0** na branch `claude/tender-einstein-tx3tjl` (25/10/2026: **o Carregar jogo R integrado na 1.209.0; a etapa 2 concluída no escopo acordado; a etapa 3 começada: a forja com duas direções, só no protótipo, aguardando o Jean**; **a criação em etapas R2 integrada na 1.208.0**; **o tutorial R e o aviso de ponto de talento R integrados na 1.207.0**; 24/10/2026: a retirada do modo procedural na 1.206.0, o quadro do C2 na 1.205.1, as faixas de passagem na 1.205.0; 23/10/2026: **a lista de Caminhos do painel com os símbolos nativos na 1.200.1**, fechando a pendência da 1E.4; **a 1E.4 integrada na 1.200.0** — os cinco símbolos de lugar da campanha em grade nativa, a plaqueta do herói, as marcas, a cancela, as estradas por estado, os nomes no lugar livre, a Viagem e o Diário com o mesmo desenho, e o bloqueio vindo da regra da viagem; a família `esqueleto_servo` removida na 1.199.1, o antagonista no gênero do título na 1.199.2 e a Ilse com a ficha dela na 1.199.3; o Barqueiro do Charco preparado na branch `claude/barqueiro-do-charco`, fora da produção; o Lich Menor N16 pelo id do guardião na 1.199.0; o Profeta das Cinzas (`profeta-t`) pelo id do guardião na 1.198.0; a Hidra do Brejo N16D2 pelo id da guardiã na 1.197.0; o servo esquelético N16B na 1.196.0; o Espantalho Possuído N16R2 pela origem na 1.195.0; o Senhor da Guerra N16 pelo id do guardião na 1.194.0; o Dragão de Gelo N16 pelo id do guardião na 1.193.0; o Mímico M1 pela origem na 1.192.0; o Golem Primordial R1b pelo id do guardião na 1.191.0; a Árvore Anciã R2b pelo id da guardiã na 1.190.0; a Árvore Desperta T1 e o Golem G2 pelas famílias na 1.189.0; 22/10/2026: a Abominação C3 pela família na 1.188.0; o Cavaleiro Sombrio P3 pela família, com o Último Guarda, na 1.187.0; o Cão infernal P1 pela família na 1.186.0; a Cria do Vazio A2 pela família na 1.185.0; a Harpia T2 e o Xamã Caído X1r2 pela família na 1.184.0; o Grifo GA3 pela família na 1.183.0; 23/10/2026: o Caído CA pela família, com os que o
   xamã ergue; 22/10/2026: o Mercenário MA e o Lobo Gélido LA pela
   família na 1.179.0; o caixote no motivo "Esgotado" do mercado na 1.180.0; o ent jovem e o Ent Ancião renomeados para
   Árvore Desperta e Árvore Anciã, com a migração dos saves, na 1.181.0; a fala da Pita depois do último tratamento na
@@ -1370,7 +1370,7 @@ redesenho global nem integração de uma nova HUD.
   ritmo e as faixas de sucesso e falha já aprovados ficam.
 - **Grimório da interface:** aparência do livro aberto, páginas, leitura e navegação serão revistas **com o sistema
   de habilidades na etapa 8**, para evitar uma rodada só de acabamento antes de redefinir o conteúdo da tela.
-- **Carregar jogo e fichas dos saves** (em 25/10/2026, a proposta R em avaliação: `ferramentas/prototipos/hud/carregar-jogo/`): revisar o visual antigo da lista e das fichas, com identificação clara da
+- **Carregar jogo e fichas dos saves** (**integrado na 1.209.0**, a R: `telas/saves.js`, `css/25-carregar.css`; o caminho em `ferramentas/prototipos/hud/carregar-jogo/`): revisar o visual antigo da lista e das fichas, com identificação clara da
   partida e ações legíveis. Preservar os dados e a semântica de carregar/excluir (desde a 1.206.0, o save do mundo
   gerado aparece marcado e não abre; compatibilidade de save não é exigida);
   não confundir o menu com o atalho Salvar da doca, já concluído.
@@ -1385,6 +1385,11 @@ redesenho global nem integração de uma nova HUD.
 
 Criar o ambiente e o ferreiro como cena própria, tomando a capela como referência de atmosfera, iluminação e
 interação. Começar com as regras existentes. A arte não depende de aprovar primeiro um sistema novo de reforço.
+
+**Em 25/10/2026 (começada):** o levantamento (o que o jogo estabelece do ferreiro, do lugar, do serviço, da entrada e
+da saída) e duas direções no jogo, A · a bancada de trabalho e B · o interior da oficina, pelo sistema de ambientes da
+capela (o quadro de cima e os pontos Ferreiro e Saída), com o balcão e o reforço de hoje embaixo. Recomendação: B.
+Só no protótipo (`ferramentas/prototipos/hud/forja/`), aguardando o Jean; nada integrado.
 
 ## 4. Protótipo do reforço e encantamento
 
@@ -1526,14 +1531,18 @@ volta à pauta quando essa expansão exigir; não é uma migração de engine.
    saves e a criação, depois da retirada do modo procedural na 1.206.0: roadmapIDEIAS/24-RETIRADA-DO-PROCEDURAL.md);
    **depois, a forja** (item 3). O reforço e encantamento, a expansão narrativa e o Grimório não começam antes do
    pedido. **Em 25/10/2026:** o tutorial R e o aviso de ponto de talento R **integrados na 1.207.0**; a criação em
-   etapas (R2) **integrada na 1.208.0** (`rpg/criacao.py`, `app/criacao.js`, `24-criacao.css`); o "Carregar jogo"
-   com **uma proposta, a R, aguardando a aprovação visual do Jean**, só no protótipo
-   (`ferramentas/prototipos/hud/carregar-jogo/`, `folha-saves.png`, `demo.bat` na porta 8772). **A etapa 2 não está
-   encerrada.** Pendências reais: a aprovação e a integração do "Carregar jogo" (a especialização e a missão em
-   andamento em `resumo_save`); o tempo da lista que cresce com o número de saves (~9 ms por save, o motor lendo cada
-   arquivo inteiro), registrado sem mudança; a revisão por evidência dos componentes antigos restantes da etapa 2
-   (item 2). O "Continuar" da subida de nível segue fora, por decisão do Jean. **Próximo passo:** o Jean avalia a R
-   dos saves; aprovada, integrar; depois, a revisão dos componentes restantes, antes de passar à forja.
+   etapas (R2) na 1.208.0; o Carregar jogo (R) na 1.209.0, com o nome inteiro na dica (mouse e foco) e o foco na
+   partida mais recente que abre. **A etapa 2 está concluída no escopo acordado** (a revisão em
+   `ferramentas/prototipos/hud/revisao-etapa2/LEIA-ME.md`: A, as entregas; B, os dois defeitos achados, corrigidos na
+   1.209.0; C, os opcionais e os reservados). **Exceções explícitas, adiadas por decisão do Jean:** o "Continuar" da
+   subida de nível; os tempos das faixas e adiantá-las; o menu completo de configurações (com a escolha Estouro ou
+   Relicário e o d20); a migração dos saves do mundo gerado. **Reservados:** o Grimório e os Talentos (etapa 8); a
+   revisão narrativa e a expansão (etapa 9). **Opcional:** a dica "qualquer tecla adianta o texto" e o fio de
+   leitura. A lista de saves (~9 ms por save no motor) fica sem índice, por decisão do Jean. **A etapa 3 começou**
+   (item 3): o levantamento da forja e duas direções, A (a bancada de trabalho) e B (o interior da oficina),
+   recomendação B, só no protótipo (`ferramentas/prototipos/hud/forja/`, `folha-forja.png`, `demo.bat` na porta
+   8775), **aguardando a aprovação do Jean**. O reforço e encantamento (etapa 4), outros interiores, o Grimório e a
+   expansão narrativa não começam antes do pedido.
 5. **Retomar a etapa 2** e **seguir 3–7**, como na sequência abaixo; **etapa 8** com habilidades, talentos, Grimório e
    árvore no mesmo ciclo; **etapa 9**, a campanha; **depois do plano**, a avaliação de refatoração.
 
