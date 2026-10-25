@@ -7485,3 +7485,21 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Conferido no jogo** nas duas janelas (os pontos, os cartões, o reforço, a saída e a volta, sem relógio novo ao
   entrar de novo, o movimento reduzido). **Aguarda o Jean; nada integrado.** Não começados: o reforço/encantamento,
   outros interiores, o Grimório, a expansão narrativa; a etapa 2 segue concluída.
+
+### 25/10/2026 (data do computador local) — A forja F: a transposição fiel da referência (protótipo)
+
+- **O pedido:** o Jean gostou do ritmo e da fluidez da R, não do desenho do ferreiro, e mandou uma imagem gerada como a
+  referência principal da aparência (guardada sem alteração em `ferramentas/arte/referencias/forja/`, com a origem e o
+  hash no LEIA-ME de lá). A R continua a referência do ritmo e da demonstração.
+- **A candidata F** (`ferramentas/prototipos/hud/forja/forja-f.js` e `f/`; LEIA-ME da forja, seção "A transposição fiel
+  (F)"; `folha-forja-f.png`, referência × F e R × F no jogo; `folha-movimento-f.png`; `demo.bat`, porta 8775, o botão F
+  primeiro): a composição da referência num quadro de 320×96 (as paisagens são 72; a vista cresce na proporção, só no
+  cenário da demonstração), o fundo pela redução da referência limpa em superpixels, o ferreiro desenhado à mão em
+  grades (careca, gordo e forte, o rosto separado da barba, a barba em mechas afunilando numa trança com a presilha, o
+  avental na barriga; as mãos simples, sem dedos, e o antebraço da tenaz grosso, pedidos do Jean durante a entrega),
+  as poses refeitas à mão na linha do tempo da R (53 quadros de 100 ms). Fonte em camadas: `f/aseprite/forja-f.aseprite`
+  (o `desenhar_f.py` não a sobrescreve sem `--refazer`; o `exportar_f.py` tira dela as camadas do jogo).
+- **Conferido no jogo** nas duas janelas (os pontos e os nomes fora do ferreiro, os cartões, o reforço, a saída e a
+  volta, o Esc, sem relógio novo, o movimento reduzido; dois ciclos fotografados quadro a quadro: um relógio só, a
+  100 ms). A 1280, sobram 15 px de rolagem abaixo dos cartões (à vista). **Aguarda o Jean; nada integrado.** Não
+  começados: o reforço/encantamento, outros interiores, o Grimório, a expansão narrativa.
