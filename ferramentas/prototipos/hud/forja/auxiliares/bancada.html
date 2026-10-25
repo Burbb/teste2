@@ -1,0 +1,18 @@
+<!doctype html><meta charset="utf-8"><title>Bancada da forja</title>
+<!-- A bancada do desenho da forja (só para trabalhar a arte; o jogo não lê isto): as duas cenas a 1×, a 3× (perto do
+     tamanho no jogo a 1920) e ampliadas para diagnóstico. ?quadro=n escolhe o quadro do fogo. -->
+<style>body{background:#111;color:#ccc;font:13px sans-serif;margin:10px} canvas{image-rendering:pixelated;display:block;margin:4px 0 14px}</style>
+<script src="../forja-arte.js"></script>
+<body><script>
+const q = Number(new URLSearchParams(location.search).get("quadro") || 0);
+const escala = Number(new URLSearchParams(location.search).get("escala") || 3);
+for (const id of ["a", "b"]) {
+  const def = ForjaArte[id], b = def.base(320, {});
+  const c = document.createElement("canvas"); c.width = 320; c.height = 72;
+  def.desenhar(c.getContext("2d"), 320, b, {}, q, new URLSearchParams(location.search).get("destaque"));
+  const t = document.createElement("div"); t.textContent = id.toUpperCase(); document.body.appendChild(t);
+  const g = document.createElement("canvas"); g.width = 320 * escala; g.height = 72 * escala; g.id = "c-" + id;
+  const gc = g.getContext("2d"); gc.imageSmoothingEnabled = false; gc.drawImage(c, 0, 0, 320 * escala, 72 * escala);
+  document.body.appendChild(g);
+}
+</script>

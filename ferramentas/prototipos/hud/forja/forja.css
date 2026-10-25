@@ -1,0 +1,17 @@
+/* A forja com ambiente, as duas direções no jogo (protótipo, 25/10/2026; nada no jogo). Vale com html[data-forja].
+   A forja é uma tela de menu (o Voltar e o título na barra de cima): com o ambiente, a arte aparece no topo, como na
+   capela, e o balcão segue embaixo. Os nomes dos pontos ficam sempre à vista (o ferreiro e a saída). */
+html[data-forja] #cena[data-tipo="menu"].com-ambiente #vista { display: block; }
+html[data-forja] #pontos-cena[data-cena^="forja"] .ci-ponto:not(.parado) .ci-balao { visibility: visible; }
+/* o cartão para onde o ponto do ferreiro leva: um aceno curto na aresta (sem movimento com o reduzido, só a cor) */
+html[data-forja] .forja .servico.forja-chamado { border-color: var(--latao-claro); }
+/* Com o ambiente, a cena já mostra quem atende (o ferreiro, com o nome): o topo do balcão fica numa linha (a fala e o
+   ouro, sem o martelo e o título repetidos) e os cartões de reforço vão lado a lado, à vista sem rolar a 1280×720. Os
+   cartões, os preços, os motivos e as ações são os do jogo. */
+html[data-forja] #cena.com-ambiente .forja .loja-topo { padding: 4px 12px; }
+html[data-forja] #cena.com-ambiente .forja .loja-topo > img, html[data-forja] #cena.com-ambiente .forja .loja-topo > canvas,
+html[data-forja] #cena.com-ambiente .forja .loja-topo > div > b { display: none; }
+html[data-forja] #cena.com-ambiente .forja .loja-topo .lore { font-size: 16px; }
+html[data-forja] #cena.com-ambiente .forja h4 { margin-top: 0.6em; }
+html[data-forja] #cena.com-ambiente .forja .servicos { grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); }
+html[data-forja] #cena.com-ambiente .forja .servico { grid-template-columns: 52px 1fr auto; gap: 0 10px; }
