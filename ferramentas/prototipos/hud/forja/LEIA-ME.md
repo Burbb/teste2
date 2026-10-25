@@ -385,3 +385,11 @@ poses, no tamanho do jogo e a 8×, e no jogo a 1920). Conferido: `exportar_h2.py
 
 O processo da forja ficou registrado na skill `arte-cenas-fenda` (`.claude/skills/arte-cenas-fenda/`, com a forja como
 estudo de caso em `forja.md`), para os próximos interiores.
+
+## No jogo (1.210.0)
+
+O Jean aprovou a H2 para integração. A fonte continua aqui (`h2/aseprite/forja-h2.aseprite`); o jogo lê as camadas
+copiadas para `rpg/web/static/cenas/forja/` por `python ferramentas/prototipos/hud/forja/h2/exportar_h2.py --jogo` (não
+se editam as cópias), desenhadas por `rpg/web/static/telas/cena-forja.js`. O resto da integração (o motor, a vista, os
+pontos, o CSS) está em `docs/ARQUITETURA.md`. O cenário desta pasta (`cenario_forja.py`) continua servindo as candidatas
+antigas para comparação; sem proposta, ele mostra a forja do jogo (o roteiro de fotos chama de "atual").

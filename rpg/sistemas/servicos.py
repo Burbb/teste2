@@ -9,6 +9,18 @@ from .. import sobrevivencia
 from ..telemetria import registrar
 
 
+def cena_forja():
+    """O ambiente da forja para a interface gráfica (telas/cena-forja.js; as de texto ignoram): a oficina com o ferreiro
+    trabalhando e os dois pontos. O Ferreiro leva aos cartões de reforço (é neles que se escolhe a peça); a Saída é o
+    Voltar do menu."""
+    return {"cena": "forja", "titulo": "A forja", "pagina": True, "pontos": [
+        {"id": "ferreiro", "nome": "Ferreiro", "faz": "reforçar o que você usa", "estado": "O ferreiro, na bigorna.",
+         "servicos": True},
+        {"id": "saida", "nome": "Saída", "faz": "voltar à vila", "estado": "A porta para a rua do Vau.",
+         "acao": {"voltar": True}},
+    ]}
+
+
 class Servicos:
     def pecas_da_forja(self):
         """O que o ferreiro pode reforçar: (espaço, item, atributo, ganho, custo), com ganho e custo nulos no limite."""
@@ -32,6 +44,7 @@ class Servicos:
         j = self.j
         while True:
             self.ui.cena("A forja", self.loc["nome"], "menu")  # a cada volta: na tela gráfica, a forja se redesenha
+            self.ui.painel("cena", cena_forja())  # a oficina no quadro de cima, antes do balcão
             pecas = self.pecas_da_forja()
             dados = {"ouro": j.ouro, "pecas": [
                 {"slot": slot, "item": itens.ficha(item, j.nome_recurso), "reforco": item.get("reforco", 0),

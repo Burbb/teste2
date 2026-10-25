@@ -1075,7 +1075,7 @@
   const SANGUESSUGAS = [[70, 55, 1], [96, 55, -1], [133, 51, 1], [COLUNAS[2] - 6, 51, 1]];
 
   // ================================================================ as cenas e os pontos
-  // Cada ponto: a área clicável, onde fica o nome e para onde a câmera vai (no quadro de 320×72).
+  // Cada ponto: a área clicável, onde fica o nome e para onde a câmera vai (no quadro da cena: 320×72, ou mais alto).
   const CENAS = {
     ossuario: { base: baseOssuario, desenhar: desenharOssuario,
       pontos: { sarilho: { area: [186, 14, 110, 56], balao: [240, 12], foco: [238, 48] },
@@ -1096,11 +1096,13 @@
     fundo: { base: baseFundo, desenhar: desenharFundo, frente: frenteFundo,
       pontos: { escada: { area: [4, 4, 62, 42], balao: [34, 10], foco: [40, 30] },
                 lodo: { area: [66, 46, 38, 14], balao: [85, 47], foco: [96, 52] } } },
+    // a forja do Vau (telas/cena-forja.js): a oficina em camadas prontas, o ferreiro trabalhando
+    forja: window.CenaForja,
   };
 
   /** O contorno de um ponto aceso, no estilo da arte: quatro cantos dourados com a sombra por fora, em volta da área. */
   function cantos(c, [x, y, w, hh]) {
-    const px = pincel(c), L = 4, x1 = x + w - 1, y1 = Math.min(QH - 1, y + hh - 1);
+    const px = pincel(c), L = 4, x1 = x + w - 1, y1 = Math.min(c.canvas.height - 1, y + hh - 1);
     [["#000000", 1], [COR.ouro, 0]].forEach(([cor, d]) => {
       [[x, y, 1, 1], [x1, y, -1, 1], [x, y1, 1, -1], [x1, y1, -1, -1]].forEach(([cx, cy, sx, sy]) => {
         for (let k = 0; k < L; k++) { px(cx + sx * k + d * sx, cy + d * sy, 1, 1, cor); px(cx + d * sx, cy + sy * k + d * sy, 1, 1, cor); }
@@ -1142,7 +1144,11 @@
     const troca = antes && !reduzido() ? { de: antes.b.canvas, inicio: performance.now() } : null;
     atual = { d, def, b, est };
     cantoDeIlse();
-    document.getElementById("cena").classList.add("com-ambiente");
+    const cena = document.getElementById("cena"), alto = b.canvas.height > QH;
+    cena.classList.add("com-ambiente");
+    // um ambiente mais alto que as paisagens (a forja): a vista cresce na proporção dele (css/26-forja.css)
+    cena.classList.toggle("ambiente-alto", alto);
+    if (alto) cena.style.setProperty("--arte-alt", b.canvas.height); else cena.style.removeProperty("--arte-alt");
     if (typeof recolherArte === "function") recolherArte(false);
     Vista.usarAmbiente({
       base: b.canvas, foco: d.foco ? def.pontos[d.foco].foco : null,
@@ -1171,7 +1177,9 @@
     if (!atual) return;
     atual = null;
     cantoDeIlse();  // saiu do fundo: o canto para
-    document.getElementById("cena").classList.remove("com-ambiente");
+    const cena = document.getElementById("cena");
+    cena.classList.remove("com-ambiente", "ambiente-alto");
+    cena.style.removeProperty("--arte-alt");
     Vista.usarAmbiente(null);
     montarPontos();
   }
@@ -1186,7 +1194,7 @@
    *  com os pontos valendo (fora da luta, sem estar de perto). */
   function acesos(destaque) {
     if (!atual || !capa || capa.hidden || capa.classList.contains("perto")) return [];
-    const ids = destacando() ? atual.d.pontos.filter((p) => p.acao || p.olhar).map((p) => p.id) : [];
+    const ids = destacando() ? atual.d.pontos.filter((p) => p.acao || p.olhar || p.servicos).map((p) => p.id) : [];
     if (destaque && !ids.includes(destaque) && atual.def.pontos[destaque]) ids.push(destaque);
     return ids.filter((id) => atual.def.pontos[id]);
   }
@@ -1249,8 +1257,8 @@
     capa.setAttribute("role", "group");
     capa.setAttribute("aria-label", `${d.titulo}${descricao ? ": " + descricao : ""}`);
     d.pontos.forEach((p) => {
-      const ativo = !!p.acao || !!p.olhar;
-      const rotulo = p.acao ? `${p.nome}: ${p.faz}` : p.olhar ? `${p.nome}: olhar de perto` : `${p.nome}. ${p.estado}`;
+      const ativo = !!p.acao || !!p.olhar || !!p.servicos;
+      const rotulo = p.acao || p.servicos ? `${p.nome}: ${p.faz}` : p.olhar ? `${p.nome}: olhar de perto` : `${p.nome}. ${p.estado}`;
       const bt = document.createElement("button");
       bt.type = "button";
       bt.className = "ci-ponto" + (ativo ? "" : " parado");
@@ -1268,7 +1276,8 @@
     requestAnimationFrame(posicionar);
   }
   /** O ponto: destaque no mouse e no foco. Com ação: o clique (ou Enter/espaço) aproxima a câmera e manda a mesma ação
-   *  do menu. De olhar: só aproxima, e "Afastar" volta. Sem nada: diz o estado. */
+   *  do menu. De olhar: só aproxima, e "Afastar" volta. De serviços (quem atende, como o ferreiro): leva o foco aos
+   *  cartões do serviço, embaixo. Sem nada: diz o estado. */
   function ligarPonto(bt, p) {
     // Três destaques diferentes: o global (F4, em acesos), o do mouse (enquanto ele está em cima) e o do foco do
     // teclado (:focus-visible: o foco que o mouse deixa num botão não acende nada).
@@ -1282,6 +1291,17 @@
       if (processando) { pular = true; return; }  // a página ainda corre: o clique adianta, como na arte
       if (!pontosValem()) return;
       const foco = atual.def.pontos[p.id].foco;
+      if (p.servicos) {  // quem atende (o ferreiro): o ponto leva aos cartões do serviço, embaixo, onde se escolhe
+        const cartoes = [...document.querySelectorAll("#folha .servico")];
+        const alvo = cartoes.find((c) => !c.classList.contains("caro") && !c.classList.contains("limite")) || cartoes[0];
+        if (!alvo) return;
+        App.som("escolha");
+        alvo.scrollIntoView({ block: "nearest" });
+        alvo.focus({ preventScroll: true });
+        alvo.classList.add("chamado");
+        setTimeout(() => alvo.classList.remove("chamado"), 900);
+        return;
+      }
       if (p.olhar) {
         App.som("escolha");
         capa.classList.add("perto"); bt.setAttribute("data-olhado", "");

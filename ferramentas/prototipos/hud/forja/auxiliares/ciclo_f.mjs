@@ -14,7 +14,7 @@ const SAIDA = path.join(aqui, "..", "capturas");
 mkdirSync(SAIDA, { recursive: true });
 const espera = (ms) => new Promise((r) => setTimeout(r, ms));
 const PY = process.env.PYTHON || (process.platform === "win32" ? "python" : "python3");
-const VERSAO = process.env.VERSAO || "f";  // f ou g
+const VERSAO = process.env.VERSAO || "f";  // f, g, h, h2 ou atual (o jogo, sem proposta)
 let falhas = 0;
 const conferir = (ok, msg) => { console.log(`  ${ok ? "ok" : "FALHOU"}  ${msg}`); if (!ok) falhas++; };
 
@@ -23,7 +23,7 @@ for (const [jan, W, H] of [["1920", 1920, 945], ["1280", 1280, 720]]) {
   console.log(`== ${jan}`);
   // uma campanha nova por janela (a outra ficou dentro da forja)
   const proc = spawn(PY, [path.join(aqui, "cenario_forja.py")], { cwd: raiz,
-    env: { ...process.env, VELOCIDADE: "rapido", PYTHONPATH: raiz, PYTHONIOENCODING: "utf-8", PROPOSTA: VERSAO } });
+    env: { ...process.env, VELOCIDADE: "rapido", PYTHONPATH: raiz, PYTHONIOENCODING: "utf-8", PROPOSTA: VERSAO === "atual" ? "" : VERSAO } });
   let url = null;
   proc.stdout.on("data", (d) => { const m = String(d).match(/http:\S+/); if (m) url = m[0]; });
   for (let k = 0; k < 400 && !url; k++) await espera(100);

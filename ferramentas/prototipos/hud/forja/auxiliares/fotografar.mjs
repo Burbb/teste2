@@ -66,8 +66,7 @@ for (const jan of (process.env.JANELAS || "1920,1280").split(",")) {
           cartoesAVista: ult.bottom <= pg.getBoundingClientRect().bottom + 1, rola: pg.scrollHeight > pg.clientHeight + 1 };
       });
       console.log("  ", JSON.stringify(lay));
-      if (v === "atual") { conferir(lay.arte === 0, "hoje: a forja sem arte"); }
-      else {
+      {  // desde a 1.210.0 a forja do jogo ("atual") também tem o ambiente
         conferir(lay.arte > 100, `a arte da forja no topo (${lay.arte} px de altura)`);
         conferir(lay.baloes.length === 2 && lay.baloes.every((x) => x.visivel && x.dentro), `os nomes dos pontos à vista e dentro da arte (${lay.baloes.map((x) => x.texto).join(", ")})`);
         conferir(lay.cartoesAVista, "os três cartões de reforço à vista sem rolar");
@@ -89,10 +88,9 @@ for (const jan of (process.env.JANELAS || "1920,1280").split(",")) {
       conferir(depois < antes, `reforçar: o ouro desce (${antes} → ${depois})`);
       await p.mouse.move(2, 2);
       await p.screenshot({ path: path.join(SAIDA, `${pre}-depois-do-reforco.png`) });
-      if (v !== "atual") conferir(await p.evaluate(() => document.getElementById("cena").classList.contains("com-ambiente")), "a arte continua depois do reforço");
+      conferir(await p.evaluate(() => document.getElementById("cena").classList.contains("com-ambiente")), "a arte continua depois do reforço");
       // a saída: pelo ponto na arte (A e B) ou pelo Voltar (hoje), de volta à vila; e entrar de novo
-      if (v === "atual") await p.keyboard.press("Escape");
-      else await p.click('#pontos-cena .ci-ponto[data-ponto="saida"]');
+      await p.click('#pontos-cena .ci-ponto[data-ponto="saida"]');
       conferir(await naVila(p), "sair da forja volta à vila");
       await parado(p);
       conferir(await p.evaluate(() => !document.getElementById("cena").classList.contains("com-ambiente")), "na vila, a paisagem de sempre (o ambiente da forja saiu)");
@@ -105,7 +103,7 @@ for (const jan of (process.env.JANELAS || "1920,1280").split(",")) {
     conferir(erros.length === 0, `sem erros na página ${erros.join(" ")}`);
     await p.close();
     // movimento reduzido: o quadro parado (duas fotos da arte iguais)
-    if (v !== "atual" && jan === "1920") {
+    if (jan === "1920") {
       const p2 = await b.newPage({ viewport: { width: W, height: H }, reducedMotion: "reduce" });
       await p2.goto(url).catch(() => {});
       await parado(p2); await entrar(p2); await p2.mouse.move(2, 2);

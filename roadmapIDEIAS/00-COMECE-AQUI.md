@@ -7543,3 +7543,17 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   acabamento, a construção do ambiente, a escala por enquadramento, a animação pelos apoios, as fontes e a validação,
   os erros da forja). A skill de itens aponta para ela. A taverna é um uso futuro; a ordem do plano não mudou (depois
   da forja, a etapa 4, o reforço e o encantamento).
+
+### 25/10/2026 (data do computador local) — A forja H2 no jogo (1.210.0); a etapa 3 concluída
+
+- **O Jean aprovou a H2 para integração.** No jogo desde a 1.210.0: a oficina, o ferreiro e o rosto da H2, as poses, o
+  ritmo, o fogo e as faíscas, os pontos Ferreiro (leva aos cartões de reforço) e Saída (o Voltar), o balcão compacto.
+  O motor manda a cena antes do balcão (`servicos.cena_forja`); a arte vem em camadas prontas (`static/cenas/forja/`,
+  `telas/cena-forja.js`) exportadas da fonte da H2 (`exportar_h2.py --jogo`); a vista aceita o quadro de 96 só para
+  essa cena (`vista.js`, `css/26-forja.css`). O jogo não carrega nada do protótipo. Preços, ganhos, o limite +5 e as
+  regras do reforço não mudaram.
+- **Conferido:** a produção desenha os mesmos 53 quadros da H2, em sequência, a 1920×945 e a 1280×720; o roteiro de
+  fotos da forja (pontos, cartões, reforço de verdade, saída, volta, Esc, Tab, movimento reduzido, sem relógio novo, sem
+  rolagem vazia); as outras cenas com a altura de sempre; a suíte; o gabarito (as 9 partidas da tela gráfica mudaram só
+  pelo painel novo da cena da forja: tirando essas linhas, batem com o gravado; atualizado); a fumaça.
+- **Próximo:** a etapa 4 (reforço e encantamento), começando pela pesquisa e pela proposta de design, sem regra nova.

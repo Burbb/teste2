@@ -1,0 +1,22 @@
+/* A forja com o ambiente (1.210.0): a arte da oficina no quadro de cima (telas/cena-forja.js) e o balcão do reforço
+   embaixo. A forja é uma tela de menu (o Voltar e o título na barra de cima), que normalmente esconde a vista; com o
+   ambiente, ela aparece, como na capela. */
+#cena[data-tipo="menu"].com-ambiente #vista { display: block; }
+/* Um ambiente mais alto que as paisagens (a forja: 320×96, --arte-alt vem de cenas.js): a vista cresce na mesma
+   proporção, sem esticar a arte, com o teto de 36% da altura da janela. Os outros ambientes ficam como estão. */
+#cena.com-ambiente.ambiente-alto #vista { height: calc(min(100cqw * var(--arte-alt) / 320, 36vh) + var(--P) * 12); }
+/* Os nomes do Ferreiro e da Saída ficam sempre à vista (são os dois pontos do lugar). */
+#pontos-cena[data-cena="forja"] .ci-ponto:not(.parado) .ci-balao { visibility: visible; }
+/* O cartão para onde o ponto do ferreiro leva: um aceno curto na aresta (com movimento reduzido, a mesma cor). */
+.forja .servico.chamado { border-color: var(--latao-claro); }
+/* Com o ambiente, a cena já mostra quem atende (o ferreiro, com o nome): o topo do balcão fica numa linha (a fala e o
+   ouro, sem o martelo e o título repetidos) e os cartões de reforço vão lado a lado, à vista sem rolar a 1280×720. */
+#cena.com-ambiente .forja .loja-topo { padding: 4px 12px; }
+#cena.com-ambiente .forja .loja-topo > img, #cena.com-ambiente .forja .loja-topo > canvas,
+#cena.com-ambiente .forja .loja-topo > div > b { display: none; }
+#cena.com-ambiente .forja .loja-topo .lore { font-size: 16px; }
+#cena.com-ambiente .forja h4 { margin-top: 0.6em; }
+#cena.com-ambiente .forja .servicos { grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); }
+#cena.com-ambiente .forja .servico { grid-template-columns: 52px 1fr auto; gap: 0 10px; }
+/* Sem o respiro de baixo da folha (como o mercado): com o quadro alto, ele deixava página vazia para rolar a 1280. */
+#cena.com-ambiente #folha:has(.forja) { padding-bottom: 0; }

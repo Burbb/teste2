@@ -2,7 +2,10 @@
 frente.png (320×96), e as tiras fogo.png (os 4 quadros do fogo), espada.png e ferreiro.png (um quadro de 320×96 por
 estado, na ordem de desenhar_h2.ESTADOS). Lê o .aseprite como está, com os retoques.
 
-    python ferramentas/prototipos/hud/forja/f/exportar_h2.py [--conferir]
+    python ferramentas/prototipos/hud/forja/h2/exportar_h2.py [--conferir] [--jogo]
+
+--jogo: copia as camadas exportadas para o jogo (rpg/web/static/cenas/forja/, lidas por telas/cena-forja.js desde a
+1.210.0). A arte do jogo sai sempre daqui, da fonte; não se edita a cópia.
 
 --conferir: monta os 53 quadros do ciclo com as tiras exportadas (como forja-h2.js monta) e compara com cena_h2.quadro,
 o desenho em código; só vale enquanto a fonte não foi retocada (depois de um retoque, as diferenças são o retoque).
@@ -78,7 +81,15 @@ def conferir():
     return dif == 0
 
 
+JOGO = AQUI.parents[4] / "rpg" / "web" / "static" / "cenas" / "forja"
+
+
 if __name__ == "__main__":
     exportar()
+    if "--jogo" in sys.argv:
+        JOGO.mkdir(parents=True, exist_ok=True)
+        for arq in sorted(SAIDA.glob("*.png")):
+            shutil.copy(arq, JOGO / arq.name)
+        print("no jogo:", JOGO)
     if "--conferir" in sys.argv:
         sys.exit(0 if conferir() else 1)

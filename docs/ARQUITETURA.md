@@ -287,6 +287,16 @@ id, `ficha_guardiao`; os contratos por `contratos.desc_caca` e `desc_alvo`, os m
   `Vista.ceuDo`. Na capela, a sala em que se está (`missoes.sala_atual`) é separada da etapa: as passagens entre salas
   vencidas são opções do menu (`("capela", sala)`, meta `capela_ir`) e pontos da cena; cada ação da capela tem a sua
   sala (`onde`). Ver roadmapIDEIAS/20.
+  A forja do Vau (1.210.0) é a sexta cena: `Servicos.ferreiro` manda `servicos.cena_forja()` antes do balcão, a cada
+  volta do menu. A arte vem pronta em camadas (`static/cenas/forja/`, exportadas da fonte
+  `ferramentas/prototipos/hud/forja/h2/aseprite/forja-h2.aseprite` por `exportar_h2.py --jogo`; não se editam as
+  cópias) e `telas/cena-forja.js` (`window.CenaForja`, registrada em `CENAS.forja`) só escolhe o quadro de cada uma pelo
+  relógio das cenas (o ciclo do ferreiro, 53 quadros de 100 ms; o fogo) e desenha as faíscas. O quadro dela é 320×96:
+  a vista usa a altura da base do ambiente (`HA` em `vista.js`; sem ambiente, os 72 das paisagens) e `#cena.ambiente-alto`
+  (com `--arte-alt`) faz a caixa crescer na proporção (`css/26-forja.css`, que também mostra a vista na tela de menu e
+  compacta o balcão). Os pontos: a Saída é o Voltar (`acao`); o Ferreiro é um ponto "de serviços" (`servicos`: leva o
+  foco ao primeiro cartão que se pode pagar, embaixo, sem falar com o motor). O processo de arte está na skill
+  `arte-cenas-fenda`.
   A fogueira (1.98.0) também é uma cena do topo: o painel `acampamento` (o mesmo do motor, `comitiva.fogueira`) monta
   a cena em `telas/acampamento.js` (`Acampamento.montar`: o lugar ao fundo, o teso com o fogo, a luz e a roda, o
   barranco na frente) e a passa à `Vista.usarAmbiente`; `telas/fogueira.js` desenha embaixo só a frase, a instrução e

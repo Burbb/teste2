@@ -5,6 +5,7 @@
 
 const Vista = (() => {
   const W = 320, H = 72;
+  let HA = H;  // a altura da arte: a das paisagens, ou a do ambiente à vista se ele for mais alto (a forja: 96)
   const CEUS = [
     ["#2c4470", "#45648f", "#7a90b0", "#c09a80", "#e8b88a"],
     ["#24508c", "#33649e", "#4f80b6", "#79a4c8", "#a8c4d6"],
@@ -355,7 +356,7 @@ const Vista = (() => {
   function pintarChao() {
     const cena = document.body;
     if (!canvas || !cena) return;
-    const [r, g, b] = (ambiente ? ambiente.base : frente).getContext("2d").getImageData(W >> 1, H - 1, 1, 1).data;
+    const [r, g, b] = (ambiente ? ambiente.base : frente).getContext("2d").getImageData(W >> 1, (ambiente ? ambiente.base.height : H) - 1, 1, 1).data;
     const t = document.createElement("canvas"), n = 12;
     t.width = 4; t.height = n;
     const x = t.getContext("2d");
@@ -414,23 +415,23 @@ const Vista = (() => {
   /** O quadro pela câmera: a vila inteira, ou o recorte do prédio em dobro. Sempre pixel inteiro. */
   function enquadrar(c, cam) {
     c.imageSmoothingEnabled = false;
-    c.drawImage(quadroBuf, cam.x, cam.y, W / cam.s, H / cam.s, 0, 0, W, H);
+    c.drawImage(quadroBuf, cam.x, cam.y, W / cam.s, HA / cam.s, 0, 0, W, HA);
   }
 
   function desenhar() {
     if (!estado || !ctx) return;
-    if (!quadroBuf) { quadroBuf = document.createElement("canvas"); quadroBuf.width = W; quadroBuf.height = H; }
+    if (!quadroBuf) { quadroBuf = document.createElement("canvas"); quadroBuf.width = W; quadroBuf.height = HA; }
     desenharEm(quadroBuf.getContext("2d"));
-    ctx.clearRect(0, 0, W, H);
+    ctx.clearRect(0, 0, W, HA);
     const t = camera.de ? (performance.now() - camera.inicio) / camera.ms : 1;
     if (t >= 1) { camera.de = null; enquadrar(ctx, camera); }
     else {
       // a troca de câmera: o enquadramento de antes embaixo, o novo por cima numa trama que vai fechando
-      if (!mascara) { mascara = document.createElement("canvas"); mascara.width = W; mascara.height = H; }
+      if (!mascara) { mascara = document.createElement("canvas"); mascara.width = W; mascara.height = HA; }
       const m = mascara.getContext("2d");
       enquadrar(ctx, camera.de);
-      m.globalCompositeOperation = "source-over"; m.clearRect(0, 0, W, H); enquadrar(m, camera);
-      m.globalCompositeOperation = "destination-in"; m.fillStyle = trama(Math.max(1, Math.ceil(t * 16))); m.fillRect(0, 0, W, H);
+      m.globalCompositeOperation = "source-over"; m.clearRect(0, 0, W, HA); enquadrar(m, camera);
+      m.globalCompositeOperation = "destination-in"; m.fillStyle = trama(Math.max(1, Math.ceil(t * 16))); m.fillRect(0, 0, W, HA);
       ctx.drawImage(mascara, 0, 0);
     }
     if (aurora) pintarAurora();
@@ -454,13 +455,13 @@ const Vista = (() => {
     const alt = c.clientHeight - topo - parseFloat(cs.paddingBottom);
     if (larg <= 0 || alt <= 0) return null;
     const cw = Math.round(larg * dpr), ch = Math.round(alt * dpr);
-    const esc = Math.max(cw / W, ch / H), dw = Math.round(W * esc), dh = Math.round(H * esc);
+    const esc = Math.max(cw / W, ch / HA), dw = Math.round(W * esc), dh = Math.round(HA * esc);
     const [fx, fy] = cs.objectPosition.split(" ").map((v) => (v.endsWith("%") ? parseFloat(v) / 100 : 0.5));
     const ox = Math.round((cw - dw) * fx), oy = Math.round((ch - dh) * fy);
     // na tela: a caixa do bitmap (cw x ch) é esticada para larg x alt; a escala de cada eixo vem dessa razão
     const kx = larg / cw, ky = alt / ch;
     return { cw, ch, dw, dh, ox, oy, larg, alt, esq: c.offsetLeft + c.clientLeft + esq, topo: c.offsetTop + c.clientTop + topo,
-      ex: (dw / W) * kx, ey: (dh / H) * ky, dx: ox * kx, dy: oy * ky };
+      ex: (dw / W) * kx, ey: (dh / HA) * ky, dx: ox * kx, dy: oy * ky };
   }
   /** A caixa da arte em pixels da tela (para as camadas por cima dela): a caixa (esq, topo, larg, alt, relativas à
    *  cena), a escala de cada eixo (ex, ey) e o deslocamento da arte dentro da caixa (dx, dy). Um ponto (x, y) da arte
@@ -553,7 +554,7 @@ const Vista = (() => {
     canvas = canvas || document.getElementById("vista");
     if (!canvas || !e) return;
     if (!ctx) {
-      arte = document.createElement("canvas"); arte.width = W; arte.height = H;
+      arte = document.createElement("canvas"); arte.width = W; arte.height = HA;
       ctx = arte.getContext("2d");
       tela = canvas.getContext("2d");
       // a arte cresce ou recolhe (a janela muda, ou a altura anima): a cada quadro, já no tamanho novo, e o que está por
@@ -598,12 +599,16 @@ const Vista = (() => {
     requestAnimationFrame(passo);
   }
   function destacar(id) { if (destaque !== id) { destaque = id; desenhar(); } }
-  /** Põe um ambiente no lugar da paisagem (ou tira, com null). `a`: { desenhar(ctx 320x72, quadro, destaque),
+  /** Põe um ambiente no lugar da paisagem (ou tira, com null). `a`: { desenhar(ctx 320 × a altura da base, quadro, destaque),
    *  andar(quadro)?, base (canvas: a última linha dá a cor do chão que continua embaixo da arte), foco ([x, y] para já
    *  começar de perto) }. Troca sem animação: quem anima a chegada é a página. */
   function usarAmbiente(a) {
     if (ambiente === a) return;
     ambiente = a;
+    HA = a && a.base ? a.base.height : H;
+    if (arte && arte.height !== HA) arte.height = HA;
+    if (quadroBuf && quadroBuf.height !== HA) quadroBuf.height = HA;
+    if (mascara && mascara.height !== HA) mascara.height = HA;
     destaque = null;
     const para = a && a.foco ? enquadramento(a.foco) : { s: 1, x: 0, y: 0 };
     Object.assign(camera, para); camera.de = null;
@@ -611,7 +616,7 @@ const Vista = (() => {
     desenhar();
   }
   function enquadramento([fx, fy]) {
-    return { s: 2, x: Math.max(0, Math.min(W / 2, Math.round(fx - W / 4))), y: Math.max(0, Math.min(H / 2, Math.round(fy - H / 4))) };
+    return { s: 2, x: Math.max(0, Math.min(W / 2, Math.round(fx - W / 4))), y: Math.max(0, Math.min(HA / 2, Math.round(fy - HA / 4))) };
   }
   /** A câmera do ambiente: perto de um ponto ([x, y] da arte) ou a vista inteira (null), no pontilhado de sempre (sem
    *  ele, com movimento reduzido). A promessa resolve quando a troca termina. */
