@@ -125,6 +125,9 @@ for (const jan of (process.env.JANELAS || "1920,1280").split(",")) {
         conferir(!!(await p.waitForSelector('#texto :text("Este save não abre")', { timeout: 10000 }).catch(() => null)), "o save do mundo gerado: a mensagem curta");
         await espera(800);
         conferir(!(await p.$("#heroi .heroi-nome")), "e nada carrega");
+        conferir(await p.evaluate(() => { const c = document.querySelector("#prompt .continuar"); const r = c && c.getBoundingClientRect();
+          return !!r && r.top >= 0 && r.bottom <= innerHeight && !document.querySelector(".sv")?.offsetHeight; }),
+          "a janela sai da página: a mensagem e o Continuar à vista");
       }
       if (caso === "so_ruins") continue;
       // o clique duplo carrega uma vez
