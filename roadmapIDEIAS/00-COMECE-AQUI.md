@@ -57,7 +57,7 @@ Raças/origens, tamanho da campanha, modelo de derrota, preparação de habilida
 5. [07-ETAPAS.md](07-ETAPAS.md), [10-DECISOES.md](10-DECISOES.md) e [08-TRABALHO-COM-CLAUDE.md](08-TRABALHO-COM-CLAUDE.md): entrega atual, decisões e forma de trabalhar.
 6. [docs/ARQUITETURA.md](../docs/ARQUITETURA.md), [docs/COMO_CRIAR.md](../docs/COMO_CRIAR.md) e documentos temáticos pertinentes à tarefa.
 
-O README principal descreve o jogo disponível, inclusive o mundo procedural e o hardcore. O roadmap descreve a direção futura; não interpretar essa diferença como autorização para trocar imediatamente o comportamento.
+O README principal descreve o jogo disponível (desde a 1.206.0, só a campanha; o mundo procedural saiu: [24](24-RETIRADA-DO-PROCEDURAL.md)). O roadmap descreve a direção futura; não interpretar essa diferença como autorização para trocar imediatamente o comportamento.
 
 [docs/ROADMAP.md](../docs/ROADMAP.md) trata da evolução técnica; `roadmapIDEIAS` trata da campanha e do design. Há notas técnicas antigas já identificadas em 09-BASE-EXISTENTE. Confira a implementação antes de reconstruir algo listado como pendente.
 
@@ -7378,3 +7378,23 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Recomendação:** B (a ligação com o controle mais clara). Registrados à parte: a ordem do Tab contrária à leitura
   (como hoje) e o N1 a 1280 de hoje sobre o nome do lugar.
 - **Agora:** a escolha do Jean; nada integrado. Não começados: o menu inicial, a retirada do procedural, o Grimório.
+
+### 24/10/2026 (data do computador local) — Tutorial R, aviso de talento, a retirada do procedural (1.206.0)
+
+- **Tutorial (protótipo, aguardando o Jean):** a B refinada, R (`ferramentas/prototipos/hud/orientacao/`, segunda
+  rodada no LEIA-ME; `folha-orientacao.png`, hoje × B × R; `demo.bat`): o ouro envelhecido só na seta e num traço
+  junto dela, o "Entendi" no botão da HUD, o Tab na ordem da leitura. O V1 e a luta guiada C1–C4 entraram nos casos
+  (`JA_VISTAS` no cenário `tutorial`). Corrigido no jogo (1.205.1): o quadro do C2 cobria a linha da habilidade.
+- **Aviso de ponto de talento (protótipo, aguardando o Jean):** confirmado o acabamento antigo (a estrela e a seta de
+  sprite ampliadas, o brilho que atravessa; a 1280, duas linhas; Enter não abria). A candidata R em
+  `ferramentas/prototipos/hud/aviso-talento/` (`folha-aviso.png`). O Continuar da subida de nível ficou fora.
+- **A retirada do modo procedural (1.206.0):** o levantamento, as decisões e o que fica para a expansão em
+  [24-RETIRADA-DO-PROCEDURAL.md](24-RETIRADA-DO-PROCEDURAL.md). Só a campanha: o título com "Novo jogo" (a campanha),
+  "Carregar" e "Sair"; o save do mundo gerado aparece marcado e não abre (mensagem curta; o arquivo fica).
+- **Telas iniciais (protótipo, aguardando o Jean):** o levantamento e a criação em cartões, R
+  (`ferramentas/prototipos/hud/telas-iniciais/`, `folha-telas-iniciais.png`, `demo.bat` na porta 8770). O título e o
+  save recusado ficam como estão; os cartões dos saves, registrados para a consolidação da HUD.
+- **Conferido:** `unittest` (682 ok, 1 pulado), o gabarito novo (as 24 partidas na campanha; as transcrições
+  conferidas antes de atualizar), pyflakes e fumaça (tudo certo); as telas iniciais a 1920×945 e 1280×720.
+- **A ordem combinada:** fechar o tutorial, o aviso de talento e as telas iniciais (título, saves, criação); depois a
+  forja. O reforço/encantamento e a expansão narrativa não começam antes do pedido.

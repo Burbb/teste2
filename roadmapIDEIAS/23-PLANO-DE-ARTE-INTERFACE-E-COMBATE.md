@@ -1371,7 +1371,8 @@ redesenho global nem integração de uma nova HUD.
 - **Grimório da interface:** aparência do livro aberto, páginas, leitura e navegação serão revistas **com o sistema
   de habilidades na etapa 8**, para evitar uma rodada só de acabamento antes de redefinir o conteúdo da tela.
 - **Carregar jogo e fichas dos saves:** revisar o visual antigo da lista e das fichas, com identificação clara da
-  partida e ações legíveis. Preservar os dados, a compatibilidade dos saves e a semântica de carregar/excluir;
+  partida e ações legíveis. Preservar os dados e a semântica de carregar/excluir (desde a 1.206.0, o save do mundo
+  gerado aparece marcado e não abre; compatibilidade de save não é exigida);
   não confundir o menu com o atalho Salvar da doca, já concluído.
 - **Livro narrativo da capela:** apresentação imersiva do relato. É outro objeto/contexto que o grimório equipado.
   A revisão visual não autoriza reescrever a história agora.
@@ -1520,7 +1521,11 @@ volta à pauta quando essa expansão exigir; não é uma migração de engine.
    aprovadas (`094bb80a`: 32 no minimapa, 48 no mapa grande); o pântano e as ruínas aprovados (`c7bd2348`); em
    avaliação, a planície refinada e a Viagem e o Diário com o mesmo desenho; depois, a integração do conjunto; nada no
    jogo.
-4. **Retomar a etapa 2** e **seguir 3–7**, como na sequência abaixo; **etapa 8** com habilidades, talentos, Grimório e
+4. **A ordem nova (24/10/2026, pedido do Jean):** fechar esta frente da interface (o tutorial, com a candidata R em
+   avaliação; o aviso de ponto de talento, com a candidata R em avaliação) e as telas iniciais (o título, os saves e a
+   criação, depois da retirada do modo procedural na 1.206.0: roadmapIDEIAS/24-RETIRADA-DO-PROCEDURAL.md); **depois, a
+   forja** (item 3). O reforço e encantamento, a expansão narrativa e o Grimório não começam antes do pedido.
+5. **Retomar a etapa 2** e **seguir 3–7**, como na sequência abaixo; **etapa 8** com habilidades, talentos, Grimório e
    árvore no mesmo ciclo; **etapa 9**, a campanha; **depois do plano**, a avaliação de refatoração.
 
 ## Próxima passagem de trabalho — sequência aprovada em 19/10/2026 (histórico)
