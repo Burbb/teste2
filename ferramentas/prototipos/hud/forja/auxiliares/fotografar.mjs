@@ -49,6 +49,8 @@ for (const jan of (process.env.JANELAS || "1920,1280").split(",")) {
     const { proc, url } = await subir(v === "atual" ? "" : v);
     const p = await b.newPage({ viewport: { width: W, height: H } });
     const erros = []; p.on("pageerror", (e) => erros.push(String(e)));
+    // conta os relógios que a página cria (sair e entrar na forja não pode criar outro: a arte anda no da vista)
+    await p.addInitScript(() => { window.__relogios = 0; const si = window.setInterval; window.setInterval = (...a) => { window.__relogios++; return si(...a); }; });
     const pre = `${jan}-${v}`;
     try {
       await p.goto(url); await parado(p);
@@ -94,8 +96,9 @@ for (const jan of (process.env.JANELAS || "1920,1280").split(",")) {
       conferir(await naVila(p), "sair da forja volta à vila");
       await parado(p);
       conferir(await p.evaluate(() => !document.getElementById("cena").classList.contains("com-ambiente")), "na vila, a paisagem de sempre (o ambiente da forja saiu)");
+      const antesRel = await p.evaluate(() => window.__relogios);
       await entrar(p);
-      conferir(true, "entrar de novo na forja");
+      conferir(await p.evaluate(() => window.__relogios) === antesRel, `entrar de novo na forja não cria outro relógio (${antesRel})`);
       await p.keyboard.press("Escape");
       conferir(await naVila(p), "Esc sai da forja");
     } catch (e) { conferir(false, `${pre}: ${e.message.split("\n")[0]}`); }

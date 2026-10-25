@@ -78,3 +78,74 @@ preços e os saves não mudam.
   acabamento.
 
 **Aguardam a aprovação do Jean; a forja não foi integrada.**
+
+## A B refinada (R), a candidata (25/10/2026; protótipo, nada no jogo)
+
+O Jean escolheu desenvolver a B (A e B ficam como histórico, em `forja-arte.js`): a melhor ideia de espaço, mas vazia e
+esquemática. A R (`forja-r.js`) mantém a profundidade e reconstrói a oficina, com um ferreiro novo trabalhando numa
+espada sem parar. A folha B anterior × R no mesmo contexto: `folha-forja-r.png`; o movimento: `folha-movimento.png`
+(as poses-chave ampliadas, o ciclo quadro a quadro, a pose do movimento reduzido, a cena no tamanho de uso). A
+demonstração: `demo.bat` (o botão R vem primeiro).
+
+### As referências consultadas (e o que se viu de fato)
+
+- **O André de Dark Souls, num GIF do Tenor** (`media.tenor.com/YMxHNb3e6LAAAAAC/martillo-black-smith.gif`, um trecho
+  do jogo): **observado quadro a quadro** (18 quadros de 50 ms, decodificados no navegador). Aproveitado: o ritmo, que
+  não é de metrônomo: o martelo fica no alto cerca de 400 ms quase parado, desce em cerca de 100 ms, o tronco e a
+  cabeça afundam com o golpe, as faíscas explodem no contato e se abrem em riscos longos, ele fica uns 200 ms embaixo
+  assentando o martelo e só então sobe num tempo médio. A aparência dele não foi usada.
+- **Blacksmith Craft, da Craftpix** (`free-game-assets.itch.io/blacksmith-craft-pixel-art-game-assets`, o GIF de
+  demonstração): **observado quadro a quadro** (16 quadros de 100 ms). Aproveitado, em pixel art de tamanho parecido:
+  quatro poses bastam para ler o golpe (o repouso, o martelo sobre o ombro, atrás da cabeça, o golpe), o corpo inclina
+  para a bigorna no golpe e a faísca nasce no ponto de contato. Evitado: todas as poses no mesmo tempo (100 ms cada).
+- **Consultadas sem ver a animação** (só a página ou a descrição): o Animated NPC Sprites da finalbossblues (a página
+  do ferreiro não mostra a animação), o Pixel People: The Badass Blacksmith (16×16), o Blacksmith da kanmandev (as
+  faíscas e a forja animadas, a martelada não) e o [LPC] Blacksmith da OpenGameArt (as marteladas em andamento). Nada
+  delas entrou no desenho.
+
+### O ferreiro e o golpe
+
+- **O ferreiro**: gordo e forte (a barriga projetada com o avental em quatro tons, a borda acesa pela brasa da lâmina),
+  os ombros largos curvados sobre o trabalho, o cabelo grisalho à vista, a barba grande e ruiva saindo do queixo na
+  silhueta; o corpo a três quartos, um pouco de costas, e a cabeça de perfil para a esquerda (o ângulo ajustado: vista
+  de costas, a barba lia como cabelo comprido). Concentrado na espada, sem olhar para quem joga. Os dois dedos que
+  faltam não cabem na mão de 3 px: ficam no texto do balcão, sem desenho e sem mudar a história.
+- **O ciclo** (o relógio das cenas, 100 ms por quadro; 53 quadros, 5,3 s): assentado na lâmina → sobe em dois tempos
+  (o martelo por trás do ombro, sem cobrir o rosto) → segura no alto (200 a 400 ms, variando) → desce num quadro (um
+  rastro nítido de 1 px no caminho, sem borrão) → o golpe (a face do martelo encosta na lâmina sempre no mesmo ponto; o
+  tronco afunda 1 px; as faíscas nascem do contato) → o rebote (o martelo 3 px acima, as faíscas se abrindo) → assenta
+  (100 a 400 ms). Quatro golpes e uma pausa de 600 ms em que a mão da tenaz sobe e a espada vira de lado. O ombro, o
+  cotovelo e o punho mudam em cada pose, e o tronco e a cabeça descem com o peso (a cabeça um quadro depois do tronco).
+  As pernas não saem do lugar. O último quadro emenda no primeiro (o repouso).
+- **A espada em fabricação**: a ponta afinando, o fio aceso em cima e o sulco no meio, a espiga estreita presa na
+  tenaz, sem guarda nem cabo; o trecho batido em brasa, mais vivo logo depois do golpe.
+
+### A oficina, por zonas
+
+A porta à esquerda com a rua e a luz fria do dia entrando no chão; a tina de têmpera e o balde perto da bigorna; a
+bigorna no toco com dois martelos diferentes encostados e lascas de ferro no chão; a fornalha no fundo, com a fuligem
+na chaminé e em volta da boca, as lajes na frente, o monte de carvão com brasas e as duas tenazes penduradas (de bico
+longo e de bico chato); o armazém à direita: o cabideiro com uma espada pronta, uma lâmina por terminar, um machado e um
+martelo, a prateleira com os lingotes, o feixe de barras de grossuras diferentes, o barril com um elmo por consertar,
+duas lâminas encostadas e o escudo. A parede é de taipa e madeira em cima, calma, e de pedra irregular embaixo; o chão
+é de terra batida, sem tábuas. A luz quente da fornalha e a fria da porta separam os planos; o foco é o ferreiro, a
+espada e a bigorna.
+
+### Conferido (no jogo, `auxiliares/fotografar.mjs` com VERSOES=b,r, as duas janelas, tudo certo)
+
+Os mesmos pontos da B: os nomes à vista e dentro da arte (o Ferreiro sobre a parede, à esquerda da bigorna, longe do
+rosto, do martelo e da espada); os três cartões sem rolar a 1280; o Ferreiro levando ao cartão; o Tab nos pontos; um
+reforço de verdade; a Saída e a volta; o Esc; **entrar de novo não cria outro relógio** (a arte anda no relógio único
+da vista: a contagem dos `setInterval` da página não muda); com movimento reduzido, a pose do alto, parada (duas fotos
+iguais). Na bancada (`auxiliares/bancada-r.html`), o ciclo inteiro e as poses.
+
+### A avaliação e os limites
+
+- **O ganho**: o ferreiro tem personalidade e trabalho (a barriga, a barba, a curva das costas, o peso do golpe), o
+  olho vai direto para ele, para a espada e para as faíscas, e a oficina tem lugares e usos em vez de uma parede vazia.
+- **Os limites**: os braços são construídos por juntas (o contorno e a luz calculados, não pintados pixel a pixel em
+  cada pose) e o martelo é desenhado pelo ângulo: lê no tamanho do jogo, mas um acabamento à mão de cada pose daria mais
+  forma ao punho e ao antebraço. A espada virando na pausa é sutil (1 px). O ferreiro tem 44 px no quadro: a barba e a
+  postura leem a 1920; a 1280 a barba fica pequena, mas a silhueta e o golpe continuam legíveis. A cabeça de perfil
+  sobre o corpo a três quartos é uma escolha de leitura. A parede entre a porta e a bigorna fica calma de propósito.
+- **Aguarda a aprovação do Jean; a forja não foi integrada.**

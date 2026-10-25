@@ -4,7 +4,7 @@ os seus saves não são tocados. Clique no prédio do ferreiro (ou escolha "Ferr
 
     python cenario_forja.py        # sobe o servidor e imprime o endereço na primeira linha
 
-PROPOSTA=a ou b: a forja com o ambiente (forja-arte.js, forja.js, forja.css). Só neste processo, o motor manda o
+PROPOSTA=a ou b: a forja com o ambiente (forja-arte.js, forja.js, forja.css); r: a B refinada, a candidata (forja-r.js). Só neste processo, o motor manda o
 painel "cena" da forja logo antes do balcão (`forja_<proposta>`, com os pontos Ferreiro e Saída); o balcão, os
 cartões, os preços e o reforço são os do jogo. Vazia: a forja de hoje (sem arte). OURO (padrão 300; 30 para ver os
 cartões sem ouro), CLASSE (padrão guerreiro). PAINEL=<endereço> põe a faixa da demonstração no canto.
@@ -20,7 +20,8 @@ RAIZ = pathlib.Path(__file__).resolve().parents[5]
 sys.path.insert(0, str(RAIZ))
 PROTO = pathlib.Path(__file__).resolve().parents[1]
 TIPOS = {".css": "text/css; charset=utf-8", ".js": "text/javascript; charset=utf-8"}
-ROTULOS = {"": "a forja de hoje (sem arte)", "a": "A · a bancada de trabalho", "b": "B · o interior da oficina"}
+ROTULOS = {"": "a forja de hoje (sem arte)", "a": "A · a bancada de trabalho", "b": "B · o interior da oficina",
+           "r": "R · a B refinada, o ferreiro forjando (a candidata)"}
 CENAS_JS = "  const CENAS = {"
 
 
@@ -68,6 +69,7 @@ def demonstracao(srv):
                 assert marca in pagina, "index.html mudou: não achei 25-carregar.css"
                 pagina = pagina.replace(marca, marca + '\n<link rel="stylesheet" href="/static/prototipo-forja/forja.css">')
                 pagina = pagina.replace("</body>", '<script src="/static/prototipo-forja/forja-arte.js"></script>'
+                                        '<script src="/static/prototipo-forja/forja-r.js"></script>'
                                         '<script src="/static/prototipo-forja/forja.js"></script></body>')
                 pagina = pagina.replace("<html", f'<html data-forja="{proposta}"', 1)
             if painel:

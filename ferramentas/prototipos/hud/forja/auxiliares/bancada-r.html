@@ -1,0 +1,28 @@
+<!doctype html><meta charset="utf-8"><title>Bancada da forja R</title>
+<!-- A bancada do desenho da forja R (só para trabalhar a arte; o jogo não lê isto). ?quadro=n: a cena nesse quadro do
+     ciclo, a 3×. Embaixo: a tira das poses (uma por pose do ciclo, o ferreiro recortado, ampliado 4×, para
+     diagnosticar o movimento; não é o tamanho de uso) e a linha do tempo. ?reduzido=1 simula o movimento reduzido. -->
+<style>body{background:#111;color:#ccc;font:13px sans-serif;margin:10px} canvas{image-rendering:pixelated;display:block;margin:4px 0 12px}
+.poses{display:flex;flex-wrap:wrap;gap:6px}.poses div{text-align:center}</style>
+<script src="../forja-r.js"></script>
+<body><script>
+const qs = new URLSearchParams(location.search);
+if (qs.get("reduzido")) window.matchMedia = () => ({ matches: true });
+const R = ForjaArte.r, b = R.base(320, {});
+function quadroEm(q, escala, recorte) {
+  const c = document.createElement("canvas"); c.width = 320; c.height = 72;
+  R.desenhar(c.getContext("2d"), 320, b, {}, q, qs.get("destaque"));
+  const [x, y, w, h] = recorte || [0, 0, 320, 72];
+  const g = document.createElement("canvas"); g.width = w * escala; g.height = h * escala;
+  const gc = g.getContext("2d"); gc.imageSmoothingEnabled = false; gc.drawImage(c, x, y, w, h, 0, 0, w * escala, h * escala);
+  return g;
+}
+const cena = quadroEm(Number(qs.get("quadro") || 0), Number(qs.get("escala") || 3)); cena.id = "cena"; document.body.appendChild(cena);
+// uma pose de cada: o primeiro quadro em que ela aparece no ciclo
+const vistos = {}, tira = document.createElement("div"); tira.className = "poses"; tira.id = "poses";
+for (let q = 0; q < R.DURACAO; q++) { const p = R.poseDe(q); if (vistos[p.nome] !== undefined) continue; vistos[p.nome] = q;
+  const d = document.createElement("div"); d.appendChild(quadroEm(q, 4, [100, 10, 90, 62])); d.append(`${p.nome} (q${q})`); tira.appendChild(d); }
+document.body.appendChild(tira);
+const linha = document.createElement("pre"); linha.textContent = R.CICLO.map(([n, d]) => `${n}×${d}`).join("  ") + `\n= ${R.DURACAO} quadros (${R.DURACAO / 10} s)`;
+document.body.appendChild(linha);
+</script>

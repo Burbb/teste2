@@ -11,6 +11,7 @@
   if (!versao || !window.__CENAS || !window.ForjaArte) return;
   window.__CENAS.forja_a = window.ForjaArte.a;
   window.__CENAS.forja_b = window.ForjaArte.b;
+  if (window.ForjaArte.r) window.__CENAS.forja_r = window.ForjaArte.r;  // a B refinada (forja-r.js), a candidata
 
   // O ponto do ferreiro não tem uma ação só (são até três peças): o clique, o Enter ou o espaço nele levam o foco ao
   // primeiro cartão de reforço que se pode pagar (ou ao primeiro), com a página rolando até ele. Só no protótipo: na
