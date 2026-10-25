@@ -95,20 +95,32 @@ Os exemplos conversados (consumir queimadura, sacrificar servo, preparar contra-
 
 **Morte e consequências:** companheiros não morrem permanentemente por uma derrota ou queda em batalha. Morte permanente pode ocorrer por rumo da história e consequências narrativas das decisões do jogador. Essa exceção não autoriza transformar uma queda comum em batalha em morte permanente. Incapacitação durante a luta, retorno, recuperação, ferimentos e custos após a batalha continuam em aberto. Esta decisão trata dos companheiros; não altera por si só as regras de morte do protagonista ou dos modos de dificuldade.
 
-### 3.5 Ordem das ações — acordada
+### 3.5 Ordem das ações, turnos e rodadas — acordados
 
-**Turnos individuais intercalados, com a ordem próxima de ações visível.** Herói, companheiros e inimigos agem individualmente conforme uma ordem que permita entender quem terá oportunidade de responder antes de uma ameaça. Não é um turno coletivo em que todos os aliados agem antes de todos os inimigos. “Intercalados” não obriga alternância estrita aliado–inimigo.
+**Turnos individuais intercalados, com a ordem próxima visível.** Herói, companheiros e inimigos têm suas próprias vezes. Não é um turno coletivo em que todos os aliados agem antes de todos os inimigos; “intercalados” também não obriga alternância estrita aliado–inimigo.
 
-**Agilidade como critério de iniciativa é uma hipótese sugerida por Jean**, ainda sem fórmula aprovada. Também permanecem abertos:
+**A Agilidade define a ordem inicial quando a batalha começa. Essa ordem permanece fixa durante toda a batalha**, repetindo-se nas rodadas seguintes. Não recalcular iniciativa a cada rodada nem reordenar personagens em consequência de mudanças de Agilidade durante a luta. Agilidade não concede ações extras neste modelo.
 
-- desempates e eventual aleatoriedade;
-- ordem fixa por rodada ou linha de tempo dinâmica;
-- se velocidade muda só a posição ou também a frequência de ações;
-- quantidade de próximas ações mostradas;
-- efeitos de acelerar, atrasar ou interromper;
-- entrada e saída de invocações e pets na ordem.
+Distinguir na documentação, nos dados e na interface:
 
-Não inferir ações extras nem uma mudança automática de ordem de habilidades a partir da simples aprovação dos turnos intercalados. O funcionamento precisa ser discutido antes de implementado.
+- **Turno individual:** a vez de um combatente.
+- **Rodada:** o ciclo geral, que termina quando todos tiveram sua vez, inclusive quem não pôde agir por atordoamento ou outro impedimento.
+
+Cada combatente tem uma vez por rodada. Perder a ação não deixa a rodada esperando por ele nem cria uma ação a recuperar depois. Os detalhes de derrota, saída, retorno, invocações e pets ainda precisam ser definidos: não inserir automaticamente um recém-chegado com ações adicionais ou reordenar os participantes existentes.
+
+O modelo de rodada dá uma referência comum para efeitos, mas **não determina que todos os buffs, defesas e condições expirem no fim da rodada**. Durações devem dizer seu marco claramente: por exemplo, próximo turno do portador ou fim da rodada. A ordem de aplicação e expiração ainda precisa ser especificada por categoria de efeito, evitando o termo ambíguo “turno” para dois relógios diferentes.
+
+Continuam abertos: desempates, quantidade de próximas posições mostradas, momento exato de leitura da Agilidade inicial (incluindo efeitos anteriores ao combate) e regras para participantes que entram ou saem durante a luta. A decisão não redefine os outros usos da Agilidade fora da iniciativa.
+
+Aceleradores, atrasos ou trocas de posição na ordem não são uma extensão aprovada: contrariariam a ordem fixa combinada. Interrupções de preparações podem ser estudadas sem alterar a posição do alvo na sequência.
+
+### 3.6 Estrutura do turno — direção aprovada
+
+- **Uma ação principal por turno:** atacar, usar habilidade, defender ou usar consumível. Usar cura/consumível também disputa a oportunidade de atacar. Custos particulares, reações e exceções ainda não estão especificados; não acrescentar ações gratuitas por inferência.
+- **Ataque básico útil:** opção confiável e econômica que continua tendo função depois dos primeiros níveis.
+- **Defender como resposta real:** direção aprovada de reduzir o dano até o próximo turno daquele personagem, permitindo responder a ameaças anunciadas sem exigir uma composição específica. Valor da redução e marco preciso de expiração (por exemplo, início do próximo turno) continuam por definir.
+- **Preparações perigosas com oportunidade de resposta:** sinalização deve permitir alguma reação real antes da resolução; avisar quando ninguém pode responder não basta.
+- Evitar multiplicar ações pequenas obrigatórias antes de encerrar a vez. Cada turno deve concentrar uma decisão relevante.
 
 ## 4. Vida útil das peças — direção acordada
 
@@ -179,7 +191,11 @@ Depois de definida a direção suficiente, o Claude poderá verificar implicaç�
 | Níveis e desenvolvimento de habilidades dos companheiros | Direção acordada; regras e valores abertos |
 | Sem morte permanente de companheiros por batalha | Acordado; exceção somente narrativa |
 | Turnos individuais intercalados e ordem próxima visível | Acordado |
-| Agilidade para iniciativa | Hipótese; fórmula e frequência de ações abertas |
+| Agilidade define a ordem inicial | Acordado; desempates e detalhes de leitura abertos |
+| Ordem fixa durante toda a batalha | Acordado; sem ações extras por Agilidade |
+| Rodada termina após todos terem sua vez, incluindo ações perdidas | Acordado |
+| Uma ação principal por turno | Direção aprovada |
+| Ataque básico útil e defesa até o próximo turno do personagem | Direção aprovada; valores e marcos precisos abertos |
 | Controle e limite de pets/invocações | Em debate |
 | Kit limitado e investimento seletivo | Direção acordada |
 | Cinco habilidades + uma ultimate | Hipótese, não número fechado |
