@@ -94,16 +94,67 @@
     });
   }
 
-  function faixa(titulo, sub, icone, classe = "") {
-    const f = document.createElement("div");
-    f.className = "faixa-festa " + classe;
-    // quem chega à comitiva: a cabeça do retrato; a espécie do mestre caçador: a cabeça própria dela, se tem
-    const arte = icone ? Icones.cabeca(icone, 48) || Icones.criatura(icone, 48) || S(icone, 3) : "";
-    f.innerHTML = `<b>${arte}${h(titulo)}${arte}</b>${sub ? `<span>${h(sub)}</span>` : ""}`;
+  // ---------------------------------------------------------------- as faixas de passagem (1.205.0)
+  // A tarja larga de lado a lado (a 38% da altura, por cima da interface), o título de 80 px com um símbolo de cada
+  // lado e o subtítulo legível (quebra a linha; o título nunca diminui por ele). O peso de cada situação, na mesma
+  // família: "comum" (a Vitória), "marco" (o Guardião, o Mestre caçador, quem chega: um acento breve na entrada),
+  // "derrota" e "peso" (a queda e o cansaço: entram descendo, sem ouro), "passagem" (a saída da capela). A tarja é
+  // desenhada em pixel (texels de 3 px): a transparência de 0,94 no miolo, as pontas em degraus de borda dura e o fio
+  // de cima só no miolo. Uma faixa que chega com outra na tela tira a anterior em 100 ms (antes, o "Guardião derrotado!"
+  // e o "Mestre caçador" ficavam um sobre o outro). Os tempos de cada uma são os de sempre (a duração da animação aqui;
+  // quanto ela segura a fila, em `celebrar`). O protótipo e as alternativas: ferramentas/prototipos/hud/faixas/.
+  const DURA_FAIXA = { comum: 1600, marco: 1600, peso: 2400, passagem: 2400, derrota: 2600 };
+  const TARJA = {  // o miolo e o fio de cima (quase o miolo: só uma beira); no marco, o acento que corre pelo fio
+    comum: { miolo: [13, 11, 10], cima: [27, 23, 18] },
+    marco: { miolo: [13, 11, 10], cima: [40, 33, 21], acento: [242, 210, 122] },
+    derrota: { miolo: [30, 7, 6], cima: [50, 15, 12] },
+    peso: { miolo: [12, 12, 15], cima: [27, 28, 33] },
+    passagem: { miolo: [13, 11, 10], cima: [24, 21, 17] },
+  };
+  const DEGRAUS = [0.14, 0.3, 0.46, 0.62, 0.78, 0.94];  // a transparência das pontas, em degraus (o miolo: 0,94)
+  /** A tarja no canvas: as pontas em seis degraus ao longo de 20% da largura (24% no peso e na queda), o fio de cima
+   *  só no miolo. No marco, com `t` (ms desde a entrada): dois brilhos curtos correm do centro pelo fio e somem. */
+  function tarja(cv, peso, t = null) {
+    const c = TARJA[peso], W = cv.width, H = cv.height, g = cv.getContext("2d"), img = g.createImageData(W, H), b = img.data;
+    const ponta = peso === "derrota" || peso === "peso" ? 0.24 : 0.2;
+    const por = (x, y, [r, gg, bb], a) => { const i = (y * W + x) * 4; b[i] = r; b[i + 1] = gg; b[i + 2] = bb; b[i + 3] = Math.round(a * 255); };
+    for (let x = 0; x < W; x++) {
+      const u = Math.min(x, W - 1 - x) / (W * ponta);
+      const a = u >= 1 ? DEGRAUS[DEGRAUS.length - 1] : DEGRAUS[Math.min(DEGRAUS.length - 1, Math.floor(u * DEGRAUS.length))];
+      const fio = Math.min(x, W - 1 - x) > W * 0.3;
+      for (let y = 0; y < H; y++) por(x, y, y === 0 && fio ? c.cima : c.miolo, a);
+    }
+    if (c.acento && t !== null && t < 480) {
+      const meio = W >> 1, alcance = Math.round((t / 480) * W * 0.32), vis = 1 - t / 480;
+      for (let k = -3; k <= 3; k++) for (const x of [meio - alcance + k, meio + alcance + k]) if (x >= 0 && x < W) {
+        const f = (Math.abs(k) <= 1 ? 1 : 0.5) * vis;
+        por(x, 0, c.cima.map((v, i) => Math.round(v + (c.acento[i] - v) * f)), 0.94);
+      }
+    }
+    g.putImageData(img, 0, 0);
+  }
+  const espelhado = (html) => html.replace("<img ", '<img style="transform:scaleX(-1)" ');
+  /** A faixa de passagem: `titulo`, `sub` (ou nada), `icone` (o símbolo da esquerda; a direita, o mesmo espelhado se
+   *  `espelhar`) e o `peso`. Sai sozinha no fim da animação (e por um tempo de segurança, também com o movimento
+   *  reduzido, em que ela fica inteira e parada). */
+  function faixa(titulo, sub, icone, peso, espelhar = true) {
+    document.querySelectorAll(".faixa-festa").forEach((e) => { e.classList.add("troca"); setTimeout(() => e.remove(), 110); });
+    const f = document.createElement("div"), dura = DURA_FAIXA[peso];
+    f.className = `faixa-festa peso-${peso}`;
+    f.setAttribute("role", "status");
+    f.style.setProperty("--dura", dura + "ms");
+    const dir = icone && espelhar ? espelhado(icone) : icone;
+    f.innerHTML = `<canvas class="faixa-tarja" aria-hidden="true"></canvas><b>${icone ? `<span class="faixa-icone">${icone}</span>` : ""}${h(titulo)}${icone ? `<span class="faixa-icone">${dir}</span>` : ""}</b>${sub ? `<span class="faixa-sub">${h(sub)}</span>` : ""}`;
     document.body.appendChild(f);
-    // Sai quando a animação acaba (a sombria, do exausto, dura mais: um tempo fixo a cortava no meio da frase).
-    f.addEventListener("animationend", (ev) => { if (ev.target === f) f.remove(); });
-    setTimeout(() => f.remove(), 4000);
+    const cv = f.querySelector(".faixa-tarja"), r = f.getBoundingClientRect();
+    cv.width = Math.ceil(r.width / 3); cv.height = Math.ceil(r.height / 3);
+    if (TARJA[peso].acento && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      const t0 = performance.now();
+      const passo = () => { const t = performance.now() - t0; tarja(cv, peso, t); if (t < 520 && f.isConnected) setTimeout(passo, 66); };
+      passo();
+    } else tarja(cv, peso);
+    f.addEventListener("animationend", (ev) => { if (ev.target === f && ev.animationName !== "faixa-troca") f.remove(); });
+    setTimeout(() => f.remove(), dura + 40);
   }
 
   /** O ícone de um item voando de um ponto da tela até um elemento (o espaço do corpo, a mochila), num arco. */
@@ -192,7 +243,7 @@
     document.querySelector('#arena .carta[data-uid="j"]')?.classList.add("caida");
     App.som("derrota");
     doer();
-    faixa(d.morte ? "Você morreu" : "Você caiu", null, "caveira", "derrota");
+    faixa(d.morte ? "Você morreu" : "Você caiu", null, S("caveira", 3), "derrota", false);
     return (async () => { for (let t = 0; t < QUEDA_MS && !pular; t += 50) await new Promise((r) => setTimeout(r, 50)); })();
   }
   /** O herói acordou (o amanhecer do resgate) ou um menu chegou: o cenário volta à luz de sempre. */
@@ -228,32 +279,34 @@
     if (m.tipo === "vitoria") {
       if (instantaneo) return Promise.resolve();
       App.som("vitoria");
-      faixa(d.chefe ? "Guardião derrotado!" : "Vitória", null, "espada");
+      faixa(d.chefe ? "Guardião derrotado!" : "Vitória", null, Icones.item("espada", 48), d.chefe ? "marco" : "comum");
       particulas(["#f2c94c", "#fff3a0", "#d4af37"], d.chefe ? 70 : 30);
       return new Promise((r) => setTimeout(r, d.chefe ? 1500 : 1000));
     }
     if (m.tipo === "mestre") {  // mestre caçador de uma espécie: a faixa de ouro com a criatura dos dois lados
       if (instantaneo) return Promise.resolve();
       App.som("nivel");
-      faixa("Mestre caçador", `${d.plural.charAt(0).toUpperCase() + d.plural.slice(1)}: +10% de dano contra eles`, d.retrato || "caveira");
+      faixa("Mestre caçador", `${d.plural.charAt(0).toUpperCase() + d.plural.slice(1)}: +10% de dano contra eles`,
+        Icones.criatura(d.retrato, 48) || S("caveira", 3), "marco");
       return new Promise((r) => setTimeout(r, 1800));
     }
     if (m.tipo === "exausto") {  // o dia acabou à força: uma faixa sombria, devagar, e a fogueira (ou o feno) em seguida
       if (instantaneo) return Promise.resolve();
       App.som("exausto");
-      faixa("Exausto", d.texto, "lua", "sombria");
+      faixa("Exausto", d.texto, S("lua", 3), "peso", false);
       return new Promise((r) => setTimeout(r, 2300));
     }
     if (m.tipo === "retirada") {  // a saída da capela antes de acampar (a arte do topo já passou ao lado de fora)
       if (instantaneo) return Promise.resolve();
       App.som(d.exausto ? "exausto" : "retirada");  // os passos que se afastam
-      faixa(d.exausto ? "Exausto" : "Saindo da capela", d.texto, d.exausto ? "lua" : "fuga", "sombria");
+      if (d.exausto) faixa("Exausto", d.texto, S("lua", 3), "peso", false);
+      else faixa("Saindo da capela", d.texto, Icones.atalho("Sair", 36), "passagem", false);  // o Sair da doca
       return new Promise((r) => setTimeout(r, 2600));
     }
     if (m.tipo === "comitiva") {
       if (instantaneo) return Promise.resolve();
       App.som("nivel");
-      faixa(`${d.nome} se junta a você`, d.titulo, d.id);
+      faixa(`${d.nome} se junta a você`, d.titulo, Icones.cabeca(d.id, 48), "marco");
       return new Promise((r) => setTimeout(r, 1500));
     }
     const caixa = document.getElementById("celebracao");

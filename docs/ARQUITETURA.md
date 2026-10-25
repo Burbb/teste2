@@ -236,7 +236,12 @@ id, `ficha_guardiao`; os contratos por `contratos.desc_caca` e `desc_alvo`, os m
   identidades e a mesma janela do achado (o tamanho de uso dos itens, o selo da raridade, a comparação numa peça só).
   O CSS de cada módulo é injetado por ele (as cores das identidades saem de funções). A vitória, os contratos, o
   mestre caçador e as faixas continuam em `telas/celebracoes.js`, como antes. Fontes, alternativas e a história:
-  `ferramentas/prototipos/hud/celebracoes/LEIA-ME.md` (o jogo não lê essa pasta).
+  `ferramentas/prototipos/hud/celebracoes/LEIA-ME.md` (o jogo não lê essa pasta). As faixas de passagem (a Vitória, o Guardião, o
+  Mestre caçador, a queda, o cansaço, a saída da capela, quem chega à comitiva; `faixa` em `telas/celebracoes.js`,
+  CSS em `23-faixas.css`, 1.205.0): a tarja larga de lado a lado com a tarja em pixel num canvas, o título de 80 px, o
+  subtítulo legível, um peso por situação (comum, marco, derrota, peso, passagem) e a troca limpa de uma faixa para a
+  próxima; quanto cada uma segura a fila continua em `celebrar`. A animação dos rótulos da luta (`.faixa-acao`) chama
+  `faixa-acao` (antes, `faixa`, o mesmo nome da faixa de passagem). História: `ferramentas/prototipos/hud/faixas/`.
   O mercado (`telas/mercado.js`) é a tela com abas: elas são só da tela (não falam com o motor); a tela ocupa a altura
   visível da página e só a lista da aba rola; a banca é uma faixa em cima (em qualquer largura), desenhada em canvas
   no estilo das paisagens, com vãos de mercadoria que aparecem conforme a largura. O que não se compra vem com o

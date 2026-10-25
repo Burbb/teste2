@@ -7351,3 +7351,17 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   movimento reduzido com a faixa inteira e parada. `unittest` e pyflakes; o jogo não mudou.
 - **Pendências separadas:** o adiantar das faixas; as duas `@keyframes faixa` com o mesmo nome (`03` e `06`).
 - **Agora:** a avaliação do Jean; nada integrado.
+
+### 24/10/2026 (data do computador local) — As faixas integradas (1.205.0)
+
+- **Aprovada pelo Jean:** a original refinada (R, `6d8f5f76`), levada ao jogo sem retoques: `faixa` em
+  `telas/celebracoes.js` (a tarja em pixel num canvas, os pesos, o acento do marco, a troca limpa) e `css/23-faixas.css`
+  (dentro da trava do estilo pixel). O CSS antigo da faixa saiu de `06`. A original, A e B ficam no protótipo.
+- **A colisão de nome:** as duas `@keyframes faixa` (`03-batalha.css` e `06`) separadas; os rótulos da luta
+  (`.faixa-acao`) usam `faixa-acao`, com o desenho que já se via (o de `06`, que valia também ali; a de `03` nunca
+  chegava à tela): `auxiliares/sonda_faixa_acao.mjs` mediu 9 variantes × 10 instantes, iguais antes e depois.
+- **Conferido no jogo:** os sete usos a 1920×945 e 1280×720 (iguais ao protótipo aprovado, até 0,2% de pixels de
+  diferença, da cena atrás); a sequência Guardião → Mestre → espólio → nível → achado com os mesmos tempos de antes;
+  no máximo uma faixa inteira por vez; cliques e teclas não atravessam; o movimento reduzido. `unittest` (696 ok, 1
+  pulado), gabarito sem atualizar (nenhuma diferença), pyflakes e fumaça.
+- **Continua pendente, à parte:** o adiantar das faixas (só a queda olha o `pular`).

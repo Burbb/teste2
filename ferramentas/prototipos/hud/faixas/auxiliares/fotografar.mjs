@@ -3,7 +3,7 @@
 // colunas), se o título cabe numa linha e o tamanho do subtítulo. Guarda ../capturas/<janela>-<versão>-<caso>.png e
 // ../capturas/medidas.json.
 //   PLAYWRIGHT_MODULO=<caminho do playwright>/index.mjs node ferramentas/prototipos/hud/faixas/auxiliares/fotografar.mjs
-// (VERSOES=atual,a,b; CASOS=vitoria,sequencia,...; JANELAS=1920,1280)
+// (VERSOES=atual,a,b; CASOS=vitoria,sequencia,...; JANELAS=1920,1280; NOME_ATUAL=jogo: o nome das fotos do jogo)
 import { spawn } from "child_process";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import { fileURLToPath } from "url";
@@ -81,6 +81,7 @@ for (const jan of (process.env.JANELAS || "1920,1280").split(",")) {
   const [W, H] = jan === "1920" ? [1920, 945] : [1280, 720];
   for (const caso of (process.env.CASOS || Object.keys(PASSOS).join(",")).split(",")) {
     for (const v of (process.env.VERSOES || "atual,a,b").split(",")) {
+      const nv = v === "atual" ? (process.env.NOME_ATUAL || "atual") : v;  // NOME_ATUAL=jogo: o jogo depois de uma integração
       const { proc, url } = await subir(caso, v === "atual" ? "" : v);
       const p = await b.newPage({ viewport: { width: W, height: H } });
       p.on("pageerror", (e) => erros.push(`${jan}-${v}-${caso}: ${e}`));
@@ -90,9 +91,9 @@ for (const jan of (process.env.JANELAS || "1920,1280").split(",")) {
         for (const [texto, nome] of PASSOS[caso].faixas) {
           const m = await faixa(p, texto);
           await p.mouse.move(2, 2);
-          await p.screenshot({ path: path.join(SAIDA, `${jan}-${v}-${nome}.png`) });
-          medidas[`${jan}-${v}-${nome}`] = m;
-          console.log(jan, v, nome, JSON.stringify(m));
+          await p.screenshot({ path: path.join(SAIDA, `${jan}-${nv}-${nome}.png`) });
+          medidas[`${jan}-${nv}-${nome}`] = m;
+          console.log(jan, nv, nome, JSON.stringify(m));
         }
       } catch (e) { erros.push(`${jan}-${v}-${caso}: ${e.message.split("\n")[0]}`); console.log("  erro", jan, v, caso, e.message.split("\n")[0]); }
       await p.close(); proc.kill();

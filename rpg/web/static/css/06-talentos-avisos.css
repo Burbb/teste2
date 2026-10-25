@@ -53,18 +53,8 @@
 .festa .continuar { margin-top: 14px; }
 .particula { position: fixed; width: 6px; height: 6px; pointer-events: none; z-index: 41; animation: explodir 1.2s cubic-bezier(.15,.7,.3,1) forwards; }
 @keyframes explodir { from { transform: translate(0, 0); opacity: 1; } to { transform: translate(var(--dx), var(--dy)); opacity: 0; } }
-.faixa-festa { position: fixed; left: 0; right: 0; top: 38%; z-index: 39; text-align: center; pointer-events: none; padding: 10px 0 14px; background: linear-gradient(90deg, transparent, rgba(13, 11, 10, 0.94) 20%, rgba(13, 11, 10, 0.94) 80%, transparent); animation: faixa 1.6s cubic-bezier(.2,.8,.3,1) forwards; }
-.faixa-festa b { display: inline-flex; align-items: center; gap: 14px; font-family: var(--titulo); font-size: calc(var(--px) * 80); font-weight: 400; line-height: 1; color: var(--ouro); text-shadow: 4px 4px 0 #000; }
-.faixa-festa span { display: block; font-size: 15px; color: var(--tinta-2); }
-@keyframes faixa { 0% { opacity: 0; transform: scaleY(0.2); } 15% { opacity: 1; transform: none; } 80% { opacity: 1; } 100% { opacity: 0; } }
-/* Exausto: a mesma faixa, sem ouro e mais lenta (o dia acabou à força, não é festa). */
-.faixa-festa.sombria { animation-duration: 2.4s; }
-.faixa-festa.sombria b { color: var(--tinta-2); }
-.faixa-festa.sombria span { font-size: 17px; font-style: italic; }
-/* A derrota (celebracoes.js: queda): a faixa em vermelho apagado, e o cenário escuro, sem os prédios, até o herói
-   acordar (o amanhecer do resgate) ou o próximo menu. */
-.faixa-festa.derrota { animation-duration: 2.6s; background: linear-gradient(90deg, transparent, rgba(30, 6, 6, 0.95) 20%, rgba(30, 6, 6, 0.95) 80%, transparent); }
-.faixa-festa.derrota b { color: #e8695b; }
+/* A derrota (celebracoes.js: queda): o cenário escuro, sem os prédios, até o herói acordar (o amanhecer do resgate) ou
+   o próximo menu. A faixa de passagem em si (a da derrota também) está em 23-faixas.css. */
 body.derrotado #vista { filter: grayscale(0.75) brightness(0.32); transition: filter 0.9s ease-out; }
 body.derrotado #predios { visibility: hidden; }
 #toasts { position: fixed; z-index: 35; top: 64px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; gap: 6px; align-items: center; pointer-events: none; }

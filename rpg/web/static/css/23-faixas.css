@@ -1,0 +1,30 @@
+/* As faixas de passagem (telas/celebracoes.js, `faixa`; 1.205.0): a original refinada, aprovada pelo Jean. A tarja
+   larga de lado a lado a 38% da altura, por cima da interface; a tarja em si é o canvas (.faixa-tarja, em texels de
+   3 px: a transparência do miolo e os degraus das pontas). O título de 80 px com a sombra dura e um símbolo de cada
+   lado; o subtítulo legível, com quebra de linha. Os pesos (comum, marco, derrota, peso, passagem) e as durações vêm
+   do JS (--dura). O protótipo e as alternativas: ferramentas/prototipos/hud/faixas/. */
+.faixa-festa { position: fixed; left: 0; right: 0; top: 38%; z-index: 39; text-align: center; pointer-events: none; padding: 14px 16px 18px;
+  animation: faixa-festa var(--dura, 1600ms) cubic-bezier(.2, .8, .3, 1) forwards; }
+.faixa-tarja { position: absolute; inset: 0; width: 100%; height: 100%; image-rendering: pixelated; z-index: -1; }
+.faixa-festa b { position: relative; display: inline-flex; align-items: center; gap: 14px; font-family: var(--titulo); font-size: calc(var(--px) * 80);
+  font-weight: 400; line-height: 1; color: var(--ouro); text-shadow: 4px 4px 0 #000; white-space: nowrap; }
+.faixa-icone { display: inline-flex; }
+.faixa-icone img { width: 48px; height: 48px; }
+.faixa-sub { position: relative; display: block; max-width: min(46em, 86vw); margin: 12px auto 0; font-family: var(--prosa); font-size: 21px;
+  line-height: 1.38; color: #e8dcc0; text-shadow: 2px 2px 0 #000; }
+/* o cansaço e a saída da capela: sem ouro; o cansaço com o subtítulo em itálico */
+.faixa-festa.peso-peso b, .faixa-festa.peso-passagem b { color: var(--tinta-2); }
+.faixa-festa.peso-peso .faixa-sub { font-style: italic; color: #d6cebf; }
+.faixa-festa.peso-passagem .faixa-sub { font-size: 20px; color: #ddd3c0; }
+/* a queda: o vermelho apagado, a tarja um pouco mais alta */
+.faixa-festa.peso-derrota { padding: 20px 16px 24px; }
+.faixa-festa.peso-derrota b { color: #e8695b; }
+/* a festa abre na vertical; a queda e o cansaço entram descendo, devagar */
+.faixa-festa.peso-peso, .faixa-festa.peso-derrota { animation-name: faixa-festa-peso; }
+@keyframes faixa-festa { 0% { opacity: 0; transform: scaleY(0.2); } 15% { opacity: 1; transform: none; } 80% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes faixa-festa-peso { 0% { opacity: 0; transform: translateY(-10px); } 18% { opacity: 1; transform: none; } 82% { opacity: 1; } 100% { opacity: 0; } }
+/* a troca: a anterior sai num instante quando a próxima chega (o Guardião e logo o Mestre caçador) */
+.faixa-festa.troca { animation: faixa-troca 100ms steps(2, end) forwards !important; }
+@keyframes faixa-troca { to { opacity: 0; } }
+/* movimento reduzido: a faixa inteira, parada, o tempo todo; some no fim (o JS a tira) */
+@media (prefers-reduced-motion: reduce) { .faixa-festa { animation: none; } }

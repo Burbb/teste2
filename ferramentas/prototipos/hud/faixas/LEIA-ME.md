@@ -1,6 +1,14 @@
 # As faixas de passagem (etapa 2, 24/10/2026; protótipo, nada no jogo)
 
-**Agora: a original refinada (R), candidata em avaliação.** O Jean preferiu a faixa de hoje às propostas A e B, que
+**Integrada na 1.205.0 (24/10/2026): a original refinada (R), aprovada pelo Jean, sem retoques** (`faixa` em
+`rpg/web/static/telas/celebracoes.js`, CSS em `rpg/web/static/css/23-faixas.css`; o jogo não lê esta pasta). Na
+mesma entrega, a colisão de nome resolvida: os rótulos da luta (`.faixa-acao`, `03-batalha.css`) passam a usar
+`faixa-acao`, com o desenho que já se via (o de `06`, que valia também ali; a `faixa` de `03` nunca chegou à tela);
+conferido por `auxiliares/sonda_faixa_acao.mjs`: 90 instantes (9 variantes × 10 tempos) iguais antes e depois. A
+original, A e B ficam aqui como histórico. As fotos do jogo integrado: `capturas/*-jogo-*.png`; a folha:
+`folha-integrada.png`.
+
+**A rodada anterior: a original refinada (R), candidata** (hoje integrada). O Jean preferiu a faixa de hoje às propostas A e B, que
 ficam como histórico (não aprovadas para integração). A R parte da ORIGINAL, numa cópia no protótipo; as faixas do
 jogo não mudaram. A comparação: `folha-original-refinada.png`. A demonstração: `demo.bat` (a linha "R").
 

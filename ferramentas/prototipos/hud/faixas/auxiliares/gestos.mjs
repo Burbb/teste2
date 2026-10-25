@@ -1,5 +1,6 @@
 // Confere o ritmo e os gestos das faixas no jogo de verdade (cenarios_faixas.py), nas faixas de hoje e nas propostas
-// (VERSOES=atual,r, o padrão; atual,a,b para as da rodada anterior), a 1920×945:
+// (VERSOES=atual,r, o padrão; atual,a,b para as da rodada anterior; JOGO=1: o jogo já com a integração, conferido como
+// as propostas), a 1920×945:
 // - a sequência real (o lobo guardião, o quinto lobo, o herói a 1 XP de subir): a ordem dos acontecimentos na tela
 //   (Guardião derrotado → Mestre caçador → o quadro do espólio → a subida de nível → o achado) e os tempos entre eles,
 //   iguais nas três (nenhuma espera a mais);
@@ -94,7 +95,7 @@ for (const v of VERS) {
   }
   linhas[v] = { ordem, t };
   console.log(`    faixas inteiras juntas, no máximo: ${juntas}; a anterior saindo durante a troca: ~${trocaMs} ms`);
-  if (v !== "atual") conferir(juntas <= 1 && trocaMs <= 200, "cada anúncio sai antes do próximo (a troca do Guardião para o Mestre, limpa)");
+  if (v !== "atual" || process.env.JOGO) conferir(juntas <= 1 && trocaMs <= 200, "cada anúncio sai antes do próximo (a troca do Guardião para o Mestre, limpa)");
   console.log("    ordem:", ordem.join(" → "));
   console.log("    tempos (ms desde a primeira faixa):", JSON.stringify(t));
   conferir(ordem[0]?.startsWith("faixa:Guardião") && ordem.some((o) => o.startsWith("faixa:Mestre")), "Guardião derrotado e depois Mestre caçador");
@@ -110,12 +111,13 @@ for (const k of ["faixa:Mestre caçador", "espolio", "nivel", "achado"]) {
   conferir(vs.every((x) => typeof x === "number") && Math.max(...vs) - Math.min(...vs) <= 250, `"${k}" chega no mesmo tempo em todas (${vs.join(", ")} ms)`);
 }
 // o movimento reduzido: a mesma faixa, parada, no mesmo tempo
-for (const v of VERS.filter((x) => x !== "atual")) {
-  const { proc, url } = await subir("comitiva", v);
+for (const v of VERS.filter((x) => x !== "atual" || process.env.JOGO)) {
+  const { proc, url } = await subir("comitiva", v === "atual" ? "" : v);
   const p = await b.newPage({ viewport: { width: 1280, height: 720 }, reducedMotion: "reduce" });
   await p.goto(url); await escolher(p, "Começar");
-  await p.waitForSelector(".fx-faixa", { timeout: 20000 });
-  const st = await p.$eval(".fx-faixa", (e) => ({ anim: getComputedStyle(e).animationName, texto: e.textContent.replace(/\s+/g, " ").trim(),
+  await p.waitForSelector(".fx-faixa, .faixa-festa", { timeout: 20000 });
+  await espera(700);  // no meio da duração (1,6 s): a faixa continua inteira, sem animar
+  const st = await p.$eval(".fx-faixa, .faixa-festa", (e) => ({ anim: getComputedStyle(e).animationName, texto: e.textContent.replace(/\s+/g, " ").trim(),
     fx: !!document.querySelector(".fx-faixa-palco") }));
   conferir(st.anim === "none" && /Irmã Odette se junta a você/.test(st.texto) && /clériga desertora/.test(st.texto) && !st.fx,
     `${v.toUpperCase()}, movimento reduzido: a faixa inteira, parada, sem efeitos (${st.texto})`);

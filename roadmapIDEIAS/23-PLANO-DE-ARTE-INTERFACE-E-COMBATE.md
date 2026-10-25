@@ -1320,7 +1320,12 @@ ou mudanças de dados por iniciativa do agente.
   doca nos símbolos, a tarja em pixel (as pontas em degraus de borda dura), um acento breve no marco, a queda e o
   cansaço entrando descendo, e a troca limpa (a anterior sai em 100 ms: hoje o Guardião e o Mestre ficam ~0,1 s juntos).
   Os mesmos tempos medidos na sequência real até o achado. Comparação em `faixas/folha-original-refinada.png`. O
-  adiantar continua pendência separada. Aguarda o Jean.
+  adiantar continua pendência separada.
+- **As faixas integradas na 1.205.0 (24/10/2026): a original refinada (R), aprovada, sem retoques** (`faixa` em
+  `telas/celebracoes.js`, `css/23-faixas.css`). Os tempos, os sons, os gatilhos e a ordem de sempre (medidos na
+  sequência real: os mesmos de antes); a troca do Guardião para o Mestre limpa. A colisão de nome resolvida: os
+  rótulos da luta passam a usar `faixa-acao`, com o desenho que já se via (90 instantes medidos, iguais antes e
+  depois). A original, A e B ficam como histórico. **O próximo: os quadros de orientação do tutorial.**
 - **O baú, a A2 em avaliação (24/10/2026, só no protótipo; histórico):** o A escolhido como direção; a A2 refina a tampa, a três
   quartos e o volume, com um 48 próprio para a pilha. A, B e o placeholder como histórico.
 - **O baú em avaliação, primeira rodada (24/10/2026, só no protótipo):** duas propostas para o Baú Trancado em
