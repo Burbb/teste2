@@ -11,6 +11,7 @@ Esta revisão substitui a recomendação de aprovar a arquitetura A em bloco. A 
 Isso vale, entre outros, para:
 
 - habilidades, talentos, especializações e sua progressão;
+- comitiva, companheiros, suas habilidades, progressão, controle e participação no combate;
 - atributos, prefixos, sufixos, afixos, propriedades de equipamento e sua variedade;
 - reforço, encantamento, raridades, recompensas e economia;
 - passagem do tempo, manhã, noite, turnos de dia e suas consequências;
@@ -69,6 +70,45 @@ Jean propôs caminhos curtos de investimento associados a habilidades: avançar 
 A habilidade inicial deve ser funcional. Investimentos podem aprofundar sua proposta e mudar decisões em combate, sem fazer todos os caminhos serem uma taxa obrigatória para a habilidade começar a funcionar. Algumas habilidades podem exigir pouco investimento e servir de apoio; outras podem concentrar a build.
 
 A ultimate terá sua identidade discutida: aquisição, disponibilidade, preparação, custo e oportunidade de uso. Nada disso está definido.
+
+### 3.3 Identidade do combate — acordada
+
+O combate deve ser divertido e desafiador, com **adaptação da própria combinação ao que os inimigos estão fazendo**, em vez de depender principalmente de executar uma sequência fixa sem reagir.
+
+A apresentação por cartas não exige inventar posicionamento, distância, cones ou linhas para obter variedade. A profundidade pode vir de tempo, alvo, preparação, consumo de estados, recursos, compromissos, respostas e combinações curtas. Habilidades individualmente compreensíveis podem produzir decisões variadas quando interagem.
+
+Preparações importantes dos inimigos devem ser sinalizadas, criando oportunidades de resposta; não é obrigatório revelar todo ataque comum. O grau exato de informação ainda será definido. Golpes devastadores precisam oferecer sinalização e possibilidade de reação, não apenas eliminar um personagem de surpresa. Inimigos simples continuam tendo lugar; a dificuldade não deve depender só de aumentar vida e dano.
+
+Interromper, proteger, curar ou concentrar ataques podem ser respostas concorrentes à mesma ameaça. Ações, recursos e oportunidades limitados devem impedir que o grupo resolva sempre tudo ao mesmo tempo.
+
+Os exemplos conversados (consumir queimadura, sacrificar servo, preparar contra-ataque, coordenar animal e herói etc.) ilustram possibilidades; **não são habilidades ou efeitos aprovados para implementação**.
+
+### 3.4 Comitiva e progressão dos companheiros — acordadas
+
+- O sistema atual de companhia/comitiva é um esboço, como os demais sistemas descritos na seção 1.
+- **Grupo ativo: protagonista e no máximo dois companheiros em batalha.** Invocações e pets não ocupam essas duas vagas. Isso não aprova quantidade ilimitada de invocações/pets: seus limites permanecem abertos.
+- **Controle direto dos companheiros principais pelo jogador.** A quantidade de opções e sua apresentação deverão manter o ritmo da luta.
+- **Companheiros ganham níveis e desenvolvem habilidades.** Sua progressão deve ampliar possibilidades de uso, não apenas aumentar números.
+- Companheiros mantêm identidade própria e um conjunto de decisões menor que o do protagonista. Não precisam repetir uma árvore ou ficha de igual complexidade; habilidades de apoio podem ser poderosas mesmo com poucas opções.
+- O caminho exato de experiência, desbloqueios, escolhas de desenvolvimento e redistribuição ainda será definido. Evitar que deixar alguém fora do grupo o torne inviável ou exija repetir batalhas fracas para recuperá-lo; o mecanismo de recuperação não está decidido.
+- Controle de animais e invocações é uma decisão separada. Ordens simples, comportamento automático ou comandos coletivos são possibilidades, ainda sem escolha.
+
+**Morte e consequências:** companheiros não morrem permanentemente por uma derrota ou queda em batalha. Morte permanente pode ocorrer por rumo da história e consequências narrativas das decisões do jogador. Essa exceção não autoriza transformar uma queda comum em batalha em morte permanente. Incapacitação durante a luta, retorno, recuperação, ferimentos e custos após a batalha continuam em aberto. Esta decisão trata dos companheiros; não altera por si só as regras de morte do protagonista ou dos modos de dificuldade.
+
+### 3.5 Ordem das ações — acordada
+
+**Turnos individuais intercalados, com a ordem próxima de ações visível.** Herói, companheiros e inimigos agem individualmente conforme uma ordem que permita entender quem terá oportunidade de responder antes de uma ameaça. Não é um turno coletivo em que todos os aliados agem antes de todos os inimigos. “Intercalados” não obriga alternância estrita aliado–inimigo.
+
+**Agilidade como critério de iniciativa é uma hipótese sugerida por Jean**, ainda sem fórmula aprovada. Também permanecem abertos:
+
+- desempates e eventual aleatoriedade;
+- ordem fixa por rodada ou linha de tempo dinâmica;
+- se velocidade muda só a posição ou também a frequência de ações;
+- quantidade de próximas ações mostradas;
+- efeitos de acelerar, atrasar ou interromper;
+- entrada e saída de invocações e pets na ordem.
+
+Não inferir ações extras nem uma mudança automática de ordem de habilidades a partir da simples aprovação dos turnos intercalados. O funcionamento precisa ser discutido antes de implementado.
 
 ## 4. Vida útil das peças — direção acordada
 
@@ -131,6 +171,16 @@ Depois de definida a direção suficiente, o Claude poderá verificar implicaç�
 |---|---|
 | Sistemas existentes como rascunhos, não limites definitivos | Acordado; orientação geral do projeto |
 | Expansão e revisão da campanha centrada na Ilse | Direção acordada; duração e conteúdo por definir |
+| Combate de preparação, resposta e adaptação aos inimigos | Direção acordada |
+| Preparações inimigas importantes sinalizadas | Direção acordada; grau de informação aberto |
+| Comitiva atual como esboço | Acordado |
+| Protagonista + até dois companheiros ativos | Acordado; pets e invocações fora dessas vagas |
+| Controle direto dos companheiros principais | Acordado |
+| Níveis e desenvolvimento de habilidades dos companheiros | Direção acordada; regras e valores abertos |
+| Sem morte permanente de companheiros por batalha | Acordado; exceção somente narrativa |
+| Turnos individuais intercalados e ordem próxima visível | Acordado |
+| Agilidade para iniciativa | Hipótese; fórmula e frequência de ações abertas |
+| Controle e limite de pets/invocações | Em debate |
 | Kit limitado e investimento seletivo | Direção acordada |
 | Cinco habilidades + uma ultimate | Hipótese, não número fechado |
 | Caminhos curtos de modificadores por habilidade | Direção acordada; três passos é hipótese |
