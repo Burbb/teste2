@@ -7503,3 +7503,18 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   volta, o Esc, sem relógio novo, o movimento reduzido; dois ciclos fotografados quadro a quadro: um relógio só, a
   100 ms). A 1280, sobram 15 px de rolagem abaixo dos cartões (à vista). **Aguarda o Jean; nada integrado.** Não
   começados: o reforço/encantamento, outros interiores, o Grimório, a expansão narrativa.
+
+### 25/10/2026 (data do computador local) — A forja G: a F corrigida, na arte do jogo (protótipo)
+
+- **O pedido:** a F não foi aprovada. O Jean manteve o design do ferreiro e pediu a animação corrigida (os pés no chão,
+  as pernas ligadas, a mão presa à tenaz e à espiga, a lâmina parada) e o cenário reconstruído na linguagem dos
+  ambientes aprovados (a capela, a prisão da Ilse, a cidade, o mercado). A imagem gerada vale só para a composição.
+- **A candidata G** (`ferramentas/prototipos/hud/forja/g/`, `forja-g.js`; LEIA-ME da forja, seção "A G"; as folhas
+  `folha-forja-g.png`, `folha-estilo-g.png`, `folha-correcoes-g.png`, `folha-movimento-g.png`; `demo.bat`, o botão G
+  primeiro): as causas dos defeitos achadas na F e corrigidas (o tronco dividido no cotovelo, as botas menores longe do
+  toco, a tenaz parada e presa à mão); a oficina inteira redesenhada em `g/oficina_g.py`, sem nada da redução; a coifa
+  simétrica, sem objetos no ar e com as mãos-francesas do esteio até a viga (correções do Jean no caminho). A F fica
+  como estava.
+- **Conferido no jogo** nas duas janelas (os pontos, os cartões, o reforço, a saída e a volta, o Esc, sem relógio novo,
+  o movimento reduzido; dois ciclos quadro a quadro, um relógio só a 100 ms; sem rolagem vazia a 1280). **Aguarda o
+  Jean; nada integrado.** Não começados: o reforço/encantamento, outros interiores, o Grimório, a expansão narrativa.
