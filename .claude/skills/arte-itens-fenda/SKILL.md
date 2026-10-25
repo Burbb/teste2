@@ -12,6 +12,9 @@ pare para a conferência.
 Caminhos relativos à raiz do repositório. O que é de um objeto só (as medidas do escudo, a forma do pote) está em
 [exemplos.md](exemplos.md); não transforme aquilo em regra.
 
+**Cenários e personagens de cena:** um interior (a forja, a taverna) ou um personagem animado dentro dele segue a skill
+`arte-cenas-fenda` ([../arte-cenas-fenda/SKILL.md](../arte-cenas-fenda/SKILL.md)), não esta.
+
 **Anéis:** quando o objeto é um anel, consulte também a skill `arte-aneis-fenda`
 ([../arte-aneis-fenda/SKILL.md](../arte-aneis-fenda/SKILL.md)): as referências do Jean e a hierarquia delas, a
 perspectiva preferida, a construção do aro antes da decoração, a comparação com a referência principal e os anéis
