@@ -368,3 +368,20 @@ tudo certo** (os nomes, os cartões, o reforço, a saída e a volta, o Esc, sem 
 - O corpo é montado por partes com a luz em três tons (como as figuras do jogo, que são grades e retângulos); o rosto,
   a barba e a trança são grades à mão.
 - **Aguarda a avaliação do Jean; nada integrado.**
+
+## A H2: a H com o olho ajustado, a candidata (25/10/2026; protótipo)
+
+O Jean aprovou na H a oficina, o enquadramento, o corpo, a barriga, o estilo e o movimento, e manteve a escala do
+ferreiro (os enquadramentos da forja, da Ilse e do mercador são diferentes). Faltava o rosto: no tamanho real, o escuro
+do olho encostava na transição para o nariz e a construção olho/sobrancelha confundia. A H fica como estava; a H2
+(`h2/`, `forja-h2.js`) muda só a cabeça (`CABECA` em `h2/ferreiro_h2.py`, duas linhas): o olho um pixel mais para trás,
+a órbita mais escura entre a ponte do nariz e o olho, a sobrancelha logo acima, o olhar para a espada. Três variantes
+foram testadas no tamanho real nas poses do alto, do golpe e do rebote (recuar com a órbita entre a ponte e o olho;
+recuar com a órbita só sob a sobrancelha, que apagava o olho; manter o olho e separar a ponte, que continuava apertado);
+ficou a primeira. A barriga, a escala, a oficina e o ritmo não mudaram. Folha: `folha-rosto-h2.png` (H e H2 nas três
+poses, no tamanho do jogo e a 8×, e no jogo a 1920). Conferido: `exportar_h2.py --conferir` (53 de 53),
+`fotografar.mjs` com H e H2 nas duas janelas (tudo certo) e `ciclo_f.mjs` com a H2 (um relógio só). A demonstração:
+`demo.bat`, o botão H2 primeiro. **Aguarda a avaliação do Jean; nada integrado.**
+
+O processo da forja ficou registrado na skill `arte-cenas-fenda` (`.claude/skills/arte-cenas-fenda/`, com a forja como
+estudo de caso em `forja.md`), para os próximos interiores.
