@@ -137,19 +137,52 @@ Os atuais Ataque, Poder, Agilidade e Defesa não são uma lista definitiva de at
 - Não tentar tornar todos os atributos igualmente úteis a todas as classes; buscar mais de uma combinação razoável e evitar investimentos sem função.
 - Habilidades, talentos e propriedades de equipamento continuam responsáveis por parte importante da identidade da build; não concentrar todas as escolhas nos atributos.
 
-**Ainda em debate:** funções, quantidade, nomes, distribuição de pontos, progressão e fórmulas; relação de potência física, magia, cura e recursos com atributos; lugar de percepção, conhecimento, vontade e interação social; eventual distinção entre atributos e perícias. A lista anterior de Força, Agilidade, Constituição, Intelecto e Vontade era ilustrativa e não foi aprovada como catálogo.
+**Lista inicial aceita para o protótipo:** Força, Agilidade, Constituição, Intelecto, Percepção, Vontade e Presença. É uma base de trabalho para validar funções, não garantia de que sete atributos permanecerão na versão final. Distribuição de pontos, escala, progressão, fórmulas e valores continuam abertos; não introduzir agora uma camada extensa de perícias.
 
 A decisão de Agilidade definir a iniciativa inicial fixa continua válida; discutir nomes ou derivações não autoriza ordem dinâmica nem ações extras.
 
 #### Complemento acordado: capacidades, potência e liberdade de build
 
-As capacidades levantadas para organizar o debate são força física, agilidade, resistência corporal, conhecimento, percepção, vontade e presença social. **Não são sete atributos aprovados.** Quantidade, nomes e a divisão entre atributos e perícias continuam abertos. Não fundir capacidades apenas para reduzir a lista; distinguir características naturais de conhecimentos/práticas aprendidas quando isso produzir escolhas úteis.
+As capacidades levantadas resultaram na lista inicial de sete atributos abaixo, aceita para teste após o debate. A decisão atual substitui o estado anterior de lista apenas ilustrativa. Não fundir capacidades apenas para reduzir a lista; distinguir características de conhecimentos/práticas aprendidas quando isso produzir escolhas úteis.
 
 **Princípio acordado:** atributos devem favorecer maneiras diferentes de jogar, evitando que um único atributo obrigatório concentre quase todo o investimento de uma classe.
 
 A direção aceita para aprofundar é obter a potência básica das habilidades, do nível e do equipamento, com atributos influenciando aspectos específicos de seu uso. Isso ainda não fixa fórmula, peso de cada fonte ou elimina qualquer contribuição de atributos ao dano. Intelecto não deve se tornar automaticamente o atributo universal de toda magia, cura e invocação, apenas renomeando o Poder atual.
 
 Aplicar o mesmo critério a personagens físicos e sobrenaturais: não exigir que o guerreiro invista quase tudo em Força para funcionar enquanto o mago recebe sua potência sem custo equivalente. Comparar alternativas reais de construção, incluindo personagens mais resistentes, perceptivos ou disciplinados. A intenção é permitir variações viáveis sem eliminar especialização nem tornar todas as distribuições equivalentes.
+
+#### Lista inicial e funções aceitas para teste
+
+| Atributo | Combate | Aventura |
+|---|---|---|
+| Força | Pressão física, romper proteção e resistir a efeitos de domínio corporal | Erguer, remover obstáculos, arrombar e realizar esforço físico |
+| Agilidade | Iniciativa inicial fixa, sem ações extras | Equilíbrio, furtividade, coordenação e reação a perigos |
+| Constituição | Vida e resistência a condições corporais | Suportar doença, veneno, esforço e condições hostis |
+| Intelecto | Uso eficiente dos recursos das habilidades | Conhecimento, mecanismos, medicina e compreensão do sobrenatural |
+| Percepção | Golpes precisos e identificação de vulnerabilidades | Pistas, armadilhas, rastros e detalhes observáveis |
+| Vontade | Resistência a medo, confusão e influências; sustentação de ações que exijam concentração | Terror, tentação, pressão e contato com o Vazio |
+| Presença | Liderança, incentivo e intimidação quando fizerem parte do kit | Persuasão, negociação, liderança, ameaça e engano |
+
+São papéis para testar, não uma autorização para implementar todos os exemplos como novos subsistemas. Romper proteção não obriga criar uma barra de armadura; concentração não obriga adotar as regras de D&D; golpes precisos não aprovam um sistema universal de erro/acerto.
+
+Cuidados acordados:
+- Não atrelar automaticamente crítico, esquiva e dano à Agilidade para torná-la útil.
+- Não deixar Intelecto reduzir custos sem limites ou prolongar automaticamente todo efeito de controle.
+- Percepção não pode esconder informações essenciais para responder a ameaças: a preparação perigosa continua comunicada para todos.
+- Presença e Percepção devem provar sua utilidade real; não criar efeitos artificiais só para justificar a lista.
+- A potência ofensiva básica vem principalmente de habilidades, nível e equipamento; atributos modulam seu uso, sem eliminar especialização ou prometer equivalência de todas as distribuições.
+- Equipamentos podem melhorar valores de combate diretamente. Uma espada não precisa conceder Força para aumentar a capacidade ofensiva.
+- A ficha mostra os resultados relevantes de forma direta, como vida, recurso, proteção, iniciativa e previsão da habilidade, sem exigir contas manuais.
+
+Exemplos de combinações como guerreiro de Força/Constituição, Agilidade/Percepção ou Vontade/Presença e mago de Intelecto/Vontade, Agilidade/Percepção ou Constituição/Vontade são casos para validar variedade, não arquétipos finais nem promessa de viabilidade sem habilidades que os sustentem.
+
+#### Contribuição dos companheiros fora da luta — acordada
+
+Companheiros podem contribuir contextualmente em situações da aventura, permitindo complementar capacidades do protagonista. Não usar automaticamente o maior atributo do grupo em todo teste.
+
+Um companheiro pode interpretar uma inscrição ou ajudar numa tarefa quando a situação permitir. Não escolhe pelo protagonista numa conversa íntima, numa decisão pessoal ou numa consequência narrativa que pertença a ele. A interação social não deve virar um imposto obrigatório de Presença no herói para acessar todo o conteúdo.
+
+Não implementar agora revisão geral de diálogos, testes ou campanha. O protótipo pode demonstrar o princípio em exemplos isolados, identificados como provisórios; integração narrativa depende de trabalho posterior.
 
 **Antes de enviar o próximo prompt ao Claude**, concluir o alinhamento necessário sobre atributos. O protótipo isolado de combate permanece como próxima entrega pretendida, mas o prompt preparado anteriormente ainda não foi enviado e precisa incorporar esta direção. Esta revisão não autoriza implementar atributos novos.
 
@@ -233,7 +266,9 @@ Depois de definida a direção suficiente, o Claude poderá verificar implicaç�
 | Controle e limite de pets/invocações | Em debate |
 | Atributos para capacidades dentro e fora do combate | Direção acordada |
 | Valores derivados para leitura clara do desempenho em combate | Direção acordada |
-| Lista, nomes, quantidade e fórmulas dos atributos | Em debate; exemplos não são catálogo aprovado |
+| Força, Agilidade, Constituição, Intelecto, Percepção, Vontade e Presença | Lista inicial aceita para teste; permanência final sujeita à validação |
+| Funções dos sete atributos | Papéis aceitos para teste; fórmulas, valores e pontos abertos |
+| Contribuição contextual de companheiros na aventura | Acordado; sem substituir decisões pessoais do protagonista |
 | Evitar atributo único obrigatório por classe | Princípio acordado, aplicado a físicos e sobrenaturais |
 | Potência básica por habilidade, nível e equipamento; atributos modulam o uso | Direção aceita para aprofundar; fórmulas e pesos abertos |
 | Kit limitado e investimento seletivo | Direção acordada |
