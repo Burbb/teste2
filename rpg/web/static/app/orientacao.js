@@ -523,12 +523,16 @@ const Orientacao = (() => {
     } else if (zona) {
       // Na faixa (ou acima das cartas): alinhado ao controle; ao lado da janelinha de Habilidades quando ela está aberta.
       // A janelinha de Habilidades desce sobre a faixa: o quadro vai para o lado dela que tem espaço.
+      // Sem lado com espaço (a janelinha larga), o quadro desce para logo abaixo da linha explicada, dentro da
+      // janelinha: empurrado para a faixa, ele cobria a parte de baixo da linha.
       const jan = a.aoLado && a.aoLado.getBoundingClientRect();
-      if (jan) x = jan.right + 12 + w <= zona.left + zona.width ? jan.right + 12 : jan.left - 12 - w;
+      const sob = jan && jan.right + 12 + w > zona.left + zona.width && jan.left - 12 - w < zona.left + 4;
+      if (sob) x = r.left + r.width / 2 - w / 2;
+      else if (jan) x = jan.right + 12 + w <= zona.left + zona.width ? jan.right + 12 : jan.left - 12 - w;
       else x = r.left + r.width / 2 - w / 2;
       x = Math.max(zona.left + 4, Math.min(zona.left + zona.width - w - 4, x));
-      y = zona.top + Math.max(4, (zona.height - h) / 2);
-      lado = jan ? (x >= jan.right ? "direita" : "esquerda") : zona.top >= r.bottom ? "baixo" : "cima";
+      y = sob ? r.bottom + PERTO : zona.top + Math.max(4, (zona.height - h) / 2);
+      lado = sob ? "baixo" : jan ? (x >= jan.right ? "direita" : "esquerda") : zona.top >= r.bottom ? "baixo" : "cima";
     } else {
       x = r.left + r.width / 2 - w / 2;
       y = r.bottom + 12;
