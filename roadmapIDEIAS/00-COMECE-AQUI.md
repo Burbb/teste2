@@ -7398,3 +7398,32 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   conferidas antes de atualizar), pyflakes e fumaça (tudo certo); as telas iniciais a 1920×945 e 1280×720.
 - **A ordem combinada:** fechar o tutorial, o aviso de talento e as telas iniciais (título, saves, criação); depois a
   forja. O reforço/encantamento e a expansão narrativa não começam antes do pedido.
+
+### 25/10/2026 (data do computador local) — Tutorial R e aviso de talento R no jogo (1.207.0); a criação em etapas (R2)
+
+- **Retomada em outra conta:** conferidos a branch (`claude/tender-einstein-tx3tjl`, igual ao remoto), o remoto
+  (`Burbb/teste2`) e as alterações locais (só `ferramentas/arte/referencias/icones/caido-avatar-512.png`, pessoal, fora
+  do Git e preservado). As fontes finais foram as dos registros da rodada anterior: a R de `orientacao/orientacao.css`
+  (com a troca da ordem dos botões do cenário) e a R de `aviso-talento/aviso.css` (com o HTML do `cenario_aviso.py`).
+- **Integrados na 1.207.0, aprovados pelo Jean:** os quadros de orientação na B refinada (R): o fundo escuro, o ouro
+  envelhecido na seta, no traço junto dela e no contorno do controle, o "Entendi" no botão da HUD, o Tab na ordem da
+  leitura; textos, gatilhos, sequência e comandos sem mudança. O aviso de ponto de talento R: o botão da HUD com o ícone
+  dos Talentos da doca e a seta dentro, um `<button>` (Enter e espaço abrem). Saíram a estrela, a seta de fora, o brilho e
+  o sprite `seta_esq`. O "Continuar" da subida de nível ficou fora, por decisão do Jean.
+- **Conferido:** as fotos de referência da R tiradas pelos roteiros dos protótipos antes de integrar e as do jogo depois:
+  os 14 quadros (mural, luta guiada C1–C4, bordas, doca, achado) nas duas janelas com as medidas iguais e 0 px sobre o
+  controle, `gestos.mjs` (o clique no quadro não escolhe nada, Enter no Entendi fecha só ele); o aviso com 1, 3 e 12
+  pontos numa linha, sumido sem pontos, com o foco visível. `unittest` (682 ok, 1 pulado), gabarito sem mudança (a
+  mudança é só visual), pyflakes e fumaça (tudo certo).
+- **Criação de personagem (protótipo, aguardando o Jean):** a criação em etapas R2
+  (`ferramentas/prototipos/hud/telas-iniciais/`, segunda rodada no LEIA-ME; `folha-criacao-r2.png`, R × R2 com os mesmos
+  dados; `demo.bat`, porta 8770, botão R2): uma área própria sobre a paisagem do título, "Nome → Classe → Modo", o resumo
+  no rodapé, cartões de classe com o retrato, a frase, o ataque e o recurso e as especializações discretas, o modo pelas
+  consequências da queda, o tutorial logo abaixo e "Começar campanha"; escolher separado de avançar. Conferida no jogo
+  (`criacao_r2.mjs`, as duas janelas, tudo certo, três campanhas começadas). O que é só da demonstração e o que a
+  integração pede está no LEIA-ME. A R fica para comparar.
+- **Pendências reais das telas iniciais:** a aprovação e a integração da criação; os cartões e a lista do "Carregar
+  jogo", ainda no acabamento antigo, sem proposta. O título e o save recusado ficam como estão.
+- **A etapa 2 não está encerrada.** Próximo passo: o Jean avalia a R2; aprovada, integrar a criação; depois, a proposta
+  dos cartões dos saves e a revisão por evidência dos componentes antigos restantes; então a forja. Não começados (sem
+  pedido): a forja, o reforço/encantamento, o Grimório, a expansão narrativa.
