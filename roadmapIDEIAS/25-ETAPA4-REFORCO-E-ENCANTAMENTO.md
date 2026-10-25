@@ -122,6 +122,27 @@ Aceleradores, atrasos ou trocas de posição na ordem não são uma extensão ap
 - **Preparações perigosas com oportunidade de resposta:** sinalização deve permitir alguma reação real antes da resolução; avisar quando ninguém pode responder não basta.
 - Evitar multiplicar ações pequenas obrigatórias antes de encerrar a vez. Cada turno deve concentrar uma decisão relevante.
 
+### 3.7 Atributos do personagem e valores de combate — direção acordada
+
+**Atributos representam capacidades do personagem dentro e fora das lutas; valores derivados mostram de forma direta o desempenho em combate.** As duas camadas devem coexistir com clareza: o jogador constrói capacidades e enxerga o resultado de atributos, equipamento, classe e efeitos sem precisar fazer contas manualmente.
+
+Os atuais Ataque, Poder, Agilidade e Defesa não são uma lista definitiva de atributos primários. Ataque e proteção, por exemplo, podem ser resultados de outras escolhas. A relação exata será definida; não substituir ou renomear campos automaticamente.
+
+- Atributos devem ter presença na aventura, nos testes e nas alternativas de resolução, além da luta.
+- Situações podem admitir capacidades diferentes ou soluções por ferramenta, informação ou decisões anteriores. Não é obrigatório oferecer todas as alternativas em toda situação.
+- Evitar que interação social seja uma única barreira de Carisma para todo conteúdo.
+- Atributos não impõem personalidade: pouco conhecimento não obriga o personagem a ser bobo; pouca capacidade social não impede escolher uma fala inteligente. As decisões continuam com o jogador.
+- A ficha deve mostrar claramente valores úteis como vida, proteção e desempenho ofensivo, mesmo quando derivados de outras capacidades.
+- Baldur’s Gate 3 foi uma referência conceitual para capacidades dentro e fora do combate, não uma aprovação para copiar seus seis atributos, sua escala ou a conversão em modificadores.
+- Não tentar tornar todos os atributos igualmente úteis a todas as classes; buscar mais de uma combinação razoável e evitar investimentos sem função.
+- Habilidades, talentos e propriedades de equipamento continuam responsáveis por parte importante da identidade da build; não concentrar todas as escolhas nos atributos.
+
+**Ainda em debate:** funções, quantidade, nomes, distribuição de pontos, progressão e fórmulas; relação de potência física, magia, cura e recursos com atributos; lugar de percepção, conhecimento, vontade e interação social; eventual distinção entre atributos e perícias. A lista anterior de Força, Agilidade, Constituição, Intelecto e Vontade era ilustrativa e não foi aprovada como catálogo.
+
+A decisão de Agilidade definir a iniciativa inicial fixa continua válida; discutir nomes ou derivações não autoriza ordem dinâmica nem ações extras.
+
+**Antes de enviar o próximo prompt ao Claude**, concluir o alinhamento necessário sobre atributos. O protótipo isolado de combate permanece como próxima entrega pretendida, mas o prompt preparado anteriormente ainda não foi enviado e precisa incorporar esta direção. Esta revisão não autoriza implementar atributos novos.
+
 ## 4. Vida útil das peças — direção acordada
 
 O caminho escolhido é **um meio-termo entre substituição constante e levar qualquer peça indefinidamente**, com espaço para apego a boas descobertas.
@@ -200,6 +221,9 @@ Depois de definida a direção suficiente, o Claude poderá verificar implicaç�
 | Uma ação principal por turno | Direção aprovada |
 | Ataque básico útil e defesa até o próximo turno do personagem | Direção aprovada; valores e marcos precisos abertos |
 | Controle e limite de pets/invocações | Em debate |
+| Atributos para capacidades dentro e fora do combate | Direção acordada |
+| Valores derivados para leitura clara do desempenho em combate | Direção acordada |
+| Lista, nomes, quantidade e fórmulas dos atributos | Em debate; exemplos não são catálogo aprovado |
 | Kit limitado e investimento seletivo | Direção acordada |
 | Cinco habilidades + uma ultimate | Hipótese, não número fechado |
 | Caminhos curtos de modificadores por habilidade | Direção acordada; três passos é hipótese |
