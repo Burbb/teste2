@@ -1,9 +1,10 @@
 """A folha compacta do protótipo de combate e atributos: as capturas que os roteiros conferir*.mjs gravam
-(capturas/1920-*.png, v2-1920-*.png e v3-1920-*.png), reduzidas lado a lado com um rótulo, numa imagem só para ver de relance.
+(capturas/1920-*.png e v2/v3/v4-1920-*.png), reduzidas lado a lado com um rótulo, numa imagem só para ver de relance.
 
     python ferramentas/prototipos/combate-atributos/auxiliares/folha.py        # a v1: grava folha.png
     python ferramentas/prototipos/combate-atributos/auxiliares/folha.py v2     # a v2: grava folha-v2.png
     python ferramentas/prototipos/combate-atributos/auxiliares/folha.py v3     # a v3: grava folha-v3.png
+    python ferramentas/prototipos/combate-atributos/auxiliares/folha.py v4     # a v4: grava folha-v4.png
 """
 import pathlib
 import sys
@@ -40,6 +41,15 @@ QUADROS_V3 = [("v3-1920-1-preparar-chama", "Preparar: tipo e escala de cada golp
               ("v3-1920-9-comparar", "Comparar as cinco builds nos três alvos"),
               ("v3-1920-10-resultados", "Resultados: ultimate, ameaças, recurso antes e depois"),
               ("v3-1920-8-fim", "O fim: ameaças e o uso da ultimate")]
+QUADROS_V4 = [("v4-1920-1-preparar-chama", "Preparar: a Chama com a Chuva e a comparação do fogo"),
+              ("v4-1920-2-chuva-no-grupo", "Encontro 3: a Chuva pôs Queimadura em cada inimigo"),
+              ("v4-1920-3-conflagracao", "A Conflagração consome as Queimaduras; Morel com o Golpe Oportuno"),
+              ("v4-1920-9-caes", "Os Cães de Brasa: a Queimadura pega, o dano cai"),
+              ("v4-1920-4-preparar-baluarte", "O Baluarte (igual à v3)"),
+              ("v4-1920-7-ultimate-usada", "A ultimate: uma vez por luta"),
+              ("v4-1920-8-ameaca", "O Bruto anunciando o golpe"),
+              ("v4-1920-11-comparar", "Comparar as builds"),
+              ("v4-1920-12-resultados", "Resultados com os detalhes")]
 COLUNAS, LARGURA, MARGEM, ROTULO = 3, 760, 16, 30
 
 
@@ -54,13 +64,13 @@ def fonte(t):
 
 def main():
     versao = (sys.argv[1:] or ["v1"])[0]
-    quadros = {"v1": QUADROS, "v2": QUADROS_V2, "v3": QUADROS_V3}[versao]
+    quadros = {"v1": QUADROS, "v2": QUADROS_V2, "v3": QUADROS_V3, "v4": QUADROS_V4}[versao]
     ims = [(Image.open(CAPT / f"{n}.png").convert("RGB"), r) for n, r in quadros if (CAPT / f"{n}.png").exists()]
     alt = round(LARGURA * ims[0][0].height / ims[0][0].width)
     linhas = (len(ims) + COLUNAS - 1) // COLUNAS
     folha = Image.new("RGB", (COLUNAS * (LARGURA + MARGEM) + MARGEM, 60 + linhas * (alt + ROTULO + MARGEM)), (18, 17, 16))
     d = ImageDraw.Draw(folha)
-    titulo = {"v1": "primeira versão", "v2": "segunda versão", "v3": "terceira versão"}[versao]
+    titulo = {"v1": "primeira versão", "v2": "segunda versão", "v3": "terceira versão", "v4": "quarta versão"}[versao]
     d.text((MARGEM, 16), f"Protótipo de combate e atributos, {titulo} (nada no jogo) · 1920×945", fill=(242, 201, 76),
            font=fonte(26))
     for k, (im, rotulo) in enumerate(ims):

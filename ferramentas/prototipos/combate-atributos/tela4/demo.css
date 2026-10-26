@@ -1,0 +1,11 @@
+/* PROTÓTIPO do combate e dos atributos, quarta versão (26/10/2026; nada no jogo). Por cima da v1, v2 e v3: a tabela
+   da comparação do fogo em Preparar e a Queimadura prevista nas cartas de alvo. */
+#prep .fogo td.grupo { color: var(--ouro); font-weight: 600; padding-top: 6px; }
+.previsto .queima { color: var(--brasa); }
+/* oito ações (a Chama com a Chuva): o custo pode quebrar e, nas janelas menores, a descrição das ações disponíveis fica
+   na dica (o mouse); o motivo de uma indisponível continua à vista */
+.acao .custo { white-space: normal; }
+@media (max-height: 800px), (max-width: 1400px) {
+  .acao:not(.nao) .desc { display: none; }
+  .acao .tipo { display: block; width: max-content; margin: 1px 0; }
+}

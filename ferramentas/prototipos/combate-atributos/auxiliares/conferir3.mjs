@@ -1,4 +1,4 @@
-// Confere e fotografa a v3 da demo do combate e dos atributos (protótipo; nada no jogo) a 1920×945 e a 1280×720: a
+// Confere e fotografa a v3 da demo do combate e dos atributos (em /v3/; a v4 tem conferir4.mjs) a 1920×945 e a 1280×720: a
 // tela Preparar (tipo e escala de cada habilidade, dano por alvo com as resistências, o manto mudando o dano recebido,
 // a combinação de Queimadura, a ultimate ou "sem ultimate equipada"), a luta (sem rolagem nem corte, previsão igual ao
 // dano real por tipo, a ultimate disponível e depois "já usada", a ameaça do Bruto ininterruptível sinalizada), o
@@ -29,7 +29,7 @@ if (!URL) { console.log("o servidor não subiu"); process.exit(1); }
 const estado = (p) => p.evaluate(() => Demo.estado);
 const ficha = (p) => p.evaluate(() => Demo.ficha);
 async function tecla(p, ...ks) { for (const k of ks) { await p.keyboard.press(k); await espera(120); } }
-async function prep(p) { await p.goto(URL); await p.waitForSelector("#prep .lutar"); await espera(300); }
+async function prep(p) { await p.goto(URL + "v3/"); await p.waitForSelector("#prep .lutar"); await espera(300); }
 async function mudouFicha(p, acao) {
   const antes = JSON.stringify(await ficha(p));
   await acao();
