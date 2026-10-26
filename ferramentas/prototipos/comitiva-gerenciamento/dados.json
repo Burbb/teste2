@@ -1,0 +1,526 @@
+{
+ "personagens": [
+  {
+   "id": "j",
+   "nome": "Jean",
+   "titulo": "Paladino · nível 5",
+   "retrato": "j",
+   "classe": "guerreiro",
+   "pecas": "guerreiro",
+   "recurso": "Vigor",
+   "equip": {
+    "cabeca": {
+     "nome": "Barbuta de Ferro",
+     "raridade": "comum",
+     "bonus": "+1 Defesa, +2 Vida",
+     "nivel": 4,
+     "icone": "elmo",
+     "slot": "cabeca",
+     "base": "Barbuta de Ferro",
+     "bonus_bruto": {
+      "defesa": 1,
+      "max_hp": 2
+     },
+     "classe": "guerreiro",
+     "lore": null
+    },
+    "amuleto": {
+     "nome": "Medalhão dos Espinhos",
+     "raridade": "comum",
+     "bonus": "+4 Espinhos",
+     "nivel": 4,
+     "icone": "amuleto",
+     "slot": "amuleto",
+     "base": "Medalhão",
+     "bonus_bruto": {
+      "espinhos": 4
+     },
+     "classe": null,
+     "lore": null
+    },
+    "armadura": {
+     "nome": "★ Manto de Cinzas (Manto)",
+     "raridade": "lendario",
+     "bonus": "+3 Defesa, +24 Vigor, +3 Vida por turno",
+     "nivel": 4,
+     "icone": "manto",
+     "slot": "armadura",
+     "base": "Manto",
+     "bonus_bruto": {
+      "defesa": 3,
+      "max_rec": 24,
+      "regen_vida": 3
+     },
+     "classe": null,
+     "lore": "Tecido com as cinzas da última vila que a Fenda engoliu."
+    },
+    "maos": {
+     "nome": "Manopla de Aço",
+     "raridade": "comum",
+     "bonus": "+1 Ataque, +1 Defesa",
+     "nivel": 4,
+     "icone": "manopla",
+     "slot": "maos",
+     "base": "Manopla de Aço",
+     "bonus_bruto": {
+      "atk": 1,
+      "defesa": 1
+     },
+     "classe": "guerreiro",
+     "lore": null
+    },
+    "arma": {
+     "nome": "Espada de Aço do Lobo",
+     "raridade": "magico",
+     "bonus": "+7 Ataque",
+     "nivel": 4,
+     "icone": "espada",
+     "slot": "arma",
+     "base": "Espada de Aço",
+     "bonus_bruto": {
+      "atk": 7
+     },
+     "classe": "guerreiro",
+     "lore": null
+    },
+    "secundaria": {
+     "nome": "Escudo de Ferro",
+     "raridade": "comum",
+     "bonus": "+1 Defesa, +2 Vida",
+     "nivel": 4,
+     "icone": "escudo",
+     "slot": "secundaria",
+     "base": "Escudo de Ferro",
+     "bonus_bruto": {
+      "defesa": 1,
+      "max_hp": 2
+     },
+     "classe": "guerreiro",
+     "lore": null
+    },
+    "pernas": {
+     "nome": "Greva de Aço da Regeneração",
+     "raridade": "magico",
+     "bonus": "+1 Defesa, +3 Vida, +2 Vida por turno",
+     "nivel": 4,
+     "icone": "calca",
+     "slot": "pernas",
+     "base": "Greva de Aço",
+     "bonus_bruto": {
+      "defesa": 1,
+      "max_hp": 3,
+      "regen_vida": 2
+     },
+     "classe": "guerreiro",
+     "lore": null
+    },
+    "pes": {
+     "nome": "Sussurro da Forca (Bota Ferrada de Ferro)",
+     "raridade": "raro",
+     "bonus": "+1 Agilidade, +1 Defesa, +3 Ataque, +4% chance de crítico",
+     "nivel": 4,
+     "icone": "bota_ferro",
+     "slot": "pes",
+     "base": "Bota Ferrada de Ferro",
+     "bonus_bruto": {
+      "agi": 1,
+      "defesa": 1,
+      "atk": 3,
+      "critico": 4
+     },
+     "classe": "guerreiro",
+     "lore": null
+    },
+    "anel1": null,
+    "anel2": {
+     "nome": "Sinete da Regeneração",
+     "raridade": "magico",
+     "bonus": "+2 Vida por turno",
+     "nivel": 4,
+     "icone": "anel",
+     "slot": "anel",
+     "base": "Sinete",
+     "bonus_bruto": {
+      "regen_vida": 2
+     },
+     "classe": null,
+     "lore": null
+    }
+   },
+   "derivados": {
+    "Ataque": 27,
+    "Defesa": 22,
+    "Agilidade": 4,
+    "Poder": 11
+   },
+   "atributos": {
+    "forca": 9,
+    "agilidade": 3,
+    "constituicao": 8,
+    "intelecto": 2,
+    "percepcao": 4,
+    "vontade": 6,
+    "presenca": 4
+   },
+   "temporario": false,
+   "disponivel": true
+  },
+  {
+   "id": "odete",
+   "nome": "Odette",
+   "titulo": "clériga desertora",
+   "retrato": "odete",
+   "classe": "mago",
+   "pecas": "mago",
+   "recurso": "Fé",
+   "equip": {
+    "cabeca": null,
+    "amuleto": null,
+    "armadura": {
+     "nome": "Veste Rúnica Puída",
+     "raridade": "comum",
+     "bonus": "+1 Defesa, +7 Vida",
+     "nivel": 4,
+     "icone": "manto",
+     "slot": "armadura",
+     "base": "Veste Rúnica Puída",
+     "bonus_bruto": {
+      "defesa": 1,
+      "max_hp": 7
+     },
+     "classe": "mago",
+     "lore": null
+    },
+    "maos": null,
+    "arma": {
+     "nome": "Maldição Antiga (Varinha de Ferro)",
+     "raridade": "raro",
+     "bonus": "+4 Poder, +9 Fé, +13 Vida, +3 Ataque",
+     "nivel": 4,
+     "icone": "varinha",
+     "slot": "arma",
+     "base": "Varinha de Ferro",
+     "bonus_bruto": {
+      "poder": 4,
+      "max_rec": 9,
+      "max_hp": 13,
+      "atk": 3
+     },
+     "classe": "mago",
+     "lore": null
+    },
+    "secundaria": null,
+    "pernas": null,
+    "pes": null,
+    "anel1": null,
+    "anel2": null
+   },
+   "derivados": {
+    "Ataque": 6.4,
+    "Defesa": 5,
+    "Agilidade": 4,
+    "Poder": 10.8
+   },
+   "vida": [
+    54,
+    54
+   ],
+   "atributos": {
+    "forca": 2,
+    "agilidade": 3,
+    "constituicao": 4,
+    "intelecto": 7,
+    "percepcao": 3,
+    "vontade": 5
+   },
+   "sugestao": [
+    "vontade",
+    "intelecto",
+    "constituicao"
+   ],
+   "pontos": 4,
+   "temporario": true,
+   "disponivel": true
+  },
+  {
+   "id": "morel",
+   "nome": "Morel",
+   "titulo": "mercenário",
+   "retrato": "morel",
+   "classe": "guerreiro",
+   "pecas": "guerreiro",
+   "recurso": "Vigor",
+   "equip": {
+    "cabeca": null,
+    "amuleto": null,
+    "armadura": {
+     "nome": "Couraça de Ferro da Fonte",
+     "raridade": "magico",
+     "bonus": "+3 Defesa, +8 Vida, +9 Vigor",
+     "nivel": 4,
+     "icone": "armadura",
+     "slot": "armadura",
+     "base": "Couraça de Ferro",
+     "bonus_bruto": {
+      "defesa": 3,
+      "max_hp": 8,
+      "max_rec": 9
+     },
+     "classe": "guerreiro",
+     "lore": null
+    },
+    "maos": null,
+    "arma": {
+     "nome": "Maça Enferrujada",
+     "raridade": "comum",
+     "bonus": "+3 Ataque",
+     "nivel": 4,
+     "icone": "maca",
+     "slot": "arma",
+     "base": "Maça Enferrujada",
+     "bonus_bruto": {
+      "atk": 3
+     },
+     "classe": "guerreiro",
+     "lore": null
+    },
+    "secundaria": null,
+    "pernas": null,
+    "pes": null,
+    "anel1": null,
+    "anel2": null
+   },
+   "derivados": {
+    "Ataque": 14.0,
+    "Defesa": 10,
+    "Agilidade": 3,
+    "Poder": 0
+   },
+   "vida": [
+    88,
+    88
+   ],
+   "atributos": {
+    "forca": 7,
+    "agilidade": 3,
+    "constituicao": 7,
+    "intelecto": 1,
+    "percepcao": 3,
+    "vontade": 3
+   },
+   "sugestao": [
+    "constituicao",
+    "forca",
+    "vontade"
+   ],
+   "pontos": 4,
+   "temporario": true,
+   "disponivel": true
+  },
+  {
+   "id": "yara",
+   "nome": "Yara",
+   "titulo": "bruxa do pântano",
+   "retrato": "yara",
+   "classe": "mago",
+   "pecas": "mago",
+   "recurso": "Mana",
+   "equip": {
+    "cabeca": null,
+    "amuleto": null,
+    "armadura": {
+     "nome": "Lamento do Túmulo (Túnica de Linho)",
+     "raridade": "raro",
+     "bonus": "+1 Defesa, +21 Vida, +3 Ataque, +4% chance de crítico",
+     "nivel": 4,
+     "icone": "manto",
+     "slot": "armadura",
+     "base": "Túnica de Linho",
+     "bonus_bruto": {
+      "defesa": 1,
+      "max_hp": 21,
+      "atk": 3,
+      "critico": 4
+     },
+     "classe": "mago",
+     "lore": null
+    },
+    "maos": null,
+    "arma": {
+     "nome": "Maldição do Túmulo (Varinha Enferrujada)",
+     "raridade": "raro",
+     "bonus": "+3 Poder, +4% roubo de vida, +2 Defesa",
+     "nivel": 4,
+     "icone": "varinha",
+     "slot": "arma",
+     "base": "Varinha Enferrujada",
+     "bonus_bruto": {
+      "poder": 3,
+      "roubo_vida": 4,
+      "defesa": 2
+     },
+     "classe": "mago",
+     "lore": null
+    },
+    "secundaria": null,
+    "pernas": null,
+    "pes": null,
+    "anel1": null,
+    "anel2": null
+   },
+   "derivados": {
+    "Ataque": 4.6,
+    "Defesa": 3,
+    "Agilidade": 5,
+    "Poder": 15.8
+   },
+   "vida": [
+    46,
+    46
+   ],
+   "atributos": {
+    "forca": 1,
+    "agilidade": 4,
+    "constituicao": 3,
+    "intelecto": 8,
+    "percepcao": 5,
+    "vontade": 3
+   },
+   "sugestao": [
+    "intelecto",
+    "percepcao",
+    "vontade"
+   ],
+   "pontos": 4,
+   "temporario": true,
+   "disponivel": false,
+   "indisponivel": "Ferida: fora das lutas até descansar. O equipamento dela pode ser trocado."
+  }
+ ],
+ "bolsa": [
+  {
+   "nome": "Montante de Ferro do Carniceiro",
+   "raridade": "magico",
+   "bonus": "+5 Ataque, +6 Vida por abate",
+   "nivel": 5,
+   "icone": "espada",
+   "slot": "arma",
+   "base": "Montante de Ferro",
+   "bonus_bruto": {
+    "atk": 5,
+    "vida_abate": 6
+   },
+   "classe": "guerreiro",
+   "lore": null
+  },
+  {
+   "nome": "Grimório de Ferro da Precisão",
+   "raridade": "magico",
+   "bonus": "+5 Poder, +4% chance de crítico",
+   "nivel": 5,
+   "icone": "livro",
+   "slot": "arma",
+   "base": "Grimório de Ferro",
+   "bonus_bruto": {
+    "poder": 5,
+    "critico": 4
+   },
+   "classe": "mago",
+   "lore": null
+  },
+  {
+   "nome": "Escudo de Ferro do Urso",
+   "raridade": "magico",
+   "bonus": "+2 Defesa, +17 Vida",
+   "nivel": 5,
+   "icone": "escudo",
+   "slot": "secundaria",
+   "base": "Escudo de Ferro",
+   "bonus_bruto": {
+    "defesa": 2,
+    "max_hp": 17
+   },
+   "classe": "guerreiro",
+   "lore": null
+  },
+  {
+   "nome": "Osso Sangrento (Brigantina de Ferro)",
+   "raridade": "raro",
+   "bonus": "+3 Defesa, +9 Vida, +3 Ataque, +3 Poder",
+   "nivel": 5,
+   "icone": "armadura",
+   "slot": "armadura",
+   "base": "Brigantina de Ferro",
+   "bonus_bruto": {
+    "defesa": 3,
+    "max_hp": 9,
+    "atk": 3,
+    "poder": 3
+   },
+   "classe": null,
+   "lore": null
+  },
+  {
+   "nome": "Diadema de Lã Negra da Regeneração",
+   "raridade": "magico",
+   "bonus": "+1 Defesa, +3 Vida, +2 Vida por turno",
+   "nivel": 5,
+   "icone": "coroa",
+   "slot": "cabeca",
+   "base": "Diadema de Lã Negra",
+   "bonus_bruto": {
+    "defesa": 1,
+    "max_hp": 3,
+    "regen_vida": 2
+   },
+   "classe": "mago",
+   "lore": null
+  },
+  {
+   "nome": "Anel dos Espinhos",
+   "raridade": "magico",
+   "bonus": "+5 Espinhos",
+   "nivel": 5,
+   "icone": "anel",
+   "slot": "anel",
+   "base": "Anel",
+   "bonus_bruto": {
+    "espinhos": 5
+   },
+   "classe": null,
+   "lore": null
+  },
+  {
+   "nome": "Arco Recurvo Enferrujado",
+   "raridade": "comum",
+   "bonus": "+3 Ataque, +1 Agilidade",
+   "nivel": 5,
+   "icone": "arco",
+   "slot": "arma",
+   "base": "Arco Recurvo Enferrujado",
+   "bonus_bruto": {
+    "atk": 3,
+    "agi": 1
+   },
+   "classe": "arqueiro",
+   "lore": null
+  },
+  {
+   "nome": "Bota Ferrada Enferrujada",
+   "raridade": "comum",
+   "bonus": "+1 Agilidade, +1 Defesa",
+   "nivel": 5,
+   "icone": "bota_ferro",
+   "slot": "pes",
+   "base": "Bota Ferrada Enferrujada",
+   "bonus_bruto": {
+    "agi": 1,
+    "defesa": 1
+   },
+   "classe": null,
+   "lore": null
+  }
+ ],
+ "limite": 12,
+ "pontos_por_nivel": 1
+}

@@ -1,0 +1,43 @@
+/* O protótipo da comitiva: a janela do inventário do jogo (05-paineis, 16-hud-telas) com as abas por cima e a ficha
+   da peça ao lado. Só o que a proposta acrescenta mora aqui. */
+body.prototipo-comitiva { margin: 0; padding: 16px; min-height: 100vh; box-sizing: border-box; background: #0d0c0f; color: var(--tinta, #ece2cc); }
+.aviso-proposta { max-width: 1180px; margin: 0 auto 12px; padding: 8px 12px; font-size: 15px; color: #f6d98a;
+  background: #2a2210; border: 1px solid #6e5420; }
+.janela-comitiva { max-width: 1180px; margin: 0 auto; padding: 12px 16px 18px; background: #16141a; border: 2px solid #3d3428; }
+.abas { display: flex; gap: 6px; margin-bottom: 10px; border-bottom: 2px solid #3d3428; }
+.aba { display: flex; align-items: center; gap: 8px; padding: 6px 12px 6px 6px; font: inherit; font-size: 16px; color: var(--tinta-2, #cfc4ad);
+  background: #121016; border: 2px solid #3d3428; border-bottom: none; cursor: pointer; }
+.aba.ativa { color: var(--tinta, #ece2cc); background: #221e26; border-color: var(--ouro, #d4a94a); }
+.aba:focus-visible { outline: 2px solid var(--ouro, #d4a94a); outline-offset: 2px; }
+.aba.indisponivel .aba-retrato { filter: grayscale(1) brightness(0.7); }
+.aba-retrato { display: grid; place-items: center; width: 34px; height: 34px; }
+.aba-tag { padding: 0 5px; font-size: 11px; letter-spacing: .04em; text-transform: uppercase; color: #1b1408; background: #e8c56a; }
+.janela-comitiva .tela.inventario { display: grid; grid-template-columns: auto minmax(320px, 1fr) minmax(280px, 340px); gap: 18px; align-items: start; }
+.janela-comitiva .espaco { font: inherit; cursor: pointer; }
+.janela-comitiva .espaco.marcado, .janela-comitiva .celula.marcado { outline: 2px solid var(--ouro, #d4a94a); outline-offset: 1px; }
+.janela-comitiva button.celula { padding: 0; cursor: pointer; }
+.janela-comitiva .celula.inutil { opacity: 0.45; }
+.janela-comitiva .pecas { margin-top: 4px; font-size: 14px; color: var(--tinta-3, #a89878); }
+.janela-comitiva h4 small { font-weight: normal; color: var(--tinta-3, #a89878); }
+.janela-comitiva .atributos-base { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 3px; }
+.janela-comitiva .attr-base { position: relative; display: flex; flex-direction: column; align-items: center; padding: 3px 0 4px; background: rgba(0, 0, 0, 0.22); border: 1px solid rgba(255, 255, 255, 0.08); }
+.janela-comitiva .attr-base small { font-size: 11px; letter-spacing: .08em; color: var(--tinta-3, #a89878); }
+.janela-comitiva .attr-base b { font-size: 17px; }
+.janela-comitiva .attr-mais { position: absolute; top: -6px; right: -4px; width: 18px; height: 18px; padding: 0; font: 700 14px/1 sans-serif; color: #1b1408; background: #e8c56a; border: 1px solid #6e4a24; cursor: pointer; }
+.janela-comitiva .attr-pontos { margin: 0 0 4px; font-size: 14px; color: #f6d98a; }
+.janela-comitiva .sugerir { margin-top: 6px; }
+.do-grupo { display: flex; gap: 6px; flex-wrap: wrap; }
+.do-grupo .celula { position: relative; width: 56px; height: 64px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; }
+.do-grupo small { font-size: 11px; color: var(--tinta-3, #a89878); }
+.lado-ficha .comparar { padding: 10px 12px; font-size: 15px; line-height: 1.4; background: #121016; border: 2px solid #3d3428; }
+.lado-ficha .comparar.vazio { color: var(--tinta-3, #a89878); }
+.lado-ficha .ficha-item .bonus { margin: 4px 0; }
+.lado-ficha .comparacao { margin-top: 6px; display: flex; flex-wrap: wrap; gap: 4px 10px; }
+.lado-ficha .comparacao small { flex-basis: 100%; color: var(--tinta-3, #a89878); }
+.lado-ficha .melhor { color: #7fe07a; } .lado-ficha .pior { color: #ff7a6e; }
+.lado-ficha .acoes { margin-top: 10px; }
+.lado-ficha .nota { margin: 6px 0 0; font-size: 13px; color: var(--tinta-3, #a89878); }
+.botao-janela { font: inherit; font-size: 15px; padding: 5px 12px; color: var(--tinta, #ece2cc); background: #2a1f16; border: 2px solid #5a4632; cursor: pointer; }
+.botao-janela:hover, .botao-janela:focus-visible { border-color: var(--ouro, #d4a94a); outline: none; }
+.botao-janela[disabled] { opacity: .5; cursor: not-allowed; }
+@media (max-width: 1300px) { .janela-comitiva .tela.inventario { grid-template-columns: auto minmax(0, 1fr); } .lado-ficha { grid-column: 1 / -1; } }
