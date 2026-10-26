@@ -163,6 +163,19 @@ def com_reforco(it, ganho):
     return mudar
 
 
+def vestida_em(g, quem, espaco, it):
+    """Vestir `it` no espaço exato (o da peça que se compara; o anel no dedo dela). Desfeito em seguida."""
+    def mudar():
+        eq = FICHA.corpo(g, quem)
+        velho = eq[espaco]
+        eq[espaco] = it
+
+        def desfazer():
+            eq[espaco] = velho
+        return desfazer
+    return mudar
+
+
 def vestida(g, quem, it):
     """Vestir `it` no lugar do que `quem` usa no espaço dele (para comparar; desfeito em seguida)."""
     def mudar():
@@ -228,9 +241,11 @@ def ficha_peca(g, it, quem, s):
             it["veio"] = antigo
             if not antigo:
                 it.pop("veio", None)
+            linhas = [{"nome": R.NOMES.get(st, st), "antes": it["bonus"].get(st, 0),
+                       "depois": it["bonus"].get(st, 0) + v_} for st, v_ in ganho.items()]
             d["passos"].append({"veio": v, "rotulo": {"fio": "Fio", "runas": "Runas"}.get(v),
-                                "ganho": R.texto_ganho(ganho), "ouro": ouro, "fragmentos": frag, "tem": tem,
-                                "falta": falta, "motivo": motivo, "luta": luta})
+                                "ganho": R.texto_ganho(ganho), "linhas": linhas, "ouro": ouro, "fragmentos": frag,
+                                "tem": tem, "ouro_tem": g.j.ouro, "falta": falta, "motivo": motivo, "luta": luta})
     if quem is None:
         investido, propria = R.desmontar_rende(it)
         total = investido + propria
@@ -252,13 +267,23 @@ def ficha_peca(g, it, quem, s):
                 d["trocas"].append({"quem": FICHA.nome_de(g, q), "no_lugar": atual and itens.rotulo(atual), **c})
     else:
         d["desmontar"] = {"equipada": True}
+        # as substitutas: as peças da bolsa que quem usa esta poderia vestir no lugar dela
+        d["substitutas"] = []
+        for sub in g.j.mochila:
+            if sub.get("slot") != it.get("slot") or FICHA.motivo_nao_veste(g, quem, sub):
+                continue
+            c = comparar(g, quem, vestida_em(g, quem, s, sub))
+            d["substitutas"].append({"uid": sub["uid"], "nome": itens.rotulo(sub), "item": itens.ficha(sub, rec), **c})
+    d["aba"] = quem or "bolsa"
     return d
 
 
 def painel(g):
     dar_uid(g)
     m = materiais(g)
-    return {"ouro": g.j.ouro, "limite": R.LIMITE,
+    abas = [{"id": q, "nome": FICHA.nome_de(g, q), "retrato": g.j.classe if q == HEROI else q}
+            for q in FICHA.personagens(g)] + [{"id": "bolsa", "nome": "Bolsa", "retrato": None}]
+    return {"ouro": g.j.ouro, "limite": R.LIMITE, "abas": abas,
             "materiais": [{"id": k, **R.MATERIAIS[k], "qtd": m.get(k, 0)} for k in R.MATERIAIS],
             "pecas": [ficha_peca(g, it, quem, s) for it, quem, s in pecas(g)]}
 

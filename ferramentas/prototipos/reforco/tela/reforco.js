@@ -1,100 +1,160 @@
-/* Protótipo do reforço (roadmapIDEIAS/25, seção 5): a tela da forja (painel "forja_proto", demo.py) e a seção
-   "Materiais" do inventário. Só esta demonstração carrega este arquivo; o jogo não.
+/* Protótipo do reforço (roadmapIDEIAS/25, seção 5): a forja (painel "forja_proto", demo.py) e a seção "Materiais" do
+   inventário. Só esta demonstração carrega este arquivo; o jogo não.
 
-   A forja: à esquerda, as peças do grupo (no corpo de cada um e na bolsa); à direita, a peça escolhida com o passo
-   seguinte (ganho, custo, quanto o grupo tem e o que falta) e a comparação na luta, e, para a peça da bolsa, a venda,
-   a troca com quem pode usar e a desmontagem. Cada pedido é um clique deliberado: o botão trava até a forja voltar
-   desenhada, a tecla segurada não repete e a desmontagem pede uma confirmação que nomeia a peça. */
+   O balcão da forja tem três serviços: Reforçar, Desmontar e Encantar (só o lugar, reservado). Cada serviço abre uma
+   janela própria sobre a coluna do meio, do tamanho dela, sem rolar a página: no topo, o ouro e os fragmentos sempre
+   à vista; à esquerda, as abas e a lista das peças (só a lista rola); à direita, a peça escolhida e, embaixo, o custo
+   e o botão, sempre visíveis. Esc fecha a janela e volta ao balcão. Cada pedido é um clique deliberado: o botão trava
+   até a forja voltar desenhada, a tecla segurada não repete e a desmontagem pede uma confirmação que nomeia a peça. */
 "use strict";
 
 (() => {
   ACOES_OCULTAS.push("forja");  // o pedido à forja não vira botão na página (nucleo.js)
-  const { h, S, dicaItem, iconeItem, topoBalcao } = Telas;
+  const { h, S, dicaItem, iconeItem, cartaoServico, topoBalcao } = Telas;
 
+  let janela = null;       // "reforcar", "desmontar" ou null (o balcão)
+  let aba = "heroi";       // na janela de reforço: de quem são as peças da lista
   let selUid = null;       // a peça escolhida (sobrevive ao redesenho da forja)
   let confirmando = null;  // {uid, nome}: a desmontagem pedida, esperando a confirmação
   let enviando = false;
+  let focoDepois = null;   // o seletor que recebe o foco quando a forja volta desenhada
 
   const icone = (nome) => Icones.porDesenho(nome) || S(nome, 2);
   const num = (v) => String(v).replace(".", ",");
   const frag = (n) => `${n} ${n === 1 ? "Fragmento" : "Fragmentos"} de Têmpera`;
+  const iconeItemHtml = (it) => Icones.equipamento(iconeItem(it)) || S(iconeItem(it), 2);
+  const retrato = (a) => (a.retrato ? Icones.cabeca(a.retrato, 32) || S(a.retrato, 2) : Icones.porDesenho("saco") || S("saco", 2));
 
-  function cartao(p) {
-    const marca = p.reforco ? ` <span class="ref-n">+${p.reforco}</span>` : "";
-    const estado = p.sem_reforco ? "sem reforço" : p.no_limite ? `no limite (+${p.reforco})`
-      : p.passos && p.passos[0].motivo ? "falta material" : "";
-    return `<button type="button" class="ref-peca${p.uid === selUid ? " marcada" : ""}${p.sem_reforco ? " apagada" : ""}" data-uid="${h(p.uid)}" ${dicaItem(p.item, "", false)}>
-      <span class="slot-px r-${h(p.item.raridade)}">${Icones.equipamento(iconeItem(p.item)) || S(iconeItem(p.item), 2)}</span>
-      <span class="ref-nome">${h(p.item.nome.replace(/ \+\d+$/, ""))}${marca}<small>${estado ? h(estado) : h(p.item.bonus)}</small></span></button>`;
+  // ------------------------------------------------------------------ o balcão
+  function balcao(d) {
+    const cartoes = [
+      cartaoServico({ icone: "martelo", nome: "Reforçar", efeito: "Arma, peito e apoio: ouro e Fragmentos de Têmpera, sem risco.",
+        attrs: 'data-servico="reforcar"' }),
+      cartaoServico({ icone: "saco", nome: "Desmontar", efeito: "Uma peça da bolsa vira Fragmentos de Têmpera.",
+        attrs: 'data-servico="desmontar"' }),
+      cartaoServico({ icone: "estrela", nome: "Encantar", efeito: "Ainda não existe: as regras estão em conversa.",
+        motivo: "O encantamento ainda não existe neste protótipo.", attrs: 'data-servico="encantar"' }),
+    ];
+    return `<div class="tela balcao-servico forja forja-proto">${topoBalcao("martelo", "O ferreiro (protótipo)", "\"Ouro e fragmento. Sem sorte: o que eu prometo, a peça ganha.\"", d.ouro)}
+      <div class="servicos ref-servicos">${cartoes.join("")}</div>${janela ? janelaHtml(d) : ""}</div>`;
   }
 
-  function lutaHtml(c) {
+  // ------------------------------------------------------------------ a janela de serviço
+  function recursosHtml(d) {
+    return `<div class="ref-recursos" aria-label="O que o grupo tem">
+      <span class="ref-rec" title="Ouro">${Icones.ouro() || S("moedas", 2)}<b>${d.ouro}</b></span>
+      ${d.materiais.map((m) => `<span class="ref-rec" title="${h(m.nome)}: ${h(m.desc)} ${h(m.fontes)}">${icone(m.icone)}<b>${m.qtd}</b><small>${h(m.plural)}</small></span>`).join("")}</div>`;
+  }
+
+  function janelaHtml(d) {
+    const servicos = [["reforcar", "Reforçar"], ["desmontar", "Desmontar"], ["encantar", "Encantar"]];
+    const abasServico = servicos.map(([id, nome]) => `<button type="button" class="ref-aba-servico${id === janela ? " ativa" : ""}" data-janela="${id}"${id === "encantar" ? ' aria-disabled="true" title="O encantamento ainda não existe neste protótipo."' : ""}>${nome}</button>`).join("");
+    const corpo = janela === "reforcar" ? reforcoHtml(d) : desmonteHtml(d);
+    return `<div class="ref-janela m-janela" role="dialog" aria-modal="true" aria-label="${janela === "reforcar" ? "Reforçar" : "Desmontar"}">
+      <header class="ref-cab"><nav class="ref-abas-servico">${abasServico}</nav>${recursosHtml(d)}
+        <button type="button" class="ref-fechar" data-fechar title="Voltar ao balcão">Fechar <kbd>Esc</kbd></button></header>
+      ${corpo}</div>`;
+  }
+
+  /** Uma peça na lista: o ícone, o nome, o reforço e uma linha curta (o estado ou o retorno). */
+  function linhaPeca(p, sub) {
+    return `<button type="button" class="ref-peca${p.uid === selUid ? " marcada" : ""}${p.sem_reforco && janela === "reforcar" ? " apagada" : ""}" data-uid="${h(p.uid)}" ${dicaItem(p.item, "", false)}>
+      <span class="slot-px r-${h(p.item.raridade)}">${iconeItemHtml(p.item)}</span>
+      <span class="ref-nome">${h(p.item.nome.replace(/ \+\d+$/, ""))}${p.reforco ? ` <span class="ref-n">+${p.reforco}</span>` : ""}<small>${h(sub)}</small></span></button>`;
+  }
+
+  // ------------------------------------------------------------------ Reforçar
+  function reforcoHtml(d) {
+    const abas = d.abas.map((a) => `<button type="button" role="tab" class="ref-aba${a.id === aba ? " ativa" : ""}" data-aba="${h(a.id)}" aria-selected="${a.id === aba}">${retrato(a)}<span>${h(a.nome)}</span></button>`).join("");
+    const lista = d.pecas.filter((p) => p.aba === aba);
+    const estado = (p) => (p.sem_reforco ? "sem reforço" : p.no_limite ? `no limite (+${p.limite})` : p.passos[0].motivo ? "falta material" : p.item.bonus);
+    const p = lista.find((x) => x.uid === selUid);
+    return `<div class="ref-corpo">
+      <aside class="ref-lado"><div class="ref-abas" role="tablist" aria-label="De quem">${abas}</div>
+        <div class="ref-lista">${lista.map((x) => linhaPeca(x, estado(x))).join("") || '<div class="detalhe-vazio">Nada aqui.</div>'}</div></aside>
+      <section class="ref-principal">${p ? reforcoPeca(p) : `<div class="ref-vazio">Escolha uma peça à esquerda.</div>`}</section></div>`;
+  }
+
+  function lutaHtml(c, titulo) {
     if (!c || !c.linhas.length) return "";
-    return `<div class="ref-luta"><small>Na luta, contra ${h(c.alvo)} (dano médio, sem crítico):</small>${c.linhas.map((l) =>
+    return `<div class="ref-luta"><small>${titulo || `Na luta, contra ${h(c.alvo)}`} (dano médio, sem crítico)</small>${c.linhas.map((l) =>
       `<div class="ref-luta-linha"><span>${h(l.rotulo)}</span><b>${num(l.antes)} → <span class="${l.melhor ? "melhor" : "pior"}">${num(l.depois)}</span></b></div>`).join("")}</div>`;
   }
 
-  function passoHtml(p, x, k) {
-    const custo = `<span class="ref-custo">${Icones.moeda() || S("moeda", 1)}${x.ouro} · ${icone("saco")}${x.fragmentos} <small>(o grupo tem ${x.tem})</small></span>`;
-    const titulo = x.rotulo ? `${h(x.rotulo)}: ` : "";
-    return `<div class="ref-passo">
-      <div class="ref-passo-cab"><b>+${p.reforco} → +${p.reforco + 1}</b> ${titulo}<span class="melhor">${h(x.ganho)}</span></div>
-      ${custo}${x.falta.length ? `<div class="pior">Falta ${h(x.falta.join(" e "))}.</div>` : ""}
-      ${lutaHtml(x.luta)}
-      <button type="button" class="acao-peca ref-reforcar${x.motivo ? " bloqueada" : ""}" data-passo="${k}"${x.motivo ? ` aria-disabled="true" title="${h(x.motivo)}"` : ""}>Reforçar${x.rotulo ? ` · ${h(x.rotulo)}` : ""}</button></div>`;
+  function reforcoPeca(p) {
+    const cab = `<div class="ref-peca-cab"><span class="slot-px r-${h(p.item.raridade)}">${iconeItemHtml(p.item)}</span>
+      <div><b class="r-${h(p.item.raridade)}">${h(p.item.nome)}</b><small>${h(p.onde)}${p.reforco ? ` · reforço +${p.reforco} de ${p.limite}${p.veio ? ` (${h(p.veio)})` : ""}` : ` · sem reforço (limite +${p.limite})`}</small>
+      <div class="ref-bonus">${h(p.item.bonus)}</div></div></div>`;
+    if (p.sem_reforco) return `${cab}<div class="ref-meio"><div class="ref-nota">${h(p.sem_reforco)}</div></div>`;
+    if (p.no_limite) return `${cab}<div class="ref-meio"><div class="ref-nota">No limite (+${p.limite}): a forja não tira mais nada dela.</div></div>`;
+    const subs = (p.substitutas || []).length ? `<details class="ref-comparar"><summary>Comparar com uma peça da bolsa (${p.substitutas.length})</summary>${p.substitutas.map((s) =>
+      lutaHtml(s, `No lugar dela: ${h(s.nome)}`) || `<div class="ref-nota">${h(s.nome)}: não muda o golpe nem a defesa.</div>`).join("")}</details>` : "";
+    const passos = p.passos.map((x) => `<div class="ref-passo">
+        <div class="ref-passo-cab">${x.rotulo ? `<b>${h(x.rotulo)}</b> · ` : ""}+${p.reforco} → +${p.reforco + 1}</div>
+        <div class="ref-antes-depois">${x.linhas.map((l) => `<span>${h(l.nome)} <b>${l.antes} → <span class="melhor">${l.depois}</span></b></span>`).join("")}</div>
+        ${lutaHtml(x.luta)}</div>`).join("");
+    const rodape = p.passos.map((x, k) => {
+      const ouroFalta = x.ouro_tem < x.ouro, fragFalta = x.tem < x.fragmentos;
+      return `<div class="ref-acao">
+        <span class="ref-custo"><span class="${ouroFalta ? "pior" : ""}">${Icones.moeda() || S("moeda", 1)}${x.ouro} <small>(tem ${x.ouro_tem})</small></span>
+          <span class="${fragFalta ? "pior" : ""}">${icone("saco")}${x.fragmentos} <small>(tem ${x.tem})</small></span></span>
+        <button type="button" class="acao-peca ref-reforcar${x.motivo ? " bloqueada" : ""}" data-passo="${k}"${x.motivo ? ` aria-disabled="true" title="${h(x.motivo)}"` : ""}>Reforçar${x.rotulo ? ` · ${h(x.rotulo)}` : ""}</button>
+        ${x.motivo ? `<span class="pior ref-falta">${h(x.motivo)}</span>` : ""}</div>`;
+    }).join("");
+    return `${cab}<div class="ref-meio">${passos}${subs}</div><footer class="ref-rodape">${rodape}</footer>`;
   }
 
-  function detalhe(d) {
-    const p = d.pecas.find((x) => x.uid === selUid);
-    if (!p) return `<div class="detalhe-vazio">Escolha uma peça para ver o reforço${d.pecas.some((x) => !x.quem) ? ", a troca e a desmontagem" : ""}.</div>`;
-    let html = `<div class="detalhe-ficha">${Telas.htmlItem(p.item, "", false)}</div>
-      <div class="ref-onde">${h(p.onde)}${p.reforco ? ` · reforço +${p.reforco} de ${p.limite}${p.veio ? ` (${h(p.veio)})` : ""}: ${h(p.acumulado)}` : ""}</div>`;
-    if (p.sem_reforco) html += `<div class="detalhe-vazio">${h(p.sem_reforco)}</div>`;
-    else if (p.no_limite) html += `<div class="detalhe-vazio">No limite (+${p.limite}).</div>`;
-    else html += p.passos.map((x, k) => passoHtml(p, x, k)).join("");
-    if (p.desmontar && p.desmontar.equipada) {
-      html += `<div class="ref-nota">Para vender ou desmontar, guarde na bolsa antes (Inventário).</div>`;
-    } else if (p.desmontar) {
-      const des = p.desmontar;
-      (p.trocas || []).forEach((t) => { html += `<h5>Se ${h(t.quem === "Jean" ? "você vestir" : t.quem + " vestir")}${t.no_lugar ? ` no lugar de ${h(t.no_lugar)}` : ""}</h5>${lutaHtml(t)}`; });
-      html += `<h5>Vender ou desmontar</h5><div class="ref-nota">No mercado, vende por ${p.venda} de ouro${p.reforco ? " (inclui 25% do ouro investido)" : ""}.</div>`;
-      if (confirmando && confirmando.uid === p.uid) {
-        html += `<div class="ref-confirmar" role="alertdialog" aria-label="Confirmar a desmontagem">
-          <b>Desmontar ${h(p.item.nome)}?</b><div>A peça some. Você recebe ${frag(des.total)}${des.investimento ? ` (${des.investimento} do reforço, ${des.da_peca} da peça)` : ""}.</div>
-          <div class="ref-botoes"><button type="button" class="acao-peca perigo" data-desmontar-sim disabled>Desmontar</button>
-          <button type="button" class="acao-peca" data-desmontar-nao>Cancelar</button></div></div>`;
-      } else {
-        const rende = des.total ? `Rende ${frag(des.total)}${des.investimento ? `: ${des.investimento} do reforço e ${des.da_peca} da peça` : " (da peça)"}.` : "";
-        html += `<div class="ref-nota">${h(des.motivo || rende)}</div><button type="button" class="acao-peca ref-desmontar${des.motivo ? " bloqueada" : ""}" data-desmontar${des.motivo ? ` aria-disabled="true" title="${h(des.motivo)}"` : ""}>Desmontar…</button>`;
-      }
+  // ------------------------------------------------------------------ Desmontar
+  function desmonteHtml(d) {
+    const bolsa = d.pecas.filter((p) => !p.quem);
+    const rendem = bolsa.filter((p) => !p.desmontar.motivo);
+    const fora = bolsa.length - rendem.length;
+    const p = rendem.find((x) => x.uid === selUid);
+    const retorno = (x) => (x.desmontar.investimento ? `${x.desmontar.total}: ${x.desmontar.investimento} do reforço e ${x.desmontar.da_peca} da peça` : `${x.desmontar.total} da peça`);
+    const lista = rendem.map((x) => linhaPeca(x, `rende ${retorno(x)}`)).join("") || '<div class="detalhe-vazio">Nenhuma peça da bolsa rende material.</div>';
+    const nota = fora ? `<div class="ref-nota ref-fora">${fora} ${fora === 1 ? "peça da bolsa não rende" : "peças da bolsa não rendem"} material (comuns sem reforço): venda no mercado.</div>` : "";
+    let principal = `<div class="ref-vazio">Escolha uma peça da bolsa à esquerda. As vestidas não aparecem: guarde na bolsa antes (Inventário).</div>`;
+    if (p) {
+      const conf = confirmando && confirmando.uid === p.uid;
+      principal = `<div class="ref-peca-cab"><span class="slot-px r-${h(p.item.raridade)}">${iconeItemHtml(p.item)}</span>
+          <div><b class="r-${h(p.item.raridade)}">${h(p.item.nome)}</b><small>Bolsa do grupo${p.reforco ? ` · reforço +${p.reforco}` : ""}</small><div class="ref-bonus">${h(p.item.bonus)}</div></div></div>
+        <div class="ref-meio"><div class="ref-retorno">${icone("saco")}<span>Rende <b>${frag(p.desmontar.total)}</b>${p.desmontar.investimento ? ` (${p.desmontar.investimento} do reforço, ${p.desmontar.da_peca} da peça)` : ""}.</span></div>
+          <div class="ref-nota">A peça some. No mercado, ela vende por ${p.venda} de ouro.</div></div>
+        <footer class="ref-rodape"><div class="ref-acao">${conf
+          ? `<span class="ref-pergunta">Desmontar <b>${h(p.item.nome)}</b>?</span>
+             <button type="button" class="acao-peca perigo" data-desmontar-sim disabled>Desmontar</button>
+             <button type="button" class="acao-peca" data-desmontar-nao>Cancelar</button>`
+          : `<button type="button" class="acao-peca" data-desmontar>Desmontar…</button>`}</div></footer>`;
     }
-    return html;
+    return `<div class="ref-corpo"><aside class="ref-lado"><div class="ref-lista">${lista}</div>${nota}</aside>
+      <section class="ref-principal">${principal}</section></div>`;
   }
 
-  function forja(d) {
-    if (selUid && !d.pecas.some((p) => p.uid === selUid)) selUid = null;  // a peça saiu (desmontada): nada marcado
-    if (confirmando && !d.pecas.some((p) => p.uid === confirmando.uid)) confirmando = null;
-    enviando = false;
-    const mats = d.materiais.map((m) => `<span class="ref-mat" title="${h(m.nome)}: ${h(m.desc)} ${h(m.fontes)}">${icone(m.icone)}<b>${m.qtd}</b> ${h(m.plural)}</span>`).join("");
-    const grupos = {};
-    d.pecas.forEach((p) => { (grupos[p.onde] = grupos[p.onde] || []).push(p); });
-    const listas = Object.entries(grupos).map(([onde, ps]) => `<h4>${h(onde)}</h4><div class="ref-lista">${ps.map(cartao).join("")}</div>`).join("");
-    return `<div class="tela balcao-servico forja forja-proto">${topoBalcao("martelo", "O ferreiro (protótipo)", "\"Ouro e fragmento. Sem sorte: o que eu prometo, a peça ganha.\"", d.ouro)}
-      <div class="ref-materiais"><small>Materiais do grupo:</small>${mats}</div>
-      <div class="ref-corpo"><div class="ref-pecas">${listas}</div><div class="peca-detalhe ref-detalhe" aria-live="polite">${detalhe(d)}</div></div></div>`;
-  }
-
-  function pedir(dados, botao) {
+  // ------------------------------------------------------------------ ligar
+  function pedir(dados, botao, foco) {
     if (enviando) return;
     if (!App.acao({ forja: true }, dados.op === "reforcar" ? "predio_ferreiro" : null, dados)) {
       aviso("Agora não dá para pedir à forja.", "info", "pergaminho");
       return;
     }
     enviando = true;
+    focoDepois = foco || null;
     if (botao) botao.disabled = true;
   }
 
+  /** A janela ocupa a coluna do meio (a cena e a página), por cima do balcão: medida a cada desenho e a cada mudança
+   *  de tamanho da janela do navegador. */
+  function posicionar() {
+    const jan = document.querySelector(".ref-janela");
+    const cena = document.getElementById("cena");
+    if (!jan || !cena) return;
+    const r = cena.getBoundingClientRect();
+    Object.assign(jan.style, { left: `${r.left + 8}px`, top: `${r.top + 8}px`, width: `${r.width - 16}px`, height: `${r.height - 16}px` });
+  }
+  window.addEventListener("resize", posicionar);
+
   function ligar(raiz, d) {
+    enviando = false;
     const redesenhar = (foco) => {
       if (!raiz.isConnected) return;
       const novo = Telas.painel({ tipo: "forja_proto", dados: d });
@@ -102,53 +162,71 @@
       const alvo = foco && novo.querySelector(foco);
       if (alvo) alvo.focus();
     };
-    raiz.querySelectorAll("[data-uid]").forEach((b) => b.addEventListener("click", () => {
+    const abrir = (qual, foco) => { janela = qual; selUid = null; confirmando = null; redesenhar(foco || ".ref-janela .ref-peca, .ref-janela [data-fechar]"); };
+    const fechar = () => { const era = janela; janela = null; confirmando = null; redesenhar(`[data-servico="${era}"]`); };
+    raiz.querySelectorAll("[data-servico]").forEach((b) => b.addEventListener("click", () => {
+      if (b.classList.contains("caro")) { App.recusar(b, b.dataset.motivo); return; }
+      abrir(b.dataset.servico);
+    }));
+    const jan = raiz.querySelector(".ref-janela");
+    if (!jan) return;
+    requestAnimationFrame(posicionar);
+    posicionar();
+    jan.querySelector("[data-fechar]").addEventListener("click", fechar);
+    jan.querySelectorAll("[data-janela]").forEach((b) => b.addEventListener("click", () => {
+      if (b.getAttribute("aria-disabled")) { App.recusar(b, b.title); return; }
+      if (b.dataset.janela !== janela) abrir(b.dataset.janela, `[data-janela="${b.dataset.janela}"]`);
+    }));
+    jan.querySelectorAll("[data-aba]").forEach((b) => b.addEventListener("click", () => {
+      if (aba !== b.dataset.aba) { aba = b.dataset.aba; selUid = null; redesenhar(`[data-aba="${b.dataset.aba}"]`); }
+    }));
+    jan.querySelectorAll("[data-uid]").forEach((b) => b.addEventListener("click", () => {
       if (selUid !== b.dataset.uid) { selUid = b.dataset.uid; confirmando = null; redesenhar(`[data-uid="${b.dataset.uid}"]`); }
     }));
     const p = d.pecas.find((x) => x.uid === selUid);
-    raiz.querySelectorAll("[data-passo]").forEach((b) => b.addEventListener("click", (ev) => {
+    jan.querySelectorAll("[data-passo]").forEach((b) => b.addEventListener("click", (ev) => {
       if (ev.detail > 1) return;  // o segundo clique de um duplo clique não compra outro passo
       const x = p.passos[Number(b.dataset.passo)];
       if (x.motivo) { App.recusar(b, x.motivo); return; }
-      pedir({ op: "reforcar", uid: p.uid, ...(x.veio ? { veio: x.veio } : {}) }, b);
+      pedir({ op: "reforcar", uid: p.uid, ...(x.veio ? { veio: x.veio } : {}) }, b, `[data-uid="${p.uid}"]`);
     }));
-    const des = raiz.querySelector("[data-desmontar]");
-    if (des) des.addEventListener("click", () => {
-      if (p.desmontar.motivo) { App.recusar(des, p.desmontar.motivo); return; }
-      confirmando = { uid: p.uid, nome: p.item.nome };
-      redesenhar("[data-desmontar-nao]");
-    });
-    const nao = raiz.querySelector("[data-desmontar-nao]");
+    const des = jan.querySelector("[data-desmontar]");
+    if (des) des.addEventListener("click", () => { confirmando = { uid: p.uid, nome: p.item.nome }; redesenhar("[data-desmontar-nao]"); });
+    const nao = jan.querySelector("[data-desmontar-nao]");
     if (nao) nao.addEventListener("click", () => { confirmando = null; redesenhar("[data-desmontar]"); });
-    const sim = raiz.querySelector("[data-desmontar-sim]");
+    const sim = jan.querySelector("[data-desmontar-sim]");
     if (sim) {
       // a confirmação só arma depois de um instante: o clique que abriu a pergunta não a responde
       const arma = performance.now() + 400;
       setTimeout(() => { if (sim.isConnected) sim.disabled = false; }, 400);
       sim.addEventListener("click", (ev) => {
-        // a trava vale no ouvinte, não só no atributo: nada antes do instante, nem com o botão ainda travado
         if (sim.disabled || performance.now() < arma || ev.detail > 1 || !confirmando) return;
         const c = confirmando;
         confirmando = null;
         selUid = null;
-        pedir({ op: "desmontar", uid: c.uid, nome: c.nome, confirmar: true }, sim);
+        pedir({ op: "desmontar", uid: c.uid, nome: c.nome, confirmar: true }, sim, ".ref-janela .ref-peca, .ref-janela [data-fechar]");
       });
     }
-    raiz.addEventListener("keydown", (ev) => {
+    jan.addEventListener("keydown", (ev) => {
       if (ev.repeat && (ev.key === "Enter" || ev.key === " ")) ev.preventDefault();  // a tecla segurada não repete
-      if (ev.key === "Escape" && confirmando) { ev.preventDefault(); ev.stopPropagation(); confirmando = null; redesenhar("[data-desmontar]"); }
     }, true);
+    if (focoDepois) {
+      const alvo = jan.querySelector(focoDepois);
+      focoDepois = null;
+      if (alvo) requestAnimationFrame(() => alvo.isConnected && alvo.focus());
+    }
   }
 
-  /* Rolar o balcão recolhe a oficina na faixa de cima, como as outras páginas do jogo fazem com a arte (pagina.js); no
-     topo, ela volta inteira. Nas cenas com ambiente o jogo não recolhe; aqui, o balcão precisa do espaço. */
-  const paginaEl = document.getElementById("pagina"), cenaEl = document.getElementById("cena");
-  paginaEl.addEventListener("scroll", () => {
-    if (!document.querySelector(".forja-proto")) return;
-    cenaEl.classList.toggle("recolhido", paginaEl.scrollTop > 48);
-  }, { passive: true });
+  // Esc com a janela aberta: primeiro cancela a confirmação, depois fecha a janela; só então o Voltar da forja.
+  document.addEventListener("keydown", (ev) => {
+    if (ev.key !== "Escape" || !janela || !document.querySelector(".ref-janela")) return;
+    ev.preventDefault();
+    ev.stopImmediatePropagation();
+    if (confirmando) { document.querySelector("[data-desmontar-nao]")?.click(); return; }
+    document.querySelector(".ref-janela [data-fechar]")?.click();
+  }, true);
 
-  Telas.registrar("forja_proto", forja, { ligar, esquecer: () => { selUid = null; confirmando = null; } });
+  Telas.registrar("forja_proto", balcao, { ligar, esquecer: () => { janela = null; selUid = null; confirmando = null; aba = "heroi"; } });
 
   /* A seção "Materiais" no inventário: as pilhas do grupo, fora dos espaços da bolsa. */
   function materiaisNoInventario() {

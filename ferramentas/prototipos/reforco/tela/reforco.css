@@ -1,41 +1,96 @@
-/* Protótipo do reforço: a forja e os materiais, no acabamento da HUD (16-hud-telas.css). Só a demonstração carrega. */
-:root body #folha:has(.forja-proto) { max-width: none; }
-.forja-proto .ref-materiais { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; margin: 10px 0 2px; font-size: 14px; color: var(--tinta-2); }
-.forja-proto .ref-materiais small { color: var(--tinta-3); }
-.forja-proto .ref-mat { display: inline-flex; align-items: center; gap: 6px; }
-.forja-proto .ref-mat b { font-family: var(--num); font-size: 20px; font-weight: 400; color: #fff3d6; }
-.forja-proto .ref-corpo { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 18px; align-items: start; }
-.forja-proto .ref-lista { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 6px; }
-.forja-proto .ref-peca { display: flex; align-items: center; gap: 8px; text-align: left; font: inherit; color: var(--tinta); cursor: pointer;
-  padding: 4px 8px 4px 4px; border: 1px solid var(--aresta-face); border-radius: 2px; background: var(--hud-face); box-shadow: var(--hud-relevo); }
-.forja-proto .ref-peca:is(:hover, :focus-visible) { border-color: var(--aresta-viva); background: var(--hud-face-viva); }
-.forja-proto .ref-peca:focus-visible { outline: 2px solid var(--latao-claro); outline-offset: 1px; }
-.forja-proto .ref-peca.marcada { border-color: var(--latao); box-shadow: inset 3px 0 0 var(--latao), var(--hud-relevo); }
-.forja-proto .ref-peca.apagada { opacity: 0.6; }
-.forja-proto .ref-peca .slot-px { flex: none; width: 48px; height: 48px; }
-.forja-proto .ref-nome { display: flex; flex-direction: column; font-size: 14px; line-height: 1.25; }
-.forja-proto .ref-nome small { font-size: 12px; color: var(--tinta-3); }
-.forja-proto .ref-n { font-family: var(--num); font-size: 17px; color: var(--latao-claro); }
-.forja-proto .ref-detalhe { width: auto; position: sticky; top: 8px; max-height: calc(100vh - 260px); overflow-y: auto; }
-.forja-proto .ref-onde { margin-top: 6px; font-size: 13px; color: var(--tinta-2); }
-.forja-proto .ref-passo { margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--ferro-fio); display: flex; flex-direction: column; gap: 4px; }
-.forja-proto .ref-passo-cab b { font-family: var(--num); font-size: 18px; font-weight: 400; color: #fff3d6; }
-.forja-proto .ref-custo { display: inline-flex; align-items: center; gap: 4px; font-family: var(--num); font-size: 18px; color: var(--ouro); }
-.forja-proto .ref-custo small { font-family: var(--texto); font-size: 12px; color: var(--tinta-3); }
-.forja-proto .ref-luta { display: flex; flex-direction: column; gap: 2px; margin: 2px 0 4px; font-size: 13px; }
-.forja-proto .ref-luta small { color: var(--tinta-3); }
-.forja-proto .ref-luta-linha { display: flex; justify-content: space-between; gap: 8px; }
-.forja-proto .ref-luta-linha b { font-family: var(--num); font-size: 17px; font-weight: 400; white-space: nowrap; }
-.forja-proto .ref-nota { margin-top: 4px; font-size: 13px; color: var(--tinta-2); }
-.forja-proto .ref-desmontar { margin-top: 6px; }
-.forja-proto .ref-confirmar { margin-top: 6px; padding: 8px; border: 1px solid var(--sangue-2); border-radius: 2px; background: rgba(120, 20, 20, 0.12); font-size: 13px; }
-.forja-proto .ref-confirmar b { display: block; margin-bottom: 4px; font-size: 14px; color: #fff3d6; }
-.forja-proto .ref-botoes { display: flex; gap: 6px; margin-top: 8px; }
-.forja-proto .acao-peca.perigo { border-color: var(--sangue-2); color: #ffd9d2; }
-.forja-proto .acao-peca[disabled] { opacity: 0.5; cursor: wait; }
-.forja-proto .melhor { color: var(--bom); }
-.forja-proto .pior { color: var(--sangue-2); font-size: 13px; }
-.forja-proto .peca-detalhe h5 { margin: 12px 0 4px; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--sec); }
-@media (max-width: 1500px) { .forja-proto .ref-corpo { grid-template-columns: minmax(0, 1fr) 270px; } .forja-proto .ref-lista { grid-template-columns: 1fr; } }
-/* rolar o balcão recolhe a oficina na faixa (reforco.js), como o jogo faz com a arte das outras páginas */
-#cena.com-ambiente.ambiente-alto.recolhido:has(.forja-proto) #vista { height: calc(52px + var(--P) * 12); }
+/* Protótipo do reforço: o balcão com os três serviços e a janela de cada serviço (reforco.js), no acabamento da HUD
+   (16-hud-telas.css). Só a demonstração carrega. */
+.forja-proto .ref-servicos { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+/* a janela: sobre a coluna do meio (reforco.js mede a cena), sem rolar a página; só a lista e o meio rolam */
+.ref-janela { position: fixed; z-index: 60; display: flex; flex-direction: column; overflow: hidden;
+  font-size: 15px; box-shadow: 0 16px 48px rgba(0, 0, 0, 0.8); }
+/* a moldura das janelas principais (14-hud.css: --m-principal e --t-painel), pelo caminho absoluto: a variável é
+   relativa ao CSS do jogo e, usada aqui (servido em /proto/), apontaria para outro lugar */
+:root body .ref-janela.m-janela { border: 12px solid transparent; border-image: url(/static/hud/moldura-nove.png) 24 / 24px round;
+  background: linear-gradient(rgba(8, 9, 11, 0.9), rgba(8, 9, 11, 0.95)), url(/static/hud/textura-painel.png) 0 0 / 128px, #0b0c0f;
+  background-clip: padding-box; }
+.ref-cab { display: flex; align-items: center; gap: 12px; padding: 4px 8px 8px; box-shadow: var(--hud-fio); flex: none; }
+.ref-abas-servico { display: flex; gap: 4px; }
+.ref-aba-servico, .ref-fechar, .ref-aba { font: inherit; color: var(--tinta-2); cursor: pointer; border: 1px solid var(--aresta-face);
+  border-radius: 2px; background: var(--hud-face); box-shadow: var(--hud-relevo); }
+.ref-aba-servico { padding: 4px 14px; font-family: var(--titulo); font-size: calc(var(--px) * 24); line-height: 1.1; }
+.ref-aba-servico.ativa { color: var(--latao-claro); border-color: var(--latao); box-shadow: inset 0 -2px 0 var(--latao), var(--hud-relevo); }
+.ref-aba-servico[aria-disabled] { opacity: 0.45; cursor: not-allowed; }
+:is(.ref-aba-servico, .ref-fechar, .ref-aba, .ref-peca):is(:hover, :focus-visible) { border-color: var(--aresta-viva); background: var(--hud-face-viva); color: var(--tinta); }
+:is(.ref-aba-servico, .ref-fechar, .ref-aba, .ref-peca, .ref-comparar summary):focus-visible { outline: 2px solid var(--latao-claro); outline-offset: 1px; }
+.ref-recursos { margin-left: auto; display: flex; align-items: center; gap: 16px; }
+.ref-rec { display: inline-flex; align-items: center; gap: 6px; }
+.ref-rec b { font-family: var(--num); font-size: 24px; font-weight: 400; color: #fff3d6; }
+.ref-rec small { font-size: 12px; color: var(--tinta-3); }
+.ref-fechar { padding: 3px 10px; font-size: 14px; }
+.ref-fechar kbd { margin-left: 4px; font-size: 11px; border: 1px solid #4a4d53; background: #0b0c0e; padding: 0 3px; }
+
+.ref-corpo { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(230px, 300px) minmax(0, 1fr); gap: 14px; padding: 10px 8px 4px; }
+.ref-lado { min-height: 0; display: flex; flex-direction: column; gap: 8px; }
+.ref-abas { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; flex: none; }
+.ref-aba { display: flex; align-items: center; gap: 6px; padding: 2px 8px 2px 2px; font-size: 14px; }
+.ref-aba.ativa { color: #fff3d6; border-color: var(--latao); box-shadow: inset 3px 0 0 var(--latao), var(--hud-relevo); }
+.ref-aba img, .ref-aba canvas { flex: none; }
+.ref-lista { flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; padding-right: 4px; }
+.ref-peca { display: flex; align-items: center; gap: 8px; text-align: left; font: inherit; color: var(--tinta); cursor: pointer;
+  padding: 3px 8px 3px 3px; border: 1px solid var(--aresta-face); border-radius: 2px; background: var(--hud-face); box-shadow: var(--hud-relevo); }
+.ref-peca.marcada { border-color: var(--latao); box-shadow: inset 3px 0 0 var(--latao), var(--hud-relevo); }
+.ref-peca.apagada { opacity: 0.6; }
+.ref-peca .slot-px { flex: none; width: 44px; height: 44px; }
+.ref-nome { display: flex; flex-direction: column; font-size: 14px; line-height: 1.25; min-width: 0; }
+.ref-nome small { font-size: 12px; color: var(--tinta-3); }
+.ref-n { font-family: var(--num); font-size: 17px; color: var(--latao-claro); }
+.ref-fora { flex: none; }
+
+.ref-principal { min-height: 0; display: flex; flex-direction: column; border: 1px solid var(--aresta-face); border-radius: 2px;
+  background: var(--hud-face); box-shadow: var(--hud-relevo); }
+.ref-vazio { margin: auto; padding: 20px; max-width: 34ch; text-align: center; color: var(--tinta-3); }
+.ref-peca-cab { display: flex; align-items: center; gap: 12px; padding: 10px 12px; flex: none; box-shadow: var(--hud-fio); }
+.ref-peca-cab .slot-px { flex: none; width: 60px; height: 60px; }
+.ref-peca-cab b { display: block; font-family: var(--titulo); font-weight: 400; font-size: calc(var(--px) * 32); line-height: 1.05; color: #fff3d6; }
+.ref-peca-cab small { display: block; font-size: 13px; color: var(--tinta-2); }
+.ref-bonus { font-family: var(--num); font-size: 17px; color: var(--tinta); }
+.ref-meio { flex: 1; min-height: 0; overflow-y: auto; padding: 4px 12px 8px; display: flex; flex-direction: column; gap: 8px; }
+.ref-passo { padding-top: 8px; display: flex; flex-direction: column; gap: 4px; }
+.ref-passo + .ref-passo { border-top: 1px solid var(--ferro-fio); }
+.ref-passo-cab { font-size: 14px; color: var(--tinta-2); }
+.ref-passo-cab b { font-size: 15px; color: #fff3d6; }
+.ref-antes-depois { display: flex; flex-wrap: wrap; gap: 4px 18px; }
+.ref-antes-depois span { font-size: 15px; }
+.ref-antes-depois b { font-family: var(--num); font-size: 22px; font-weight: 400; }
+.ref-luta { display: flex; flex-direction: column; gap: 2px; font-size: 14px; }
+.ref-luta small { color: var(--tinta-3); }
+.ref-luta-linha { display: flex; justify-content: space-between; gap: 8px; }
+.ref-luta-linha b { font-family: var(--num); font-size: 18px; font-weight: 400; white-space: nowrap; }
+.ref-comparar summary { cursor: pointer; font-size: 14px; color: var(--sec); }
+.ref-comparar .ref-luta { margin-top: 6px; }
+.ref-nota { font-size: 14px; color: var(--tinta-2); }
+.ref-retorno { display: flex; align-items: center; gap: 8px; font-size: 16px; }
+.ref-retorno b { color: #fff3d6; }
+
+/* embaixo, sempre à vista: o custo (tem / precisa) e o botão */
+.ref-rodape { flex: none; padding: 8px 12px 10px; display: flex; flex-direction: column; gap: 6px; border-top: 1px solid var(--ferro-fio);
+  background: rgba(0, 0, 0, 0.18); }
+.ref-acao { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; }
+.ref-custo { display: inline-flex; align-items: center; gap: 14px; font-family: var(--num); font-size: 20px; color: var(--ouro); }
+.ref-custo > span { display: inline-flex; align-items: center; gap: 4px; }
+.ref-custo small { font-family: var(--texto); font-size: 12px; color: var(--tinta-3); }
+.ref-custo .pior, .ref-custo .pior small { color: var(--sangue-2); }
+.ref-acao .acao-peca { margin-left: auto; padding: 6px 18px; font-size: 16px; }
+.ref-acao .acao-peca + .acao-peca { margin-left: 0; }
+.ref-falta { flex-basis: 100%; font-size: 13px; }
+.ref-pergunta { font-size: 15px; }
+.ref-pergunta b { color: #fff3d6; }
+.ref-janela .acao-peca.perigo { border-color: var(--sangue-2); color: #ffd9d2; }
+.ref-janela .acao-peca[disabled] { opacity: 0.5; cursor: wait; }
+.ref-janela .melhor { color: var(--bom); }
+.ref-janela .pior { color: var(--sangue-2); }
+
+/* janela estreita (a coluna do meio a 1280): a lista mais estreita, o recurso sem o nome */
+@media (max-width: 1500px) {
+  .ref-corpo { grid-template-columns: 220px minmax(0, 1fr); gap: 10px; }
+  .ref-rec small { display: none; }
+  .ref-aba-servico { padding: 3px 10px; }
+  .ref-peca-cab .slot-px { width: 48px; height: 48px; }
+}

@@ -14,6 +14,24 @@ para parar. Folha compacta: `folha.png`.
 Só nesta execução, `demo.py` troca a forja (o balcão novo), o baú (que pode dar fragmento), a seção "Materiais" do
 Inventário e a venda da peça reforçada. O resto é o jogo: o Inventário do grupo, o mercado, a luta, a estrada.
 
+## A tela (2ª versão, depois do primeiro teste do Jean)
+
+O primeiro balcão punha tudo na página da forja, embaixo da oficina: a página rolava, a arte piscava ao rolar (o
+recolhimento ia e voltava em torno do mesmo ponto) e o ouro e os fragmentos sumiam do alto. Pesquisei como Elden
+Ring, Diablo IV, Last Epoch e Darkest Dungeon organizam esses serviços (registrado no 25, seção 5.5) e refiz assim:
+
+- **O balcão** tem só os três serviços: **Reforçar**, **Desmontar** e **Encantar** (o lugar reservado, apagado: "ainda
+  não existe").
+- **Cada serviço abre uma janela própria** sobre a coluna do meio, com a moldura das janelas principais do jogo. A
+  página não rola; o pisca acabou porque o recolhimento da arte saiu.
+- **No topo, sempre à vista:** as abas dos serviços, o ouro e os Fragmentos de Têmpera, e o Fechar (Esc).
+- **À esquerda:** em Reforçar, as abas de quem (Jean, Morel, Odette, Bolsa) e a lista das peças; em Desmontar, só as
+  peças da bolsa que rendem, cada uma com o retorno. Só a lista rola.
+- **À direita:** a peça grande, o passo seguinte linha por linha ("Ataque 4 → 5"), a luta, e "Comparar com uma peça
+  da bolsa" (as substitutas que quem usa poderia vestir). **Embaixo, fixo:** o custo como "50 (tem 355) · 2 (tem 7)",
+  em vermelho o que falta, e o botão.
+- **Esc:** cancela a confirmação; depois fecha a janela (o foco volta ao cartão do serviço); depois sai da forja.
+
 ## Decisões aprovadas (seção 5 do 25)
 
 Reforço garantido, sem falha, quebra ou perda; melhora a função principal da peça e não os afixos nem os especiais;
@@ -125,7 +143,7 @@ golpe comum, sem crítico.
   peças sem reforço; pagar e aplicar juntos; o veio uma vez; falta de ouro ou de fragmento não cobra nada; o limite;
   companheiro; peça que ninguém usa; desmontar (a conta, a seleção antiga, a peça vestida, a comum que não rende, a
   pilha cheia, a bolsa cheia); os ciclos; o jogo não carrega o protótipo.
-- Na tela (1920×945 e 1280×720): o duplo clique em "Reforçar" compra um passo só; a confirmação da desmontagem só arma
+- Na tela (1920×945 e 1280×720): a janela cabe sem rolar a página; o duplo clique em "Reforçar" compra um passo só; a confirmação da desmontagem só arma
   depois de um instante e ignora o clique que a abriu; depois de desmontar, nada fica selecionado; a tecla segurada
   não repete; Esc cancela a confirmação.
 
@@ -137,13 +155,15 @@ python -m unittest discover -s ferramentas/prototipos/reforco/testes -t ferramen
 
 1. **Recompensa de teste:** o quadro mostra 8 Fragmentos de Têmpera. "Ir para a vila".
 2. **Inventário** (`i`): a seção "Materiais" embaixo da bolsa, com 8; a bolsa continua 6/12.
-3. **Forja** (Ferreiro → o ferreiro na oficina): escolha o **Martelo de Ferro** de Jean. Veja os dois caminhos (Fio e
-   Runas), o ganho, o custo, quanto o grupo tem e a comparação na luta. **Reforçar · Fio** duas vezes (tente o duplo
-   clique: compra um passo só). A ficha à esquerda mostra o Ataque subir.
-4. Escolha o **Martelo de Aço** na bolsa: "Se você vestir no lugar do Martelo de Ferro +2" mostra a substituta.
-5. Escolha o **Lamento de Gharbad**: a especializada (os especiais na ficha; +2 por passo).
-6. No **Inventário**, vista o Martelo de Aço em você e passe o Martelo de Ferro +2 para Morel (o reforço vai junto).
-7. Volte à forja e **desmonte** uma peça da bolsa (Desmontar… → a confirmação nomeia a peça e o retorno). Esc ou
-   Cancelar desfaz o pedido.
+3. **Forja** (Ferreiro → o ferreiro na oficina) → **Reforçar**. Na aba Jean, o **Martelo de Ferro**: os dois
+   caminhos (Fio e Runas), "Ataque 3 → 4", a luta, e embaixo o custo com quanto o grupo tem. **Reforçar · Fio** duas
+   vezes (tente o duplo clique: compra um passo só). A ficha lateral mostra o Ataque subir; o topo da janela, o ouro e
+   os fragmentos caírem.
+4. Ainda no martelo, **Comparar com uma peça da bolsa**: o Martelo de Aço e o Lamento de Gharbad no lugar dele.
+5. Aba **Bolsa**, o **Lamento de Gharbad**: a especializada (os especiais na ficha; +2 por passo).
+6. Esc fecha a janela. No **Inventário**, vista o Martelo de Aço em você e passe o Martelo de Ferro +2 para Morel (o
+   reforço vai junto); na forja, a aba Morel mostra a peça com ele.
+7. **Desmontar**: escolha uma peça (cada uma diz quanto rende) → Desmontar… → a confirmação nomeia a peça. Esc ou
+   Cancelar desfaz; Esc de novo fecha a janela.
 8. **Mercado:** venda uma peça reforçada (o preço inclui 25% do ouro investido). Abra um **baú** (às vezes 1
    fragmento). Tente reforçar sem fragmento suficiente: o botão diz o que falta e não cobra.
