@@ -189,6 +189,14 @@ Jean reafirmou a intenção de selecionar habilidades com um orçamento de ponto
 
 Preservar as decisões de turnos, companheiros, ameaças e ressurreição. A derrota imediata quando o protagonista cai, os desempates e a inserção de invocados do primeiro teste são hipóteses operacionais, não novas aprovações implícitas. Nenhuma revisão autoriza integração no jogo, reforço/encantamento completo ou expansão da campanha.
 
+#### Segunda versão do protótipo — entregue para avaliação (26/10/2026)
+
+Detalhes, fórmulas, ajustes dos inimigos e achados no [LEIA-ME](../ferramentas/prototipos/combate-atributos/LEIA-ME.md); o que comparar no [ROTEIRO](../ferramentas/prototipos/combate-atributos/ROTEIRO.md). A primeira versão continua jogável ao lado (`/v1/`). Nada integrado na produção.
+
+- **Decisões aplicadas (desta seção):** Força e Intelecto entram direto na potência física e sobrenatural; nenhum desbloqueio por pontuação; benefícios graduais com tetos; Presença fora do orçamento e sem efeito de combate (o Grito de Comando ficou com bônus fixo); Tenacidade com teto e chance final mostrada; Agilidade só na ordem fixa; kit com pontos por tier e no máximo uma ultimate; Atacar, Defender e Usar item fora do kit, gastando a ação.
+- **Hipóteses implementadas (provisórias, para avaliar):** escala 1–10 e 30 pontos de combate; +1 de potência por ponto de Força/Intelecto; crítico 2% e ponto fraco +4% por ponto de Percepção; 4 de vida e −4% de sangramento por ponto de Constituição; Tenacidade 4% por ponto de Vontade, até 40%, menos a aplicação do atacante, num sorteio só; 10 pontos de kit, até 6 espaços, tiers de 1, 2, 3 e 4 pontos; recurso 60, começa com 40, +8 por turno e +8 no básico; ultimate por Ímpeto (3, ganho com inimigo caído e ameaça desfeita ou aparada); interrupção uma vez por inimigo (depois a preparação é firme); quatro builds de teste (Força, Precisão, Runa, Baluarte) e uma comparação de arma e foco.
+- **Resultados observados (poucas partidas, sem prova de equilíbrio):** as builds mudaram a escolha na mesma luta (quem matar primeiro, quem segura a ameaça, que golpe usar contra a guarda); gastar recurso desde o início não deixou o grupo sem resposta na primeira ameaça e criou custo na segunda; guardar recurso só alongou as lutas no teste automático; lutas de 9 a 15 rodadas nos encontros 2 e 3. A observar: a Percepção contra ponto fraco quase empata com a Força; o encontro 1 ficou curto; o Baluarte arrasta mais; a hora do Juramento.
+
 ## 4. Vida útil das peças — direção acordada
 
 O caminho escolhido é **um meio-termo entre substituição constante e levar qualquer peça indefinidamente**, com espaço para apego a boas descobertas.
@@ -240,7 +248,7 @@ Na conversa, **Battle Brothers** acrescentou o exemplo de materiais de criaturas
 
 As generalizações do apêndice sobre aleatoriedade, destruição e satisfação são avaliações da pesquisa inicial, não leis de design nem prova de que uma mecânica só funciona em determinado gênero. Verificar versões e fontes antes de usar mudanças de outros jogos como justificativa decisiva.
 
-**Próximo passo acordado:** revisar o protótipo isolado de combate após o teste de Jean, conforme as seções 3.1, 3.6 e 3.7. O primeiro já foi entregue; a segunda versão deve incorporar as novas decisões sem alterar a produção. Só depois da avaliação avançar nas dependências de reforço e encantamento. Não iniciar o protótipo de forja do apêndice.
+**Próximo passo acordado:** revisar o protótipo isolado de combate após o teste de Jean, conforme as seções 3.1, 3.6 e 3.7. O primeiro já foi entregue; a segunda versão foi entregue em 26/10/2026 sem alterar a produção e aguarda a avaliação de Jean. Só depois da avaliação avançar nas dependências de reforço e encantamento. Não iniciar o protótipo de forja do apêndice.
 
 Depois de definida a direção suficiente, o Claude poderá verificar implicações técnicas, testar hipóteses numéricas e construir um protótipo isolado e pequeno. O catálogo e o combate atuais servirão de casos de teste, sem limitar as possibilidades futuras.
 
@@ -259,7 +267,7 @@ Depois de definida a direção suficiente, o Claude poderá verificar implicaç�
 | Sem morte permanente de companheiros por batalha | Acordado; exceção somente narrativa |
 | Retorno à luta por ressurreição de alto custo ou item escasso | Acordado; números e limites abertos |
 | Retorno na posição original, sem recuperar turnos perdidos | Acordado |
-| Protótipo isolado de combate antes da forja | Primeira versão entregue e jogada; próxima entrega é a revisão pós-teste ([LEIA-ME](../ferramentas/prototipos/combate-atributos/LEIA-ME.md)), sem integração |
+| Protótipo isolado de combate antes da forja | Primeira versão entregue e jogada; segunda versão entregue em 26/10/2026 para avaliação ([LEIA-ME](../ferramentas/prototipos/combate-atributos/LEIA-ME.md)), sem integração |
 | Turnos individuais intercalados e ordem próxima visível | Acordado |
 | Agilidade define a ordem inicial | Acordado; desempates e detalhes de leitura abertos |
 | Ordem fixa durante toda a batalha | Acordado; sem ações extras por Agilidade |
@@ -276,9 +284,9 @@ Depois de definida a direção suficiente, o Claude poderá verificar implicaç�
 | Atributos ofensivos contribuindo diretamente para dano | Acordado; fórmulas e pesos provisórios no próximo teste |
 | Desbloqueios ou imunidades por atingir X de atributo | Rejeitados; retirar do protótipo |
 | Presença somente no cenário e nas interações | Acordado; sem efeito de combate |
-| Tenacidade gradual com teto, sem imunidade automática | Direção de teste; fórmula e vínculo com Vontade abertos |
-| Comandos básicos fora dos slots e pontos do kit | Hipótese operacional da próxima iteração; consomem ação |
-| Orçamento de seleção de habilidades por tier, até uma ultimate | Direção acordada; valores e catálogo provisórios |
+| Tenacidade gradual com teto, sem imunidade automática | Direção de teste; na segunda versão: 4% por ponto de Vontade até 40%, menos a aplicação do atacante (hipótese, não aprovada) |
+| Comandos básicos fora dos slots e pontos do kit | Hipótese operacional implementada na segunda versão; consomem ação; aguarda avaliação |
+| Orçamento de seleção de habilidades por tier, até uma ultimate | Direção acordada; na segunda versão: 10 pontos, até 6 espaços, tiers de 1 a 4 pontos, ultimate por Ímpeto (provisórios) |
 | Kit limitado e investimento seletivo | Direção acordada |
 | Cinco habilidades + uma ultimate | Hipótese, não número fechado |
 | Caminhos curtos de modificadores por habilidade | Direção acordada; três passos é hipótese |

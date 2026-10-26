@@ -7609,3 +7609,25 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   3 é o mais leve. Nada disso é balanceamento.
 - **A etapa 4 não está concluída.** Aguarda a avaliação do Jean do protótipo e as decisões do 25 antes de reforço e
   encantamento; nada a integrar.
+
+### 26/10/2026 (data do computador local) — A segunda versão do protótipo de combate e atributos
+
+- **Por quê:** o Jean jogou a primeira, gostou do combate e aceitou lutas mais longas, mas guardou recurso com o ataque
+  básico e não sentiu a diferença entre as builds. A revisão da seção 3.7 do [25](25-ETAPA4-REFORCO-E-ENCANTAMENTO.md)
+  (commit `9d6f1860`) virou a segunda versão, isolada, em `ferramentas/prototipos/combate-atributos/` (`motor2/`,
+  `tela2/`). A primeira continua jogável ao lado (`/v1/`), com as regras congeladas.
+- **Decisões aplicadas:** Força e Intelecto entram direto no dano; sem desbloqueio por pontuação; benefícios graduais
+  com tetos; Presença fora do orçamento e sem efeito de combate; Tenacidade com teto e chance mostrada; kit com pontos
+  por tier e até uma ultimate; Atacar, Defender e Usar item fora do kit (hipótese desta iteração).
+- **Hipóteses implementadas (provisórias):** a escala 1–10 e 30 pontos; as fórmulas, o recurso (começa com 40, +8 por
+  turno e +8 no básico), o Ímpeto da ultimate, a interrupção uma vez por inimigo, quatro builds de teste e a comparação
+  de uma peça. Os inimigos ganharam vida e um pouco de dano (registrado no LEIA-ME, para não creditar a uma build).
+- **Conferido:** 53 testes do protótipo (26 da v1, 27 da v2); os dois roteiros do navegador a 1920×945 e a 1280×720
+  (teclado, tecla segurada, clique duplo, reinício, movimento reduzido); partidas à mão com Precisão, Baluarte e Runa;
+  medição automática em três estilos (sem reserva, com reserva, ignorando ameaças).
+- **Observado:** as builds mudam a escolha na mesma luta; gastar cedo não deixa sem resposta à primeira ameaça e cria
+  custo na segunda; guardar só alonga. A observar: Percepção contra ponto fraco quase empata com Força; o encontro 1
+  curto; o Baluarte longo; a hora do Juramento.
+- **Para o Jean:** o [ROTEIRO](../ferramentas/prototipos/combate-atributos/ROTEIRO.md) do que comparar e a
+  `folha-v2.png`. **A etapa 4 não está concluída**; nada a integrar.
+
