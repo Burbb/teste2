@@ -188,7 +188,7 @@ class TestGrimorio(unittest.TestCase):
         j = g.j
         exemplos = {l["rotulo"]: l for l in HABILIDADES["combustao"]["linhas"](j) if l["tipo"] == "dano"}
         for camadas, rotulo in ((1, "1 camada, acesa no turno anterior"),
-                                (3, "3 camadas: três Bolas de Fogo seguidas que acenderam, detonadas logo depois")):
+                                (3, "3 camadas, detonadas logo depois")):
             linha = exemplos[rotulo]
             p = linha["chance_critico"] / 100
             esperado = linha["medio"] * (1 - p) + linha["critico"] * p

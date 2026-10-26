@@ -32,7 +32,7 @@ def _efeitos(c, cb=None):
     for n, ef in c.efeitos.items():
         d = {"nome": ef.get("r", NOMES_EFEITOS.get(n, n)), "id": n, "turnos": ef["t"]}
         if estados.ESTADOS.get(n, {}).get("tique"):
-            d["por_turno"] = estados.dano_do_tique(cb, n, ef)
+            d["por_turno"] = estados.dano_do_tique(cb, n, ef, c)
         if ef.get("s", 1) > 1:
             d["camadas"] = ef["s"]
         d["texto"] = estados.agora(n, ef.get("v", 0))
@@ -128,16 +128,13 @@ def explicar_atributos_base(g):
         "intelecto": f"Agora: +{_num(soma.get('poder', 0))} de Poder.",
         "percepcao": f"Agora: +{_pct(atr.critico(j))} de crítico (total {_pct(grimorio.chance_critico(j))}).",
         "vontade": f"Agora: +{_num(soma.get('max_rec', 0))} de {j.nome_recurso.lower()} máximo e "
-                   f"{_pct(atr.tenacidade(j))} de Tenacidade (teto {_pct(atr.TENACIDADE_TETO)}).",
+                   f"{_pct(atr.tenacidade(j))} de Tenacidade.",
     }
-    extra = {"vontade": "Tenacidade: chance de resistir a atordoar, congelar e prender. Não protege de fogo, gelo ou "
-                        "outros tipos de dano."}
     lista = []
     for a in atr.ATRIBUTOS + ("presenca",):
-        linhas = ([f"Cada ponto: {atr.FUNCAO[a]}.", agora[a]] if a != "presenca" else
-                  ["Não recebe pontos: sobe 1 a cada 3 níveis.", f"Serve para {atr.FUNCAO[a]}. Não vale na luta."])
-        if a in extra:
-            linhas.append(extra[a])
+        # primeiro o que ele dá agora; depois o que cada ponto rende; o teste do d20 por último
+        linhas = ([agora[a], f"Cada ponto: {atr.FUNCAO[a]}."] if a != "presenca" else
+                  [f"Serve para {atr.FUNCAO[a]}. Não vale na luta.", "Não recebe pontos: sobe 1 a cada 3 níveis."])
         if a in TESTE_DE:
             linhas.append(f"Testes de {NOMES_TESTE[TESTE_DE[a]]}: "
                           f"{_parte_nos_testes(g, TESTE_DE[a], atr.NOMES[a]):+d}.")
@@ -146,6 +143,21 @@ def explicar_atributos_base(g):
         lista.append({"id": a, "nome": atr.NOMES[a], "sigla": atr.SIGLAS[a], "valor": valores.get(a, 0),
                       "linhas": linhas, "mais": mais})
     return lista
+
+
+def explicar_conceitos(g):
+    """Os valores que nascem dos atributos e têm explicação própria (a dica de cada um, na ficha e no quadro de
+    atributos): o crítico (Percepção) e a Tenacidade (Vontade)."""
+    j = g.j
+    return [
+        {"id": "critico", "nome": "Crítico", "valor": _pct(grimorio.chance_critico(j)),
+         "linhas": [f"Chance de um golpe seu sair crítico (×{_num(grimorio.mult_critico(j))} de dano).",
+                    f"Vem da Percepção ({_pct(atr.critico(j))}), da base de todo herói e de talentos e itens."]},
+        {"id": "tenacidade", "nome": "Tenacidade", "valor": _pct(atr.tenacidade(j)),
+         "linhas": ["Chance de resistir a atordoar, congelar e prender (você perde a vez se não resistir).",
+                    f"Vem da Vontade: {_pct(atr.TENACIDADE_POR_PONTO)} por ponto, até {_pct(atr.TENACIDADE_TETO)}.",
+                    "Não reduz dano: a resistência a fogo, gelo e outros tipos é outra coisa."]},
+    ]
 
 
 def _num(v):
@@ -208,6 +220,7 @@ def heroi(g):
         "atributos": {"Ataque": j.atk, "Defesa": j.defesa, "Agilidade": j.agi, "Poder": j.poder},
         "atributos_info": explicar_atributos(g), "atributos_penal": penalidades_atributos(j),
         "atributos_base": explicar_atributos_base(g), "pontos_atributo": j.pontos_atributo,
+        "conceitos": explicar_conceitos(g),
         "reputacao_info": explicar_reputacao(g),
         "testes": explicar_testes(g),
         "dificuldade_extra": g.dificuldade(0),
@@ -229,6 +242,14 @@ def heroi(g):
         "habilidades": [{"nome": efetiva(j, h)["nome"], "custo": custo_habilidade(j, h), "desc": descricao_habilidade(h, j)}
                         for h in j.habilidades],
         "grimorio": grimorio.dados(j),
+        # o kit equipado, para a fileira da barra (consulta): nome, ícone, custo, o que faz e se é a ultimate (usada
+        # nesta luta, se houver luta)
+        "kit": [{"id": h, "nome": efetiva(j, h)["nome"], "icone": efetiva(j, h)["icone"],
+                 "familia": efetiva(j, h)["familia"], "custo": custo_habilidade(j, h),
+                 "desc": descricao_habilidade(h, j), "ultimate": bool(HABILIDADES[h].get("ultimate")),
+                 "usada": bool(g.combate_ativo and HABILIDADES[h].get("ultimate")
+                               and "j" in g.combate_ativo.ultimates_usadas)}
+                for h in getattr(j, "kit", []) if h in HABILIDADES],
         "ferimentos": ferimentos, "males": sobrevivencia.descrever(j),
         "pontos_talento": j.pontos_talento, "sigilos": len(j.sigilos),
         "companheiro": ({"nome": j.companheiro["nome"], "hp": j.companheiro["hp"], "max_hp": j.companheiro["max_hp"],

@@ -555,7 +555,7 @@ function rodaDeAcoes(m) {
   };
   const arma = iconeAtaque();
   botao("atacar", Icones.acao(arma) || spr(arma, 2), "Atacar", `<b>${esc(atk.meta.nome)}</b><div class="tipo">${ehHeroi ? `grátis · devolve um pouco de ${esc(heroi.recurso.toLowerCase())}` : "grátis"}</div>` +
-    (basico ? `<div class="melhor">Dano: ${basico.min}–${basico.max} (crítico ${basico.critico})</div>` : ""),
+    (basico ? `<div class="melhor">Dano: ${basico.min}–${basico.max}</div>` : ""),
     () => { App.som("escolha"); habMirando = atk.meta.nome; responder(m.id, acaoIdx("atacar")); });
   const def = m.opcoes[acaoIdx("defender")];
   if (def) {
@@ -986,7 +986,7 @@ function danoGrimorio(id) {
   const g = estado && estado.heroi.grimorio;
   const x = g && g.habilidades.find((h) => h.id === id);
   const d = x && x.linhas.find((l) => l.tipo === "dano");
-  return d ? `<div class="melhor">${esc(d.rotulo === "Dano" ? "Dano" : d.rotulo)}: ${d.min}–${d.max} (crítico ${d.critico})</div><div class="rodape">Detalhes no Grimório (P).</div>` : "";
+  return d ? `<div class="melhor">${esc(d.rotulo === "Dano" ? "Dano" : d.rotulo)}: ${d.min}–${d.max}${d.sem_esquiva ? " · não pode ser esquivado" : ""}</div><div class="rodape">A conta no Grimório (P).</div>` : "";
 }
 
 /** O Grimório não é um menu do jogo: abre por cima de qualquer tela, como o mapa. */

@@ -31,7 +31,7 @@
       <div class="boneco">${espacos}<div class="boneco-retrato">${Icones.retrato(p.classe, "Retrato do herói") || S(p.classe, 6)}</div></div>
       <div class="inv-lado">
         <div class="ficha-mini"><div class="heroi-nome">${h(p.nome)}</div><div class="heroi-titulo">${h(p.titulo)} · nível&nbsp;${p.nivel} · ${p.xp}/${p.xp_proximo}&nbsp;XP</div></div>
-        ${baseHtml(p)}<div class="atributos">${attrs}</div>
+        ${baseHtml(p, true)}<div class="atributos">${attrs}</div>
         <h4>Mochila <small>${p.mochila.length}/${limite}</small></h4>
         <div class="mochila-grade">${celulas.join("")}<div class="slot-px lixeira" title="Arraste um item aqui para largar">${S("caveira", 2, "fantasma")}<span class="espaco-nome">Largar</span></div></div>
         <h4>Bolsa</h4><div class="slots">${bolsa || '<span class="vazio">vazia</span>'}</div>
@@ -57,16 +57,30 @@
   /** Os seis atributos e a Presença (etapa 4): a sigla e o valor, com a dica do motor (o que cada ponto dá, quanto soma
    *  agora, o teste do d20 que usa). Com pontos da subida de nível, o "+" de cada um (o motor diz se dá: `mais`; o clique
    *  é a opção escondida `atributo`). A Presença não recebe pontos: sobe sozinha a cada 3 níveis. */
-  function baseHtml(p) {
+  function baseHtml(p, conceitos = false) {
     const lista = p.atributos_base || [];
     if (!lista.length) return "";
+    // o "+" vale fora da luta (o motor oferece a distribuição nos menus do lugar e na ficha); na luta, apagado
+    const emLuta = !!(App.estado && App.estado.combate);
     const celulas = lista.map((a) => {
-      const mais = a.mais ? `<button type="button" class="attr-mais" data-atributo="${h(a.id)}"${a.mais.motivo ? ` disabled title="${h(a.mais.motivo)}"` : ""} aria-label="+1 de ${h(a.nome)}">+</button>` : "";
+      const motivo = a.mais && (a.mais.motivo || (emLuta ? "Distribua fora da luta." : null));
+      const mais = a.mais ? `<button type="button" class="attr-mais" data-atributo="${h(a.id)}"${motivo ? ` disabled title="${h(motivo)}"` : ""} aria-label="+1 de ${h(a.nome)}">+</button>` : "";
       return `<div class="attr-base" tabindex="0" ${dica(`<b>${h(a.nome)} ${a.valor}</b><ul class="dica-lista">${a.linhas.map((l) => `<li>${Realce.texto(l)}</li>`).join("")}</ul>`)}>
         <small>${h(a.sigla)}</small><b>${a.valor}</b>${mais}</div>`;
     }).join("");
     const pontos = p.pontos_atributo ? `<div class="attr-pontos">${Texto.plural(p.pontos_atributo, "ponto")} de atributo para distribuir</div>` : "";
-    return `${pontos}<div class="atributos-base">${celulas}</div>`;
+    // o crítico e a Tenacidade: cada um com a dica própria (nascem da Percepção e da Vontade)
+    const derivados = conceitos && (p.conceitos || []).length ? `<div class="atributos-conceitos">${p.conceitos.map((c) =>
+      `<div class="attr-conceito" tabindex="0" data-conceito="${h(c.id)}" ${dica(`<b>${h(c.nome)} ${h(c.valor)}</b><ul class="dica-lista">${c.linhas.map((l) => `<li>${Realce.texto(l)}</li>`).join("")}</ul>`)}><span>${h(c.nome)}</span><b>${h(c.valor)}</b></div>`).join("")}</div>` : "";
+    return `${pontos}<div class="atributos-base">${celulas}</div>${derivados}`;
+  }
+  /** O "+" de um atributo (a ficha e o quadro da ficha lateral): a ação escondida do motor. */
+  function ligarMais(raiz) {
+    raiz.querySelectorAll(".attr-mais:not([disabled])").forEach((b) => b.addEventListener("click", (ev) => {
+      ev.stopPropagation();
+      // sem a opção na pergunta de agora (uma cena no meio, um evento), o motivo em vez de nada
+      if (!App.acao({ atributo: b.dataset.atributo }, "equipar")) aviso("Distribua os pontos num menu do lugar ou na ficha.", "info", "pergaminho");
+    }));
   }
   /** Os testes do d20 numa linha da ficha, com a dica: o bônus de cada teste e de onde vem (nível, atributo, classe),
    *  o que a situação de agora muda (sem luz), para que serve e se o atributo de origem está abaixo do normal. Tudo
@@ -96,10 +110,7 @@
   function ligarInventario(raiz) {
     const heroi = App.estado && App.estado.heroi;
     if (!heroi) return;
-    raiz.querySelectorAll(".attr-mais:not([disabled])").forEach((b) => b.addEventListener("click", (ev) => {
-      ev.stopPropagation();
-      App.acao({ atributo: b.dataset.atributo }, "equipar");
-    }));
+    ligarMais(raiz);
     let arrastando = null;
     const limpar = () => { raiz.querySelectorAll(".alvo").forEach((x) => x.classList.remove("alvo")); arrastando = null; };
     raiz.querySelectorAll("[draggable=true]").forEach((el) => {
@@ -156,6 +167,7 @@
     }));
   }
 
+  Object.assign(Telas, { atributosBaseHtml: baseHtml, ligarMaisAtributo: ligarMais });
   Telas.registrar("personagem", personagem, { ligar: ligarInventario });
 
   Object.assign(Telas, { atributosHtml, chegando, reputacaoHtml, testesHtml });

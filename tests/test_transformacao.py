@@ -111,7 +111,7 @@ class TestFicha(unittest.TestCase):
         pagina = next(p for p in grimorio.dados(g.j)["habilidades"] if p["id"] == "lanca_gelo")
         self.assertEqual((pagina["nome"], pagina["custo"]), ("Prisão de Gelo", 16))
         self.assertIn("× 70%", pagina["linhas"][0]["formula"])
-        self.assertEqual(pagina["linhas"][0]["nota"], "Não pode ser esquivado.")
+        self.assertTrue(pagina["linhas"][0]["sem_esquiva"])  # no resumo, uma vez (1.211.1: não mais na nota)
         self.assertIn("Prisão de Gelo", [h["nome"] for h in estado_heroi(g)["habilidades"]])
         self.assertEqual(glossario()["Prisão de Gelo"], "gelo")
         g.ui.roteiro = ["Voltar"]

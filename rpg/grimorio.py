@@ -60,8 +60,9 @@ def mult_talentos(u, alcance):
 
 
 def golpe(u, mult, stat="atk", alcance="corpo", tipo="fisico", bonus=0.0, bonus_txt=None, crit_extra=0.0, rotulo="Dano",
-          extra=1.0, extra_txt=None, nota=None):
-    """Uma linha de dano: faixa (±15%), média, crítico e de onde vem cada parte."""
+          extra=1.0, extra_txt=None, nota=None, sem_esquiva=False):
+    """Uma linha de dano: faixa (±15%), média, crítico e de onde vem cada parte. A tela mostra a faixa e o
+    sem_esquiva no resumo; a fórmula, o crítico, a escala e a nota, na consulta (Como é calculado)."""
     valor = getattr(u, stat)
     tal, nome_tal = mult_talentos(u, alcance)
     base = valor * mult + bonus
@@ -82,11 +83,12 @@ def golpe(u, mult, stat="atk", alcance="corpo", tipo="fisico", bonus=0.0, bonus_
     return {"tipo": "dano", "rotulo": rotulo, "elemento": ELEMENTO.get(tipo, tipo), "alcance": alcance,
             "min": int(medio * 0.85), "max": int(medio * 1.15), "medio": int(medio),
             "critico": int(medio * mult_critico(u)), "chance_critico": round(crit * 100),
-            "formula": " ".join(formula), "escala": escala, "nota": nota}
+            "formula": " ".join(formula), "escala": escala, "nota": nota, "sem_esquiva": sem_esquiva}
 
 
-def efeito(texto):
-    return {"tipo": "efeito", "texto": texto}
+def efeito(texto, detalhe=None):
+    from .habilidades import _efeito
+    return _efeito(texto, detalhe)
 
 
 def _queimadura(u, chance):
@@ -98,9 +100,12 @@ def _queimadura(u, chance):
         origem.append(f"+{_pct(mult(u, 'queimadura_mult') - 1)} {', '.join(nomes(u, 'queimadura_mult'))}")
     if mod(u, "queimadura_dano"):
         origem.append(f"+{_pct(mod(u, 'queimadura_dano'))} {', '.join(nomes(u, 'queimadura_dano'))}")
-    from .estados import ESTADOS
-    return efeito(f"{_pct(chance)} de chance de acender: {_num(v)} de fogo por turno, {t} turnos, acumula até "
-                  f"{bal.MAX_CHAMAS} camadas ({', '.join(origem)}); não pega em {ESTADOS['queimadura']['imunes']}.")
+    # o resumo só com os números (a descrição já diz que aplica): por camada, a duração, o teto e a chance, se houver
+    chance_txt = "" if chance >= 1 else f" ({_pct(chance)} de chance)"
+    return efeito(f"Queimadura{chance_txt}: {_num(v)} de fogo por turno do alvo, {t} turnos, até {bal.MAX_CHAMAS} "
+                  "camadas.",
+                  detalhe=f"Por camada: {', '.join(origem)}. A resistência do alvo ao fogo reduz o dano por turno, uma "
+                          "vez; a chuva enfraquece as chamas. Só quem é imune ao fogo não pega fogo")
 
 
 # Como os RPGs de turno descrevem o alcance (Final Fantasy, Pokémon): quem, e se é um só ou todos.
@@ -232,8 +237,9 @@ def texto(j):
     """O Grimório em linhas, para o modo texto (a tela de personagem): uma linha por página, e as regras uma vez."""
     def linha(l):
         if l["tipo"] == "dano":
-            return f"{l['rotulo']} {l['min']}–{l['max']} (média {l['medio']}), crítico {l['critico']} em {l['chance_critico']}%"
-        return l["texto"]
+            return (f"{l['rotulo']} {l['min']}–{l['max']} (média {l['medio']}), crítico {l['critico']} em "
+                    f"{l['chance_critico']}%" + ("; não pode ser esquivado" if l.get("sem_esquiva") else ""))
+        return l["texto"] + (f" [{l['detalhe'].rstrip('.')}]" if l.get("detalhe") else "")
     d = dados(j)
     linhas = []
     for x in [d["basico"]] + d["habilidades"] + d["passivas"]:

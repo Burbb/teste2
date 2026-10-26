@@ -26,6 +26,7 @@ Regra de ouro ao criar blocos: a ordem dos sorteios (rng) tem de ser a mesma de 
 para o gabarito de regressão continuar idêntico quando nada de jogo mudou.
 """
 
+import re
 from . import balanceamento as bal
 from .estados import descrever_aplicar, descrever_buff
 from .modificadores import fontes, mod, mult
@@ -127,11 +128,10 @@ class Dano:
         if self.em == "outro" and not self.grimorio:  # os números são os do golpe anterior: aqui, só para onde vai
             return [_efeito(SEGUNDO_ALVO)] + descrever(self.depois, u)
         rotulo = self.grimorio or ("Em cada inimigo" if self.em == "todos" else "Dano")
-        nota = self.nota or (None if self.esquiva else "Não pode ser esquivado.")
         linha = golpe(u, self.mult, stat=self.stat, alcance=self.alcance, tipo=self.tipo,
                       bonus=valor(self.bonus, u) if self.bonus else 0.0,
                       bonus_txt=self.bonus.texto() if self.bonus else None, crit_extra=self.crit_extra,
-                      rotulo=rotulo, nota=nota)
+                      rotulo=rotulo, nota=self.nota, sem_esquiva=not self.esquiva)
         return [linha] + descrever(self.depois, u)
 
 
@@ -186,8 +186,19 @@ class Se:
         return linhas
 
 
-def _efeito(texto):
-    return {"tipo": "efeito", "texto": texto}
+_FORMULA = re.compile(r"\s*\(([^()]*×[^()]*)\)")
+
+
+def _efeito(texto, detalhe=None):
+    """Uma linha de efeito do Grimório: o resumo (o que acontece, com o número de agora) e, à parte, o detalhe da
+    conta. A fórmula entre parênteses ("(Poder × 40%)") sai do resumo e vai para o detalhe (skill texto-regras-fenda:
+    o cálculo fica na consulta)."""
+    formulas = [m.group(1) for m in _FORMULA.finditer(texto)]
+    if formulas:
+        texto = _FORMULA.sub("", texto)
+    det = "; ".join(([detalhe] if detalhe else []) + formulas)
+    return {"tipo": "efeito", "texto": texto, **({"detalhe": det[0].upper() + det[1:] + ("" if det.endswith(".") else ".")}
+                                                 if det else {})}
 
 
 class Aplicar:
@@ -494,7 +505,7 @@ def _linhas_comando_fera(u):
         linhas.append(_efeito(f"Se a mordida acertar, sangramento forte: {_num(max(3, f['atk'] * 0.55))} por turno, 4 "
                               f"turnos; não afeta {ESTADOS['sangramento']['imunes']}."))
     else:
-        linhas.append(_efeito("Não pode ser esquivado. O alvo fica enfraquecido (−25% de dano) por 2 turnos."))
+        linhas.append(_efeito("O alvo fica enfraquecido (−25% de dano) por 2 turnos dele. Não pode ser esquivado."))
     return linhas
 
 
@@ -581,9 +592,10 @@ def _linhas_combustao(u):
                   crit_extra=0.05, rotulo="1 camada, acesa no turno anterior"),
             golpe(u, 1.0, stat="poder", alcance="distancia", tipo="fogo", bonus=detonar(bal.MAX_CHAMAS),
                   bonus_txt=f"{bal.MAX_CHAMAS} camadas", crit_extra=0.05 * bal.MAX_CHAMAS,
-                  rotulo=f"{bal.MAX_CHAMAS} camadas: três Bolas de Fogo seguidas que acenderam, detonadas logo depois",
-                  nota=f"Cada camada pede uma Bola de Fogo que acenda ({acende * 100:.0f}% de chance agora). A explosão é "
-                       "o que as chamas ainda queimariam × (1,6 + 0,2 por camada).")]
+                  rotulo=f"{bal.MAX_CHAMAS} camadas, detonadas logo depois",
+                  nota=f"Cada camada pede um acerto que acenda: a Brasa sempre, a Bola de Fogo em {acende * 100:.0f}% "
+                       "das vezes. A explosão é o que as chamas ainda queimariam × (1,6 + 0,2 por camada). A "
+                       "resistência do alvo ao fogo reduz o golpe inteiro, uma vez.")]
 
 
 def blocos(ficha):
@@ -666,8 +678,7 @@ HABILIDADES = {
         Dizer("Você reza em voz baixa. Uma luz quente te envolve. (+{cura} vida, males removidos)", "verde")],
         icone="coracao", familia="sagrado"),
     "julgamento": hab("Julgamento Divino", 36, "todos",
-                      "Causa 120% do Ataque + 100% do Poder em dano sagrado a todos os inimigos. Não pode ser "
-                      "esquivado.", [
+                      "Causa 120% do Ataque + 100% do Poder em dano sagrado a todos os inimigos.", [
         Dizer("Você ergue a arma aos céus. Colunas de luz caem sobre seus inimigos!", "amarelo+negrito"),
         Dano(1.2, tipo="sagrado", bonus=Escala(poder=1), alcance="distancia", esquiva=False, em="todos")],
         icone="raio", familia="sagrado"),
@@ -850,10 +861,11 @@ def _conflagracao(cb, u, alvo):
 
 def _linhas_conflagracao(u):
     from .grimorio import golpe
-    return [golpe(u, 0.7, stat="poder", alcance="distancia", tipo="fogo", rotulo="Em cada inimigo (sem chamas)"),
-            _efeito("Em quem está em chamas, o que a queimadura ainda causaria explode junto (como a Combustão, alvo por "
-                    "alvo) e as chamas se apagam."),
-            _efeito("Não pode ser esquivado. Ultimate: uma vez por luta.")]
+    return [golpe(u, 0.7, stat="poder", alcance="distancia", tipo="fogo", rotulo="Em cada inimigo (sem chamas)",
+                  sem_esquiva=True),
+            _efeito("Em quem está em chamas, a Queimadura é consumida e o que ela ainda causaria explode junto, alvo por "
+                    "alvo.", detalhe="A mesma conta da Combustão; a resistência de cada alvo ao fogo reduz o golpe "
+                                     "inteiro, uma vez")]
 
 
 HABILIDADES.update({
@@ -921,18 +933,18 @@ HABILIDADES.update({
         realce="arcano"),
     # Piromante: o conjunto de fogo (Brasa, Chuva de Brasas, Combustão, Conflagração)
     "brasa": hab("Brasa", 8, "inimigo",
-                 "Causa 60% do Poder em dano de fogo e aplica 1 camada de Queimadura (até 3). Não pode ser esquivada.", [
+                 "Causa 60% do Poder em dano de fogo e aplica 1 camada de Queimadura (até 3).", [
         Dano(0.6, tipo="fogo", alcance="distancia", stat="poder", rotulo="Brasa", esquiva=False, depois=[
             Se("vivo", Acender(1.0))])], icone="chama", familia="fogo", realce="fogo"),
     "chuva_brasas": hab("Chuva de Brasas", 18, "todos",
                         "Causa 35% do Poder em dano de fogo a todos os inimigos e aplica 1 camada de Queimadura em "
-                        "cada um. Não pode ser esquivada.", [
+                        "cada um.", [
         Dizer("Brasas caem como chuva sobre os inimigos!", "vermelho"),
         Dano(0.35, tipo="fogo", alcance="distancia", stat="poder", em="todos", esquiva=False, depois=[
             Se("vivo", Acender(1.0))])], icone="fogueira", familia="fogo", realce="fogo"),
     "conflagracao": hab("Conflagração", 30, "todos",
                         "Causa 70% do Poder em dano de fogo a todos os inimigos e consome a Queimadura de cada um, "
-                        "como a Combustão. Não pode ser esquivada.",
+                        "como a Combustão.",
                         fn=_conflagracao, linhas=_linhas_conflagracao, icone="voador", familia="fogo", realce="fogo"),
 })
 

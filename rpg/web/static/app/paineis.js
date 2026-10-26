@@ -193,6 +193,61 @@ function recurso(id, icones, qtd, opts = {}) {
     <div class="icones">${imgs}</div><div class="qtd">${qtd}</div></div>`;
 }
 
+/* O kit equipado na barra (1.211.1): consulta. Cada habilidade é um botão com a dica (nome, custo, o que faz; a
+   ultimate marcada); fora da luta, o clique abre a página dela no Grimório, que diz se dá para trocar ali (o motor
+   oferece a troca só na vila e na fogueira). Na luta a barra some (09-comitiva.css): as ações seguem na roda, na sua
+   vez. Sem espaço (a janela estreita), a fileira vira o botão "Kit · N", que abre a mesma lista. */
+let kitAberto = false;
+function dicaKit(k, h) {
+  const emLuta = !!(estado && estado.combate);
+  return `<b>${esc(k.nome)}</b>${k.ultimate ? ' <span class="tag-ultimate">Ultimate · 1 vez por luta</span>' : ""}` +
+    `<div class="tipo">${k.custo ? `${k.custo} de ${esc(h.recurso)}` : "Sem custo"}</div><div class="bonus">${Realce.texto(k.desc)}</div>` +
+    (k.usada ? '<div class="pior">Já usada nesta luta.</div>' : "") +
+    `<div class="rodape">${emLuta ? "Na sua vez, pela ação Habilidades." : "Clique para ver no Grimório. O kit se troca na vila ou na fogueira."}</div>`;
+}
+function botaoKit(k, h, lista) {
+  return `<button type="button" class="kit-hab${k.ultimate ? " ultimate" : ""}${k.usada ? " usada" : ""} el-${esc(k.familia || "arcano")}" data-kit-hab="${esc(k.id)}" aria-label="${esc(k.nome)}" ${Telas.dica(dicaKit(k, h))}>` +
+    `${spr(k.icone || "estrela", 2)}${lista ? `<span class="kit-nome">${esc(k.nome)}</span><span class="kit-custo">${k.custo || "grátis"}</span>` : ""}</button>`;
+}
+function kitHud(h) {
+  const kit = h.kit || [];
+  if (!kit.length) return `<div class="hud-kit vazio"><button type="button" class="kit-vazio" data-kit-hab="" ${Telas.dica("<b>Kit vazio</b><div>Nenhuma habilidade vai para a luta. Monte o kit no Grimório, na vila ou na fogueira.</div>")}>Kit vazio</button></div>`;
+  const ult = kit.some((k) => k.ultimate);
+  return `<div class="hud-kit${kitAberto ? " aberto" : ""}" role="group" aria-label="Kit equipado">
+    <div class="kit-fileira">${kit.map((k) => botaoKit(k, h)).join("")}</div>
+    <button type="button" class="kit-recolhido" aria-expanded="${kitAberto}" aria-controls="kit-lista">Kit · ${Texto.plural(kit.length, "habilidade")}${ult ? ' <i class="kit-ult" title="com a ultimate">◆</i>' : ""}</button>
+    <div class="kit-lista" id="kit-lista">${kit.map((k) => botaoKit(k, h, true)).join("")}</div></div>`;
+}
+function ligarKitHud(h) {
+  const caixa = $("#hud-linha .hud-kit");
+  if (!caixa) return;
+  // recolhe quando a fileira não cabe (as barras ficariam estreitas demais ou a linha transbordaria)
+  const linha = $("#hud-linha"), vitais = $("#hud-linha .hud-vitais");
+  caixa.classList.remove("recolhida");
+  if (linha.scrollWidth > linha.clientWidth + 1 || (vitais && vitais.offsetWidth < 220)) caixa.classList.add("recolhida");
+  caixa.querySelectorAll("[data-kit-hab]").forEach((b) => b.addEventListener("click", (ev) => {
+    ev.stopPropagation();
+    if (estado && estado.combate) return;  // na luta, só consulta: a ação é na roda, na sua vez
+    Telas.abrirGrimorio(b.dataset.kitHab || null);
+  }));
+  const rec = caixa.querySelector(".kit-recolhido");
+  if (rec) rec.addEventListener("click", (ev) => {
+    ev.stopPropagation();
+    kitAberto = !kitAberto;
+    caixa.classList.toggle("aberto", kitAberto);
+    rec.setAttribute("aria-expanded", String(kitAberto));
+    if (kitAberto) { const p = caixa.querySelector(".kit-lista [data-kit-hab]"); if (p) p.focus(); }
+  });
+  caixa.addEventListener("keydown", (ev) => {
+    if (ev.key === "Escape" && kitAberto) { ev.stopPropagation(); kitAberto = false; caixa.classList.remove("aberto"); if (rec) { rec.setAttribute("aria-expanded", "false"); rec.focus(); } }
+  });
+}
+document.addEventListener("click", (ev) => {  // clicar fora fecha a lista do kit recolhido
+  if (!kitAberto || ev.target.closest(".hud-kit")) return;
+  kitAberto = false;
+  const c = document.querySelector("#hud-linha .hud-kit"); if (c) c.classList.remove("aberto");
+});
+
 function desenharHud(h, antes) {
   // Um desenho para "acabou" e outro para "tem": o número ao lado diz quanto.
   const comida = [h.provisoes ? "pernil" : "osso_diag"];
@@ -220,6 +275,7 @@ function desenharHud(h, antes) {
       <div class="vital" data-vital="rec" ${Telas.dica(esc(h.recurso), true)}>${Icones.vital(h.recurso) || spr(RECURSO_ICONE[h.recurso] || "estrela", 1)}${barra(RECURSO_BARRA[h.recurso] || "mana", h.rec, h.max_rec, antes ? antes.rec : undefined, "hud-rec")}<span class="num">${h.rec}/${h.max_rec}</span></div>
       <div class="hud-condicoes">${bloqueioVida}${(h.condicoes || []).map((c) => `<span class="condicao${c.grave ? " grave" : ""}" data-condicao="${esc(c.id)}" ${Telas.dica(`<b>${esc(c.texto)}</b>${c.dica.map((l) => `<div>${esc(l)}</div>`).join("")}`)}>${spr(c.icone, 1)}${esc(c.texto)}</span>`).join("")}</div>
     </div>
+    ${kitHud(h)}
     <div class="hud-recursos">
       ${recurso("provisoes", comida, `${h.provisoes}<small>d</small>`, { alerta: h.provisoes <= 1, vazio: !h.provisoes, titulo: h.provisoes ? `Comida para ${Texto.plural(h.provisoes, "dia")}. Cada dia consome 1 (e cada companheiro come também).` : "Sem comida! Você vai passar fome." })}
       ${recurso("tochas", tochas, h.tochas, { alerta: h.tochas === 0, vazio: !h.tochas, titulo: "Tochas: luz para a noite, ruínas e a cidadela." })}
@@ -230,6 +286,7 @@ function desenharHud(h, antes) {
       ${feridas}
     </div>`;
   animarBarras($("#hud-linha"));
+  ligarKitHud(h);
   Telas.ligarDicas($("#hud-linha"));
   // Feedback: o que mudou desde o último estado
   const agora = { provisoes: h.provisoes, tochas: h.tochas, ouro: h.ouro, pocoes: h.pocoes, bandagens: h.bandagens, flechas: h.flechas };
@@ -249,6 +306,10 @@ function desenharHud(h, antes) {
   }
   ultimosRecursos = agora;
 }
+
+// O quadro dos atributos na ficha lateral (1.211.1): os seis e a Presença, o crítico e a Tenacidade, e o "+" quando há
+// pontos; o mesmo desenho e os mesmos dados da ficha (inventario.js, baseHtml). Aberto ou fechado, fica como você deixou.
+let atributosAbertos = false;
 
 function desenharHeroi(h, antes) {
   guardarLarguras($("#heroi"));
@@ -300,15 +361,26 @@ function desenharHeroi(h, antes) {
     <div class="identidade"><div class="retrato-grande">${Icones.retrato(h.classe, "Retrato do herói") || spr(h.classe, 3)}</div>
       <div><div class="heroi-nome">${esc(h.nome)}</div><div class="heroi-titulo">${esc(h.titulo)} • nível&nbsp;${h.nivel}</div></div></div>
     <div class="xp-linha"><div class="legenda-linha"><span>Experiência</span><span>${h.xp}/${h.xp_proximo}</span></div>${barra("xp", h.xp, h.xp_proximo, antes && antes.nivel === h.nivel ? antes.xp : undefined, antes && antes.nivel === h.nivel ? "xp" : undefined)}</div>
-    ${h.pontos_atributo ? `<div class="talento-linha"><button type="button" class="talento-aviso" data-atalho="Inventário"><span class="estrela">${spr("estrela", 2)}</span><span class="talento-texto">${Texto.plural(h.pontos_atributo, "ponto de atributo", "pontos de atributo").replace(/^\d+/, (n) => `<b>${n}</b>`)}</span><span class="talento-abrir" aria-hidden="true">▸</span></button></div>` : ""}
     ${h.pontos_talento ? `<div class="talento-linha"><button type="button" class="talento-aviso" data-atalho="Talentos"><span class="estrela">${Icones.atalho("Talentos", 32) || spr("estrela", 2)}</span><span class="talento-texto">${Texto.plural(h.pontos_talento, "ponto de talento", "pontos de talento").replace(/^\d+/, (n) => `<b>${n}</b>`)}</span><span class="talento-abrir" aria-hidden="true">▸</span></button></div>` : ""}
-    <div class="secao"><h3>Atributos</h3><div class="atributos">${attrs}</div>${Telas.testesHtml(h)}</div>
+    <div class="secao"><h3>Atributos</h3><div class="atributos">${attrs}</div>${Telas.testesHtml(h)}
+      <button type="button" class="atributos-abrir${h.pontos_atributo ? " com-pontos" : ""}" aria-expanded="${atributosAbertos}" aria-controls="atributos-quadro">
+        <span class="nome">Atributos</span>${h.pontos_atributo ? `<b class="attr-livres">· +${h.pontos_atributo}</b>` : ""}<span class="seta" aria-hidden="true">${atributosAbertos ? "▾" : "›"}</span></button>
+      <div class="atributos-quadro" id="atributos-quadro"${atributosAbertos ? "" : " hidden"}>${Telas.atributosBaseHtml(h, true)}</div></div>
     <div class="secao"><h3>Equipado</h3><div class="equip-mini">${Object.keys(Telas.AREA).map(slot).join("")}</div></div>
     ${comitiva}
     <div class="secao"><h3>Ferimentos</h3>${feridas}</div>
     <div class="secao"><h3>Bolsa</h3><div class="slots">${bolsa || '<span class="vazio">vazia</span>'}</div></div>
     <div class="secao"><h3>Reputação</h3>${Telas.reputacaoHtml(h)}</div>`;
   acomodarNome();
+  const abrir = $("#heroi .atributos-abrir");
+  if (abrir) abrir.addEventListener("click", (ev) => {
+    ev.stopPropagation();
+    atributosAbertos = !atributosAbertos;
+    abrir.setAttribute("aria-expanded", String(atributosAbertos));
+    abrir.querySelector(".seta").textContent = atributosAbertos ? "▾" : "›";
+    $("#atributos-quadro").hidden = !atributosAbertos;
+  });
+  Telas.ligarMaisAtributo($("#heroi"));
   animarBarras($("#heroi"));
   Telas.ligarDicas($("#heroi"));
   // O aviso de ponto de talento abre a árvore (ou guarda o pedido, se ainda houver cena correndo).

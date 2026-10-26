@@ -366,3 +366,13 @@ body.derrotado #predios { visibility: hidden; }
 .ajuda-dado { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 10px; }
 .ajuda-dado-rotulo { margin-right: 4px; color: var(--tinta-2); }
 .ajuda-dado [aria-pressed="true"] { border-color: var(--ouro); color: var(--ouro); }
+/* o Grimório: o resumo à vista e a conta na consulta (skill texto-regras-fenda) */
+.g-tag { margin-left: 10px; padding: 0 6px; font-size: 12px; letter-spacing: .03em; color: #f4e8c8; background: #6e4a24; vertical-align: 3px; }
+.g-calculo { margin: 10px 0 0; padding: 4px 10px 6px; border: 1px solid rgba(90, 70, 50, 0.45); background: rgba(255, 255, 255, 0.10);
+  font-size: 13.5px; line-height: 1.4; color: #3a2e24; }
+.g-calculo summary { cursor: pointer; font-size: 14px; color: #5a3f22; }
+.g-calculo summary:focus-visible { outline: 2px solid #8a5a2c; outline-offset: 2px; }
+.g-calculo ul { margin: 6px 0 2px; padding-left: 18px; }
+.g-calculo li { margin: 3px 0; }
+.g-calculo .g-escala-item { display: inline-block; margin-right: 8px; color: #2b7424; }
+.g-calculo .g-rodape { margin: 6px 0 0; }

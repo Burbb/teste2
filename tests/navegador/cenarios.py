@@ -1114,6 +1114,7 @@ LUTAS_INTEGRACAO = {
     "misto": lambda g, n: [g.inimigo("bandido", nivel=n) for _ in range(2)] + [g.inimigo("cultista", nivel=n)],
     "esqueletos": lambda g, n: [g.inimigo("esqueleto", nivel=n) for _ in range(3)],
     "chefe": lambda g, n: [_chefe(n)],
+    "caes": lambda g, n: [g.inimigo("cao_infernal", nivel=max(3, n)) for _ in range(2)],  # resistem ao fogo (×0,24)
 }
 
 
@@ -1125,7 +1126,7 @@ def _chefe(n):
 def integracao(ui):
     """TESTE (etapa 4, roadmapIDEIAS/26): a CLASSE (padrão guerreiro; ESPEC, padrão a primeira) no nível NIVEL (padrão
     6, o nível de teste: não é o ritmo da campanha), vestido, com a COMITIVA (padrão "odete,morel"; vazio: sozinho), na
-    LUTA (lobos, misto, esqueletos, chefe). CAIDO=<id>: esse companheiro entra caído na primeira luta (para a Pena e o
+    LUTA (lobos, misto, esqueletos, chefe, caes: dois cães infernais, que resistem ao fogo). CAIDO=<id>: esse companheiro entra caído na primeira luta (para a Pena e o
     Reerguer); PENAS=n: Penas de Fênix na bolsa;
     PONTOS=n: pontos de atributo para distribuir. Depois de cada luta: a seguinte sem descanso (vida, recurso e
     caídos ficam como estão), a mesma de novo com tudo cheio, ou seguir jogando (a fogueira e a vila trocam o kit)."""
