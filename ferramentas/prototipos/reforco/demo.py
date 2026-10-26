@@ -322,7 +322,12 @@ def reforcar(g, uid, veio=None):
         it["veio"] = veio
     ganho = R.proximo(it)
     # tudo conferido: paga e aplica junto (nada cobrado sem o resultado)
-    g.perder_ouro(ouro, destino="ferreiro")
+    # a janela da forja mostra o resultado e o ouro no topo: o aviso de "−N ouro" do jogo ficaria por cima da bancada
+    efeito, g.ui.efeito = g.ui.efeito, (lambda *a, **k: None)
+    try:
+        g.perder_ouro(ouro, destino="ferreiro")
+    finally:
+        g.ui.efeito = efeito
     materiais(g)["fragmento"] = tem - frag
     for st, v in ganho.items():
         it["bonus"][st] = it["bonus"].get(st, 0) + v
@@ -380,7 +385,8 @@ def forja(self):
             ok, texto = desmontar(self, d.get("uid"), d.get("nome"))
         else:
             continue
-        self.ui.efeito(texto, "aprova" if ok else "info")
+        if not ok:  # o sucesso a própria janela mostra (a bancada acende; o topo conta ouro e fragmentos)
+            self.ui.efeito(texto, "info")
 
 
 # ------------------------------------------------------------------ ligar ao jogo, só nesta execução

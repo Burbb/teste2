@@ -14,6 +14,34 @@ para parar. Folha compacta: `folha.png`.
 Só nesta execução, `demo.py` troca a forja (o balcão novo), o baú (que pode dar fragmento), a seção "Materiais" do
 Inventário e a venda da peça reforçada. O resto é o jogo: o Inventário do grupo, o mercado, a luta, a estrada.
 
+## A tela, 4ª versão: a A · Bancada refinada (candidata em avaliação)
+
+**Direção escolhida pelo Jean: A · Bancada.** Esta versão é a candidata refinada dela, ainda não aprovada nem
+integrada. A A anterior e a B ficam em `tela/historico/v3` (a faixa da demonstração abre: "v3 (A e B)", com a troca
+entre elas). Folha: `folha.png` (A anterior × A refinada com os mesmos dados, e o fluxo com recursos).
+
+- **A bancada é um objeto:** uma chapa de ferro rebitada com espessura e sombra. Nela, da esquerda para a direita, os
+  materiais (ouro e Fragmentos em encaixes, o custo grande e "Tem" embaixo), um conduto, a peça num encaixe sobre um
+  pé de ferro com sombra de contato, as marcas do reforço sob ela, outro conduto com a seta e o visor do resultado; no
+  pé da chapa, a ação. Princípio tirado da Forja de Stardew Valley ([wiki](https://stardewvalleywiki.com/Forge),
+  captura da interface examinada): os encaixes ligados por canos e uma seta numa chapa única fazem a operação parecer
+  parte de uma máquina. Não copiei a máquina nem a paleta.
+- **Papéis separados:** o centro tem o próximo reforço, o ganho ("Ataque 4 → 5"), o custo e a ação; a ficha (mais
+  larga: 360 px a 1920, 270 a 1280) tem o nome, o dono e todas as propriedades; a que o reforço muda tem o valor
+  destacado num nicho de latão, sem repetir o "→".
+- **Fio e Runas:** o visor do resultado vira duas opções ("Fio · Ataque 3 → 4", "Runas · Poder 0 → 1"); escolher é
+  clicar numa; o custo é o mesmo.
+- **Símbolos:** as marcas sob a peça são só o reforço; o material aparece pelo ícone com a quantidade (no canto das
+  peças ao desmontar e no visor "Recebe"); a propriedade afetada é destacada pelo valor. O losango saiu.
+- **Limite:** "Reforço máximo +4", as quatro marcas cheias, sem botão.
+- **Desmontar:** a peça → "Recebe" (o ícone com a quantidade); a confirmação no ferro da chapa: "Desmontar [nome]?",
+  "O equipamento será destruído." (em vermelho), Cancelar · Desmontar (o Desmontar em vermelho). A proteção continua
+  (a confirmação arma depois de um instante; Cancelar não muda peça, recursos nem seleção).
+- **Resultado do reforço:** um clique compra um passo; o custo cai, o próximo preço aparece, a peça continua
+  escolhida e o foco volta ao Reforçar; a peça, a marca nova e o valor na ficha acendem por um instante (passos de
+  pixel, 0,9 s, sem som, sem espera). Com movimento reduzido, o contorno da marca e do valor fica até a próxima ação.
+  Os avisos genéricos "−N ouro" e "Peça +N" do jogo não aparecem por cima da janela (o topo conta).
+
 ## A tela, 3ª versão: duas direções (A · Bancada, B · Arsenal)
 
 A estrutura da 2ª versão continua (uma janela por serviço, sem rolar a página, ouro e Fragmentos no topo, a ação
