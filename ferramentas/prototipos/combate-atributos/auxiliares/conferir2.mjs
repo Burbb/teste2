@@ -1,4 +1,4 @@
-// Confere e fotografa a v2 da demo do combate e dos atributos (protótipo; nada no jogo) a 1920×945 e a 1280×720: sobe
+// Confere e fotografa a v2 da demo (em /v2/; a v3 tem conferir3.mjs) do combate e dos atributos (protótipo; nada no jogo) a 1920×945 e a 1280×720: sobe
 // o servidor numa porta livre com os resultados numa pasta temporária e confere a tela Preparar (orçamento do kit, uma
 // ultimate, a ficha mudando com a build, a arma mudando o dano, Presença sem efeito na luta), a luta (sem rolagem nem
 // corte, a previsão no alvo igual ao dano real, a chance de resistir na ameaça, a ultimate com Ímpeto), o teclado, a
@@ -28,7 +28,7 @@ if (!URL) { console.log("o servidor não subiu"); process.exit(1); }
 const estado = (p) => p.evaluate(() => Demo.estado);
 const ficha = (p) => p.evaluate(() => Demo.ficha);
 async function tecla(p, ...ks) { for (const k of ks) { await p.keyboard.press(k); await espera(120); } }
-async function prep(p) { await p.goto(URL); await p.waitForSelector("#prep .lutar"); await espera(300); }
+async function prep(p) { await p.goto(URL + "v2/"); await p.waitForSelector("#prep .lutar"); await espera(300); }
 async function build(p, id) {
   const antes = JSON.stringify(await ficha(p));
   await p.click(`[data-build="${id}"]`);

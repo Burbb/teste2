@@ -1,9 +1,10 @@
 """DEMONSTRAÇÃO do combate e dos atributos (protótipo; nada no jogo). Um servidor local com as duas versões, para
 comparar:
 
-- **v2** (26/10/2026, a atual) em http://127.0.0.1:8781/ : motor2/ e tela2/ (atributos no dano, Tenacidade, Presença
-  fora da luta, montagem do kit com pontos e a leitura das builds);
-- **v1** (25/10/2026, a primeira, congelada) em http://127.0.0.1:8781/v1/ : motor/ e tela/.
+- **v3** (26/10/2026, a atual) em http://127.0.0.1:8781/ : motor3/ e tela3/ (tipos de dano, resistências, o Avanço
+  do Baluarte, a Queimadura e a Combustão, Vontade no recurso, a ultimate de uso único, a cadência das preparações);
+- **v2** (26/10/2026, congelada) em http://127.0.0.1:8781/v2/ : motor2/ e tela2/;
+- **v1** (25/10/2026, congelada) em http://127.0.0.1:8781/v1/ : motor/ e tela/.
 
 Os retratos, os ícones, as fontes e os materiais do jogo são lidos de rpg/web/static (só leitura: nada do jogo carrega
 arquivos daqui, e daqui nada se grava no jogo).
@@ -27,21 +28,24 @@ from urllib.parse import unquote, urlparse
 AQUI = pathlib.Path(__file__).resolve().parent
 RAIZ = AQUI.parents[2]
 JOGO = RAIZ / "rpg" / "web" / "static"
-TELA, TELA2 = AQUI / "tela", AQUI / "tela2"
+TELA, TELA2, TELA3 = AQUI / "tela", AQUI / "tela2", AQUI / "tela3"
 sys.path.insert(0, str(AQUI))
 from motor import conteudo as C  # noqa: E402
 from motor.regras import Combate, situacao, _dist_valida  # noqa: E402
 from motor2 import conteudo as C2  # noqa: E402
 from motor2 import regras as R2  # noqa: E402
+from motor3 import conteudo as C3  # noqa: E402
+from motor3 import regras as R3  # noqa: E402
 
 PORTA = int(os.environ.get("DEMO_PORTA", "8781"))
 PASTA_SAVES = pathlib.Path(os.environ.get("DEMO_SAVES") or tempfile.mkdtemp(prefix="combate-atributos-"))
 trava = threading.Lock()
-sessao = {"combate": None, "resultados": [], "combate2": None, "resultados2": []}
+sessao = {"combate": None, "resultados": [], "combate2": None, "resultados2": [], "combate3": None, "resultados3": []}
 
 
 def _gravar():
-    (PASTA_SAVES / "resultados.json").write_text(json.dumps({"v1": sessao["resultados"], "v2": sessao["resultados2"]},
+    (PASTA_SAVES / "resultados.json").write_text(json.dumps({"v1": sessao["resultados"], "v2": sessao["resultados2"],
+                                                             "v3": sessao["resultados3"]},
                                                             ensure_ascii=False, indent=1), encoding="utf-8")
 
 
@@ -182,7 +186,11 @@ class Demo(BaseHTTPRequestHandler):
     def do_GET(self):
         url = urlparse(self.path)
         if url.path == "/":
+            return self._arquivo(TELA3, "index.html")
+        if url.path in ("/v2", "/v2/"):
             return self._arquivo(TELA2, "index.html")
+        if url.path.startswith("/tela3/"):
+            return self._arquivo(TELA3, url.path[len("/tela3/"):])
         if url.path in ("/v1", "/v1/"):
             return self._arquivo(TELA, "index.html")
         if url.path.startswith("/tela/"):
@@ -206,6 +214,13 @@ class Demo(BaseHTTPRequestHandler):
                 return self._json(200, cb.estado() if cb else {"vazio": True})
             if url.path == "/api2/resultados":
                 return self._json(200, {"resultados": sessao["resultados2"], "pasta": str(PASTA_SAVES)})
+            if url.path == "/api3/catalogo":
+                return self._json(200, catalogo3())
+            if url.path == "/api3/estado":
+                cb = sessao["combate3"]
+                return self._json(200, cb.estado() if cb else {"vazio": True})
+            if url.path == "/api3/resultados":
+                return self._json(200, {"resultados": sessao["resultados3"], "pasta": str(PASTA_SAVES)})
         self._json(404, {"erro": "nada aqui"})
 
     def do_POST(self):
@@ -219,6 +234,8 @@ class Demo(BaseHTTPRequestHandler):
             try:
                 if url.path.startswith("/api2/"):
                     return self._post2(url.path[len("/api2/"):], corpo)
+                if url.path.startswith("/api3/"):
+                    return _post3(self, url.path[len("/api3/"):], corpo)
                 if url.path == "/api/iniciar":
                     enc = corpo.get("encontro")
                     if enc not in C.ENCONTROS:
@@ -282,6 +299,102 @@ class Demo(BaseHTTPRequestHandler):
         return self._json(404, {"erro": "nada aqui"})
 
 
+# ---------------------------------------------------------------- v3
+def _guardar_resultado3(cb, como):
+    if cb is None or cb.resumo.get("anotado"):
+        return
+    cb.resumo["anotado"] = True
+    h = cb.c["heroi"]
+    r = {"encontro": cb.encontro, "nome": cb.cfg["nome"], "build": cb.build, "atributos": h.atr, "presenca": cb.presenca,
+         "kit": h.kit, "kit_nomes": [C3.HABILIDADES[k]["nome"] for k in h.kit], "equip": h.equip,
+         "fim": cb.fim or como, "rodadas": cb.rodada, "quedas": cb.resumo["quedas"],
+         "dano_recebido": cb.resumo["dano_recebido"], "acoes": cb.resumo["acoes"], "recurso": cb.resumo["recurso"],
+         "ameacas": cb.resumo["ameacas"], "adiamentos": cb.resumo["adiamentos"], "controles": cb.resumo["controles"],
+         "ultimates": cb.resumo["ultimates"], "linha": cb.resumo["linha"], "hora": time.strftime("%H:%M:%S")}
+    sessao["resultados3"].append(r)
+    _gravar()
+
+
+def _atr3(corpo, exata=True):
+    atr = corpo.get("atributos")
+    if not atr:
+        b = C3.BUILDS.get(corpo.get("build") or "forca")
+        return dict(b["atributos"]) if b else None
+    atr = {k: int(atr[k]) for k in C3.ATRIBUTOS}
+    erro = R3.validar_atributos(atr)
+    if erro and (exata or not erro.startswith("A soma")):
+        raise ValueError(erro)
+    return atr
+
+
+def _presenca3(corpo):
+    p = int(corpo.get("presenca") or C3.PRESENCA_PADRAO)
+    if not (C3.ATRIBUTO_MIN <= p <= C3.ATRIBUTO_MAX):
+        raise ValueError("Presença vai de 1 a 10.")
+    return p
+
+
+def catalogo3():
+    return {"versao": 3,
+            "encontros": [{"id": k, "nome": v["nome"], "tipo": v["tipo"], "objetivo": v["objetivo"], "teste": v.get("teste")}
+                          for k, v in C3.ENCONTROS.items()],
+            "builds": [{"id": k, **v} for k, v in C3.BUILDS.items()],
+            "atributos": [{"id": a, "nome": C3.NOME_ATRIBUTO[a], "sigla": C3.SIGLA[a], "funcao": C3.FUNCAO[a]}
+                          for a in C3.ATRIBUTOS],
+            "orcamento": C3.ORCAMENTO, "min": C3.ATRIBUTO_MIN, "max": C3.ATRIBUTO_MAX, "presenca": C3.PRESENCA_PADRAO,
+            "habilidades": [{"id": k, "nome": h["nome"], "tier": h["tier"], "pontos": C3.PONTOS_TIER[h["tier"]],
+                             "custo": h["custo"], "desc": h["desc"], "alvo": h["alvo"], "origem": h["origem"],
+                             "info": R3.descrever(h)}
+                            for k, h in C3.HABILIDADES.items() if "tier" in h],
+            "origens": C3.ORIGEM,
+            "basicos": [{"id": k, "nome": C3.HABILIDADES[k]["nome"], "desc": C3.HABILIDADES[k]["desc"]} for k in C3.BASICOS],
+            "kit_pontos": C3.KIT_PONTOS, "kit_espacos": C3.KIT_ESPACOS,
+            "equipamento": {p: [{"id": k, **o} for k, o in v.items()] for p, v in C3.EQUIPAMENTO.items()},
+            "equip_padrao": C3.EQUIPAMENTO_PADRAO,
+            "recurso": {"base": C3.RECURSO_BASE, "nivel": C3.RECURSO_NIVEL, "vontade": C3.RECURSO_VONTADE,
+                        "turno": C3.RECURSO_TURNO, "basico": C3.RECURSO_BASICO},
+            "saves": str(PASTA_SAVES)}
+
+
+def _post3(self, rota, corpo):
+    build = corpo.get("build") if corpo.get("build") in C3.BUILDS else None
+    if rota == "ficha":
+        atr = _atr3(corpo, exata=False)
+        kit = corpo.get("kit", C3.BUILDS[build]["kit"] if build else [])
+        erro_kit = R3.validar_kit(kit)
+        f = R3.ficha(atr, [] if erro_kit else kit, corpo.get("equip"), _presenca3(corpo), build or "livre")
+        f["erro_kit"] = erro_kit
+        f["erro_atributos"] = R3.validar_atributos(atr)
+        f["equipamento"] = {p: R3.comparar_equipamento(atr, [] if erro_kit else kit, p) for p in C3.EQUIPAMENTO}
+        return self._json(200, f)
+    if rota == "comparar":
+        return self._json(200, R3.comparar_builds(corpo.get("equip")))
+    if rota == "iniciar":
+        enc = corpo.get("encontro")
+        if enc not in C3.ENCONTROS:
+            return self._json(400, {"erro": "encontro desconhecido"})
+        atr = _atr3(corpo) if corpo.get("atributos") else None
+        _guardar_resultado3(sessao["combate3"], "reiniciado")
+        sessao["combate3"] = R3.Combate(enc, build or "forca", atr, corpo.get("kit"), corpo.get("equip"),
+                                        _presenca3(corpo))
+        return self._json(200, sessao["combate3"].estado())
+    if rota == "agir":
+        cb = sessao["combate3"]
+        if not cb:
+            return self._json(409, {"ok": False, "motivo": "Nenhuma luta."})
+        r = cb.agir(corpo.get("turno_id"), str(corpo.get("acao", "")), corpo.get("alvo"))
+        if cb.fim:
+            _guardar_resultado3(cb, cb.fim)
+        return self._json(200, {**r, "estado": cb.estado()})
+    if rota == "situacao":
+        return self._json(200, R3.situacao(_atr3(corpo, exata=False), _presenca3(corpo), corpo.get("escolha"),
+                                           bool(corpo.get("ajuda"))))
+    return self._json(404, {"erro": "nada aqui"})
+
+
+
+
+
 def servir(porta=PORTA):
     srv = ThreadingHTTPServer(("127.0.0.1", porta), Demo)
     srv.daemon_threads = True
@@ -291,7 +404,7 @@ def servir(porta=PORTA):
 def main():
     srv = servir()
     print(f"http://127.0.0.1:{srv.server_address[1]}/", flush=True)
-    print(f"v1 em http://127.0.0.1:{srv.server_address[1]}/v1/", flush=True)
+    print(f"v2 em http://127.0.0.1:{srv.server_address[1]}/v2/ e v1 em http://127.0.0.1:{srv.server_address[1]}/v1/", flush=True)
     print(f"resultados da sessão em {PASTA_SAVES}", flush=True)
     try:
         srv.serve_forever()
