@@ -45,6 +45,18 @@ Cada página e cada dica em três camadas, sem misturar:
 Na dica de um atributo, primeiro o que ele dá agora (com o valor), depois o que cada ponto rende, por fim o teste do
 d20. Conceito derivado (Tenacidade, crítico) tem a explicação própria, num elemento com a dica dele.
 
+**Mesmo nome, números diferentes (1.213.0).** Quando um atributo e o valor que ele alimenta têm o mesmo nome (AGI e a
+Agilidade de luta), a dica diz qual é qual e mostra o caminho de um ao outro: base, modificadores, total. Nada de
+"Agora:" como rótulo; o benefício aparece uma vez, com o número.
+
+| Antes | Depois |
+|---|---|
+| AGI 4: "Agora: Agilidade 3 (3,6% de esquiva)." / "Cada ponto: +1 de Agilidade (esquiva, ordem dos turnos e fuga)." | "Soma 4 à Agilidade (+1 por ponto). Com equipamento +1 e ferimentos e fome −37%, a Agilidade de luta é 3." |
+| Agilidade 3 (painel): "Abaixo do normal: Perna torcida −30%, ... (sem isso, 5)." / "Vem do atributo Agilidade (+1 por ponto) e do nível." | "Ferimentos e fome: Perna torcida −30%, Mordida dilacerada −10% → 3 na luta." / "Esquiva: 3,6% de chance por golpe (...)" / "De onde vem: atributo Agilidade 4 + equipamento 1 = 5." |
+
+Os números vêm da mesma conta do motor (`web/estado.composicao`: `Jogador.totais` e as penalidades), nunca de uma
+conta paralela na tela.
+
 Nada de condição vaga: "resiste muito" vira a regra de verdade ("a resistência do alvo ao fogo reduz o dano por
 turno"; "só quem é imune ao fogo não pega fogo"). Se a regra do código for a vaga, conserte a regra, não o texto.
 

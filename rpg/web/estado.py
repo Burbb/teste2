@@ -69,44 +69,85 @@ def explicar_testes(g):
     return saida
 
 
+# o atributo que soma em cada valor derivado (atributos.POR_PONTO), pelo nome que a ficha mostra
+ATRIBUTO_DO_STAT = {"atk": "Força", "poder": "Intelecto", "agi": "Agilidade", "max_hp": "Constituição",
+                    "max_rec": "Vontade"}
+
+
+def composicao(j, stat):
+    """De onde vem um valor derivado, pela mesma conta do motor (Jogador.totais e recalcular): a classe e o nível, o
+    atributo, o equipamento e os talentos, o total, e as penalidades de ferimento e fome até o valor que vale na luta.
+    Devolve a frase ("Classe e nível 8 + Força 6 + equipamento 3 = 17.") e, com penalidade, a segunda ("Ferimentos:
+    Perna torcida −30%, ... → 3.")."""
+    from ..talentos import bonus_stats
+    partes = [("Classe e nível", j.base[stat]),
+              (f"atributo {ATRIBUTO_DO_STAT.get(stat, '')}".rstrip(), atr.contribuicao(j).get(stat, 0)),
+              ("equipamento", sum(it["bonus"].get(stat, 0) for it in j.equip.values() if it)),
+              ("talentos", bonus_stats(j).get(stat, 0))]
+    totais, _ = j.totais()
+    vale = [(n, v) for n, v in partes if abs(v) >= 0.05]
+    texto = " + ".join(f"{n} {_num(round(v, 1))}" for n, v in vale).replace("+ -", "− ")
+    # uma parcela só: o nome e o valor, sem a conta ("atributo Agilidade 3")
+    frase = f"{texto} = {max(1, int(round(totais[stat])))}." if len(vale) > 1 else f"{texto}."
+    fontes = sobrevivencia.fontes_penalidade(j).get(stat)
+    if not fontes:
+        return frase, None
+    return frase, f"{', '.join(f'{n} −{round((1 - v) * 100)}%' for n, v in fontes)} → {getattr(j, stat)} na luta."
+
+
+def _ate_a_luta(j, stat, nome):
+    """O que leva da soma do atributo ao valor que vale na luta, quando não são o mesmo número: os outros
+    modificadores e as penalidades (". Com equipamento +1 e ferimentos e fome −37%, a Agilidade é 3.")."""
+    from ..talentos import bonus_stats
+    outros = [("classe e nível", j.base[stat]),
+              ("equipamento", sum(it["bonus"].get(stat, 0) for it in j.equip.values() if it)),
+              ("talentos", bonus_stats(j).get(stat, 0))]
+    mods = [f"{n} {'+' if v > 0 else '−'}{_num(round(abs(v), 1))}" for n, v in outros if abs(v) >= 0.05]
+    fontes = sobrevivencia.fontes_penalidade(j).get(stat)
+    if fontes:
+        fator = 1.0
+        for _, v in fontes:
+            fator *= v
+        mods.append(f"ferimentos e fome −{round((1 - fator) * 100)}%")
+    if not mods:
+        return "."
+    return f". Com {tx.lista_natural(mods)}, {nome} é {getattr(j, stat)}."
+
+
 def explicar_atributos(g):
-    """Para que serve cada valor derivado, com os números de agora (o que a tela mostra ao passar o mouse). De onde vem
-    cada um sai de explicar_atributos_base (a Força no Ataque, o Intelecto no Poder...)."""
+    """Para que serve cada valor derivado, com o valor que vale e de onde ele vem (o que a tela mostra ao passar o
+    mouse e no foco). Primeiro o que ele faz, com os números; depois a composição; com ferimento ou fome, a linha da
+    penalidade vem primeiro (a tela a pinta de vermelho: inventario.js)."""
     j = g.j
     ataque_usa = CLASSES[j.classe]["ataque"][3]
     reducao = 1 - bal.fator_defesa(j.defesa, j.nivel)
     reducao_mais = 1 - bal.fator_defesa(j.defesa + 1, j.nivel) - reducao
-    ataque = ["Dano dos golpes físicos: armas e flechas."]
-    if ataque_usa == "atk":
-        ataque.append(f"Base do {CLASSES[j.classe]['ataque'][0]} e das habilidades físicas.")
-    else:
-        ataque.append("Suas magias usam Poder.")
-    ataque += ["Vem do nível, da Força (+1 por ponto) e do equipamento.",
-               "+1 de Ataque ≈ +1 de dano por golpe, antes da defesa do inimigo."]
-    defesa = [f"Reduz em {_pct(reducao)} o dano de um inimigo do seu nível. Inimigos de nível mais alto atravessam "
-              "mais a armadura; os de nível mais baixo, menos.",
-              f"+1 de Defesa reduz cerca de {_pct(reducao_mais)} a mais (o ganho diminui aos poucos)."]
+    ataque = ["Dano dos golpes físicos (armas e flechas): +1 de Ataque ≈ +1 de dano por golpe, antes da defesa do "
+              "inimigo."]
+    ataque.append(f"Base do {CLASSES[j.classe]['ataque'][0]} e das habilidades físicas." if ataque_usa == "atk"
+                  else "Suas magias usam Poder.")
+    defesa = [f"Reduz em {_pct(reducao)} o dano de um inimigo do seu nível (de nível mais alto, menos; de mais baixo, "
+              f"mais). +1 de Defesa reduz cerca de {_pct(reducao_mais)} a mais."]
     esquiva = min(bal.ESQUIVA_MAX_AGI, j.agi * bal.ESQUIVA_POR_AGI)
-    agilidade = [f"Chance de se esquivar de um golpe: {_pct(esquiva)} (máximo {_pct(bal.ESQUIVA_MAX_AGI)} só pela "
-                 f"Agilidade; com habilidades, até {_pct(bal.MAX_ESQUIVA)}).",
-                 "Decide a sua posição na ordem dos turnos, calculada no começo da luta.",
-                 "Quanto maior que a dos inimigos, mais fácil fugir.",
-                 f"Vem do atributo Agilidade (+1 por ponto) e do nível. +1 de Agilidade = +{_pct(bal.ESQUIVA_POR_AGI)} "
-                 "de esquiva."]
+    agilidade = [f"Esquiva: {_pct(esquiva)} de chance por golpe ({_pct(bal.ESQUIVA_POR_AGI)} por ponto, até "
+                 f"{_pct(bal.ESQUIVA_MAX_AGI)}; com habilidades, até {_pct(bal.MAX_ESQUIVA)}).",
+                 "Ordem dos turnos e fuga: com mais Agilidade que os inimigos, você age antes e foge com mais "
+                 "facilidade."]
     poder = ["Dano e cura das magias e da fé."]
     usam_poder = grimorio.habilidades_que_usam(j, "poder")
     if ataque_usa == "poder":
         queima = max(1, int(Combate.valor_queimadura(None, j)))
-        poder += ["Base das suas magias e do ataque básico.",
-                  f"Cada camada de Queimadura causa {queima} de dano por turno do alvo (até {bal.MAX_CHAMAS} camadas)."]
+        poder += [f"Base das suas magias e do ataque básico; Queimadura de {queima} por turno do alvo, por camada."]
     elif usam_poder:
         poder += [f"Usado por: {tx.lista_natural(usam_poder)}."]
     else:
         poder += ["Nenhuma habilidade sua usa Poder agora (alguns itens e eventos usam)."]
-    poder.append("Vem do nível, do Intelecto (+1 por ponto) e do equipamento.")
     info = {"Ataque": ataque, "Defesa": defesa, "Agilidade": agilidade, "Poder": poder}
-    for nome, p in penalidades_atributos(j).items():  # abaixo do normal: a primeira linha diz por quê
-        info[nome].insert(0, f"Abaixo do normal: {', '.join(p['fontes'])} (sem isso, {p['normal']}).")
+    for nome, stat in ATRIBUTOS_FICHA:
+        frase, penal = composicao(j, stat)
+        if penal:
+            info[nome].insert(0, f"Ferimentos e fome: {penal}")
+        info[nome].append(f"De onde vem: {frase}")
     return info
 
 
@@ -120,20 +161,27 @@ def explicar_atributos_base(g):
     j = g.j
     valores = dict(atr.de(j), presenca=atr.presenca(j))
     soma = atr.contribuicao(j)
+    rec = j.nome_recurso
+    fem = rec == "Mana"
+    # o que cada atributo soma hoje, numa frase (sem "Agora:"; o ganho por ponto entre parênteses, uma vez)
     agora = {
-        "forca": f"Agora: +{_num(soma.get('atk', 0))} de Ataque.",
-        "agilidade": f"Agora: Agilidade {j.agi} ({_pct(min(bal.ESQUIVA_MAX_AGI, j.agi * bal.ESQUIVA_POR_AGI))} de "
-                     "esquiva).",
-        "constituicao": f"Agora: +{_num(soma.get('max_hp', 0))} de vida máxima.",
-        "intelecto": f"Agora: +{_num(soma.get('poder', 0))} de Poder.",
-        "percepcao": f"Agora: +{_pct(atr.critico(j))} de crítico (total {_pct(grimorio.chance_critico(j))}).",
-        "vontade": f"Agora: +{_num(soma.get('max_rec', 0))} de {j.nome_recurso.lower()} máximo e "
-                   f"{_pct(atr.tenacidade(j))} de Tenacidade.",
+        "forca": f"Soma {_num(soma.get('atk', 0))} ao Ataque (+1 por ponto){_ate_a_luta(j, 'atk', 'o Ataque')}",
+        "agilidade": (f"Soma {_num(soma.get('agi', 0))} à Agilidade (+1 por ponto)"
+                      f"{_ate_a_luta(j, 'agi', 'a Agilidade de luta')}"),
+        "constituicao": (f"Soma {_num(soma.get('max_hp', 0))} à vida máxima (+4 por ponto)"
+                         f"{_ate_a_luta(j, 'max_hp', 'a vida máxima')}"),
+        "intelecto": f"Soma {_num(soma.get('poder', 0))} ao Poder (+1 por ponto){_ate_a_luta(j, 'poder', 'o Poder')}",
+        "percepcao": f"Soma {_pct(atr.critico(j))} ao crítico (+1% por ponto); o crítico total é "
+                     f"{_pct(grimorio.chance_critico(j))}.",
+        "vontade": (f"Soma {_num(soma.get('max_rec', 0))} {'à' if fem else 'ao'} {rec} {'máxima' if fem else 'máximo'} "
+                    f"e {_pct(atr.tenacidade(j))} de Tenacidade (+3 e +4% por ponto; Tenacidade até "
+                    f"{_pct(atr.TENACIDADE_TETO)})"
+                    + _ate_a_luta(j, "max_rec", f"{'a' if fem else 'o'} {rec} {'máxima' if fem else 'máximo'}")),
     }
     lista = []
     for a in atr.ATRIBUTOS + ("presenca",):
         # primeiro o que ele dá agora; depois o que cada ponto rende; o teste do d20 por último
-        linhas = ([agora[a], f"Cada ponto: {atr.FUNCAO[a]}."] if a != "presenca" else
+        linhas = ([agora[a]] if a != "presenca" else
                   [f"Serve para {atr.FUNCAO[a]}. Não vale na luta.", "Não recebe pontos: sobe 1 a cada 3 níveis."])
         if a in TESTE_DE:
             linhas.append(f"Testes de {NOMES_TESTE[TESTE_DE[a]]}: "
