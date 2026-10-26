@@ -1,5 +1,6 @@
 """Fotografia do estado do jogo em JSON, para a interface web desenhar painéis, mapa e combate."""
 
+from .. import atributos as atr
 from .. import balanceamento as bal
 from .. import abertura, capitulo, comitiva, consequencias, grimorio, mapa, missoes, sobrevivencia
 from .. import texto as tx
@@ -12,6 +13,7 @@ from .. import itens
 from ..itens import CONSUMIVEIS, EM_ALIADO, ficha
 from ..mundo import nivel_regiao
 from ..jogo import NOMES_TESTE
+from ..sistemas.testes import TESTE_DERIVADO
 from ..combate import Combate
 from ..talentos import custo_habilidade
 
@@ -60,7 +62,7 @@ def explicar_testes(g):
     for a, nome in NOMES_TESTE.items():
         fixas, situacao = g.partes_fixas_teste(a), g.situacao_teste(a)
         abaixo = [f"{n} abaixo do normal: {', '.join(p['fontes'])}" for n, p in penal.items()
-                  if any(r.startswith(n + " ") for r, _ in fixas)]
+                  if TESTE_DERIVADO.get(a) == n]
         saida[nome] = {"mod": g.mod_teste(a), "partes": fixas + situacao, "fixo": sum(v for _, v in fixas),
                        "fixas": fixas, "situacao": situacao, "uso": g.USO_TESTE[a],
                        "chance_media": g.chance_teste_media(a), "abaixo": abaixo}
@@ -68,46 +70,86 @@ def explicar_testes(g):
 
 
 def explicar_atributos(g):
-    """Para que serve cada atributo, com os números de agora (o que a tela mostra ao passar o mouse)."""
+    """Para que serve cada valor derivado, com os números de agora (o que a tela mostra ao passar o mouse). De onde vem
+    cada um sai de explicar_atributos_base (a Força no Ataque, o Intelecto no Poder...)."""
     j = g.j
     ataque_usa = CLASSES[j.classe]["ataque"][3]
     reducao = 1 - bal.fator_defesa(j.defesa, j.nivel)
     reducao_mais = 1 - bal.fator_defesa(j.defesa + 1, j.nivel) - reducao
-    esquiva = min(bal.ESQUIVA_MAX_AGI, j.agi * bal.ESQUIVA_POR_AGI)
-    critico = grimorio.chance_critico(j)
-    ataque = ["Força dos golpes de arma: quanto maior, mais dano físico."]
+    ataque = ["Dano dos golpes físicos: armas e flechas."]
     if ataque_usa == "atk":
-        ataque.append(f"É a base do seu ataque básico ({CLASSES[j.classe]['ataque'][0]}) e das habilidades físicas.")
+        ataque.append(f"Base do {CLASSES[j.classe]['ataque'][0]} e das habilidades físicas.")
     else:
-        ataque.append("Pouco importa para você: suas magias usam Poder.")
-    ataque += [f"Nos testes de Força, o Ataque dá {_parte_nos_testes(g, 'forca', 'Ataque'):+d} (o total está em Testes do d20).",
+        ataque.append("Suas magias usam Poder.")
+    ataque += ["Vem do nível, da Força (+1 por ponto) e do equipamento.",
                "+1 de Ataque ≈ +1 de dano por golpe, antes da defesa do inimigo."]
-    defesa = [f"Reduz o dano de um inimigo do seu nível em {_pct(reducao)}. Inimigos de nível mais alto "
-              "atravessam mais a armadura; os de nível mais baixo, menos.",
-              f"Cada ponto a mais reduz cerca de {_pct(reducao_mais)} a mais (o ganho diminui aos poucos).",
-              f"Nos testes de Vontade, a Defesa dá {_parte_nos_testes(g, 'vontade', 'Defesa'):+d}."]
+    defesa = [f"Reduz em {_pct(reducao)} o dano de um inimigo do seu nível. Inimigos de nível mais alto atravessam "
+              "mais a armadura; os de nível mais baixo, menos.",
+              f"+1 de Defesa reduz cerca de {_pct(reducao_mais)} a mais (o ganho diminui aos poucos)."]
+    esquiva = min(bal.ESQUIVA_MAX_AGI, j.agi * bal.ESQUIVA_POR_AGI)
     agilidade = [f"Chance de se esquivar de um golpe: {_pct(esquiva)} (máximo {_pct(bal.ESQUIVA_MAX_AGI)} só pela "
                  f"Agilidade; com habilidades, até {_pct(bal.MAX_ESQUIVA)}).",
-                 f"Chance de acerto crítico: {_pct(critico)} (máximo {_pct(bal.MAX_CRITICO)}).",
-                 "Mais fácil fugir de uma luta.",
-                 f"Nos testes, a Agilidade dá {_parte_nos_testes(g, 'destreza', 'Agilidade'):+d} em Destreza e "
-                 f"{_parte_nos_testes(g, 'percepcao', 'Agilidade'):+d} em Percepção.",
-                 f"+1 de Agilidade = +{_pct(bal.ESQUIVA_POR_AGI)} de esquiva e +{_pct(bal.CRITICO_POR_AGI)} de crítico."]
-    poder = ["Força da magia e da fé."]
+                 "Decide a sua posição na ordem dos turnos, calculada no começo da luta.",
+                 "Quanto maior que a dos inimigos, mais fácil fugir.",
+                 f"Vem do atributo Agilidade (+1 por ponto) e do nível. +1 de Agilidade = +{_pct(bal.ESQUIVA_POR_AGI)} "
+                 "de esquiva."]
+    poder = ["Dano e cura das magias e da fé."]
     usam_poder = grimorio.habilidades_que_usam(j, "poder")
     if ataque_usa == "poder":
         queima = max(1, int(Combate.valor_queimadura(None, j)))
-        poder += ["É a base de todas as suas magias e do ataque básico.",
-                  f"Cada camada de queimadura arde {queima} por turno (acumula até {bal.MAX_CHAMAS} camadas)."]
+        poder += ["Base das suas magias e do ataque básico.",
+                  f"Cada camada de Queimadura causa {queima} de dano por turno do alvo (até {bal.MAX_CHAMAS} camadas)."]
     elif usam_poder:
-        poder += [f"Aumenta {tx.lista_natural(usam_poder)}."]
+        poder += [f"Usado por: {tx.lista_natural(usam_poder)}."]
     else:
-        poder += ["Pouco importa para a sua classe (alguns itens e eventos usam)."]
-    poder.append(f"Nos testes de Arcano, o Poder dá {_parte_nos_testes(g, 'arcano', 'Poder'):+d}.")
+        poder += ["Nenhuma habilidade sua usa Poder agora (alguns itens e eventos usam)."]
+    poder.append("Vem do nível, do Intelecto (+1 por ponto) e do equipamento.")
     info = {"Ataque": ataque, "Defesa": defesa, "Agilidade": agilidade, "Poder": poder}
     for nome, p in penalidades_atributos(j).items():  # abaixo do normal: a primeira linha diz por quê
         info[nome].insert(0, f"Abaixo do normal: {', '.join(p['fontes'])} (sem isso, {p['normal']}).")
     return info
+
+
+TESTE_DE = {"forca": "forca", "agilidade": "destreza", "intelecto": "arcano", "percepcao": "percepcao",
+            "vontade": "vontade", "presenca": "carisma"}
+
+
+def explicar_atributos_base(g):
+    """Os seis atributos e a Presença na ficha (etapa 4, atributos.py): o valor, o que cada ponto dá e quanto soma agora,
+    e o teste do d20 que usa cada um. Os números vêm do motor; a tela só desenha."""
+    j = g.j
+    valores = dict(atr.de(j), presenca=atr.presenca(j))
+    soma = atr.contribuicao(j)
+    agora = {
+        "forca": f"Agora: +{_num(soma.get('atk', 0))} de Ataque.",
+        "agilidade": f"Agora: Agilidade {j.agi} ({_pct(min(bal.ESQUIVA_MAX_AGI, j.agi * bal.ESQUIVA_POR_AGI))} de "
+                     "esquiva).",
+        "constituicao": f"Agora: +{_num(soma.get('max_hp', 0))} de vida máxima.",
+        "intelecto": f"Agora: +{_num(soma.get('poder', 0))} de Poder.",
+        "percepcao": f"Agora: +{_pct(atr.critico(j))} de crítico (total {_pct(grimorio.chance_critico(j))}).",
+        "vontade": f"Agora: +{_num(soma.get('max_rec', 0))} de {j.nome_recurso.lower()} máximo e "
+                   f"{_pct(atr.tenacidade(j))} de Tenacidade (teto {_pct(atr.TENACIDADE_TETO)}).",
+    }
+    extra = {"vontade": "Tenacidade: chance de resistir a atordoar, congelar e prender. Não protege de fogo, gelo ou "
+                        "outros tipos de dano."}
+    lista = []
+    for a in atr.ATRIBUTOS + ("presenca",):
+        linhas = ([f"Cada ponto: {atr.FUNCAO[a]}.", agora[a]] if a != "presenca" else
+                  ["Não recebe pontos: sobe 1 a cada 3 níveis.", f"Serve para {atr.FUNCAO[a]}. Não vale na luta."])
+        if a in extra:
+            linhas.append(extra[a])
+        if a in TESTE_DE:
+            linhas.append(f"Testes de {NOMES_TESTE[TESTE_DE[a]]}: "
+                          f"{_parte_nos_testes(g, TESTE_DE[a], atr.NOMES[a]):+d}.")
+        # o "+" da ficha: só nos seis, com pontos da subida de nível; o porquê quando não dá
+        mais = None if a == "presenca" or not j.pontos_atributo else {"motivo": g.motivo_atributo(a)}
+        lista.append({"id": a, "nome": atr.NOMES[a], "sigla": atr.SIGLAS[a], "valor": valores.get(a, 0),
+                      "linhas": linhas, "mais": mais})
+    return lista
+
+
+def _num(v):
+    return str(int(v)) if float(v).is_integer() else f"{v:.1f}".replace(".", ",")
 
 
 ATRIBUTOS_FICHA = (("Ataque", "atk"), ("Defesa", "defesa"), ("Agilidade", "agi"), ("Poder", "poder"))
@@ -165,6 +207,7 @@ def heroi(g):
         "vida_por_um_fio": bal.VIDA_POR_UM_FIO,
         "atributos": {"Ataque": j.atk, "Defesa": j.defesa, "Agilidade": j.agi, "Poder": j.poder},
         "atributos_info": explicar_atributos(g), "atributos_penal": penalidades_atributos(j),
+        "atributos_base": explicar_atributos_base(g), "pontos_atributo": j.pontos_atributo,
         "reputacao_info": explicar_reputacao(g),
         "testes": explicar_testes(g),
         "dificuldade_extra": g.dificuldade(0),
@@ -255,6 +298,9 @@ def combate(g):
                  getattr(c, "tracos", []) or [], getattr(c, "familia", None), getattr(c, "chave", None),
                  getattr(c, "guardiao", None), getattr(c, "origem", None)),
              "tipo": getattr(c, "tipo", None),
+             # o recurso de quem escolhe a ação (a comitiva, etapa 4): Fé, Vigor ou Mana, na carta
+             **({"rec": c.rec, "max_rec": c.max_rec, "recurso": c.nome_recurso}
+                if getattr(c, "tipo", None) == "comitiva" and getattr(c, "max_rec", 0) else {}),
              # o desenho da sala que é este inimigo (a sacristia: os dois de capa escura), para a tela seguir a carta
              **({"figura": c.figura} if getattr(c, "figura", None) else {})}
         if lado == "inimigo":
@@ -265,6 +311,8 @@ def combate(g):
 
     return {
         "titulo": cb.titulo, "turno": cb.turno,
+        # a ordem fixa da luta (etapa 4): quem age, em ordem, quem já passou nesta rodada e quem está fora
+        "ordem": cb.ordem_para_tela(),
         "inimigos": [ficha(e, "inimigo") for e in cb.inimigos if e.vivo or not e.fugiu],
         "aliados": [ficha(a, "aliado") for a in cb.aliados],
         "heroi": dict(ficha(g.j, "aliado"), nome=g.j.nome, classe=g.j.classe, nivel=g.j.nivel),

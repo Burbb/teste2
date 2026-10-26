@@ -71,7 +71,7 @@ const Batalha = (() => {
     e.innerHTML = `<div class="carta-fx"></div><div class="icone">${Icones.cabeca(c.uid === "j" ? c.classe : c.cid, 32) || (c.lado === "aliado" && Icones.animal(c.tipo, 32)) || Icones.criatura(icone(c), 32) || S(icone(c), 2)}</div>
       <div class="carta-nome"><span></span><small></small></div>
       <div class="carta-hp"><span class="barra-px vida"><span class="rastro"></span><span class="enchimento"></span></span><span class="num"></span></div>
-      ${c.uid === "j" ? '<div class="carta-rec"><span class="barra-px mana"><span class="enchimento"></span></span><span class="num"></span></div><div class="carta-flechas" hidden></div>' : ""}
+      ${c.uid === "j" || c.max_rec ? '<div class="carta-rec"><span class="barra-px mana"><span class="enchimento"></span></span><span class="num"></span></div>' : ""}${c.uid === "j" ? '<div class="carta-flechas" hidden></div>' : ""}
       <div class="carta-efeitos"></div><div class="preparando" hidden>⚠ prepara um golpe devastador</div>`;
     barra(e, c.hp, c.max_hp);
     if (c.lado === "inimigo") {  // a ficha do inimigo aparece ao passar o mouse (no lugar do antigo "Analisar")
@@ -182,6 +182,13 @@ const Batalha = (() => {
           fl.classList.toggle("zerada", heroi.flechas <= 0);
           fl.title = `Flechas: ${heroi.flechas} (a aljava leva ${heroi.max_flechas || 30}). Sem flechas, o ataque vira um golpe de adaga fraco e as habilidades de tiro ficam bloqueadas.`;
         }
+      }
+    } else if (c.max_rec) {  // a comitiva escolhe a ação (etapa 4): o recurso dela (Fé, Vigor, Mana) na carta
+      const r = el.querySelector(".carta-rec");
+      if (r) {
+        r.querySelector(".barra-px").className = "barra-px fina " + ({ Vigor: "vigor", Mana: "mana", Fé: "vigor" }[c.recurso] || "mana");
+        r.querySelector(".enchimento").style.width = pct(c.rec, c.max_rec) + "%";
+        r.querySelector(".num").textContent = `${c.rec}/${c.max_rec}`;
       }
     }  // sem title nas cartas: a ficha (inimigo) e a própria carta já dizem quem é
     const ef = el.querySelector(".carta-efeitos");
@@ -1040,7 +1047,8 @@ const Batalha = (() => {
   }
   function vez(uid) {
     cartas.forEach((el, u) => el.classList.toggle("vez", u === uid));
-    podeEscolher(uid === "j");
+    const el = uid && cartas.get(uid);
+    podeEscolher(uid === "j" || !!(el && el.classList.contains("aliado")));  // a comitiva também escolhe (etapa 4)
   }
   /** A carta de quem escolhe a ação vem para a frente e cresce. O nicho do retrato não cresce (15-hud-luta.css) e vai
    *  para o pixel inteiro da tela depois da transição da carta, para o rosto não ficar em meio pixel. */

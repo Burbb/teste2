@@ -22,6 +22,19 @@
       ${pode ? `<button type="button" class="g-versao-trocar" data-versao="${h(x.id)}">Usar ${h(v.outra)}</button>`
         : `<p class="g-versao-onde">${h(v.onde)}</p>`}</div>`;
   }
+  /** O kit (etapa 4): se a habilidade vai para a luta e quanto custa do orçamento. O botão só onde o motor oferece a
+   *  troca (meta `kit`: a vila e a fogueira); fora disso, onde se troca. Sem caber, o porquê do motor. */
+  const kitOferecido = (id) => (App.opcoes() || []).find((o) => o.meta && o.meta.kit === id);
+  function caixaKit(x, g) {
+    const k = x.kit;
+    if (!k || !g.kit) return "";
+    const oferta = kitOferecido(x.id);
+    const estado = k.no_kit ? '<span class="g-kit-tag no-kit">No kit</span>' : '<span class="g-kit-tag">Fora do kit</span>';
+    const custo = `${k.ultimate ? "Ultimate (1 vez por luta)" : k.tier[0].toUpperCase() + k.tier.slice(1)} · ${Texto.plural(k.pontos, "ponto")} do kit`;
+    const botao = oferta ? `<button type="button" class="g-kit-trocar" data-kit="${h(x.id)}"${k.motivo ? ` disabled aria-describedby="g-kit-motivo"` : ""}>${k.no_kit ? "Tirar do kit" : "Levar no kit"}</button>`
+      : `<p class="g-kit-onde">${h(g.kit.onde)}</p>`;
+    return `<div class="g-kit">${estado}<span class="g-kit-custo">${custo}</span>${botao}${k.motivo ? `<p class="g-kit-motivo" id="g-kit-motivo">${h(k.motivo)}</p>` : ""}</div>`;
+  }
   function abrirGrimorio(id, quieto) {
     const g = App.estado && App.estado.heroi && App.estado.heroi.grimorio;
     if (!g) return;
@@ -32,9 +45,9 @@
     const icone = (x) => x.icone || "estrela";
     const custo = (x) => x.passiva ? (x.rotulo || "Passiva") : x.custo ? `${x.custo} ${h(g.recurso.toLowerCase())}` : "grátis";
     document.getElementById("grimorio-indice").innerHTML = `
-      <div class="grimorio-cab"><b>Grimório</b><small>${h(heroi.titulo)} · nível ${heroi.nivel}</small></div>
+      <div class="grimorio-cab"><b>Grimório</b><small>${h(heroi.titulo)} · nível ${heroi.nivel}</small>${g.kit ? `<small class="g-kit-resumo">${h(g.kit.texto)}</small>` : ""}</div>
       <ul class="grimorio-lista">${todas.map((x) => `<li><button type="button" class="grimorio-item${x.id === paginaGrimorio ? " aberto" : ""}" data-pagina="${h(x.id)}">
-        <span class="gi-icone">${S(icone(x), 2)}</span><span class="gi-nome">${h(x.nome)}</span><span class="gi-custo${x.passiva ? " passiva" : ""}">${custo(x)}</span></button></li>`).join("")}</ul>
+        <span class="gi-icone">${S(icone(x), 2)}</span><span class="gi-nome">${h(x.nome)}${x.kit && x.kit.no_kit ? '<span class="gi-kit" title="No kit">◆</span>' : ""}</span><span class="gi-custo${x.passiva ? " passiva" : ""}">${custo(x)}</span></button></li>`).join("")}</ul>
       <div class="grimorio-atributos">${Object.entries(g.atributos).map(([k, v]) => `<span><small>${h(k)}</small><b>${v}</b></span>`).join("")}</div>
       <ul class="grimorio-gerais">${g.gerais.map((l) => `<li>${Realce.texto(l)}</li>`).join("")}</ul>`;
     const x = todas.find((t) => t.id === paginaGrimorio);
@@ -47,12 +60,14 @@
     const det = document.getElementById("grimorio-detalhe");
     det.innerHTML = `<div class="g-topo"><span class="g-icone">${S(icone(x), 4)}</span>
         <div><b class="g-nome">${h(x.nome)}</b><div class="g-meta">${custo(x)}${x.flechas_por_alvo ? ` · ${x.flechas_por_alvo} flecha por inimigo` : x.flechas ? ` · ${Texto.plural(x.flechas, "flecha")}` : ""}${x.alvo ? ` · Alvo: ${h(x.alvo)}` : ""}</div></div></div>
-      <p class="g-desc">${Realce.texto(x.desc)}</p><ul class="g-linhas">${linhas}</ul>${caixaVersao(x)}
+      <p class="g-desc">${Realce.texto(x.desc)}</p>${caixaKit(x, g)}<ul class="g-linhas">${linhas}</ul>${caixaVersao(x)}
       ${x.passiva ? "" : '<p class="g-rodape">Números antes da defesa do inimigo e de efeitos do momento (fortalecido, clima, alvo marcado).</p>'}`;
     desenhado = assinatura(g, x);
     if (!quieto) { det.classList.remove("virando"); void det.offsetWidth; det.classList.add("virando"); }
     const troca = det.querySelector(".g-versao-trocar");
     if (troca) troca.addEventListener("click", (ev) => { ev.stopPropagation(); App.acao({ versao: troca.dataset.versao }, "pagina"); });
+    const kitB = det.querySelector(".g-kit-trocar:not([disabled])");
+    if (kitB) kitB.addEventListener("click", (ev) => { ev.stopPropagation(); App.acao({ kit: kitB.dataset.kit }, "pagina"); });
     const caixa = document.getElementById("sobre-grimorio");
     if (caixa.hidden) { caixa.hidden = false; App.som("pagina"); }
     caixa.querySelectorAll("[data-pagina]").forEach((b) => b.addEventListener("click", (ev) => {
@@ -60,7 +75,7 @@
       if (b.dataset.pagina !== paginaGrimorio) { App.som("pagina"); abrirGrimorio(b.dataset.pagina); }
     }));
   }
-  const assinatura = (g, x) => JSON.stringify(g) + (x && trocaOferecida(x.id) ? "+troca" : "");
+  const assinatura = (g, x) => JSON.stringify(g) + (x && trocaOferecida(x.id) ? "+troca" : "") + (x && kitOferecido(x.id) ? "+kit" : "");
   /** Com o livro aberto, um estado ou um menu novo (a troca feita, a volta à vila) redesenha a página, sem virar. */
   function atualizarGrimorio() {
     const caixa = document.getElementById("sobre-grimorio");

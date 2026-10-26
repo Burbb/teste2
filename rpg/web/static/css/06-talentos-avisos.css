@@ -144,6 +144,19 @@ body.derrotado #predios { visibility: hidden; }
 .g-versao-onde { margin: 6px 0 0; font-size: 13px; font-style: italic; color: #7a6646; }
 .g-versao-trocar { margin-top: 8px; font: inherit; font-size: 15px; color: var(--tinta); background: #2a1f16; border: 3px solid #5a4632; padding: 4px 12px; box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.35); cursor: pointer; }
 .g-versao-trocar:hover, .g-versao-trocar:focus-visible { border-color: var(--ouro); }
+/* o kit (etapa 4): se a habilidade vai para a luta, o custo do orçamento e, na vila e na fogueira, o botão */
+.g-kit { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin: 8px 0 4px; padding: 6px 10px; border-left: 3px solid #8a6a3c;
+  background: rgba(255, 255, 255, 0.14); font-size: 14px; color: #3a2e24; }
+.g-kit-tag { padding: 0 6px; font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: #f4e8c8; background: #7a6646; }
+.g-kit-tag.no-kit { background: #3f5a2a; }
+.g-kit-onde, .g-kit-motivo { flex-basis: 100%; margin: 0; font-size: 13px; font-style: italic; color: #7a6646; }
+.g-kit-motivo { color: #8a2a1a; font-style: normal; }
+.g-kit-trocar { margin-left: auto; font: inherit; font-size: 14px; color: var(--tinta); background: #2a1f16; border: 3px solid #5a4632; padding: 2px 10px;
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.35); cursor: pointer; }
+.g-kit-trocar:hover, .g-kit-trocar:focus-visible { border-color: var(--ouro); }
+.g-kit-trocar[disabled] { opacity: .5; cursor: not-allowed; }
+.gi-kit { margin-left: 5px; font-size: 10px; color: #3f5a2a; vertical-align: 2px; }
+.g-kit-resumo { display: block; margin-top: 2px; }
 @keyframes livro-abre { from { transform: scale(.92) translateY(10px); opacity: 0; } }
 @keyframes pagina-vira { from { opacity: 0; transform: translateX(14px); } }
 @media (max-width: 760px) {

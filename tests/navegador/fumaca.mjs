@@ -1520,7 +1520,7 @@ async function cenarioAbertura(browser) {
   const ateQuadro = async (re, ms = 6000) => { for (let t = 0; t < ms; t += 100) { if (re.test(await quadro())) return true; await page.waitForTimeout(100); } return false; };
   try {
     await (await esperar('#prompt .escolha:has-text("Descer à despensa")', 30000)).click();
-    conferir(await ateQuadro(/Clique em Habilidades \(tecla 2\)/, 15000) && !(await cobre()), "C1: o quadro aponta Habilidades, sem cobrir carta nem ação");
+    conferir(await ateQuadro(/Clique em Habilidades \(tecla 3\)/, 15000) && !(await cobre()), "C1: o quadro aponta Habilidades, sem cobrir carta nem ação");
     await page.click('#roda .roda-botao[data-slot="habilidades"]');
     conferir(await ateQuadro(/Clique em Bola de Fogo/), "C2: aberta a janelinha, o quadro aponta a habilidade da classe");
     await page.keyboard.press("1");  // a mesma coisa pelo teclado
@@ -1606,6 +1606,11 @@ async function cenarioFocoEFuga(browser) {
     conferir(enche.every((b) => /enche-verde/.test(b)), "a barra de Foco enche de verde na HUD e na carta da luta");
     let fugiu = false, voltou = false;
     for (let tent = 0; tent < 10 && !fugiu; tent++) {
+      // a vez de Morel (etapa 4: a comitiva escolhe pela roda, sem Fugir): defende e espera a sua vez
+      for (let k = 0; k < 40 && !(await page.$('#roda .roda-botao[data-slot="fugir"]')); k++) {
+        const def = await page.$('#roda .roda-botao[data-slot="defender"]'); if (def) await def.click().catch(() => {});
+        await page.waitForTimeout(250);
+      }
       const bt = await page.$('#roda .roda-botao[data-slot="fugir"]');
       if (!bt) break;
       await bt.click();
@@ -2048,7 +2053,9 @@ async function cenarioApresentacao(browser) {
     }
   }
   {
-    const { proc, url } = await subir("tutorial", { LUTA: "lobo", QUANTOS: "3", VIDA: "0.05", CONTRATO: "aceito", VISTAS: "A1" });
+    // EMBOSCADA=jogador: a sua vez vem antes dos lobos (etapa 4: na ordem fixa eles agiriam primeiro e a queda viria antes
+    // de a página abrir)
+    const { proc, url } = await subir("tutorial", { LUTA: "lobo", QUANTOS: "3", VIDA: "0.05", CONTRATO: "aceito", VISTAS: "A1", EMBOSCADA: "jogador" });
     const { page, erros } = await abrir(browser, url);
     try {
       let faixa = "", escuro = false, logs = false;

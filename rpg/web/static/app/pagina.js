@@ -444,9 +444,9 @@ function turno(m) {
     textoEl.querySelectorAll(".passado").forEach((x) => x.remove());
     for (const filho of textoEl.children) filho.classList.add("passado");
   }
-  anexar(el("div", "divisor-turno", `turno ${m.n}`));
-  historico("h-turno", `— turno ${m.n} —`);
-  Turnos.aoTurno(m.n, replay);  // o anúncio "Turno N" na arena (refazendo a página, só a placa)
+  anexar(el("div", "divisor-turno", `rodada ${m.n}`));
+  historico("h-turno", `— rodada ${m.n} —`);
+  Turnos.aoTurno(m.n, replay);  // o anúncio "Rodada N" na arena (refazendo a página, só a placa)
 }
 
 function bloco(m) {

@@ -12,6 +12,7 @@
 .rx-cura { color: #7fe07a; }
 .rx-crit { color: #ffd447; }
 .rx-mana { color: #8fb4ff; }
+.rx-arcano { color: #a9b6ff; }
 .rx-vigor { color: #ffb866; }
 .rx-foco { color: #b5e8b0; }
 .rx-esquiva { color: #9fe6d8; }
@@ -33,6 +34,7 @@
 :is(.g-desc, .g-efeito, .grimorio-gerais, .g-versao) .rx-cura { color: #2b7424; }
 :is(.g-desc, .g-efeito, .grimorio-gerais, .g-versao) .rx-crit { color: #946a00; }
 :is(.g-desc, .g-efeito, .grimorio-gerais, .g-versao) .rx-mana { color: #2c50a8; }
+:is(.g-desc, .g-efeito, .grimorio-gerais, .g-versao) .rx-arcano { color: #3d3fa0; }
 :is(.g-desc, .g-efeito, .grimorio-gerais, .g-versao) .rx-vigor { color: #a3560e; }
 :is(.g-desc, .g-efeito, .grimorio-gerais, .g-versao) .rx-foco { color: #36743a; }
 :is(.g-desc, .g-efeito, .grimorio-gerais, .g-versao) .rx-esquiva { color: #216e60; }

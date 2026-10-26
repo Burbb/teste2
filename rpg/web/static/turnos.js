@@ -29,6 +29,9 @@ const Turnos = (() => {
   let lugarPlaca = null;  // {chave: o tamanho da janela, nome: dentro|fora}, decidido uma vez por luta (a placa)
   let ajuste = 0;
   let perde = null;  // o estado que tira o turno de agora ("preso na teia"), para a placa: até o turno seguinte
+  // A ordem fixa da luta (etapa 4): a do motor (estado.combate.ordem) e, entre um estado e outro, quem começa a agir
+  // pelos lances ("acao", "pula"); o lance "rodada" recomeça a fila. Só o que o motor diz: ninguém é deduzido.
+  let ordem = [];
 
   // A camada mora na página (fixa), acima da arena: a placa e o anúncio são interface, não fazem parte da cena. Ficam
   // parados enquanto a arena chega perto no golpe final (transform) e treme no impacto (translate): a medida é feita com
@@ -135,10 +138,11 @@ const Turnos = (() => {
   function desenharPlaca(turno, pisca) {
     if (!garantirCamada()) return;
     if (!placa) { placa = faixa("turnos-placa", ""); camada.appendChild(placa); }
-    const linhaIni = perde ? `<span class="ini perde">${esc(perde)}: perde este turno</span>`
+    const linhaIni = perde ? `<span class="ini perde">${esc(perde)}: perde esta vez</span>`
       : ini.ativa ? `<span class="ini">Iniciativa: ${esc(ini.curto)}</span>`
       : ini.mostrandoFim ? `<span class="ini ${ini.usada ? "usada" : "acabou"}">${ini.usada ? `Iniciativa usada (${esc(ini.pct)})` : "Iniciativa passou"}</span>` : "";
-    const html = `<span class="t">Turno<b>${turno}</b></span>${linhaIni}`;
+    const fila = ordem.length > 1 ? `<span class="ordem">${ordem.map((o) => `<span class="o${o.vez ? " vez" : ""}${o.passou ? " passou" : ""}${o.fora ? " fora" : ""}${o.entra ? " espera" : ""}">${esc(curto(o.nome))}</span>`).join('<i>›</i>')}</span>` : "";
+    const html = `<span class="t">Rodada<b>${turno}</b></span>${fila}${linhaIni}`;
     if (placa._html !== html) { placa._html = html; placa.innerHTML = html; }
     placa.classList.toggle("pisca", !!pisca);
     if (pisca) setTimeout(() => placa && placa.classList.remove("pisca"), 650);
@@ -150,7 +154,7 @@ const Turnos = (() => {
   function limpar() {
     if (camada) camada.remove();
     camada = placa = anuncio = medida = null;
-    ultimoTurno = 0; fundoRoda = 0; lugarPlaca = null; perde = null;
+    ultimoTurno = 0; fundoRoda = 0; lugarPlaca = null; perde = null; ordem = [];
     ini = { ativa: false, texto: "", usada: false, mostrandoFim: false };
     clearInterval(ajuste); ajuste = 0;
   }
@@ -160,6 +164,20 @@ const Turnos = (() => {
     setTimeout(() => { ini.mostrandoFim = false; if (estado && estado.combate) desenharPlaca(estado.combate.turno || ultimoTurno); }, reduzido() ? 2400 : 1600);
   }
   const maiuscula = (t) => (t ? t[0].toUpperCase() + t.slice(1) : t);
+  // o nome na fila: inteiro quando é curto ("Lobo Cinzento"); senão, a primeira palavra e a letra de quem tem igual
+  // ("Rato da despensa A" → "Rato A")
+  const curto = (n) => {
+    const t = String(n || "");
+    if (t.length <= 14) return t;
+    const p = t.split(/[ ,(]+/).filter(Boolean), l = p[p.length - 1];
+    return p.length > 1 && /^[A-Z]$/.test(l) ? `${p[0]} ${l}` : p[0] || "";
+  };
+  function marcarVez(uid) {
+    const i = ordem.findIndex((o) => o.uid === uid);
+    if (i < 0) return false;
+    ordem.forEach((o, k) => { o.vez = k === i; o.passou = k < i; });
+    return true;
+  }
 
   /** O estado: a placa acompanha o turno do motor; a iniciativa entra e sai pelo estado da sua carta. */
   function aoEstado(e) {
@@ -172,6 +190,7 @@ const Turnos = (() => {
     } else if (texto === null && ini.ativa) {
       iniciativaAcabou();  // passou sem golpe (o golpe que a usa já a marcou: aoLance)
     }
+    if (e.combate.ordem) ordem = e.combate.ordem.map((o) => ({ ...o }));
     if (e.combate.turno) { ultimoTurno = Math.max(ultimoTurno, e.combate.turno); desenharPlaca(ultimoTurno); }
     // a arena cresce devagar quando uma carta entra ou ganha efeitos (batalha.js, acomodar): a placa acompanha
     if (!ajuste) ajuste = setInterval(() => { if (placa && placa.isConnected && estado && estado.combate) desenharPlaca(ultimoTurno || estado.combate.turno); }, 400);
@@ -184,16 +203,18 @@ const Turnos = (() => {
       const efs = (estado && estado.combate && estado.combate.heroi && estado.combate.heroi.efeitos) || [];
       const trava = efs.find((x) => estado.estados && estado.estados[x.id] && estado.estados[x.id].perde_turno);
       perde = trava ? maiuscula(trava.nome) : null;
-      if (trava) anunciar("perde", `Turno ${n}`, [`${maiuscula(trava.nome)}: você perde este turno`]);
+      if (trava) anunciar("perde", `Rodada ${n}`, [`${maiuscula(trava.nome)}: você perde esta vez`]);
       // o bônus fica na placa ("Iniciativa: +25% no 1º golpe"); o anúncio só diz que a vez é sua
-      else if (n === 1 && ini.ativa) anunciar("iniciativa", "Iniciativa!", ["Turno 1 · Só você age"]);
-      else anunciar("", `Turno ${n}`);
+      else if (n === 1 && ini.ativa) anunciar("iniciativa", "Iniciativa!", ["Rodada 1 · Só você age"]);
+      else anunciar("", `Rodada ${n}`);
     }
     desenharPlaca(n, !refazendo);
   }
   /** Os lances (fora do replay): alguém começando a agir tira o anúncio (a atenção vai para o golpe; o turno segue na
    *  placa); a emboscada deles; o golpe que usa a iniciativa (também numa salva em área). */
   function aoLance(m) {
+    if (m.tipo === "rodada") { ordem.forEach((o) => { o.vez = false; o.passou = false; }); if (camada) desenharPlaca(m.n || ultimoTurno); }
+    if ((m.tipo === "acao" || m.tipo === "pula") && m.de && marcarVez(m.de) && camada) desenharPlaca(ultimoTurno);
     if ((m.tipo === "acao" || m.tipo === "salva") && anuncio) {
       const este = anuncio;
       anuncio = null;

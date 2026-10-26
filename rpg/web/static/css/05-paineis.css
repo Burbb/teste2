@@ -31,6 +31,18 @@
 .talento-linha { margin-top: 10px; display: flex; align-items: center; gap: 4px; }
 /* Atributos: cada um numa caixinha de filete escuro, ícone, nome e o número à direita. */
 .atributos { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+/* os seis atributos e a Presença (etapa 4): uma fileira de siglas e valores; o "+" quando há pontos da subida de nível */
+.atributos-base { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 3px; margin-bottom: 6px; }
+.attr-base { position: relative; display: flex; flex-direction: column; align-items: center; padding: 3px 0 4px; background: rgba(0, 0, 0, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.08); }
+.attr-base:focus-visible { outline: 2px solid var(--ouro); outline-offset: 1px; }
+.attr-base small { font-family: var(--num); font-size: 11px; letter-spacing: .08em; color: var(--tinta-3); }
+.attr-base b { font-family: var(--num); font-size: 17px; line-height: 1.05; color: var(--tinta); }
+.attr-mais { position: absolute; top: -6px; right: -4px; width: 18px; height: 18px; padding: 0; font: 700 14px/1 var(--num); color: #1b1408;
+  background: #e8c56a; border: 1px solid #6e4a24; cursor: pointer; }
+.attr-mais:hover, .attr-mais:focus-visible { background: #fff0b8; }
+.attr-mais[disabled] { opacity: .35; cursor: not-allowed; }
+.attr-pontos { margin: 0 0 4px; font-size: 13.5px; color: #f6d98a; }
 .atributo { --anel: var(--anel-j); display: flex; align-items: center; gap: 7px; padding: 4px 8px 4px 6px;
   border: var(--borda) solid var(--p-j); border-image: var(--anel) 1 / 1 stretch; background: var(--p-k); background-clip: padding-box; }
 .atributo img.sprite { --s: 16; }

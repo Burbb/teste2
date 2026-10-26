@@ -392,7 +392,8 @@ function iconeAtaque() {
 /* Cartas de ação do combate: habilidades e itens com ícone, custo e dica (como numa barra de ações). O ícone e a cor
    de cada habilidade vêm do catálogo do motor (habilidades.py: icone, familia). */
 // Alcance como nos RPGs de turno (Final Fantasy, Pokémon): quem, e se é um só ou todos.
-const ALVO_TXT = { inimigo: "Inimigo único", todos: "Todos os inimigos", proprio: "Você", aliado: "Aliado único", aliados: "Todos os aliados" };
+const ALVO_TXT = { inimigo: "Inimigo único", todos: "Todos os inimigos", proprio: "Você", aliado: "Aliado único", aliados: "Todos os aliados",
+  aliado_caido: "Aliado caído" };
 function cartaAcao(o, i, m, pos) {
   const meta = o.meta;
   const b = el("button", "escolha carta-acao");
@@ -510,22 +511,26 @@ function tremerNao(b, motivo) {
 }
 /** Geometria da carta do herói dentro da arena (sem contar o zoom do foco). Com a arena se acomodando (uma carta
  *  entrou, batalha.js), vale o lugar final da carta e a altura final da arena: a roda não fica no meio do caminho. */
-function geometriaHeroi() {
-  const c = Batalha.elCarta("j"), arena = rodaEl().parentElement;
+function geometriaHeroi(uid = "j") {
+  const c = Batalha.elCarta(uid) || Batalha.elCarta("j"), arena = rodaEl().parentElement;
   return { x: c.offsetLeft - (c._acX || 0), y: c.offsetTop - (c._acY || 0), w: c.offsetWidth, h: c.offsetHeight,
     W: arena.clientWidth, H: arena._altura || arena.clientHeight };
 }
-function prepararRoda() {
+let atorDaVez = "j";  // de quem é a vez de escolher (meta `ator`: você ou um da comitiva, etapa 4)
+function prepararRoda(ator = atorDaVez) {
   limparRoda();
-  Batalha.vez("j");
-  Batalha.foco("j");
+  Batalha.vez(ator);
+  Batalha.foco(ator);
   promptEl.appendChild(el("span", "marca-roda"));  // a próxima mensagem limpa o prompt, e com ele a roda
   pergunta.teclasNum = [];
   requestAnimationFrame(() => Batalha.abrirCaminho());  // a roda já montada: balão de fala que a cubra sai da frente
 }
 
+const nomeDaCarta = (uid) => { const c = Batalha.elCarta(uid); return c ? c.querySelector(".carta-nome span").textContent : ""; };
 function rodaDeAcoes(m) {
-  prepararRoda();
+  atorDaVez = (m.opcoes[0].meta && m.opcoes[0].meta.ator) || "j";
+  const ehHeroi = atorDaVez === "j";
+  prepararRoda(atorDaVez);
   viaBarra = false;
   habMirando = "";
   const roda = rodaEl();
@@ -533,7 +538,7 @@ function rodaDeAcoes(m) {
   const heroi = estado.heroi;
   const atk = m.opcoes[acaoIdx("atacar")];
   const habs = m.opcoes[acaoIdx("habilidades")].meta.habilidades || [];
-  const basico = heroi.grimorio && heroi.grimorio.basico.linhas.find((l) => l.tipo === "dano");
+  const basico = ehHeroi && heroi.grimorio && heroi.grimorio.basico.linhas.find((l) => l.tipo === "dano");
   const botoes = [];
   const botao = (id, icone, rotulo, dica, aoClicar) => {
     const b = el("button", "roda-botao");
@@ -549,9 +554,15 @@ function rodaDeAcoes(m) {
     return b;
   };
   const arma = iconeAtaque();
-  botao("atacar", Icones.acao(arma) || spr(arma, 2), "Atacar", `<b>${esc(atk.meta.nome)}</b><div class="tipo">grátis · devolve um pouco de ${esc(heroi.recurso.toLowerCase())}</div>` +
+  botao("atacar", Icones.acao(arma) || spr(arma, 2), "Atacar", `<b>${esc(atk.meta.nome)}</b><div class="tipo">${ehHeroi ? `grátis · devolve um pouco de ${esc(heroi.recurso.toLowerCase())}` : "grátis"}</div>` +
     (basico ? `<div class="melhor">Dano: ${basico.min}–${basico.max} (crítico ${basico.critico})</div>` : ""),
     () => { App.som("escolha"); habMirando = atk.meta.nome; responder(m.id, acaoIdx("atacar")); });
+  const def = m.opcoes[acaoIdx("defender")];
+  if (def) {
+    botao("defender", Icones.acao("escudo") || spr("escudo", 2), "Defender",
+      `<b>Defender</b><div class="tipo">grátis · gasta a vez</div><div class="bonus">Recebe ${Math.round(def.meta.valor * 100)}% menos dano até ${ehHeroi ? "a sua próxima vez" : `a próxima vez de ${esc(nomeDaCarta(atorDaVez))}`}.</div>`,
+      () => { App.som("escolha"); responder(m.id, acaoIdx("defender")); });
+  }
   if (habs.length) {
     const hb = botao("habilidades", Icones.acao("grimorio") || spr("grimorio", 2), "Habilidades", "", (b) => {
       if (janelaAberta && b.classList.contains("ativo")) { fecharJanela(); return; }
@@ -567,7 +578,8 @@ function rodaDeAcoes(m) {
     hb.dataset.alterna = "";  // abre e fecha a cada clique, mesmo seguidos (Gesto, em nucleo.js)
   }
   const itens = m.opcoes[acaoIdx("itens")].meta.itens || [];
-  const ib = botao("itens", Icones.acao("pocao") || spr("pocao", 2), "Itens", "<b>Itens</b><div>Poções, tônicos, bandagens e troca de arma. Usar gasta o turno.</div>", (b) => {
+  const ib = botao("itens", Icones.acao("pocao") || spr("pocao", 2), "Itens", ehHeroi ? "<b>Itens</b><div>Poções, tônicos, bandagens e troca de arma. Usar gasta a vez.</div>"
+    : "<b>Itens</b><div>Poção de Vida ou Pena de Fênix da bolsa do grupo. Usar gasta a vez.</div>", (b) => {
     if (janelaAberta && b.classList.contains("ativo")) { fecharJanela(); return; }
     App.som("pagina");  // sem nada que sirva, o seletor abre com a frase que diz isso
     abrirJanela(b, "Itens", itens.map((meta) => linhaItem(meta, () => {
@@ -589,10 +601,11 @@ function rodaDeAcoes(m) {
 
 /** Os botões em arco, colados à direita da carta (que cresceu 12% com o foco). */
 function arcoDeBotoes(botoes) {
-  const g = geometriaHeroi();
+  const g = geometriaHeroi(atorDaVez);
   const cx = g.x + g.w / 2, cy = g.y + g.h / 2;
   const direita = cx + (g.w / 2) * 1.12;
-  const passo = 50, total = (botoes.length - 1) * passo;
+  // 50 px entre os botões; com mais botões do que a arena comporta (Defender, Analisar, Fugir), até 44, sem sair dela
+  const passo = botoes.length > 1 ? Math.max(44, Math.min(50, (g.H - 48) / (botoes.length - 1))) : 50, total = (botoes.length - 1) * passo;
   const topo = Math.max(28, Math.min(g.H - 28 - total, cy - total / 2));
   botoes.forEach((b, i) => {
     const y = topo + i * passo;
@@ -613,15 +626,16 @@ function linhaHabilidade(h, aoClicar) {
 }
 function linhaItem(meta, aoClicar) {
   if (meta.trocar !== undefined) {
-    return { icone: Icones.item(Telas.iconeItem(meta.equip)) || spr(Telas.iconeItem(meta.equip), 2), fam: "fisico", nome: "Trocar: " + meta.equip.nome, info: "turno", slot: "troca",
+    return { icone: Icones.item(Telas.iconeItem(meta.equip)) || spr(Telas.iconeItem(meta.equip), 2), fam: "fisico", nome: "Trocar: " + meta.equip.nome, info: "vez", slot: "troca",
       dica: Telas.htmlItem(meta.equip, "Trocar de arma no meio da luta gasta o seu turno."), aoClicar };
   }
   return { icone: Icones.consumivel(meta.usar_item) || spr(Telas.iconeConsumivel(meta.usar_item), 2), fam: "cura", nome: meta.nome, info: `×${meta.qtd}`, slot: "item",
     dica: `<b>${esc(meta.nome)}</b><div class="tipo">Você tem ${meta.qtd} · gasta o turno</div><div class="bonus">${Realce.texto(meta.desc)}</div>${meta.motivo ? `<div class="pior">${esc(meta.motivo)}</div>` : ""}`,
     bloqueio: meta.motivo, aoClicar };  // apagado, a dica já diz por quê (como nas habilidades)
 }
+const TIPO_TXT = { fisico: "físico", fogo: "fogo", gelo: "gelo", arcano: "arcano", sagrado: "sagrado", sombra: "sombra", veneno: "veneno", sangue: "sangue" };
 function dicaHabilidade(h) {
-  return `<b>${esc(h.nome)}</b><div class="tipo">${h.custo ? `${h.custo} de ${esc(h.recurso)}` : "Sem custo"}${h.flechas ? ` · ${Texto.plural(h.flechas, "flecha")}` : ""} · Alvo: ${ALVO_TXT[h.alvo_tipo] || "—"}</div>
+  return `<b>${esc(h.nome)}</b>${h.ultimate ? ' <span class="tag-ultimate">Ultimate · 1 vez por luta</span>' : ""}<div class="tipo">${h.custo ? `${h.custo} de ${esc(h.recurso)}` : "Sem custo"}${h.flechas ? ` · ${Texto.plural(h.flechas, "flecha")}` : ""} · Alvo: ${ALVO_TXT[h.alvo_tipo] || "—"}${h.tipo ? ` · ${TIPO_TXT[h.tipo] || esc(h.tipo)}` : ""}</div>
     <div class="bonus">${Realce.texto(h.desc)}</div>${danoGrimorio(h.habilidade)}${h.pode ? "" : `<div class="pior">${esc(h.motivo || "Indisponível")}</div>`}`;
 }
 
@@ -629,7 +643,9 @@ function dicaHabilidade(h) {
 function previaAlvos(tipo) {
   document.querySelectorAll("#batalha .carta.previa").forEach((c) => c.classList.remove("previa", "previa-area"));
   if (!tipo) return;
-  const cartas = tipo === "proprio" ? document.querySelectorAll('#batalha .carta[data-uid="j"]')
+  const cartas = tipo === "proprio" ? document.querySelectorAll(`#batalha .carta[data-uid="${atorDaVez}"]`)
+    : tipo === "aliado" ? document.querySelectorAll("#batalha .carta.aliado:not(.morta)")
+    : tipo === "aliado_caido" ? document.querySelectorAll("#batalha .carta.aliado.morta")
     : document.querySelectorAll("#batalha .carta.inimigo:not(.morta)");
   cartas.forEach((c) => c.classList.add("previa", ...(tipo === "todos" ? ["previa-area"] : [])));
 }
@@ -720,7 +736,7 @@ function dispor(j, linhas) {
   ["left", "top", "width", "maxHeight", "minHeight", "paddingBottom"].forEach((k) => { j.style[k] = ""; });
   if (j.parentElement !== rodaEl()) rodaEl().appendChild(j);
   colunasDaLista(lista, 2);
-  const g = geometriaHeroi();
+  const g = geometriaHeroi(atorDaVez);
   const topoTela = j.offsetParent.getBoundingClientRect().top;
   // da largura da arena, colado embaixo dela (nada se mexe); a lista rola dentro se não couber
   j.style.left = "0px";
@@ -920,7 +936,7 @@ function rodaSubmenu(m) {
     else if (meta.usar_item || meta.trocar !== undefined) linhas.push(linhaItem(meta, () => { App.som("item"); responder(m.id, i); }));
   });
   // Uma âncora invisível onde ficaria o botão de Itens, para a janelinha abrir no mesmo lugar.
-  const g = geometriaHeroi();
+  const g = geometriaHeroi(atorDaVez);
   const ancora = el("span", "roda-ancora");
   ancora.style.left = g.x + g.w * 1.06 + 20 + "px";
   ancora.style.top = g.y + g.h / 2 + "px";
@@ -946,7 +962,7 @@ function rodaMira(m) {
   }
   rodaEl().appendChild(chip);
   // no meio da faixa dos comandos, na altura da sua carta (sem passar do alto nem do pé da arena)
-  const g = geometriaHeroi(), meia = chip.offsetHeight / 2;
+  const g = geometriaHeroi(atorDaVez), meia = chip.offsetHeight / 2;
   chip.style.left = Math.round(g.x + g.w * 1.06 + 12) + "px";
   chip.style.top = Math.round(Math.max(6 + meia, Math.min(g.H - 6 - meia, g.y + g.h / 2))) + "px";
 }

@@ -58,6 +58,14 @@ body:has(.roda-janela:not(.lateral)) .turnos-placa[data-lugar="fora"] { visibili
 .turnos-placa { padding: 4px 26px 5px; gap: 1px; --fundo: #141316; transition: opacity 200ms; }
 .turnos-placa .t { font-family: var(--num, monospace); font-size: 14px; letter-spacing: 1.5px; text-transform: uppercase; color: #cfc4ad; }
 .turnos-placa .t b { color: #f2e7cc; font-size: 16px; letter-spacing: 0; margin-left: 4px; }
+/* a ordem fixa da luta (etapa 4): quem age agora em marfim, quem já passou nesta rodada apagado, quem está fora riscado */
+.turnos-placa .ordem { display: flex; flex-wrap: wrap; justify-content: center; align-items: baseline; gap: 0 5px; max-width: 520px;
+  white-space: normal; font-family: var(--texto, serif); font-size: 13.5px; line-height: 1.25; color: #b9ae97; }
+.turnos-placa .ordem i { font-style: normal; color: #6f6656; }
+.turnos-placa .ordem .o.vez { color: #fff4dc; text-shadow: 0 0 6px rgba(242, 210, 122, 0.55); }
+.turnos-placa .ordem .o.passou { color: #7d7465; }
+.turnos-placa .ordem .o.fora { color: #6a6157; text-decoration: line-through; text-decoration-color: rgba(160, 140, 120, 0.7); }
+.turnos-placa .ordem .o.espera { color: #8e8574; font-style: italic; }
 .turnos-placa .ini { font-family: var(--texto, serif); font-size: 13.5px; line-height: 1.1; color: #f6d98a; }
 .turnos-placa .ini.acabou { color: #a59c8a; text-decoration: line-through; text-decoration-color: rgba(165, 156, 138, 0.7); }
 .turnos-placa .ini.usada { color: #b8f0a0; }

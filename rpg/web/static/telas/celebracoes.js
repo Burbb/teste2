@@ -392,7 +392,7 @@
   /** Uma linha curta para o registro (histórico) de cada festa: o registro guarda o fato, a festa mostra. */
   function resumoCelebracao(m) {
     const d = m.dados || {};
-    if (m.tipo === "nivel") return `▸ Nível ${d.nivel}: +1 ponto de talento${(d.habilidades || []).length ? ", " + d.habilidades.map((x) => x.nome).join(", ") : ""}`;
+    if (m.tipo === "nivel") return `▸ Nível ${d.nivel}: +1 ponto de talento${d.pontos_atributo ? ", +2 pontos de atributo" : ""}${(d.habilidades || []).length ? ", " + d.habilidades.map((x) => x.nome).join(", ") : ""}`;
     if (m.tipo === "contratos") return `▸ ${d.contratos.length === 1 ? "Contrato cumprido" : d.contratos.length + " contratos cumpridos"}: +${d.ouro} ouro, +${d.xp} XP`;
     if (m.tipo === "sigilo") return `▸ Sigilo ${d.sigilos}/3 (${d.guardiao}): +1 ponto de talento`;
     if (m.tipo === "spec") return `▸ Você agora é ${d.nome}`;

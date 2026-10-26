@@ -84,7 +84,7 @@
   }
 
   const linhaGanhos = (d) => `<div class="fb2-ganhos">${ganhos(d).map((x, i) => `<span class="fb2-ganho" style="--i:${i}">${x.icone}<b>+${x.v}</b><span>${h(x.k)}</span></span>`).join("")}</div>`;
-  const talentoHTML = () => `<div class="fb2-talento">${talento(32)}<div><b>+1</b> ponto de talento<small>no livro de Talentos <kbd>T</kbd></small></div></div>`;
+  const talentoHTML = (d) => `<div class="fb2-talento">${talento(32)}<div><b>+1</b> ponto de talento<small>no livro de Talentos <kbd>T</kbd></small>${d && d.pontos_atributo ? `<small class="fb2-atributo"><b>+2</b> pontos de atributo · na ficha <kbd>I</kbd></small>` : ""}</div></div>`;
   const habsHTML = (lista) => habilidades(lista).map((x) => `<div class="fb2-hab"><span class="fb2-hab-icone">${x.icone}</span>
     <div><span class="fb2-rotulo">nova habilidade</span><b>${x.nome}</b><p>${x.desc}</p></div></div>`).join("");
   /** O talento e as habilidades lado a lado, com um fio entre eles. */
@@ -93,7 +93,7 @@
   const direcao = {
     nome: "estouro",
     nivel: (d) => festa({ classe: "fb2-nivel", faixa: "Você subiu de nível", palavra: "Nível", numero: d.nivel, pal: P.ouro, cores: SELO.ouro, som: "subir",
-      info: `${linhaGanhos(d)}${lado(talentoHTML(), habsHTML(d.habilidades))}
+      info: `${linhaGanhos(d)}${lado(talentoHTML(d), habsHTML(d.habilidades))}
         ${d.especializacao ? '<p class="fb2-aviso">Uma encruzilhada se aproxima: em breve você escolherá sua especialização.</p>' : ""}` }),
     sigilo: (d) => festa({ classe: "fb2-sigilo", faixa: `${h(d.guardiao)} caiu`, palavra: "Sigilo", numero: `${d.sigilos}/3`, pal: P.sigilo, cores: SELO.sigilo, som: "fanfarra",
       info: `${lado(`<div class="fb2-losangos">${[0, 1, 2].map((i) => `<i class="${i < d.sigilos ? "tem" : ""}"></i>`).join("")}</div><p class="fb2-texto">Uma runa ardente se grava na sua mão.</p>`, talentoHTML())}` }),
@@ -194,6 +194,8 @@
   .fb2-talento { display: flex; align-items: center; gap: 10px; font: 19px/1.15 var(--texto); color: #f2d27a; }
   .fb2-talento b { font: 32px/1 var(--titulo); color: #fff3a0; text-shadow: 0 3px 0 #8a6a14, 0 5px 0 #000; }
   .fb2-talento small { display: block; font: 13px/1.4 var(--texto); color: #a89878; }
+  .fb2-talento small.fb2-atributo { margin-top: 4px; font-size: 15px; color: #e8d6a8; }
+  .fb2-talento small.fb2-atributo b { font: inherit; color: #fff3a0; text-shadow: none; }
   .fb2 kbd, .dir-estouro kbd { font: 13px/1 var(--num); color: #c0b8a8; border: 1px solid #4a4d53; background: #0b0c0e; padding: 2px 5px; margin-left: 4px; }
   .fb2-hab { display: flex; align-items: flex-start; gap: 12px; max-width: 520px; }
   .fb2-habs { display: flex; flex-direction: column; gap: 12px; text-align: left; }

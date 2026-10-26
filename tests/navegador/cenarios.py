@@ -23,6 +23,7 @@
     python -m tests.navegador.cenarios reacoes       # Contra-ataque, espinhos, roubo de vida e o Revide juntos (CONTRA, ESPINHOS, ROUBO, LUTA)
     python -m tests.navegador.cenarios relatorio     # Explorar cai numa luta comum: o relatório e o que vem depois (EVENTO, VEZES, SEMENTE, PERIODO)
     python -m tests.navegador.cenarios muralha       # Guerreiro nv 6, Muralha + Contra-ataque (CONTRA) e o Broquel, contra bandidos e um cultista
+    python -m tests.navegador.cenarios integracao    # TESTE da etapa 4: herói com a comitiva em lutas seguidas (CLASSE, ESPEC, NIVEL, COMITIVA, LUTA, CAIDO, PENAS, PONTOS)
 
 Imprime o endereço do servidor na primeira linha e fica no ar até ser encerrado.
 """
@@ -711,6 +712,10 @@ def _broquel(ui, nivel, talentos, luta, extra=None):
              hardcore=False)
     g.iniciar("Jean", "guerreiro", "turvo")
     dev.subir_ate(g, nivel, spec=os.environ.get("ESPEC", "paladino"))
+    if "erguer_escudo" not in g.j.kit:  # o escudo erguido é o que o cenário testa: vai no kit (etapa 4)
+        from rpg import kit
+        g.j.kit = ["erguer_escudo"] + g.j.kit
+        kit.ajustar(g.j)
     g.j.talentos.clear()
     for t in talentos:
         nome, _, rank = t.partition("=")
@@ -1104,7 +1109,83 @@ def aneis(ui):
         pass
 
 
-CENARIOS = {"aneis": aneis, "mercado": mercado, "relatorio": relatorio, "combate": combate, "titulo": titulo, "vila": vila, "campanha": campanha, "baus": baus, "missao": missao,
+LUTAS_INTEGRACAO = {
+    "lobos": lambda g, n: [g.inimigo("lobo", nivel=n) for _ in range(3)],
+    "misto": lambda g, n: [g.inimigo("bandido", nivel=n) for _ in range(2)] + [g.inimigo("cultista", nivel=n)],
+    "esqueletos": lambda g, n: [g.inimigo("esqueleto", nivel=n) for _ in range(3)],
+    "chefe": lambda g, n: [_chefe(n)],
+}
+
+
+def _chefe(n):
+    from rpg.inimigos import instanciar_guardiao
+    return instanciar_guardiao({"bioma": "floresta", "idx": 0, "nome": "Guardião do teste"}, n)
+
+
+def integracao(ui):
+    """TESTE (etapa 4, roadmapIDEIAS/26): a CLASSE (padrão guerreiro; ESPEC, padrão a primeira) no nível NIVEL (padrão
+    6, o nível de teste: não é o ritmo da campanha), vestido, com a COMITIVA (padrão "odete,morel"; vazio: sozinho), na
+    LUTA (lobos, misto, esqueletos, chefe). CAIDO=<id>: esse companheiro entra caído na primeira luta (para a Pena e o
+    Reerguer); PENAS=n: Penas de Fênix na bolsa;
+    PONTOS=n: pontos de atributo para distribuir. Depois de cada luta: a seguinte sem descanso (vida, recurso e
+    caídos ficam como estão), a mesma de novo com tudo cheio, ou seguir jogando (a fogueira e a vila trocam o kit)."""
+    from rpg import dev
+    from rpg.ui import BotUI
+    classe = os.environ.get("CLASSE", "guerreiro")
+    nivel = int(os.environ.get("NIVEL", "6"))
+    g = Jogo(BotUI(random.Random(1)), seed=int(os.environ.get("SEMENTE", "11")), pasta_saves=tempfile.mkdtemp(),
+             hardcore=False)
+    g.iniciar("Jean", classe, "turvo")
+    ja_comecada(g)
+    dev.subir_ate(g, nivel, spec=os.environ.get("ESPEC") or None)
+    dev.vestir(g, random.Random(3), nivel)
+    g.j.pontos_atributo = int(os.environ.get("PONTOS", "0"))
+    for cid in [c for c in os.environ.get("COMITIVA", "odete,morel").split(",") if c]:
+        cm.recrutar(g, cid)
+    g.j.consumiveis["pocao_vida"] = 2
+    g.j.consumiveis["pena_fenix"] = int(os.environ.get("PENAS", "1"))
+    loc = next(l for l in g.mundo["locais"] if l["chave"] == "bosque_do_moinho")
+    g.mundo["atual"], loc["visitado"] = loc["id"], True
+    g.periodo, g.clima = 1, "limpo"
+    g.ui, ui.jogo = ui, g
+    g.j.recalcular()
+    g.j.hp, g.j.rec = g.j.max_hp, g.j.max_rec
+    caido = os.environ.get("CAIDO")
+    if caido and cm.membro(g, caido):  # na primeira luta, ele entra e cai antes da primeira vez (a cena de teste)
+        from rpg.comitiva import luta as cm_luta
+        preparar = cm_luta.preparar_combate
+
+        def preparar_caido(cb):
+            lista = preparar(cb)
+            for a in cb.aliados:
+                if getattr(a, "cid", None) == caido and not getattr(g, "_caido_feito", False):
+                    a.hp = 0
+                    g._caido_feito = True
+            return lista
+        cm_luta.preparar_combate = preparar_caido
+        cm.preparar_combate = preparar_caido
+    luta = os.environ.get("LUTA", "lobos")
+    escolha = "seguinte"
+    n = 0
+    while escolha:
+        n += 1
+        if escolha == "mesma":
+            g.j.hp, g.j.rec, g.j.efeitos = g.j.max_hp, g.j.max_rec, {}
+            for m in cm.junto(g):
+                m["hp"], m["ferido"] = m["max_hp"], False
+        ui.cena(f"Luta de teste {n}", g.contexto_cena(), "evento")
+        g.dizer("Cena de teste: luta preparada (etapa 4). A vida e os caídos seguem de uma luta para a outra.", "cinza")
+        lutar(g, LUTAS_INTEGRACAO[luta](g, max(1, nivel - 1)))
+        escolha = g.menu("A luta acabou.", [("A luta seguinte, sem descanso", "seguinte"),
+                                            ("A mesma luta de novo, com tudo cheio", "mesma"),
+                                            ("Seguir jogando", None)])
+    try:
+        g.rodar()
+    except FimDeJogo:
+        pass
+
+
+CENARIOS = {"integracao": integracao, "aneis": aneis, "mercado": mercado, "relatorio": relatorio, "combate": combate, "titulo": titulo, "vila": vila, "campanha": campanha, "baus": baus, "missao": missao,
             "recarga": recarga, "capela": capela, "retorno": retorno, "praca": praca, "encruzilhada": encruzilhada,
             "tiro_duplo": tiro_duplo, "covil": covil, "broquel": broquel, "muralha": muralha, "reacoes": reacoes, "resgate": resgate,
             "gelo": gelo, "abertura": abertura, "fogueira": fogueira,

@@ -175,7 +175,7 @@ const Icones = (() => {
   // a roda da luta: o ataque da classe (a espada do Guerreiro, 1.145.0; o arco do Arqueiro, 1.169.0, o mesmo arquivo do
   // equipamento: o ícone é da classe, então com a Besta também), Habilidades (o grimório), Itens (a poção) e Fugir (a
   // bota com os riscos de movimento, a mesma da Agilidade: correr, não a porta do Sair)
-  const ACAO = { espada: "espada", arco: "arco", cajado: "cajado", grimorio: "atalho-grimorio", pocao: "pocao", fuga: "attr-agilidade" };
+  const ACAO = { espada: "espada", arco: "arco", cajado: "cajado", grimorio: "atalho-grimorio", pocao: "pocao", fuga: "attr-agilidade", escudo: "escudo" };
   // os ícones dos estados da luta (16, o chip da carta e o selo do estado que chega), pelo id do estado no motor
   // (rpg/estados.py): o Firme (1.155.0, a corrente rompida: dois elos com o vão da ruptura), o Em guarda (1.156.0, o
   // escudo de ferro em pé, o aro e a face em duas águas) e a Esquiva (1.157.0, a figura em movimento: a cabeça, o braço
