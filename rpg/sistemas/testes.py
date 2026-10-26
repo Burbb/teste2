@@ -1,9 +1,17 @@
 """Testes de atributo: d20 + bônus contra a dificuldade."""
 
 import math
+from .. import atributos as atr
 from .. import balanceamento as bal
+from .. import sobrevivencia
 from ..classes import CLASSES, SPECS
 from ..regras import NOMES_TESTE
+
+
+TESTE_POR_PONTO = 1.5
+# o valor derivado de cada atributo: o que um ferimento ou a fome tiram dele vale no teste (sobrevivencia.py)
+PENALIZA = {"forca": "atk", "agilidade": "agi", "intelecto": "poder"}
+TESTE_DERIVADO = {"forca": "Ataque", "destreza": "Agilidade", "arcano": "Poder"}
 
 
 class Testes:
@@ -29,17 +37,21 @@ class Testes:
         j = self.j
         b = self._bonus_atributo
         partes = [("nível", j.nivel // 2)]
-        if attr == "forca":
-            partes.append((f"Ataque {j.atk}", b(j.atk)))
-        elif attr == "destreza":
-            partes.append((f"Agilidade {j.agi}", b(j.agi * 1.4)))
-        elif attr == "arcano":
-            partes.append((f"Poder {j.poder}", b(j.poder)))
-        elif attr == "percepcao":
-            partes.append((f"Agilidade {j.agi}", b(j.agi)))
-        elif attr == "vontade":
-            partes.append((f"Defesa {j.defesa}", b(j.defesa * 0.8)))
+        # O atributo de origem (etapa 4, atributos.py): cada teste pelo seu; ×1,5 deixa o bônus perto do de antes, quando
+        # vinha do Ataque, do Poder, da Agilidade e da Defesa. A Presença soma o que passou da inicial (no começo, nada:
+        # o Carisma de quem começa é o de antes).
+        origem = {"forca": "forca", "destreza": "agilidade", "arcano": "intelecto", "percepcao": "percepcao",
+                  "vontade": "vontade"}
+        if attr in origem:
+            a = origem[attr]
+            v = atr.de(j).get(a, 0)
+            # ferimento e fome que tiram do valor derivado (a perna torcida, da Agilidade) tiram também do teste
+            for _, f in sobrevivencia.fontes_penalidade(j).get(PENALIZA.get(a), []):
+                v = v * f
+            v = int(round(v))
+            partes.append((f"{atr.NOMES[a]} {v}", b(v * TESTE_POR_PONTO)))
         elif attr == "carisma":
+            partes.append((f"{atr.NOMES['presenca']} {atr.presenca(j)}", atr.presenca(j) - atr.PRESENCA_INICIAL))
             partes.append((f"Reputação {j.reputacao:+d}", j.reputacao // 10))
         for fonte in (CLASSES[j.classe], SPECS.get(j.spec, {})):  # "olhos de arqueiro", "paladino"...
             if attr in fonte.get("testes", {}):

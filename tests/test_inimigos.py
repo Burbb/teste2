@@ -93,7 +93,8 @@ class TestIniciativa(unittest.TestCase):
             def escolher(self, pergunta, opcoes):
                 metas = self.meta_opcoes or []
                 if pergunta == "Sua ação:":
-                    return 1 if buff_primeiro and cb.turno == 1 else 0
+                    hab = next(i for i, m in enumerate(metas) if m and m.get("acao") == "habilidades")
+                    return hab if buff_primeiro and cb.turno == 1 else 0
                 if pergunta == "Habilidades:":
                     return next(i for i, m in enumerate(metas) if m and m.get("habilidade") == "erguer_escudo")
                 return super().escolher(pergunta, opcoes)

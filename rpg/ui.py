@@ -149,7 +149,7 @@ class UI:
                     "teste_ok" if sucesso else "teste_falha")
 
     def novo_turno(self, n):
-        self._imprimir(self.pintar(f"── turno {n} ──", "cinza"))
+        self._imprimir(self.pintar(f"── rodada {n} ──", "cinza"))
 
     def atualizar(self):
         """O estado mudou (um golpe, uma cura): interfaces com painel podem redesenhar."""

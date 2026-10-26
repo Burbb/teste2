@@ -51,7 +51,7 @@ class Politica(arena.LutadorUI):
             return 0  # dar descanso (o cenário "Ilse, rito")
         return super().escolher(pergunta, opcoes)
 
-    def _acao(self, cb, metas):
+    def _decidir(self, cb, metas):
         j = cb.j
         if cb.turno > LIMITE_TURNOS:
             raise Impasse()
@@ -62,22 +62,22 @@ class Politica(arena.LutadorUI):
         habs = [m for m in next((m["habilidades"] for m in metas if m.get("acao") == "habilidades"), []) if m["pode"]]
         if j.hp < 0.35 * j.max_hp and any(m.get("usar_item") == "pocao_vida" and not m.get("motivo") for m in itens):
             self._plano = "pocao_vida"
-            return 2
+            return "itens"
         cura = next((m["habilidade"] for m in habs if m["habilidade"] in arena.CURAS), None)
         if cura and j.hp < 0.5 * j.max_hp:
             self._plano = cura
-            return 1
+            return "habilidades"
         vivos = cb.inimigos_vivos()
         quer = {"atacar": False, "abertura": self.acoes_luta == 1, "manter": not j.efeito("guarda"),
                 "todo_turno": True, "preparado": any(e.carregando for e in vivos)}[self.politica]
         if quer and any(m["habilidade"] == "erguer_escudo" for m in habs):
             self._plano = "erguer_escudo"
-            return 1
+            return "habilidades"
         h = self._habilidade(cb, [m for m in habs if m["habilidade"] not in DEFESAS])
         if h:
             self._plano = h
-            return 1
-        return 0
+            return "habilidades"
+        return "atacar"
 
     @property
     def acoes_luta(self):

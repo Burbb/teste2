@@ -152,6 +152,7 @@ class TestComitiva(unittest.TestCase):
 class TestExplorarNoiteTalentos(unittest.TestCase):
     def test_fora_da_vila_explorar_e_passa_com_a_resposta(self):
         g = depois_da_despensa()
+        g.j.hp, g.j.rec = g.j.max_hp, g.j.max_rec  # inteiro: sem o que recuperar, o Acampar (D2) não entra na fila
         ir(g, "bosque_do_moinho")
         o = ab.atual(g)
         self.assertEqual((o["id"], o["ancora"]), ("V5", "opcao:Explorar a região"))

@@ -6,48 +6,54 @@ from .. import comitiva
 
 
 class TurnosDosOutros:
-    # ------------------------------------------------------------ aliados e inimigos
-    def fase_aliados(self):
-        for a in list(self.aliados):
-            if not a.vivo or not self.inimigos_vivos():
-                continue
-            if self.processar_efeitos(a):
-                continue
+    # ------------------------------------------------------------ aliados e inimigos (cada um na sua vez da ordem)
+    def vez_aliado(self, a):
+        """A vez de quem luta do seu lado. A comitiva age por escolha sua (heroi.vez_comitiva); o animal e os servos,
+        sozinhos (o controle deles é decisão separada: roadmapIDEIAS/25, 3.4). Caído, a vez passa."""
+        if not a.vivo:
             if a.tipo == "comitiva":
-                with self.agindo(a):
-                    comitiva.agir(self, a)
-                continue
-            ataques = 1 + mod(self.j, "ataques_fera") if a is self.companheiro else 1
-            for _ in range(ataques):
-                if not self.inimigos_vivos():
-                    break
-                alvo = self.rng.choice(self.inimigos_vivos())
-                with self.agindo(a, alvo=alvo):
-                    dano = self.atacar(a, alvo, 1.0, alcance=a.alcance, crit_extra=a.crit, rotulo=a.nome)
-                    if dano and a.tipo == "lobo":
-                        self.aplicar(alvo, "sangramento", 2, valor=max(1, a.atk * 0.3), chance=0.3)
-                    elif dano and a.tipo == "urso":
-                        self.aplicar(alvo, "atordoado", 1, chance=0.15)
+                self.lance("pula", de=self.uid(a), rotulo="caído")
+            return
+        if not self.inimigos_vivos() or self.processar_efeitos(a):
+            return
+        if a.tipo == "comitiva":
+            self.vez_comitiva(a)
+            return
+        ataques = 1 + mod(self.j, "ataques_fera") if a is self.companheiro else 1
+        for _ in range(ataques):
+            if not self.inimigos_vivos():
+                break
+            alvo = self.rng.choice(self.inimigos_vivos())
+            with self.agindo(a, alvo=alvo):
+                dano = self.atacar(a, alvo, 1.0, alcance=a.alcance, crit_extra=a.crit, rotulo=a.nome)
+                if dano and a.tipo == "lobo":
+                    self.aplicar(alvo, "sangramento", 2, valor=max(1, a.atk * 0.3), chance=0.3)
+                elif dano and a.tipo == "urso":
+                    self.aplicar(alvo, "atordoado", 1, chance=0.15)
+
+    def vez_inimigo(self, e):
+        self.checar_limiares()  # o momento de um piso vem antes de qualquer inimigo agir
+        if not e.vivo or e.fugiu or not self.j.vivo:
+            return
+        if self.processar_efeitos(e):
+            if e.vivo and e.carregando:  # atordoado no meio da preparação: o golpe devastador se perde
+                e.carregando = None
+                self.lance("atordoado", em=self.uid(e), rotulo="golpe interrompido!")
+                self.dizer(f"Atordoad{'o' if e.g == 'm' else 'a'}, {self.nome(e, True)} perde o golpe que "
+                           "preparava!", "verde+negrito")
+            return
+        self.checar_limiares()  # o efeito periódico do começo da vez pode tê-la levado ao piso
+        if not e.vivo:
+            return
+        self.checar_fase(e)
+        self.agir_inimigo(e)
 
     def fase_inimigos(self, apenas=None):
+        """Os inimigos, em sequência (a emboscada: o mais rápido age antes de a ordem começar)."""
         for e in list(self.inimigos):
             if apenas is not None and e is not apenas:
                 continue
-            self.checar_limiares()  # o momento de um piso vem antes de qualquer inimigo agir
-            if not e.vivo or not self.j.vivo:
-                continue
-            if self.processar_efeitos(e):
-                if e.vivo and e.carregando:  # atordoado no meio da preparação: o golpe devastador se perde
-                    e.carregando = None
-                    self.lance("atordoado", em=self.uid(e), rotulo="golpe interrompido!")
-                    self.dizer(f"Atordoad{'o' if e.g == 'm' else 'a'}, {self.nome(e, True)} perde o golpe que "
-                               "preparava!", "verde+negrito")
-                continue
-            self.checar_limiares()  # o efeito periódico do começo da vez pode tê-la levado ao piso
-            if not e.vivo:
-                continue
-            self.checar_fase(e)
-            self.agir_inimigo(e)
+            self.vez_inimigo(e)
 
     def checar_fase(self, e):
         while e.fase_atual < len(e.fases) and e.hp <= e.max_hp * e.fases[e.fase_atual]["limiar"]:
@@ -80,8 +86,17 @@ class TurnosDosOutros:
                 return self.rng.choice(aliados)
         return self.j
 
+    def redirecionar(self, alvo):
+        """Quem recebe o golpe mirado em `alvo`: o protetor, se o alvo está Protegido e ele está de pé (Proteger)."""
+        p = alvo.efeito("protegido") if alvo else None
+        por = p.get("por") if p else None
+        if por is not None and por.vivo and por is not alvo:
+            self.detalhe(f"{self.nome(por)} entra na frente de {self.nome(alvo, True)}.", "ciano")
+            return por
+        return alvo
+
     def agir_inimigo(self, e):
-        alvo = self.escolher_alvo_inimigo(e)
+        alvo = self.redirecionar(self.escolher_alvo_inimigo(e))
         if e.carregando:
             c = e.carregando
             e.carregando = None

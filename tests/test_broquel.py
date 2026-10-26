@@ -91,6 +91,7 @@ class TestRevide(unittest.TestCase):
         cb.atacar(lobo, g.j, 1.0, alcance="corpo")  # sem guarda
         g.j.aplicar("guarda", 2, 0.5)
         cb.atacar(lobo, g.j, 1.0, alcance="distancia")  # magia, flecha
+        g.j.aplicar("esquiva", 2, 0.5)  # a Agilidade não dá esquiva ao herói (etapa 4): um estado dá
         cb.rng = Sorteio([0.0])  # o herói se esquiva: não acertou, não há o que revidar
         cb.atacar(lobo, g.j, 1.0, alcance="corpo")
         self.assertEqual(reacoes(g), [])

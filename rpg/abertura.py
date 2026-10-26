@@ -239,14 +239,15 @@ def atual(g):
     j = g.j
     if g.combate_ativo is None:
         return proxima(g)
-    if not _combate_pendente(g) or not j.habilidades:
+    kit = list(getattr(j, "kit", None) or [])  # a luta mostra as do kit (etapa 4), na ordem dele
+    if not _combate_pendente(g) or not kit:
         return selo_da_vez(g)
-    hid = hab_inicial(j) if hab_inicial(j) in j.habilidades else j.habilidades[0]
+    hid = hab_inicial(j) if hab_inicial(j) in kit else kit[0]
     return {"id": "combate", "passos": {
-        "C1": "Clique em **Habilidades** (tecla 2).",
-        "C2": f"Clique em **{efetiva(j, hid)['nome']}** (tecla {j.habilidades.index(hid) + 1}).",
+        "C1": "Clique em **Habilidades** (tecla 3).",
+        "C2": f"Clique em **{efetiva(j, hid)['nome']}** (tecla {kit.index(hid) + 1}).",
         "C3": "Clique num inimigo para escolher o alvo (ou a tecla do número dele).",
-        "C4": {h: _c4(j, h) for h in j.habilidades}}, "hab": hid}
+        "C4": {h: _c4(j, h) for h in kit}}, "hab": hid}
 
 
 # ------------------------------------------------------------------ a segunda parte (V2–V5, E1, T1, N1)
@@ -781,9 +782,11 @@ def ajuda(g):
     linhas = []
     if "combate" in vistas or a.get("lutas_sem_habilidade"):
         hid = hab_inicial(j)
-        linhas.append({"grupo": "Luta", "texto": "Na sua vez, **Habilidades** (tecla 2) abre a lista; clique numa "
+        linhas.append({"grupo": "Luta", "texto": "Na sua vez, **Habilidades** (tecla 3) abre as do kit; clique numa "
                                                  "habilidade e depois no alvo."})
         linhas.append({"grupo": "Luta", "texto": _custo(j, hid, "gasta")})
+        linhas.append({"grupo": "Luta", "texto": "**Defender** (tecla 2) gasta a vez: você recebe "
+                                                 f"{round(bal.DEFENDER * 100)}% menos dano até a sua próxima vez."})
     if "V1" in vistas:
         linhas.append({"grupo": "Vila", "texto": "Clique no **mural** para ver os contratos disponíveis."})
     r = j.nome_recurso

@@ -1,6 +1,8 @@
 """Golpes, estados e mortes: a conta de um golpe (esquiva, traços, estados, crítico, defesa), o que fica
 depois dele (aplicar um estado, queimadura em camadas) e o que acontece quando alguém cai."""
 
+import re
+
 from ..grimorio import chance_critico, mult_critico
 from ..modificadores import disparar, mod, mult, nomes
 from ..estados import ESTADOS, NOMES, NOMES as NOMES_EFEITOS, no_golpe
@@ -73,6 +75,9 @@ class Golpes:
             m *= clima.get("distancia", 1)
         for _, e, f in no_golpe(alvo, "dano_recebido"):
             m *= f(e["v"])
+        fragil = alvo.efeito("fragilizado")
+        if fragil and tipo != "fisico":  # só o dano mágico (estados.py)
+            m *= 1 + fragil["v"]
         if getattr(alvo, "chave", None) and self.g.flag(f"fraqueza:{alvo.chave}"):
             m *= 1.25
         if u.jogador and self.g.mestre_caca(getattr(alvo, "familia", None)):
@@ -163,6 +168,9 @@ class Golpes:
                 self.ao_morrer(u, por=alvo)
         if alvo is self.j and alvo.vivo:
             disparar(self, alvo, "golpe_recebido", de=u, alcance=alcance, dano=dano)  # Martírio, Contra-ataque...
+        ret = alvo.efeito("retaliando") if alvo.vivo and not reacao else None
+        if ret and dano and alcance == "corpo" and u in self.inimigos and u.vivo:  # o Contragolpe (estados.py)
+            self.atacar(alvo, u, ret["v"], rotulo="Contragolpe", pode_esquivar=False, reacao=True)
         if alvo is self.j and dano:
             sobrevivencia.talvez_ferir(self.g, dano, tipo, crit, u)
         if not alvo.vivo:
@@ -204,6 +212,16 @@ class Golpes:
         if chance < 1 and self.rng.random() >= chance:
             return False
         est = ESTADOS[efeito]
+        if est["perde_turno"] and (alvo is self.j or alvo in self.aliados):
+            # a Tenacidade (atributos.py): uma chance, com teto, de o aliado resistir ao controle; um sorteio só
+            from .. import atributos
+            ten = atributos.tenacidade(alvo)
+            if ten and self.rng.random() < ten:
+                self.lance("efeito_negado", em=self.uid(alvo), efeito=efeito, por="tenacidade",
+                           rotulo=f"resistiu ({round(ten * 100)}%)")
+                self.detalhe(f"{self.nome(alvo)} resiste pela Tenacidade "
+                             f"({round(ten * 100)}% de chance).", "cinza")
+                return False
         if est["imune"] and est["imune"](alvo):  # o motivo real vai junto, para a tela mostrar no alvo
             self.lance("efeito_negado", em=self.uid(alvo), efeito=efeito, por="imune", rotulo="imune")
             self.detalhe(f"{self.nome(alvo)} não é afetad{'o' if alvo.g == 'm' else 'a'} ({NOMES_EFEITOS[efeito]}).",
@@ -225,7 +243,7 @@ class Golpes:
             # A tela diz isso, em vez de anunciar um congelamento novo que não muda nada.
             ja = atual.get("r") or NOMES_EFEITOS[efeito]
             self.lance("efeito", em=self.uid(alvo), efeito=efeito, rotulo=f"já {ja}")
-            self.detalhe(f"{self.nome(alvo)} já está {ja}: não soma, perde só o próximo turno.", "cinza")
+            self.detalhe(f"{self.nome(alvo)} já está {_no_genero(ja, alvo)}: não soma, perde só o próximo turno.", "cinza")
             return True
         if acumula and atual and est["camadas"]:
             # Mais uma camada: o dano por turno soma (até o teto) e a duração se renova.
@@ -241,7 +259,7 @@ class Golpes:
         if rotulo:
             alvo.efeitos[efeito]["r"] = rotulo
         self.lance("efeito", em=self.uid(alvo), efeito=efeito, rotulo=rotulo or NOMES_EFEITOS[efeito])
-        self.detalhe(f"{self.nome(alvo)} fica {rotulo or NOMES_EFEITOS[efeito]}!", "magenta")
+        self.detalhe(f"{self.nome(alvo)} fica {_no_genero(rotulo or NOMES_EFEITOS[efeito], alvo)}!", "magenta")
         return True
 
     def ao_morrer(self, c, por=None, tipo=None):
@@ -267,3 +285,11 @@ class Golpes:
             self.curou(j, j.curar(mod(j, "vida_abate")), rotulo=(nomes(j, "vida_abate") or ["Vida por abate"])[0],
                        conta=False)
         disparar(self, j, "abate", alvo=c, tipo=tipo)  # Frenesi, Assassino, Coração Ardente...
+
+
+def _no_genero(rotulo, u):
+    """O estado concordando com quem o recebe: "envenenado" vira "envenenada" para Odette e Yara (o particípio no
+    começo do rótulo: "presa na teia", "congelada")."""
+    if getattr(u, "g", "m") != "f":
+        return rotulo
+    return re.sub(r"^(\w+?)(ad|id|es)o\b", r"\1\2a", rotulo)

@@ -7,7 +7,7 @@ fora, porque mudam a cada luta; o livro diz isso em vez de esconder.
 
 from . import balanceamento as bal
 from .classes import CLASSES
-from .habilidades import crit_extra, da_estado, efetiva, ficha, origem, resumo_versao, transformacoes, versao
+from .habilidades import HABILIDADES, crit_extra, da_estado, efetiva, ficha, origem, resumo_versao, transformacoes, versao
 from .modificadores import contribuicoes, mod, mult, nomes
 from .talentos import custo_habilidade
 
@@ -42,7 +42,10 @@ def fontes_critico(j):
 
 def chance_critico(u, extra=0.0):
     """A chance de crítico de um golpe. A conta única: o combate, a ficha e o Grimório usam esta."""
-    return min(bal.MAX_CRITICO, bal.CRITICO_BASE + u.agi * bal.CRITICO_POR_AGI + extra + mod(u, "critico"))
+    # o herói: a Percepção (atributos.py), não a Agilidade, que só dá a ordem dos turnos; os outros, como antes
+    from . import atributos
+    base = atributos.critico(u) if getattr(u, "atributos", None) else u.agi * bal.CRITICO_POR_AGI
+    return min(bal.MAX_CRITICO, bal.CRITICO_BASE + base + extra + mod(u, "critico"))
 
 
 def mult_critico(u, furtivo=False):
@@ -174,13 +177,19 @@ def dados(j):
               "linhas": [golpe(j, mult, stat=stat, alcance=alcance, tipo=tipo),
                          efeito(f"Ao acertar, devolve {recupera} de {j.nome_recurso.lower()} "
                                 f"({_pct(bal.ATAQUE_RECURSO)} do máximo).")]}
+    from . import kit as kits
     habs = []
     for h_id in j.habilidades:
         h = efetiva(j, h_id)  # a versão que o herói leva (E6): a página dela, com os números dela
+        t = kits.tier(h_id) if h_id in HABILIDADES else 1
+        no_kit = h_id in (getattr(j, "kit", None) or [])
         habs.append({"id": h_id, "nome": h["nome"], "icone": h["icone"], "custo": custo_habilidade(j, h_id), "flechas": h.get("flechas", 0),
                      "flechas_por_alvo": h.get("flechas_por_alvo", 0),
                      "alvo": ALVOS.get(h["alvo"], ""), "desc": h["desc"],  # os números de agora vão nas linhas
                      "linhas": h["linhas"](j) + linhas_de_itens(j, h_id),
+                     # o kit (etapa 4): se vai para a luta, quanto custa do orçamento e por que não cabe
+                     "kit": {"no_kit": no_kit, "tier": kits.NOME_TIER[t], "pontos": kits.PONTOS_TIER[t],
+                             "ultimate": t == "ultimate", "motivo": None if no_kit else kits.motivo_incluir(j, h_id)},
                      **({"versao": pagina_versao(j, h_id)} if h_id in transformacoes(j) else {})})
     tal_corpo, _ = mult_talentos(j, "corpo")
     tal_dist, _ = mult_talentos(j, "distancia")
@@ -210,7 +219,12 @@ def dados(j):
     caminho = pagina_grimorio(j)
     if caminho:
         passivas.append(caminho)
+    r = kits.resumo(j) if hasattr(j, "kit") else None
+    kit = r and dict(r, texto=f"Kit: {r['pontos']}/{r['max_pontos']} pontos, {r['espacos']}/{r['max_espacos']} "
+                              "habilidades, no máximo uma ultimate.",
+                     onde="Monta-se na vila ou na fogueira. Atacar, Defender e Itens não entram no kit.")
     return {"recurso": j.nome_recurso, "basico": basico, "habilidades": habs, "passivas": passivas, "gerais": gerais,
+            "kit": kit,
             "atributos": {"Ataque": j.atk, "Poder": j.poder, "Agilidade": j.agi}}
 
 

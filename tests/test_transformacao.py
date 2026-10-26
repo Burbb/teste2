@@ -38,6 +38,8 @@ def mago(nivel=4, talento=True, pasta=None, roteiro=()):
     g = Jogo(Anotador(roteiro), seed=5, pasta_saves=pasta or tempfile.mkdtemp())
     g.iniciar("Teste", "mago", "turvo")
     dev.subir_ate(g, nivel, spec="piromante")
+    if "lanca_gelo" not in g.j.kit:
+        g.j.kit = ["lanca_gelo"] + g.j.kit[:3]  # a Lança (ou a Prisão) vai para a luta (o kit, etapa 4)
     if talento:
         talentos.aprender(g.j, PRISAO)
     g.j.hp, g.j.rec = g.j.max_hp, g.j.max_rec

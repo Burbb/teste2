@@ -179,7 +179,7 @@ TALENTOS = {
     "arqueiro": [
         _t("olho_aguia", "Olho de Águia", "base", 1, 3, "+4% de chance de crítico por ponto.",
            mods={"critico": 0.04}, icone="olho"),
-        _t("pes_leves", "Pés Leves", "base", 1, 3, "+2 Agilidade por ponto.", stats={"agi": 2}, icone="folha"),
+        _t("pes_leves", "Pés Leves", "base", 1, 3, "+2 de Agilidade por ponto: esquiva, ordem dos turnos e fuga.", stats={"agi": 2}, icone="folha"),
         _t("aljava_funda", "Aljava Funda", "base", 1, 2,
            "+15% de chance por ponto de recuperar flechas e +5 de espaço na aljava.",
            mods={"aljava": bal.ALJAVA_POR_TALENTO, "recolher_flecha": bal.RECOLHER_FLECHA_TALENTO}, icone="aljava"),

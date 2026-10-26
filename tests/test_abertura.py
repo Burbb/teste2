@@ -23,7 +23,7 @@ class Jogador(Roteiro):
         if self.roteiro and any(o.startswith(self.roteiro[0]) for o in opcoes):
             alvo = self.roteiro.pop(0)
             return next(i for i, o in enumerate(opcoes) if o.startswith(alvo))
-        if pergunta in ("Sua ação:", "Alvo:"):
+        if pergunta in ("Sua ação:", "Alvo:") or pergunta.startswith("Vez de "):  # a comitiva também ataca
             return 0
         if pergunta == "Habilidades:":
             return 0
@@ -292,7 +292,7 @@ class TestOrientacoes(unittest.TestCase):
             g = nova(classe)
             g.combate_ativo = object()
             o = abertura.atual(g)
-            self.assertEqual(o["passos"]["C1"], "Clique em **Habilidades** (tecla 2).")
+            self.assertEqual(o["passos"]["C1"], "Clique em **Habilidades** (tecla 3).")
             self.assertEqual(o["passos"]["C2"], f"Clique em **{hab}** (tecla 1).")
             self.assertEqual(o["passos"]["C4"][o["hab"]], {"nome": hab, "gasto": gasto, "atacar": atacar}, classe)
             # cada habilidade do herói tem o dela, com o custo real (a outra do nível 1: Erguer Escudo, Meditar...)
@@ -338,7 +338,7 @@ class TestOrientacoes(unittest.TestCase):
         abertura.depois_da_luta(g, True)
         abertura.visto(g, "V1")
         grupos = [l["grupo"] for l in abertura.ajuda(g)["linhas"]]
-        self.assertEqual(grupos, ["Luta", "Luta", "Vila"])
+        self.assertEqual(grupos, ["Luta", "Luta", "Luta", "Vila"])  # Habilidades, o custo, Defender (etapa 4); o mural
         self.assertIn("gasta 10 de Vigor", abertura.ajuda(g)["linhas"][1]["texto"])
 
 

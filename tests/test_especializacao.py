@@ -43,8 +43,10 @@ class TestPrevia(unittest.TestCase):
             g = heroi(classe)
             for spec in CLASSES[classe]["specs"]:
                 p = especializacao.previa(g.j, spec)
-                self.assertEqual([x["agora"] for x in p["habilidades"]], [True, True, False], spec)
-                self.assertEqual(p["habilidades"][2]["nivel"], 7)
+                agora = [x["agora"] for x in p["habilidades"]]  # duas no 4; o resto depois, a ultimate no 6
+                self.assertEqual(agora[:2], [True, True], spec)
+                self.assertFalse(any(agora[2:]), spec)
+                self.assertEqual(p["habilidades"][-1]["nivel"], 6, spec)
                 self.assertIn("nível de agora (4)", p["referencia"])
                 self.assertTrue(p["beneficios"], spec)  # todo caminho diz o que dá, não só o que não tem
                 self.assertTrue(p["limites"], spec)
@@ -66,7 +68,8 @@ class TestPrevia(unittest.TestCase):
         self.assertTrue(any("animal luta ao seu lado" in x for x in pat["beneficios"]))
         sombra = especializacao.previa(g.j, "sombra")
         self.assertTrue(any("Veneno" in x and "mortos-vivos nem construtos" in x for x in sombra["limites"]))
-        self.assertTrue(any("Agilidade +5" in x and "crítico" in x for x in sombra["beneficios"]))
+        # a Agilidade do herói só dá a ordem dos turnos e a fuga (etapa 4): o benefício diz isso, sem crítico nem esquiva
+        self.assertTrue(any("Agilidade +5" in x and "ordem dos turnos" in x for x in sombra["beneficios"]))
 
     def test_previa_e_o_heroi_especializado(self):
         """Os números da prévia são os do herói depois de escolher (mesmo nível, talentos e equipamento)."""

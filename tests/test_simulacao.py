@@ -138,9 +138,9 @@ class TestSimulacao(unittest.TestCase):
             for cid in ("odete", "morel"):
                 comitiva.recrutar(g, cid)
             g.j.spec = "berserker"
-            g.j.habilidades = ["redemoinho"]
+            g.j.habilidades = g.j.kit = ["redemoinho"]
             g.j.rec = g.j.max_rec
-            escolhas = iter([1, 0])  # Habilidades → Redemoinho
+            escolhas = iter([2, 0])  # Habilidades (depois de Atacar e Defender) → Redemoinho
             g.ui.escolher = lambda pergunta, opcoes: next(escolhas, 0)
             inimigos = [g.inimigo("bandido", nivel=1) for _ in range(2)]
             for e in inimigos:
@@ -165,7 +165,8 @@ class TestSimulacao(unittest.TestCase):
             golpe = next(x for x in salva if x["tipo"] == "golpe")
             self.assertEqual(golpe["de"], "j")
             self.assertIn(golpe["em"], {cb.uid(e) for e in inimigos})
-            cb.fase_aliados()
+            for a in cb.aliados:  # a vez de cada um na ordem (etapa 4): a comitiva ataca (o robô escolhe 0)
+                cb.vez_aliado(a)
             self.assertTrue(any(d.get("de") == cb.uid(a) for t, d in lances for a in cb.aliados if t == "acao"))
             g.combate_ativo = None
 
@@ -545,9 +546,9 @@ class TestSistemas(unittest.TestCase):
         self.assertEqual(linhas[0], "−15% Ataque, −15% Poder, −15% Agilidade.")
         totais, _ = j.totais()
         atk, poder, agi = (int(round(totais[s])) for s in ("atk", "poder", "agi"))
-        self.assertEqual((poder, agi), (1, 3))  # o guerreiro novo: pouco Poder e pouca Agilidade
+        self.assertEqual((poder, agi), (2, 3))  # o guerreiro novo: pouco Poder (Intelecto 2) e pouca Agilidade
         self.assertEqual(linhas[1], f"No seu herói: Ataque {atk} → {int(round(totais['atk'] * 0.85))}. "
-                                    "Poder 1 e Agilidade 3: baixos demais para cair.")
+                                    "Poder 2 e Agilidade 3: baixos demais para cair.")
 
     def test_conversa_direta_pelo_painel(self):
         """O ✉ do painel abre a conversa direto: a tela gráfica ganha uma opção escondida no menu do lugar, e ela

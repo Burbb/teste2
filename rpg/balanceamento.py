@@ -216,3 +216,11 @@ CONTRATO_OURO_BASE = 10
 CONTRATO_OURO_POR_NIVEL = 6
 CONTRATO_XP_BASE = 8
 CONTRATO_XP_FRACAO = 0.12     # do XP que falta para subir naquele nível
+
+# Etapa 4 (roadmapIDEIAS/26): caído o último inimigo perigoso, os que sobram fogem se somarem até esta fração da vida
+# inicial do grupo (o fim arrastado da caçada final). Provisório.
+DEBANDADA_FRACAO = 0.25
+DEFENDER = 0.4          # Defender: −40% de dano até a próxima vez de quem defende
+PENA_COMPANHEIRO = 0.4  # a Pena de Fênix num companheiro caído: volta com 40% da vida
+REERGUER = 0.3          # o Reerguer de Odette: 30%, uma vez por luta
+RECURSO_COMITIVA = 40   # o recurso de cada companheiro na luta (cheio no começo), +5 por rodada

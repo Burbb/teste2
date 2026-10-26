@@ -169,7 +169,7 @@ class TestDescricao(unittest.TestCase):
         self.assertEqual([l["tipo"] for l in linhas], ["dano", "efeito"])
         self.assertEqual(linhas[0]["rotulo"], "Cada um dos 2 disparos")
         self.assertEqual(linhas[1]["texto"], SEGUNDO_ALVO)
-        self.assertIn("o 2º em outro inimigo (o mais ferido)", descricao_habilidade("tiro_duplo", g.j))
+        self.assertIn("o 2º no inimigo mais ferido", descricao_habilidade("tiro_duplo", g.j))
         g = Jogo(Roteiro(), seed=5, pasta_saves=tempfile.mkdtemp())
         g.iniciar("Teste", "arqueiro", "turvo")
         dev.subir_ate(g, 4, spec=False)

@@ -8,7 +8,6 @@ LIMITE = 2  # companheiros ao mesmo tempo (fora o animal do patrulheiro)
 COMPANHEIROS = {
     "odete": dict(
         nome="Irmã Odette", curto="Odette", g="f", titulo="clériga desertora", papel="cura",
-        preces=2,  # curas por luta (luta.py: a ação dela)
         desc="Fugiu da catedral na noite em que a Fenda se abriu. Fecha feridas; não perdoa crueldade.",
         base=dict(hp=30, atk=4, poder=6, defesa=3, agi=4), cresc=dict(hp=6, atk=0.6, poder=1.2, defesa=0.6),
         valores={"misericordia": 3, "generosidade": 2, "fe": 3, "honestidade": 2, "purificar": 2, "honra": 1,

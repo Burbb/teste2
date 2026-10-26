@@ -7,6 +7,7 @@ simulador de equilíbrio (tests/equilibrio.py), que monta heróis típicos de ca
 import random
 
 from . import balanceamento as bal
+from . import kit
 from .itens import gerar_equip, rolar_raridade
 from .mundo import nivel_regiao
 from . import talentos
@@ -23,16 +24,26 @@ def subir_ate(g, nivel, spec=None, animal=None):
     """Sobe de nível como no jogo (atributos, habilidades, pontos de talento). No 4, especializa: `spec`, ou
     a primeira da classe se nenhuma for dada; com `spec=False`, deixa a encruzilhada acontecer no jogo."""
     j = g.j
-    while j.nivel < nivel:
-        g.subir_nivel()
-        if j.nivel >= bal.NIVEL_ESPECIALIZACAO and not j.spec and spec is not False:
-            from .classes import CLASSES
-            g.especializar(spec or CLASSES[j.classe]["specs"][0])
-            if animal and j.companheiro and j.companheiro["tipo"] != animal:
-                g.escolher_companheiro(animal)
-            enc = f"encruzilhada_{j.classe}"
-            if enc in g.forcados:
-                g.forcados.remove(enc)
+    g.atributos_pela_classe = True  # os pontos de cada nível já gastos, pela preferência da classe (atributos.py)
+    try:
+        while j.nivel < nivel:
+            _subir(g, spec, animal)
+    finally:
+        g.atributos_pela_classe = False
+    kit.sugerido(j)  # o kit de quem subiu sozinho: a ultimate e as mais novas que couberem
+
+
+def _subir(g, spec, animal):
+    j = g.j
+    g.subir_nivel()
+    if j.nivel >= bal.NIVEL_ESPECIALIZACAO and not j.spec and spec is not False:
+        from .classes import CLASSES
+        g.especializar(spec or CLASSES[j.classe]["specs"][0])
+        if animal and j.companheiro and j.companheiro["tipo"] != animal:
+            g.escolher_companheiro(animal)
+        enc = f"encruzilhada_{j.classe}"
+        if enc in g.forcados:
+            g.forcados.remove(enc)
 
 
 def gastar_talentos(g, rng):

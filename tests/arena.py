@@ -41,6 +41,7 @@ class LutadorUI(BotUI):
         self.g = None
         self._plano = None
         self._alvo = None  # o alvo do plano, quando não é o mais ferido (a Prisão vai em quem prepara)
+        self._aliado = None  # em quem a comitiva usa a habilidade de apoio (a Prece no mais ferido)
         self._usadas = set()  # buffs já usados nesta luta
         self._defendeu = -99  # turno em que se protegeu pela última vez
         self._serie = None
@@ -69,12 +70,20 @@ class LutadorUI(BotUI):
         metas = self.meta_opcoes or []
         if pergunta == "Sua ação:":
             return self._acao(cb, metas)
-        if pergunta == "Habilidades:":
+        if pergunta.startswith("Vez de "):
+            return self._vez_comitiva(cb, metas)
+        if pergunta == "Habilidades:" or pergunta.startswith("Habilidades de "):
             ids = [m["habilidade"] if m else None for m in metas]
             return ids.index(self._plano) if self._plano in ids else len(opcoes) - 1
         if pergunta == "Usar qual item?":
             ids = [m.get("usar_item") if m else None for m in metas]
             return ids.index(self._plano) if self._plano in ids else len(opcoes) - 1
+        if pergunta == "Em quem?":  # a comitiva escolhe em quem (escolher_aliado): o caído, o mais ferido, você
+            alvos = [m.get("alvo") for m in metas]
+            quer = self._aliado if self._aliado not in (None, "caido") else None
+            if quer is not None and cb.uid(quer) in alvos:
+                return alvos.index(cb.uid(quer))
+            return 0
         if pergunta.startswith("Em quem usar"):
             return 0 if opcoes[0].startswith("Você") else len(opcoes) - 1
         if pergunta == "Alvo:":
@@ -85,41 +94,76 @@ class LutadorUI(BotUI):
         return super().escolher(pergunta, opcoes)
 
     def _acao(self, cb, metas):
+        idx = self._indices(metas)
+        return idx[self._decidir(cb, metas)]
+
+    @staticmethod
+    def _indices(metas):
+        """A posição de cada ação no menu, pela meta `acao` (Atacar, Defender, Habilidades, Itens...)."""
+        return {m.get("acao"): i for i, m in enumerate(metas) if m}
+
+    def _vez_comitiva(self, cb, metas):
+        """O companheiro como uma pessoa o jogaria: Odette levanta quem caiu e cura quem está abaixo de 60%; Morel
+        interrompe quem prepara um golpe e aproveita o atordoado; Yara amaldiçoa o chefe e usa a Seta; senão, o
+        ataque."""
+        idx = self._indices(metas)
+        pode = {m["habilidade"] for m in next((m["habilidades"] for m in metas if m.get("acao") == "habilidades"), [])
+                if m["pode"]}
+        self._plano = self._alvo = self._aliado = None
+        vivos = cb.inimigos_vivos()
+        lado = [cb.j] + [a for a in cb.aliados if a.tipo == "comitiva"]
+        ferido = min((c for c in lado if c.vivo), key=lambda c: c.hp / c.max_hp, default=None)
+        prepara = next((e for e in vivos if e.carregando), None)
+        tonto = next((e for e in vivos if e.efeito("atordoado")), None)
+        chefe = next((e for e in vivos if e.chefe), None)
+        regras = [("reerguer", any(not c.vivo for c in lado[1:]), None, "caido"),
+                  ("prece", ferido is not None and ferido.hp < 0.6 * ferido.max_hp, None, ferido),
+                  ("joelho", prepara is not None, prepara, None),
+                  ("oportuno", tonto is not None, tonto, None),
+                  ("maldicao", chefe is not None and not chefe.efeito("enfraquecido"), chefe, None),
+                  ("seta", True, None, None), ("oportuno", True, None, None)]
+        for h, quando, alvo, aliado in regras:
+            if h in pode and quando:
+                self._plano, self._alvo, self._aliado = h, alvo, aliado
+                return idx["habilidades"]
+        return idx["atacar"]
+
+    def _decidir(self, cb, metas):
         j = cb.j
         self._plano = self._alvo = None
         itens = next((m["itens"] for m in metas if m.get("acao") == "itens"), [])
         if j.hp < 0.35 * j.max_hp and any(m.get("usar_item") == "pocao_vida" and not m["motivo"] for m in itens):
             self._plano = "pocao_vida"
-            return 2
+            return "itens"
         habs = [m for m in next((m["habilidades"] for m in metas if m.get("acao") == "habilidades"), []) if m["pode"]]
         cura = next((m["habilidade"] for m in habs if m["habilidade"] in CURAS), None)
         if cura and j.hp < 0.5 * j.max_hp:
             self._plano = cura
-            return 1
+            return "habilidades"
         prepara = next((e for e in cb.inimigos_vivos() if e.carregando and not e.efeito("firme")), None)
         controle = next((m["habilidade"] for m in habs if m.get("variante") in CONTROLES), None)
         if prepara and controle:
             self._plano, self._alvo = controle, prepara
-            return 1
+            return "habilidades"
         if any(e.carregando for e in cb.inimigos_vivos()):
             defesa = next((m["habilidade"] for m in habs if m["habilidade"] in DEFESAS), None)
             if defesa:
                 self._plano = defesa
-                return 1
+                return "habilidades"
             if j.hp < 0.6 * j.max_hp and any(m.get("usar_item") == "pocao_vida" and not m["motivo"] for m in itens):
                 self._plano = "pocao_vida"
-                return 2
+                return "itens"
         # Ferido, a pessoa se protege (de novo a cada 3 turnos, quando o efeito já passou).
         defesa = next((m["habilidade"] for m in habs if m["habilidade"] in DEFESAS), None)
         if defesa and j.hp < 0.6 * j.max_hp and cb.turno - self._defendeu >= 3:
             self._defendeu = cb.turno
             self._plano = defesa
-            return 1
+            return "habilidades"
         h = self._habilidade(cb, habs)
         if h:
             self._plano = h
-            return 1
-        return 0
+            return "habilidades"
+        return "atacar"
 
     def _habilidade(self, cb, habs):
         j = cb.j
@@ -137,6 +181,15 @@ class LutadorUI(BotUI):
         area = [m for m in habs if m["alvo_tipo"] == "todos"]
         if len(vivos) >= 2 and area:
             return max(area, key=lambda m: m["custo"])["habilidade"]
+        # o fogo do Piromante como uma pessoa joga: acende até 2 camadas e detona (Brasa → Combustão)
+        ids = {m["habilidade"] for m in habs}
+        mira = self._alvo if self._alvo in vivos else min(vivos, key=lambda e: e.hp) if vivos else None
+        if mira is not None and "combustao" in ids and cb.camadas(mira) >= 2:
+            self._alvo = mira
+            return "combustao"
+        if mira is not None and "brasa" in ids and "combustao" in ids:
+            self._alvo = mira
+            return "brasa"
         alvo = [m for m in habs if m["alvo_tipo"] == "inimigo" and m.get("variante") not in CONTROLES]
         if alvo:
             return max(alvo, key=lambda m: m["custo"])["habilidade"]

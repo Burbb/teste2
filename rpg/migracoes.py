@@ -5,7 +5,7 @@ acrescenta-se uma função `_vN_para_vN1` em MIGRACOES. Um save antigo passa por
 chegar à versão atual; assim nenhum código do jogo precisa se defender de saves velhos.
 """
 
-VERSAO_SAVE = 6
+VERSAO_SAVE = 7
 
 # Tudo o que o estado da partida guarda além do jogador, da semente e do gerador aleatório.
 CAMPOS_SAVE = ("mundo", "dia", "periodo", "clima", "passos", "flags", "historico", "contagem",
@@ -126,7 +126,47 @@ def _v5_para_v6(d):
     return d
 
 
-MIGRACOES = {1: _v1_para_v2, 2: _v2_para_v3, 3: _v3_para_v4, 4: _v4_para_v5, 5: _v5_para_v6}
+# As habilidades de fogo de antes do repertório da etapa 4 (roadmapIDEIAS/26): o Inferno virou a Chuva de Brasas;
+# a Fênix, a Conflagração (a ultimate do Piromante).
+HABILIDADES_TROCADAS = {"inferno": "chuva_brasas", "fenix": "conflagracao"}
+
+
+def _v6_para_v7(d):
+    """Os atributos e o kit (etapa 4, 1.211.0). O herói ganha os atributos iniciais da classe mais os pontos dos níveis
+    que já subiu, distribuídos pela preferência da classe (atributos.PREFERENCIA), e a Presença dos níveis. A base é
+    refeita para que os totais fiquem os mesmos de antes: o que os atributos passam a somar sai da base (Vida, Ataque,
+    Poder, recurso e Agilidade continuam iguais na ficha). O Inferno e a Fênix viram a Chuva de Brasas e a Conflagração,
+    e o herói aprende o repertório novo até o nível dele (o mesmo de quem começa agora); o kit é montado com as aprendidas que couberem, na ordem do Grimório. Rodar duas vezes não muda nada."""
+    from . import atributos as atr
+    from . import kit as kits
+    j = d["jogador"]
+    if "classe" not in j:  # um save de teste, só com o que o teste precisa
+        return d
+    if "atributos" not in j:
+        atual = atr.iniciais(j["classe"])
+        for a in atr.distribuir_sozinho(j["classe"], (j.get("nivel", 1) - 1) * atr.PONTOS_POR_NIVEL, atual):
+            atual[a] = min(atr.ATRIBUTO_MAX, atual[a] + 1)
+        j["atributos"] = atual
+        base = j.get("base") or {}
+        for stat, v in atr.contribuicao(type("_", (), {"atributos": atual})()).items():
+            if stat in base:
+                base[stat] -= v
+    j.setdefault("pontos_atributo", 0)
+    j.setdefault("presenca", atr.PRESENCA_INICIAL + j.get("nivel", 1) // atr.PRESENCA_A_CADA)
+    from .classes import habilidades_ate
+    habs = []
+    for h in list(j.get("habilidades", [])) + habilidades_ate(j["classe"], j.get("spec"), j.get("nivel", 1)):
+        h = HABILIDADES_TROCADAS.get(h, h)
+        if h not in habs:
+            habs.append(h)
+    j["habilidades"] = habs
+    if "kit" not in j:
+        heroi = type("_", (), {"habilidades": habs, "kit": []})()
+        j["kit"] = kits.ajustar(heroi, completar=True)
+    return d
+
+
+MIGRACOES = {1: _v1_para_v2, 2: _v2_para_v3, 3: _v3_para_v4, 4: _v4_para_v5, 5: _v5_para_v6, 6: _v6_para_v7}
 
 
 def migrar(dados):

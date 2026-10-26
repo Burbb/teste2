@@ -446,7 +446,7 @@ ORDENS_FERA = {
     "falcao": ("Os olhos!", "O falcão mergulha nos olhos do alvo (100%, não pode ser esquivado): "
                "o alvo fica enfraquecido (−25% de dano) por 2 turnos."),
 }
-DESC_ORDEM = "Uma ordem que o animal não faz sozinho: o urso protege, o lobo dilacera, o falcão cega."
+DESC_ORDEM = "O animal age por ordem sua: o urso protege você, o lobo dilacera o alvo, o falcão o cega."
 
 
 def _tipo_fera(u):
@@ -550,7 +550,7 @@ def _barreira(cb, u, alvo):
 
 def _combustao(cb, u, alvo):
     """Detona as chamas do alvo: tudo o que a queimadura ainda causaria vira dano agora, e mais um pouco.
-    Sem chamas, é um estalo fraco. O jogo é acender (Bola de Fogo, Inferno) e escolher a hora de explodir."""
+    Sem chamas, é um estalo fraco. O jogo é acender (Bola de Fogo, Brasa, Chuva de Brasas) e escolher a hora de explodir."""
     restante = cb.restante_queimadura(alvo)
     camadas = cb.camadas(alvo)
     if restante:
@@ -634,133 +634,317 @@ ANIMACOES = {"grito", "falange", "rugido", "redemoinho", "rajada"}
 
 HABILIDADES = {
     # Guerreiro
-    "golpe_pesado": hab("Golpe Pesado", 10, "inimigo", "170% de dano físico.",
+    "golpe_pesado": hab("Golpe Pesado", 10, "inimigo", "Causa 170% do Ataque em dano físico.",
                         [Dano(1.7, rotulo="Golpe Pesado")], icone="martelo", familia="fisico"),
-    "erguer_escudo": hab("Erguer Escudo", 8, "proprio", "Reduz o dano recebido pela metade por 2 turnos.", [
+    "erguer_escudo": hab("Erguer Escudo", 8, "proprio", "Reduz o dano recebido em 50% por 2 turnos seus.", [
         Buff("guarda", Mod(2, "escudo_turnos"), 0.5),
         Dizer("Você ergue o escudo e firma os pés. (dano recebido -50% por {turnos} turnos)", "ciano")],
         icone="escudo", familia="protecao", anim="falange"),
-    "investida": hab("Investida", 12, "inimigo", "120% de dano; se acertar, 45% de chance de atordoar.", [
+    "investida": hab("Investida", 12, "inimigo",
+                     "Causa 120% do Ataque em dano físico. Se acertar, 45% de chance de atordoar o alvo: ele perde a "
+                     "próxima vez.", [
         Dano(1.2, rotulo="Investida", depois=[Se("acertou", Aplicar("atordoado", 1, chance=0.45))])],
         icone="espada", familia="fisico"),
-    "grito_guerra": hab("Grito de Guerra", 14, "proprio", "+30% de dano por 3 turnos e enfraquece inimigos.", [
+    "grito_guerra": hab("Grito de Guerra", 14, "proprio",
+                        "Aumenta o seu dano em 30% por 3 turnos seus. Cada inimigo tem 80% de chance de ficar "
+                        "enfraquecido (−25% de dano) por 2 turnos dele.", [
         Dizer("Você solta um grito de guerra que faz o chão tremer!", "ciano"),
         Buff("fortalecido", 3, 0.3),
         Aplicar("enfraquecido", 2, chance=0.8, em="todos")], icone="manopla", familia="forca", anim="grito"),
-    "golpe_sagrado": hab("Golpe Sagrado", 15, "inimigo", "Dano sagrado que cura você em 20% do dano.", [
+    "golpe_sagrado": hab("Golpe Sagrado", 15, "inimigo",
+                         "Causa 130% do Ataque + 80% do Poder em dano sagrado. Se acertar, cura você em 20% do dano "
+                         "causado.", [
         Dano(1.3, tipo="sagrado", bonus=Escala(poder=0.8), rotulo="Golpe Sagrado", depois=[
             Se("acertou", CurarPeloDano(0.2, bonus="cura_luz"),
                Dizer("A luz fecha suas feridas. (+{cura} vida)", "verde", se="cura"))])],
         icone="orbe_luz", familia="sagrado"),
-    "prece": hab("Prece", 20, "proprio", "Cura 25% da vida + poder e remove males.", [
+    "prece": hab("Prece", 20, "proprio",
+                 "Cura 25% da sua vida máxima + 100% do Poder e remove os males (veneno, sangramento, maldição, "
+                 "fraqueza).", [
         Curar(Escala(max_hp=0.25, poder=1.0), bonus="cura_luz"),
         LimparMales(),
         Dizer("Você reza em voz baixa. Uma luz quente te envolve. (+{cura} vida, males removidos)", "verde")],
         icone="coracao", familia="sagrado"),
-    "julgamento": hab("Julgamento Divino", 36, "todos", "Luz sagrada atinge todos os inimigos.", [
+    "julgamento": hab("Julgamento Divino", 36, "todos",
+                      "Causa 120% do Ataque + 100% do Poder em dano sagrado a todos os inimigos. Não pode ser "
+                      "esquivado.", [
         Dizer("Você ergue a arma aos céus. Colunas de luz caem sobre seus inimigos!", "amarelo+negrito"),
         Dano(1.2, tipo="sagrado", bonus=Escala(poder=1), alcance="distancia", esquiva=False, em="todos")],
         icone="raio", familia="sagrado"),
-    "sede_sangue": hab("Sede de Sangue", 12, "inimigo", "140% de dano, rouba vida e causa sangramento.", [
+    "sede_sangue": hab("Sede de Sangue", 12, "inimigo",
+                       "Causa 140% do Ataque em dano físico. Se acertar, rouba 40% do dano como vida e aplica "
+                       "Sangramento por 3 turnos do alvo.", [
         Dano(1.4, rotulo="Sede de Sangue", depois=[
             Se("acertou", Roubo(0.4, rotulo="Sede de Sangue"),
                Aplicar("sangramento", 3, valor=SANGRAMENTO),
                Dizer("Você bebe a fúria do golpe. (+{cura} vida)", "verde", se="cura"))])],
         icone="gota", familia="sangue", realce="sangue"),
-    "redemoinho": hab("Redemoinho", 22, "todos", "Atinge todos os inimigos com 110% de dano.",
+    "redemoinho": hab("Redemoinho", 22, "todos",
+                      "Gira 5 vezes; cada giro causa 22% do Ataque em dano físico a todos os inimigos.",
                       fn=_redemoinho, linhas=_linhas_redemoinho, icone="machado", familia="fisico", anim="redemoinho"),
-    "furia_cega": hab("Fúria Cega", 0, "inimigo", "Sacrifica 15% da vida: +60% de dano por 3 turnos e ataca.",
+    "furia_cega": hab("Fúria Cega", 0, "inimigo",
+                      "Custa 15% da sua vida máxima. Aumenta o seu dano em 60% por 3 turnos seus e ataca o alvo com "
+                      "130% do Ataque.",
                       fn=_furia_cega, linhas=_linhas_furia_cega, icone="caveira", familia="sangue"),
     # Arqueiro
-    "tiro_certeiro": hab("Tiro Certeiro", 8, "inimigo", "170% de dano, +30% chance de crítico.",
+    "tiro_certeiro": hab("Tiro Certeiro", 8, "inimigo",
+                         "Causa 170% do Ataque em dano físico, com +30% de chance de crítico.",
                          [Dano(1.7, alcance="distancia", crit_extra=0.3, rotulo="Tiro Certeiro")], flechas=1,
                          icone="flecha", familia="fisico"),
-    "marcar_presa": hab("Marcar Presa", 6, "inimigo", "O alvo recebe +25% de dano de todos (você e aliados) por 3 turnos.", [
+    "marcar_presa": hab("Marcar Presa", 6, "inimigo",
+                        "O alvo recebe 25% mais dano de todos os golpes (os seus, os da comitiva e os do animal) por "
+                        "3 turnos dele.", [
         Aplicar("marcado", 3, 0.25, direto=True),
         Dizer("Você estuda os movimentos de {alvo} e encontra os pontos fracos. (+25% dano recebido)", "ciano")],
         icone="olho", familia="forca"),
-    "chuva_flechas": hab("Chuva de Flechas", 20, "todos", "Atinge todos os inimigos. Gasta uma flecha por inimigo.", [
+    "chuva_flechas": hab("Chuva de Flechas", 20, "todos",
+                         "Causa 100% do Ataque em dano físico a todos os inimigos. Gasta 1 flecha por inimigo.", [
         Dizer("Você dispara uma saraivada de flechas para o alto...", "ciano"),
         Dano(1.0, alcance="distancia", em="todos")], flechas_por_alvo=1, icone="aljava", familia="fisico"),
-    "passo_agil": hab("Passo Ágil", 6, "proprio", "+30% de esquiva por 2 turnos (a esquiva total não passa de 60%).", [
+    "passo_agil": hab("Passo Ágil", 6, "proprio",
+                      "Aumenta a sua esquiva em 30% por 2 turnos seus (a esquiva total vai até 60%).", [
         Buff("esquiva", 2, 0.3),
         Dizer("Você se move em zigue-zague, difícil de acertar. (+30% esquiva, até o teto de 60%)", "ciano")],
         icone="fuga", familia="protecao"),
     "tiro_duplo": hab("Tiro Duplo", 10, "inimigo",
-                      "Dois disparos de 90%: o 1º no alvo, o 2º em outro inimigo (o mais ferido); sozinho, os dois no alvo.", [
+                      "Dispara 2 vezes, 90% do Ataque cada: o 1º no alvo, o 2º no inimigo mais ferido. Sozinho, os "
+                      "dois no alvo.", [
         Salva("tiro_duplo",  # as duas flechas saem quase juntas, numa rajada só
               Dano(0.9, alcance="distancia", rotulo="Tiro Duplo (1)", grimorio="Cada um dos 2 disparos"),
               Dano(0.9, alcance="distancia", rotulo="Tiro Duplo (2)", em="outro"))], flechas=2,
         icone="arco", familia="fisico", anim="rajada"),
     "comando_fera": hab("Ordem da Fera", 12, "inimigo", DESC_ORDEM, fn=_comando_fera, linhas=_linhas_comando_fera,
                         desc_fn=_desc_ordem, req=_req_fera, icone="fera", familia="natureza"),
-    "furia_natureza": hab("Fúria da Natureza", 32, "todos", "130% em todos, sangramento e cura o companheiro.", [
+    "furia_natureza": hab("Fúria da Natureza", 32, "todos",
+                          "Causa 130% do Ataque em dano físico a todos os inimigos, com 50% de chance de Sangramento "
+                          "em cada um, e cura o animal por completo.", [
         Dizer("Você assobia. A mata responde: vento, espinhos e flechas em uníssono!", "verde+negrito"),
         Dano(1.3, alcance="distancia", em="todos", depois=[
             Se("vivo", Aplicar("sangramento", 3, valor=SANGRAMENTO, chance=0.5))]),
         Codigo(_curar_fera, lambda u: [_efeito("Cura o companheiro animal por completo.")])], flechas=4,
         icone="folha", familia="natureza"),
-    "desaparecer": hab("Desaparecer", 10, "proprio", "Próximo ataque é crítico devastador; +esquiva.", [
+    "desaparecer": hab("Desaparecer", 10, "proprio",
+                       "O seu próximo ataque é crítico de ×2,3, e a sua esquiva aumenta em 50% por 1 turno seu.", [
         Buff("furtivo", 3, 1),
         Buff("esquiva", 1, 0.5),
         Dizer("Você se funde às sombras. Seu próximo ataque será crítico.", "magenta")],
         icone="capuz", familia="sombra"),
     "flecha_envenenada": hab("Flecha Envenenada", 10, "inimigo",
-                             "Dano e veneno forte por 4 turnos (não afeta mortos-vivos nem construtos).", [
+                             "Causa 100% do Ataque em dano físico. Se acertar, aplica Veneno por 4 turnos do alvo. "
+                             "Não afeta mortos-vivos nem construtos.", [
         Dano(1.0, alcance="distancia", rotulo="Flecha Envenenada", depois=[
             Se("acertou", Aplicar("veneno", 4, valor=Escala(minimo=3, atk=0.45, agi=0.2)))])], flechas=1,
         icone="gota_verde", familia="veneno", realce="veneno"),
-    "execucao": hab("Execução", 16, "inimigo", "320% de dano se o alvo estiver abaixo de 35% de vida.",
+    "execucao": hab("Execução", 16, "inimigo",
+                    "Causa 320% do Ataque em dano físico se o alvo estiver com até 35% da vida; acima disso, 120%.",
                     fn=_execucao, linhas=_linhas_execucao, flechas=1, crit_extra=0.2,
                     icone="caveira", familia="sangue"),
     # Mago
     "bola_fogo": hab("Bola de Fogo", 14, "inimigo",
-                     "150% de dano de fogo; costuma acender o alvo (as chamas acumulam até 3 camadas).", [
+                     "Causa 150% do Poder em dano de fogo. Se acertar, 60% de chance de aplicar 1 camada de "
+                     "Queimadura (até 3).", [
                          Dano(1.5, tipo="fogo", alcance="distancia", stat="poder", rotulo="Bola de Fogo", depois=[
                              Se("acertou", Acender(0.6, garantido="acender_garantido"))])],
                      icone="chama", familia="fogo", realce="fogo"),
-    "meditar": hab("Meditar", 0, "proprio", "Recupera mana (6 + 12% do máximo).", fn=_meditar,
+    "meditar": hab("Meditar", 0, "proprio", "Recupera mana: 6 + 12% do máximo.", fn=_meditar,
                    linhas=lambda u: [_efeito(f"Recupera {ganho_meditar(u)} de mana (6 + 12% do máximo). Gasta o turno.")],
-                   desc_fn=lambda u: f"Recupera {ganho_meditar(u)} de mana (6 + 12% do máximo). Não custa nada, mas gasta o turno.",
+                   desc_fn=lambda u: f"Recupera {ganho_meditar(u)} de mana (6 + 12% do máximo).",
                    icone="lua", familia="arcano"),
-    "lanca_gelo": hab("Lança de Gelo", 10, "inimigo", "130% de dano de gelo; se acertar, pode congelar.", [
+    "lanca_gelo": hab("Lança de Gelo", 10, "inimigo",
+                      "Causa 130% do Poder em dano de gelo. Se acertar, 35% de chance de congelar o alvo: ele perde a"
+                      " próxima vez.", [
         Dano(1.3, tipo="gelo", alcance="distancia", stat="poder", rotulo="Lança de Gelo", depois=[
             Se("acertou", Aplicar("atordoado", 1, chance=0.35, rotulo="congelado"))])],
         icone="gelo", familia="gelo", realce="gelo"),
-    "barreira": hab("Barreira Arcana", 20, "proprio", "Escudo que absorve dano por 2 turnos (não acumula).",
+    "barreira": hab("Barreira Arcana", 20, "proprio",
+                    "Cria uma barreira que absorve 20% da sua vida máxima + 60% do Poder em dano por 2 turnos seus. "
+                    "Não acumula.",
                     fn=_barreira,
-                    linhas=lambda u: [_efeito(f"Absorve {_valor_barreira(u)} de dano por {2 + mod(u, 'barreira_turnos')} "
-                                              "turnos (20% da vida máxima + Poder × 60%). Não acumula.")],
+                    linhas=lambda u: [_efeito(f"Absorve {_valor_barreira(u)} de dano por {2 + mod(u, 'barreira_turnos')} turnos seus "
+                                              "(20% da vida máxima + Poder × 60%). Não acumula.")],
                     icone="escudo_azul", familia="arcano"),
-    "inferno": hab("Inferno", 35, "todos", "60% de dano de fogo em todos (pode errar); pode acender cada um.", [
-        Dizer("O chão se abre em chamas sob seus inimigos!", "vermelho+negrito"),
-        Dano(0.6, tipo="fogo", alcance="distancia", stat="poder", em="todos", depois=[
-            Se("acertou_vivo", Acender(0.5))])], icone="fogueira", familia="fogo", realce="fogo"),
-    "combustao": hab("Combustão", 14, "inimigo", "Detona as chamas do alvo: o que a queimadura ainda causaria vira "
-                     "dano na hora (mais forte com várias camadas).", fn=_combustao, linhas=_linhas_combustao,
+    "combustao": hab("Combustão", 14, "inimigo",
+                     "Consome a Queimadura do alvo e causa, em dano de fogo, o que ela ainda causaria, com +60% e "
+                     "+20% por camada. Sem Queimadura, causa 80% do Poder.", fn=_combustao, linhas=_linhas_combustao,
                      icone="estrela", familia="fogo", realce="fogo"),
-    "fenix": hab("Fênix", 40, "inimigo", "250% de dano de fogo e cura 20% da vida.", [
-        Dizer("Asas de fogo se abrem às suas costas. Você se torna a própria chama!", "amarelo+negrito"),
-        Dano(2.5, tipo="fogo", alcance="distancia", stat="poder", rotulo="Fênix"),
-        Curar(Escala(max_hp=0.2)),
-        Dizer("O fogo renova sua carne. (+{cura} vida)", "verde", se="cura")], icone="voador", familia="fogo"),
-    "drenar_vida": hab("Drenar Vida", 14, "inimigo", "Dano sombrio que cura 40% do causado.", [
+    "drenar_vida": hab("Drenar Vida", 14, "inimigo",
+                       "Causa 120% do Poder em dano de sombra. Se acertar, rouba 40% do dano como vida.", [
         Dano(1.2, tipo="sombra", alcance="distancia", stat="poder", rotulo="Drenar Vida", depois=[
             Se("acertou", Roubo(Mod(0.4, "dreno_cura"), rotulo="Drenar Vida"),
                Dizer("A vitalidade roubada flui para você. (+{cura} vida)", "verde", se="cura"))])],
         icone="gota_roxa", familia="sombra", realce="sangue"),
-    "erguer_servo": hab("Erguer Servo", 22, "proprio", "Invoca um esqueleto aliado que atrai os golpes (máx. 1, mais com talentos).",
+    "erguer_servo": hab("Erguer Servo", 22, "proprio",
+                        "Invoca um servo esqueleto que provoca os inimigos por 2 turnos dele. No máximo 1 de cada vez"
+                        " (mais com talentos).",
                         fn=_erguer_servo,
                         linhas=lambda u: [_efeito(f"Invoca um servo com {int(_vida_servo(u))} de vida e "
                                                   f"{int(u.poder * 0.3) + 2} de ataque (no máximo "
                                                   f"{1 + mod(u, 'servos_max')} ao mesmo tempo)."),
                                           _efeito("Entra provocando por 2 turnos: os inimigos atacam o servo.")],
                         icone="osso", familia="sombra"),
-    "maldicao": hab("Maldição", 18, "todos", "Amaldiçoa todos: dano contínuo e -40% de defesa.", [
+    "maldicao": hab("Maldição", 18, "todos",
+                    "Amaldiçoa todos os inimigos por 4 turnos deles: 40% do Poder em dano por turno e −40% de defesa.", [
         Aplicar("maldito", 4, valor=Escala(minimo=3, poder=0.4), em="todos"),
         Dizer("Você pronuncia palavras que não deveriam existir. Seus inimigos murcham.", "magenta")],
         icone="orbe_sombra", familia="sombra"),
 }
+
+
+# ====================================================================== o repertório provisório (etapa 4)
+# roadmapIDEIAS/25 (3.10) e 26: cerca de 8–10 comuns por classe, aprendidas por nível (classes.py), e conjuntos menores
+# das especializações com uma ultimate. Números provisórios. Cada uma diz o tipo, o que escala (stat do bloco) e o alvo.
+def _proteger(cb, u, alvo):
+    """Até o começo da sua próxima vez, os golpes contra o aliado vêm para você (estados.py: protegido/protegendo)."""
+    alvo.aplicar("protegido", 1)
+    alvo.efeitos["protegido"]["por"] = u  # quem protege (a luta acaba e os estados somem: nada vai para o save)
+    u.aplicar("protegendo", 1)
+    cb.lance("buff", em=cb.uid(alvo), efeitos=["protegido"], rotulo="Protegido")
+    cb.dizer(f"{cb.nome(u)} se põe na frente de {cb.nome(alvo, True)}: os golpes contra {alvo.nome if alvo is not cb.j else 'você'} "
+             f"vão para {'você' if u is cb.j else u.nome}.", "ciano")
+
+
+def _valor_egide(u):
+    return int(10 + u.poder * 1.4)
+
+
+def _egide(cb, u, alvo):
+    v = _valor_egide(u)
+    u.remover("barreira")
+    u.aplicar("barreira", 2, v)
+    cb.dizer(f"Runas se acendem no seu escudo. (absorve {v} de dano)", "azul")
+
+
+def _sifao(cb, u, alvo):
+    """Dano arcano; se derrubar o alvo, a mana volta (uma decisão de recurso: guardar o golpe para o fim)."""
+    cb.atacar(u, alvo, 1.1, tipo="arcano", alcance="distancia", stat="poder", rotulo="Sifão")
+    if not alvo.vivo and u.rec < u.max_rec:
+        ganho = min(u.max_rec - u.rec, 15)
+        u.rec += ganho
+        cb.dizer(f"A energia de {alvo.nome} volta para você. (+{ganho} de mana)", "azul")
+        cb.recuperou(u, ganho, "Sifão")
+
+
+def _rajada(cb, u, alvo):
+    """Três disparos de 60% em alvos sorteados entre os de pé (dano distribuído)."""
+    with cb.salva("rajada", "rajada"):
+        for i in range(3):
+            vivos = cb.inimigos_vivos()
+            if not vivos:
+                break
+            cb.atacar(u, cb.rng.choice(vivos), 0.6, alcance="distancia", rotulo=f"Rajada ({i + 1})")
+
+
+def _conflagracao(cb, u, alvo):
+    """A ultimate do Piromante: fogo em todos e, em cada um, o que as chamas ainda queimariam explode (como a Combustão,
+    alvo por alvo). Quem não está em chamas leva só o fogo."""
+    cb.dizer("O ar se incendeia de uma vez!", "vermelho+negrito")
+    with cb.salva("conflagracao"):
+        for e in cb.inimigos_vivos():
+            restante, camadas = cb.restante_queimadura(e), cb.camadas(e)
+            if restante:
+                e.remover("queimadura")
+            cb.atacar(u, e, 0.7, tipo="fogo", alcance="distancia", stat="poder", pode_esquivar=False,
+                      bonus=restante * (bal.COMBUSTAO_BASE + bal.COMBUSTAO_POR_CAMADA * camadas) if restante else 0,
+                      rotulo=f"Conflagração ×{camadas}" if camadas > 1 else "Conflagração")
+
+
+def _linhas_conflagracao(u):
+    from .grimorio import golpe
+    return [golpe(u, 0.7, stat="poder", alcance="distancia", tipo="fogo", rotulo="Em cada inimigo (sem chamas)"),
+            _efeito("Em quem está em chamas, o que a queimadura ainda causaria explode junto (como a Combustão, alvo por "
+                    "alvo) e as chamas se apagam."),
+            _efeito("Não pode ser esquivado. Ultimate: uma vez por luta.")]
+
+
+HABILIDADES.update({
+    # Guerreiro: pressão física, proteção, retaliação, rompimento e o caminho arcano (Intelecto)
+    "lamina_runica": hab("Lâmina Rúnica", 14, "inimigo", "Causa 160% do Poder em dano arcano.", [
+        Dano(1.6, tipo="arcano", stat="poder", rotulo="Lâmina Rúnica")], icone="orbe", familia="arcano", realce="arcano"),
+    "proteger": hab("Proteger", 8, "aliado", "Até a sua próxima vez, os golpes contra o aliado escolhido acertam você.",
+                    fn=_proteger, linhas=lambda u: [_efeito("Até o começo da sua próxima vez, os golpes contra o aliado "
+                                                            "escolhido (também o golpe preparado) vêm para você.")],
+                    icone="escudo", familia="protecao"),
+    "contragolpe": hab("Contragolpe", 8, "proprio",
+                       "Até a sua próxima vez, você revida cada golpe corpo a corpo recebido com 60% do Ataque.", [
+        Buff("retaliando", 1, 0.6),
+        Dizer("Você abaixa a guarda de propósito, esperando o golpe.", "ciano")], icone="espada", familia="forca"),
+    "quebra_guarda": hab("Quebra-Guarda", 14, "inimigo",
+                         "Causa 110% do Ataque em dano físico. Se acertar, reduz a defesa do alvo em 40% por 2 turnos"
+                         " dele.", [
+        Dano(1.1, rotulo="Quebra-Guarda", depois=[Se("acertou_vivo", Aplicar("quebrado", 2, 0.4))])],
+        icone="martelo", familia="fisico"),
+    "egide_runica": hab("Égide Rúnica", 12, "proprio",
+                        "Cria uma barreira que absorve 10 + 140% do Poder em dano por 2 turnos seus. Não acumula.",
+                        fn=_egide, linhas=lambda u: [_efeito(f"Absorve {_valor_egide(u)} de dano por 2 turnos seus "
+                                                             "(10 + Poder × 140%). Não acumula.")],
+                        icone="escudo_azul", familia="arcano"),
+    # Arqueiro: dano concentrado ou distribuído, preparação, vulnerabilidade, controle e efeitos persistentes
+    "mirar": hab("Mirar", 4, "proprio", "O seu próximo ataque é crítico.", [
+        Buff("mirando", 3, 1), Dizer("Você respira e espera o vento parar.", "ciano")], icone="olho", familia="forca"),
+    "tiro_imobilizador": hab("Tiro Imobilizador", 12, "inimigo",
+                             "Causa 80% do Ataque em dano físico. Se acertar, 60% de chance de atordoar o alvo: ele "
+                             "perde a próxima vez e o golpe que preparava.", [
+        Dano(0.8, alcance="distancia", rotulo="Tiro Imobilizador", depois=[
+            Se("acertou_vivo", Aplicar("atordoado", 1, chance=0.6))])], flechas=1,
+        icone="flecha", familia="fisico"),
+    "flecha_perfurante": hab("Flecha Perfurante", 12, "inimigo",
+                             "Causa 120% do Ataque em dano físico. Se acertar, reduz a defesa do alvo em 30% por 2 "
+                             "turnos dele.", [
+        Dano(1.2, alcance="distancia", rotulo="Flecha Perfurante", depois=[Se("acertou_vivo", Aplicar("quebrado", 2, 0.3))])],
+        flechas=1, icone="flecha", familia="fisico"),
+    "flecha_sangrenta": hab("Flecha Sangrenta", 8, "inimigo",
+                            "Causa 100% do Ataque em dano físico. Se acertar, aplica Sangramento por 3 turnos do "
+                            "alvo.", [
+        Dano(1.0, alcance="distancia", rotulo="Flecha Sangrenta", depois=[
+            Se("acertou_vivo", Aplicar("sangramento", 3, valor=SANGRAMENTO))])], flechas=1, icone="gota", familia="sangue",
+        realce="sangue"),
+    "rajada": hab("Rajada", 16, "inimigo",
+                  "Dispara 3 vezes; cada disparo causa 60% do Ataque em dano físico a um inimigo sorteado.", fn=_rajada,
+                  linhas=lambda u: [_efeito("Três disparos de 60% do Ataque, cada um num inimigo de pé sorteado.")],
+                  flechas=3, icone="aljava", familia="fisico", anim="rajada"),
+    # Mago: dano direto, estados, área, barreiras e decisões de recurso
+    "runa_fragil": hab("Runa da Fragilidade", 8, "inimigo",
+                       "O alvo recebe 30% mais dano mágico (todo golpe que não é físico) por 3 turnos dele.", [
+        Aplicar("fragilizado", 3, 0.3),
+        Dizer("Uma runa pálida se grava em {alvo}.", "azul")], icone="orbe_sombra", familia="arcano"),
+    "sifao": hab("Sifão", 10, "inimigo",
+                 "Causa 110% do Poder em dano arcano. Se derrubar o alvo, recupera 15 de mana.", fn=_sifao,
+                 linhas=lambda u: [_efeito("110% do Poder em dano arcano. Se o golpe derrubar o alvo, +15 de mana.")],
+                 icone="lua", familia="arcano", realce="arcano"),
+    "nevasca": hab("Nevasca", 22, "todos",
+                   "Causa 70% do Poder em dano de gelo a todos os inimigos. Cada um tem 20% de chance de congelar.", [
+        Dano(0.7, tipo="gelo", alcance="distancia", stat="poder", em="todos", depois=[
+            Se("acertou_vivo", Aplicar("atordoado", 1, chance=0.2, rotulo="congelado"))])],
+        icone="gelo", familia="gelo", realce="gelo"),
+    "descarga": hab("Descarga", 24, "inimigo", "Causa 220% do Poder em dano arcano.", [
+        Dano(2.2, tipo="arcano", alcance="distancia", stat="poder", rotulo="Descarga")], icone="raio", familia="arcano",
+        realce="arcano"),
+    # Piromante: o conjunto de fogo (Brasa, Chuva de Brasas, Combustão, Conflagração)
+    "brasa": hab("Brasa", 8, "inimigo",
+                 "Causa 60% do Poder em dano de fogo e aplica 1 camada de Queimadura (até 3). Não pode ser esquivada.", [
+        Dano(0.6, tipo="fogo", alcance="distancia", stat="poder", rotulo="Brasa", esquiva=False, depois=[
+            Se("vivo", Acender(1.0))])], icone="chama", familia="fogo", realce="fogo"),
+    "chuva_brasas": hab("Chuva de Brasas", 18, "todos",
+                        "Causa 35% do Poder em dano de fogo a todos os inimigos e aplica 1 camada de Queimadura em "
+                        "cada um. Não pode ser esquivada.", [
+        Dizer("Brasas caem como chuva sobre os inimigos!", "vermelho"),
+        Dano(0.35, tipo="fogo", alcance="distancia", stat="poder", em="todos", esquiva=False, depois=[
+            Se("vivo", Acender(1.0))])], icone="fogueira", familia="fogo", realce="fogo"),
+    "conflagracao": hab("Conflagração", 30, "todos",
+                        "Causa 70% do Poder em dano de fogo a todos os inimigos e consome a Queimadura de cada um, "
+                        "como a Combustão. Não pode ser esquivada.",
+                        fn=_conflagracao, linhas=_linhas_conflagracao, icone="voador", familia="fogo", realce="fogo"),
+})
+
+# O tier de cada habilidade no kit (kit.py: comum 1 ponto, avançada 2) e as ultimates (3 pontos, uma por kit, uma vez
+# por luta). As que não estão aqui são comuns.
+AVANCADAS = {"lamina_runica", "grito_guerra", "quebra_guarda", "egide_runica", "redemoinho", "chuva_flechas",
+             "tiro_imobilizador", "flecha_perfurante", "rajada", "barreira", "nevasca", "descarga", "combustao",
+             "chuva_brasas", "erguer_servo"}
+ULTIMATES = {"julgamento", "furia_cega", "furia_natureza", "execucao", "conflagracao", "maldicao"}
+for _id, _h in HABILIDADES.items():
+    _h["tier"] = 2 if _id in AVANCADAS else 1
+    _h["ultimate"] = _id in ULTIMATES
 
 
 # ---------------------------------------------------------------------- transformações (E6)

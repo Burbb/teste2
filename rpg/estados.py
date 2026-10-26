@@ -49,6 +49,10 @@ def _quem(todos):
     return "cada inimigo" if todos else "o alvo"
 
 
+def _de_quem(todos):
+    return "de cada inimigo" if todos else "do alvo"
+
+
 def _origem(escala):
     return f" ({escala})" if escala else ""
 
@@ -86,17 +90,17 @@ def _clima_apaga(cb, dano):
 ESTADOS = {
     # --- bênçãos (antes dos males: na conta do golpe, o bônus multiplica primeiro)
     "guarda": estado("em guarda", "escudo", "protecao", titulo="Em guarda", dica="recebe menos dano",
-                     buff=lambda u, t, v: f"Dano recebido −{_pct(v)} por {_turnos(t)}, em todo golpe que te acerta "
+                     buff=lambda u, t, v: f"Dano recebido −{_pct(v)} por {_turnos(t)} seus, em todo golpe que te acerta "
                                           "(também o golpe preparado).",
                      golpe={"dano_final": lambda v: 1 - v}, agora=lambda v: f"dano recebido −{_pct(v)}"),
     # Cada fonte de dano a mais é um estado próprio, com o seu ícone e o seu número: elas se somam lado a lado (cada
     # uma multiplica o golpe), e a mesma fonte de novo só renova (fica o maior valor e a maior duração). Assim o
     # Frenesi não apaga a Fúria, e o Grito de Guerra junto da Fúria rende as duas.
     "fortalecido": estado("fortalecido", "espada", "forca", titulo="Fortalecido", dica="causa mais dano",
-                          buff=lambda u, t, v: f"Seu dano +{_pct(v)} por {_turnos(t)}.",
+                          buff=lambda u, t, v: f"Seu dano +{_pct(v)} por {_turnos(t)} seus.",
                           golpe={"dano_causado": lambda v: 1 + v}, agora=lambda v: f"+{_pct(v)} de dano"),
     "furia": estado("em fúria", "machado", "forca", titulo="Fúria", dica="causa mais dano",
-                    buff=lambda u, t, v: f"Fúria: seu dano +{_pct(v)} por {_turnos(t)}.",
+                    buff=lambda u, t, v: f"Fúria: seu dano +{_pct(v)} por {_turnos(t)} seus.",
                     golpe={"dano_causado": lambda v: 1 + v}, agora=lambda v: f"fúria: +{_pct(v)} de dano"),
     "frenesi": estado("em frenesi", "raio", "forca", titulo="Frenesi", dica="cada abate soma dano",
                       golpe={"dano_causado": lambda v: 1 + v}, agora=lambda v: f"frenesi: +{_pct(v)} de dano até o fim da luta"),
@@ -111,6 +115,25 @@ ESTADOS = {
     "furtivo": estado("furtivo", "olho", "sombra", titulo="Furtivo", dica="o próximo ataque é crítico garantido",
                       buff=lambda u, t, v: _buff_furtivo(u), golpe={"critico_garantido": "Furtivo"}),
     "provocando": estado("provocando", "caveira", "forca", titulo="Provocando", dica="os inimigos atacam ele"),
+    # Etapa 4 (a integração do combate, roadmapIDEIAS/26). Os estados duram "N turnos de quem os tem": o turno conta
+    # no começo da vez do portador (processar_efeitos), então 1 = até o começo da próxima vez dele.
+    "defendendo": estado("defendendo", "escudo", "protecao", titulo="Defendendo",
+                         dica="recebe menos dano até a próxima vez",
+                         buff=lambda u, t, v: f"Dano recebido −{_pct(v)} até o começo da sua próxima vez.",
+                         golpe={"dano_final": lambda v: 1 - v}, agora=lambda v: f"dano recebido −{_pct(v)} até a próxima vez"),
+    "protegido": estado("protegido", "escudo", "protecao", titulo="Protegido",
+                        dica="os golpes contra ele vão para quem o protege",
+                        agora=lambda v: "os golpes vão para quem protege, até a próxima vez dele"),
+    "protegendo": estado("protegendo", "escudo", "protecao", titulo="Protegendo",
+                         dica="recebe os golpes no lugar do protegido"),
+    "retaliando": estado("retaliando", "espada", "forca", titulo="Retaliando",
+                         dica="devolve um golpe a cada golpe corpo a corpo recebido",
+                         buff=lambda u, t, v: (f"Até a sua próxima vez, cada golpe corpo a corpo que te acerta recebe um "
+                                               f"contragolpe de {_pct(v)} do seu Ataque."),
+                         agora=lambda v: f"contragolpe de {_pct(v)} do Ataque a cada golpe corpo a corpo"),
+    "mirando": estado("mirando", "olho", "forca", titulo="Mirando", dica="o próximo ataque é crítico garantido",
+                      buff=lambda u, t, v: "O próximo ataque é crítico garantido (mirar gasta a vez).",
+                      golpe={"critico_garantido": "Mira"}),
     # Quem acaba de perder o turno não perde o seguinte (como em Darkest Dungeon e WoW): sem trava em sequência.
     "firme": estado("firme", "cadeado", "protecao", titulo="Firme", dica="acabou de se soltar: não pode ser atordoado nem congelado agora",
                     protege=("atordoado",)),
@@ -143,7 +166,21 @@ ESTADOS = {
     "enfraquecido": estado(
         "enfraquecido", "osso", "maldicao", titulo="Enfraquecido", negativo=True, dica="causa −25% de dano",
         golpe={"dano_causado": lambda v: 0.75},
-        descrever=lambda t, v, esc, ch, todos, rot: _chance(ch, f"enfraquecer {_quem(todos)} por {_turnos(t)} (causa −25% de dano).")),
+        descrever=lambda t, v, esc, ch, todos, rot: _chance(ch, f"enfraquecer {_quem(todos)} por {_turnos(t)} dele (causa −25% de dano).")),
+    "quebrado": estado(
+        "com a defesa quebrada", "osso", "maldicao", titulo="Defesa quebrada", negativo=True, dica="defesa reduzida",
+        golpe={"defesa": lambda v: 1 - v}, agora=lambda v: f"defesa −{_pct(v)}",
+        descrever=lambda t, v, esc, ch, todos, rot: (
+            f"{_pct(ch)} de chance de reduzir a defesa {_de_quem(todos)} em {_pct(v)} por {_turnos(t)} dele." if ch < 1
+            else f"Reduz a defesa {_de_quem(todos)} em {_pct(v)} por {_turnos(t)} dele.")),
+    # O dano mágico recebido sobe (o combate pergunta pelo nome: só golpes que não são físicos).
+    "fragilizado": estado(
+        "fragilizado", "orbe_sombra", "arcano", titulo="Fragilizado", negativo=True,
+        dica="recebe mais dano mágico (todo golpe que não é físico)",
+        agora=lambda v: f"recebe +{_pct(v)} de dano mágico",
+        descrever=lambda t, v, esc, ch, todos, rot: (
+            (f"{_pct(ch)} de chance: " if ch < 1 else "") + f"{_quem(todos)[0].upper()}{_quem(todos)[1:]} recebe "
+            f"{_pct(v)} a mais de dano mágico (todo golpe que não é físico) por {_turnos(t)} dele.")),
     "marcado": estado(
         "marcado", "flecha", "marca", titulo="Marcado", negativo=True, dica="recebe mais dano de todos",
         golpe={"dano_recebido": lambda v: 1 + v}, agora=lambda v: f"recebe +{_pct(v)} de dano de todos",
@@ -155,7 +192,7 @@ ESTADOS = {
 
 def _buff_esquiva(u, t, v):
     base = min(bal.ESQUIVA_MAX_AGI, u.agi * bal.ESQUIVA_POR_AGI)
-    return (f"Esquiva +{_pct(v)} por {_turnos(t)}: de {_pct(base)} para {_pct(min(bal.MAX_ESQUIVA, base + v))} "
+    return (f"Esquiva +{_pct(v)} por {_turnos(t)} seus: de {_pct(base)} para {_pct(min(bal.MAX_ESQUIVA, base + v))} "
             f"(teto de {_pct(bal.MAX_ESQUIVA)}). É uma chance a cada golpe: um golpe pode acertar mesmo assim.")
 
 

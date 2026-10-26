@@ -1,5 +1,6 @@
 """Combatentes: jogador, inimigos e aliados."""
 
+from . import atributos as atr
 from . import balanceamento as bal
 from .classes import CLASSES, SPECS
 from .estados import NEGATIVOS as EFEITOS_NEGATIVOS  # os males do catálogo de estados
@@ -120,6 +121,8 @@ class Jogador(Combatente):
         self.jogador = True
         self.classe = classe
         self.spec = None
+        self.atributos = atr.iniciais(classe)   # os seis de combate (atributos.py)
+        self.presenca = atr.PRESENCA_INICIAL    # só fora da luta
         self.base = {k: float(b[k]) for k in STATS}
         self.nivel = 1
         self.xp = 0
@@ -134,17 +137,20 @@ class Jogador(Combatente):
         self.mochila = []
         self.equip = {s: None for s in ("cabeca", "amuleto", "armadura", "maos", "arma", "secundaria", "pernas", "pes",
                                         "anel1", "anel2")}
-        self.habilidades = [h for (nv, h) in dados["habilidades"] if nv <= 1]
+        self.habilidades = [h for (nv, h) in dados["habilidades"] if nv <= 1]  # as aprendidas (o Grimório)
+        self.kit = list(self.habilidades)  # as que vão para a luta (kit.py: pontos, espaços, uma ultimate)
         self.companheiro = None
         self.reputacao = 0
         self.sigilos = []
         self.talentos = {}
         self.pontos_talento = 0
+        self.pontos_atributo = 0  # os da subida de nível, a distribuir fora da luta (atributos.py)
         self.provisoes = 4
         self.fome = 0
         self.ferimentos = []
         self.recalcular()
         self.hp = self.max_hp
+        self.rec = self.max_rec  # cheio: o máximo só fica certo com os atributos somados (recalcular)
 
     # ------------------------------------------------------------ atributos
     @property
@@ -169,12 +175,13 @@ class Jogador(Combatente):
         return self.talentos.get(talento, 0)
 
     def totais(self):
-        """Cada atributo antes das penalidades (ferimentos, fome): base + talentos + equipamento."""
+        """Cada valor derivado antes das penalidades (ferimentos, fome): base + atributos + talentos + equipamento."""
         from .talentos import bonus_stats
         extras = bonus_stats(self)
+        dos_atributos = atr.contribuicao(self)
         totais = {}
         for stat in STATS:
-            total = self.base[stat] + extras.get(stat, 0)
+            total = self.base[stat] + dos_atributos.get(stat, 0) + extras.get(stat, 0)
             for item in self.equip.values():
                 if item:
                     total += item["bonus"].get(stat, 0)

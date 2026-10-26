@@ -14,6 +14,13 @@ from .. import balanceamento as bal
 USAVEIS_EM_COMBATE = USAVEIS_NA_LUTA  # o catálogo diz (itens.py: luta)
 
 
+def _tipo_dano(h):
+    """O tipo do primeiro golpe da habilidade (físico, fogo, arcano...), para a carta dizer; None se não fere."""
+    from ..habilidades import Dano, blocos
+    d = next((p for p in blocos(h) if isinstance(p, Dano)), None)
+    return d.tipo if d else None
+
+
 class AcoesDoHeroi:
     # ------------------------------------------------------------ jogador
     def fase_jogador(self):
@@ -29,13 +36,19 @@ class AcoesDoHeroi:
             if j.classe == "arqueiro" and j.flechas <= 0:
                 nome_atk = "Golpe de Adaga — sem flechas!"
             analisar = self.ui.analisar_no_menu
-            opcoes = [f"Atacar ({nome_atk})", "Habilidades", "Itens"] + (["Analisar inimigos"] if analisar else [])
+            # Atacar, Defender e Usar item são comandos de toda vez, fora do kit (kit.py); as habilidades são as do kit.
+            ids = ["atacar", "defender", "habilidades", "itens"] + (["analisar"] if analisar else [])
+            opcoes = [f"Atacar ({nome_atk})", "Defender", "Habilidades", "Itens"] + (["Analisar inimigos"] if analisar else [])
             # Na tela gráfica as ações viram uma barra dentro da arena, com as habilidades já à mostra.
-            metas = [{"acao": "atacar", "nome": nome_atk}, {"acao": "habilidades", "habilidades": self.metas_habilidades()},
+            metas = [{"acao": "atacar", "nome": nome_atk}, {"acao": "defender", "valor": bal.DEFENDER},
+                     {"acao": "habilidades", "habilidades": self.metas_habilidades()},
                      {"acao": "itens", "itens": self.metas_itens()}] + ([{"acao": "analisar"}] if analisar else [])
             if self.pode_fugir:
+                ids.append("fugir")
                 opcoes.append("Fugir")
                 metas.append({"acao": "fugir"})
+            for m in metas:
+                m["ator"] = "j"
             self.ui.meta_opcoes = metas
             selo = abertura.selo_da_vez(self.g)  # um selo novo numa carta (a orientação dele passa com a ação)
             abertura.dica_texto(self.g, "selo")
@@ -45,27 +58,70 @@ class AcoesDoHeroi:
                 self.ui.meta_opcoes = None
             if selo:
                 abertura.visto(self.g, selo["id"])
-            if esc >= 3 and not analisar:
-                esc += 1  # mantém a numeração das ações abaixo
-            if esc == 0:
+            acao = ids[esc]
+            if acao == "atacar":
                 alvo = self.escolher_alvo(cancelavel=True)
                 if alvo is None:
                     continue
                 self.ataque_basico(alvo)
                 return None
-            if esc == 1:
+            if acao == "defender":
+                self.defender(j)
+                return None
+            if acao == "habilidades":
                 if self.menu_habilidades():
                     return None
-            elif esc == 2:
+            elif acao == "itens":
                 r = self.menu_itens()
                 if r == "fuga":
                     return "fuga"
                 if r:
                     return None
-            elif esc == 3:
+            elif acao == "analisar":
                 self.analisar()
-            elif esc == 4:
+            elif acao == "fugir":
                 return "fuga" if self.tentar_fuga() else None
+
+    def defender(self, u):
+        """Defender: −40% de dano até o começo da próxima vez de quem defende (o estado dura 1 turno dele)."""
+        with self.agindo(u, "Defender", hab="defender", anim="falange"):
+            u.aplicar("defendendo", 1, bal.DEFENDER)
+            self.lance("buff", em=self.uid(u), efeitos=["defendendo"], rotulo="Defendendo", hab="defender")
+            self.detalhe(f"{self.nome(u)} se defende: dano recebido −{round(bal.DEFENDER * 100)}% até a próxima vez.",
+                         "ciano")
+
+    def escolher_aliado(self, u, incluir_si=True, cancelavel=True, caidos=False):
+        """Em quem a habilidade ou o item de apoio age: você e a comitiva (os caídos, com caidos=True)."""
+        todos = [self.j] + [a for a in self.aliados if a.tipo == "comitiva"]
+        if caidos:
+            cands = [a for a in todos if not a.vivo]
+        else:
+            cands = [a for a in todos if a.vivo and (incluir_si or a is not u)]
+        if not cands:
+            return None
+        self.ui.meta_opcoes = [{"alvo": self.uid(c)} for c in cands] + ([{"voltar": True}] if cancelavel else [])
+        try:
+            esc = self.ui.escolher("Em quem?", [("Você" if c is self.j else c.nome) + f" ({c.hp}/{c.max_hp})"
+                                               for c in cands] + (["Voltar"] if cancelavel else []))
+        finally:
+            self.ui.meta_opcoes = None
+        return cands[esc] if esc < len(cands) else None
+
+    def caidos_da_comitiva(self):
+        return [a for a in self.aliados if a.tipo == "comitiva" and not a.vivo]
+
+    def reerguer(self, u, alvo, rotulo, fracao, item=None):
+        """Ressurreição na luta (a Pena de Fênix num companheiro, o Reerguer de Odette): volta com uma fração da vida,
+        na mesma posição da ordem; se a vez dele já passou nesta rodada, só age na próxima. Sem recuperar a vez."""
+        if item:
+            self.j.consumiveis[item] -= 1
+            telemetria.registrar(self.g, "consumivel", item=item, em_combate=True, em=getattr(alvo, "cid", None))
+        with self.agindo(u, rotulo, alvo, hab="item" if item else "reerguer"):
+            alvo.hp = max(1, round(alvo.max_hp * fracao))
+            alvo.limpar_negativos()
+            self.curou(alvo, alvo.hp, tipo="levantar", de=u, rotulo=rotulo)
+            self.dizer(f"{alvo.nome} se levanta com {alvo.hp} de vida.", "amarelo+negrito")
+        return "turno"
 
     def escolher_alvo(self, cancelavel=False):
         """Com cancelavel, a lista ganha "Voltar" e devolve None se a pessoa desistir (nada foi gasto ainda)."""
@@ -102,6 +158,10 @@ class AcoesDoHeroi:
         """Por que não dá para usar a habilidade agora (ou None se dá)."""
         j = self.j
         h = efetiva(j, h_id)
+        if h.get("ultimate") and "j" in self.ultimates_usadas:
+            return "Ultimate já usada nesta luta"
+        if h["alvo"] == "aliado" and not any(a.vivo and a.tipo == "comitiva" for a in self.aliados):
+            return "Ninguém para proteger"
         if j.rec < custo_habilidade(j, h_id):
             return f"{j.nome_recurso} insuficiente"
         if self.flechas_de(h) > j.flechas:
@@ -118,7 +178,7 @@ class AcoesDoHeroi:
         """Cada habilidade como a interface gráfica a desenha: ícone, custo, alvo, dica e se dá para usar agora."""
         j = self.j
         metas = []
-        for h_id in j.habilidades:
+        for h_id in j.kit:
             h = efetiva(j, h_id)  # a versão que o herói escolheu levar (E6); o id do botão continua o mesmo
             motivo = self.motivo_bloqueio(h_id)
             v = versao(j, h_id)
@@ -126,12 +186,13 @@ class AcoesDoHeroi:
                           "custo": custo_habilidade(j, h_id),
                           "recurso": j.nome_recurso, "flechas": self.flechas_de(h), "alvo_tipo": h["alvo"],
                           "desc": descricao_habilidade(h_id, j), "pode": motivo is None, "motivo": motivo,
+                          "ultimate": bool(h.get("ultimate")), "tipo": _tipo_dano(h),
                           **({"variante": v} if v != h_id else {})})  # só na transformada: quem não tem, igual
         return metas
 
     def menu_habilidades(self):
         j = self.j
-        ids = list(j.habilidades)
+        ids = list(j.kit)
         opcoes = []
         for h_id in ids:
             h = efetiva(j, h_id)
@@ -168,6 +229,12 @@ class AcoesDoHeroi:
             alvo = self.escolher_alvo(cancelavel=True)
             if alvo is None:
                 return False
+        elif h["alvo"] == "aliado":
+            alvo = self.escolher_aliado(j, incluir_si=False)
+            if alvo is None:
+                return False
+        if h.get("ultimate"):
+            self.ultimates_usadas.add("j")
         j.rec -= custo
         self.habilidades_usadas += 1
         self.tel["habilidades"][h_ef] = self.tel["habilidades"].get(h_ef, 0) + 1
@@ -195,6 +262,8 @@ class AcoesDoHeroi:
         Trocar de arma gasta o turno; armadura não: ninguém veste uma cota de malha com um lobo no pescoço."""
         j = self.j
         usaveis = [k for k in USAVEIS_EM_COMBATE if j.consumiveis.get(k, 0) > 0]
+        if j.consumiveis.get("pena_fenix", 0) > 0 and "pena_fenix" not in usaveis and self.caidos_da_comitiva():
+            usaveis.append("pena_fenix")  # num companheiro caído (em você, ela age sozinha)
         armas = [it for it in j.mochila if it["slot"] in ("arma", "secundaria") and self.g.pode_usar(it)]
         return usaveis, armas
 
@@ -212,7 +281,8 @@ class AcoesDoHeroi:
     def motivo_item(self, k):
         """Por que o item não serve agora, na luta (ou None). A bolsa do painel e o menu de itens dizem o mesmo."""
         if k == "pena_fenix":
-            return PENA_FENIX_AGE_SOZINHA
+            # num companheiro caído, usa-se (gasta a vez); em você, ela age sozinha quando você cai
+            return None if self.caidos_da_comitiva() else PENA_FENIX_AGE_SOZINHA
         if k not in USAVEIS_EM_COMBATE:
             return "Isso não se usa no meio da luta."
         if k == "bomba_fumaca" or self.aliados_precisam(k):
@@ -241,6 +311,11 @@ class AcoesDoHeroi:
                 self.g.equipar(it)
             return "turno"
         k = usaveis[esc]
+        if k == "pena_fenix":
+            quem = self.escolher_aliado(j, caidos=True)
+            if quem is None:
+                return None
+            return self.reerguer(j, quem, "Pena de Fênix", bal.PENA_COMPANHEIRO, item="pena_fenix")
         if k == "bomba_fumaca":
             if not self.pode_fugir:
                 self.dizer("Não há como fugir desta luta!", "vermelho")
@@ -297,6 +372,136 @@ class AcoesDoHeroi:
             self.dizer(f"Você joga a {nome} para {a.nome}, que bebe num gole. (+{a.hp - antes} vida)", "verde")
             self.curou(a, a.hp - antes, de=j, rotulo=nome)
         return "turno"
+
+    # ------------------------------------------------------------ a vez de um companheiro (etapa 4)
+    def motivo_comitiva(self, a, h):
+        if h.get("uma_vez") and (a.cid, h["id"]) in self.ultimates_usadas:
+            return "Já usada nesta luta"
+        if h["alvo"] == "aliado_caido" and not self.caidos_da_comitiva():
+            return "Ninguém caído"
+        if h["alvo"] == "aliado" and h["id"] == "proteger" and not [c for c in [self.j] + self.aliados
+                                                                   if c.vivo and c is not a and (c is self.j or c.tipo == "comitiva")]:
+            return "Ninguém para proteger"
+        if a.rec < h["custo"]:
+            return f"{a.nome_recurso} insuficiente"
+        return None
+
+    def metas_comitiva(self, a):
+        return [{"habilidade": h["id"], "nome": h["nome"], "icone": h["icone"], "familia": h["familia"],
+                 "custo": h["custo"], "recurso": a.nome_recurso, "flechas": 0, "alvo_tipo": h["alvo"], "desc": h["desc"],
+                 "pode": self.motivo_comitiva(a, h) is None, "motivo": self.motivo_comitiva(a, h)}
+                for h in comitiva.KITS.get(a.cid, [])]
+
+    def vez_comitiva(self, a):
+        """Você escolhe a ação do companheiro: Atacar, Defender, Usar item (a bolsa do grupo) ou o kit dele."""
+        nome_atk, mult, tipo, alcance, stat = comitiva.ATAQUE[a.cid]
+        while True:
+            ids = ["atacar", "defender", "habilidades", "itens"]
+            opcoes = [f"{a.nome}: Atacar ({nome_atk})", "Defender", "Habilidades", "Itens"]
+            metas = [{"acao": "atacar", "nome": nome_atk}, {"acao": "defender", "valor": bal.DEFENDER},
+                     {"acao": "habilidades", "habilidades": self.metas_comitiva(a)},
+                     {"acao": "itens", "itens": self.metas_itens_comitiva()}]
+            for m in metas:
+                m["ator"] = self.uid(a)
+            self.ui.meta_opcoes = metas
+            try:
+                acao = ids[self.ui.escolher(f"Vez de {a.nome}:", opcoes)]
+            finally:
+                self.ui.meta_opcoes = None
+            if acao == "atacar":
+                alvo = self.escolher_alvo(cancelavel=True)
+                if alvo is None:
+                    continue
+                with self.agindo(a, nome_atk, alvo, hab="ataque"):
+                    self.atacar(a, alvo, mult, tipo=tipo, alcance=alcance, stat=stat, rotulo=a.nome)
+                    comitiva.gritar(self, a, "ataque", 0.15)
+                return
+            if acao == "defender":
+                self.defender(a)
+                return
+            if acao == "habilidades":
+                if self.menu_comitiva(a):
+                    return
+            elif acao == "itens":
+                if self.itens_comitiva(a):
+                    return
+
+    def menu_comitiva(self, a):
+        kit = comitiva.KITS.get(a.cid, [])
+        self.ui.meta_opcoes = self.metas_comitiva(a) + [None]
+        try:
+            esc = self.ui.escolher(f"Habilidades de {a.nome}:",
+                                   [f"{h['nome']} [{h['custo']} {a.nome_recurso}] — {h['desc']}" for h in kit] + ["Voltar"])
+        finally:
+            self.ui.meta_opcoes = None
+        if esc >= len(kit):
+            return False
+        h = kit[esc]
+        motivo = self.motivo_comitiva(a, h)
+        if motivo:
+            self.dizer(motivo + ".", "cinza")
+            return False
+        alvo = a
+        if h["alvo"] == "inimigo":
+            alvo = self.escolher_alvo(cancelavel=True)
+        elif h["alvo"] == "aliado":
+            alvo = self.escolher_aliado(a, incluir_si=h["id"] != "proteger")
+        elif h["alvo"] == "aliado_caido":
+            alvo = self.escolher_aliado(a, caidos=True)
+        if alvo is None:
+            return False
+        a.rec -= h["custo"]
+        if h.get("uma_vez"):
+            self.ultimates_usadas.add((a.cid, h["id"]))
+        self.ui.atualizar()
+        with self.agindo(a, h["nome"], alvo if alvo is not a else None, hab=f"{a.cid}:{h['id']}"):
+            h["fn"](self, a, alvo)
+        return True
+
+    def metas_itens_comitiva(self):
+        j = self.j
+        lista = []
+        for k in ("pocao_vida", "pena_fenix"):
+            if j.consumiveis.get(k, 0) > 0:
+                motivo = None
+                if k == "pena_fenix" and not self.caidos_da_comitiva():
+                    motivo = "Ninguém caído"
+                elif k == "pocao_vida" and not [c for c in [j] + self.aliados if c.vivo and c.hp < c.max_hp
+                                                  and (c is j or c.tipo == "comitiva")]:
+                    motivo = "Ninguém ferido"
+                lista.append({"usar_item": k, "item": k, "qtd": j.consumiveis[k], "nome": CONSUMIVEIS[k]["nome"],
+                              "desc": descricao(k, j), "motivo": motivo})
+        return lista
+
+    def itens_comitiva(self, a):
+        """O companheiro usa um item da bolsa do grupo: a poção em alguém de pé, a Pena num caído."""
+        metas = self.metas_itens_comitiva()
+        if not metas:
+            self.dizer("A bolsa não tem nada que sirva agora.", "cinza")
+            return False
+        self.ui.meta_opcoes = metas + [None]
+        try:
+            esc = self.ui.escolher("Usar qual item?", [f"{m['nome']} x{m['qtd']}" for m in metas] + ["Voltar"])
+        finally:
+            self.ui.meta_opcoes = None
+        if esc >= len(metas) or metas[esc]["motivo"]:
+            return False
+        k = metas[esc]["item"]
+        if k == "pena_fenix":
+            quem = self.escolher_aliado(a, caidos=True)
+            if quem is None:
+                return False
+            self.reerguer(a, quem, "Pena de Fênix", bal.PENA_COMPANHEIRO, item="pena_fenix")
+            return True
+        quem = self.escolher_aliado(a)
+        if quem is None:
+            return False
+        self.j.consumiveis[k] -= 1
+        with self.agindo(a, CONSUMIVEIS[k]["nome"], quem, hab="item"):
+            antes = quem.hp
+            quem.curar(quem.max_hp * bal.POCAO_VIDA)
+            self.curou(quem, quem.hp - antes, de=a, rotulo=CONSUMIVEIS[k]["nome"])
+        return True
 
     def analisar(self):
         for e in self.inimigos_vivos():

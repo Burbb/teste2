@@ -48,10 +48,15 @@ def lutar(classe, spec, hab=None, cancelar=False, ataque=False):
     g.iniciar("Teste", classe, "turvo")
     g.escolher_companheiro = lambda *_: None  # o patrulheiro sem a pergunta do animal
     dev.subir_ate(g, 12, spec=spec)
+    if hab:
+        g.j.kit = [hab]  # a habilidade do teste vai para a luta (o kit, etapa 4)
     g.j.hp, g.j.rec = g.j.max_hp // 2, g.j.max_rec
     inicio = (g.j.rec, g.j.flechas if classe == "arqueiro" else None)  # a tela só manda flechas ao arqueiro
     try:
-        Combate(g, [g.inimigo("caido", nivel=9), g.inimigo("caido", nivel=9)]).executar()
+        inimigos = [g.inimigo("caido", nivel=9), g.inimigo("caido", nivel=9)]
+        for e in inimigos:
+            e.agi = 0  # sem esquiva: a ação acerta (o teste é do custo na tela, não da sorte)
+        Combate(g, inimigos).executar()
     except StopIteration:
         pass
     return ui.canal.mensagens, inicio

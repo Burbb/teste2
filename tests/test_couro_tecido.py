@@ -81,7 +81,8 @@ class TestMigracao(unittest.TestCase):
         self.assertEqual(depois["comitiva"][0]["equip"]["cabeca"]["icone"], "capuz")
 
     def test_nada_alem_do_desenho_muda(self):
-        antes, depois = _save_v4(), migrar(_save_v4())
+        # só o passo v4 → v5 (os seguintes acrescentam o que é deles: os atributos e o kit, na v7)
+        antes, depois = _save_v4(), _v4_para_v5(_save_v4())
 
         def sem_desenho(no):
             if isinstance(no, dict):

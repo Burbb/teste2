@@ -444,6 +444,7 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
             ("Talentos" + (f"  ★ {tx.plural(pontos, 'ponto')} para gastar!" if pontos else ""), "talentos",
              {"sistema": "talentos", "pontos": pontos}),
             ("Personagem e inventário", "personagem", {"sistema": "inventario"}),
+            *self.opcoes_atributos(),  # os pontos da subida de nível (etapa 4): o "+" da ficha, ou uma linha
             ("Comitiva" + ("  ✉ alguém quer conversar" if carta else ""), "comitiva",
              {"sistema": "comitiva", "carta": bool(carta)}) if self.comitiva or self.reserva else None,
             ("Mapa", "mapa", {"sistema": "mapa"}),
@@ -495,10 +496,14 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
                     abertura.visto(self, "F2")  # a ferida enfaixada: o estado "tratado" dela mostra o resultado
             elif op[0] == "versao":
                 self.trocar_versao(op[1], op[2])
+            elif op[0] == "kit":
+                self.mexer_kit(op[1])
+            elif op[0] == "atributo":
+                self.gastar_atributo(op[1])
             else:
                 self.usar_em_companheiro(op[1], op[2])
             return
-        acoes = {"viajar": self.viajar, "personagem": self.personagem, "comitiva": lambda: comitiva.menu(self), "talentos": self.menu_talentos, "bestiario": self.ver_bestiario, "mapa": self.mapa,
+        acoes = {"viajar": self.viajar, "personagem": self.personagem, "comitiva": lambda: comitiva.menu(self), "talentos": self.menu_talentos, "atributos": self.menu_atributos, "bestiario": self.ver_bestiario, "mapa": self.mapa,
                  "diario": self.diario, "salvar": self.salvar, "sair": self.sair}
         acoes[op]()
 
@@ -576,6 +581,7 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
             *missoes.opcoes(self),  # o passo da missão que se dá aqui (campanha), como "Examinar a fonte nova"
             *abertura.opcoes(self),  # a despensa adiada e o homem do canto (campanha nova)
             *self.opcoes_versao(),  # a troca de versão de uma habilidade transformada (o botão do Grimório)
+            *self.opcoes_kit(),  # montar o kit (etapa 4): os botões do Grimório, ou uma linha no texto
         ]
         # A frase da vila aparece na chegada e quando o tempo passa, não a cada volta ao menu (do mercado, do
         # inventário). O sorteio segue a cada volta: com a mesma semente, a partida continua a mesma.

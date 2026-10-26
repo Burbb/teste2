@@ -1,6 +1,7 @@
 """Equipamento, mochila, consumíveis e a tela de personagem."""
 
 from .. import abertura
+from .. import atributos as atr
 from .. import grimorio, itens
 from ..itens import CONSUMIVEIS, EM_ALIADO, PENA_FENIX_AGE_SOZINHA, descrever_bonus
 from .. import comitiva
@@ -357,11 +358,14 @@ class Inventario:
             op = self.menu("", [
                 ("Usar item da bolsa", "usar"),
                 ("Equipar item da mochila", "equipar") if j.mochila else None,
+                (f"Distribuir {tx.plural(j.pontos_atributo, 'ponto')} de atributo", "atributos") if j.pontos_atributo else None,
                 ("Voltar", None),
             ])
             if op is None:
                 return
-            if op == "usar":
+            if op == "atributos":
+                self.menu_atributos()
+            elif op == "usar":
                 usaveis = [k for k in self.USAVEIS_FORA if j.tem(k)]
                 k = self.menu("Usar:", [(CONSUMIVEIS[k]["nome"] + (f" (abre os {j.consumiveis[k]})" if k == "bau" and j.consumiveis[k] > 1
                                                                  else ""), k, {"item": k}) for k in usaveis] + [("Voltar", None)])
@@ -391,6 +395,7 @@ class Inventario:
             if it:
                 opcoes.append((f"Tirar {it['nome']}", ("tirar", slot), {"tirar": slot}))
         opcoes += self.opcoes_bolsa()
+        opcoes += self.opcoes_atributos()  # o "+" de cada atributo, com pontos da subida de nível (etapa 4)
         for i, it in enumerate(j.mochila):
             opcoes.append((f"Largar {it['nome']}", ("largar", it), {"largar": i}))
         op = self.menu("", opcoes + [("Voltar", None, {"voltar": True})])
@@ -404,6 +409,8 @@ class Inventario:
             self.usar_consumivel(op[1])
         elif op[0] == "usar_em":
             self.usar_em_companheiro(op[1], op[2])
+        elif op[0] == "atributo":
+            self.gastar_atributo(op[1])
         else:
             self.largar(op[1])
         return False
@@ -412,6 +419,8 @@ class Inventario:
         j = self.j
         self.dizer(f"Vida {j.hp}/{j.max_hp}   {j.nome_recurso} {j.rec}/{j.max_rec}   Ataque {j.atk}   "
                    f"Defesa {j.defesa}   Agilidade {j.agi}   Poder {j.poder}")
+        self.dizer("Atributos: " + "   ".join(f"{atr.SIGLAS[a]} {v}" for a, v in dict(atr.de(j), presenca=atr.presenca(j)).items())
+                   + (f"   ({tx.plural(j.pontos_atributo, 'ponto')} para distribuir)" if j.pontos_atributo else ""), "ciano")
         self.dizer(f"Provisões: {tx.plural(j.provisoes, 'dia')}   Tochas: {j.consumiveis.get('tocha', 0)}", "amarelo")
         males = sobrevivencia.descrever(j)
         self.dizer("Condição: " + (", ".join(males) if males else "sem ferimentos"),

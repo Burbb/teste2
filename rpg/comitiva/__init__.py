@@ -15,7 +15,7 @@ Em partes:
     catalogo.py   quem são os companheiros, as reações às escolhas, os gritos da luta
     grupo.py      quem está no grupo, entrar e sair, aprovação, o que o tempo cobra
     conversas.py  as conversas de cada um, as falas da noite, o carinho no animal
-    luta.py       a comitiva na luta (a ação de cada companheiro mora na ficha dele: ACOES)
+    luta.py       a comitiva na luta (o kit de cada companheiro, que você controla na vez dele: KITS)
     fogueira.py   a cena do acampamento e o menu da comitiva
     tela.py       o que a tela mostra (estado, explicação da aprovação)
 
@@ -31,7 +31,7 @@ from .grupo import (
     parte_do_xp, descansar, cuidar)
 from .conversas import CONVERSAS, AVULSAS, conversa, avulsa, proxima_conversa, conversar, falar, noite, fala_ociosa, carinho
 from .tela import explicar_aprovacao, estado
-from .luta import preparar_combate, alvo_inimigo, gritar, agir, encerrar_combate
+from .luta import preparar_combate, alvo_inimigo, gritar, KITS, ATAQUE, encerrar_combate
 from .fogueira import fogueira, menu
 
 __all__ = ["LIMITE", "COMPANHEIROS", "REACOES", "NIVEIS", "GRITOS", "CARINHO", "ATALHOS_FOGUEIRA", "dados", "membros",
@@ -40,4 +40,4 @@ __all__ = ["LIMITE", "COMPANHEIROS", "REACOES", "NIVEIS", "GRITOS", "CARINHO", "
            "mudar_aprovacao", "reagir", "reagir_escolha", "verificar_partidas", "partir", "amanhecer", "depois_do_amanhecer",
            "comer", "pagar_soldo", "soldo_devido", "parte_do_xp", "descansar", "cuidar", "CONVERSAS", "AVULSAS", "conversa", "avulsa", "proxima_conversa",
            "conversar", "falar", "noite", "fala_ociosa", "carinho", "explicar_aprovacao", "estado", "preparar_combate",
-           "alvo_inimigo", "gritar", "agir", "encerrar_combate", "fogueira", "menu"]
+           "alvo_inimigo", "gritar", "KITS", "ATAQUE", "encerrar_combate", "fogueira", "menu"]

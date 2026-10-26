@@ -32,6 +32,9 @@ class Aliado(Combatente):
         # o desenho da carta, escolhido por quem invoca (1.196.0): o servo do Erguer Servo, o crânio nu; a criatura que o
         # Rei dos Mortos ergue, o retrato dela. Só o desenho: as regras continuam pelo tipo. Sem ele, o de antes.
         self.retrato = retrato
+        # o recurso de quem age por escolha sua (a comitiva, etapa 4): comitiva/luta.py põe; animal e servos não têm
+        self.rec = self.max_rec = self.regen = 0
+        self.nome_recurso = ""
 
 
 _SERIE = [0]
@@ -53,6 +56,7 @@ class Combate(Golpes, AcoesDoHeroi, TurnosDosOutros):
         self.emboscada = emboscada
         self.pode_fugir = pode_fugir and not any(e.chefe for e in self.inimigos)
         self.titulo = titulo or "COMBATE"
+        self.cena_propria = titulo is not None  # luta de cena (a despensa, a turba): o texto dela conta como acaba
         self.flechas_gastas = 0
         self.turno = 0
         self.abertura = bool(mod(self.j, "abertura"))
@@ -67,6 +71,9 @@ class Combate(Golpes, AcoesDoHeroi, TurnosDosOutros):
         self._fala_turno = -1
         self._cura_j = 0
         self._salva = self._salva_textos = None
+        self.ordem, self.entra, self.da_vez = [], {}, None
+        self.ultimates_usadas = set()  # quem já usou a ultimate nesta luta (uma vez por luta; a queda não devolve)
+        self.vida_inicial = sum(e.max_hp for e in self.inimigos)
         self._nomear()
         for e in self.inimigos:
             g.ver_criatura(e.familia)
@@ -241,32 +248,74 @@ class Combate(Golpes, AcoesDoHeroi, TurnosDosOutros):
         disparar(self, self.j, "inicio_combate")  # Aura de Proteção, Armadilheiro...
         abertura.dica_texto(self.g, "combate")  # na interface de texto, a orientação da luta numa linha
 
+        # A ordem (etapa 4, roadmapIDEIAS/26): calculada uma vez, pela Agilidade, e fixa a luta inteira. Cada um tem a
+        # sua vez; a rodada (self.turno) termina quando todos tiveram a vez, inclusive quem a perdeu. Quem entra no
+        # meio (servo, criatura chamada) vai para o fim da ordem e age a partir da rodada seguinte.
+        self.ordem = self._ordem_inicial()
+        self.entra = {id(c): 1 for c in self.ordem}
         while True:
             self.turno += 1
-            if self.fase_jogador() == "fuga":
-                return self.fim("fuga")
-            # A surpresa é aquele turno: quem o usa para outra coisa (um buff, uma poção) perde o bônus, em vez
-            # de guardá-lo para o golpe do turno seguinte.
-            self.j.remover("iniciativa")
-            self.checar_limiares()
-            r = self._checar_fim()
-            if r:
-                return self.fim(r)
-            if not pular_inimigos:  # o turno da surpresa é só seu: a comitiva e o animal entram no seguinte
-                self.fase_aliados()
+            self.da_vez = None
+            self.lance("rodada", n=self.turno, ordem=[self.uid(c) for c in self.ordem])
+            for pos in range(len(self.ordem)):
+                self._sincronizar_ordem()
+                c = self.ordem[pos]
+                if self.entra.get(id(c), 1) > self.turno:
+                    continue
+                if pular_inimigos and c is not self.j:
+                    continue  # a surpresa: a rodada 1 é só sua (a comitiva e o animal entram na seguinte)
+                self.da_vez = c
+                if c is self.j:
+                    if self.fase_jogador() == "fuga":
+                        return self.fim("fuga")
+                    # A surpresa é aquele turno: quem o usa para outra coisa perde o bônus.
+                    self.j.remover("iniciativa")
+                elif c in self.aliados:
+                    self.vez_aliado(c)
+                else:
+                    self.vez_inimigo(c)
+                self.da_vez = None
                 self.checar_limiares()
                 r = self._checar_fim()
                 if r:
                     return self.fim(r)
-            if pular_inimigos:
-                pular_inimigos = False
-            else:
-                self.fase_inimigos()
-                self.checar_limiares()
-                r = self._checar_fim()
-                if r:
-                    return self.fim(r)
+            pular_inimigos = False
             self.j.rec = min(self.j.max_rec, self.j.rec + self.j.regen)
+            for a in self.aliados:
+                if getattr(a, "max_rec", 0) and a.vivo:
+                    a.rec = min(a.max_rec, a.rec + a.regen)
+
+    def _chave_ordem(self, c, i):
+        from .. import atributos
+        per = atributos.de(c).get("percepcao", getattr(c, "per", 0) or 0)
+        return (-c.agi, -per, 0 if (c is self.j or c in self.aliados) else 1, i)
+
+    def _ordem_inicial(self):
+        todos = [self.j] + list(self.aliados) + [e for e in self.inimigos if e.vivo]
+        return [c for i, c in sorted(enumerate(todos), key=lambda x: self._chave_ordem(x[1], x[0]))]
+
+    def _sincronizar_ordem(self):
+        """Quem entrou no meio da luta (servo, criatura chamada) vai para o fim da ordem e age a partir da rodada
+        seguinte (hipótese operacional, roadmapIDEIAS/26)."""
+        dentro = {id(c) for c in self.ordem}
+        for c in list(self.aliados) + list(self.inimigos):
+            if id(c) not in dentro:
+                self.ordem.append(c)
+                self.entra[id(c)] = self.turno + 1
+                dentro.add(id(c))
+
+    def ordem_para_tela(self):
+        """A ordem fixa, para a tela desenhar: quem é, se já passou nesta rodada, se é a vez dele, se está fora."""
+        if not getattr(self, "ordem", None):
+            return []
+        pos = self.ordem.index(self.da_vez) if self.da_vez in self.ordem else None
+        lista = []
+        for i, c in enumerate(self.ordem):
+            fora = not c.vivo or getattr(c, "fugiu", False)
+            lista.append({"uid": self.uid(c), "nome": "Você" if c is self.j else c.nome, "vez": c is self.da_vez,
+                          "passou": pos is not None and i < pos, "fora": fora,
+                          "entra": self.entra.get(id(c)) if self.entra.get(id(c), 1) > self.turno else None})
+        return lista
 
     def checar_limiares(self):
         """Um inimigo com piso de vida (Inimigo.piso) que chegou nele tem o seu momento, uma vez, no primeiro ponto
@@ -299,7 +348,28 @@ class Combate(Golpes, AcoesDoHeroi, TurnosDosOutros):
             return "derrota"
         if not self.inimigos_vivos():
             return "vitoria"
+        if self._debandada():
+            return "vitoria"
         return None
+
+    def _debandada(self):
+        """O fim arrastado (roadmapIDEIAS/26): caído o último perigoso (chefe, quem prepara golpe, quem invoca), os que
+        sobram somando pouca vida fogem e a luta acaba. Não vale para chefe, luta sem saída, luta de um inimigo só nem
+        luta de cena (com título próprio: o texto depois dela conta com os corpos)."""
+        vivos = self.inimigos_vivos()
+        if len(self.inimigos) < 2 or not self.pode_fugir or not self.mortos or self.cena_propria:
+            return False
+        if any(e.chefe or e.carregando or e.invoca or getattr(e, "piso", None) is not None for e in vivos):
+            return False
+        if sum(e.hp for e in vivos) > self.vida_inicial * bal.DEBANDADA_FRACAO:
+            return False
+        for e in vivos:
+            e.fugiu = True
+            e.debandou = True  # conta como vencido (o XP e o ouro vêm; o espólio do corpo, não)
+            self.lance("fuga", de=self.uid(e))
+        quem = tx.maiuscula(tx.lista_natural([self.nome(e) for e in vivos]))
+        self.dizer(f"{quem} {'desiste e foge' if len(vivos) == 1 else 'desistem e fogem'}.", "verde")
+        return True
 
     def mostrar_estado(self):
         j = self.j
@@ -307,6 +377,10 @@ class Combate(Golpes, AcoesDoHeroi, TurnosDosOutros):
         ui.novo_turno(self.turno)
         if ui.hud:
             return  # o painel lateral mostra vida, efeitos e inimigos
+        ordem = [o for o in self.ordem_para_tela() if not o["fora"]]
+        if len(ordem) > 1:  # a ordem fixa da luta (etapa 4): a sua vez entre colchetes
+            ui._imprimir(ui.pintar("  Ordem: " + " › ".join(f"[{o['nome']}]" if o["vez"] else o["nome"] for o in ordem),
+                                   "cinza"))
         linha = (f"  Você  {ui.barra(j.hp, j.max_hp, 14, 'verde')} {j.hp}/{j.max_hp}  "
                  f"{j.nome_recurso} {j.rec}/{j.max_rec}")
         if j.classe == "arqueiro":
@@ -314,7 +388,8 @@ class Combate(Golpes, AcoesDoHeroi, TurnosDosOutros):
         ui._imprimir(linha + self._efeitos_txt(j))
         for a in self.aliados:
             if a.vivo:
-                ui._imprimir(f"  {a.nome}  {ui.barra(a.hp, a.max_hp, 10, 'ciano')} {a.hp}/{a.max_hp}"
+                rec = f"  {a.nome_recurso} {a.rec}/{a.max_rec}" if getattr(a, "max_rec", 0) else ""
+                ui._imprimir(f"  {a.nome}  {ui.barra(a.hp, a.max_hp, 10, 'ciano')} {a.hp}/{a.max_hp}{rec}"
                              + self._efeitos_txt(a))
         for e in self.inimigos_vivos():
             extra = "  << preparando golpe! >>" if e.carregando else ""
@@ -377,10 +452,9 @@ class Combate(Golpes, AcoesDoHeroi, TurnosDosOutros):
             if not self.companheiro.vivo:
                 self.dizer(f"{self.companheiro.nome} está ferido demais para lutar até você descansar.", "cinza")
         j.efeitos = {}
-        if j.classe != "mago":  # o fôlego volta em parte; a mana, devagar
-            j.rec = min(j.max_rec, j.rec + int(j.max_rec * bal.FOLEGO_POS_LUTA))
-        else:
-            j.rec = min(j.max_rec, j.rec + int(j.max_rec * bal.MANA_POS_LUTA))
+        # Continuidade (roadmapIDEIAS/26): o recurso é a reserva de uma luta e volta inteiro no fim dela; a vida não
+        # volta (descanso, poções, curandeira). A ultimate fica de novo à mão na próxima luta.
+        j.rec = j.max_rec
         recuperadas = 0
         if j.classe == "arqueiro" and self.flechas_gastas and resultado == "vitoria":
             chance = bal.RECOLHER_FLECHA + mod(j, "recolher_flecha")
@@ -393,7 +467,7 @@ class Combate(Golpes, AcoesDoHeroi, TurnosDosOutros):
                                "verde")
 
         if resultado == "vitoria":
-            derrotados = [e for e in self.inimigos if not e.fugiu]
+            derrotados = [e for e in self.inimigos if not e.fugiu or getattr(e, "debandou", False)]
             self.ui.separador("verde")
             if not g.ui.conquistas_na_tela:  # na tela, a faixa de Vitória e o quadro do espólio dizem isso
                 self.dizer("VITÓRIA!", "verde+negrito")

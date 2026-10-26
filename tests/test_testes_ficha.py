@@ -75,8 +75,9 @@ class TestTestesNaFicha(unittest.TestCase):
         g = jogo("arqueiro", nivel=5)
         sobrevivencia.ferir(g, "perna")
         t = self.conferir_com_o_motor(g)
-        for nome in ("Destreza", "Percepção"):
-            self.assertTrue(any("Agilidade abaixo do normal" in l and "Perna torcida" in l for l in t[nome]["abaixo"]), nome)
+        # a Percepção é atributo próprio (etapa 4): a perna torcida tira da Agilidade e, com ela, da Destreza
+        self.assertTrue(any("Agilidade abaixo do normal" in l and "Perna torcida" in l for l in t["Destreza"]["abaixo"]))
+        self.assertEqual(t["Percepção"]["abaixo"], [])
         self.assertEqual(t["Força"]["abaixo"], [])
 
 

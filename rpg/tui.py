@@ -85,7 +85,11 @@ def painel_combate(g):
         return None
     j = g.j
     t = Text()
-    t.append(f"⚔ COMBATE — turno {cb.turno}\n", style="bold red")
+    t.append(f"⚔ COMBATE — rodada {cb.turno}\n", style="bold red")
+    ordem = cb.ordem_para_tela()  # a ordem fixa (etapa 4): quem age agora entre colchetes; quem está fora, sem
+    if ordem:
+        t.append("Ordem: " + " › ".join(f"[{o['nome']}]" if o["vez"] else o["nome"] for o in ordem if not o["fora"])
+                 + "\n", style="grey62")
     t.append(f"{'Você':<22}", style="bold")
     _barra(t, j.hp, j.max_hp, 16, "green")
     t.append(f" {j.hp}/{j.max_hp}")
@@ -96,6 +100,8 @@ def painel_combate(g):
             t.append(f"\n{a.nome[:21]:<22}", style="cyan")
             _barra(t, a.hp, a.max_hp, 16, "cyan")
             t.append(f" {a.hp}/{a.max_hp}")
+            if getattr(a, "max_rec", 0):
+                t.append(f"  {a.nome_recurso} {a.rec}/{a.max_rec}")
     for e in cb.inimigos_vivos():
         t.append(f"\n{e.nome[:21]:<22}", style="red")
         _barra(t, e.hp, e.max_hp, 16, "red")
@@ -409,7 +415,7 @@ class AppRPG(App):
         for p in self.partes:
             p[1] = True
         self.partes = self.partes[-30:]
-        self.adicionar(Rule(Text(f" turno {n} ", style="grey62"), style="grey35"), False, False, False)
+        self.adicionar(Rule(Text(f" rodada {n} ", style="grey62"), style="grey35"), False, False, False)
 
     def _fixar(self, conteudo, chip):
         if chip is True and self.partes and self.partes[-1][2] is True and not self.partes[-1][1]:

@@ -106,7 +106,7 @@ class PercursoUI(LutadorUI):
             return i
         return super().escolher(pergunta, opcoes)
 
-    def _acao(self, cb, metas):
+    def _decidir(self, cb, metas):
         j = cb.j
         itens = next((m["itens"] for m in metas if m.get("acao") == "itens"), [])
         pode = {m.get("usar_item") for m in itens if not m.get("motivo")}
@@ -114,16 +114,16 @@ class PercursoUI(LutadorUI):
         if j.hp < 0.35 * j.max_hp and "pocao_vida" not in pode:
             if "bomba_fumaca" in pode and fugir is not None:
                 self._plano, self._alvo = "bomba_fumaca", None
-                return 2
+                return "itens"
             if fugir is not None:
-                return fugir  # sem poção e quase caindo: foge, como uma pessoa fugiria
+                return "fugir"  # sem poção e quase caindo: foge, como uma pessoa fugiria
         for k, quando in (("antidoto", j.efeito("veneno") and j.hp < 0.7 * j.max_hp),
                           ("bandagem", j.efeito("sangramento")),
                           ("tonico", j.rec < 0.25 * j.max_rec)):
             if quando and k in pode:
                 self._plano, self._alvo = k, None
-                return 2
-        return super()._acao(cb, metas)
+                return "itens"
+        return super()._decidir(cb, metas)
 
 
 class Percurso:

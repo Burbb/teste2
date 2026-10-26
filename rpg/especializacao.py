@@ -23,6 +23,7 @@ ORDEM_STATS = ("max_hp", "max_rec", "atk", "defesa", "agi", "poder")
 # O que as chaves de modificador que uma especialização declara (`mods` em classes.py) querem dizer para quem joga.
 MODS_TEXTO = {
     "resiste_terror": lambda v: f"Resiste ao grito de terror em {v * 100:.0f}% das vezes (a fé não vacila).",
+    "critico": lambda v: f"+{v * 100:.0f}% de chance de crítico.",
 }
 PLURAL_TRACO = {"morto-vivo": "mortos-vivos", "demonio": "demônios", "corrompido": "corrompidos", "etereo": "etéreos",
                 "planta": "plantas", "construto": "construtos", "blindado": "blindados", "voador": "voadores"}
@@ -77,9 +78,9 @@ def beneficios(j, spec):
         linhas.append("Nos testes: " + ", ".join(f"{NOMES_TESTE[t]} {_sinal(b)}" for t, (_, b) in s["testes"].items())
                       + ".")
     agi = s["bonus"].get("agi", 0)
-    if agi > 0:  # a mesma conta do golpe (grimorio.chance_critico, combate.atacar): Agilidade vira crítico e esquiva
-        linhas.append(f"Agilidade {_sinal(agi)}: +{_num(agi * bal.CRITICO_POR_AGI * 100)}% de chance de crítico e "
-                      f"+{_num(agi * bal.ESQUIVA_POR_AGI * 100)}% de esquiva (até os tetos de sempre).")
+    if agi > 0:  # a mesma conta do golpe (combate.atacar): a Agilidade dá esquiva e a posição na ordem dos turnos
+        linhas.append(f"Agilidade {_sinal(agi)}: +{_num(agi * bal.ESQUIVA_POR_AGI * 100)}% de esquiva (até o teto de "
+                      "sempre) e age antes na ordem dos turnos.")
     fera = getattr(j, "companheiro", None)
     if s.get("companheiro") and fera:
         linhas.append(f"{fera['nome']} ({COMPANHEIROS[fera['tipo']]['nome']}) luta ao seu lado todo turno; a Ordem da "
