@@ -7751,3 +7751,12 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Para depois:** elevação de base (exemplo numérico), encantamento, arte e som, fontes na campanha, a aljava.
 - **Conferido:** 15 testes do protótipo; a tela a 1920×945 e 1280×720 (duplo clique, confirmação, Esc, falta de
   recurso); o jogo de produção não carrega a pasta. Aguarda a avaliação do Jean antes de integrar.
+
+### 26/10/2026 (data do computador local) — Reforço: a janela por serviço e as duas direções visuais (protótipo)
+
+- **2ª versão:** depois do teste do Jean (a página rolava, a arte piscava, ouro e fragmentos sumiam), cada serviço
+  abre uma janela própria sobre a coluna do meio; o pisca saiu com o recolhimento da arte.
+- **3ª versão:** a mesma estrutura em duas direções, A · Bancada e B · Arsenal, com planos de ferro, encaixes e
+  botões de estados claros; escrita de interface (rótulo e número); "Encantar" fora até existir; a comparação de
+  teste fechada e marcada. Pesquisa visual em Soul Knight Prequel e Elona Mobile (registrada no LEIA-ME). v1 e v2
+  guardadas em `tela/historico/`. Regras e números iguais. Aguarda a avaliação visual do Jean antes de integrar.

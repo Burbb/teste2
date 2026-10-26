@@ -376,6 +376,14 @@ recursos fixos no cabeçalho, página sem rolar (só a lista rola), "antes → d
 desmontagem separada e confirmada. O protótipo seguiu isso: Reforçar, Desmontar e Encantar (reservado) no balcão, cada
 um numa janela sobre a coluna do meio.
 
+**A tela, 3ª versão (aguardando avaliação visual):** a estrutura da 2ª ficou; a apresentação e a escrita foram
+refeitas em duas direções para comparar, A · Bancada (a peça num encaixe central, o trabalho em volta dela) e B ·
+Arsenal (a grade de todas as peças por dono e uma ficha compacta), trocadas pela faixa da demonstração. Referências
+visuais examinadas em capturas reais: Soul Knight Prequel (forja, reforja, confirmação de fundir, ficha da peça) e
+Elona Mobile (fornalha de encantamento); o que se aproveitou de cada uma está no LEIA-ME. "Encantar" saiu da tela até
+existir; a comparação de teste ficou fechada e marcada; a escrita virou rótulo e número (skill `texto-regras-fenda`,
+"Telas de serviço"). Regras e números sem mudança.
+
 **Pendências futuras:** elevação de base excepcional (exemplo numérico no LEIA-ME; elegibilidade, marcos, custo e o
 destino do reforço abertos); encantamento (conversa própria); arte, celebração e som; fontes concretas na campanha; a
 aljava. A etapa 4 continua aberta.
