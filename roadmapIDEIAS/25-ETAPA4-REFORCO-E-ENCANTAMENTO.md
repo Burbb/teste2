@@ -334,6 +334,11 @@ a continuidade entre lutas e o ritmo medido. Escolhas, conversões, catálogo, m
 [26](26-INTEGRACAO-DO-COMBATE.md). Falta o Jean jogar; o orçamento do kit e o dano do Necromante contra chefes ficam
 para decidir. Reforço e encantamento completos continuam fora.
 
+**Ajustes da 1.212.0** (26/10/2026), depois do teste do Jean: a Queimadura contra resistência, a leitura das
+descrições, os atributos e o kit à vista, a debandada rara e a observação do Golpe Pesado ([26](26-INTEGRACAO-DO-COMBATE.md#ajustes-da-1212-depois-do-teste-do-jean)).
+**Proposta, fora do jogo:** o gerenciamento da comitiva no protótipo (`ferramentas/prototipos/comitiva-gerenciamento/`),
+aguardando avaliação; equipamento e atributos dos companheiros não foram integrados.
+
 Depois de definida a direção suficiente, o Claude poderá verificar implicações técnicas, testar hipóteses numéricas e construir um protótipo isolado e pequeno. O catálogo e o combate atuais servirão de casos de teste, sem limitar as possibilidades futuras.
 
 ## 8. Estado das decisões

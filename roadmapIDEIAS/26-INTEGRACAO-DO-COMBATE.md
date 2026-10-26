@@ -51,7 +51,7 @@ desfazia a preparação.
 | Companheiro caído | Fica fora até descansar (dormir na vila ou na fogueira), como já era. Na luta, volta só pelo Reerguer de Odette (30 de Fé, uma vez por luta, 30% da vida) ou pela Pena de Fênix (40% da vida), no mesmo lugar da ordem: se a vez dele já passou na rodada, age na seguinte |
 | Protagonista caído | Como era: a Pena de Fênix e a proteção levantam sozinhas; senão, derrota (resgate, ou fim no hardcore). Os modos de dificuldade não mudaram |
 | Ultimate numa nova luta | Disponível de novo |
-| Fim de luta arrastado | Numa luta comum (sem título de cena, com saída), com 2 ou mais inimigos: caído alguém, sem chefe, sem quem prepara golpe ou invoca, e os que sobram somando até 25% da vida inicial do grupo, eles desistem e fogem. Conta como vitória (XP e ouro; o espólio do corpo, não). Lutas de cena (a despensa, a turba) acabam como o texto delas conta |
+| Fim de luta arrastado (debandada) | Desde a 1.212.0: só numa luta comum (sem título de cena, com saída, 2+ inimigos), avaliada no fim da rodada, com metade ou mais do grupo morta, você com 40% da vida ou mais, os que sobram somando até 15% da vida inicial e todos inofensivos; então, 50% de chance por rodada. Quem foge dá XP, mas não ouro, espólio nem abate. Detalhes em "Ajustes da 1.212.0" |
 | Saves | Formato 7. O save antigo ganha os atributos iniciais mais os pontos dos níveis já subidos (pela preferência da classe) e a Presença dos níveis; a base é refeita para os totais ficarem iguais; Inferno vira Chuva de Brasas e Fênix vira Conflagração; o herói aprende o repertório novo do nível dele; o kit é montado com o que couber. Conferido nos 38 saves de `~/.cronicas_da_fenda` (só leitura, nenhum arquivo alterado): todos migram, e os da versão 6 mantêm os mesmos totais |
 
 ## Conversões (nada morto em silêncio)
@@ -228,6 +228,96 @@ atributos). O gabarito revelou um erro, corrigido antes de atualizar: o herói c
 **Provisório**: todos os números (pontos e espaços do kit, custos, multiplicadores, recurso da comitiva, Tenacidade,
 Defender 40%, a debandada a 25%), o catálogo e o Golpe Oportuno. Saves antigos migram (testado nos seus, só leitura).
 
+## Ajustes da 1.212.0 (depois do teste do Jean)
+
+### Queimadura contra resistência
+
+- **O que estava errado:** o código tornava imune à Queimadura quem tinha resistência ao fogo abaixo de 0,5 (o Cão
+  infernal, ×0,24, e o afixo flamejante, ×0,3), e o texto dizia "não pega em quem resiste muito ao fogo". O dano por
+  turno de quem pegava fogo não passava pela resistência. As duas coisas contrariavam a decisão: resistência reduz o
+  dano; só a imunidade explícita impede.
+- **Agora:** a Queimadura pega em todos, salvo quem é imune ao fogo (eficácia 0, uma regra explícita do inimigo, que a
+  ficha dele mostra como "imune"; hoje nenhum inimigo é). O valor guardado é o de quem acendeu; o tique de cada turno
+  passa pela eficácia do alvo uma vez (`estados.dano_do_tique`, a mesma conta mostrada na carta); a Combustão e a
+  Conflagração consomem a Queimadura e detonam o valor guardado, e o golpe delas aplica a resistência uma vez
+  (`Combate.atacar`). Testado: duas camadas que ardem 10 por turno num alvo comum ardem 2 num Cão infernal; a Combustão num alvo de
+  resistência 0,5 causa a metade; o imune ao fogo não pega fogo.
+
+### Descrição, resumo e cálculo
+
+O Grimório mostra o resumo à vista (a faixa de dano, "não pode ser esquivado" uma vez, o que acontece com os números
+de agora) e a conta em "Como é calculado", que abre por clique e teclado (fórmula, crítico, ganho por ponto, talentos,
+exceções). A carta da ação na luta mostra a descrição e a faixa de dano, sem o crítico. A dica de um atributo começa
+pelo que ele dá agora; o crítico e a Tenacidade têm dica própria (as células "Crítico" e "Tenacidade"). A skill
+`texto-regras-fenda` registra os critérios.
+
+### Atributos e kit fora do Inventário
+
+- **Ficha lateral:** comparei a linha fixa com os seis atributos e o botão expansível, a 1920×945 e a 1280×720. A
+  linha de sete colunas aperta o painel (as siglas e o "+" se encostam a 1280); ficou o **botão "Atributos"**, com
+  "· +2" ligado aos pontos livres, que abre um quadro em duas fileiras com os valores, as dicas, o crítico, a
+  Tenacidade e o "+" (apagado na luta). O mesmo desenho e os mesmos dados da ficha do Inventário.
+- **Kit na barra:** entre a vida e o recurso e os indicadores, uma fileira com as habilidades do kit (ícone, dica com
+  nome, custo e efeito; a ultimate com a borda de ouro e o ◆). Fora da luta, o clique abre a página dela no Grimório,
+  que só oferece a troca na vila e na fogueira. Na luta a barra não aparece (as ações seguem na roda, na sua vez). Sem
+  espaço (1280×720), vira "Kit · N habilidades", que abre a mesma lista; kit vazio diz "Kit vazio".
+
+### Debandada
+
+**Como era (1.211.0):** avaliada depois de cada vez; com 2+ inimigos, a luta com saída e sem título de cena, alguém já
+morto, nenhum vivo chefe, preparando golpe, invocando ou com piso, e os vivos somando até 25% da vida inicial do grupo:
+todos fugiam na hora. Efeitos: contavam como derrotados, então davam XP, ouro, **espólio do corpo** (contra o que este
+documento dizia) e **contavam como abate** nos contratos de caça, no bestiário (mestre caçador), nas estatísticas e no
+nêmesis.
+
+**Como é (1.212.0):** avaliada no fim da rodada; exige metade ou mais do grupo morta, você com 40% da vida ou mais e os
+que sobram somando até 15% da vida inicial; cada sobrevivente tem de ser inofensivo: sem golpe preparado, sem invocar,
+sem habilidade que sustente o grupo (uivo, grito, cura, regenerar, reviver, maldição, teia...), sem regra própria
+(chefe, único, elite com afixo, piso, o que a vitória sobre ele mostra) e sem poder derrubar ninguém do seu lado nem
+com um crítico (`dano_previsto` × 1,6 contra a vida de cada um). Cumprido tudo, 50% de chance por rodada. Quem foge dá
+XP (o encontro foi vencido); não dá ouro nem espólio e não conta como abate; o texto diz isso na hora ("Quem foge não
+deixa espólio nem conta como abate nos contratos."). Missões e lutas de cena não debandam (têm título próprio ou
+`ao_vencer`).
+
+**Frequência**, nas mesmas lutas comuns com saída (6 caminhos, níveis 2, 4, 6 e 8, 10 lutas cada, as mesmas sementes e o
+mesmo robô; `python -m tests.debandada` e `python -m tests.debandada antes`): das 172 lutas com 2+ inimigos, a debandada
+acontecia em **140 (81%)**; agora, em **11 (6%)**. Testes de unidade cobrem quando acontece e quando não (golpe
+preparado, ameaça de derrubar com pouca vida, quem sustenta, elite, chefe, cena, você ferido, muita vida restante) e as
+consequências (abates, contrato, espólio, ouro, XP). **Ideia guardada, não feita:** quem foge volta depois (um encontro
+com os fugitivos).
+
+### Golpe Pesado
+
+Sem mudança de número. Ele dura uma luta comum inteira (6 a 7 seguidos com o Vigor do nível 1 a 5; uma luta comum
+tem 4 a 7 rodadas) porque o recurso volta cheio a cada luta e regenera 6 por rodada: é a economia, não o golpe. No
+nível 1 é a única habilidade de dano do Guerreiro. Contra golpe preparado, as ferramentas próprias (Erguer Escudo,
+Defender, Investida) existem; não achei evidência de que ele domine onde área, controle ou proteção deveriam valer. Se
+o Jean quiser menos repetição, a alavanca é a economia do recurso entre lutas, não o Golpe Pesado.
+
+### Limites das medidas anteriores
+
+As tabelas de equilíbrio acima (1.211.0) são do simulador (`tests.equilibrio`): um robô (`tests/arena.py`) que escolhe
+pela regra simples (a habilidade mais cara, área com 2+ inimigos, defesa quando ferido, o combo de fogo), com o kit
+montado sozinho por papel (`kit.sugerido`), a comitiva jogada pelo robô (Odette cura, Morel interrompe, Yara amaldiçoa),
+12 lutas comuns e 6 guardiões por nível, sem saída (então sem debandada), sem talentos escolhidos com intenção e com
+equipamento sorteado. Mostram direção e tamanho, não o jogo de uma pessoa. Continuam provisórios, sem compensação neste
+lote: a esquiva restaurada da Agilidade, o crítico da Sombra, o orçamento do kit (8 pontos) e o Necromante contra
+guardiões.
+
+### O gabarito na 1.212.0
+
+Conferido contra a 1.211.0, partida por partida: as 12 de texto do Guerreiro, do Arqueiro e da comitiva saíram
+**idênticas** (nenhuma debandada nem Queimadura em alvo resistente nelas); as 3 do Mago em texto mudam só na linha da
+Queimadura do Grimório (impressa na tela de personagem); as 12 da tela mudam só no estado do herói mandado à tela (a
+ordem nova das linhas da dica de atributo, o kit, o crítico e a Tenacidade, o resumo e o cálculo do Grimório), com o
+mesmo número de linhas. Nenhuma jogada mudou.
+
+### Proposta: gerenciamento da comitiva
+
+No protótipo, separado do jogo: [ferramentas/prototipos/comitiva-gerenciamento](../ferramentas/prototipos/comitiva-gerenciamento/LEIA-ME.md)
+(abas com retratos, a mesma janela para todos, a bolsa do grupo, o equipamento de cada um, a comparação com o
+selecionado, as dependências reais e a regra proposta para os atributos dos companheiros). Aguarda avaliação.
+
 ## Andamento
 
 - [x] Motor: ordem fixa, rodadas, Defender, comitiva controlada, kit, ultimate, atributos, Tenacidade
@@ -235,4 +325,6 @@ Defender 40%, a debandada a 25%), o catálogo e o Golpe Oportuno. Saves antigos 
 - [x] Interface: ordem na placa, roda de quem age, ultimate, kit no Grimório, atributos na ficha
 - [x] Continuidade entre lutas, ritmo medido, saves (formato 7)
 - [x] Escrita das regras revista (skill `texto-regras-fenda`)
+- [x] Ajustes da 1.212.0: Queimadura, leitura, atributos e kit à vista, debandada
 - [ ] Jean jogar; decidir o orçamento do kit e o dano do Necromante contra chefes
+- [ ] Avaliar a proposta da comitiva (protótipo)

@@ -7695,3 +7695,29 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Para o Jean:** o roteiro no [26](26-INTEGRACAO-DO-COMBATE.md#roteiro-de-teste-para-o-jean). **A etapa 4 continua
   aberta** (reforço e encantamento completos não começaram).
 
+### 26/10/2026 (data do computador local) — Ajustes depois do teste do Jean (1.212.0) e a proposta da comitiva
+
+- **Pedido:** o retorno do Jean sobre a integração: a Queimadura contra resistência, a leitura das descrições, os
+  atributos e o kit à vista, a debandada menos frequente, o Golpe Pesado (observar), e a proposta de gerenciamento da
+  comitiva no protótipo.
+- **Integrado (1.212.0):**
+  - **Queimadura:** a regra antiga (resistência abaixo de 0,5 tornava imune; o tique ignorava a resistência) estava no
+    código e no texto. Agora pega em todos, salvo imunidade explícita; a resistência reduz o tique e a detonação, uma
+    vez cada.
+  - **Leitura:** resumo à vista e "Como é calculado" no Grimório; a carta da luta sem o crítico; a dica de atributo
+    pelo que ele dá agora; crítico e Tenacidade com dica própria. A skill `texto-regras-fenda` ganhou os critérios.
+  - **Ficha lateral:** o botão "Atributos" (· +N com pontos), com o quadro dos atributos (a linha fixa apertava o
+    painel). **Kit na barra:** a fileira do kit (recolhe em "Kit · N" na janela estreita); o clique abre o Grimório, que
+    só troca na vila e na fogueira.
+  - **Debandada:** no fim da rodada, com a luta decidida e os que sobram inofensivos; 50% por rodada. Quem foge dá XP,
+    mas não ouro, espólio nem abate (antes contava como abate e dava espólio). Frequência nas mesmas lutas: 81% → 6%
+    (`python -m tests.debandada`).
+  - **Golpe Pesado:** sem mudança; a repetição vem da economia do recurso (registrado no 26).
+- **Proposta (fora do jogo):** `ferramentas/prototipos/comitiva-gerenciamento/` (abas com retratos, a bolsa do
+  grupo, o equipamento de cada um e a comparação com o selecionado, as dependências reais, a regra proposta para os
+  atributos dos companheiros). Aguarda avaliação.
+- **Provisório, sem compensação neste lote:** a esquiva da Agilidade, o crítico da Sombra, o orçamento do kit, o
+  Necromante contra guardiões. Os limites das medidas estão no [26](26-INTEGRACAO-DO-COMBATE.md#limites-das-medidas-anteriores).
+- **Conferido:** os testes (24 da integração), o gabarito (motivos no 26: só apresentação), pyflakes, a fumaça; as
+  telas a 1920×945 e 1280×720.
+
