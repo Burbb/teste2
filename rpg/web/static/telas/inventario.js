@@ -24,6 +24,7 @@
   const atual = () => { const fs = fichas(); return fs.find((f) => f.id === selId) || fs[0]; };
   const serve = (p, it) => !it.classe || it.classe === p.classe;
   const quemTexto = (p) => (p.id === "heroi" ? "você" : p.nome);
+  // a cabeça só nos tamanhos dela (32 e 48: escala inteira); no boneco, o busto, como o do herói (64 dava o xadrez)
   const retratoDe = (p, lado = 32) => Icones.cabeca(p.id === "heroi" ? p.classe : p.id, lado) || S(p.id === "heroi" ? p.classe : p.id, 2);
   const limiteBolsa = () => (App.estado.heroi.limite_mochila || 12);
 
@@ -69,7 +70,7 @@
     const sugerir = !heroiSel && p.pontos_atributo
       ? `<button type="button" class="botao-grupo sugerir" data-sugerir="${h(p.id)}"${p.indisponivel ? ` disabled title="${h(p.indisponivel)}"` : ""}>Distribuir pela sugestão <small>${h(p.sugestao)}</small></button>` : "";
     return `<div class="tela inventario${grupo ? " com-grupo" : ""}">${abas}
-      <div class="inv-corpo"><div class="boneco">${espacos}<div class="boneco-retrato">${heroiSel ? Icones.retrato(p.classe, "Retrato do herói") || S(p.classe, 6) : retratoDe(p, 64)}</div></div>
+      <div class="inv-corpo"><div class="boneco">${espacos}<div class="boneco-retrato">${Icones.retrato(heroiSel ? p.classe : p.id, `Retrato: ${h(p.nome)}`) || (heroiSel ? S(p.classe, 6) : retratoDe(p, 48))}</div></div>
         <div class="peca-detalhe" aria-live="polite">${detalheHtml(p)}</div></div>
       <div class="inv-lado">
         <div class="ficha-mini"><div class="heroi-nome">${h(p.nome)}</div><div class="heroi-titulo">${subtitulo}</div>
