@@ -7655,3 +7655,18 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Para o Jean:** o [ROTEIRO](../ferramentas/prototipos/combate-atributos/ROTEIRO.md) e a `folha-v3.png`. **A etapa 4
   não está concluída**; nada a integrar.
 
+### 26/10/2026 (data do computador local) — A quarta versão do protótipo de combate (refinamento da v3)
+
+- **Pedido:** a seção 3.9 do [25](25-ETAPA4-REFORCO-E-ENCANTAMENTO.md) (commit `1a6135e8`): registrar a leitura dos
+  ataques básicos, retirar a Marca do Morel e completar o conjunto de fogo com uma habilidade de área. Na conversa, o
+  Jean pediu também uma habilidade nova para o Morel no lugar da Marca.
+- **Feito:** `motor4/` e `tela4/` (a v4 abre na raiz; a v3 em `/v3/`, intacta). Sem a Marca; o Golpe Oportuno do Morel
+  (+60% em quem está atordoado ou preparando); a Chuva de Brasas (pouco fogo em área e uma camada de Queimadura em cada
+  inimigo, 22 de recurso, tier 2). Brasa, Combustão e Conflagração ficaram como na v3, que já cumpria os papéis.
+  Recurso, duração e os outros encontros não mudaram por causa dos básicos finais.
+- **Conferido:** a comparação do fogo jogada de verdade (um alvo, grupo, resistência: ações, custo, direto,
+  periódico, total), aparecendo em Preparar; 85 testes do protótipo (11 da v4); o roteiro do navegador da v4 a
+  1920×945 e a 1280×720, e os da v3, v2 e v1 nas rotas novas.
+- **Para o Jean:** o [ROTEIRO](../ferramentas/prototipos/combate-atributos/ROTEIRO.md) e a `folha-v4.png`. **A etapa 4
+  não está concluída**; nada a integrar.
+

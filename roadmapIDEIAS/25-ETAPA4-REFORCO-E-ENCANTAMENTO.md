@@ -248,6 +248,16 @@ Nome, tier, custos e coeficientes da habilidade nova são provisórios. Manter u
 
 **Escopo:** rodada pequena e isolada, preservando a v3 para comparação. Remover a Marca, completar o conjunto de fogo e registrar a observação sobre os básicos. Demais regras, encontros e economia ficam como estão salvo correção necessária e explicada. Não integrar produção, revisar todas as classes nem declarar a etapa 4 concluída.
 
+#### Quarta versão do protótipo — entregue para avaliação (26/10/2026)
+
+Detalhes no [LEIA-ME](../ferramentas/prototipos/combate-atributos/LEIA-ME.md); o que testar no [ROTEIRO](../ferramentas/prototipos/combate-atributos/ROTEIRO.md). A v3 continua jogável em `/v3/` (e v2, v1). Nada integrado.
+
+- **Decisões aplicadas (desta seção):** a leitura dos ataques básicos registrada, sem rebalancear recurso nem duração por causa deles; a Marca retirada da candidata (as versões anteriores e a produção não mudam); a habilidade de fogo em área com uma camada de Queimadura garantida em cada inimigo, sem imunidade nova, a resistência reduzindo só o dano; os papéis de Brasa, área, Combustão e Conflagração mantidos (Brasa, Combustão e Conflagração da v3 já os cumpriam e ficaram iguais).
+- **Sobre a vaga da Marca:** esta seção pedia para não preenchê-la por obrigação; na conversa da entrega, Jean pediu uma habilidade nova para testar no lugar. Foi feita como golpe de efeito imediato, não como preparação nem Marca renomeada, e segue em teste.
+- **Valores provisórios:** Chuva de Brasas (fogo, foco + nível + Intelecto × 0,35, tier 2, 22 de recurso, 1 pilha em cada inimigo); Golpe Oportuno do Morel (físico × 1,2, 15 de recurso, +60% em quem está atordoado ou preparando); kit sugerido da Chama: Brasa, Chuva, Combustão, Proteger, Conflagração.
+- **Resultados observados (alvos parados, mesma build):** num alvo, Brasa → Combustão rende 44 por 32 de recurso e a Chuva → Combustão 39 por 42 (a Brasa continua melhor); no grupo de três, Chuva → Conflagração faz 108 em 2 ações (52) e três Brasas → Conflagração os mesmos 108 em 4 ações (66); contra 60% de fogo, a Queimadura pega e o dano cai para cerca de um terço. A reserva básica da Chama (67) comporta a sequência, que funciona num encontro normal antes da expiração. Falta Jean dizer se o Golpe Oportuno vira obrigação como a Marca.
+
+
 ## 4. Vida útil das peças — direção acordada
 
 O caminho escolhido é **um meio-termo entre substituição constante e levar qualquer peça indefinidamente**, com espaço para apego a boas descobertas.
@@ -318,7 +328,7 @@ Depois de definida a direção suficiente, o Claude poderá verificar implicaç�
 | Sem morte permanente de companheiros por batalha | Acordado; exceção somente narrativa |
 | Retorno à luta por ressurreição de alto custo ou item escasso | Acordado; números e limites abertos |
 | Retorno na posição original, sem recuperar turnos perdidos | Acordado |
-| Protótipo isolado de combate antes da forja | v1/v2 entregues e jogadas; v3 entregue em 26/10/2026 conforme seção 3.8 para avaliação ([LEIA-ME](../ferramentas/prototipos/combate-atributos/LEIA-ME.md)), sem integração |
+| Protótipo isolado de combate antes da forja | v1, v2 e v3 jogadas; v4 (refinamento da seção 3.9) entregue em 26/10/2026 para avaliação ([LEIA-ME](../ferramentas/prototipos/combate-atributos/LEIA-ME.md)), sem integração |
 | Turnos individuais intercalados e ordem próxima visível | Acordado |
 | Agilidade define a ordem inicial | Acordado; desempates e detalhes de leitura abertos |
 | Ordem fixa durante toda a batalha | Acordado; sem ações extras por Agilidade |
