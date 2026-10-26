@@ -160,7 +160,7 @@ class TestDesmontar(unittest.TestCase):
     def test_peca_comum_sem_reforco_nao_rende(self):
         g = jogo()
         comum = next(x for x in g.j.mochila if x.get("raridade") == "comum")
-        self.assertEqual(D.desmontar(g, comum["uid"], comum["nome"]), (False, "Não rende material: venda ou largue."))
+        self.assertEqual(D.desmontar(g, comum["uid"], comum["nome"]), (False, "Não rende material."))
 
     def test_pilha_cheia_e_bolsa_cheia(self):
         g = jogo()

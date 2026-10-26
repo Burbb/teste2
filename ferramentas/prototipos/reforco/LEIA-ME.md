@@ -14,14 +14,48 @@ para parar. Folha compacta: `folha.png`.
 Só nesta execução, `demo.py` troca a forja (o balcão novo), o baú (que pode dar fragmento), a seção "Materiais" do
 Inventário e a venda da peça reforçada. O resto é o jogo: o Inventário do grupo, o mercado, a luta, a estrada.
 
+## A tela, 3ª versão: duas direções (A · Bancada, B · Arsenal)
+
+A estrutura da 2ª versão continua (uma janela por serviço, sem rolar a página, ouro e Fragmentos no topo, a ação
+sempre à vista, Esc fecha). Mudam a apresentação e a escrita. A **faixa da demonstração**, no alto da tela, troca a
+direção na hora (A ou B) e abre as versões antigas (v2, v1), guardadas em `tela/historico/`. Folha comparativa:
+`folha.png` (os mesmos itens e recursos nas duas, a 1920×945 e a 1280×720, com o Mercado aprovado ao lado).
+
+- **A · Bancada:** a peça num encaixe afundado no centro, o passo em cima ("+1 → +2"), as quatro marcas do reforço
+  embaixo, os ganhos, o custo e o botão logo abaixo dela; a esteira das peças embaixo; os donos (retratos) à esquerda;
+  a ficha completa à direita. Desmontar: a peça → o que recebe, a confirmação embaixo.
+- **B · Arsenal:** as peças de todos numa grade por dono, com o +N no canto; a ficha compacta à direita (cabeçalho,
+  passo, propriedades, venda, teste) e, fixos no pé dela, o custo e o botão. Desmontar: só a grade da bolsa, cada peça
+  com o que rende no canto (◆1, ◆3; "—" não rende).
+- **Em comum:** planos de ferro chapados com a textura dos botões do jogo e arestas duras (luz em cima, sombra embaixo),
+  encaixes escuros para as peças, a raridade no fio de baixo do encaixe, a seleção pelos quatro cantos de latão,
+  botões com quatro estados com forma (mouse clareia, pressionado afunda 1 px, indisponível tracejado, foco no anel de
+  latão), a ação principal em latão. Tab fica dentro da janela; as setas andam entre as peças.
+- **Escrita:** "+1 → +2", "Ataque 4 → 5", custo com rótulos ("Ouro · Custo 50 · Tem 355"), "Falta 1 Fragmento",
+  "Recebe 1 Fragmento de Têmpera", "Destrói a peça." / "A peça é destruída.", "Venda: [moeda] 42" como dado
+  secundário. "Encantar" saiu. A comparação contra o Esqueleto está numa área fechada, marcada **teste**. A ficha mostra
+  todas as propriedades; as que o reforço faz crescer têm o ◆. Os casos estão na skill `texto-regras-fenda`.
+- `CASOS=1` no `demo.py` abre a conferência: a armadura de Morel já no limite (+4) e 2 fragmentos (material
+  insuficiente no segundo passo).
+
+### Pesquisa visual (capturas abertas e examinadas)
+
+| Captura | O que aproveitei | O que não |
+|---|---|---|
+| Soul Knight Prequel, Forja · Reforjar ([anúncio oficial](https://prequel.chillyroom.com/et/article/base/135), imagem 11) | A peça num encaixe no alto do painel central, sobre um suporte (A); a grade de equipamentos à direita com o "+N" no canto de cada peça (B); a quantidade de material "1/10" logo acima do botão | As abas laterais de muitos serviços, a paleta marrom e laranja, as barras verdes |
+| Soul Knight Prequel, confirmação de Fundir (imagem 9) | A confirmação por cima da operação, com Cancelar e Confirmar lado a lado e o aviso de que não se desfaz | O texto longo explicando a regra |
+| Soul Knight Prequel, ficha da peça (imagem 4) | As ações da peça juntas no pé da ficha | — |
+| Elona Mobile, fornalha de encantamento ([blog](https://pzdl-hiraku.hatenablog.com/entry/2021/08/12/185946), a 3ª captura) | Peça à esquerda, material à direita, o resultado no meio: "a peça → o que vem" (o desmontar de A); o valor de agora e o ganho na mesma linha ("耐久 + 8 → +4") | A densidade (duas listas cheias de números e capacidades), a moeda paga (diamantes) |
+
+O acabamento seguiu a HUD aprovada, não esses jogos: nada da paleta alegre, da monetização ou dos sistemas deles.
+
 ## A tela (2ª versão, depois do primeiro teste do Jean)
 
 O primeiro balcão punha tudo na página da forja, embaixo da oficina: a página rolava, a arte piscava ao rolar (o
 recolhimento ia e voltava em torno do mesmo ponto) e o ouro e os fragmentos sumiam do alto. Pesquisei como Elden
 Ring, Diablo IV, Last Epoch e Darkest Dungeon organizam esses serviços (registrado no 25, seção 5.5) e refiz assim:
 
-- **O balcão** tem só os três serviços: **Reforçar**, **Desmontar** e **Encantar** (o lugar reservado, apagado: "ainda
-  não existe").
+- **O balcão** tinha três serviços: **Reforçar**, **Desmontar** e **Encantar** (reservado, apagado; saiu na 3ª versão).
 - **Cada serviço abre uma janela própria** sobre a coluna do meio, com a moldura das janelas principais do jogo. A
   página não rola; o pisca acabou porque o recolhimento da arte saiu.
 - **No topo, sempre à vista:** as abas dos serviços, o ouro e os Fragmentos de Têmpera, e o Fechar (Esc).

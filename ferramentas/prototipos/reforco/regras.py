@@ -76,9 +76,9 @@ def tipo(item):
 def motivo_sem_reforco(item):
     s = item.get("slot")
     if s == "secundaria" and item.get("classe") == "arqueiro":
-        return "A aljava não recebe reforço neste teste: as linhas dela são pequenas demais para crescer por passos."
+        return "A aljava não recebe reforço."
     if s in ("anel", "amuleto"):
-        return "Anel e amuleto valem pelos afixos; o reforço não mexe neles."
+        return "Anéis e amuletos não recebem reforço."
     if s in ("cabeca", "maos", "pernas", "pes"):
         return "Só arma, peito e apoio recebem reforço."
     return None

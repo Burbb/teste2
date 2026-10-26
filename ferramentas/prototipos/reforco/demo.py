@@ -216,19 +216,28 @@ def ficha_peca(g, it, quem, s):
          "reforco": n, "limite": R.LIMITE, "tipo": t,
          "acumulado": R.texto_ganho(R.ganho_total(it, n)) if n else "",
          "veio": {"fio": "Fio", "runas": "Runas"}.get(it.get("veio"))}
+    # todas as propriedades da peça, na ordem dela; as que o reforço faz crescer vêm marcadas (a ficha não esconde nada)
+    from rpg.entidades import nome_stat
+    cresce = {st for st, _, _ in R.linhas(it)}
+    d["propriedades"] = [{"stat": st, "nome": nome_stat(st, rec).lstrip("% ")[:1].upper() + nome_stat(st, rec).lstrip("% ")[1:], "valor": v,
+                          "pct": st in itens.PERCENTUAIS, "cresce": st in cresce}
+                         for st, v in it["bonus"].items() if v]
+    d["efeito"] = (itens.unico_de(it) or {}).get("efeito")
     if not t:
         d["sem_reforco"] = R.motivo_sem_reforco(it)
     elif ninguem_usa(g, it):
-        d["sem_reforco"] = ninguem_usa(g, it) + " Venda ou desmonte."
+        d["sem_reforco"] = ninguem_usa(g, it)
     elif n >= R.LIMITE:
         d["no_limite"] = True
     else:
         ouro, frag = custo_passo(g, n)
         longe = FICHA.motivo_indisponivel(g, quem) if quem not in (None, HEROI) else None
         falta = [x for x in (f"{ouro - g.j.ouro} de ouro" if g.j.ouro < ouro else None,
-                             f"{frag - tem} {'Fragmento' if frag - tem == 1 else 'Fragmentos'} de Têmpera"
+                             f"{frag - tem} {'Fragmento' if frag - tem == 1 else 'Fragmentos'}"
                              if tem < frag else None) if x]
-        motivo = longe or (f"Falta {' e '.join(falta)}." if falta else None)
+        # "Faltam 2 Fragmentos", "Falta 1 Fragmento", "Faltam 40 de ouro e 2 Fragmentos": a frase inteira, sem parágrafo
+        plural = len(falta) > 1 or (falta and not falta[0].startswith("1 "))
+        motivo = longe or (f"{'Faltam' if plural else 'Falta'} {' e '.join(falta)}" if falta else None)
         # a arma do Guerreiro escolhe o veio no primeiro reforço: um passo para cada caminho
         veios = ["fio", "runas"] if t == "arma" and it.get("classe") == "guerreiro" and not it.get("veio") else [None]
         d["passos"] = []
@@ -251,8 +260,8 @@ def ficha_peca(g, it, quem, s):
         total = investido + propria
         cheia = materiais(g).get("fragmento", 0) + total > R.PILHA_MAX
         d["desmontar"] = {"investimento": investido, "da_peca": propria, "total": total,
-                          "motivo": ("Não rende material: venda ou largue." if not total else
-                                     f"A pilha de Fragmentos de Têmpera não cabe mais {total} (máximo {R.PILHA_MAX})."
+                          "motivo": ("Não rende material." if not total else
+                                     f"Fragmentos no máximo ({R.PILHA_MAX})."
                                      if cheia else None)}
         d["venda"] = it.get("preco", 0) // 2
         # a substituta: vestida em cada um que pode usar, no lugar do que ele usa
@@ -327,7 +336,7 @@ def reforcar(g, uid, veio=None):
         FICHA.atualizar(g, quem)
     registrar(g, "ferreiro", item=it["nome"], ganho=ganho, ouro=ouro, fragmentos=frag, em=quem or "bolsa",
               prototipo="reforco")
-    return True, f"{it['nome']}: {R.texto_ganho(ganho)}."
+    return True, f"{it['nome']} · {R.texto_ganho(ganho)}"
 
 
 def desmontar(g, uid, nome):
@@ -341,14 +350,14 @@ def desmontar(g, uid, nome):
     investido, propria = R.desmontar_rende(it)
     total = investido + propria
     if not total:
-        return False, "Não rende material: venda ou largue."
+        return False, "Não rende material."
     if materiais(g).get("fragmento", 0) + total > R.PILHA_MAX:
-        return False, f"A pilha de Fragmentos de Têmpera não cabe mais {total} (máximo {R.PILHA_MAX})."
+        return False, f"Fragmentos no máximo ({R.PILHA_MAX})."
     g.j.mochila.remove(it)
     materiais(g)["fragmento"] = materiais(g).get("fragmento", 0) + total
     registrar(g, "desmontar", item=it["nome"], fragmentos=total, investimento=investido, da_peca=propria,
               prototipo="reforco")
-    return True, f"Você desmonta {it['nome']}: +{total} {'Fragmento' if total == 1 else 'Fragmentos'} de Têmpera."
+    return True, f"Desmontado: {it['nome']} · +{total} {'Fragmento' if total == 1 else 'Fragmentos'} de Têmpera"
 
 
 def forja(self):
@@ -459,7 +468,7 @@ def recompensa_de_teste(g):
     g.ui.cena("Cenário de teste", "Recompensa de demonstração", "evento")
     g.abrir_espolio(titulo="recompensa de teste",
                     frase="Cenário de teste: uma caixa do ferreiro do Vau, para experimentar o reforço.")
-    dar_material(g, "fragmento", 8, "teste")
+    dar_material(g, "fragmento", 2 if os.environ.get("CASOS") else 8, "teste")
     g.fechar_espolio()
     # a página espera quem joga (o navegador abre depois do jogo começar: a cena atual é a desta recompensa)
     g.menu("Os fragmentos ficam na seção Materiais do Inventário, fora dos 12 espaços da bolsa.",
@@ -475,6 +484,13 @@ def rodar(ui, pasta):
     g = Jogo(BotUI(random.Random(1)), seed=11, pasta_saves=pasta, hardcore=False)
     g.iniciar("Jean", "guerreiro", "turvo")
     preparar(g)
+    if os.environ.get("CASOS"):  # os casos de conferência: a armadura de Morel já no limite (+4); poucos fragmentos
+        dar_uid(g)
+        ouro = g.j.ouro
+        g.j.ouro, materiais(g)["fragmento"] = 9999, 99
+        for _ in range(R.LIMITE):
+            reforcar(g, FICHA.corpo(g, "morel")["armadura"]["uid"])
+        g.j.ouro, materiais(g)["fragmento"] = ouro, 0
     g.ui, ui.jogo = ui, g
     g.ui.cena("Cenário de teste", "Recompensa de demonstração", "evento")
     g.ui.atualizar()
@@ -506,15 +522,13 @@ def servir():
             from rpg.web import servidor as mod_srv
             with open(os.path.join(mod_srv.PASTA, "index.html"), encoding="utf-8") as f:
                 html = f.read()
-            extra = ('<link rel="stylesheet" href="/proto/reforco.css">'
-                     '<script src="/proto/reforco.js"></script></body>')
+            extra = '<script src="/proto/carregar.js"></script></body>'  # a faixa da demonstração e a tela escolhida
             return self._responder(200, html.replace("</body>", extra).encode("utf-8"), "text/html; charset=utf-8")
         if caminho.startswith("/proto/"):
-            nome = os.path.basename(caminho)
-            arq = os.path.join(tela, nome)
-            if not os.path.isfile(arq):
+            arq = os.path.normpath(os.path.join(tela, caminho[len("/proto/"):]))
+            if not arq.startswith(tela + os.sep) or not os.path.isfile(arq):
                 return self._responder(404)
-            tipo = "text/css" if nome.endswith(".css") else "text/javascript"
+            tipo = "text/css" if arq.endswith(".css") else "text/javascript"
             with open(arq, "rb") as f:
                 return self._responder(200, f.read(), tipo + "; charset=utf-8")
         return get(self)

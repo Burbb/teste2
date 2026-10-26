@@ -1,0 +1,41 @@
+/* Protótipo do reforço: a forja e os materiais, no acabamento da HUD (16-hud-telas.css). Só a demonstração carrega. */
+:root body #folha:has(.forja-proto) { max-width: none; }
+.forja-proto .ref-materiais { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; margin: 10px 0 2px; font-size: 14px; color: var(--tinta-2); }
+.forja-proto .ref-materiais small { color: var(--tinta-3); }
+.forja-proto .ref-mat { display: inline-flex; align-items: center; gap: 6px; }
+.forja-proto .ref-mat b { font-family: var(--num); font-size: 20px; font-weight: 400; color: #fff3d6; }
+.forja-proto .ref-corpo { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 18px; align-items: start; }
+.forja-proto .ref-lista { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 6px; }
+.forja-proto .ref-peca { display: flex; align-items: center; gap: 8px; text-align: left; font: inherit; color: var(--tinta); cursor: pointer;
+  padding: 4px 8px 4px 4px; border: 1px solid var(--aresta-face); border-radius: 2px; background: var(--hud-face); box-shadow: var(--hud-relevo); }
+.forja-proto .ref-peca:is(:hover, :focus-visible) { border-color: var(--aresta-viva); background: var(--hud-face-viva); }
+.forja-proto .ref-peca:focus-visible { outline: 2px solid var(--latao-claro); outline-offset: 1px; }
+.forja-proto .ref-peca.marcada { border-color: var(--latao); box-shadow: inset 3px 0 0 var(--latao), var(--hud-relevo); }
+.forja-proto .ref-peca.apagada { opacity: 0.6; }
+.forja-proto .ref-peca .slot-px { flex: none; width: 48px; height: 48px; }
+.forja-proto .ref-nome { display: flex; flex-direction: column; font-size: 14px; line-height: 1.25; }
+.forja-proto .ref-nome small { font-size: 12px; color: var(--tinta-3); }
+.forja-proto .ref-n { font-family: var(--num); font-size: 17px; color: var(--latao-claro); }
+.forja-proto .ref-detalhe { width: auto; position: sticky; top: 8px; max-height: calc(100vh - 260px); overflow-y: auto; }
+.forja-proto .ref-onde { margin-top: 6px; font-size: 13px; color: var(--tinta-2); }
+.forja-proto .ref-passo { margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--ferro-fio); display: flex; flex-direction: column; gap: 4px; }
+.forja-proto .ref-passo-cab b { font-family: var(--num); font-size: 18px; font-weight: 400; color: #fff3d6; }
+.forja-proto .ref-custo { display: inline-flex; align-items: center; gap: 4px; font-family: var(--num); font-size: 18px; color: var(--ouro); }
+.forja-proto .ref-custo small { font-family: var(--texto); font-size: 12px; color: var(--tinta-3); }
+.forja-proto .ref-luta { display: flex; flex-direction: column; gap: 2px; margin: 2px 0 4px; font-size: 13px; }
+.forja-proto .ref-luta small { color: var(--tinta-3); }
+.forja-proto .ref-luta-linha { display: flex; justify-content: space-between; gap: 8px; }
+.forja-proto .ref-luta-linha b { font-family: var(--num); font-size: 17px; font-weight: 400; white-space: nowrap; }
+.forja-proto .ref-nota { margin-top: 4px; font-size: 13px; color: var(--tinta-2); }
+.forja-proto .ref-desmontar { margin-top: 6px; }
+.forja-proto .ref-confirmar { margin-top: 6px; padding: 8px; border: 1px solid var(--sangue-2); border-radius: 2px; background: rgba(120, 20, 20, 0.12); font-size: 13px; }
+.forja-proto .ref-confirmar b { display: block; margin-bottom: 4px; font-size: 14px; color: #fff3d6; }
+.forja-proto .ref-botoes { display: flex; gap: 6px; margin-top: 8px; }
+.forja-proto .acao-peca.perigo { border-color: var(--sangue-2); color: #ffd9d2; }
+.forja-proto .acao-peca[disabled] { opacity: 0.5; cursor: wait; }
+.forja-proto .melhor { color: var(--bom); }
+.forja-proto .pior { color: var(--sangue-2); font-size: 13px; }
+.forja-proto .peca-detalhe h5 { margin: 12px 0 4px; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--sec); }
+@media (max-width: 1500px) { .forja-proto .ref-corpo { grid-template-columns: minmax(0, 1fr) 270px; } .forja-proto .ref-lista { grid-template-columns: 1fr; } }
+/* rolar o balcão recolhe a oficina na faixa (reforco.js), como o jogo faz com a arte das outras páginas */
+#cena.com-ambiente.ambiente-alto.recolhido:has(.forja-proto) #vista { height: calc(52px + var(--P) * 12); }
