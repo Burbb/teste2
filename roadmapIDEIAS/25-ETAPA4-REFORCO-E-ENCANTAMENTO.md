@@ -336,8 +336,9 @@ para decidir. Reforço e encantamento completos continuam fora.
 
 **Ajustes da 1.212.0** (26/10/2026), depois do teste do Jean: a Queimadura contra resistência, a leitura das
 descrições, os atributos e o kit à vista, a debandada rara e a observação do Golpe Pesado ([26](26-INTEGRACAO-DO-COMBATE.md#ajustes-da-1212-depois-do-teste-do-jean)).
-**Proposta, fora do jogo:** o gerenciamento da comitiva no protótipo (`ferramentas/prototipos/comitiva-gerenciamento/`),
-aguardando avaliação; equipamento e atributos dos companheiros não foram integrados.
+**Comitiva integrada na 1.213.0** (26/10/2026): equipamento individual, atributos com 1 ponto livre por nível do
+herói e a sugestão sob pedido, a bolsa do grupo e uma regra única para vestir e trocar peças, na janela do Inventário
+([26](26-INTEGRACAO-DO-COMBATE.md#a-comitiva-integrada-e-os-refinamentos-da-hud-1213)). Números provisórios.
 
 Depois de definida a direção suficiente, o Claude poderá verificar implicações técnicas, testar hipóteses numéricas e construir um protótipo isolado e pequeno. O catálogo e o combate atuais servirão de casos de teste, sem limitar as possibilidades futuras.
 

@@ -7721,3 +7721,19 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Conferido:** os testes (24 da integração), o gabarito (motivos no 26: só apresentação), pyflakes, a fumaça; as
   telas a 1920×945 e 1280×720.
 
+### 26/10/2026 (data do computador local) — A comitiva no Inventário e os refinamentos da HUD (1.213.0)
+
+- **Pedido:** integrar o gerenciamento da comitiva aprovado (com os ajustes de interação) e refinar a HUD: o botão
+  Atributos, a Agilidade 3 e 4, o kit na barra.
+- **Integrado:**
+  - **Janela do grupo:** o Inventário com as abas de retrato; bolsa do grupo (os mesmos 12); equipamento individual;
+    comparação com o selecionado; um clique escolhe, dois equipam, o botão direito abre o menu, arrastar funciona; tudo
+    por uma regra única no motor (`comitiva/ficha.py`), com troca inteira ou nenhuma.
+  - **Atributos dos companheiros:** iniciais pela identidade, 1 ponto livre por nível do herói, a sugestão só quando o
+    jogador pede. As peças e os pontos valem na luta (incluindo os bônus especiais).
+  - **Saves no formato 8;** quem sai da comitiva devolve as peças à bolsa (o que não cabe vira achado).
+  - **Agilidade:** a causa (três conceitos com um nome) e as dicas com a conta; **Atributos** com o acabamento dos
+    Testes do d20; **kit** em quadrados da HUD, recolhendo só quando transborda.
+- **Provisório:** os atributos iniciais e o ponto por nível dos companheiros; a classe de peças de cada um.
+- **Conferido:** os testes (15 novos da comitiva), o gabarito (motivos no 26), pyflakes, a fumaça; as telas a
+  1920×945 e 1280×720. Roteiro curto no [26](26-INTEGRACAO-DO-COMBATE.md#roteiro-de-teste-1213-uns-5-minutos).

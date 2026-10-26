@@ -1,6 +1,8 @@
 # Comitiva: gerenciamento (proposta, protótipo)
 
-**Nada disto está no jogo.** É a proposta da seção 7 do pedido de 26/10/2026 (depois da integração do combate, 1.211.x):
+**Integrado na 1.213.0** (o Inventário do grupo; regras no
+[26](../../../roadmapIDEIAS/26-INTEGRACAO-DO-COMBATE.md#a-comitiva-integrada-e-os-refinamentos-da-hud-1213)). O protótipo
+fica como registro da proposta. **Na época, nada disto estava no jogo.** É a proposta da seção 7 do pedido de 26/10/2026 (depois da integração do combate, 1.211.x):
 uma janela só para o herói e a comitiva, com o equipamento de cada um e a bolsa do grupo. Aguarda a avaliação do Jean.
 
 ## Abrir

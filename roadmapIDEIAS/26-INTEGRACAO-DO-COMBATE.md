@@ -316,15 +316,120 @@ mesmo número de linhas. Nenhuma jogada mudou.
 
 No protótipo, separado do jogo: [ferramentas/prototipos/comitiva-gerenciamento](../ferramentas/prototipos/comitiva-gerenciamento/LEIA-ME.md)
 (abas com retratos, a mesma janela para todos, a bolsa do grupo, o equipamento de cada um, a comparação com o
-selecionado, as dependências reais e a regra proposta para os atributos dos companheiros). Aguarda avaliação.
+selecionado, as dependências reais e a regra proposta para os atributos dos companheiros). Aprovada com ajustes de
+interação e integrada na 1.213.0 (abaixo).
+
+## A comitiva integrada e os refinamentos da HUD (1.213.0)
+
+### Agilidade 3 e 4: a causa
+
+Três coisas diferentes tinham o mesmo nome: o **atributo** Agilidade (AGI, os pontos), o **total** (atributo + classe
+e nível + equipamento + talentos, `Jogador.totais`) e a **Agilidade de luta** (o total com ferimentos e fome,
+`recalcular`), que é a que vale na esquiva, na ordem dos turnos e na fuga. O caso do Jean: AGI 4, total 5 com uma
+peça, 3 na luta com a perna torcida e a mordida. Os números estavam certos; a dica dizia "Agora: Agilidade 3" ao lado
+do AGI 4, sem o caminho. Não igualei os números (são conceitos diferentes): cada dica agora nomeia qual é qual e mostra
+a conta, pela mesma função do motor (`web/estado.composicao`): "Soma 4 à Agilidade (+1 por ponto). Com equipamento +1
+e ferimentos e fome −37%, a Agilidade de luta é 3." Sem "Agora:"; o benefício aparece uma vez, com o número. O mesmo
+para Força, Constituição, Intelecto, Percepção e Vontade, e para Ataque, Defesa e Poder no painel. A skill
+`texto-regras-fenda` registra o critério ("Mesmo nome, números diferentes").
+
+### Botão Atributos e kit na barra
+
+- **Atributos:** o mesmo acabamento de "Testes do d20" (fundo, fio, tipografia, espaçamento); abre por clique e teclado,
+  com a seta que gira (`aria-expanded`) e o foco visível. O conteúdo aprovado não mudou.
+- **Kit:** os ícones lado a lado entre a vida e o recurso e os indicadores, em quadrados de 34 px com o fio de ferro
+  da HUD; a ultimate com o fio de latão. Fora da luta, o clique abre a página no Grimório (que só troca o kit na vila e
+  na fogueira); a dica abre com o mouse e com o foco.
+- **Por que o Jean via "Kit · N habilidades":** a regra antiga recolhia quando o bloco da vida ficava abaixo de 220 px
+  (cedo demais), não media de novo ao mudar a janela ou o zoom e, medida com a barra escondida na luta (largura 0),
+  recolhia sempre. Agora recolhe só quando a linha transborda de fato, medida com a barra visível e de novo a cada
+  mudança de tamanho (`ResizeObserver`). Medido: os ícones cabem a 1920, 1600, 1536, 1440 e 1280 de largura; a 1366
+  (a barra mais apertada pela coluna do mundo) recolhe para "Kit · 4". Abaixo de 1280 (1200), mesmo recolhida, a
+  linha passa 6 px: fica para a consolidação da HUD.
+
+### Equipamento e atributos da comitiva
+
+Tudo em `rpg/comitiva/ficha.py`; a janela é o Inventário (`telas/inventario.js`), que com a comitiva vira o
+**Inventário do grupo**.
+
+- **A janela:** as abas com o retrato de cada um (← → no teclado); o boneco, a ficha e os atributos são os do
+  selecionado; a **bolsa é a do grupo** (a mochila, os mesmos 12 espaços; ninguém ganha outra). Quem espera no
+  acampamento não aparece (leva o que veste e volta vestido).
+- **Peças:** Odette e Yara vestem as de mago; Morel, as de guerreiro; todos, as sem classe (anel, amuleto e peças sem
+  classe). A peça incompatível diz por quê ("Morel não usa peças de arqueiro.").
+- **Números reais:** os do catálogo pelo nível do herói continuam a base; somam os atributos acima dos iniciais e as
+  peças (`grupo.atributos`). Na luta, o Ataque e o Poder ainda passam pela lealdade. Os bônus especiais das peças
+  (crítico, roubo de vida, espinhos, vida por turno e por abate) e as regras de um único valem para o companheiro como
+  para o herói (o item entra nos modificadores dele). Sem pontos gastos nem peças, os números são exatamente os de
+  antes (o gabarito das 6 partidas com comitiva saiu idêntico).
+- **Uma regra para todos os gestos:** o botão da ficha, os dois cliques, o menu do botão direito e o arrasto mandam o
+  mesmo pedido ao motor, que confere: quem veste, se está aqui, a classe da peça, o espaço, a luta, a bolsa cheia, a
+  peça já no lugar. O destino da peça que sai é decidido antes de mexer em qualquer coisa: da bolsa, a que sai fica na
+  casa exata da que entrou; do mesmo corpo (trocar de dedo), os anéis trocam de lugar; de outra pessoa, a que sai vai
+  para a bolsa, e com a bolsa cheia a troca não acontece ("A bolsa está cheia: Machado de Ferro não teria para onde
+  ir."). Nenhuma peça some nem se duplica (testado).
+- **Gestos:** um clique escolhe a peça e mostra a ficha comparada com o selecionado e as ações à vista; dois cliques
+  equipam no selecionado (uma vez; o anel com os dois dedos ocupados abre a escolha); o botão direito (ou a tecla de
+  menu, ou Shift+F10) abre o menu com "Equipar em [selecionado]", "Equipar em [outro]" (com "sai de ..." quando tira de
+  alguém) e "Guardar na bolsa"; arrastar leva da bolsa a um espaço que serve, do corpo para a bolsa (na casa onde
+  soltar) e de uma casa da bolsa a outra. Soltar fora ou cancelar não muda nada. Num espaço marcado, a lista "Peças
+  para ..." mostra o que serve, da bolsa e de quem usa. O menu cabe na tela, anda com as setas, fecha com Esc e devolve
+  o foco. Sem arrasto sobre os retratos nesta rodada. Os consumíveis seguem como antes (dois cliques não os gastam).
+- **Indisponível:** o ferido pode ser equipado (a aba diz "ferido"); quem não está aqui (a Yara fora do Vau) aparece
+  com a aba apagada e o motivo, e nada muda nele (peças, pontos, sugestão). Na luta, a janela não troca nada.
+- **Atributos (provisórios):** 24 pontos iniciais pela identidade; a Vontade inicial é a Tenacidade que cada um já
+  tinha (Odette 6, Morel 3, Yara 7: 24%, 12%, 28%), por isso difere um pouco do protótipo.
+
+  | | FOR | AGI | CON | INT | PER | VON | Sugestão |
+  |---|---|---|---|---|---|---|---|
+  | Odette | 2 | 3 | 4 | 6 | 3 | 6 | VON › INT › CON |
+  | Morel | 7 | 3 | 7 | 1 | 3 | 3 | CON › FOR › VON |
+  | Yara | 1 | 3 | 3 | 7 | 3 | 7 | INT › PER › VON |
+
+  Cada ponto além do inicial rende como no herói (+1 de Ataque, +1 de Agilidade, +4 de vida, +1 de Poder, +1% de
+  crítico, +3 de recurso e +4% de Tenacidade). **1 ponto livre por nível do herói** (a metade dos dele). Quem entra
+  tarde chega com os pontos dos níveis que já passaram, livres. "Distribuir pela sugestão" gasta só os pontos livres,
+  quando o jogador pede; nunca mexe no que ele distribuiu, nem ao reabrir ou carregar.
+- **Saves (formato 8):** cada membro, na estrada ou no acampamento, ganha o corpo vazio, os atributos iniciais e os
+  pontos dos níveis já subidos, livres. Nada é distribuído sozinho; a luta continua igual até o jogador gastar.
+- **Quem sai da comitiva** (dispensado ou foi embora): as peças são do grupo e voltam para a bolsa. O que não couber
+  chega como um achado, uma peça por vez, na janela de sempre (equipar, guardar ou, sem espaço, deixar para trás: a
+  escolha é do jogador). Nenhuma consequência narrativa nova.
+- **Fora desta rodada:** o achado com a bolsa cheia continua como era ("Equipar agora" deixa a peça antiga para trás,
+  e a janela avisa); a troca direta entre duas pessoas com a bolsa cheia (cada uma com a peça da outra) não existe:
+  libere uma casa antes.
+
+### O gabarito na 1.213.0
+
+Conferido contra a 1.212.0 com as mesmas mudanças de tela: as 6 partidas da comitiva saíram **idênticas**; as 9 de
+texto mudam só na última linha (o save, formato 8, com os campos novos) e uma delas também na frase de equipar da
+mochila ("Você equipa Mordida Sangrenta; Chapéu de Couro Rasgado volta para a bolsa."); as 9 da tela mudam a partir da
+primeira tela de personagem, porque a janela ganhou uma opção escondida (o pedido da janela do grupo) e o robô sorteia
+entre as opções. Nenhuma regra de luta mudou.
+
+### Roteiro de teste (1.213.0, uns 5 minutos)
+
+`python -m tests.navegador.cenarios grupo` (opções: `CHEIA=1`, `FERIDO=morel`, `LONGE=odete`, `COMITIVA=`), e "i".
+
+1. Aba Morel: clique no peito da bolsa. A ficha compara com a malha dele; "Equipar em Morel". A malha antiga volta para
+   a mesma casa da bolsa.
+2. Dois cliques no arco: nada muda; o motivo aparece.
+3. Aba Odette: dois cliques no anel raro: a escolha entre Anel 1 e Anel 2 (os dois ocupados).
+4. Botão direito no grimório: "Equipar em Odette"; Esc fecha e devolve o foco.
+5. Clique no espaço da arma de Morel: "Peças para Arma" mostra a da bolsa e a sua ("com você").
+6. Arraste a arma de Morel para uma casa vazia da bolsa; arraste uma peça da bolsa para outra casa.
+7. "Distribuir pela sugestão" em Morel; o "+" em Odette. Os números e as dicas acompanham.
+8. Com `CHEIA=1`: "Guardar na bolsa" fica bloqueado, com o motivo. Com `LONGE=odete`: a aba apagada, nada muda nela.
+9. Numa luta, confira que as peças de Morel valem (a Defesa e a vida da carta; os espinhos).
 
 ## Andamento
 
 - [x] Motor: ordem fixa, rodadas, Defender, comitiva controlada, kit, ultimate, atributos, Tenacidade
 - [x] Repertório provisório das três classes (catálogo acima)
 - [x] Interface: ordem na placa, roda de quem age, ultimate, kit no Grimório, atributos na ficha
-- [x] Continuidade entre lutas, ritmo medido, saves (formato 7)
+- [x] Continuidade entre lutas, ritmo medido, saves (formato 7; 8 com a comitiva)
 - [x] Escrita das regras revista (skill `texto-regras-fenda`)
 - [x] Ajustes da 1.212.0: Queimadura, leitura, atributos e kit à vista, debandada
 - [ ] Jean jogar; decidir o orçamento do kit e o dano do Necromante contra chefes
-- [ ] Avaliar a proposta da comitiva (protótipo)
+- [x] Comitiva: equipamento, atributos e a janela do grupo; Agilidade, botão Atributos e kit (1.213.0)
+- [ ] Jean testar a janela do grupo (roteiro acima)

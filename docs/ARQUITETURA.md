@@ -177,7 +177,7 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
 | `rpg/modificadores.py` | `mod`/`mult`/`disparar`: como talentos e passivas mudam o jogo (as chaves e eventos válidos) |
 | `rpg/inimigos.py`, `rpg/dados.py` | famílias de inimigos, biomas, climas, traços; o catálogo de guardiões e de antagonistas (guardado para a expansão: a campanha de hoje usa só a guardiã) |
 | `rpg/itens.py` | consumíveis, equipamento, afixos, únicos |
-| `rpg/comitiva/` | companheiros: `catalogo` (quem são, reações), `grupo` (entrar, sair, aprovação; `junto`/`fora`: quem anda com você mas não está aqui, por regras em `AUSENCIAS` que a campanha registra), `conversas` (a história de cada um e as `avulsas`, de uma vez só), `luta` (a ação de cada um em `ACOES`), `fogueira`, `tela` |
+| `rpg/comitiva/` | companheiros: `catalogo` (quem são, reações), `grupo` (entrar, sair, aprovação; `junto`/`fora`: quem anda com você mas não está aqui, por regras em `AUSENCIAS` que a campanha registra), `conversas` (a história de cada um e as `avulsas`, de uma vez só), `luta` (a ação de cada um em `ACOES`), `ficha` (o equipamento e os atributos de cada um e a regra única de vestir, tirar e trocar peças, com a bolsa do grupo: todo gesto da janela do Inventário passa por ela), `fogueira`, `tela` |
 
 ## Saves
 
