@@ -569,7 +569,7 @@ def selo_da_vez(g):
         u, n, ef, e = achados[oid]
         # O efeito de agora: o dano por turno (veneno, sangramento, chamas) ou a frase com o número do estado.
         if e.get("tique"):
-            info = f"{dano_do_tique(cb, n, ef)} de dano por turno" + (f" e {e['dica']}" if e["golpe"] else "")
+            info = f"{dano_do_tique(cb, n, ef, u)} de dano por turno" + (f" e {e['dica']}" if e["golpe"] else "")
         elif n == "iniciativa":  # o principal: um turno a mais, só do herói, e o bônus (o do estado) no primeiro golpe
             juntos = bool(getattr(cb, "aliados", None)) or bool(getattr(cb, "companheiro", None))
             info = ("Você ganha um turno extra antes dos inimigos" + (" (só você: comitiva e animal agem a partir do turno seguinte)"

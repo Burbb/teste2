@@ -73,12 +73,17 @@ GOLPE_ETAPAS = {
 
 def estado(nome, icone, familia, titulo=None, negativo=False, tique=None, perde_turno=False, imune=None, resiste=None,
            camadas=0, rotulo_camadas=None, dica="", descrever=None, buff=None, ajuste_tique=None, golpe=None,
-           depois=None, protege=(), agora=None, imunes=None):
+           depois=None, protege=(), agora=None, imunes=None, tipo_dano=None):
     return dict(nome=nome, icone=icone, familia=familia, titulo=titulo or nome.capitalize(), negativo=negativo,
                 tique=tique, perde_turno=perde_turno,
                 imune=imune, resiste=resiste, camadas=camadas, rotulo_camadas=rotulo_camadas, dica=dica,
                 descrever=descrever, buff=buff, ajuste_tique=ajuste_tique, golpe=golpe or {}, depois=depois,
-                protege=protege, agora=agora, imunes=imunes)
+                protege=protege, agora=agora, imunes=imunes, tipo_dano=tipo_dano)
+
+
+def _imune_fogo(a):
+    from .combate.eficacia import mult_tracos
+    return mult_tracos(a, "fogo", "distancia") == 0
 
 
 def _clima_apaga(cb, dano):
@@ -148,7 +153,9 @@ ESTADOS = {
         descrever=lambda t, v, esc, ch, todos, rot: _chance(ch, f"sangramento: {_num(v)} por turno, {_turnos(t)}{_origem(esc)}.")),
     "queimadura": estado(
         "em chamas", "chama", "fogo", titulo="Chamas", negativo=True, tique=("queimadura", "amarelo"),
-        imune=lambda a: a.resist.get("fogo", 1) < 0.5, imunes="quem resiste muito ao fogo", camadas=bal.MAX_CHAMAS, rotulo_camadas="em chamas ×{s}",
+        # pega em todos, salvo quem é imune ao fogo (eficácia 0, uma regra explícita do inimigo); a resistência ao fogo
+        # reduz o dano por turno, uma vez, no tique (dano_do_tique), e a Combustão, no golpe dela (Combate.atacar)
+        imune=_imune_fogo, tipo_dano="fogo", camadas=bal.MAX_CHAMAS, rotulo_camadas="em chamas ×{s}",
         ajuste_tique=_clima_apaga, dica="a Combustão detona o que falta arder"),
     "maldito": estado(
         "amaldiçoado", "gota_roxa", "maldicao", titulo="Maldição", negativo=True, tique=("maldição", "magenta"),
@@ -236,10 +243,16 @@ def descrever_buff(u, efeito, turnos, valor):
     return f"{(e or {}).get('nome', efeito)} por {_turnos(turnos)}."
 
 
-def dano_do_tique(cb, nome, ef):
-    """Quanto um estado que fere a cada turno tira agora: o combate aplica esta conta e a tela mostra a mesma."""
+def dano_do_tique(cb, nome, ef, alvo=None):
+    """Quanto um estado que fere a cada turno tira agora: o combate aplica esta conta e a tela mostra a mesma. O valor
+    guardado no estado é o de quem o aplicou; o estado com `tipo_dano` (a Queimadura: fogo) passa pela eficácia do
+    alvo aqui, uma vez (traços e resistência, a mesma conta do golpe)."""
     est = ESTADOS[nome]
-    dano = max(1, int(ef["v"]))
+    v = ef["v"]
+    if est.get("tipo_dano") and alvo is not None:
+        from .combate.eficacia import mult_tracos
+        v *= mult_tracos(alvo, est["tipo_dano"], "distancia")
+    dano = max(1, int(v))
     if est["ajuste_tique"] and cb:
         dano = est["ajuste_tique"](cb, dano)
     return dano

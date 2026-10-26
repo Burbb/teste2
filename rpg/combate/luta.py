@@ -280,6 +280,8 @@ class Combate(Golpes, AcoesDoHeroi, TurnosDosOutros):
                 if r:
                     return self.fim(r)
             pular_inimigos = False
+            if self._debandada():  # avaliada uma vez, no fim da rodada
+                return self.fim("vitoria")
             self.j.rec = min(self.j.max_rec, self.j.rec + self.j.regen)
             for a in self.aliados:
                 if getattr(a, "max_rec", 0) and a.vivo:
@@ -348,27 +350,48 @@ class Combate(Golpes, AcoesDoHeroi, TurnosDosOutros):
             return "derrota"
         if not self.inimigos_vivos():
             return "vitoria"
-        if self._debandada():
-            return "vitoria"
         return None
 
-    def _debandada(self):
-        """O fim arrastado (roadmapIDEIAS/26): caído o último perigoso (chefe, quem prepara golpe, quem invoca), os que
-        sobram somando pouca vida fogem e a luta acaba. Não vale para chefe, luta sem saída, luta de um inimigo só nem
-        luta de cena (com título próprio: o texto depois dela conta com os corpos)."""
-        vivos = self.inimigos_vivos()
-        if len(self.inimigos) < 2 or not self.pode_fugir or not self.mortos or self.cena_propria:
+    # Habilidades de inimigo que sustentam o grupo (curar, fortalecer, chamar, prender): quem as tem não é inofensivo.
+    SUSTENTA = ("uivo", "grito_guerra", "cura", "regenerar", "reviver", "invocar", "maldicao", "grito_terror", "teia",
+                "esmagar", "devorar")
+
+    def _inofensivo(self, e):
+        """Um inimigo que sobrou e não ameaça mais (a debandada): sem golpe preparado, sem chamar ninguém, sem habilidade
+        que sustente o grupo, sem regra própria (chefe, único, elite com afixo, piso, o que a vitória sobre ele mostra) e
+        que não derruba ninguém do seu lado nem com um crítico."""
+        if e.chefe or e.carregando or e.invoca or getattr(e, "unico", False) or e.afixo:
             return False
-        if any(e.chefe or e.carregando or e.invoca or getattr(e, "piso", None) is not None for e in vivos):
+        if getattr(e, "piso", None) is not None or getattr(e, "ao_vencer", None):
+            return False
+        if any(h in self.SUSTENTA for h in e.habilidades):
+            return False
+        lado = [self.j] + [a for a in self.aliados if a.vivo]
+        return all(self.dano_previsto(e, a) * bal.DEBANDADA_CRITICO < a.hp for a in lado if a.vivo)
+
+    def _debandada(self):
+        """O fim de uma luta comum já decidida (roadmapIDEIAS/26): no fim da rodada, com metade ou mais do grupo morta,
+        você com boa parte da vida e os que sobram inofensivos (_inofensivo) e somando pouca vida, eles podem desistir e
+        fugir (uma chance por rodada). Não vale para luta sem saída, luta de um inimigo só nem luta de cena (com título
+        próprio). Quem foge dá XP (o encontro foi vencido), mas não ouro nem espólio, e não conta como abate."""
+        vivos = self.inimigos_vivos()
+        if len(self.inimigos) < 2 or not self.pode_fugir or self.cena_propria or not vivos:
+            return False
+        if len(self.mortos) * 2 < len(self.inimigos) or self.j.hp < self.j.max_hp * bal.DEBANDADA_VIDA_HEROI:
             return False
         if sum(e.hp for e in vivos) > self.vida_inicial * bal.DEBANDADA_FRACAO:
             return False
+        if not all(self._inofensivo(e) for e in vivos):
+            return False
+        if self.rng.random() >= bal.DEBANDADA_CHANCE:
+            return False
         for e in vivos:
             e.fugiu = True
-            e.debandou = True  # conta como vencido (o XP e o ouro vêm; o espólio do corpo, não)
+            e.debandou = True
             self.lance("fuga", de=self.uid(e))
         quem = tx.maiuscula(tx.lista_natural([self.nome(e) for e in vivos]))
         self.dizer(f"{quem} {'desiste e foge' if len(vivos) == 1 else 'desistem e fogem'}.", "verde")
+        self.dizer("Quem foge não deixa espólio nem conta como abate nos contratos.", "cinza")
         return True
 
     def mostrar_estado(self):
@@ -412,7 +435,7 @@ class Combate(Golpes, AcoesDoHeroi, TurnosDosOutros):
             ef = c.efeitos[nome]
             est = ESTADOS.get(nome, {})
             if est.get("tique") and c.vivo:
-                dano = dano_do_tique(self, nome, ef)
+                dano = dano_do_tique(self, nome, ef, c)
                 c.hp = max(0, c.hp - dano)
                 rot, cor = est["tique"]
                 self.lance("tique", em=self.uid(c), dano=dano, efeito=nome, hp=c.hp, max_hp=c.max_hp)
@@ -467,7 +490,9 @@ class Combate(Golpes, AcoesDoHeroi, TurnosDosOutros):
                                "verde")
 
         if resultado == "vitoria":
-            derrotados = [e for e in self.inimigos if not e.fugiu or getattr(e, "debandou", False)]
+            # vencer o encontro não é matar a criatura: quem debandou dá XP, mas não ouro, espólio nem abate
+            derrotados = [e for e in self.inimigos if not e.fugiu]
+            debandados = [e for e in self.inimigos if getattr(e, "debandou", False)]
             self.ui.separador("verde")
             if not g.ui.conquistas_na_tela:  # na tela, a faixa de Vitória e o quadro do espólio dizem isso
                 self.dizer("VITÓRIA!", "verde+negrito")
@@ -479,13 +504,15 @@ class Combate(Golpes, AcoesDoHeroi, TurnosDosOutros):
                 self.ui.atualizar()  # a arena sai antes: a cena não divide a tela com a carta dele
                 for f in ao_vencer:
                     f()
-            g.ui.celebrar("vitoria", {"inimigos": len(derrotados), "chefe": any(e.chefe for e in derrotados)})
+            g.ui.celebrar("vitoria", {"inimigos": len(derrotados) + len(debandados),
+                                      "chefe": any(e.chefe for e in derrotados)})
             # O espólio: o ouro, o XP, os contratos que andaram e o que se acha nos corpos. Na tela gráfica tudo
             # isso (e o que o evento ainda der logo depois) vai para um quadro só, antes da próxima pergunta.
             g.abrir_espolio()
             if recuperadas > 0:
                 g.achou("flechas", "Flechas", recuperadas)  # as recolhidas do campo, no quadro (já estão na aljava)
-            xp = int(comitiva.parte_do_xp(g) * sum(e.xp * bal.fator_xp(e.nivel - j.nivel) for e in derrotados))
+            xp = int(comitiva.parte_do_xp(g) * sum(e.xp * bal.fator_xp(e.nivel - j.nivel)
+                                                   for e in derrotados + debandados))
             g.ganhar_ouro(ouro, fonte="lutas")
             g.registrar_abates(derrotados)
             g.ganhar_xp(xp)

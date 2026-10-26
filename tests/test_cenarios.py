@@ -30,7 +30,8 @@ class Fogueira(Roteiro):
                 raise Parar
             self.conversou = True
             return next(i for i, o in enumerate(opcoes) if o.startswith("Conversar com Yara"))
-        return next((i for i, o in enumerate(opcoes) if o == "Acampar"), 0)  # na conversa, a primeira resposta
+        # acampar já ("Acampar e descansar até o amanhecer"; sem explorar antes); na conversa, a primeira resposta
+        return next((i for i, o in enumerate(opcoes) if o.startswith("Acampar")), 0)
 
 
 class TestCenarioFogueira(unittest.TestCase):

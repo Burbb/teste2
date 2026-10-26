@@ -219,7 +219,10 @@ CONTRATO_XP_FRACAO = 0.12     # do XP que falta para subir naquele nível
 
 # Etapa 4 (roadmapIDEIAS/26): caído o último inimigo perigoso, os que sobram fogem se somarem até esta fração da vida
 # inicial do grupo (o fim arrastado da caçada final). Provisório.
-DEBANDADA_FRACAO = 0.25
+DEBANDADA_FRACAO = 0.15
+DEBANDADA_VIDA_HEROI = 0.4    # a debandada só com você acima disso: a luta está encaminhada
+DEBANDADA_CHANCE = 0.5        # a chance, por rodada, de os que sobram desistirem (quando todo o resto vale)
+DEBANDADA_CRITICO = 1.6       # quem ainda derruba alguém do seu lado com um crítico não é inofensivo
 DEFENDER = 0.4          # Defender: −40% de dano até a próxima vez de quem defende
 PENA_COMPANHEIRO = 0.4  # a Pena de Fênix num companheiro caído: volta com 40% da vida
 REERGUER = 0.3          # o Reerguer de Odette: 30%, uma vez por luta

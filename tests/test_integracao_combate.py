@@ -234,25 +234,120 @@ class TestFimDaLuta(unittest.TestCase):
         self.assertEqual(g.j.rec, g.j.max_rec)
         self.assertLess(g.j.hp, g.j.max_hp)
 
-    def test_debandada_so_na_luta_comum(self):
-        g = jogo()
-        inimigos = lobos(g, 3)
-        cb = Combate(g, inimigos, pode_fugir=True)
+    def _quase_vencida(self, g, titulo=None, vida_resto=8):
+        """Quatro lobos fracos: dois mortos, dois com pouca vida; o sorteio da debandada sempre a favor."""
+        inimigos = lobos(g, 4)
+        for e in inimigos:
+            e.atk, e.poder, e.habilidades = 1, 0, []  # sem o Uivo do lobo (sustenta o grupo: não debandaria)
+        cb = Combate(g, inimigos, pode_fugir=True, titulo=titulo)
         cb.vida_inicial = sum(e.max_hp for e in inimigos)
-        inimigos[0].hp = 0
-        cb.mortos.append(inimigos[0])
-        for e in inimigos[1:]:
-            e.hp = 10
+        for e in inimigos[:2]:
+            e.hp = 0
+            cb.mortos.append(e)
+        for e in inimigos[2:]:
+            e.hp = vida_resto
+        cb.rng = random.Random(0)
+        cb.rng.random = lambda: 0.0
+        return cb, inimigos
+
+    def test_debandada_na_luta_comum_decidida(self):
+        g = jogo()
+        cb, _ = self._quase_vencida(g)
         self.assertTrue(cb._debandada())
-        g2 = jogo()
-        inimigos = lobos(g2, 3)
-        cena = Combate(g2, inimigos, pode_fugir=True, titulo="A Despensa")
-        cena.vida_inicial = sum(e.max_hp for e in inimigos)
-        inimigos[0].hp = 0
-        cena.mortos.append(inimigos[0])
-        for e in inimigos[1:]:
-            e.hp = 10
+
+    def test_sem_debandada_com_ameaca(self):
+        g = jogo()
+        cb, inimigos = self._quase_vencida(g)
+        inimigos[2].carregando = {"mult": 2.5, "rotulo": "Bote"}  # prepara um golpe perigoso
+        self.assertFalse(cb._debandada())
+        cb, inimigos = self._quase_vencida(jogo())
+        inimigos[3].atk = 500  # pouca vida, mas ainda derruba você
+        self.assertFalse(cb._debandada())
+        cb, inimigos = self._quase_vencida(jogo())
+        inimigos[3].habilidades = ["uivo"]  # sustenta o grupo
+        self.assertFalse(cb._debandada())
+        cb, inimigos = self._quase_vencida(jogo())
+        inimigos[3].afixo = "anciao"  # elite
+        self.assertFalse(cb._debandada())
+
+    def test_sem_debandada_na_cena_no_chefe_e_com_voce_mal(self):
+        cena, _ = self._quase_vencida(jogo(), titulo="A Despensa")
         self.assertFalse(cena._debandada())
+        cb, inimigos = self._quase_vencida(jogo())
+        inimigos[2].chefe = True
+        self.assertFalse(cb._debandada())
+        g = jogo()
+        cb, _ = self._quase_vencida(g)
+        g.j.hp = int(g.j.max_hp * 0.3)  # a luta não está encaminhada para você
+        self.assertFalse(cb._debandada())
+        cb, _ = self._quase_vencida(jogo(), vida_resto=200)  # os que sobram ainda somam muita vida
+        self.assertFalse(cb._debandada())
+
+    def test_quem_foge_da_xp_mas_nao_conta_como_abate_nem_da_espolio(self):
+        g = jogo()
+        loc = next(l for l in g.mundo["locais"] if l["tipo"] != "vila")
+        g.mundo["atual"] = loc["id"]
+        g.contratos.append({"id": 1, "tipo": "caca", "local": loc["id"], "familia": "lobo", "total": 10, "feito": 0,
+                            "ouro": 1, "xp": 1, "desc": "teste"})
+        cb, inimigos = self._quase_vencida(g)
+        xp, ouro, saque = [], [], []
+        g.ganhar_xp = lambda n, **k: xp.append(n)
+        g.ganhar_ouro = lambda n, **k: ouro.append(n)
+        g.saque_de_combate = lambda lista: saque.append(list(lista))
+        abates = g.estatisticas["abates"]
+        self.assertTrue(cb._debandada())
+        cb.fim("vitoria")
+        self.assertEqual(g.estatisticas["abates"] - abates, 2)  # só os dois mortos
+        self.assertEqual(g.contratos[0]["feito"], 2)
+        self.assertEqual([e for e in saque[0]], inimigos[:2])
+        self.assertEqual(ouro, [sum(e.ouro for e in inimigos[:2])])
+        self.assertGreater(xp[0], 0)
+
+
+class TestQueimadura(unittest.TestCase):
+    """A resistência ao fogo reduz o dano da Queimadura, uma vez; só a imunidade explícita (o fogo não fere) impede."""
+
+    def _alvo(self, g, resist):
+        e = g.inimigo("lobo", nivel=1)
+        e.hp = e.max_hp = 10 ** 4
+        e.tracos, e.resist = [], {"fogo": resist}
+        return e
+
+    def test_pega_em_quem_resiste_e_arde_menos(self):
+        from rpg.estados import dano_do_tique
+        g = jogo("mago", nivel=4, spec="piromante")
+        comum, resistente = self._alvo(g, 1.0), self._alvo(g, 0.3)
+        cb = Combate(g, [comum, resistente], pode_fugir=False)
+        v = cb.valor_queimadura(g.j)
+        for e in (comum, resistente):
+            self.assertTrue(cb.aplicar(e, "queimadura", 3, valor=v, acumula=True))
+        self.assertEqual(dano_do_tique(cb, "queimadura", comum.efeito("queimadura"), comum), max(1, int(v)))
+        self.assertEqual(dano_do_tique(cb, "queimadura", resistente.efeito("queimadura"), resistente),
+                         max(1, int(v * 0.3)))
+
+    def test_imune_so_quando_o_fogo_nao_fere(self):
+        g = jogo("mago", nivel=4, spec="piromante")
+        imune = self._alvo(g, 0)
+        cb = Combate(g, [imune], pode_fugir=False)
+        self.assertFalse(cb.aplicar(imune, "queimadura", 3, valor=5, acumula=True))
+
+    def test_combustao_aplica_a_resistencia_uma_vez(self):
+        from rpg.habilidades import HABILIDADES
+        g = jogo("mago", nivel=4, spec="piromante")
+        danos = {}
+        for resist in (1.0, 0.5):
+            alvo = self._alvo(g, resist)
+            alvo.defesa = 0
+            cb = Combate(g, [alvo], pode_fugir=False)
+            cb.rng = random.Random(0)
+            cb.rng.random = lambda: 0.99  # sem esquiva nem crítico
+            cb.rng.uniform = lambda a, b: 1.0
+            cb.aplicar(alvo, "queimadura", 3, valor=20, acumula=True)
+            antes = alvo.hp
+            HABILIDADES["combustao"]["fn"](cb, g.j, alvo)
+            danos[resist] = antes - alvo.hp
+            self.assertIsNone(alvo.efeito("queimadura"))  # consumida
+        self.assertAlmostEqual(danos[0.5] / danos[1.0], 0.5, delta=0.02)
 
 
 class TestSave(unittest.TestCase):

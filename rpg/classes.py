@@ -126,7 +126,8 @@ SPECS = {
         "reage": ("curiosidade",),
         "limites": ("A Combustão rende pouco sem chamas no alvo: acender vem antes (a Brasa e a Chuva de Brasas acendem "
                     "sempre; a Bola de Fogo, às vezes).",
-                    "Quem resiste muito ao fogo não pega fogo; a chuva enfraquece as chamas."),
+                    "Quem resiste ao fogo arde menos (a resistência reduz a Queimadura e a Combustão); a chuva "
+                    "enfraquece as chamas."),
     },
     "necromante": {
         "nome": "Necromante", "classe": "mago",
