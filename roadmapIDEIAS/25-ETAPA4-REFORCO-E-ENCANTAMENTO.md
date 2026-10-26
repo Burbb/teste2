@@ -384,6 +384,12 @@ Elona Mobile (fornalha de encantamento); o que se aproveitou de cada uma está n
 existir; a comparação de teste ficou fechada e marcada; a escrita virou rótulo e número (skill `texto-regras-fenda`,
 "Telas de serviço"). Regras e números sem mudança.
 
+**Direção escolhida: A · Bancada (Jean, 26/10/2026).** A 4ª versão do protótipo é a candidata refinada dela, em
+avaliação, não integrada: a bancada virou uma chapa rebitada com os encaixes ligados (materiais → peça → resultado,
+princípio da Forja de Stardew Valley), a ficha ficou mais larga e sem repetir o ganho, as marcas só contam o reforço,
+o limite é "Reforço máximo +4" sem botão, a confirmação da desmontagem foi para o ferro com o vermelho só no aviso e
+na ação, e o reforço feito tem um retorno curto. A A anterior e a B ficam como histórico. Regras e números iguais.
+
 **Pendências futuras:** elevação de base excepcional (exemplo numérico no LEIA-ME; elegibilidade, marcos, custo e o
 destino do reforço abertos); encantamento (conversa própria); arte, celebração e som; fontes concretas na campanha; a
 aljava. A etapa 4 continua aberta.

@@ -7760,3 +7760,13 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   botões de estados claros; escrita de interface (rótulo e número); "Encantar" fora até existir; a comparação de
   teste fechada e marcada. Pesquisa visual em Soul Knight Prequel e Elona Mobile (registrada no LEIA-ME). v1 e v2
   guardadas em `tela/historico/`. Regras e números iguais. Aguarda a avaliação visual do Jean antes de integrar.
+
+### 26/10/2026 (data do computador local) — Reforço: a A · Bancada escolhida e refinada (protótipo)
+
+- **Decisão do Jean:** a direção A · Bancada. A A anterior e a B ficam em `tela/historico/v3`.
+- **Candidata em avaliação (4ª versão):** a chapa rebitada com os encaixes ligados (materiais → peça no suporte →
+  resultado) e a ação no pé; a ficha mais larga só com nome, dono e propriedades (a afetada destacada pelo valor); Fio e
+  Runas como as duas opções do visor; as marcas só contam o reforço; "Reforço máximo +4" sem botão; a confirmação no
+  ferro (Cancelar · Desmontar, o vermelho no aviso e na ação); o retorno curto do reforço.
+- **Conferido** a 1920×945 e 1280×720: o fluxo com recursos (um passo por ação, custo e próximo preço, seleção e foco
+  mantidos), Fio e Runas, falta, limite, nome longo, seleção vazia, desmontar cancelado e confirmado. Não integrado.
