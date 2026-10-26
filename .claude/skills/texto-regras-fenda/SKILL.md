@@ -1,0 +1,82 @@
+---
+name: texto-regras-fenda
+description: Escrever, revisar ou conferir o texto de regras de The Unquiet (Crônicas da Fenda): a descrição de habilidades, estados, atributos, itens e ações da luta, as dicas (tooltips) e as linhas do Grimório. Use quando uma entrega cria ou muda uma regra que aparece na tela, quando o Jean pede revisão de descrições ou de dicas, ou antes de fechar uma entrega de combate ou progressão. Não serve para narrativa, diálogos nem lore (esses seguem o critério editorial do roadmapIDEIAS/07-ETAPAS.md).
+---
+
+# Texto de regras de The Unquiet
+
+Vale para o texto que diz **o que uma coisa faz no jogo**. A cena, a fala e o lore seguem o
+[critério editorial](../../../roadmapIDEIAS/07-ETAPAS.md#critério-editorial); esta skill não as encurta.
+
+## Três registros, três lugares
+
+| Registro | Onde aparece | O que leva |
+|---|---|---|
+| **Descrição mecânica** | `desc` da habilidade (`rpg/habilidades.py`, `rpg/comitiva/luta.py`), a carta da ação na luta, a linha do menu de texto | O efeito, em quem, quanto, por quanto tempo e a condição. Uma ou duas frases. |
+| **Dica de consulta** | as `linhas` do Grimório, a dica do atributo na ficha, a dica do estado na carta | A conta (escala, fórmula, valor de agora), os tetos, as exceções. Abre com o mouse ou o foco do teclado. |
+| **Narrativa** | `Dizer` na luta, eventos, cenas | O que se vê e ouve. Não é a regra: não repete números da descrição. |
+
+O custo, o recurso, o alvo e o tipo de dano já aparecem no componente (a carta: "14 de Mana · Alvo: Inimigo único ·
+fogo"). A descrição não os repete, salvo quando o alvo é parte da frase ("a todos os inimigos").
+
+## Critérios
+
+- Responder direto: **o que faz, em quem, em que condição**. Verbo concreto no começo ("Causa", "Aplica", "Consome",
+  "Reduz", "Cura"), na 3ª pessoa do indicativo.
+- Frases curtas. Sem introdução, sem autoelogio ("poderoso", "devastador", "o golpe mais caro"), sem conselho de
+  estratégia ("ideal para…", "use quando…").
+- Manter os números de decisão: porcentagem do atributo que escala, chance, duração, camadas, teto, condição.
+- Distinguir: **dano imediato** ("Causa"), **dano periódico** ("por turno do alvo"), **aplicar** um estado,
+  **acumular** camadas ("até 3 camadas") e **consumir** ("Consome a Queimadura").
+- Duração sempre com o dono do turno: "por 2 turnos seus", "por 3 turnos dele (do alvo)". O estado conta no começo do
+  turno de quem o carrega.
+- Sabor fica fora da regra: a frase de cena vai no `Dizer`, não na `desc`.
+
+## Vocabulário (etapa 4)
+
+- **turno** (ou **vez**): a ação de um combatente na ordem. **Rodada**: todos agiram (inclusive quem perdeu a vez).
+  Nunca "turno" no sentido de rodada.
+- **dano físico / mágico**: mágico é todo golpe que não é físico (fogo, gelo, arcano, sagrado, sombra).
+- **Tenacidade** (da Vontade): chance de resistir a atordoar, congelar e prender. **Resistência elemental** é outra
+  coisa: reduz o dano de um tipo. Não misturar.
+- Estados pelo nome da tela, com maiúscula quando é o nome do estado: Queimadura, Sangramento, Veneno, Fragilizado,
+  Defesa quebrada. O particípio concorda com quem recebe ("Odette fica envenenada").
+- **Atordoar**: perde a próxima vez (e o golpe que preparava). "Congelar" e "prender" são o mesmo estado, com outro
+  rótulo; a descrição diz o efeito ("perde a próxima vez").
+- **Ultimate**: o componente mostra a marca ("Ultimate · 1 vez por luta"). A descrição não começa com "Ultimate:".
+
+## Conferir contra a regra implementada
+
+1. Leia a definição: os blocos (`Dano(mult, stat, tipo, esquiva)`, `Aplicar(estado, turnos, valor, chance)`,
+   `Acender`, `Roubo`, `Curar`) ou a função (`fn`). A `desc` não pode prometer o que o bloco não faz, nem calar o que
+   ele faz (a Prece de Odette limpa males com aprovação 75 ou mais).
+2. Compare com as linhas do Grimório do mesmo herói: os dois têm de dizer a mesma coisa com os mesmos termos.
+   O script de conferência gera todas de uma vez (um herói de cada especialização no nível 6, `grimorio.dados`).
+3. Número que muda com o herói (o que o Meditar devolve) vem de `desc_fn` ou das `linhas`: a tela não calcula.
+4. Rode o jogo e leia a carta da luta e a página do Grimório na resolução do Jean.
+
+## Fontes consultadas (outubro de 2026)
+
+- **Slay the Spire**, tradução PT-BR (repositório `paulohauck/slaythespire-ptbr-localization`, `cards.json`):
+  imperativo, com o número no lugar marcado (`!D!`, `!M!`): "Cause !D! de dano. Aplique !M! de Vulnerabilidade.";
+  "Ganhe !B! de Proteção."; condição explícita: "Se o inimigo estiver Envenenado, cause !D! de dano novamente.";
+  a operação dita pelo verbo: "Dobre o Veneno de um inimigo."
+- **Path of Exile**, texto oficial em PT-BR (poedb.tw/pt): a frase de efeito separada das linhas de mecânica, uma por
+  linha: "60% de chance de Envenenar ao Acertar"; "Duração base é de 1 segundo".
+- Revisões anteriores do projeto: as dicas da 1.202.1 e 1.202.3 (vida máxima bloqueada, ferimentos, bandagem,
+  achado): dizer o que reduz e quanto, e como volta.
+
+Em comum: o efeito primeiro, um número por ideia, a condição como condição ("Se acertar,"), o detalhe da conta na
+consulta. Daqui saiu a escolha do indicativo ("Causa") em vez do imperativo, para combinar com a voz das dicas que o
+jogo já tem.
+
+## Antes e depois (1.211.0)
+
+| Antes | Depois |
+|---|---|
+| Descarga: "220% de dano arcano num alvo: o golpe mais caro do mago." | "Causa 220% do Poder em dano arcano." |
+| Bola de Fogo: "150% de dano de fogo; costuma acender o alvo (as chamas acumulam até 3 camadas)." | "Causa 150% do Poder em dano de fogo. Se acertar, 60% de chance de aplicar 1 camada de Queimadura (até 3)." |
+| Conflagração: "Ultimate: fogo em todos; as chamas de cada um explodem." | "Causa 70% do Poder em dano de fogo a todos os inimigos e consome a Queimadura de cada um, como a Combustão. Não pode ser esquivada." |
+| Tiro Imobilizador: "…60% de chance de prender o alvo…" (e o Grimório dizia "atordoar") | "…Se acertar, 60% de chance de atordoar o alvo: ele perde a próxima vez e o golpe que preparava." |
+| Grimório: "quebrar a defesa de o alvo (−40%) por 2 turnos dele." | "Reduz a defesa do alvo em 40% por 2 turnos dele." |
+| Prece (Odette): "Cura 220% do Poder + 12% da vida máxima do aliado." | "Cura o aliado em 220% do Poder + 12% da vida máxima dele. Com a aprovação de Odette em 75 ou mais, também remove os males." |
