@@ -1926,9 +1926,10 @@ async function cenarioAneis(browser) {
         await (await page.waitForSelector('#doca .atalho[data-rotulo="Inventário"]', { timeout: 10000 })).click();
         const cel = await page.waitForSelector(".mochila-grade [data-mochila]", { timeout: 10000 });
         await cel.dblclick();
-        const menu = await page.$$eval(".menu-espaco button", (bs) => bs.map((b) => b.textContent));
+        // o menu da janela do grupo (1.213.0): um botão por espaço, com o anel que volta para a bolsa; as setas andam
+        const menu = await page.$$eval(".menu-grupo button", (bs) => bs.map((b) => b.textContent));
         conferir(menu.length === 3 && /Anel 1/.test(menu[0]) && /Anel 2/.test(menu[1]), "dois cliques num anel da mochila: o menu pergunta qual substituir");
-        await page.keyboard.press("Tab");
+        await page.keyboard.press("ArrowDown");
         await page.keyboard.press("Enter");
         await page.waitForTimeout(800);
         const fim = await page.evaluate(() => ({ ...App.estado.heroi.equip }));

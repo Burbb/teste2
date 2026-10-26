@@ -35,6 +35,8 @@ class Progressao:
             self.distribuir_pela_classe()
         j.recalcular()
         j.hp = min(j.max_hp, j.hp + max(0, j.max_hp - antes_hp))  # só ganha o que o máximo aumentou
+        for m in comitiva.membros(self) + comitiva.reserva(self):  # 1 ponto livre por nível para cada um (ficha.py)
+            comitiva.ficha.preparar(m, j.nivel - 1)["pontos_atributo"] += comitiva.ficha.PONTOS_POR_NIVEL
         comitiva.atualizar_vida_maxima(self)
         j.rec = min(j.max_rec, j.rec + max(0, j.max_rec - antes_rec))
         registrar(self, "nivel", stats=telemetria.instantaneo(j), fontes=telemetria.fontes_poder(self),

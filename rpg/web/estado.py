@@ -250,6 +250,86 @@ def explicar_reputacao(g):
     return {"titulo": titulo, "linhas": linhas}
 
 
+def _soma(lista, total):
+    """A conta de um número do companheiro: "base 11,6 (nível 3) + equipamento 2 = 13,6"; só a base, sem conta."""
+    (rotulo, base), resto = lista[0], lista[1:]
+    if not resto:
+        return f"a base de {rotulo}"
+    return (f"base {_num(round(base, 1))} + " + " + ".join(f"{n} {_num(round(v, 1))}" for n, v in resto)
+            ).replace("+ -", "− ") + f" = {_num(round(total, 1))}"
+
+
+def ficha_companheiro(g, m):
+    """A ficha de um companheiro na janela do grupo (1.213.0), no formato da do herói: os números que valem na luta
+    (com a lealdade), de onde vêm, os atributos com o "+" dos pontos livres, o crítico, a Tenacidade e as peças."""
+    f = comitiva.ficha
+    j, cid = g.j, m["id"]
+    d = comitiva.COMPANHEIROS[cid]
+    f.preparar(m, j.nivel)
+    at = comitiva.atributos(g, m)
+    leal = comitiva.lealdade(m)
+    rec = comitiva.luta.RECURSO[cid]
+    fem = rec in ("Fé", "Mana")
+    u = f.combatente(g, m)
+    valores = {"Ataque": at["atk"] * leal, "Defesa": at["defesa"], "Agilidade": at["agi"], "Poder": at["poder"] * leal}
+    reducao = 1 - bal.fator_defesa(at["defesa"], j.nivel)
+    esquiva = min(bal.ESQUIVA_MAX_AGI, at["agi"] * bal.ESQUIVA_POR_AGI)
+    nome_atk, _, _, _, stat_atk = comitiva.ATAQUE[cid]
+    info = {
+        "Ataque": ["Dano dos golpes físicos." + (f" Base do {nome_atk}." if stat_atk == "atk" else "")],
+        "Defesa": [f"Reduz em {_pct(reducao)} o dano de um inimigo do seu nível."],
+        "Agilidade": [f"Esquiva: {_pct(esquiva)} de chance por golpe ({_pct(bal.ESQUIVA_POR_AGI)} por ponto, até "
+                      f"{_pct(bal.ESQUIVA_MAX_AGI)}).", "Ordem dos turnos: mais Agilidade, mais cedo na rodada."],
+        "Poder": ["Dano e cura das magias e da fé." + (f" Base do {nome_atk}." if stat_atk == "poder" else "")],
+    }
+    for nome, stat in ATRIBUTOS_FICHA:
+        conta = _soma(f.partes(g, m, stat), at[stat])
+        if stat in ("atk", "poder") and leal != 1:
+            conta += f"; na luta, × {_num(round(leal, 2))} da lealdade (aprovação {m['aprovacao']})"
+        info[nome].append(f"De onde vem: {conta}.")
+    valores_base = f.atributos_de(m)
+    iniciais = f.INICIAIS[cid]
+    acima = {a: valores_base[a] - iniciais[a] for a in atr.ATRIBUTOS}
+    # os iniciais já estão nos números do catálogo: o que conta é o ponto além deles (sem "Soma 0")
+    def soma(a, ganho, alvo, total=""):
+        ini = f"do {iniciais[a]} inicial" if iniciais[a] == 1 else f"dos {iniciais[a]} iniciais"
+        regra = f"{ganho} por ponto além {ini}"
+        if not acima[a]:
+            return f"Cada ponto além {ini} soma {ganho.lstrip('+')} {alvo}{total}."
+        valor = _pct(acima[a] * atr.CRITICO_POR_PONTO) if ganho == "+1%" else acima[a] * int(ganho.strip("+"))
+        return f"Soma {valor} {alvo} ({regra}){total}."
+    rec_nome = f"{'à' if fem else 'ao'} {rec} {'máxima' if fem else 'máximo'}"
+    agora = {
+        "forca": soma("forca", "+1", "ao Ataque"),
+        "agilidade": soma("agilidade", "+1", "à Agilidade", f"; a Agilidade de luta é {at['agi']}"),
+        "constituicao": soma("constituicao", "+4", "à vida máxima", f"; a vida máxima é {at['max_hp']}"),
+        "intelecto": soma("intelecto", "+1", "ao Poder"),
+        "percepcao": soma("percepcao", "+1%", "ao crítico", f"; o crítico total é {_pct(grimorio.chance_critico(u))}"),
+        "vontade": (f"Dá {_pct(atr.tenacidade(u))} de Tenacidade ({_pct(atr.TENACIDADE_POR_PONTO)} por ponto, até "
+                    f"{_pct(atr.TENACIDADE_TETO)}). " + soma("vontade", "+3", rec_nome, f"; o máximo é {at['max_rec']}")),
+    }
+    base = [{"id": a, "nome": atr.NOMES[a], "sigla": atr.SIGLAS[a], "valor": valores_base[a], "linhas": [agora[a]],
+             "mais": {"motivo": f.motivo_atributo(g, cid, a)} if m["pontos_atributo"] else None}
+            for a in atr.ATRIBUTOS]
+    conceitos = [
+        {"id": "critico", "nome": "Crítico", "valor": _pct(grimorio.chance_critico(u)),
+         "linhas": [f"Chance de um golpe de {d['curto']} sair crítico (×{_num(grimorio.mult_critico(u))} de dano).",
+                    "Vem da Agilidade e da Percepção acima da inicial, e das peças."]},
+        {"id": "tenacidade", "nome": "Tenacidade", "valor": _pct(atr.tenacidade(u)),
+         "linhas": ["Chance de resistir a atordoar, congelar e prender.",
+                    f"Vem da Vontade: {_pct(atr.TENACIDADE_POR_PONTO)} por ponto, até {_pct(atr.TENACIDADE_TETO)}."]},
+    ]
+    sugestao = " › ".join(atr.SIGLAS[a] for a in f.SUGESTAO[cid])
+    return {"id": cid, "nome": d["curto"], "titulo": d["titulo"], "classe": f.CLASSE_PECAS[cid],
+            "pecas": f"Usa peças de {f.NOME_CLASSE[f.CLASSE_PECAS[cid]]} e as sem classe.",
+            "nivel": j.nivel, "hp": m["hp"], "max_hp": m["max_hp"], "max_rec": at["max_rec"], "recurso": rec,
+            "ferido": m["ferido"], "indisponivel": f.motivo_indisponivel(g, cid) if not g.combate_ativo else None,
+            "atributos": {k: int(round(v)) for k, v in valores.items()}, "atributos_info": info,
+            "atributos_penal": {}, "atributos_base": base, "pontos_atributo": m["pontos_atributo"],
+            "sugestao": sugestao, "conceitos": conceitos,
+            "equip": {slot: _item(it, rec) for slot, it in f.corpo(g, cid).items()}}
+
+
 def heroi(g):
     j = g.j
     ferimentos = []
@@ -305,6 +385,8 @@ def heroi(g):
                         if j.companheiro else None),
         "efeitos": _efeitos(j, g.combate_ativo),
         "comitiva": comitiva.estado(g),
+        # a janela do grupo: a ficha de cada companheiro que anda com você (quem espera no acampamento, não)
+        "grupo": [ficha_companheiro(g, m) for m in comitiva.membros(g)],
     }
 
 

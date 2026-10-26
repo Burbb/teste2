@@ -136,3 +136,72 @@
 :root body :is(.noite-item, .achado-espolio, .festa .ganho, .espolio-linha, .espolio-contrato) {
   border-width: 1px; border-radius: 2px; background: rgba(0, 0, 0, 0.3); }
 :root body :is(.noite-item, .achado-espolio, .espolio-linha, .espolio-contrato):not(.bom):not(.aviso):not(.perigo):not(.feito):not([class*="rar-"]) { border-color: var(--aresta); }
+
+/* ------------------------------------------------------------ a janela do grupo (1.213.0, telas/inventario.js)
+   As abas com o retrato de cada um; o boneco e a ficha do selecionado; embaixo do boneco, a ficha da peça marcada,
+   com as ações à vista. Componentes internos: aresta fina e a face leve, como os cartões. */
+:root body .tela.inventario.com-grupo { grid-template-columns: auto 1fr; }
+:root body .tela.inventario .grupo-abas { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 6px; padding-bottom: 8px;
+  box-shadow: var(--hud-fio, 0 1px 0 var(--ferro-fio)); }
+:root body .grupo-aba { display: flex; align-items: center; gap: 8px; padding: 4px 10px 4px 4px; font: inherit; font-size: 15px;
+  color: var(--tinta-2); cursor: pointer; border: 1px solid var(--aresta-face); border-radius: 2px; background: var(--hud-face);
+  box-shadow: var(--hud-relevo); }
+:root body .grupo-aba:is(:hover, :focus-visible) { border-color: var(--aresta-viva); background: var(--hud-face-viva); color: var(--tinta); }
+:root body .grupo-aba:focus-visible { outline: 2px solid var(--latao-claro); outline-offset: 2px; }
+:root body .grupo-aba.ativa { color: #fff3d6; border-color: var(--latao); box-shadow: inset 0 -2px 0 var(--latao), var(--hud-relevo); }
+:root body .grupo-aba.indisponivel .aba-retrato { filter: grayscale(1) brightness(0.7); }
+:root body .grupo-aba .aba-retrato { display: grid; place-items: center; width: 32px; height: 32px; }
+:root body .grupo-aba .aba-tag { font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--tinta-3); }
+:root body .grupo-aba .aba-pontos { font-family: var(--num); font-size: 16px; font-weight: 400; color: var(--latao-claro); }
+:root body .inv-corpo { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+:root body .ficha-mini .pecas { margin-top: 2px; font-size: 13px; color: var(--tinta-3); }
+:root body .ficha-mini .pior { margin-top: 2px; font-size: 13px; line-height: 1.35; color: var(--sangue-2); }
+:root body .botao-grupo[disabled] { opacity: 0.5; cursor: not-allowed; }
+/* a peça marcada com um clique: o contorno de latão (o arrasto continua com o anel verde) */
+:root body .tela.inventario .slot-px.marcado { outline: 2px solid var(--latao-claro); outline-offset: 2px; }
+:root body .tela.inventario :is(.espaco, .celula):focus-visible { outline: 2px solid var(--ouro); outline-offset: 2px; }
+/* a ficha da peça: a ficha do jogo (htmlItem) e as ações */
+:root body .peca-detalhe { width: 260px; padding: 8px 10px 10px; font-size: 14px; line-height: 1.4;
+  border: 1px solid var(--aresta-face); border-radius: 2px; background: var(--hud-face); box-shadow: var(--hud-relevo); }
+:root body .peca-detalhe .detalhe-vazio { font-size: 13px; color: var(--tinta-3); }
+:root body .peca-detalhe .detalhe-ficha b { display: block; font-family: var(--titulo); font-weight: 400; font-size: calc(var(--px) * 24); line-height: 1.05; color: #fff3d6; }
+:root body .peca-detalhe .tipo { font-size: 12px; color: var(--tinta-3); text-transform: uppercase; letter-spacing: 0.06em; margin: 2px 0 4px; }
+:root body .peca-detalhe .bonus { font-family: var(--num); font-size: 18px; line-height: 1.15; }
+:root body .peca-detalhe .comparacao { margin-top: 6px; padding-top: 4px; border-top: 1px solid var(--ferro-fio); display: flex; flex-direction: column;
+  font-family: var(--num); font-size: 17px; line-height: 1.15; }
+:root body .peca-detalhe .comparacao small { font-family: var(--texto); font-size: 11px; color: var(--tinta-3); }
+:root body .peca-detalhe .melhor { color: var(--bom); }
+:root body .peca-detalhe .pior { color: var(--sangue-2); }
+:root body .peca-detalhe .lore { margin-top: 6px; font-style: italic; color: var(--tinta-2); }
+:root body .peca-detalhe .atalho-shift { display: none; }
+:root body .peca-detalhe h5 { margin: 10px 0 6px; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--sec); }
+:root body .detalhe-acoes { display: flex; flex-direction: column; gap: 4px; margin-top: 8px; }
+:root body :is(.acao-peca, .peca-opcao, .botao-grupo) { display: flex; flex-direction: column; align-items: flex-start; text-align: left; font: inherit;
+  font-size: 14px; color: var(--tinta); cursor: pointer; padding: 4px 8px; border: 1px solid var(--aresta-face); border-radius: 2px;
+  background: var(--hud-face); box-shadow: var(--hud-relevo); }
+:root body :is(.acao-peca, .peca-opcao, .botao-grupo):is(:hover, :focus-visible) { border-color: var(--aresta-viva); background: var(--hud-face-viva); color: #fff7e6; }
+:root body :is(.acao-peca, .peca-opcao, .botao-grupo):focus-visible { outline: 2px solid var(--latao-claro); outline-offset: 1px; }
+:root body :is(.acao-peca, .peca-opcao, .botao-grupo) small { font-size: 12px; line-height: 1.3; color: var(--tinta-3); }
+:root body :is(.acao-peca, .menu-grupo button).bloqueada { color: var(--tinta-3); }
+:root body .detalhe-motivo { margin-top: 6px; font-size: 13px; }
+/* o menu do botão direito: o nome da peça menor que o das dicas, os botões da mesma largura */
+:root body .menu-grupo { max-width: 300px; }
+:root body .menu-grupo b { font-size: calc(var(--px) * 24); line-height: 1.05; }
+:root body .menu-grupo button, :root body .menu-grupo button:has(.menu-nota) { max-width: none; }
+:root body .pecas-espaco { display: flex; flex-direction: column; gap: 4px; }
+:root body .peca-opcao { flex-direction: row; align-items: center; gap: 8px; }
+:root body .peca-opcao img { flex: none; }
+:root body .peca-opcao span { display: flex; flex-direction: column; }
+:root body .botao-grupo.sugerir { flex-direction: row; align-items: baseline; gap: 8px; margin: 6px 0 2px; }
+@media (max-width: 920px) { :root body .peca-detalhe { width: auto; } }
+/* com largura (a coluna do meio a 1600 px ou mais), a ficha da peça vira a terceira coluna e fica à vista ao rolar */
+@media (min-width: 1600px) {
+  :root body #folha:has(.tela.inventario) { max-width: none; }  /* como a loja: a janela usa a coluna do meio inteira */
+  :root body .tela.inventario { grid-template-columns: auto minmax(0, 1fr) 260px; }
+  :root body .tela.inventario .inv-corpo { display: contents; }
+  :root body .tela.inventario :is(.boneco, .inv-lado, .peca-detalhe) { grid-row: 1; }
+  :root body .tela.inventario.com-grupo :is(.boneco, .inv-lado, .peca-detalhe) { grid-row: 2; }
+  :root body .tela.inventario .boneco { grid-column: 1; }
+  :root body .tela.inventario .inv-lado { grid-column: 2; }
+  :root body .tela.inventario .peca-detalhe { grid-column: 3; position: sticky; top: 8px; }
+}

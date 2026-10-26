@@ -24,6 +24,7 @@
     python -m tests.navegador.cenarios relatorio     # Explorar cai numa luta comum: o relatório e o que vem depois (EVENTO, VEZES, SEMENTE, PERIODO)
     python -m tests.navegador.cenarios muralha       # Guerreiro nv 6, Muralha + Contra-ataque (CONTRA) e o Broquel, contra bandidos e um cultista
     python -m tests.navegador.cenarios integracao    # TESTE da etapa 4: herói com a comitiva em lutas seguidas (CLASSE, ESPEC, NIVEL, COMITIVA, LUTA, CAIDO, PENAS, PONTOS)
+    python -m tests.navegador.cenarios grupo         # a janela do grupo: equipamento e atributos da comitiva (CLASSE, NIVEL, COMITIVA, CHEIA, FERIDO, LONGE)
 
 Imprime o endereço do servidor na primeira linha e fica no ar até ser encerrado.
 """
@@ -1186,7 +1187,60 @@ def integracao(ui):
         pass
 
 
-CENARIOS = {"integracao": integracao, "aneis": aneis, "mercado": mercado, "relatorio": relatorio, "combate": combate, "titulo": titulo, "vila": vila, "campanha": campanha, "baus": baus, "missao": missao,
+def grupo(ui):
+    """A janela do grupo (1.213.0, comitiva/ficha.py): o herói (CLASSE, padrão guerreiro) no NIVEL (padrão 4) na vila
+    do Vau, de manhã, com a COMITIVA (padrão "morel,odete"), cada um com os pontos livres dos níveis que passaram. Na
+    bolsa: peças de mago (para Odette), de guerreiro (para Morel), um arco (ninguém da comitiva usa), um anel e um
+    amuleto. Morel veste uma arma e um peito; Odette, um anel em cada dedo (a escolha do anel). CHEIA=1: a bolsa cheia
+    (12). FERIDO=<id>: ferido (pode ser equipado). LONGE=<id>: não está aqui (a aba apagada, nada muda nele). Abre no
+    Inventário com "i"."""
+    from rpg import itens
+    from rpg.ui import BotUI
+    classe = os.environ.get("CLASSE", "guerreiro")
+    nivel = int(os.environ.get("NIVEL", "4"))
+    g = Jogo(BotUI(random.Random(1)), seed=int(os.environ.get("SEMENTE", "11")), pasta_saves=tempfile.mkdtemp(),
+             hardcore=False)
+    g.iniciar("Jean", classe, "turvo")
+    ja_comecada(g)
+    g.j.nivel = nivel
+    rng = random.Random(7)
+    for cid in [c for c in os.environ.get("COMITIVA", "morel,odete").split(",") if c]:
+        cm.recrutar(g, cid)
+
+    def peca(cl, slot, raridade="magico"):  # anel e amuleto: sem classe (cl só escolhe o material)
+        return itens.gerar_equip(rng, cl or classe, nivel, slot=slot, raridade=raridade)
+    if cm.membro(g, "morel"):
+        cm.ficha.corpo(g, "morel").update(arma=peca("guerreiro", "arma", "comum"), armadura=peca("guerreiro", "armadura", "comum"))
+    if cm.membro(g, "odete"):
+        cm.ficha.corpo(g, "odete").update(anel1=peca(None, "anel", "comum"), anel2=peca(None, "anel", "magico"))
+    g.j.mochila = [peca("mago", "secundaria", "raro"), peca("mago", "arma"), peca("guerreiro", "armadura", "raro"),
+                   peca("guerreiro", "arma"), peca("arqueiro", "arma"), peca(None, "anel", "raro"), peca(None, "amuleto")]
+    if os.environ.get("CHEIA"):
+        while len(g.j.mochila) < 12:
+            g.j.mochila.append(peca(None, "amuleto", "comum"))
+    for cid in os.environ.get("FERIDO", "").split(","):
+        if cm.membro(g, cid):
+            cm.membro(g, cid)["ferido"] = True
+    longe = os.environ.get("LONGE")
+    if longe:
+        cm.AUSENCIAS.append(lambda g, m: {"curto": "espera do lado de fora", "texto": "Espera do lado de fora."}
+                            if m["id"] == longe else None)
+    for m in cm.membros(g):
+        cm.ficha.atualizar(g, m["id"])
+        m["hp"] = m["max_hp"]
+    loc = next(l for l in g.mundo["locais"] if l["chave"] == "vau_do_turvo")
+    g.mundo["atual"], loc["visitado"] = loc["id"], True
+    g.periodo, g.clima = 0, "limpo"
+    g.ui, ui.jogo = ui, g
+    g.j.recalcular()
+    g.j.hp, g.j.rec = g.j.max_hp, g.j.max_rec
+    try:
+        g.rodar()
+    except FimDeJogo:
+        pass
+
+
+CENARIOS = {"integracao": integracao, "grupo": grupo, "aneis": aneis, "mercado": mercado, "relatorio": relatorio, "combate": combate, "titulo": titulo, "vila": vila, "campanha": campanha, "baus": baus, "missao": missao,
             "recarga": recarga, "capela": capela, "retorno": retorno, "praca": praca, "encruzilhada": encruzilhada,
             "tiro_duplo": tiro_duplo, "covil": covil, "broquel": broquel, "muralha": muralha, "reacoes": reacoes, "resgate": resgate,
             "gelo": gelo, "abertura": abertura, "fogueira": fogueira,

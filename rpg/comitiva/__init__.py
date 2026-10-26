@@ -18,6 +18,7 @@ Em partes:
     luta.py       a comitiva na luta (o kit de cada companheiro, que você controla na vez dele: KITS)
     fogueira.py   a cena do acampamento e o menu da comitiva
     tela.py       o que a tela mostra (estado, explicação da aprovação)
+    ficha.py      o equipamento e os atributos de cada um; vestir, tirar e trocar peças (a regra única)
 
 Quem usa importa daqui (`from rpg import comitiva`; `comitiva.reagir(...)`).
 """
@@ -33,6 +34,7 @@ from .conversas import CONVERSAS, AVULSAS, conversa, avulsa, proxima_conversa, c
 from .tela import explicar_aprovacao, estado
 from .luta import preparar_combate, alvo_inimigo, gritar, KITS, ATAQUE, encerrar_combate
 from .fogueira import fogueira, menu
+from . import ficha
 
 __all__ = ["LIMITE", "COMPANHEIROS", "REACOES", "NIVEIS", "GRITOS", "CARINHO", "ATALHOS_FOGUEIRA", "dados", "membros",
            "membro", "presente", "AUSENCIAS", "fora", "junto", "reserva", "na_reserva", "disponivel", "nome", "flexao", "nivel", "lealdade", "atributos",
@@ -40,4 +42,4 @@ __all__ = ["LIMITE", "COMPANHEIROS", "REACOES", "NIVEIS", "GRITOS", "CARINHO", "
            "mudar_aprovacao", "reagir", "reagir_escolha", "verificar_partidas", "partir", "amanhecer", "depois_do_amanhecer",
            "comer", "pagar_soldo", "soldo_devido", "parte_do_xp", "descansar", "cuidar", "CONVERSAS", "AVULSAS", "conversa", "avulsa", "proxima_conversa",
            "conversar", "falar", "noite", "fala_ociosa", "carinho", "explicar_aprovacao", "estado", "preparar_combate",
-           "alvo_inimigo", "gritar", "KITS", "ATAQUE", "encerrar_combate", "fogueira", "menu"]
+           "alvo_inimigo", "gritar", "KITS", "ATAQUE", "encerrar_combate", "fogueira", "menu", "ficha"]

@@ -151,13 +151,14 @@ class Golpes:
             self.detalhe(txt, "vermelho" if defensor else "amarelo")
         else:
             self.ui.atualizar()
-        if u is self.j and dano:
+        if (u is self.j or veste(u)) and dano:  # o herói e a comitiva: as peças dela valem como as suas
             roubo = mod(u, "roubo_vida")
             if roubo:
                 # arredonda (e pelo menos 1): truncar zerava o roubo dos golpes pequenos e a build parecia não funcionar
                 self.curou(u, u.curar(max(1, round(dano * roubo))), "roubo", fonte=alvo,
                            rotulo=(nomes(u, "roubo_vida") or ["Roubo de vida"])[0])
-        espinhos = mod(alvo, "espinhos") if alvo is self.j and dano and alcance == "corpo" and u in self.inimigos else 0
+        espinhos = (mod(alvo, "espinhos") if (alvo is self.j or veste(alvo)) and dano and alcance == "corpo"
+                    and u in self.inimigos else 0)
         if espinhos and u.vivo:
             u.hp = max(0, u.hp - espinhos)
             self.lance("golpe", de=None, em=self.uid(u), dano=espinhos, crit=False, elemento="fisico", alcance="corpo",
@@ -166,7 +167,7 @@ class Golpes:
             self.detalhe(f"Espinhos ferem {u.nome}. ({espinhos})", "amarelo")
             if not u.vivo:
                 self.ao_morrer(u, por=alvo)
-        if alvo is self.j and alvo.vivo:
+        if (alvo is self.j or veste(alvo)) and alvo.vivo:
             disparar(self, alvo, "golpe_recebido", de=u, alcance=alcance, dano=dano)  # Martírio, Contra-ataque...
         ret = alvo.efeito("retaliando") if alvo.vivo and not reacao else None
         if ret and dano and alcance == "corpo" and u in self.inimigos and u.vivo:  # o Contragolpe (estados.py)
@@ -280,11 +281,19 @@ class Golpes:
         j = self.j
         disparar(self, j, "morte", alvo=c, por=por, tipo=tipo)  # Colheita, Rei dos Mortos...
         if por is not j:
+            if veste(por) and mod(por, "vida_abate"):  # a peça de um companheiro: a vida é de quem derrubou
+                self.curou(por, por.curar(mod(por, "vida_abate")),
+                           rotulo=(nomes(por, "vida_abate") or ["Vida por abate"])[0], conta=False)
             return
         if mod(j, "vida_abate"):  # a tela mostra de onde veio a vida (antes, a barra só subia no redesenho)
             self.curou(j, j.curar(mod(j, "vida_abate")), rotulo=(nomes(j, "vida_abate") or ["Vida por abate"])[0],
                        conta=False)
         disparar(self, j, "abate", alvo=c, tipo=tipo)  # Frenesi, Assassino, Coração Ardente...
+
+
+def veste(u):
+    """Um companheiro da comitiva: as peças dele (ficha.py) valem na luta como as do herói."""
+    return getattr(u, "tipo", None) == "comitiva"
 
 
 def _no_genero(rotulo, u):

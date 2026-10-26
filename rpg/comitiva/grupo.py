@@ -2,6 +2,7 @@
 
 from ..telemetria import registrar
 from .catalogo import COMPANHEIROS, LIMITE, NIVEIS, REACOES
+from .ficha import devolver_pecas, preparar
 
 
 def dados(cid):
@@ -71,15 +72,21 @@ def lealdade(m):
 
 
 def atributos(g, m):
+    """Os números do companheiro: os do catálogo pelo nível do herói, mais o que os atributos somam acima dos iniciais
+    e as peças vestidas (ficha.extras). Sem pontos gastos nem peças, os de sempre."""
+    from ..balanceamento import RECURSO_COMITIVA
+    from .ficha import extras
     d = COMPANHEIROS[m["id"]]
     nv = g.j.nivel - 1
     b, c = d["base"], d["cresc"]
+    ex = extras(m)
     return {
-        "max_hp": int(b["hp"] + c["hp"] * nv),
-        "atk": b["atk"] + c["atk"] * nv,
-        "poder": b["poder"] + c["poder"] * nv,
-        "defesa": int(b["defesa"] + c["defesa"] * nv),
-        "agi": b["agi"],
+        "max_hp": int(b["hp"] + c["hp"] * nv) + int(round(ex["max_hp"])),
+        "atk": b["atk"] + c["atk"] * nv + ex["atk"],
+        "poder": b["poder"] + c["poder"] * nv + ex["poder"],
+        "defesa": int(b["defesa"] + c["defesa"] * nv + ex["defesa"]),
+        "agi": b["agi"] + int(round(ex["agi"])),
+        "max_rec": RECURSO_COMITIVA + int(round(ex["max_rec"])),
     }
 
 
@@ -97,6 +104,7 @@ def recrutar(g, cid):
         return None
     m = {"id": cid, "aprovacao": 0, "dias": 0, "desde": g.dia, "conversas": 0, "ultima_conversa": -1,
          "missao": 0, "caminho": None, "ferido": False, "hp": 1, "max_hp": 1}
+    preparar(m, g.j.nivel)  # o corpo vazio, os atributos iniciais e os pontos dos níveis que já passaram
     m["max_hp"] = m["hp"] = atributos(g, m)["max_hp"]
     g.comitiva.append(m)
     d = COMPANHEIROS[cid]
@@ -113,6 +121,7 @@ def sair(g, cid, motivo="saiu"):
     g.comitiva.remove(m)
     g.marcar(f"comitiva:{cid}", motivo)
     registrar(g, "comitiva", acao=motivo, id=cid, aprovacao=m["aprovacao"], dias=m["dias"])
+    devolver_pecas(g, m)  # as peças são do grupo: voltam para a bolsa (ficha.py)
 
 
 # O custo de levar alguém, na nota da opção de aceitar (comer, abaixo).

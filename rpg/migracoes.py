@@ -5,7 +5,7 @@ acrescenta-se uma função `_vN_para_vN1` em MIGRACOES. Um save antigo passa por
 chegar à versão atual; assim nenhum código do jogo precisa se defender de saves velhos.
 """
 
-VERSAO_SAVE = 7
+VERSAO_SAVE = 8
 
 # Tudo o que o estado da partida guarda além do jogador, da semente e do gerador aleatório.
 CAMPOS_SAVE = ("mundo", "dia", "periodo", "clima", "passos", "flags", "historico", "contagem",
@@ -166,7 +166,21 @@ def _v6_para_v7(d):
     return d
 
 
-MIGRACOES = {1: _v1_para_v2, 2: _v2_para_v3, 3: _v3_para_v4, 4: _v4_para_v5, 5: _v5_para_v6, 6: _v6_para_v7}
+def _v7_para_v8(d):
+    """O equipamento e os atributos da comitiva (1.213.0, comitiva/ficha.py). Cada membro, na estrada ou no
+    acampamento, ganha o corpo vazio, os atributos iniciais e os pontos dos níveis que o herói já subiu, livres: nada é
+    distribuído sozinho, e os números de luta continuam os de antes até o jogador gastar. Rodar duas vezes não muda
+    nada."""
+    from .comitiva.ficha import preparar
+    nivel = d["jogador"].get("nivel", 1)
+    for m in list(d.get("comitiva") or []) + list(d.get("reserva") or []):
+        if isinstance(m, dict) and "id" in m:
+            preparar(m, nivel)
+    return d
+
+
+MIGRACOES = {1: _v1_para_v2, 2: _v2_para_v3, 3: _v3_para_v4, 4: _v4_para_v5, 5: _v5_para_v6, 6: _v6_para_v7,
+             7: _v7_para_v8}
 
 
 def migrar(dados):

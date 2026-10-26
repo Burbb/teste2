@@ -22,10 +22,11 @@
     if (curta) dicasCurtas.add(id);
     return `data-dica="${id}"`;
   }
-  const itensDica = new Map();  // id da dica → item, para o Shift mostrar o equipado ao lado
-  function dicaItem(it, rodape = "", comparando = true) {
-    const id = guardarDica(htmlItem(it, rodape, comparando));
-    if (comparando) itensDica.set(id, it);
+  const itensDica = new Map();  // id da dica → {it, quem}, para o Shift mostrar o equipado ao lado
+  /** quem: a ficha de quem compara (o selecionado na janela do grupo); sem ela, o herói. */
+  function dicaItem(it, rodape = "", comparando = true, quem) {
+    const id = guardarDica(htmlItem(it, rodape, comparando, quem));
+    if (comparando) itensDica.set(id, { it, quem });
     return `data-dica="${id}"`;
   }
 
@@ -71,7 +72,9 @@
         caixa.innerHTML = dicas.get(id) || "";
         caixa.classList.remove("ficha-inimigo");
         caixa.classList.toggle("curta", dicasCurtas.has(id));
-        caixa._item = itensDica.get(id) || null;
+        const par = itensDica.get(id);
+        caixa._item = par ? par.it : null;
+        caixa._quem = par ? par.quem : undefined;
         caixa._esquerda = false;
         abrirDica(el);
         const r = el.getBoundingClientRect();
@@ -100,7 +103,7 @@
   function mostrarEquipado(ligado) {
     const caixa = document.getElementById("dica-item");
     let lado = document.getElementById("dica-equipado");
-    const eq = ligado && caixa && !caixa.hidden && caixa._item ? equipadosPara(caixa._item) : [];
+    const eq = ligado && caixa && !caixa.hidden && caixa._item ? equipadosPara(caixa._item, caixa._quem) : [];
     if (!eq.length) { if (lado) lado.hidden = true; return; }
     if (!lado) { lado = document.createElement("div"); lado.id = "dica-equipado"; lado.className = "m-janela"; document.body.appendChild(lado); }
     lado.innerHTML = eq.map((it, i) => `<div class="${i ? "outro" : ""}"><span class="selo-equipado">Equipado${eq.length > 1 || it.espaco.startsWith("anel") ? ` · ${NOME_ESPACO[it.espaco]}` : ""}</span>${htmlItem(it, "", false)}</div>`).join("");

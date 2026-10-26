@@ -44,7 +44,9 @@ def chance_critico(u, extra=0.0):
     """A chance de crítico de um golpe. A conta única: o combate, a ficha e o Grimório usam esta."""
     # o herói: a Percepção (atributos.py), não a Agilidade, que só dá a ordem dos turnos; os outros, como antes
     from . import atributos
-    base = atributos.critico(u) if getattr(u, "atributos", None) else u.agi * bal.CRITICO_POR_AGI
+    # a comitiva: a Percepção acima da inicial soma ao de sempre (comitiva/ficha.py; 0 sem pontos nela)
+    base = (atributos.critico(u) if getattr(u, "atributos", None)
+            else u.agi * bal.CRITICO_POR_AGI + getattr(u, "critico_atributo", 0.0))
     return min(bal.MAX_CRITICO, bal.CRITICO_BASE + base + extra + mod(u, "critico"))
 
 

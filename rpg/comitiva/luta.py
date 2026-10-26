@@ -2,6 +2,7 @@
 
 from .. import balanceamento as bal
 from .catalogo import COMPANHEIROS, GRITOS
+from .ficha import atributos_de, critico_extra, equip_de
 from .grupo import atributos, fora, junto, lealdade, membro, nome
 
 
@@ -25,10 +26,14 @@ def preparar_combate(cb):
         a.cid = m["id"]
         a.membro = m
         # etapa 4 (roadmapIDEIAS/26): você escolhe a ação dela na vez dela; o recurso é dela e volta cheio a cada luta
-        a.rec = a.max_rec = bal.RECURSO_COMITIVA
+        a.rec = a.max_rec = at["max_rec"]
         a.regen = 5
         a.nome_recurso = RECURSO[m["id"]]
-        a.vontade = VONTADE[m["id"]]  # a Tenacidade (atributos.tenacidade)
+        a.vontade = atributos_de(m)["vontade"]  # a Tenacidade (atributos.tenacidade): 4% por ponto
+        # as peças valem na luta como no herói: os números já somaram (atributos); os bônus especiais (crítico, roubo
+        # de vida, espinhos, vida por turno e por abate) e as regras de um único entram pelos modificadores do item
+        a.equip = equip_de(m)
+        a.critico_atributo = critico_extra(m)  # a Percepção acima da inicial (grimorio.chance_critico)
         lista.append(a)
         cb.aliados.append(a)
     # Inimigos que enfrentam um grupo resistem mais (e chefes, feitos para um herói só, mais ainda).
@@ -69,7 +74,6 @@ def gritar(cb, a, situacao, chance=0.3):
 # Na vez de um companheiro, você escolhe: Atacar, Defender, Usar item (a bolsa é a do grupo) ou uma habilidade do kit
 # dele (heroi.vez_comitiva). O kit é fixo e menor que o seu (roadmapIDEIAS/25, 3.4); números provisórios.
 RECURSO = {"odete": "Fé", "morel": "Vigor", "yara": "Mana"}
-VONTADE = {"odete": 6, "morel": 3, "yara": 7}
 ATAQUE = {  # o golpe de toda vez: (nome, multiplicador, tipo, alcance, stat)
     "odete": ("Bastão", 0.9, "sagrado", "corpo", "atk"),
     "morel": ("Golpe", 1.0, "fisico", "corpo", "atk"),

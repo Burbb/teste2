@@ -349,7 +349,11 @@ class Inventario:
     def personagem(self):
         while True:
             j = self.j
-            self.ui.cena(j.nome, f"{j.nome_classe} nível {j.nivel}", "menu")
+            # com a comitiva, a janela é a do grupo (a aba escolhe quem): o título não é o do herói
+            if self.ui.conquistas_na_tela and comitiva.membros(self):
+                self.ui.cena("Inventário do grupo", None, "menu")
+            else:
+                self.ui.cena(j.nome, f"{j.nome_classe} nível {j.nivel}", "menu")
             if self.ui.painel("personagem", {"limite": LIMITE_MOCHILA}):
                 if self._personagem_web():
                     return
@@ -376,12 +380,13 @@ class Inventario:
                                              f"{descrever_bonus(it['bonus'], self.j.nome_recurso)}", it, {"mochila": i})
                                             for i, it in enumerate(j.mochila)] + [("Voltar", None)])
                 if it:
-                    if it["classe"] and it["classe"] != j.classe:
-                        self.dizer("Você não sabe usar isso.", "vermelho")
+                    motivo = comitiva.ficha.motivo_nao_veste(self, comitiva.ficha.HEROI, it)
+                    if motivo:
+                        self.dizer(motivo, "vermelho")
                     else:
                         destino = self.escolher_espaco(it)
                         if destino:
-                            self.equipar(it, destino)
+                            self.vestir(comitiva.ficha.HEROI, it, destino)
 
     def _personagem_web(self):
         """Na interface web, cada ação do inventário é uma opção direta (arrastar, clicar). True = sair."""
@@ -396,15 +401,20 @@ class Inventario:
                 opcoes.append((f"Tirar {it['nome']}", ("tirar", slot), {"tirar": slot}))
         opcoes += self.opcoes_bolsa()
         opcoes += self.opcoes_atributos()  # o "+" de cada atributo, com pontos da subida de nível (etapa 4)
+        # a janela do grupo (1.213.0): vestir em quem está selecionado, tirar, reordenar a bolsa, os atributos e a
+        # sugestão da comitiva. Uma opção só; o que fazer vem junto da resposta e passa pela regra única (ficha.py)
+        opcoes.append(("Equipamento do grupo", ("grupo",), {"equipamento": True}))
         for i, it in enumerate(j.mochila):
             opcoes.append((f"Largar {it['nome']}", ("largar", it), {"largar": i}))
         op = self.menu("", opcoes + [("Voltar", None, {"voltar": True})])
         if op is None:
             return True
         if op[0] == "equipar":
-            self.equipar(op[1], op[2])
+            self.vestir(comitiva.ficha.HEROI, op[1], op[2])
         elif op[0] == "tirar":
-            self.desequipar(op[1])
+            self.tirar_peca(comitiva.ficha.HEROI, op[1])
+        elif op[0] == "grupo":
+            self.acao_do_grupo(getattr(self.ui, "extra_resposta", None) or {})
         elif op[0] == "usar":
             self.usar_consumivel(op[1])
         elif op[0] == "usar_em":
@@ -414,6 +424,57 @@ class Inventario:
         else:
             self.largar(op[1])
         return False
+
+    def vestir(self, quem, item, destino=None):
+        """Vestir pela regra única (comitiva/ficha.py). A janela mostra a peça no corpo; o texto diz o que a tela não
+        mostra (a peça que saiu de outra pessoa, para onde foi a que estava no espaço) ou por que não deu."""
+        origem = comitiva.ficha.onde_esta(self, item)
+        ok, texto = comitiva.ficha.vestir(self, quem, item, destino)
+        if not self.ui.conquistas_na_tela:
+            self.dizer(texto, "verde" if ok else "vermelho")
+        elif not ok or origem[0] not in ("bolsa", quem):  # tirada de outra pessoa: a janela não mostra o corpo dela
+            self.ui.efeito(texto, "info")
+        return ok
+
+    def tirar_peca(self, quem, espaco, posicao=None):
+        ok, texto = comitiva.ficha.tirar(self, quem, espaco, posicao)
+        if not ok:
+            self.ui.efeito(texto, "info") if self.ui.conquistas_na_tela else self.dizer(texto, "vermelho")
+        elif not self.ui.conquistas_na_tela:
+            self.dizer(texto, "cinza")
+        return ok
+
+    def acao_do_grupo(self, d):
+        """O que a janela do grupo pediu (vem junto da resposta). Nada aqui confia na tela: cada pedido é conferido."""
+        f = comitiva.ficha
+        quem = d.get("quem", f.HEROI)
+        if quem not in f.personagens(self):
+            self.ui.efeito("Essa pessoa não está na comitiva.", "info")
+            return
+        op = d.get("op")
+        mochila = self.j.mochila
+        if op == "vestir":
+            if isinstance(d.get("mochila"), int) and 0 <= d["mochila"] < len(mochila):
+                item = mochila[d["mochila"]]
+            else:
+                eq = f.corpo(self, d.get("de")) if d.get("de") in f.personagens(self) else None
+                item = eq.get(d.get("de_espaco")) if eq else None
+            if item is None:
+                self.ui.efeito("Essa peça não está mais aí.", "info")
+                return
+            self.vestir(quem, item, d.get("destino"))
+        elif op == "tirar":
+            self.tirar_peca(quem, d.get("espaco"), d.get("posicao") if isinstance(d.get("posicao"), int) else None)
+        elif op == "mover" and isinstance(d.get("de"), int) and isinstance(d.get("para"), int):
+            f.mover_na_bolsa(self, d["de"], d["para"])
+        elif op == "atributo" and quem != f.HEROI:
+            motivo = f.motivo_atributo(self, quem, d.get("atributo"))
+            if motivo:
+                self.ui.efeito(motivo, "info")
+            else:
+                f.gastar_atributo(self, quem, d["atributo"])
+        elif op == "sugestao" and quem != f.HEROI:
+            f.distribuir_sugestao(self, quem)
 
     def _personagem_texto(self):
         j = self.j

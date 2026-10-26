@@ -1,6 +1,6 @@
 """A vez dos outros: a comitiva, o animal e os servos; os inimigos, com o juízo do que faz sentido agora."""
 
-from ..modificadores import mod
+from ..modificadores import mod, nomes
 from ..inimigos import HABS, HABS_INIMIGO, ROTULOS_HABS_INIMIGO
 from .. import comitiva
 
@@ -14,6 +14,9 @@ class TurnosDosOutros:
             if a.tipo == "comitiva":
                 self.lance("pula", de=self.uid(a), rotulo="caído")
             return
+        if a.tipo == "comitiva" and mod(a, "regen_vida") and a.hp < a.max_hp:  # a peça dele, como a sua (heroi.py)
+            self.curou(a, a.curar(mod(a, "regen_vida")), tipo="discreto", conta=False,
+                       rotulo=(nomes(a, "regen_vida") or ["Regeneração"])[0])
         if not self.inimigos_vivos() or self.processar_efeitos(a):
             return
         if a.tipo == "comitiva":
