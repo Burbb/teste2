@@ -32,6 +32,22 @@ fogo"). A descrição não os repete, salvo quando o alvo é parte da frase ("a 
   turno de quem o carrega.
 - Sabor fica fora da regra: a frase de cena vai no `Dizer`, não na `desc`.
 
+## Resumo à vista, conta na consulta (1.211.1)
+
+Cada página e cada dica em três camadas, sem misturar:
+- **descrição principal**: o efeito e o alvo (a `desc`);
+- **resumo numérico**: o dano de agora (a faixa), o custo, a duração e as camadas que importam para escolher, e a
+  restrição que muda a escolha ("não pode ser esquivado", uma vez, no resumo);
+- **detalhes de cálculo**: a fórmula, o crítico, o ganho por ponto, os talentos e as exceções, na consulta "Como é
+  calculado" (abre por clique e teclado). No código: `_efeito(texto, detalhe=...)`; a fórmula entre parênteses com
+  "×" sai sozinha do resumo e vai para o detalhe; `golpe(..., sem_esquiva=True)` no lugar da nota repetida.
+
+Na dica de um atributo, primeiro o que ele dá agora (com o valor), depois o que cada ponto rende, por fim o teste do
+d20. Conceito derivado (Tenacidade, crítico) tem a explicação própria, num elemento com a dica dele.
+
+Nada de condição vaga: "resiste muito" vira a regra de verdade ("a resistência do alvo ao fogo reduz o dano por
+turno"; "só quem é imune ao fogo não pega fogo"). Se a regra do código for a vaga, conserte a regra, não o texto.
+
 ## Vocabulário (etapa 4)
 
 - **turno** (ou **vez**): a ação de um combatente na ordem. **Rodada**: todos agiram (inclusive quem perdeu a vez).
