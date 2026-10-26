@@ -230,6 +230,24 @@ Detalhes no [LEIA-ME](../ferramentas/prototipos/combate-atributos/LEIA-ME.md); o
 - **Resultados observados (poucas partidas, sem prova de equilíbrio):** o Avanço deu ao Baluarte uma decisão própria (puxar o Golpe Esmagador e ainda bater), com custo real em vida; a combinação de Queimadura precisou de 3 pingos para preparar dois alvos para a Conflagração; o manto de fogo reduziu à metade o fogo recebido por Jean no encontro dos Cães e não muda os outros; com a ultimate disponível desde o início, Fúria e Tempestade valiam mais na abertura até o efeito mudar; depois, sem dominância clara na medição automática, e o Juramento rende mais na hora da ameaça; as ameaças do Bruto aparecem (3 a 4 por luta) com interrupções, resoluções e adiamentos registrados. A observar: encontro 1 curto com a reserva cheia; o Baluarte mais lento; se tipo e defesa ficaram claros sem poluir os botões.
 
 
+### 3.9 Retorno de Jean sobre a v3 — rodada local aprovada
+
+**Leitura dos ataques básicos:** Jean esclareceu que, quando considera a vitória garantida, termina usando ataques básicos por conveniência. Frequência alta de básicos não prova falta de recurso, opções ou interesse. Observar momento e recurso disponível, junto do relato. No arquivo `resultados(3).json`, Baluarte contra o Bruto usa quatro Avanços nas primeiras cinco rodadas e depois básicos com recurso crescente; Chama contra o Xamã usa cinco Brasas e duas Combustões, sem básico do protagonista. São exemplos de experiência, não prova geral de equilíbrio.
+
+**Marca do Morel:** retirar da próxima candidata do protótipo. Jean considera a habilidade uma preparação repetitiva que vira obrigação. Não substituir por bônus equivalente renomeado nem preencher a vaga por obrigação. Isso não proíbe toda mecânica futura de marca nem autoriza remover conteúdo de produção.
+
+**Completar o conjunto de fogo:** testar uma habilidade comum de área que cause pouco dano direto e aplique uma camada de Queimadura em cada inimigo válido, garantida salvo imunidade explícita. Resistência a fogo reduz o dano e não ganha automaticamente uma segunda função de impedir aplicação. Não criar imunidades novas só para esta rodada.
+
+Papéis aprovados para o teste:
+- Brasa: aplicação concentrada e econômica num alvo.
+- Nova habilidade de área: preparação de vários alvos, custo maior que Brasa e espaço/pontos no kit.
+- Combustão: consumir Queimadura de um alvo.
+- Conflagração (ultimate): consumir Queimadura de todos os inimigos afetados, uma vez por combate.
+
+Nome, tier, custos e coeficientes da habilidade nova são provisórios. Manter utilidade da Brasa contra alvo único. Conferir a sequência de preparar o grupo e consumir antes da expiração, com resistência calculada corretamente e sem duplicar dano já ocorrido.
+
+**Escopo:** rodada pequena e isolada, preservando a v3 para comparação. Remover a Marca, completar o conjunto de fogo e registrar a observação sobre os básicos. Demais regras, encontros e economia ficam como estão salvo correção necessária e explicada. Não integrar produção, revisar todas as classes nem declarar a etapa 4 concluída.
+
 ## 4. Vida útil das peças — direção acordada
 
 O caminho escolhido é **um meio-termo entre substituição constante e levar qualquer peça indefinidamente**, com espaço para apego a boas descobertas.
@@ -281,7 +299,7 @@ Na conversa, **Battle Brothers** acrescentou o exemplo de materiais de criaturas
 
 As generalizações do apêndice sobre aleatoriedade, destruição e satisfação são avaliações da pesquisa inicial, não leis de design nem prova de que uma mecânica só funciona em determinado gênero. Verificar versões e fontes antes de usar mudanças de outros jogos como justificativa decisiva.
 
-**Próximo passo acordado:** revisar o protótipo isolado de combate após o teste de Jean, conforme as seções 3.1, 3.6 e 3.7. A segunda versão já foi entregue e jogada. A próxima entrega é a v3 conforme a seção 3.8, sem alterar a produção. Só depois da avaliação avançar nas dependências de reforço e encantamento. Não iniciar o protótipo de forja do apêndice.
+**Próximo passo acordado:** revisar o protótipo isolado de combate após o teste de Jean, conforme as seções 3.1, 3.6 e 3.7. A segunda versão já foi entregue e jogada. A v3 foi entregue e jogada; a próxima entrega é o refinamento local da seção 3.9, sem alterar a produção. Só depois da avaliação avançar nas dependências de reforço e encantamento. Não iniciar o protótipo de forja do apêndice.
 
 Depois de definida a direção suficiente, o Claude poderá verificar implicações técnicas, testar hipóteses numéricas e construir um protótipo isolado e pequeno. O catálogo e o combate atuais servirão de casos de teste, sem limitar as possibilidades futuras.
 
