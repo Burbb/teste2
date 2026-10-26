@@ -1,6 +1,6 @@
 # 25 — Etapa 4: reforço, encantamento e identidade da progressão
 
-Atualizado em 25/10/2026 após o debate com Jean. **Documento de direção de design; nenhuma regra nova foi implementada por esta revisão.** A forja H2 integrada na 1.210.0 encerra a etapa 3. A etapa 4 está em definição.
+Atualizado em 26/10/2026 após o debate com Jean sobre reforço e materiais. **Esta revisão altera somente documentação.** A forja H2 encerrou a etapa 3; combate e comitiva estão integrados até a 1.213.0. A etapa 4 continua aberta, agora com direção aprovada para um protótipo de reforço e materiais.
 
 Esta revisão substitui a recomendação de aprovar a arquitetura A em bloco. A pesquisa, o levantamento da versão 1.210.0 e as propostas anteriores estão preservados no apêndice histórico. **Em caso de conflito, prevalecem as decisões e os estados descritos abaixo.** Números, receitas e fluxos do apêndice não são especificação de implementação.
 
@@ -292,20 +292,54 @@ A raridade exata dessas descobertas, suas fontes e sua correspondência com as c
 
 A build deve poder começar a funcionar com habilidades e talentos. Um item excepcional pode transformá-la ou abrir uma variação desejada, sem obrigar o jogador a esperar por um drop específico para conseguir jogar sua proposta básica.
 
-## 5. Consequências para reforço e encantamento
+## 5. Reforço, materiais e encantamento — decisões de 26/10/2026
 
-A separação de papéis está acordada; as regras da antiga arquitetura A não estão aprovadas em bloco.
+As decisões abaixo substituem os pontos antes abertos correspondentes; não aprovam a antiga arquitetura A em bloco.
 
-- Reforçar desenvolve a potência da peça e sua utilidade; não implica tornar toda peça inicial equivalente às melhores.
-- Encantar oferece adaptação escolhida; não deve apagar facilmente a identidade das descobertas excepcionais.
-- Propriedades excepcionais podem conversar com habilidades e seus modificadores. Não ficam limitadas aos onze afixos ou aos seis bônus de especialização existentes.
-- Materiais, conhecimentos e melhorias podem estar ligados a exploração, personagens, missões e inimigos especiais. Desmanchar é uma possibilidade de obtenção, não uma fonte exclusiva já aprovada.
-- Reutilizar código é uma decisão de implementação posterior, não o critério que determina quais efeitos o jogo merece ter.
-- As melhorias devem produzir escolhas compreensíveis e satisfação pelo resultado no jogo. Arte, animação e som reforçarão essas decisões depois.
+### 5.1 Reforço e vida útil — aprovados como direção
 
-**Transferência do reforço, reembolso, recuperação de essência e receitas permanentes permanecem em aberto.** Transferir tudo automaticamente pode tornar as peças intercambiáveis; perder tudo pode desestimular investimento e substituição. A regra será escolhida conforme a diferença desejada entre peças provisórias e excepcionais.
+- O reforço melhora a função principal da peça: dano físico e/ou potência arcana nas armas conforme sua identidade; proteção nas armaduras; propriedade principal definida para cada tipo de apoio.
+- Não aumentar automaticamente todos os atributos, afixos, crítico, roubo de vida ou modificadores especiais junto com o reforço. O mapeamento por tipo de peça será explicitado e testado.
+- Separar qualidade da base e nível de reforço. Uma peça inicial reforçada pode competir por um período com uma nova base melhor, mas nem toda peça inicial deve acompanhar indefinidamente a campanha.
+- Peças excepcionais poderão elevar sua base em momentos posteriores da campanha, mediante investimento e material mais raro, preservando a identidade que sustenta a build. É uma direção futura aprovada, não serviço a implementar nesta rodada. Critérios de elegibilidade, marcos, tratamento do reforço existente e custos permanecem abertos.
+- Reforço comum garantido, sem falha, quebra ou perda de níveis.
+- Ao substituir uma peça, desmontá-la permite recuperar parte dos materiais investidos no reforço. O jogador também pode guardar para outro companheiro ou vender. Não transferir automaticamente o +N para a substituta.
+- Percentuais de recuperação, materiais próprios da peça, eventual recuperação de ouro, preços, fórmulas, espaços elegíveis e limites ainda precisam de teste. +5/+10 e 20% não são decisões finais.
+- A espada que faz Lâmina Rúnica atingir um segundo alvo foi um exemplo de peça excepcional; não constitui aprovação de novo item ou habilidade.
 
-Também continuam abertos: espaços atendidos, limite de reforço, fórmula de ganho, relação com raridade/material/nível, custos, materiais, quantidade de encantamentos, regras de acúmulo, remoção e substituição, fontes, desbloqueios e local do serviço. O +5 existente e os 20% propostos não são limites de design definitivos.
+### 5.2 Materiais — categoria aprovada
+
+Adicionar materiais como categoria pequena e funcional, conforme a necessidade real dos serviços, sem dezenas de ingredientes antecipados.
+
+Três funções estão identificadas, não três materiais específicos já definidos:
+1. reforço comum: ouro mais material de reforço;
+2. elevação futura de bases excepcionais: material mais raro ligado a avanço e desafios;
+3. encantamento: materiais ou essências a definir junto do sistema.
+
+- Materiais compartilhados pelo grupo, contados em pilhas numa seção “Materiais” do inventário, fora dos 12 espaços da bolsa.
+- Aparecem nas recompensas com nome, ícone e quantidade. A forja mostra posse, custo e falta; a descrição informa uso e fontes conhecidas.
+- Exploração, recompensas e desmontagem podem fornecer materiais. Desmontar não será a única fonte: quem ainda não tem equipamento sobrando precisa poder experimentar reforço.
+- Ouro continua relevante e concorre com outros gastos. Não balancear apenas pelo saldo ao fim do Vale atual.
+- Não criar mineração, coleta manual ou profissões nesta rodada. Não criar material por classe ou slot sem escolha relevante que justifique.
+- Quantidades, nomes, fontes concretas, raridade e desbloqueios são hipóteses para avaliar, não conteúdo aprovado da campanha.
+
+### 5.3 Encantamento — direção preservada, regras adiadas
+
+Encantar adapta a peça à build ou a um desafio; não deve apagar facilmente propriedades excepcionais. Não limitar efeitos ao catálogo atual.
+
+Continuam para debate com Jean: quantidade por peça, efeitos e combinações, descoberta/receitas, consumo e recuperação de essências, remoção/substituição e local do serviço. Não implementar o sistema nem os dezessete efeitos do apêndice por inferência.
+
+### 5.4 Próxima entrega — protótipo isolado
+
+Jean testou o inventário da comitiva na 1.213.0 e relatou que está funcionando bem até aqui; a frente pode seguir. Isso não declara todos os números de combate definitivos.
+
+Próximo lote: verificar implicações no catálogo atual e construir um protótipo jogável de reforço garantido, materiais compartilhados e desmontagem com recuperação parcial. Fórmulas, custos e quantidades devem estar identificados como provisórios e comparados com exemplos reais de equipamento e combate, incluindo companheiros.
+
+A demonstração deve permitir investir numa peça, comparar uma substituta, escolher guardar/vender/desmontar e verificar a recuperação. Usar saves temporários; manter o jogo de produção intacto até avaliação. A elevação de base excepcional fica descrita com exemplos numéricos, sem um serviço funcional nesta rodada; encantamento segue para conversa própria.
+
+Usar a forja e componentes aprovados, sem redesenhar ambiente, personagem ou inventário inteiro e sem arte/cerimônia final antes das regras. Não gerar vídeos sem pedido.
+
+Registrar escolhas de teste, resultados e pendências no LEIA-ME, no plano e na continuidade. A etapa 4 permanece aberta.
 
 ## 6. Pontos que a proposta anterior precisa resolver
 
@@ -327,12 +361,11 @@ Na conversa, **Battle Brothers** acrescentou o exemplo de materiais de criaturas
 
 As generalizações do apêndice sobre aleatoriedade, destruição e satisfação são avaliações da pesquisa inicial, não leis de design nem prova de que uma mecânica só funciona em determinado gênero. Verificar versões e fontes antes de usar mudanças de outros jogos como justificativa decisiva.
 
-**Próximo passo acordado:** integrar a estrutura aprovada e um repertório provisório às classes reais, conforme seção 3.10, para testar chefe, encontros consecutivos e ritmo dentro da campanha. Não implementar ainda reforço/encantamento completo.
+**Marco anterior concluído:** integrar a estrutura da seção 3.10 e testar na campanha. **Próximo passo atual:** protótipo de reforço, materiais e desmontagem, no escopo da seção 5.4.
 
 **Integração feita na 1.211.0** (26/10/2026): o combate da seção 3.10 está na campanha, com o repertório provisório,
 a continuidade entre lutas e o ritmo medido. Escolhas, conversões, catálogo, medidas e roteiro no
-[26](26-INTEGRACAO-DO-COMBATE.md). Falta o Jean jogar; o orçamento do kit e o dano do Necromante contra chefes ficam
-para decidir. Reforço e encantamento completos continuam fora.
+[26](26-INTEGRACAO-DO-COMBATE.md). Jean já jogou e pediu os ajustes registrados a seguir; o orçamento do kit e o desempenho do Necromante contra chefes continuam provisórios. Reforço e encantamento completos continuam fora.
 
 **Ajustes da 1.212.0** (26/10/2026), depois do teste do Jean: a Queimadura contra resistência, a leitura das
 descrições, os atributos e o kit à vista, a debandada rara e a observação do Golpe Pesado ([26](26-INTEGRACAO-DO-COMBATE.md#ajustes-da-1212-depois-do-teste-do-jean)).
@@ -357,7 +390,7 @@ Depois de definida a direção suficiente, o Claude poderá verificar implicaç�
 | Sem morte permanente de companheiros por batalha | Acordado; exceção somente narrativa |
 | Retorno à luta por ressurreição de alto custo ou item escasso | Acordado; números e limites abertos |
 | Retorno na posição original, sem recuperar turnos perdidos | Acordado |
-| Protótipo isolado de combate antes da forja | v1, v2 e v3 jogadas; v4 (refinamento da seção 3.9) entregue em 26/10/2026 para avaliação ([LEIA-ME](../ferramentas/prototipos/combate-atributos/LEIA-ME.md)), sem integração |
+| Protótipo isolado de combate antes da forja | Ciclo v1–v4 concluído e estrutura integrada na 1.211.0; ajustes até 1.213.0 no documento 26 |
 | Turnos individuais intercalados e ordem próxima visível | Acordado |
 | Agilidade define a ordem inicial | Acordado; desempates e detalhes de leitura abertos |
 | Ordem fixa durante toda a batalha | Acordado; sem ações extras por Agilidade |
@@ -384,7 +417,12 @@ Depois de definida a direção suficiente, o Claude poderá verificar implicaç�
 | Peças que orientam builds serem realmente pouco frequentes | Direção acordada; taxas e tiers abertos |
 | Reforço, encantamento e propriedade excepcional com papéis distintos | Direção acordada |
 | Arquitetura A anterior, 20%, +5, preços e 17 essências | Proposta histórica, não aprovada em bloco |
-| Transferência, recuperação, desmanche e receitas | Em debate |
+| Reforço garantido e função principal da peça | Direção aprovada; fórmula, slots e limites para teste |
+| Desmontagem e recuperação parcial de materiais de reforço | Aprovadas como direção; taxas provisórias; sem transferência automática do +N |
+| Materiais do grupo fora dos 12 espaços | Aprovado; seção Materiais, ouro + material no reforço |
+| Elevação de base de peças excepcionais | Direção futura aprovada; não implementar nesta rodada |
+| Encantamento, essências e receitas | Debate posterior; sem implementação autorizada |
+| Próxima entrega | Protótipo isolado da seção 5.4; avaliação antes da produção |
 | Tipos de dano, escalas e resistências explícitos | Direção aprovada para v3; fórmulas e catálogo provisórios |
 | Vontade aumentando reserva de recurso | Aprovado para teste; sem Sabedoria nova nem regeneração automática |
 | Baluarte com habilidade baseada parcialmente em vida | Aprovado para teste, não bônus universal |
