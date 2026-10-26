@@ -1,25 +1,224 @@
 # Protótipo do combate e dos atributos
 
-Duas versões jogáveis, isoladas, para comparar. **Não é integração:** o jogo não carrega nada desta pasta (um teste
-confere), as regras de produção não mudaram e os números são de teste, não catálogo nem balanceamento da campanha.
+Três versões jogáveis, isoladas, para comparar. **Não é integração:** o jogo não carrega nada desta pasta (um teste
+confere), as regras de produção, a campanha e a forja não mudaram, e os números são de teste, não catálogo nem
+balanceamento.
 
-- **v2 (26/10/2026, a atual):** a revisão da seção 3.7 do
-  [25](../../../roadmapIDEIAS/25-ETAPA4-REFORCO-E-ENCANTAMENTO.md) depois que o Jean jogou a primeira.
-  `motor2/` e `tela2/`. Folha: `folha-v2.png`. O que comparar: [ROTEIRO.md](ROTEIRO.md).
-- **v1 (25/10/2026, preservada):** `motor/` e `tela/`, regras congeladas (só o rótulo "v1" no topo, o botão para a v2
-  e um acerto de concordância nos nomes de estado). Folha: `folha.png`. Descrita no fim deste arquivo.
+- **v3 (26/10/2026, a atual):** a seção 3.8 do [25](../../../roadmapIDEIAS/25-ETAPA4-REFORCO-E-ENCANTAMENTO.md),
+  depois que o Jean jogou a v2. `motor3/` e `tela3/`. Folha: `folha-v3.png`. O que testar: [ROTEIRO.md](ROTEIRO.md).
+- **v2 (26/10/2026, preservada):** `motor2/` e `tela2/`, em `/v2/`. Descrita mais abaixo.
+- **v1 (25/10/2026, preservada):** `motor/` e `tela/`, em `/v1/`. Descrita no fim.
 
 ## Abrir
 
-Dê dois cliques em `demo.bat` (ou rode `python ferramentas/prototipos/combate-atributos/servidor.py` na raiz). A v2
-abre em http://127.0.0.1:8781/ na tela **Preparar**; a v1 fica em http://127.0.0.1:8781/v1/ (botão **v1** no topo).
-Os resultados das duas vão para uma pasta temporária nova a cada execução (o caminho aparece em Resultados); os saves
-do jogo não são lidos nem tocados. A construção e o kit escolhidos ficam no navegador.
+Dê dois cliques em `demo.bat` (ou rode `python ferramentas/prototipos/combate-atributos/servidor.py` na raiz). A v3
+abre em http://127.0.0.1:8781/ na tela **Preparar**; a v2 e a v1 ficam nos botões do topo (`/v2/`, `/v1/`). Os
+resultados das três vão para uma pasta temporária nova a cada execução (o caminho aparece em Resultados); os saves do
+jogo não são lidos nem tocados.
 
-**Teclado na v2:** `P` abre Preparar; em Preparar, `Enter` luta e `Esc` volta à luta. Na luta, número escolhe a ação e
-o alvo, `Esc` volta, `R` reinicia. Tecla segurada e clique duplo fazem uma ação só.
+**Teclado na v3:** `P` abre Preparar; em Preparar, `Enter` luta e `Esc` volta. Na luta, número escolhe a ação e o
+alvo, `Esc` volta, `R` reinicia. Tecla segurada e clique duplo fazem uma ação só. O mouse sobre um golpe ou uma
+previsão mostra a conta.
 
-## v2 · o que está decidido e foi aplicado
+## v3 · primeiro, as ameaças do Bruto (investigação)
+
+O arquivo de sessão do Jean (v2) tinha as duas lutas contra o Bruto com 12 rodadas e **zero preparações**. Reproduzi
+antes de mexer em número:
+
+- **A causa:** na v2 a preparação estava presa ao **número da rodada** (2, 5, 8, 11). O Bruto é o último da ordem,
+  então todo aliado age antes dele em toda rodada. Um atordoamento nessas rodadas fazia ele perder a vez, e a
+  preparação daquela rodada **não acontecia** (não ficava para depois). Nas lutas do Jean, o Golpe no Joelho e o Golpe
+  de Escudo foram usados 4 vezes cada luta: o ciclo inteiro sumiu. Reproduzido com um roteiro que atordoa o Bruto nas
+  rodadas 2, 5, 8 e 11: 0 preparações, 0 desfeitas, derrota na rodada 7 (os besteiros nunca pararam).
+- **Não era falha de telemetria das preparações** (elas não existiram), **mas havia uma lacuna:** os controles
+  aplicados em **inimigos** não eram contados; só os sofridos pelos aliados. Por isso o arquivo dizia "0 sofridos".
+- **O atordoamento do Morel "100% das vezes"** que o Jean notou bate com os números da v2: o Joelho aplica 10%
+  contra 15% de Tenacidade do Bruto (5% de chance de resistir) e 5% dos besteiros (0%).
+- **A regra "firme depois da primeira interrupção"** nunca entrou em jogo nessas lutas (nada foi interrompido; tudo
+  foi impedido antes). Ela não era necessária para o problema e foi **retirada** na v3.
+
+**O que mudou na v3:** a preparação conta os **turnos em que o inimigo age** (o Bruto prepara no 2º turno dele e
+depois a cada 3); turno perdido não conta, então **atordoar adia, não apaga**, e o adiamento é registrado.
+Interromper desfaz a preparação sempre, a não ser num golpe **específico ininterruptível, sinalizado**: o Bruto abaixo
+da metade da vida prepara o Golpe Esmagador "furioso", que não se desfaz e o deixa firme até soltar. A Tenacidade do
+Bruto subiu para 30% (o Joelho tem 20% de chance de não atordoá-lo). Os resultados guardam cada ameaça (quem, quando,
+alvo, ininterruptível, resultado, rodada do fim, dano, se foi aparada), os adiamentos e os controles dos dois lados.
+
+## v3 · o que está decidido e foi aplicado (seção 3.8)
+
+| Decisão | Na v3 |
+|---|---|
+| Toda habilidade diz tipo, escala e defesa | Na lista do kit (linha embaixo do nome), no mouse sobre o golpe, na Ficha da luta ("os golpes desta vez") e na tabela de dano |
+| Tipo e escala são eixos distintos | Corte Preciso: físico, arma + nível + Força, ignora 3 de proteção. Lâmina Rúnica: arcano, foco + nível + Intelecto, ignora 10% de resistência arcana. Avanço do Baluarte: físico, nível + 25% da vida máxima |
+| Dano sobrenatural não ignora toda defesa | Arcano e fogo enfrentam a resistência do tipo (o Xamã resiste 30% ao arcano; o Cão de Brasa 60% ao fogo) |
+| Resistências por tipo, com teto, vindas do equipamento | Arcano e fogo, teto 60%; o manto do protagonista (Salamandra: fogo 35%; Rúnico: arcano 35%); aparece na ficha e na carta |
+| Resistência a dano separada da Tenacidade | A Tenacidade só entra no sorteio do controle; a resistência só no dano |
+| Baluarte com contribuição ofensiva própria | Avanço do Baluarte: dano pela vida máxima, e ele puxa os golpes de alvo único até o próximo turno (sem redução) |
+| Vontade aumenta a reserva | Recurso máximo = 40 + 4 × nível + 3 × Vontade; começa cheio. Não dá regeneração nem resistência |
+| Reserva e regeneração distintas | Reserva: o máximo, cheio no começo. Regeneração: +6 por turno e +6 no ataque básico |
+| Combinação aplicar e consumir queimadura | Brasa (põe Queimadura) e Combustão (consome), na especialização de demonstração "Lâmina e Chama" |
+| Especialização soma ao repertório | "Lâmina e Chama" aparece junto das habilidades do Guerreiro; o kit mistura as duas |
+| Kit trocado fora da luta | A tela Preparar é o "fora da luta" (como cidade ou acampamento); nada de acampamento implementado |
+| Ultimate sem Ímpeto, uma vez por luta | Disponível desde o início, gasta a ação e 30 de recurso, uma vez por combatente; queda e retorno não devolvem. Odette ganhou uma ultimate (Luz Restauradora) para testar isso com companheira |
+| A interface diz o estado da ultimate | Carta e ação: disponível / falta recurso / já usada nesta luta; Preparar e Ficha: "sem ultimate equipada" |
+
+Mantido: ordem fixa pela Agilidade, turnos individuais, rodadas, uma ação principal, companheiros controlados,
+ressurreição. **Hipóteses operacionais (não decisões):** a queda do protagonista encerra a luta; o desempate da
+ordem; o invocado no fim da ordem agindo a partir da rodada seguinte; Atacar, Defender e Usar item fora do kit.
+
+## v3 · fórmulas e números provisórios
+
+**A ordem da conta de um golpe** (a mesma na previsão e no golpe, numa função só):
+1. potência = base (arma, foco ou nada) + nível + Σ coeficiente × atributo (ou × vida máxima);
+2. × o multiplicador da habilidade;
+3. + o que a habilidade consome (Combustão: 200% do dano cru que a Queimadura ainda faria);
+4. × (1 + a soma dos bônus: comando, marca, ponto fraco, estado do alvo, alvo preparando);
+5. × 1,5 se crítico;
+6. × 0,5 se o golpe é físico e o alvo tem Guarda;
+7. × (1 − as reduções do alvo aliado: defender 40%, desafio 25%, juramento 50%);
+8. **uma** defesa, a do tipo: físico − (proteção − o que ignora, mínimo 0); arcano e fogo × (1 − (resistência −
+   penetração), entre 0 e 60%);
+9. arredonda, mínimo 1; o Escudo de Luz absorve depois.
+
+A Queimadura pinga o valor cru × (1 − resistência ao fogo de quem queima). Nada desconta duas vezes: a proteção não
+toca o arcano nem o fogo, a resistência não toca o físico (há teste).
+
+| Atributo | Dá | Conta |
+|---|---|---|
+| Força | Dano físico (das habilidades que escalam com ela) | +1 de potência por ponto |
+| Intelecto | Dano arcano e de fogo | +1 de potência por ponto |
+| Percepção | Crítico e ponto fraco | 2%/ponto (até 25%); +3%/ponto contra ponto fraco (até 30%; era 4%) |
+| Constituição | Vida e resistência corporal | 4 de vida/ponto; −4% de Sangramento/ponto (até 40%) |
+| Vontade | Recurso máximo e Tenacidade | +3 de recurso/ponto; 4%/ponto de Tenacidade (até 40%) |
+| Agilidade | Ordem | só a ordem inicial |
+| Presença | Fora da luta | nada na luta |
+
+**O kit:** 10 pontos, até 6 espaços, tier 1 = 1, 2 = 2, 3 = 3, ultimate = 4, no máximo uma.
+
+| Origem | Tier 1 | Tier 2 | Tier 3 | Ultimate (30 de recurso, 1×/luta) |
+|---|---|---|---|---|
+| Guerreiro | Corte Preciso (10), Proteger (15), Grito de Comando (15) | Golpe Pesado (25), Golpe de Escudo (30), **Avanço do Baluarte** (20) | Desafio (25) | Fúria do Campeão (físico em todos, +100% em quem prepara, desfaz as interrompíveis), Juramento (grupo −50% e sem controle por um turno) |
+| Lâmina e Chama (demonstração) | **Brasa** (12) | Lâmina Rúnica (20), **Combustão** (20) | — | Tempestade Rúnica (arcano em todos, +100% em marcado, atordoado ou queimando), **Conflagração** (fogo em todos, consome as Queimaduras) |
+
+**A Queimadura:** cada Brasa põe 1 pilha (até 3); cada pilha pinga 30% da potência de fogo de quem pôs, no início dos
+3 próximos turnos do alvo. A Combustão (e a Conflagração) soma 200% do que ainda pingaria e apaga a Queimadura.
+
+**As builds** (nível 3; Espada comum 5, Amuleto simples 3, Manto de viagem; os mesmos companheiros):
+
+| | Força | Precisão | Runa | Chama | Baluarte |
+|---|---|---|---|---|---|
+| FOR AGI CON INT PER VON | 9 3 7 1 4 6 | 6 8 4 1 9 2 | 2 5 5 9 4 5 | 2 6 5 9 3 5 | 5 2 9 1 3 10 |
+| Vida / recurso / ordem (enc. 2) | 86 / 70 / 5º | 74 / 58 / 1º | 78 / 67 / 3º | 78 / 67 / 1º | 94 / 82 / 5º |
+| Kit sugerido | Golpe Pesado, Proteger, Comando, Golpe de Escudo, Fúria | Corte, Golpe Pesado, Comando, Proteger, Golpe de Escudo, Desafio (sem ultimate) | Lâmina, Corte, Proteger, Golpe de Escudo, Tempestade | Brasa, Combustão, Proteger, Lâmina, Conflagração | Avanço, Desafio, Proteger, Juramento |
+
+**A combinação no Bruto parado** (tabela em Preparar quando a build tem Brasa ou Combustão; Chama, INT 9):
+
+| Sequência | Turnos | Custo | Bruto | Cão (fogo 60%) |
+|---|---|---|---|---|
+| Brasa e esperar os 3 pingos | 3 | 12 | 23 | 10 |
+| Combustão sozinha | 1 | 20 | 10 | 4 |
+| Brasa → Combustão | 2 | 32 | 44 | 17 |
+| Brasa → Brasa → Combustão | 3 | 44 | 84 | 32 |
+| Lâmina Rúnica × 2 (comparação) | 2 | 40 | 56 | 52 |
+
+Preparar a combinação rende mais por recurso e por luta longa; a Lâmina rende mais por turno e não depende do alvo
+ficar vivo. Contra o Cão, o fogo quase some: a preparação para o inimigo importa.
+
+**O Avanço do Baluarte e a Constituição** (Golpe Pesado e Avanço no Bruto, trocando pontos de Força por Constituição):
+
+| CON / FOR | Vida | Atacar | Golpe Pesado | Avanço |
+|---|---|---|---|---|
+| 5 / 9 | 78 | 17 | 31 | 23 |
+| 7 / 7 | 86 | 14 | 27 | 25 |
+| 9 / 5 | 94 | 12 | 24 | 27 |
+
+Cada ponto de Constituição dá +1 ao Avanço e +4 de vida; cada ponto de Força dá +1,8 ao Golpe Pesado e +1 a todo golpe
+com a arma. A Constituição não domina ataque e sobrevivência ao mesmo tempo: o Baluarte troca o dano de arma pelo
+Avanço, que ainda puxa os golpes para ele.
+
+### Os encontros: o que mudou nos inimigos desde a v2
+
+| Inimigo | Mudança | Por quê |
+|---|---|---|
+| Todos com preparação | Cadência por turno agido (primeiro, cada) em vez de número de rodada | A investigação acima |
+| Bandido Bruto | Tenacidade 15% → 30%; abaixo de 50% da vida, o Esmagador vem ininterruptível (sinalizado) | O Joelho não podia ser 100%; um golpe específico que pede outra resposta |
+| Xamã Caído | Resistência arcana 30%; a Garra virou arcana (12) | Testar a resistência e o manto rúnico |
+| Cão de Brasa (novo, encontro 4) | 140 de vida, fogo 60%, Mordida em brasa (fogo 11), Sopro de Brasa (fogo 16 no grupo + Queimadura 4) | O inimigo para comparar com e sem resistência e a Chama contra a Runa |
+| Regra "firme depois da 1ª interrupção" | Retirada | Não aprovada e não necessária |
+
+Novos testes: **t5 · ultimate, queda e retorno** (Odette usa a Luz, cai, volta com a Pena: continua gasta) e **t6 ·
+Queimadura e Combustão** (um Soldado parado, sem Guarda, com 400 de vida, para comparar as sequências).
+
+## v3 · o que observei
+
+Joguei à mão o encontro 2 com o **Baluarte** (até a rodada 4; o jogador automático terminou: vitória na 9) e o
+encontro 3 com a **Chama** (até a rodada 3; vitória na 10), e comparei os mantos com a mesma build, kit e semente.
+
+- **O Avanço deu ao Baluarte uma decisão própria.** Na rodada 3, o Esmagador mirava Odette (38 de vida, 35 previstos).
+  Em vez do Joelho do Morel, usei o Avanço no Bruto: 27 de dano, e o golpe veio para Jean (33; 30% de resistir ao
+  atordoamento, e resistiu). O custo apareceu na rodada 1: o mesmo Avanço puxou três golpes para Jean (32 de dano).
+  É uma troca de vida por dano e proteção, não um bônus de graça.
+- **A combinação pediu planejamento e mostrou o risco.** Com a Queimadura de 2 pingos (o primeiro valor), o Xamã já
+  tinha parado de queimar quando a Conflagração ficou pronta: mudei para 3 pingos de 30%. Depois, Brasa no Xamã (rodada
+  1), Brasa no Soldado (rodada 2) e Conflagração na rodada 3: 18 + 29 + 9 de dano por 30 de recurso, no momento em que
+  as duas Queimaduras estavam vivas.
+- **O manto importa contra o inimigo certo:** no encontro 4, o dano de fogo em Jean caiu de 50 para 26 com o Manto de
+  salamandra (mesma build, kit e semente); contra os outros encontros, nada muda.
+- **A ultimate e a abertura:** com a reserva cheia, Fúria e Tempestade valiam mais na abertura. Mudei o efeito (golpe
+  base menor, +100% contra quem prepara ou tem estado), não a regra. Na medição automática, abrir com a ultimate passou
+  a encurtar o encontro 2 em uma rodada, mas aumentou o dano recebido nos encontros 3 e 4 (e o Juramento na abertura
+  piorou o encontro 3: 189 de dano contra 127 na hora da ameaça). Não há dominância clara; falta ver com uma pessoa.
+- **As ameaças do Bruto agora aparecem:** 3 a 4 anunciadas por luta no encontro 2, com interrupções, resoluções,
+  desfeitas por queda e 1 a 2 adiamentos por atordoamento, tudo nos resultados.
+- **O jogador automático** (regra fixa, só ordem de grandeza): vence os quatro encontros com as cinco builds; encontros
+  2 e 3 em 8 a 15 rodadas; o Baluarte é o mais lento (13–15). O encontro 1 continua curto (3 rodadas, com a reserva
+  cheia).
+- **Para o Jean confirmar:** se o tipo e a defesa ficaram claros sem poluir os botões (estão no mouse e na Ficha); se o
+  Avanço faz o Baluarte querer ser jogado; se a combinação vale o tempo; se a ultimate de uso único tem hora; se o
+  encontro 1 ficou curto demais com a reserva cheia.
+
+## v3 · limitações
+
+- O jogador automático não prova equilíbrio, e ele usa pouco as ultimates "na hora" (as condições dele são simples).
+- Só o protagonista monta o kit e só ele tem equipamento; os companheiros têm kits fixos (Odette com uma ultimate).
+- Três tipos de dano; sem vulnerabilidades, sem resistência física percentual, sem catálogo de elementos.
+- A cura continua sem atributo; o rompimento de proteção só no Corte e na Guarda do Golpe Pesado.
+- As peças são de laboratório: sem loot, forja ou encantamento.
+
+## Verificar
+
+```
+python -m unittest discover -s ferramentas/prototipos/combate-atributos/testes -t ferramentas/prototipos/combate-atributos
+PLAYWRIGHT_MODULO=<caminho do playwright>/index.mjs node ferramentas/prototipos/combate-atributos/auxiliares/conferir3.mjs
+PLAYWRIGHT_MODULO=<caminho do playwright>/index.mjs node ferramentas/prototipos/combate-atributos/auxiliares/conferir2.mjs
+PLAYWRIGHT_MODULO=<caminho do playwright>/index.mjs node ferramentas/prototipos/combate-atributos/auxiliares/conferir.mjs
+python ferramentas/prototipos/combate-atributos/auxiliares/folha.py v3
+```
+
+Os testes da v3 (21, `testes/test_regras3.py`) cobrem: a previsão igual ao dano real por tipo e alvo (físico, arcano,
+fogo; Bruto, Xamã, Cão, Soldado); resistência e penetração na ordem e no teto; nada descontado duas vezes; o manto
+reduzindo só o tipo dele; toda habilidade de dano com tipo, escala e defesa; a Vontade aumentando só a reserva e a
+Tenacidade; a combinação feita só com a reserva básica (Vontade 1, sem ataque básico); a Combustão somando e
+consumindo; o Avanço pela vida sem mexer nos outros golpes; nenhum desbloqueio e Presença fora; a ultimate disponível
+desde o início, uma vez, "já usada" depois, falta de recurso, e a queda e o retorno sem devolver; as ameaças do Bruto
+(atordoar adia e é registrado, interrupção registrada e sem "firme" geral, o furioso ininterruptível); o recurso antes
+e depois na linha do tempo; o kit; ordem, rodada, retorno, gestos; e o servidor com as três versões. O roteiro
+`conferir3.mjs` confere tudo isso na tela a 1920×945 e a 1280×720 e grava `capturas/v3-*.png`.
+
+## Arquivos
+
+- `motor3/conteudo.py`, `motor3/regras.py`, `tela3/` (index, demo.js, demo.css por cima da v1 e da v2).
+- `servidor.py` (as três versões: `/` e `/api3/`, `/v2/` e `/api2/`, `/v1/` e `/api/`), `demo.bat`, `ROTEIRO.md`,
+  `testes/`, `auxiliares/` (conferir.mjs, conferir2.mjs, conferir3.mjs, folha.py), `capturas/`, `folha.png`,
+  `folha-v2.png`, `folha-v3.png`.
+
+---
+
+## A segunda versão (26/10/2026, preservada para comparar)
+
+Em http://127.0.0.1:8781/v2/ (o botão v2 no topo da v3).
+
+### v2 · o que está decidido e foi aplicado
 
 | Decisão (25, seção 3.7) | Na v2 |
 |---|---|
@@ -40,7 +239,7 @@ o alvo, `Esc` volta, `R` reinicia. Tecla segurada e clique duplo fazem uma açã
 da ordem (Percepção, depois aliado antes de inimigo, depois a entrada); o invocado entra no fim da ordem e age a partir
 da rodada seguinte. A tela e o registro dizem "hipótese operacional" onde aparecem.
 
-## v2 · fórmulas provisórias
+### v2 · fórmulas provisórias
 
 Escala de 1 a 10; o protagonista distribui **30 pontos** nos seis atributos de combate. Presença à parte.
 
@@ -68,13 +267,13 @@ Escala de 1 a 10; o protagonista distribui **30 pontos** nos seis atributos de c
   físico) → − proteção (mínimo 1) → escudo. A previsão da tela e o golpe usam a **mesma função** (teste: em dezenas de
   golpes das quatro builds, o dano real é o previsto, normal ou crítico).
 
-### O recurso (revisto junto: custos, reserva, recuperação)
+#### O recurso (revisto junto: custos, reserva, recuperação)
 
 Máximo 60, começa com **40** (era 30), recupera **8 no início de cada turno** (novo) e mais 8 no ataque básico (era 10).
 Custos: 10 a 15 nas baratas, 20 a 30 nas fortes. A ultimate não gasta recurso: pede **3 de Ímpeto**, que sobe quando
 um inimigo cai ou uma ameaça é desfeita ou aparada (defendida, protegida, desafiada, escudada) e zera ao usar.
 
-### As builds (mesmo nível 3, Espada comum, Amuleto simples, proteção 3, mesmos companheiros)
+#### As builds (mesmo nível 3, Espada comum, Amuleto simples, proteção 3, mesmos companheiros)
 
 | | Força | Precisão | Runa | Baluarte |
 |---|---|---|---|---|
@@ -95,7 +294,7 @@ menores (Odette: Lampejo, Curar, Escudo de Luz, Reerguer; Morel: Golpe no Joelho
 **Equipamento para comparar uma peça:** Espada comum 5, reforçada 7, de mestre 9; Amuleto simples 3, rúnico 6. Em
 Preparar, a tabela "Trocando só uma peça" mostra cada golpe do kit com cada opção, na mesma build, nível e alvo.
 
-### Os encontros: o que mudou nos inimigos (para não creditar a uma build o que foi do inimigo)
+#### Os encontros: o que mudou nos inimigos (para não creditar a uma build o que foi do inimigo)
 
 Os mesmos três encontros e os mesmos testes da v1, mais o **t5 · Ímpeto pronto** (começa com a ultimate cheia, para
 experimentar). Ajustes, todos porque o grupo mudou, não para favorecer uma build:
@@ -113,7 +312,7 @@ A vida subiu porque o dano do grupo subiu com os atributos (a potência física 
 Jean aceitou lutas mais longas; o dano subiu um pouco porque a vida do grupo subiu (Jean 58–73 → 74–94). A Agilidade dos
 inimigos está na escala 1–10. Todos os inimigos têm Tenacidade (0% a 35%).
 
-## v2 · o que observei
+### v2 · o que observei
 
 Joguei à mão o encontro 2 com a **Precisão** (vitória na rodada 9) e com o **Baluarte** (até a rodada 4, depois o
 jogador automático terminou: vitória na 14), e o encontro 3 com a **Runa** (até a rodada 3; vitória na 9).
@@ -143,7 +342,7 @@ jogador automático terminou: vitória na 14), e o encontro 3 com a **Runa** (at
 - **Para o Jean confirmar:** se a diferença entre as builds agora se sente (é o objetivo da rodada); se o encontro 1
   ficou curto demais (3–4 rodadas); se o Baluarte, que leva 13–15 rodadas, arrasta.
 
-## v2 · limitações
+### v2 · limitações
 
 - O jogador automático escolhe por regra fixa; não prova equilíbrio. As partidas à mão são poucas e com aprendizagem.
 - Só o protagonista monta o kit; os companheiros têm kits fixos. Sem talentos, caminhos por habilidade, aprender ou
@@ -153,7 +352,7 @@ jogador automático terminou: vitória na 14), e o encontro 3 com a **Runa** (at
   corrigido.
 - O equipamento é só para comparar uma peça; não há loot, forja ou encantamento.
 
-## Verificar
+### Verificar (v2)
 
 ```
 python -m unittest discover -s ferramentas/prototipos/combate-atributos/testes -t ferramentas/prototipos/combate-atributos
@@ -173,7 +372,7 @@ Preparar e a luta (sem rolagem nem corte, o grupo inteiro na coluna), a previsã
 de resistir na ameaça, a ultimate, o teclado, a tecla segurada, o clique duplo, o reinício, o movimento reduzido e o
 botão da v1, e grava `capturas/v2-*.png`.
 
-## Arquivos
+### Arquivos (v2)
 
 - `motor2/conteudo.py` (atributos, builds, kit, equipamento, recurso, inimigos, encontros, a situação) e
   `motor2/regras.py` (as regras, a ficha, a comparação); `tela2/` (index, demo.js, demo.css por cima de
