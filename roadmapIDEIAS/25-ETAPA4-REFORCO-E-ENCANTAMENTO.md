@@ -341,6 +341,36 @@ Usar a forja e componentes aprovados, sem redesenhar ambiente, personagem ou inv
 
 Registrar escolhas de teste, resultados e pendências no LEIA-ME, no plano e na continuidade. A etapa 4 permanece aberta.
 
+### 5.5 Protótipo de reforço, materiais e desmontagem (26/10/2026) — aguardando avaliação
+
+Demonstração jogável em [ferramentas/prototipos/reforco](../ferramentas/prototipos/reforco/LEIA-ME.md) (`demo.bat`):
+o jogo de verdade num save temporário, com a forja, o baú, a seção Materiais e a venda trocados só nessa execução. A
+produção não mudou e não carrega a pasta.
+
+**Decisões aprovadas aplicadas:** as da 5.1 e 5.2 (garantido; função principal; base separada do reforço; desmontar
+devolve parte do investido sem transferir o +N; ouro e material; materiais do grupo fora da bolsa; mais de uma fonte).
+
+**Hipóteses numéricas desta rodada (provisórias):**
+- Reforçam arma, peito e apoio de escudo e de tomo. Arma do Guerreiro: Fio (Ataque) ou Runas (Poder, o caminho
+  arcano), escolhido no primeiro reforço; Arqueiro: Ataque; Mago: Poder. Peito e escudo: Defesa e Vida. Tomo: Poder e
+  Mana. Fora: aljava (linhas pequenas demais; a propriedade dela fica para decidir), peças complementares, anel e
+  amuleto. Afixos e especiais não crescem.
+- Cada + vale 1,5 nível de peça na linha da base (3 nos apoios), na proporção da base; piso de +1 por passo na arma.
+- Limite +4; 25/50/90/140 de ouro e 1/2/3/4 Fragmentos de Têmpera por passo (305 e 10 até o +4).
+- Um material: o Fragmento de Têmpera (pilha até 99). Fontes na demonstração: recompensa de teste (8), baú (50%, 1),
+  desmontagem.
+- Desmontar (peça da bolsa): metade dos fragmentos investidos, para cima, mais o da peça (comum 0, incomum 1, raro 2,
+  lendário 3); sem ouro. Vender: o preço sobe metade do ouro investido (a venda devolve 25%); sem fragmentos.
+
+**Resultados observados** (Esqueleto nível 4, defesa 6, dano médio sem crítico): o Martelo de Ferro (Ataque 3) vai de
+8,0 a 10,7 do +0 ao +4; o Martelo de Aço do nível 7 sem reforço dá 10,7 (vale mais que o Ferro +2 e empata com o +4);
+o lendário Lamento de Gharbad ganha +2 por passo e mantém os especiais. Reforçar e depois desmontar ou vender nunca
+deixa o grupo com mais do que tinha (testado). Detalhes, tabelas e roteiro no LEIA-ME.
+
+**Pendências futuras:** elevação de base excepcional (exemplo numérico no LEIA-ME; elegibilidade, marcos, custo e o
+destino do reforço abertos); encantamento (conversa própria); arte, celebração e som; fontes concretas na campanha; a
+aljava. A etapa 4 continua aberta.
+
 ## 6. Pontos que a proposta anterior precisa resolver
 
 1. **Arredondamento e ganho:** incremento percentual arredondado a cada nível pode deixar atributos pequenos sem crescer; mínimo +1 pode causar ganho relativo excessivo. Comparar resultados acumulados e exemplos de bases diferentes antes de escolher fórmula.

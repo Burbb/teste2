@@ -7737,3 +7737,17 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Provisório:** os atributos iniciais e o ponto por nível dos companheiros; a classe de peças de cada um.
 - **Conferido:** os testes (15 novos da comitiva), o gabarito (motivos no 26), pyflakes, a fumaça; as telas a
   1920×945 e 1280×720. Roteiro curto no [26](26-INTEGRACAO-DO-COMBATE.md#roteiro-de-teste-1213-uns-5-minutos).
+
+### 26/10/2026 (data do computador local) — Protótipo de reforço, materiais e desmontagem (etapa 4)
+
+- **Pedido:** um protótipo jogável para investir numa peça, sentir a melhora, comparar uma substituta e decidir entre
+  manter, passar a um companheiro, vender ou desmontar (25, seções 4 e 5, commit 01f4521e do Jean).
+- **Feito (isolado, sem integração):** `ferramentas/prototipos/reforco/` (`demo.bat`): o jogo num save temporário, a
+  forja com o balcão novo (a peça, o passo, o custo, a posse e a falta, a comparação na luta, a substituta, a venda e a
+  desmontagem com confirmação), a seção Materiais no Inventário, a recompensa de teste e o baú como fontes.
+- **Hipóteses (provisórias):** arma/peito/apoio; Fio ou Runas na arma do Guerreiro; 1,5 nível de peça por +, piso
+  de +1 na arma; limite +4; 305 de ouro e 10 fragmentos até o +4; desmontar devolve metade dos fragmentos e o da
+  peça; vender devolve 25% do ouro. Detalhes no LEIA-ME e no 25 (5.5).
+- **Para depois:** elevação de base (exemplo numérico), encantamento, arte e som, fontes na campanha, a aljava.
+- **Conferido:** 15 testes do protótipo; a tela a 1920×945 e 1280×720 (duplo clique, confirmação, Esc, falta de
+  recurso); o jogo de produção não carrega a pasta. Aguarda a avaliação do Jean antes de integrar.

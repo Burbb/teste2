@@ -85,7 +85,7 @@ A migração das artes e seus usos específicos consta no plano 23; não contar 
 | **1E** | Desvio visual depois dos itens | **Concluída para a campanha na 1.200.0** (a 1E.4: o mapa, o minimapa, a Viagem e o Diário). Histórico: contador de flechas (1.155.0) e 17 estados (1.155.0–1.161.0) concluídos; Afogado, Ilse, Lobo e Bandido integrados (1.162.0–1.163.0); os três animais do patrulheiro concluídos (1.164.0–1.165.0); o Troll da montanha (1.166.0), o Rei Troll e a Aranha (1.167.0); a Rainha Aracnídea (1.168.0); o arco no Atacar do Arqueiro (1.169.0); o lobo na fogueira (1.170.0); o sapo e a sanguessuga (1.171.0); o cultista, a bruxa e o rato (1.172.0); o javali e o carniçal (1.173.0); o espectro (1.174.0); em andamento as demais criaturas, os chefes e as invocações (1E.3); depois caminhos e símbolos do mapa/minimapa (1E.4) |
 | **2** | Menu de carregar e fichas dos saves, criação, livro da capela, dado, subida de nível, celebrações e raridade | Pendente; Grimório e árvore passam ao mesmo ciclo dos sistemas na etapa 8 |
 | **3** | Interior da forja e ferreiro | Pendente; começar com as regras atuais |
-| **4** | Protótipo de reforço e encantamento | Hipóteses; chances, custos, riscos e limites não aprovados |
+| **4** | Protótipo de reforço e encantamento | Direção aprovada (25, seção 5). Protótipo jogável de reforço, materiais e desmontagem em `ferramentas/prototipos/reforco` (26/10), aguardando avaliação; números provisórios; encantamento e elevação de base para depois |
 | **5** | Interiores do Templo, Curandeira e Taverna | Pendente |
 | **6** | Cenários dos lugares, entornos de acampamentos e cenas principais | Pendente; conferir a permanência dos acontecimentos |
 | **7** | Cenas dos eventos recorrentes da estrada | Pendente |
