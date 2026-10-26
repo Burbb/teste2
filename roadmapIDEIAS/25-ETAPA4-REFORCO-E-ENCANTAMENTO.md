@@ -258,6 +258,24 @@ Detalhes no [LEIA-ME](../ferramentas/prototipos/combate-atributos/LEIA-ME.md); o
 - **Resultados observados (alvos parados, mesma build):** num alvo, Brasa → Combustão rende 44 por 32 de recurso e a Chuva → Combustão 39 por 42 (a Brasa continua melhor); no grupo de três, Chuva → Conflagração faz 108 em 2 ações (52) e três Brasas → Conflagração os mesmos 108 em 4 ações (66); contra 60% de fogo, a Queimadura pega e o dano cai para cerca de um terço. A reserva básica da Chama (67) comporta a sequência, que funciona num encontro normal antes da expiração. Falta Jean dizer se o Golpe Oportuno vira obrigação como a Marca.
 
 
+### 3.10 Estrutura aprovada e integração autorizada após a v4
+
+Jean aprovou seguir para o jogo real, testando chefe e lutas consecutivas na campanha, sem exigir outra rodada isolada. Relatou que as lutas parecem longas; reduzir trechos repetitivos e a demora após o confronto já estar decidido é objetivo da integração, sem atribuir seu uso de básicos a falta de recurso.
+
+**Autorização atual:** integrar a estrutura de combate descrita nas seções 3.3–3.9, adaptada às classes e sistemas reais, e criar repertório provisório pesquisado. Esta seção substitui as restrições anteriores de “somente protótipo” para esse escopo. Não aprova automaticamente todos os valores, habilidades e exceções introduzidos pelo laboratório.
+
+Estrutura aprovada: iniciativa inicial fixa por Agilidade; turnos individuais e rodadas; uma ação principal; até dois companheiros principais controláveis; queda e ressurreição conforme acordado; kit limitado por orçamento e espaços; comandos básicos fora do kit; escalas e tipos explícitos; atributos graduais; resistências; combinações de estados; até uma ultimate equipada, uma utilização por combate, sem Ímpeto. Presença continua somente na aventura. Fórmulas, custos, tetos, slots, pontos e catálogo permanecem ajustáveis.
+
+**Classes reais:** retirar do jogo o “guerreiro de fogo” artificial do laboratório. Levar a combinação de fogo ao repertório apropriado de Mago/Piromante, respeitando aprendizado e especialização. Builds híbridas futuras não estão proibidas, mas não justificam liberar todo o catálogo entre classes agora.
+
+**Repertório provisório:** referência inicial de cerca de 8–10 habilidades comuns por classe, contando existentes pertinentes; aprendizado progressivo, não todas no nível inicial. Especializações acrescentam conjuntos menores próprios e ultimate, sem retirar as habilidades iniciais. Pesquisar referências por função e escolher efeitos compatíveis com combate sem posicionamento. Buscar ao menos duas combinações por classe, opções econômicas e ferramentas independentes; não criar rotações obrigatórias. Quantidade é alvo de trabalho, não quota para encher com efeitos redundantes. Talentos completos, catálogo final e arte nova não fazem parte desta autorização.
+
+**Continuidade obrigatória:** antes de integrar, escolher e documentar regras provisórias explícitas para vida, recursos, companheiros caídos, consumíveis e disponibilidade da ultimate entre combates; aprendizado e troca de kit nas cidades/acampamentos. Claude pode resolver escolhas operacionais coerentes com as decisões e testá-las, sem apresentar números como design final. Não deixar a campanha depender do reinício cheio do laboratório.
+
+**Integração completa no escopo:** adaptar inimigos, companheiros reais, pets/invocações existentes, equipamentos/afixos, progressão, interface e modos suportados onde dependam do combate, sem criar novos subsistemas desnecessários. Tratar saves deliberadamente, sem apagar arquivos pessoais ou prometer compatibilidade não testada. Preservar narrativa e aprovações visuais, salvo mudanças de interface necessárias ao funcionamento.
+
+**Validação:** percursos reais com as três classes, ao menos um chefe e sequência de encontros sem reinício artificial. Medir rodadas, ações e tempo ativo separadamente de animações/pausas; registrar fase final de baixo risco quando observável. Lutas comuns podem ser curtas; desafios podem durar mais. Comparar mesmas condições e investigar diferenças de gabarito. A integração não encerra a etapa 4 nem autoriza implementar reforço/encantamento completo, árvores extensas de talentos ou expansão narrativa.
+
 ## 4. Vida útil das peças — direção acordada
 
 O caminho escolhido é **um meio-termo entre substituição constante e levar qualquer peça indefinidamente**, com espaço para apego a boas descobertas.
@@ -309,7 +327,7 @@ Na conversa, **Battle Brothers** acrescentou o exemplo de materiais de criaturas
 
 As generalizações do apêndice sobre aleatoriedade, destruição e satisfação são avaliações da pesquisa inicial, não leis de design nem prova de que uma mecânica só funciona em determinado gênero. Verificar versões e fontes antes de usar mudanças de outros jogos como justificativa decisiva.
 
-**Próximo passo acordado:** revisar o protótipo isolado de combate após o teste de Jean, conforme as seções 3.1, 3.6 e 3.7. A segunda versão já foi entregue e jogada. A v3 foi entregue e jogada; a próxima entrega é o refinamento local da seção 3.9, sem alterar a produção. Só depois da avaliação avançar nas dependências de reforço e encantamento. Não iniciar o protótipo de forja do apêndice.
+**Próximo passo acordado:** integrar a estrutura aprovada e um repertório provisório às classes reais, conforme seção 3.10, para testar chefe, encontros consecutivos e ritmo dentro da campanha. Não implementar ainda reforço/encantamento completo.
 
 Depois de definida a direção suficiente, o Claude poderá verificar implicações técnicas, testar hipóteses numéricas e construir um protótipo isolado e pequeno. O catálogo e o combate atuais servirão de casos de teste, sem limitar as possibilidades futuras.
 
@@ -346,7 +364,7 @@ Depois de definida a direção suficiente, o Claude poderá verificar implicaç�
 | Desbloqueios ou imunidades por atingir X de atributo | Rejeitados; retirar do protótipo |
 | Presença somente no cenário e nas interações | Acordado; sem efeito de combate |
 | Tenacidade gradual com teto, sem imunidade automática | Direção de teste; na segunda versão: 4% por ponto de Vontade até 40%, menos a aplicação do atacante (hipótese, não aprovada) |
-| Comandos básicos fora dos slots e pontos do kit | Hipótese operacional implementada na segunda versão; consomem ação; aguarda avaliação |
+| Comandos básicos fora dos slots e pontos do kit | Aprovado para integração; consomem ação |
 | Orçamento de seleção de habilidades por tier, até uma ultimate | Direção acordada; na segunda versão: 10 pontos, até 6 espaços, tiers de 1 a 4 pontos, Ímpeto rejeitado após teste; v3 usa uma ultimate por combate (demais números provisórios) |
 | Kit limitado e investimento seletivo | Direção acordada |
 | Cinco habilidades + uma ultimate | Hipótese, não número fechado |
@@ -361,8 +379,8 @@ Depois de definida a direção suficiente, o Claude poderá verificar implicaç�
 | Baluarte com habilidade baseada parcialmente em vida | Aprovado para teste, não bônus universal |
 | Ultimate uma vez por combate, sem Ímpeto | Aprovado para teste; ação e custo de recurso viável |
 | Habilidades iniciais mantidas após especialização | Direção aprovada |
-| Troca de kit em cidades/acampamentos fora de combate | Direção inicial aprovada; sem integração agora |
-| Produção, arte final e sistemas completos | Não autorizados nesta rodada; somente v3 isolada e sua interface de teste |
+| Troca de kit em cidades/acampamentos fora de combate | Aprovada para integração; regras operacionais documentadas |
+| Integração do combate e repertório provisório | Autorizada após v4, no escopo da seção 3.10; sem arte final nova ou sistemas fora dele |
 
 ## Apêndice — pesquisa e proposta inicial, preservadas como histórico
 
