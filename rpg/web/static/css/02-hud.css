@@ -81,13 +81,12 @@ body.por-um-fio .vital[data-vital="hp"] .enchimento { animation: pulso-vida var(
 /* o kit equipado (1.211.1): uma fileira de botões entre as barras e os recursos; recolhida, o botão "Kit · N" e a
    lista por baixo. A ultimate com a borda de ouro; a usada nesta luta, apagada. */
 .hud-kit { position: relative; flex: none; display: flex; align-items: center; }
-.kit-fileira { display: flex; gap: 4px; }
-.kit-hab { position: relative; display: grid; place-items: center; width: 36px; height: 36px; padding: 0; cursor: pointer;
-  background: #15131a; border: 2px solid #3d3428; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.6); }
+.kit-fileira { display: flex; gap: 3px; }
+.kit-hab { position: relative; display: grid; place-items: center; width: 34px; height: 34px; padding: 0; cursor: pointer;
+  background: rgba(0, 0, 0, 0.32); border: 1px solid var(--ferro-fio, rgba(255, 255, 255, 0.12)); }
 .kit-hab img.sprite { --s: 32; }
 .kit-hab:hover, .kit-hab:focus-visible { border-color: var(--ouro); outline: none; }
-.kit-hab.ultimate { border-color: #c79a3a; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.6), 0 0 0 1px #5a4214; }
-.kit-hab.ultimate::after { content: "◆"; position: absolute; top: -7px; right: -5px; font-size: 11px; color: #f2d27a; text-shadow: 0 1px 0 #000; }
+.kit-hab.ultimate { border-color: var(--latao, #b08a45); box-shadow: inset 0 0 0 1px rgba(176, 138, 69, 0.35); }
 .kit-hab.usada { opacity: 0.45; }
 .kit-recolhido, .kit-vazio { display: none; height: 32px; padding: 0 10px; font: inherit; font-size: 14px; color: var(--tinta); cursor: pointer;
   background: #15131a; border: 2px solid #3d3428; white-space: nowrap; }
@@ -96,6 +95,7 @@ body.por-um-fio .vital[data-vital="hp"] .enchimento { animation: pulso-vida var(
 .kit-ult { font-style: normal; color: #f2d27a; }
 .hud-kit.recolhida .kit-fileira { display: none; }
 .hud-kit.recolhida .kit-recolhido { display: block; }
+.hud-kit.curta .kit-palavra { display: none; }
 .kit-lista { display: none; position: absolute; z-index: 25; top: calc(100% + 4px); left: 0; min-width: 240px; padding: 4px;
   flex-direction: column; gap: 3px; background: #121016; border: 2px solid #3d3428; box-shadow: 0 6px 14px rgba(0, 0, 0, 0.6); }
 .hud-kit.recolhida.aberto .kit-lista { display: flex; }
@@ -103,7 +103,6 @@ body.por-um-fio .vital[data-vital="hp"] .enchimento { animation: pulso-vida var(
 .kit-lista .kit-hab img.sprite { --s: 32; }
 .kit-lista .kit-nome { flex: 1; text-align: left; font-size: 14px; color: var(--tinta); white-space: nowrap; }
 .kit-lista .kit-custo { font-family: var(--num); font-size: 14px; color: var(--tinta-3); }
-.kit-lista .kit-hab.ultimate::after { top: 2px; right: 4px; }
 /* a etiqueta da ultimate nas dicas (a carta da ação, o kit da barra) */
 .tag-ultimate { display: inline-block; margin-left: 6px; padding: 0 5px; font-size: 11px; letter-spacing: .05em; text-transform: uppercase;
   color: #1b1408; background: #e8c56a; vertical-align: 2px; }

@@ -260,12 +260,6 @@ img.marca-texto { width: 9px; height: 11px; image-rendering: pixelated; vertical
 .esp-confirmar { border-color: var(--ouro-2); }
 @media (max-width: 1100px) { .esp-cartas { grid-template-columns: 1fr; } }
 /* a ficha lateral: o botão "Atributos" (com "· +N" quando há pontos) e o quadro compacto dos atributos (1.211.1) */
-.atributos-abrir { display: flex; align-items: center; gap: 6px; width: 100%; margin-top: 6px; padding: 5px 8px; font: inherit; font-size: 14px;
-  color: var(--tinta-2); text-align: left; cursor: pointer; background: rgba(0, 0, 0, 0.22); border: 1px solid rgba(255, 255, 255, 0.08); }
-.atributos-abrir:hover, .atributos-abrir:focus-visible { border-color: var(--ouro); outline: none; color: var(--tinta); }
-.atributos-abrir .seta { margin-left: auto; color: var(--tinta-3); }
-.atributos-abrir .attr-livres { color: #f6d98a; }
-.atributos-abrir.com-pontos { border-color: rgba(232, 197, 106, 0.55); }
 .atributos-quadro { margin-top: 6px; }
 .atributos-quadro .atributos-base { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px 4px; margin-top: 4px; }
 .atributos-quadro .attr-base b { font-size: 16px; }

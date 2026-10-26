@@ -215,16 +215,13 @@ function kitHud(h) {
   const ult = kit.some((k) => k.ultimate);
   return `<div class="hud-kit${kitAberto ? " aberto" : ""}" role="group" aria-label="Kit equipado">
     <div class="kit-fileira">${kit.map((k) => botaoKit(k, h)).join("")}</div>
-    <button type="button" class="kit-recolhido" aria-expanded="${kitAberto}" aria-controls="kit-lista">Kit · ${Texto.plural(kit.length, "habilidade")}${ult ? ' <i class="kit-ult" title="com a ultimate">◆</i>' : ""}</button>
+    <button type="button" class="kit-recolhido" aria-expanded="${kitAberto}" aria-controls="kit-lista" aria-label="Kit: ${Texto.plural(kit.length, "habilidade")}${ult ? ", com a ultimate" : ""}">Kit · ${kit.length}<span class="kit-palavra"> ${kit.length === 1 ? "habilidade" : "habilidades"}</span>${ult ? ' <i class="kit-ult" aria-hidden="true">◆</i>' : ""}</button>
     <div class="kit-lista" id="kit-lista">${kit.map((k) => botaoKit(k, h, true)).join("")}</div></div>`;
 }
 function ligarKitHud(h) {
   const caixa = $("#hud-linha .hud-kit");
   if (!caixa) return;
-  // recolhe quando a fileira não cabe (as barras ficariam estreitas demais ou a linha transbordaria)
-  const linha = $("#hud-linha"), vitais = $("#hud-linha .hud-vitais");
-  caixa.classList.remove("recolhida");
-  if (linha.scrollWidth > linha.clientWidth + 1 || (vitais && vitais.offsetWidth < 220)) caixa.classList.add("recolhida");
+  medirKit();
   caixa.querySelectorAll("[data-kit-hab]").forEach((b) => b.addEventListener("click", (ev) => {
     ev.stopPropagation();
     if (estado && estado.combate) return;  // na luta, só consulta: a ação é na roda, na sua vez
@@ -242,6 +239,23 @@ function ligarKitHud(h) {
     if (ev.key === "Escape" && kitAberto) { ev.stopPropagation(); kitAberto = false; caixa.classList.remove("aberto"); if (rec) { rec.setAttribute("aria-expanded", "false"); rec.focus(); } }
   });
 }
+/** Recolhe a fileira só quando ela não cabe: a linha da barra, com a fileira aberta, transbordaria (as barras já no
+ *  mínimo delas, 180 px). Mede só com a barra à vista (na luta ela some: largura zero não decide nada) e de novo a
+ *  cada mudança de largura (a janela, o zoom, a barra voltando depois da luta: o ResizeObserver abaixo). */
+function medirKit() {
+  const linha = $("#hud-linha"), caixa = linha && linha.querySelector(".hud-kit");
+  if (!caixa || !linha.offsetParent || !linha.clientWidth) return;
+  caixa.classList.remove("recolhida", "curta");
+  if (linha.scrollWidth > linha.clientWidth + 1) caixa.classList.add("recolhida");
+  if (linha.scrollWidth > linha.clientWidth + 1) caixa.classList.add("curta");  // nem o botão cabe: "Kit · 4"
+}
+if (window.ResizeObserver) {
+  let quadro = 0;
+  const obs = new ResizeObserver(() => { cancelAnimationFrame(quadro); quadro = requestAnimationFrame(medirKit); });
+  const ligar = () => { const l = $("#hud-linha"); if (l) obs.observe(l); else setTimeout(ligar, 200); };
+  ligar();
+}
+
 document.addEventListener("click", (ev) => {  // clicar fora fecha a lista do kit recolhido
   if (!kitAberto || ev.target.closest(".hud-kit")) return;
   kitAberto = false;
@@ -364,7 +378,7 @@ function desenharHeroi(h, antes) {
     ${h.pontos_talento ? `<div class="talento-linha"><button type="button" class="talento-aviso" data-atalho="Talentos"><span class="estrela">${Icones.atalho("Talentos", 32) || spr("estrela", 2)}</span><span class="talento-texto">${Texto.plural(h.pontos_talento, "ponto de talento", "pontos de talento").replace(/^\d+/, (n) => `<b>${n}</b>`)}</span><span class="talento-abrir" aria-hidden="true">▸</span></button></div>` : ""}
     <div class="secao"><h3>Atributos</h3><div class="atributos">${attrs}</div>${Telas.testesHtml(h)}
       <button type="button" class="atributos-abrir${h.pontos_atributo ? " com-pontos" : ""}" aria-expanded="${atributosAbertos}" aria-controls="atributos-quadro">
-        <span class="nome">Atributos</span>${h.pontos_atributo ? `<b class="attr-livres">· +${h.pontos_atributo}</b>` : ""}<span class="seta" aria-hidden="true">${atributosAbertos ? "▾" : "›"}</span></button>
+        <span class="icone-attr" aria-hidden="true">${spr("estrela", 1)}</span><span class="nome">Atributos</span>${h.pontos_atributo ? `<b class="attr-livres">· +${h.pontos_atributo}</b>` : ""}<span class="seta" aria-hidden="true">›</span></button>
       <div class="atributos-quadro" id="atributos-quadro"${atributosAbertos ? "" : " hidden"}>${Telas.atributosBaseHtml(h, true)}</div></div>
     <div class="secao"><h3>Equipado</h3><div class="equip-mini">${Object.keys(Telas.AREA).map(slot).join("")}</div></div>
     ${comitiva}
@@ -376,8 +390,7 @@ function desenharHeroi(h, antes) {
   if (abrir) abrir.addEventListener("click", (ev) => {
     ev.stopPropagation();
     atributosAbertos = !atributosAbertos;
-    abrir.setAttribute("aria-expanded", String(atributosAbertos));
-    abrir.querySelector(".seta").textContent = atributosAbertos ? "▾" : "›";
+    abrir.setAttribute("aria-expanded", String(atributosAbertos));  // a seta gira pelo CSS (14-hud.css)
     $("#atributos-quadro").hidden = !atributosAbertos;
   });
   Telas.ligarMaisAtributo($("#heroi"));

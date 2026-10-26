@@ -281,6 +281,19 @@
 :root body .testes-ficha .seta { margin-left: auto; color: var(--sec); font-size: 15px; }
 :root body .testes-ficha:is(:hover, :focus-visible) { background: rgba(255, 255, 255, 0.045); }
 :root body .testes-ficha:is(:hover, :focus-visible) .nome { color: #f3e6c8; }
+/* o botão Atributos (paineis.js): o mesmo acabamento dos Testes do d20 (a linha com o filete, o ícone, o nome, a seta),
+   mas é um botão: abre o quadro por clique e teclado; a seta gira quando aberto e o foco tem contorno */
+:root body .atributos-abrir { display: flex; align-items: center; gap: 8px; width: 100%; margin: 0; padding: 6px 4px 5px 2px;
+  font: inherit; text-align: left; background: none; border: 0; border-top: 1px solid rgba(255, 255, 255, 0.07); cursor: pointer; }
+:root body .atributos-abrir .icone-attr { display: grid; place-items: center; width: 22px; height: 22px; }
+:root body .atributos-abrir .nome { font-size: 13px; color: var(--sec); }
+:root body .atributos-abrir .attr-livres { font-size: 13px; color: #f6d98a; }
+:root body .atributos-abrir .seta { margin-left: auto; color: var(--sec); font-size: 15px; transition: rotate 120ms; }
+:root body .atributos-abrir[aria-expanded="true"] .seta { rotate: 90deg; }
+:root body .atributos-abrir:is(:hover, :focus-visible) { background: rgba(255, 255, 255, 0.045); }
+:root body .atributos-abrir:is(:hover, :focus-visible) .nome { color: #f3e6c8; }
+:root body .atributos-abrir:focus-visible { outline: 1px solid var(--ouro); outline-offset: -1px; }
+@media (prefers-reduced-motion: reduce) { :root body .atributos-abrir .seta { transition: none; } }
 /* na dica: um teste por item (o nome e o bônus no texto da dica, não no título), de onde vem, o uso embaixo, discreto */
 :is(#dica-item, #dica-equipado) .testes-lista { padding-left: 0; list-style: none; }
 :is(#dica-item, #dica-equipado) .testes-lista li { margin-bottom: 6px; }
