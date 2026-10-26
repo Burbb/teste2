@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Combate e atributos · v2</title>
+<!-- PROTÓTIPO do combate e dos atributos, segunda versão (26/10/2026; nada no jogo). Os materiais, as fontes, os retratos
+     e os ícones são os do jogo (rpg/web/static, só leitura); a montagem da luta vem da v1 (tela/demo.css), com o que a
+     v2 acrescenta em tela2/demo.css. As regras rodam em motor2/regras.py. -->
+<link rel="stylesheet" href="/static/css/01-base.css">
+<link rel="stylesheet" href="/static/css/11-tipografia.css">
+<link rel="stylesheet" href="/tela/demo.css">
+<link rel="stylesheet" href="/tela2/demo.css">
+</head>
+<body>
+<header id="topo" class="m-painel">
+  <h1>Combate<span> e atributos</span> <small>v2</small></h1>
+  <button id="preparar" class="botao" title="P">Preparar <kbd>P</kbd></button>
+  <label>Encontro <select id="encontro"></select></label>
+  <button id="reiniciar" class="botao" title="R">Reiniciar <kbd>R</kbd></button>
+  <span id="resumo-build"></span>
+  <span class="espaco"></span>
+  <button class="botao" data-abrir="comparar" title="As construções lado a lado: atributos, derivados e dano previsto no mesmo alvo">Comparar</button>
+  <button class="botao" data-abrir="situacao">Fora da luta</button>
+  <button class="botao" data-abrir="resultados">Resultados</button>
+  <a class="botao" href="/v1/" title="A primeira versão, preservada para comparar">v1</a>
+</header>
+<div id="teste" hidden></div>
+<section id="faixa">
+  <p id="objetivo"></p>
+  <div id="ordem" aria-label="Ordem dos turnos"></div>
+</section>
+<main id="campo">
+  <section id="grupo" aria-label="O grupo"></section>
+  <section id="frente" aria-label="Os inimigos"></section>
+  <aside id="lado" class="m-painel">
+    <nav id="abas"><button data-aba="registro" class="atual">Registro</button><button data-aba="ficha">Ficha</button></nav>
+    <div id="registro" aria-live="polite"></div>
+    <div id="ficha" hidden></div>
+  </aside>
+  <div id="fim" hidden></div>
+</main>
+<footer id="doca" class="m-painel"></footer>
+<section id="prep" hidden aria-label="Preparar a construção e o kit"></section>
+<div id="modal" hidden><div class="caixa m-janela" role="dialog" aria-modal="true"><button class="fechar" aria-label="Fechar">×</button><div id="modal-corpo"></div></div></div>
+
+<script src="/static/sprites-dados.js"></script>
+<script src="/static/sprites.js"></script>
+<script>Sprites.publicar();</script>
+<script src="/static/retratos.js"></script>
+<script src="/static/desenhos.js"></script>
+<script src="/static/icones.js"></script>
+<script src="/tela2/demo.js"></script>
+</body>
+</html>

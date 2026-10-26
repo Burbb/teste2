@@ -1,11 +1,17 @@
-"""DEMONSTRAÇÃO do combate e dos atributos (protótipo, 25/10/2026; nada no jogo). Um servidor local que roda as regras de
-motor/regras.py e serve a tela da demo (tela/), com os retratos, os ícones, as fontes e os materiais do jogo lidos de
-rpg/web/static (só leitura: nada do jogo carrega arquivos daqui, e daqui nada se grava no jogo).
+"""DEMONSTRAÇÃO do combate e dos atributos (protótipo; nada no jogo). Um servidor local com as duas versões, para
+comparar:
 
-    python ferramentas/prototipos/combate-atributos/servidor.py      # a demo em http://127.0.0.1:8781/
+- **v2** (26/10/2026, a atual) em http://127.0.0.1:8781/ : motor2/ e tela2/ (atributos no dano, Tenacidade, Presença
+  fora da luta, montagem do kit com pontos e a leitura das builds);
+- **v1** (25/10/2026, a primeira, congelada) em http://127.0.0.1:8781/v1/ : motor/ e tela/.
 
-Uma luta por vez, na memória. Os "saves" da demo (o resultado de cada luta terminada ou reiniciada, para comparar as
-construções) vão para uma pasta temporária nova a cada execução; os saves do jogo não são lidos nem tocados.
+Os retratos, os ícones, as fontes e os materiais do jogo são lidos de rpg/web/static (só leitura: nada do jogo carrega
+arquivos daqui, e daqui nada se grava no jogo).
+
+    python ferramentas/prototipos/combate-atributos/servidor.py
+
+Uma luta por versão, na memória. Os "saves" da demo (o resultado de cada luta terminada ou reiniciada) vão para uma
+pasta temporária nova a cada execução; os saves do jogo não são lidos nem tocados.
 """
 import json
 import mimetypes
@@ -21,17 +27,25 @@ from urllib.parse import unquote, urlparse
 AQUI = pathlib.Path(__file__).resolve().parent
 RAIZ = AQUI.parents[2]
 JOGO = RAIZ / "rpg" / "web" / "static"
-TELA = AQUI / "tela"
+TELA, TELA2 = AQUI / "tela", AQUI / "tela2"
 sys.path.insert(0, str(AQUI))
 from motor import conteudo as C  # noqa: E402
 from motor.regras import Combate, situacao, _dist_valida  # noqa: E402
+from motor2 import conteudo as C2  # noqa: E402
+from motor2 import regras as R2  # noqa: E402
 
 PORTA = int(os.environ.get("DEMO_PORTA", "8781"))
 PASTA_SAVES = pathlib.Path(os.environ.get("DEMO_SAVES") or tempfile.mkdtemp(prefix="combate-atributos-"))
 trava = threading.Lock()
-sessao = {"combate": None, "resultados": []}
+sessao = {"combate": None, "resultados": [], "combate2": None, "resultados2": []}
 
 
+def _gravar():
+    (PASTA_SAVES / "resultados.json").write_text(json.dumps({"v1": sessao["resultados"], "v2": sessao["resultados2"]},
+                                                            ensure_ascii=False, indent=1), encoding="utf-8")
+
+
+# ---------------------------------------------------------------- v1 (congelada)
 def _guardar_resultado(cb, como):
     """Anota a luta (terminada ou interrompida) na lista da sessão e no arquivo temporário."""
     if cb is None or cb.resumo.get("anotado"):
@@ -43,8 +57,7 @@ def _guardar_resultado(cb, como):
          "preparos_resolvidos": cb.resumo["preparos_resolvidos"], "preparos_desfeitos": cb.resumo["preparos_desfeitos"],
          "hora": time.strftime("%H:%M:%S")}
     sessao["resultados"].append(r)
-    (PASTA_SAVES / "resultados.json").write_text(json.dumps(sessao["resultados"], ensure_ascii=False, indent=1),
-                                                encoding="utf-8")
+    _gravar()
 
 
 def _atributos(corpo):
@@ -69,8 +82,6 @@ def catalogo():
 
 
 def comparar(atr_livre=None):
-    """Os valores derivados do protagonista em cada distribuição, no mesmo nível, equipamento e grupo (o primeiro
-    encontro só para ter a ordem)."""
     colunas = []
     for k in C.DISTRIBUICOES:
         cb = Combate("e1", k)
@@ -82,6 +93,62 @@ def comparar(atr_livre=None):
         colunas.append({"id": "livre", "nome": "Livre", "atributos": cb.c["heroi"].atr, "derivados": cb.derivados(cb.c["heroi"]),
                         "ordem": [cb.c[i].nome for i in cb.ordem]})
     return {"colunas": colunas}
+
+
+# ---------------------------------------------------------------- v2
+def _guardar_resultado2(cb, como):
+    if cb is None or cb.resumo.get("anotado"):
+        return
+    cb.resumo["anotado"] = True
+    h = cb.c["heroi"]
+    r = {"encontro": cb.encontro, "nome": cb.cfg["nome"], "build": cb.build, "atributos": h.atr, "presenca": cb.presenca,
+         "kit": h.kit, "kit_nomes": [C2.HABILIDADES[k]["nome"] for k in h.kit], "equip": h.equip,
+         "fim": cb.fim or como, "rodadas": cb.rodada, "quedas": cb.resumo["quedas"],
+         "dano_recebido": cb.resumo["dano_recebido"], "acoes": cb.resumo["acoes"], "recurso": cb.resumo["recurso"],
+         "preparos": cb.resumo["preparos"], "preparos_resolvidos": cb.resumo["preparos_resolvidos"],
+         "preparos_desfeitos": cb.resumo["preparos_desfeitos"], "preparos_aparados": cb.resumo["preparos_aparados"],
+         "controles": cb.resumo["controles"], "ultimate": cb.resumo["ultimate"], "hora": time.strftime("%H:%M:%S")}
+    sessao["resultados2"].append(r)
+    _gravar()
+
+
+def _atr2(corpo, exata=True):
+    atr = corpo.get("atributos")
+    if not atr:
+        b = C2.BUILDS.get(corpo.get("build") or "forca")
+        return dict(b["atributos"]) if b else None
+    atr = {k: int(atr[k]) for k in C2.ATRIBUTOS}
+    erro = R2.validar_atributos(atr)
+    if erro and (exata or not erro.startswith("A soma")):
+        raise ValueError(erro)
+    return atr
+
+
+def _presenca(corpo):
+    p = int(corpo.get("presenca") or C2.PRESENCA_PADRAO)
+    if not (C2.ATRIBUTO_MIN <= p <= C2.ATRIBUTO_MAX):
+        raise ValueError("Presença vai de 1 a 10.")
+    return p
+
+
+def catalogo2():
+    return {"versao": 2,
+            "encontros": [{"id": k, "nome": v["nome"], "tipo": v["tipo"], "objetivo": v["objetivo"], "teste": v.get("teste")}
+                          for k, v in C2.ENCONTROS.items()],
+            "builds": [{"id": k, **v} for k, v in C2.BUILDS.items()],
+            "atributos": [{"id": a, "nome": C2.NOME_ATRIBUTO[a], "sigla": C2.SIGLA[a], "funcao": C2.FUNCAO[a]}
+                          for a in C2.ATRIBUTOS],
+            "orcamento": C2.ORCAMENTO, "min": C2.ATRIBUTO_MIN, "max": C2.ATRIBUTO_MAX, "presenca": C2.PRESENCA_PADRAO,
+            "habilidades": [{"id": k, "nome": h["nome"], "tier": h["tier"], "pontos": C2.PONTOS_TIER[h["tier"]],
+                             "custo": h["custo"], "desc": h["desc"], "tipo": h.get("tipo"), "alvo": h["alvo"]}
+                            for k, h in C2.HABILIDADES.items() if "tier" in h],
+            "basicos": [{"id": k, "nome": C2.HABILIDADES[k]["nome"], "desc": C2.HABILIDADES[k]["desc"]} for k in C2.BASICOS],
+            "kit_pontos": C2.KIT_PONTOS, "kit_espacos": C2.KIT_ESPACOS, "impeto": C2.IMPETO_ULTIMATE,
+            "equipamento": {p: [{"id": k, **o} for k, o in v.items()] for p, v in C2.EQUIPAMENTO.items()},
+            "equip_padrao": C2.EQUIPAMENTO_PADRAO,
+            "recurso": {"max": C2.RECURSO_MAX, "inicio": C2.RECURSO_INICIO, "turno": C2.RECURSO_TURNO,
+                        "basico": C2.RECURSO_BASICO},
+            "saves": str(PASTA_SAVES)}
 
 
 class Demo(BaseHTTPRequestHandler):
@@ -115,9 +182,13 @@ class Demo(BaseHTTPRequestHandler):
     def do_GET(self):
         url = urlparse(self.path)
         if url.path == "/":
+            return self._arquivo(TELA2, "index.html")
+        if url.path in ("/v1", "/v1/"):
             return self._arquivo(TELA, "index.html")
         if url.path.startswith("/tela/"):
             return self._arquivo(TELA, url.path[len("/tela/"):])
+        if url.path.startswith("/tela2/"):
+            return self._arquivo(TELA2, url.path[len("/tela2/"):])
         if url.path.startswith("/static/"):
             return self._arquivo(JOGO, url.path[len("/static/"):])
         with trava:
@@ -128,6 +199,13 @@ class Demo(BaseHTTPRequestHandler):
                 return self._json(200, cb.estado() if cb else {"vazio": True})
             if url.path == "/api/resultados":
                 return self._json(200, {"resultados": sessao["resultados"], "pasta": str(PASTA_SAVES)})
+            if url.path == "/api2/catalogo":
+                return self._json(200, catalogo2())
+            if url.path == "/api2/estado":
+                cb = sessao["combate2"]
+                return self._json(200, cb.estado() if cb else {"vazio": True})
+            if url.path == "/api2/resultados":
+                return self._json(200, {"resultados": sessao["resultados2"], "pasta": str(PASTA_SAVES)})
         self._json(404, {"erro": "nada aqui"})
 
     def do_POST(self):
@@ -139,6 +217,8 @@ class Demo(BaseHTTPRequestHandler):
             return self._json(400, {"erro": "pedido inválido"})
         with trava:
             try:
+                if url.path.startswith("/api2/"):
+                    return self._post2(url.path[len("/api2/"):], corpo)
                 if url.path == "/api/iniciar":
                     enc = corpo.get("encontro")
                     if enc not in C.ENCONTROS:
@@ -166,6 +246,41 @@ class Demo(BaseHTTPRequestHandler):
                 return self._json(400, {"erro": str(e)})
         self._json(404, {"erro": "nada aqui"})
 
+    def _post2(self, rota, corpo):
+        build = corpo.get("build") if corpo.get("build") in C2.BUILDS else None
+        if rota == "ficha":
+            atr = _atr2(corpo, exata=False)
+            kit = corpo.get("kit", C2.BUILDS[build]["kit"] if build else [])
+            erro_kit = R2.validar_kit(kit)
+            f = R2.ficha(atr, [] if erro_kit else kit, corpo.get("equip"), _presenca(corpo), build or "livre")
+            f["erro_kit"] = erro_kit
+            f["erro_atributos"] = R2.validar_atributos(atr)
+            f["equipamento"] = {p: R2.comparar_equipamento(atr, [] if erro_kit else kit, p) for p in ("arma", "foco")}
+            return self._json(200, f)
+        if rota == "comparar":
+            return self._json(200, R2.comparar_builds(corpo.get("equip")))
+        if rota == "iniciar":
+            enc = corpo.get("encontro")
+            if enc not in C2.ENCONTROS:
+                return self._json(400, {"erro": "encontro desconhecido"})
+            atr = _atr2(corpo) if corpo.get("atributos") else None
+            _guardar_resultado2(sessao["combate2"], "reiniciado")
+            sessao["combate2"] = R2.Combate(enc, build or "forca", atr, corpo.get("kit"), corpo.get("equip"),
+                                            _presenca(corpo))
+            return self._json(200, sessao["combate2"].estado())
+        if rota == "agir":
+            cb = sessao["combate2"]
+            if not cb:
+                return self._json(409, {"ok": False, "motivo": "Nenhuma luta."})
+            r = cb.agir(corpo.get("turno_id"), str(corpo.get("acao", "")), corpo.get("alvo"))
+            if cb.fim:
+                _guardar_resultado2(cb, cb.fim)
+            return self._json(200, {**r, "estado": cb.estado()})
+        if rota == "situacao":
+            return self._json(200, R2.situacao(_atr2(corpo, exata=False), _presenca(corpo), corpo.get("escolha"),
+                                               bool(corpo.get("ajuda"))))
+        return self._json(404, {"erro": "nada aqui"})
+
 
 def servir(porta=PORTA):
     srv = ThreadingHTTPServer(("127.0.0.1", porta), Demo)
@@ -176,6 +291,7 @@ def servir(porta=PORTA):
 def main():
     srv = servir()
     print(f"http://127.0.0.1:{srv.server_address[1]}/", flush=True)
+    print(f"v1 em http://127.0.0.1:{srv.server_address[1]}/v1/", flush=True)
     print(f"resultados da sessão em {PASTA_SAVES}", flush=True)
     try:
         srv.serve_forever()

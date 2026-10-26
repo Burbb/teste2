@@ -1,0 +1,94 @@
+/* PROTÓTIPO do combate e dos atributos, segunda versão (26/10/2026; nada no jogo). Por cima da montagem da v1
+   (tela/demo.css): a tela Preparar (construção, kit, ficha) e o que a luta ganhou (previsões, Ímpeto, Tenacidade).
+   Referência: 1920×945; a 1280×720 tudo cabe sem rolar a página (o Preparar rola por coluna). */
+#topo #resumo-build { font-size: 14px; color: var(--tinta-2); overflow: hidden; text-overflow: ellipsis; min-width: 0; flex-shrink: 1; }
+#topo #resumo-build b { color: var(--ouro); font-weight: 600; }
+small { font-size: 0.8em; color: var(--tinta-2); }
+.ok { color: var(--bom); } .falta { color: var(--sangue); }
+
+/* ---------------------------------------------------------------- preparar */
+body.preparando > #faixa, body.preparando > #campo, body.preparando > #doca, body.preparando > #teste { display: none !important; }
+#prep { flex: 1 1 0; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr) minmax(0, 1.15fr);
+  grid-template-rows: minmax(0, 1fr) auto; gap: 8px; }
+#prep .col { padding: 8px 12px; overflow: auto; min-height: 0; }
+#prep h2 { font: calc(var(--px, 1px) * 32) var(--titulo); color: var(--ouro); text-shadow: var(--contorno); line-height: 1; margin-bottom: 6px; }
+#prep h3 { font: 20px var(--texto); font-weight: 700; color: var(--ouro); }
+#prep h4 { font: 15px var(--texto); font-weight: 700; color: var(--ouro); margin: 10px 0 4px; }
+#prep h4 small { font-weight: 400; }
+.builds { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.build { display: grid; text-align: left; gap: 2px; padding: 5px 9px 7px; background: var(--p-A); border: var(--borda) solid var(--p-J); color: var(--tinta); cursor: pointer; font: 14px var(--texto); }
+.build b { font-size: 16px; font-weight: 600; }
+.build span { color: var(--tinta-2); font-size: 13px; line-height: 1.25; }
+.build.atual { border-color: var(--ouro); background: var(--p-C); }
+.build:is(:hover, :focus-visible) { border-color: var(--ouro); outline: none; }
+.atr { list-style: none; margin: 0; padding: 0; }
+.atr li { display: grid; grid-template-columns: minmax(0, 1fr) 28px 28px 28px 70px; align-items: center; gap: 4px; padding: 2px 0;
+  border-bottom: var(--px) solid var(--p-J); }
+.atr .nome { display: grid; font-size: 15px; }
+.atr .nome small { font-size: 12px; }
+.atr b { text-align: center; color: var(--ouro); font-size: 17px; }
+.atr button { height: 24px; padding: 0; font: 16px var(--texto); color: var(--tinta); background: var(--p-A); border: var(--borda) solid var(--p-J); cursor: pointer; }
+.atr button[disabled] { opacity: 0.35; cursor: default; }
+.atr .medida { height: 8px; background: linear-gradient(90deg, var(--ouro-2) var(--v), var(--p-k) 0); border: var(--px) solid var(--p-J); }
+.atr .presenca { margin-top: 8px; border-top: var(--px) dashed var(--p-J); }
+.atr .presenca .medida { background: linear-gradient(90deg, var(--p-g) var(--v), var(--p-k) 0); }
+.equip { display: grid; gap: 4px; }
+.equip label { display: flex; justify-content: space-between; gap: 8px; font-size: 15px; color: var(--tinta-2); }
+#prep select { font: 15px var(--texto); color: var(--tinta); background: var(--p-A); border: var(--borda) solid var(--p-J); padding: 2px 4px; }
+.kit-soma { margin: 0 0 4px; font-size: 15px; }
+.habs { display: grid; gap: 4px; }
+.hab { position: relative; display: grid; grid-template-columns: 20px auto 1fr; column-gap: 6px; align-items: baseline; text-align: left;
+  padding: 4px 8px 5px; background: var(--p-A); border: var(--borda) solid var(--p-J); color: var(--tinta); cursor: pointer; font: 14px var(--texto); }
+.hab .marca { color: var(--ouro); font-weight: 700; }
+.hab b { font-size: 15px; font-weight: 600; }
+.hab .custo { color: var(--ouro-2); font-size: 13px; justify-self: end; }
+.hab .desc { grid-column: 2 / -1; color: var(--tinta-2); font-size: 13px; line-height: 1.25; }
+.hab.no-kit { border-color: var(--ouro); background: var(--p-C); }
+.hab.nao { opacity: 0.5; cursor: not-allowed; }
+.hab.nao .desc { color: var(--sangue); }
+.hab:not(.nao):is(:hover, :focus-visible) { border-color: var(--ouro); outline: none; }
+.fichao .frase { margin: 2px 0; font-size: 16px; }
+.fichao .troca { margin: 2px 0 6px; font-size: 14px; color: var(--tinta-2); }
+.fichao ul { list-style: none; margin: 0; padding: 0; }
+.fichao .derivados { display: grid; grid-template-columns: 1fr 1fr; column-gap: 14px; }
+.fichao .derivados li { display: grid; grid-template-columns: 1fr auto; padding: 2px 0; border-bottom: var(--px) solid var(--p-J); font-size: 14px; }
+.fichao .derivados b { color: var(--tinta); font-weight: 600; }
+.fichao .derivados small { grid-column: 1 / -1; font-size: 12px; }
+#prep table, #modal table { border-collapse: collapse; font-size: 14px; width: 100%; }
+#prep th, #prep td { padding: 2px 8px; border-bottom: var(--px) solid var(--p-J); text-align: left; }
+#prep thead th { color: var(--ouro); font-weight: 600; }
+#prep td.num { text-align: right; font-weight: 600; }
+#prep tr.atual td { color: var(--ouro); }
+#prep .rodape { grid-column: 1 / -1; display: flex; align-items: center; gap: 12px; justify-content: flex-end; padding: 2px 4px; }
+#prep .rodape label { color: var(--tinta-2); display: flex; gap: 6px; align-items: center; }
+#prep .lutar { border-color: var(--ouro); color: var(--ouro); font-size: 17px; }
+
+/* ---------------------------------------------------------------- a luta: o que a v2 acrescenta */
+.impeto { font-size: 14px; color: var(--ouro); letter-spacing: 0.05em; }
+.impeto small { letter-spacing: 0; }
+.previsto { margin: 0; font-size: 14px; color: var(--p-Y); }
+.carta .previsto b { color: var(--p-w); }
+.acao .tipo { font-style: normal; font-size: 11px; padding: 0 4px; margin-right: 6px; background: var(--p-J); color: var(--tinta-2); vertical-align: 2px; }
+.acao .tipo.ult { background: var(--ouro-3); color: var(--ouro); }
+.acao.ult:not(.nao) { border-color: var(--ouro-2); }
+.acao .previsto { display: block; font-size: 13px; color: var(--p-Y); }
+#ficha .fora { opacity: 0.6; }
+#modal .comparar table td { min-width: 150px; }
+#modal tr.texto td { font-size: 13px; font-weight: 400; color: var(--tinta-2); }
+#modal tr.sep th { color: var(--ouro); padding-top: 10px; }
+#modal .resultados td small { display: block; font-size: 11px; }
+#registro .ev-impeto { color: var(--ouro); }
+
+@media (max-height: 800px), (max-width: 1400px) {
+  #prep .col { padding: 6px 10px; }
+  .build span { font-size: 12px; }
+  .fichao .derivados { grid-template-columns: 1fr; }
+  #topo #resumo-build { display: none; }
+}
+@media (max-height: 800px) {
+  #objetivo { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .barra { height: 17px; }
+  .carta { gap: 2px; }
+  .estados li { display: flex; gap: 4px; align-items: center; }
+  .impeto { line-height: 1.1; }
+}

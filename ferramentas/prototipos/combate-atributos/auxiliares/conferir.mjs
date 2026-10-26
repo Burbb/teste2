@@ -1,4 +1,4 @@
-// Confere e fotografa a demo do combate e dos atributos (protótipo; nada no jogo) a 1920×945 e a 1280×720: sobe o
+// Confere e fotografa a v1 da demo do combate e dos atributos (protótipo; nada no jogo; a v2 tem conferir2.mjs) a 1920×945 e a 1280×720: sobe o
 // servidor numa porta livre com os resultados numa pasta temporária e, em cada janela, confere que a página não rola e
 // que nada corta (o topo numa linha, as cartas de ação inteiras), o teclado (número escolhe a ação e o alvo, Esc volta,
 // tecla segurada não repete a ação), o clique duplo (uma ação só), o reinício (sem eventos acumulados), o movimento
@@ -27,7 +27,7 @@ if (!URL) { console.log("o servidor não subiu"); process.exit(1); }
 
 const estado = (p) => p.evaluate(() => Demo.estado);
 async function abrir(p, encontro, dist) {
-  await p.goto(URL);
+  await p.goto(URL + "v1/");
   await p.waitForSelector("#doca .acao");
   await p.selectOption("#encontro", encontro);
   await p.selectOption("#distribuicao", dist);

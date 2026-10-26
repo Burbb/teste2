@@ -692,7 +692,7 @@ NOME_ESTADO = {"defesa": "Defendendo", "protegido": "Protegido", "protegendo": "
 def nome_estado(o, k):
     """O nome do estado concordando com o portador (Odette fica Atordoada)."""
     n = NOME_ESTADO[k]
-    return n[:-1] + "a" if o.a == "a" and n.endswith("o") else n
+    return n[:-1] + "a" if o.a == "a" and n.endswith("do") and not n.endswith("ndo") else n
 
 
 NOME_PREPARO = {"bote": "O Bote", "esmagador": "O Golpe Esmagador", "terror": "O Grito de Terror"}
