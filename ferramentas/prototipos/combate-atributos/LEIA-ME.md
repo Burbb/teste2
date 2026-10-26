@@ -1,26 +1,115 @@
 # Protótipo do combate e dos atributos
 
-Três versões jogáveis, isoladas, para comparar. **Não é integração:** o jogo não carrega nada desta pasta (um teste
+Quatro versões jogáveis, isoladas, para comparar. **Não é integração:** o jogo não carrega nada desta pasta (um teste
 confere), as regras de produção, a campanha e a forja não mudaram, e os números são de teste, não catálogo nem
 balanceamento.
 
-- **v3 (26/10/2026, a atual):** a seção 3.8 do [25](../../../roadmapIDEIAS/25-ETAPA4-REFORCO-E-ENCANTAMENTO.md),
-  depois que o Jean jogou a v2. `motor3/` e `tela3/`. Folha: `folha-v3.png`. O que testar: [ROTEIRO.md](ROTEIRO.md).
-- **v2 (26/10/2026, preservada):** `motor2/` e `tela2/`, em `/v2/`. Descrita mais abaixo.
-- **v1 (25/10/2026, preservada):** `motor/` e `tela/`, em `/v1/`. Descrita no fim.
+- **v4 (26/10/2026, a atual):** um refinamento pequeno da v3 pela seção 3.9 do
+  [25](../../../roadmapIDEIAS/25-ETAPA4-REFORCO-E-ENCANTAMENTO.md): sem a Marca, com o Golpe Oportuno do Morel e a
+  Chuva de Brasas. `motor4/` e `tela4/`. Folha: `folha-v4.png`. O que testar: [ROTEIRO.md](ROTEIRO.md).
+- **v3 (26/10/2026, preservada):** `motor3/` e `tela3/`, em `/v3/`. Descrita logo abaixo da v4.
+- **v2** em `/v2/` e **v1** em `/v1/`, preservadas, descritas no fim.
 
 ## Abrir
 
-Dê dois cliques em `demo.bat` (ou rode `python ferramentas/prototipos/combate-atributos/servidor.py` na raiz). A v3
-abre em http://127.0.0.1:8781/ na tela **Preparar**; a v2 e a v1 ficam nos botões do topo (`/v2/`, `/v1/`). Os
-resultados das três vão para uma pasta temporária nova a cada execução (o caminho aparece em Resultados); os saves do
-jogo não são lidos nem tocados.
+Dê dois cliques em `demo.bat` (ou rode `python ferramentas/prototipos/combate-atributos/servidor.py` na raiz). A v4
+abre em http://127.0.0.1:8781/ na tela **Preparar**; a v3, a v2 e a v1 ficam nos botões do topo. Os resultados vão
+para uma pasta temporária nova a cada execução; os saves do jogo não são lidos nem tocados. Teclado: `P` Preparar,
+`Enter` luta, número escolhe ação e alvo, `Esc` volta, `R` reinicia.
 
-**Teclado na v3:** `P` abre Preparar; em Preparar, `Enter` luta e `Esc` volta. Na luta, número escolhe a ação e o
-alvo, `Esc` volta, `R` reinicia. Tecla segurada e clique duplo fazem uma ação só. O mouse sobre um golpe ou uma
-previsão mostra a conta.
+## v4 · o que mudou
 
-## v3 · primeiro, as ameaças do Bruto (investigação)
+| | Decisão (seção 3.9) | Valor provisório desta rodada |
+|---|---|---|
+| Ataques básicos | Não ler a frequência de básicos, sozinha, como falta de recurso ou de opções: o Jean termina com básicos quando a vitória está garantida | Nada rebalanceado por isso |
+| Marca do Morel | Retirada da candidata; as versões anteriores continuam com ela; a produção não muda | — |
+| No lugar da Marca | O Jean pediu uma habilidade nova para testar (a seção 3.9 dizia para não preencher a vaga por obrigação; registrado). Escolhi um golpe de efeito imediato, não uma preparação nem uma Marca renomeada | **Golpe Oportuno**: físico, arma + nível + Força × 1,2, 15 de Vigor, +60% em quem está atordoado ou preparando um golpe. Concorre com o Golpe no Joelho diante de uma preparação: desfazer ou aproveitar |
+| Fogo em área | Uma habilidade comum de área: pouco dano, uma camada de Queimadura em cada inimigo, garantida (sem imunidades novas; a resistência ao fogo reduz o dano, não a aplicação), mais cara que a Brasa, disputando pontos e espaço | **Chuva de Brasas**: fogo, foco + nível + Intelecto × 0,35, tier 2 (2 pontos), 22 de Vigor (a Brasa custa 12), 1 pilha em cada inimigo |
+| Papéis do fogo | Brasa concentrada e econômica; Chuva prepara o grupo; Combustão consome um alvo; Conflagração (ultimate, 1×/luta) consome todos | A Brasa, a Combustão e a Conflagração da v3 já cumpriam os papéis e ficaram iguais (conferido antes de mexer) |
+| Kit sugerido da Chama | — | Brasa, Chuva de Brasas, Combustão, Proteger, Conflagração (10 pontos; a Lâmina Rúnica saiu do sugerido para caber) |
+
+Também: a Tempestade Rúnica dizia "+100% em quem está marcado"; sem a Marca, ficou "atordoado ou queimando" (o mesmo
+efeito para o que ainda existe). Os eventos de dano ganharam o valor e a fonte, para a comparação somar o dano direto e
+o periódico sem contar nada duas vezes; nas janelas menores, a descrição das ações disponíveis foi para a dica (o
+"previsto" continua no botão), porque oito ações não cabiam a 1280×720. Nada mais mudou: atributos, recurso, os outros
+encontros e as outras habilidades são os da v3.
+
+## v4 · a Queimadura conferida
+
+**O que já estava certo (v3):** a Brasa soma uma pilha (até 3) e renova os 3 pingos; cada pingo tira pilhas × pingo
+cru × (1 − resistência ao fogo do alvo); a Combustão e a Conflagração somam 200% do que ainda pingaria (cru) e apagam a
+Queimadura, sem pingos depois; quem não queima leva só o golpe base da Conflagração.
+
+**A comparação, jogada de verdade** (a mesma build Chama, INT 9, reserva 67; alvos parados nos testes t6, t7 e t8; os
+companheiros só se defendem; as Queimaduras pingam até apagar ou ser consumidas; a tabela aparece em Preparar):
+
+| Situação | Sequência de Jean | Ações | Custo | Direto | Periódico | Total |
+|---|---|---|---|---|---|---|
+| Um alvo (Soldado) | Brasa → Combustão | 2 | 32 | 40 | 4 | **44** |
+| | Brasa → Brasa → Combustão | 3 | 44 | 71 | 13 | **84** |
+| | Chuva → Combustão (área num alvo só) | 2 | 42 | 35 | 4 | 39 |
+| | Chuva e esperar | 1 | 22 | 6 | 12 | 18 |
+| Grupo (três lobos) | Chuva → Conflagração | 2 | 52 | 96 | 12 | **108** |
+| | Brasa em cada um (3) → Conflagração | 4 | 66 | 84 | 24 | 108 |
+| | Chuva e esperar | 1 | 22 | 15 | 36 | 51 |
+| Resistência (dois Cães, fogo 60%) | Chuva → Conflagração | 2 | 52 | 27 | 4 | 31 |
+| | Brasa → Combustão | 2 | 32 | 17 | 2 | 19 |
+
+- **Num alvo só, a Brasa continua melhor** (44 por 32 de Vigor contra 39 por 42 com a Chuva).
+- **No grupo, a Chuva faz em 2 ações o que três Brasas fazem em 4**, mais barato, e deixa a Conflagração pronta antes
+  de expirar.
+- **Contra resistência**, a Queimadura pega em todos, mas o fogo rende um terço: a preparação para o inimigo importa.
+- A **reserva básica** da Chama (67) comporta Chuva + Conflagração (52) no primeiro turno e no seguinte. Num encontro
+  normal (o 3, sem condição de teste) a sequência funciona: a Chuva no turno 1, a Conflagração no turno 2 consome as
+  Queimaduras do Xamã, do Soldado e do Afogado (teste e roteiro do navegador).
+- Conferido nos testes: a camada em cada inimigo mesmo com resistência; a previsão igual ao dano real (direto e por
+  pingo); o teto de 3 pilhas; a expiração depois de 3 pingos; o consumo por alvo; nenhum pingo depois da explosão; o
+  dano perdido pelos alvos igual à soma dos eventos (nada contado duas vezes); o inimigo morto antes da explosão sem
+  erro e sem dano contado; a ultimate uma vez só; o clique duplo recusado.
+
+## v4 · o que observei e o que não mudou
+
+- **Os básicos do Jean** (arquivo `resultados(3).json`, seção 3.9): o Baluarte contra o Bruto usou quatro Avanços nas
+  primeiras cinco rodadas e depois básicos enquanto o recurso subia; a Chama contra o Xamã usou cinco Brasas e duas
+  Combustões, sem nenhum básico do protagonista. Com o relato dele (básicos por conveniência quando a vitória está
+  garantida), isso não indica falta de recurso nem de opções. **Nada foi rebalanceado por isso**; recursos e duração das
+  lutas são os da v3.
+- O Golpe Oportuno cria uma escolha nova diante de uma preparação: o Joelho desfaz (e talvez atordoe); o Oportuno
+  aproveita (+60%) e deixa a preparação sair. O atordoamento do próprio Joelho acaba no turno do inimigo, antes da
+  próxima vez de Morel: na prática o bônus vem das preparações (ou de um atordoamento que não seja dele). Falta ver
+  se ele vira obrigação, como a Marca virou.
+- Limitações: a comparação usa alvos parados (o dano que os inimigos fariam não entra); só a Chama tem o conjunto de
+  fogo; os números continuam provisórios.
+
+## Verificar
+
+```
+python -m unittest discover -s ferramentas/prototipos/combate-atributos/testes -t ferramentas/prototipos/combate-atributos
+PLAYWRIGHT_MODULO=<caminho do playwright>/index.mjs node ferramentas/prototipos/combate-atributos/auxiliares/conferir4.mjs
+python ferramentas/prototipos/combate-atributos/auxiliares/folha.py v4
+```
+
+Os testes da v4 (11, `testes/test_regras4.py`) cobrem a Marca fora só da v4, o Golpe Oportuno (bônus e previsão igual
+ao real), a Chuva (papel no kit, camada em cada inimigo com resistência, previsão do golpe e do pingo, pilhas, teto,
+expiração), a Conflagração (consumo por alvo, nada depois, nada contado duas vezes, alvo morto antes), a sequência num
+encontro normal com a reserva básica, a comparação mostrando os papéis e o servidor com a v4 na raiz e a v3 em `/v3/`.
+O roteiro `conferir4.mjs` confere tudo na tela a 1920×945 e a 1280×720 (com o que a v3 já conferia: previsão, ultimate,
+gestos, reinício, movimento reduzido) e grava `capturas/v4-*.png`. Os roteiros da v3, da v2 e da v1 continuam
+(`conferir3.mjs` em `/v3/`, `conferir2.mjs` em `/v2/`, `conferir.mjs` em `/v1/`).
+
+## Arquivos
+
+- `motor4/` (a v3 copiada com as mudanças acima e a comparação do fogo, `comparar_fogo`), `tela4/` (por cima de
+  `tela3/demo.css`), `testes/test_regras4.py`, `auxiliares/conferir4.mjs`, `folha-v4.png`.
+- `servidor.py` serve as quatro versões (`/` e `/api4/`, `/v3/` e `/api3/`, `/v2/` e `/api2/`, `/v1/` e `/api/`).
+
+---
+
+## A terceira versão (26/10/2026, preservada para comparar)
+
+Em http://127.0.0.1:8781/v3/ (o botão v3 no topo da v4).
+
+### v3 · primeiro, as ameaças do Bruto (investigação)
 
 O arquivo de sessão do Jean (v2) tinha as duas lutas contra o Bruto com 12 rodadas e **zero preparações**. Reproduzi
 antes de mexer em número:
@@ -44,7 +133,7 @@ da metade da vida prepara o Golpe Esmagador "furioso", que não se desfaz e o de
 Bruto subiu para 30% (o Joelho tem 20% de chance de não atordoá-lo). Os resultados guardam cada ameaça (quem, quando,
 alvo, ininterruptível, resultado, rodada do fim, dano, se foi aparada), os adiamentos e os controles dos dois lados.
 
-## v3 · o que está decidido e foi aplicado (seção 3.8)
+### v3 · o que está decidido e foi aplicado (seção 3.8)
 
 | Decisão | Na v3 |
 |---|---|
@@ -66,7 +155,7 @@ Mantido: ordem fixa pela Agilidade, turnos individuais, rodadas, uma ação prin
 ressurreição. **Hipóteses operacionais (não decisões):** a queda do protagonista encerra a luta; o desempate da
 ordem; o invocado no fim da ordem agindo a partir da rodada seguinte; Atacar, Defender e Usar item fora do kit.
 
-## v3 · fórmulas e números provisórios
+### v3 · fórmulas e números provisórios
 
 **A ordem da conta de um golpe** (a mesma na previsão e no golpe, numa função só):
 1. potência = base (arma, foco ou nada) + nível + Σ coeficiente × atributo (ou × vida máxima);
@@ -136,7 +225,7 @@ Cada ponto de Constituição dá +1 ao Avanço e +4 de vida; cada ponto de Forç
 com a arma. A Constituição não domina ataque e sobrevivência ao mesmo tempo: o Baluarte troca o dano de arma pelo
 Avanço, que ainda puxa os golpes para ele.
 
-### Os encontros: o que mudou nos inimigos desde a v2
+#### Os encontros: o que mudou nos inimigos desde a v2
 
 | Inimigo | Mudança | Por quê |
 |---|---|---|
@@ -149,7 +238,7 @@ Avanço, que ainda puxa os golpes para ele.
 Novos testes: **t5 · ultimate, queda e retorno** (Odette usa a Luz, cai, volta com a Pena: continua gasta) e **t6 ·
 Queimadura e Combustão** (um Soldado parado, sem Guarda, com 400 de vida, para comparar as sequências).
 
-## v3 · o que observei
+### v3 · o que observei
 
 Joguei à mão o encontro 2 com o **Baluarte** (até a rodada 4; o jogador automático terminou: vitória na 9) e o
 encontro 3 com a **Chama** (até a rodada 3; vitória na 10), e comparei os mantos com a mesma build, kit e semente.
@@ -177,7 +266,7 @@ encontro 3 com a **Chama** (até a rodada 3; vitória na 10), e comparei os mant
   Avanço faz o Baluarte querer ser jogado; se a combinação vale o tempo; se a ultimate de uso único tem hora; se o
   encontro 1 ficou curto demais com a reserva cheia.
 
-## v3 · limitações
+### v3 · limitações
 
 - O jogador automático não prova equilíbrio, e ele usa pouco as ultimates "na hora" (as condições dele são simples).
 - Só o protagonista monta o kit e só ele tem equipamento; os companheiros têm kits fixos (Odette com uma ultimate).
@@ -185,13 +274,11 @@ encontro 3 com a **Chama** (até a rodada 3; vitória na 10), e comparei os mant
 - A cura continua sem atributo; o rompimento de proteção só no Corte e na Guarda do Golpe Pesado.
 - As peças são de laboratório: sem loot, forja ou encantamento.
 
-## Verificar
+### Verificar (v3)
 
 ```
 python -m unittest discover -s ferramentas/prototipos/combate-atributos/testes -t ferramentas/prototipos/combate-atributos
 PLAYWRIGHT_MODULO=<caminho do playwright>/index.mjs node ferramentas/prototipos/combate-atributos/auxiliares/conferir3.mjs
-PLAYWRIGHT_MODULO=<caminho do playwright>/index.mjs node ferramentas/prototipos/combate-atributos/auxiliares/conferir2.mjs
-PLAYWRIGHT_MODULO=<caminho do playwright>/index.mjs node ferramentas/prototipos/combate-atributos/auxiliares/conferir.mjs
 python ferramentas/prototipos/combate-atributos/auxiliares/folha.py v3
 ```
 
@@ -205,7 +292,7 @@ desde o início, uma vez, "já usada" depois, falta de recurso, e a queda e o re
 e depois na linha do tempo; o kit; ordem, rodada, retorno, gestos; e o servidor com as três versões. O roteiro
 `conferir3.mjs` confere tudo isso na tela a 1920×945 e a 1280×720 e grava `capturas/v3-*.png`.
 
-## Arquivos
+### Arquivos (v3)
 
 - `motor3/conteudo.py`, `motor3/regras.py`, `tela3/` (index, demo.js, demo.css por cima da v1 e da v2).
 - `servidor.py` (as três versões: `/` e `/api3/`, `/v2/` e `/api2/`, `/v1/` e `/api/`), `demo.bat`, `ROTEIRO.md`,
@@ -216,7 +303,7 @@ e depois na linha do tempo; o kit; ordem, rodada, retorno, gestos; e o servidor 
 
 ## A segunda versão (26/10/2026, preservada para comparar)
 
-Em http://127.0.0.1:8781/v2/ (o botão v2 no topo da v3).
+Em http://127.0.0.1:8781/v2/.
 
 ### v2 · o que está decidido e foi aplicado
 
