@@ -7631,3 +7631,27 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Para o Jean:** o [ROTEIRO](../ferramentas/prototipos/combate-atributos/ROTEIRO.md) do que comparar e a
   `folha-v2.png`. **A etapa 4 não está concluída**; nada a integrar.
 
+### 26/10/2026 (data do computador local) — A terceira versão do protótipo de combate e atributos
+
+- **Por quê:** o Jean jogou a v2: sentiu mais a diferença entre builds (sobretudo pelo kit), gostou do guerreiro de dano
+  sobrenatural, achou o Baluarte válido e rejeitou o Ímpeto (não conseguiu usar a ultimate). A seção 3.8 do
+  [25](25-ETAPA4-REFORCO-E-ENCANTAMENTO.md) (commit `6d5b6c80`) virou a v3, isolada (`motor3/`, `tela3/`), com a v1 e a
+  v2 jogáveis ao lado (`/v1/`, `/v2/`).
+- **Investigado primeiro:** as lutas contra o Bruto com zero preparações no arquivo do Jean. Causa reproduzida: na v2 a
+  preparação estava presa ao número da rodada, e os atordoamentos nessas rodadas (o Bruto é o último da ordem)
+  apagavam o ciclo. Havia também uma lacuna de telemetria (controles em inimigos não contados). O atordoamento "100%" do
+  Morel batia com 5% de chance de resistir. A regra "firme depois da primeira interrupção" foi retirada.
+- **Decisões aplicadas:** tipo, escala e defesa por habilidade; resistências por tipo com teto (arcano e fogo), do
+  equipamento, separadas da Tenacidade; o Avanço do Baluarte pela vida máxima; Vontade na reserva; reserva e
+  regeneração distintas; Brasa e Combustão numa especialização de demonstração que soma ao Guerreiro; ultimate sem
+  Ímpeto, uma vez por luta, desde o início, com recurso.
+- **Hipóteses numéricas:** listadas no LEIA-ME e no 25 (preparação por turno agido, golpe ininterruptível sinalizado do
+  Bruto furioso, ordem de cálculo, coeficientes, recurso, Queimadura de 3 pingos, ultimate de 30). Inimigos alterados e
+  por quê: tabela no LEIA-ME; novo encontro 4 (Cães de Brasa, fogo 60%) e testes t5 (ultimate, queda e retorno) e t6
+  (combinação num alvo parado).
+- **Conferido:** 74 testes do protótipo (26 da v1, 27 da v2, 21 da v3); os três roteiros do navegador a 1920×945 e a
+  1280×720; partidas à mão (Baluarte no encontro 2, Chama no 3) e comparações controladas (o manto no encontro 4, a
+  Constituição no Avanço, a ultimate na abertura ou na hora).
+- **Para o Jean:** o [ROTEIRO](../ferramentas/prototipos/combate-atributos/ROTEIRO.md) e a `folha-v3.png`. **A etapa 4
+  não está concluída**; nada a integrar.
+

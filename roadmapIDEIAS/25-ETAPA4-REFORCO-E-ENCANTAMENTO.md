@@ -220,6 +220,16 @@ O arquivo de sessão enviado por Jean contém quatro vitórias (6, 12, 12 e 10 r
 
 **Escopo:** preservar v1/v2 como comparação; criar v3, verificar dados reais versus previsões e registrar hipóteses. Não integrar produção, redesenhar HUD final, expandir narrativa nem implementar reforço/encantamento completo. A imunidade permanente a interrupção após o primeiro uso continua hipótese não aprovada: investigar junto das ameaças do Bruto, sem declará-la regra definitiva.
 
+#### Terceira versão do protótipo — entregue para avaliação (26/10/2026)
+
+Detalhes no [LEIA-ME](../ferramentas/prototipos/combate-atributos/LEIA-ME.md); o que testar no [ROTEIRO](../ferramentas/prototipos/combate-atributos/ROTEIRO.md). v1 e v2 continuam jogáveis (`/v1/`, `/v2/`). Nada integrado.
+
+- **Investigação das ameaças do Bruto (resultado):** as duas lutas do arquivo de Jean registraram zero preparações porque, na v2, a preparação estava presa ao número da rodada; o Bruto é o último da ordem, e o Golpe no Joelho e o Golpe de Escudo caíram nas rodadas de preparação, fazendo-o perder a vez e apagando o ciclo (reproduzido). Não foi falha da contagem das preparações; havia, sim, uma lacuna: controles aplicados em inimigos não eram contados. O atordoamento "100%" do Morel batia com 5% de chance de resistir. A regra "firme depois da primeira interrupção" nunca entrou em jogo e não era necessária: retirada.
+- **Decisões aplicadas (desta seção):** tipo, escala e defesa explícitos por habilidade; dano arcano enfrenta resistência, não ignora tudo; resistências por tipo com teto, vindas do equipamento, separadas da Tenacidade; habilidade ofensiva do Baluarte pela vida máxima sem bônus global; Vontade aumentando a reserva; reserva e regeneração distintas; combinação aplicar/consumir queimadura numa especialização que soma ao repertório; kit trocado fora da luta; ultimate sem Ímpeto, uma utilização por luta, desde o início, com recurso, sem devolver por queda e retorno.
+- **Hipóteses numéricas (provisórias):** preparação por turno agido (atordoar adia); golpe específico ininterruptível sinalizado (Bruto abaixo da metade da vida); Tenacidade do Bruto 30%; resistências arcano e fogo com teto 60%, manto de 35%; ordem de cálculo potência → habilidade → consumo → bônus somados → crítico → Guarda → reduções → uma defesa do tipo → mínimo 1 → escudo; ponto fraco 3% por ponto de Percepção; recurso 40 + 4 × nível + 3 × Vontade, cheio no início, +6 por turno e +6 no básico; Avanço do Baluarte = nível + 25% da vida máxima; Queimadura em pilhas (até 3) de 30% da potência por 3 pingos, Combustão +200% do restante; ultimate 30 de recurso; Fúria e Tempestade com golpe base menor e +100% contra quem prepara ou tem estado; Odette com uma ultimate para testar queda e retorno.
+- **Resultados observados (poucas partidas, sem prova de equilíbrio):** o Avanço deu ao Baluarte uma decisão própria (puxar o Golpe Esmagador e ainda bater), com custo real em vida; a combinação de Queimadura precisou de 3 pingos para preparar dois alvos para a Conflagração; o manto de fogo reduziu à metade o fogo recebido por Jean no encontro dos Cães e não muda os outros; com a ultimate disponível desde o início, Fúria e Tempestade valiam mais na abertura até o efeito mudar; depois, sem dominância clara na medição automática, e o Juramento rende mais na hora da ameaça; as ameaças do Bruto aparecem (3 a 4 por luta) com interrupções, resoluções e adiamentos registrados. A observar: encontro 1 curto com a reserva cheia; o Baluarte mais lento; se tipo e defesa ficaram claros sem poluir os botões.
+
+
 ## 4. Vida útil das peças — direção acordada
 
 O caminho escolhido é **um meio-termo entre substituição constante e levar qualquer peça indefinidamente**, com espaço para apego a boas descobertas.
@@ -290,7 +300,7 @@ Depois de definida a direção suficiente, o Claude poderá verificar implicaç�
 | Sem morte permanente de companheiros por batalha | Acordado; exceção somente narrativa |
 | Retorno à luta por ressurreição de alto custo ou item escasso | Acordado; números e limites abertos |
 | Retorno na posição original, sem recuperar turnos perdidos | Acordado |
-| Protótipo isolado de combate antes da forja | v1/v2 entregues e jogadas; v3 autorizada conforme seção 3.8, sem integração |
+| Protótipo isolado de combate antes da forja | v1/v2 entregues e jogadas; v3 entregue em 26/10/2026 conforme seção 3.8 para avaliação ([LEIA-ME](../ferramentas/prototipos/combate-atributos/LEIA-ME.md)), sem integração |
 | Turnos individuais intercalados e ordem próxima visível | Acordado |
 | Agilidade define a ordem inicial | Acordado; desempates e detalhes de leitura abertos |
 | Ordem fixa durante toda a batalha | Acordado; sem ações extras por Agilidade |
