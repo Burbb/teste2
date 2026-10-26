@@ -367,6 +367,15 @@ devolve parte do investido sem transferir o +N; ouro e material; materiais do gr
 o lendário Lamento de Gharbad ganha +2 por passo e mantém os especiais. Reforçar e depois desmontar ou vender nunca
 deixa o grupo com mais do que tinha (testado). Detalhes, tabelas e roteiro no LEIA-ME.
 
+**A tela, depois do primeiro teste (2ª versão):** o balcão com tudo na página rolava, piscava a arte e escondia ouro
+e fragmentos. Referências: Elden Ring (menu próprio na mesa de ferreiro, com a lista do que se pode melhorar), Diablo IV
+(janela com abas por serviço; a desmontagem lista só o que se desmonta; a crítica de "quadrado dentro de quadrado" e de
+desmontar um por um), Last Epoch (a Forja como janela própria, a peça no centro, os materiais dentro dela), Darkest
+Dungeon (o ferreiro como tela do prédio, arma e armadura lado a lado com o custo). Em comum: uma janela por serviço,
+recursos fixos no cabeçalho, página sem rolar (só a lista rola), "antes → depois" e "tem/precisa" junto do botão, e a
+desmontagem separada e confirmada. O protótipo seguiu isso: Reforçar, Desmontar e Encantar (reservado) no balcão, cada
+um numa janela sobre a coluna do meio.
+
 **Pendências futuras:** elevação de base excepcional (exemplo numérico no LEIA-ME; elegibilidade, marcos, custo e o
 destino do reforço abertos); encantamento (conversa própria); arte, celebração e som; fontes concretas na campanha; a
 aljava. A etapa 4 continua aberta.
