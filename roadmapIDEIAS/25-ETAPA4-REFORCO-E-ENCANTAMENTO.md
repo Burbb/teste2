@@ -181,7 +181,7 @@ Não implementar agora revisão geral de diálogos, testes ou campanha. O protó
 
 Jean achou a luta divertida e aceitou o aumento de duração. Usou bastante ataque básico para reservar recurso a ameaças e cura; não percebeu claramente as diferenças entre as builds. Isso é diagnóstico de experiência, não aprovação dos custos ou prova de equilíbrio. Comparações de poucas partidas também sofrem influência de aprendizagem.
 
-A próxima entrega é uma **segunda versão isolada do protótipo**, preservando a primeira para comparação. Deve testar potência ligada a atributos, benefícios graduais, Presença fora do combate e melhor leitura das builds. Rever a economia de recurso para permitir habilidades proativas e respostas de emergência sem transformar o básico numa espera obrigatória; não eliminar a necessidade de escolher quando gastar.
+Na rodada anterior, a entrega definida foi uma **segunda versão isolada do protótipo**, preservando a primeira para comparação. Ela já foi entregue e jogada; a próxima iteração segue a seção 3.8. Deve testar potência ligada a atributos, benefícios graduais, Presença fora do combate e melhor leitura das builds. Rever a economia de recurso para permitir habilidades proativas e respostas de emergência sem transformar o básico numa espera obrigatória; não eliminar a necessidade de escolher quando gastar.
 
 Jean reafirmou a intenção de selecionar habilidades com um orçamento de pontos, custos por tier e no máximo uma ultimate. Quantidade de pontos, tiers, limite de espaços (até seis continua hipótese), habilidades disponíveis e custos não estão fechados. Pontos de montar o kit, pontos de aprender/desenvolver e recurso gasto durante a luta são conceitos distintos.
 
@@ -196,6 +196,29 @@ Detalhes, fórmulas, ajustes dos inimigos e achados no [LEIA-ME](../ferramentas/
 - **Decisões aplicadas (desta seção):** Força e Intelecto entram direto na potência física e sobrenatural; nenhum desbloqueio por pontuação; benefícios graduais com tetos; Presença fora do orçamento e sem efeito de combate (o Grito de Comando ficou com bônus fixo); Tenacidade com teto e chance final mostrada; Agilidade só na ordem fixa; kit com pontos por tier e no máximo uma ultimate; Atacar, Defender e Usar item fora do kit, gastando a ação.
 - **Hipóteses implementadas (provisórias, para avaliar):** escala 1–10 e 30 pontos de combate; +1 de potência por ponto de Força/Intelecto; crítico 2% e ponto fraco +4% por ponto de Percepção; 4 de vida e −4% de sangramento por ponto de Constituição; Tenacidade 4% por ponto de Vontade, até 40%, menos a aplicação do atacante, num sorteio só; 10 pontos de kit, até 6 espaços, tiers de 1, 2, 3 e 4 pontos; recurso 60, começa com 40, +8 por turno e +8 no básico; ultimate por Ímpeto (3, ganho com inimigo caído e ameaça desfeita ou aparada); interrupção uma vez por inimigo (depois a preparação é firme); quatro builds de teste (Força, Precisão, Runa, Baluarte) e uma comparação de arma e foco.
 - **Resultados observados (poucas partidas, sem prova de equilíbrio):** as builds mudaram a escolha na mesma luta (quem matar primeiro, quem segura a ameaça, que golpe usar contra a guarda); gastar recurso desde o início não deixou o grupo sem resposta na primeira ameaça e criou custo na segunda; guardar recurso só alongou as lutas no teste automático; lutas de 9 a 15 rodadas nos encontros 2 e 3. A observar: a Percepção contra ponto fraco quase empata com a Força; o encontro 1 ficou curto; o Baluarte arrasta mais; a hora do Juramento.
+
+
+### 3.8 Revisão após Jean jogar a v2 — direção aprovada para a v3
+
+Esta seção prevalece sobre hipóteses da v2 em conflito. **Aprovação para testar numa terceira versão isolada, não para integrar nem fechar números.**
+
+**Retorno:** Jean percebeu mais diferença entre builds, principalmente pelas habilidades levadas no kit. Considera válida uma build defensiva, mesmo não tendo jogado de Baluarte. Gostou da possibilidade de guerreiro com dano sobrenatural. Rejeitou o Ímpeto atual: não conseguiu usar ultimate.
+
+O arquivo de sessão enviado por Jean contém quatro vitórias (6, 12, 12 e 10 rodadas), nenhuma ultimate usada; três dessas partidas tinham uma equipada e a de Precisão não. As duas lutas de 12 rodadas contra o Bruto registram zero preparações. Investigar comportamento e telemetria antes de concluir que as ameaças ou sua geração de Ímpeto funcionaram. Os totais não mostram quando houve recurso insuficiente; não inferir isso só por gasto acumulado.
+
+**Tipo, escala e defesa:** toda habilidade deve explicitar o tipo de dano, o atributo/valor que aumenta sua potência e como interage com defesas. São eixos distintos: tipo determina resistência enfrentada; escala determina ganho ofensivo. Exemplos ilustrativos: Corte Preciso físico com Força e penetração definida; Lâmina Rúnica arcana com Intelecto; uma habilidade física de Baluarte com parcela da vida máxima. Nomes, coeficientes e penetração são de teste. Não tornar todo dano sobrenatural automaticamente imune a toda defesa.
+
+**Resistências elementais:** testar redução percentual por elemento, vinda de equipamento e visível na ficha, com teto. Preparar-se para o elemento de uma região/chefe deve ter valor; não estabelecer como obrigação atingir todos os tetos no fim da campanha. Lista final de elementos, tetos, vulnerabilidades, penetração e ordem de cálculo continuam abertos. Resistência a dano não substitui Tenacidade contra controle. A próxima versão demonstra poucos tipos suficientes para avaliar, sem gerar catálogo de loot completo.
+
+**Baluarte:** testar primeiro uma habilidade ofensiva própria que escale parcialmente com vida máxima. Não converter vida em bônus universal de dano. Ela deve contribuir para vencer sem fazer Constituição dominar simultaneamente ataque e sobrevivência. Talentos, itens excepcionais ou resposta baseada em dano bloqueado são possibilidades futuras, não entregas obrigatórias desta rodada.
+
+**Reserva e sustentação:** nível e classe devem fornecer recurso básico suficiente para uma sequência central de habilidades. Testar Vontade aumentando recurso máximo, além da Tenacidade em avaliação. Não acrescentar Sabedoria agora, nem conceder automaticamente regeneração e resistência mágica a Vontade. Reserva sustenta uma sequência intensa; regeneração sustenta a luta longa. Fórmulas, recuperação entre lutas e pesos continuam provisórios. Investimento extra pode prolongar/repetir combinações; não deve ser requisito para o kit básico funcionar.
+
+**Kit e especialização:** manter habilidades da classe inicial disponíveis depois da especialização; esta acrescenta possibilidades, não substitui todo o repertório. Cidades e acampamentos, fora de combate, são a direção inicial para trocar kit. Não implementar esses locais na campanha nesta rodada. Ampliar o teste por poucas combinações completas (por exemplo aplicar/consumir queimadura), não por dezenas de habilidades isoladas. Progressão de aprendizado/talentos e números de pontos/slots continuam abertos.
+
+**Ultimate:** retirar Ímpeto na v3. Testar uma utilização por combatente por combate da ultimate equipada, disponível desde o início, consumindo ação e recurso com custo viável. Continua no máximo uma equipada. Sem recarga por dormir, abates ou sorte; não exigir espera em rodadas para liberar. Momento de uso deve vir do efeito e das oportunidades: preparação, proteção, estados acumulados ou ataque. Se usar sempre na abertura dominar, rever efeito/custo antes de criar outra trava geral. Não significa que todos os companheiros já tenham ultimate. Voltar de incapacitação não reinicia o uso da mesma luta.
+
+**Escopo:** preservar v1/v2 como comparação; criar v3, verificar dados reais versus previsões e registrar hipóteses. Não integrar produção, redesenhar HUD final, expandir narrativa nem implementar reforço/encantamento completo. A imunidade permanente a interrupção após o primeiro uso continua hipótese não aprovada: investigar junto das ameaças do Bruto, sem declará-la regra definitiva.
 
 ## 4. Vida útil das peças — direção acordada
 
@@ -248,7 +271,7 @@ Na conversa, **Battle Brothers** acrescentou o exemplo de materiais de criaturas
 
 As generalizações do apêndice sobre aleatoriedade, destruição e satisfação são avaliações da pesquisa inicial, não leis de design nem prova de que uma mecânica só funciona em determinado gênero. Verificar versões e fontes antes de usar mudanças de outros jogos como justificativa decisiva.
 
-**Próximo passo acordado:** revisar o protótipo isolado de combate após o teste de Jean, conforme as seções 3.1, 3.6 e 3.7. O primeiro já foi entregue; a segunda versão foi entregue em 26/10/2026 sem alterar a produção e aguarda a avaliação de Jean. Só depois da avaliação avançar nas dependências de reforço e encantamento. Não iniciar o protótipo de forja do apêndice.
+**Próximo passo acordado:** revisar o protótipo isolado de combate após o teste de Jean, conforme as seções 3.1, 3.6 e 3.7. A segunda versão já foi entregue e jogada. A próxima entrega é a v3 conforme a seção 3.8, sem alterar a produção. Só depois da avaliação avançar nas dependências de reforço e encantamento. Não iniciar o protótipo de forja do apêndice.
 
 Depois de definida a direção suficiente, o Claude poderá verificar implicações técnicas, testar hipóteses numéricas e construir um protótipo isolado e pequeno. O catálogo e o combate atuais servirão de casos de teste, sem limitar as possibilidades futuras.
 
@@ -267,7 +290,7 @@ Depois de definida a direção suficiente, o Claude poderá verificar implicaç�
 | Sem morte permanente de companheiros por batalha | Acordado; exceção somente narrativa |
 | Retorno à luta por ressurreição de alto custo ou item escasso | Acordado; números e limites abertos |
 | Retorno na posição original, sem recuperar turnos perdidos | Acordado |
-| Protótipo isolado de combate antes da forja | Primeira versão entregue e jogada; segunda versão entregue em 26/10/2026 para avaliação ([LEIA-ME](../ferramentas/prototipos/combate-atributos/LEIA-ME.md)), sem integração |
+| Protótipo isolado de combate antes da forja | v1/v2 entregues e jogadas; v3 autorizada conforme seção 3.8, sem integração |
 | Turnos individuais intercalados e ordem próxima visível | Acordado |
 | Agilidade define a ordem inicial | Acordado; desempates e detalhes de leitura abertos |
 | Ordem fixa durante toda a batalha | Acordado; sem ações extras por Agilidade |
@@ -286,7 +309,7 @@ Depois de definida a direção suficiente, o Claude poderá verificar implicaç�
 | Presença somente no cenário e nas interações | Acordado; sem efeito de combate |
 | Tenacidade gradual com teto, sem imunidade automática | Direção de teste; na segunda versão: 4% por ponto de Vontade até 40%, menos a aplicação do atacante (hipótese, não aprovada) |
 | Comandos básicos fora dos slots e pontos do kit | Hipótese operacional implementada na segunda versão; consomem ação; aguarda avaliação |
-| Orçamento de seleção de habilidades por tier, até uma ultimate | Direção acordada; na segunda versão: 10 pontos, até 6 espaços, tiers de 1 a 4 pontos, ultimate por Ímpeto (provisórios) |
+| Orçamento de seleção de habilidades por tier, até uma ultimate | Direção acordada; na segunda versão: 10 pontos, até 6 espaços, tiers de 1 a 4 pontos, Ímpeto rejeitado após teste; v3 usa uma ultimate por combate (demais números provisórios) |
 | Kit limitado e investimento seletivo | Direção acordada |
 | Cinco habilidades + uma ultimate | Hipótese, não número fechado |
 | Caminhos curtos de modificadores por habilidade | Direção acordada; três passos é hipótese |
@@ -295,7 +318,13 @@ Depois de definida a direção suficiente, o Claude poderá verificar implicaç�
 | Reforço, encantamento e propriedade excepcional com papéis distintos | Direção acordada |
 | Arquitetura A anterior, 20%, +5, preços e 17 essências | Proposta histórica, não aprovada em bloco |
 | Transferência, recuperação, desmanche e receitas | Em debate |
-| Produção, arte final e sistemas completos | Não autorizados nesta rodada; somente segunda versão do protótipo e sua interface de teste |
+| Tipos de dano, escalas e resistências explícitos | Direção aprovada para v3; fórmulas e catálogo provisórios |
+| Vontade aumentando reserva de recurso | Aprovado para teste; sem Sabedoria nova nem regeneração automática |
+| Baluarte com habilidade baseada parcialmente em vida | Aprovado para teste, não bônus universal |
+| Ultimate uma vez por combate, sem Ímpeto | Aprovado para teste; ação e custo de recurso viável |
+| Habilidades iniciais mantidas após especialização | Direção aprovada |
+| Troca de kit em cidades/acampamentos fora de combate | Direção inicial aprovada; sem integração agora |
+| Produção, arte final e sistemas completos | Não autorizados nesta rodada; somente v3 isolada e sua interface de teste |
 
 ## Apêndice — pesquisa e proposta inicial, preservadas como histórico
 
