@@ -60,6 +60,28 @@ conta paralela na tela.
 Nada de condição vaga: "resiste muito" vira a regra de verdade ("a resistência do alvo ao fogo reduz o dano por
 turno"; "só quem é imune ao fogo não pega fogo"). Se a regra do código for a vaga, conserte a regra, não o texto.
 
+## Telas de serviço: dado, não narração (forja, 10/2026)
+
+Numa janela de serviço (reforçar, desmontar, e depois encantar), o texto é **rótulo e número**, não frase. A tela já
+mostra a peça, o dono e o resultado; o texto só nomeia o que cada número é e diz o que falta.
+
+| Situação | Assim | Não assim |
+|---|---|---|
+| Reforço de agora e o próximo | "+1 → +2" | "Reforço +1 de 4; o próximo leva a +2." |
+| Ganho | "Ataque 4 → 5" | "+1 Ataque (o Golpe passa de 8 para 8,7)" na ação |
+| Custo | ícone · "Ouro · Custo 50 · Tem 355" (cada número com o seu rótulo) | "50 (tem 355)", "50 / 355" (qual é qual?) |
+| Falta | "Faltam 2 Fragmentos", "Falta 1 Fragmento" | "Falta 2 Fragmentos de Têmpera para este reforço. Consiga mais em baús." |
+| Desmontar | nome da peça · "Recebe 1 Fragmento de Têmpera" · "Destrói a peça." · Confirmar | "A peça some. No mercado, ela vende por 12 de ouro." |
+| Venda | "Venda: [moeda] 56", secundário | "venda no mercado" (recomendação) |
+| Serviço que não existe | não aparece | um cartão apagado "Encantar: as regras estão em conversa" |
+| Sem efeito possível | "Anéis e amuletos não recebem reforço." | a justificativa de design ("valem pelos afixos") |
+
+- Observação de protótipo (o que é teste, o que é provisório) mora na faixa da demonstração ou na documentação, nunca na
+  tela do jogador. Medição de teste (o dano contra um alvo fixo) fica numa área fechada e marcada "teste".
+- O botão diz a ação ("Reforçar", "Desmontar", "Confirmar"); o motivo do bloqueio fica ao lado, numa linha.
+- Nada de fala de personagem para explicar regra (o ferreiro não justifica o sistema).
+- As propriedades da peça continuam inteiras na ficha: limpar a escrita não esconde dado necessário à escolha.
+
 ## Vocabulário (etapa 4)
 
 - **turno** (ou **vez**): a ação de um combatente na ordem. **Rodada**: todos agiram (inclusive quem perdeu a vez).
