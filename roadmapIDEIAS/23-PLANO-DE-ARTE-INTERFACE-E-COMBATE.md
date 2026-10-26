@@ -1477,6 +1477,9 @@ no patamar atual do jogo e precisa de uma revisão própria; isso não aprova um
   mudança real de sistema.
 - Prototipar preparação de habilidades em locais seguros: vila e acampamento.
 - Hipótese inicial: até seis habilidades preparadas, no máximo uma elite, mantendo Atacar/Itens/Fugir separados.
+  **Na 1.211.0** o kit provisório entrou no jogo (8 pontos, 5 espaços, uma ultimate; Atacar, Defender, Itens e Fugir
+  fora), com acesso funcional pelo Grimório na vila e na fogueira, sem o redesenho do livro
+  ([26](26-INTEGRACAO-DO-COMBATE.md)).
 - Quantidade de espaços, definição de elite/ult, custos por pontos, tiers, restrições e equilíbrio não estão fechados.
   A ideia de pontos é uma alternativa a avaliar, não outra regra para acumular automaticamente.
 - Testar os ícones preparados na HUD, sua posição e formatos (inclusive losangos) antes de decidir layout.

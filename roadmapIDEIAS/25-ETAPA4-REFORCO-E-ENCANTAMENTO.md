@@ -329,6 +329,11 @@ As generalizações do apêndice sobre aleatoriedade, destruição e satisfaçã
 
 **Próximo passo acordado:** integrar a estrutura aprovada e um repertório provisório às classes reais, conforme seção 3.10, para testar chefe, encontros consecutivos e ritmo dentro da campanha. Não implementar ainda reforço/encantamento completo.
 
+**Integração feita na 1.211.0** (26/10/2026): o combate da seção 3.10 está na campanha, com o repertório provisório,
+a continuidade entre lutas e o ritmo medido. Escolhas, conversões, catálogo, medidas e roteiro no
+[26](26-INTEGRACAO-DO-COMBATE.md). Falta o Jean jogar; o orçamento do kit e o dano do Necromante contra chefes ficam
+para decidir. Reforço e encantamento completos continuam fora.
+
 Depois de definida a direção suficiente, o Claude poderá verificar implicações técnicas, testar hipóteses numéricas e construir um protótipo isolado e pequeno. O catálogo e o combate atuais servirão de casos de teste, sem limitar as possibilidades futuras.
 
 ## 8. Estado das decisões

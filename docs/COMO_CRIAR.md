@@ -7,13 +7,18 @@ Receitas para crescer o jogo sem quebrar nada. Cada receita termina com o que ro
 1. Em `rpg/habilidades.py`, acrescente no catálogo `HABILIDADES`:
 
 ```python
-"lamina_gelida": hab("Lâmina Gélida", 12, "inimigo", "130% de dano de gelo; pode congelar.", [
+"lamina_gelida": hab("Lâmina Gélida", 12, "inimigo", "Causa 130% do Ataque em dano de gelo. Se acertar, 30% de chance de "
+                     "congelar o alvo: ele perde a próxima vez.", [
     Dano(1.3, tipo="gelo", rotulo="Lâmina Gélida", depois=[
         Se("acertou", Aplicar("atordoado", 1, chance=0.3, rotulo="congelado"))])],
     icone="gelo", familia="gelo", realce="gelo"),
 ```
 
 2. Dê a habilidade a uma classe ou especialização em `rpg/classes.py` (`"habilidades": [(nível, "lamina_gelida")]`).
+3. Diga quanto ela pesa no kit (`rpg/habilidades.py`, perto do fim): sem nada, é comum (1 ponto); em `AVANCADAS`,
+   avançada (2); em `ULTIMATES`, ultimate (3, uma vez por luta, no máximo uma no kit). Aprender a põe no kit se couber.
+4. Escreva a descrição pela skill `texto-regras-fenda` (o que faz, em quem, quanto, por quanto tempo e de quem é o
+   turno; nada de "poderoso") e confira contra as linhas do Grimório do mesmo herói.
 
 Como ela aparece na tela também é dado, na própria ficha:
 

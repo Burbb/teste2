@@ -42,13 +42,23 @@ sorteia entre os que valem para o contexto.
 
 ## Combate
 
-`Combate` (pacote `rpg/combate/`) roda turnos: sua ação → aliados (comitiva, animal, servos) → inimigos. A classe
+`Combate` (pacote `rpg/combate/`) roda rodadas numa **ordem fixa** (etapa 4, 1.211.0; roadmapIDEIAS/26): no começo,
+`_ordem_inicial` ordena todos pela Agilidade (desempate: Percepção, aliado antes de inimigo, entrada); cada um tem a
+sua vez (`fase_jogador`, `vez_aliado`, `vez_inimigo`); a rodada (`turno`, o lance `rodada`) acaba quando todos
+passaram. Quem entra no meio vai para o fim e age na rodada seguinte (`_sincronizar_ordem`); `ordem_para_tela` manda a
+fila à tela. A comitiva escolhe pela mesma roda do herói (`heroi.vez_comitiva`, meta `ator`, kit em
+`comitiva.KITS`); o animal e os servos agem sozinhos. O recurso volta cheio no `fim`; `_debandada` encerra a luta
+comum quando só sobra o que não ameaça. A classe
 junta partes por responsabilidade, como o `Jogo` junta os sistemas: `luta.py` (quem está na luta, o laço, os lances,
 o fim), `golpe.py` (a conta de um golpe, os estados que ele deixa, as mortes), `heroi.py` (a sua vez), `turnos.py` (a
 vez da comitiva, do animal, dos servos e dos inimigos) e `eficacia.py` (traços e resistências). Quem usa importa do
 pacote: `from rpg.combate import Combate`.
 
 - `atacar()` é **a** conta de dano (esquiva, eficácia, modificadores, defesa, crítico, barreira, roubo de vida).
+- **Atributos e kit** (`rpg/atributos.py`, `rpg/kit.py`): os seis atributos somam aos derivados em
+  `Jogador.totais()` (`atributos.contribuicao`); o crítico do herói vem da Percepção, a Tenacidade (resistir a controle,
+  em `golpe.aplicar`) da Vontade, a Presença só dos testes de Carisma. A luta mostra só `Jogador.kit` (pontos por tier,
+  espaços, uma ultimate); o Grimório mostra todas as aprendidas. A ultimate fica em `Combate.ultimates_usadas`.
 - **Piso de vida** (`Inimigo.piso`, `retido`, `ao_limiar` em `entidades.py`): com piso, nenhuma atribuição a `hp`
   (golpe, vários golpes, efeito periódico, comitiva, servo, espinhos, execução) a leva abaixo dele; o excesso fica em
   `retido`. `Combate.checar_limiares` chama `ao_limiar` uma vez, no primeiro ponto seguro (depois da sua vez, da vez
@@ -315,7 +325,9 @@ id, `ficha_guardiao`; os contratos por `contratos.desc_caca` e `desc_alvo`, os m
   aparecessem juntos (`acomodarNomes`: sem cobrir rosto, fogo nem o Dormir). Com movimento reduzido, as chamas
   ficam paradas. A orientação do Dormir (D3) fica na faixa logo abaixo da cena, com a haste até o botão, como a dos
   prédios da vila.
-- `turnos.js` (1.116.0) a iniciativa e a passagem dos turnos: o anúncio em faixa ("Turno N", "Iniciativa!" com o bônus
+- `turnos.js` (1.116.0; a ordem na 1.211.0) a iniciativa e a passagem das rodadas: a placa traz "Rodada N" e a ordem
+  fixa (`estado.combate.ordem`; quem age, quem passou, quem está fora, quem espera; entre um estado e outro, os lances
+  `rodada`, `acao` e `pula`). O anúncio em faixa ("Rodada N", "Iniciativa!" com o bônus
   real, "Emboscada!", e o turno que você perde por um estado com `perde_turno`, como atordoado ou preso na teia) e a placa com o
   turno de agora e a iniciativa enquanto vale ("usada"/"passou"). Só lê o motor: a mensagem `turno` (`ui.novo_turno`,
   uma vez por volta, no começo da sua vez; comitiva, animal e servos não a geram), `estado.combate.turno`, o lance

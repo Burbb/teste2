@@ -7670,3 +7670,28 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Para o Jean:** o [ROTEIRO](../ferramentas/prototipos/combate-atributos/ROTEIRO.md) e a `folha-v4.png`. **A etapa 4
   não está concluída**; nada a integrar.
 
+### 26/10/2026 (data do computador local) — O combate integrado na campanha (1.211.0)
+
+- **Pedido:** a seção 3.10 do [25](25-ETAPA4-REFORCO-E-ENCANTAMENTO.md) (commits `196572af`, `bdf80b48`): a estrutura
+  aprovada do protótipo dentro da campanha, com um repertório provisório por classe, a continuidade entre lutas, o
+  ritmo e a escrita das regras. Tudo no [26](26-INTEGRACAO-DO-COMBATE.md): escolhas, conversões, catálogo, combos,
+  medidas, o gabarito e o roteiro de teste.
+- **Feito no jogo:** ordem fixa pela Agilidade e rodadas (a placa mostra a ordem); Defender; a vez de Odette, Morel e
+  Yara com a roda (recurso próprio, kit fixo, Reerguer); a Pena de Fênix num companheiro caído; o kit (8 pontos, 5
+  espaços, uma ultimate) no Grimório, na vila e na fogueira; a ultimate uma vez por luta, desde o nível 6; os seis
+  atributos e a Presença, com pontos para distribuir na ficha; os testes do d20 pelos atributos; o recurso cheio no fim
+  de cada luta; a debandada nas lutas comuns; o fogo do Piromante (Brasa, Combustão, Chuva de Brasas, Conflagração;
+  saíram Inferno e Fênix); o caminho rúnico do Guerreiro (Lâmina e Égide Rúnicas); saves no formato 7.
+- **Escrita:** a skill `texto-regras-fenda` (.claude/skills), com fontes (Slay the Spire em PT-BR, Path of Exile em
+  PT-BR oficial), critérios, vocabulário e antes/depois; o catálogo inteiro revisto contra o comportamento (o Tiro
+  Imobilizador dizia "prender" e atordoava; "defesa de o alvo"; durações sem dono; a Prece de Odette não dizia que limpa
+  os males).
+- **Medido e corrigido:** sem a esquiva da Agilidade, a Sombra caía de 89% para 60% de vitórias; a esquiva voltou, o
+  crítico do herói passou para a Percepção (Arqueiro com mais Percepção, Sombra com +6% de crítico). Com comitiva, os
+  caminhos ficaram perto de antes; o Necromante contra guardiões cai (64% → 50%: Fênix fora, ultimate uma por luta),
+  registrado para decidir. O gabarito achou o recurso inicial pela metade (corrigido).
+- **Conferido:** 707 testes (18 novos da integração), o gabarito atualizado (24 partidas, motivos no 26), pyflakes, a
+  fumaça; as telas a 1920×945 e 1280×720, teclado e movimento reduzido; os 38 saves do Jean migrados só em leitura.
+- **Para o Jean:** o roteiro no [26](26-INTEGRACAO-DO-COMBATE.md#roteiro-de-teste-para-o-jean). **A etapa 4 continua
+  aberta** (reforço e encantamento completos não começaram).
+
