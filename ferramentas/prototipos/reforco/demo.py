@@ -295,17 +295,69 @@ def ficha_peca(g, it, quem, s):
             d["substitutas"].append({"uid": sub["uid"], "nome": itens.rotulo(sub), "item": itens.ficha(sub, rec), **c})
     d["aba"] = quem or "bolsa"
     d["encantos"] = [encanto_tela(k) for k in it.get("encantos") or []]
-    d["encantar"] = {"motivo": E.motivo(it), "essencias": [
-        {"id": k, "nome": e["nome"], "cor": e["cor"], "icone": e["icone"], "desc": e["desc"], "efeito": e["efeito"],
-         "limite": e["limite"], "tipos": list(e["tipos"]), "compativel": E.compativel(k),
-         "qtd": materiais(g).get(e["material"], 0), "motivo": E.motivo(it, k)} for k, e in ((k, E.ESSENCIAS[k]) for k in E.ORDEM)]}
+    d["gravacao_total"] = gravacao_total(g, quem)
+    d["transferir"] = transferencias(g, it)
+    d["encantar"] = {"motivo": E.motivo(it), "teto": E.TETO, "dono": FICHA.nome_de(g, quem) if quem else None,
+                     "totais": E.niveis_equip(FICHA.corpo(g, quem)) if quem else {},
+                     "essencias": [{**encanto_tela(E.chave(k, t)), "compativel": E.compativel(k),
+                                    "qtd": materiais(g).get(E.material(k, t), 0), "motivo": E.motivo(it, E.chave(k, t))}
+                                   for k in E.ORDEM for t in E.TIERS]}
     return d
 
 
 def encanto_tela(k):
-    e = E.ESSENCIAS.get(k)
-    return {"id": k, "nome": e["nome"], "cor": e["cor"], "icone": e["icone"], "desc": e["desc"], "efeito": e["efeito"],
-            "limite": e["limite"], "fx": e["fx"]} if e else None
+    """Uma gravação (ou uma essência a gravar) para a tela: o nome com o tier, a cor, o símbolo e o texto do efeito em
+    cada nível de 1 ao teto (a tela escolhe pelo nível: o desta peça, o total de quem veste)."""
+    e, t = E.ler(k)
+    if not e:
+        return None
+    d = E.ESSENCIAS[e]
+    ef, lim = E.texto(e, t)
+    return {"id": k, "essencia": e, "tier": t, "numeral": E.NUMERAL[t], "nome": d["nome"], "titulo": E.nome(e, t),
+            "cor": d["cor"], "icone": d["icone"], "efeito": ef, "limite": lim, "fx": d["fx"],
+            "textos": [list(E.texto(e, n)) for n in range(1, E.TETO + 1)], "teto": E.TETO, "cresce": d["cresce"],
+            "detalhe": d["ficha"]}
+
+
+JOGO = [None]  # a partida desta execução (as fichas das telas precisam de quem veste a peça)
+
+
+def dono_de(g, it):
+    """Quem veste esta peça (o id do personagem), ou None (bolsa ou fora do grupo). Pela identidade, não pelo nome."""
+    for q in FICHA.personagens(g):
+        if any(x is it for x in FICHA.corpo(g, q).values()):
+            return q
+    return None
+
+
+def transferencias(g, origem):
+    """Os destinos possíveis de uma transferência a partir desta peça: cada peça do grupo do mesmo tipo e raridade, com
+    o resultado das duas e o preço, ou o motivo de não poder."""
+    if not origem.get("reforco"):
+        return {"motivo": "Esta peça não tem reforço para transferir.", "destinos": []}
+    lista = []
+    for it, quem, s in pecas(g):
+        if it is origem or R.tipo(it) != R.tipo(origem) or it.get("raridade") != origem.get("raridade"):
+            continue
+        novo, motivo = R.transferencia(origem, it)
+        lista.append({"uid": it["uid"], "nome": it["nome"], "onde": _nome_quem(g, quem), "de": it.get("reforco", 0),
+                      "novo": novo, "ouro": g.preco(R.custo_transferencia(novo)) if novo else None, "motivo": motivo,
+                      "icone": itens.icone_de(it), "raridade": it.get("raridade", "comum")})
+    return {"motivo": None if lista else "Nenhuma peça do mesmo espaço e da mesma raridade no grupo.", "destinos": lista}
+
+
+def gravacao_total(g, quem):
+    """O nível total de cada efeito em quem: [{id, nome, cor, total, efetivo, efeito, limite}] (só as peças vestidas)."""
+    if quem is None:
+        return []
+    soma = E.niveis_equip(FICHA.corpo(g, quem))
+    out = []
+    for e in E.ORDEM:
+        if e in soma:
+            ef, lim = E.texto(e, min(E.TETO, soma[e]))
+            out.append({"id": e, "nome": E.ESSENCIAS[e]["nome"], "cor": E.ESSENCIAS[e]["cor"], "total": soma[e],
+                        "efetivo": min(E.TETO, soma[e]), "efeito": ef, "limite": lim, "quem": FICHA.nome_de(g, quem)})
+    return out
 
 
 def painel(g):
@@ -425,7 +477,7 @@ def encantar(g, uid, essencia, sulco=0, pedido=None, substitui=None):
     it, quem, _ = achar(g, uid)
     if it is None:
         return False, "Essa peça não está mais com o grupo."
-    if essencia not in E.ESSENCIAS:
+    if not E.ler(essencia)[0]:
         return False, "Escolha uma essência."
     if not isinstance(sulco, int):
         return False, "Escolha um sulco."
@@ -434,7 +486,7 @@ def encantar(g, uid, essencia, sulco=0, pedido=None, substitui=None):
         return False, motivo
     if (it["encantos"][sulco] or None) != (substitui or None):
         return False, "A gravação da peça mudou. Escolha de novo."
-    mat, ouro = E.ESSENCIAS[essencia]["material"], g.preco(E.CUSTO_OURO)
+    mat, ouro = E.material(*E.ler(essencia)), g.preco(E.CUSTO_OURO)
     if materiais(g).get(mat, 0) < 1 or g.j.ouro < ouro:
         return False, "Faltam recursos para esta gravação."
     g.forja_pedido = pedido
@@ -451,7 +503,7 @@ def encantar(g, uid, essencia, sulco=0, pedido=None, substitui=None):
                       "sulco": sulco, "de": encanto_tela(antes), "para": encanto_tela(essencia)}
     registrar(g, "encantar", item=it["nome"], essencia=essencia, sulco=sulco, substituiu=antes, ouro=ouro, em=quem or "bolsa",
               prototipo="encanto")
-    return True, f"Gravado: {E.ESSENCIAS[essencia]['nome']} · {it['nome']}"
+    return True, f"Gravado: {E.nome(*E.ler(essencia))} · {it['nome']}"
 
 
 def niveis_de_teste(g):
@@ -484,6 +536,97 @@ def niveis_de_teste(g):
     registrar(g, "niveis_teste")
 
 
+def transferir(g, origem_uid, destino_uid, pedido=None):
+    """Transfere o reforço (garantido): a origem fica +0 (conserva o resto: base, afixos, sulcos e gravações); o destino
+    recebe o nível da origem menos 2, no lugar do dele. Cobra o ouro uma vez por pedido."""
+    if pedido is not None and pedido == getattr(g, "forja_pedido", None):
+        return False, None
+    o, qo, _ = achar(g, origem_uid)
+    dd, qd, _ = achar(g, destino_uid)
+    if o is None or dd is None:
+        return False, "A peça não está mais com o grupo."
+    novo, motivo = R.transferencia(o, dd)
+    if motivo:
+        return False, motivo
+    ouro = g.preco(R.custo_transferencia(novo))
+    if g.j.ouro < ouro:
+        return False, f"Faltam {ouro - g.j.ouro} de ouro."
+    g.forja_pedido = pedido
+    efeito, g.ui.efeito = g.ui.efeito, (lambda *a, **k: None)
+    try:
+        g.perder_ouro(ouro, destino="ferreiro")
+    finally:
+        g.ui.efeito = efeito
+    de_o, de_d = o.get("reforco", 0), dd.get("reforco", 0)
+    for it in (o, dd):
+        it.setdefault("bonus_base", dict(it["bonus"]))
+        it.setdefault("preco_base", it.get("preco", 0))
+    aplicar_nivel(o, 0)
+    aplicar_nivel(dd, novo)
+    for q in {qo, qd} - {None}:
+        FICHA.atualizar(g, q)
+    g.forja_ultimo = {"id": (getattr(g, "forja_ultimo", None) or {}).get("id", 0) + 1, "tipo": "transfere",
+                      "origem": origem_uid, "destino": destino_uid, "de_origem": de_o, "de_destino": de_d, "novo": novo,
+                      "ouro": ouro}
+    registrar(g, "transferir", origem=o["nome"], destino=dd["nome"], de_origem=de_o, de_destino=de_d, novo=novo, ouro=ouro,
+              prototipo="reforco")
+    return True, f"Transferido: {dd['nome']} · +{novo}"
+
+
+def essencias_de_teste(g):
+    """Composições de essências para comparar (a faixa da demonstração; nada disto é conteúdo): Jean com a arma em
+    Brasa II + Brasa I + Carrasco I (Brasa 3) e o peito em Vigília III + Revide II + Geada I; Odette com Eco III + Eco II
+    no tomo e Eco II na arma (Eco 7, acima do teto 5); Morel com Revide nas duas peças. Os sulcos dessas peças passam a
+    3 (só no teste) e o grupo recebe 3 essências de cada tier. Só no save temporário da demonstração."""
+    dar_uid(g)
+    sulcos_do_grupo(g)
+
+    def gravar(it, lista):
+        if it is not None and E.tipo(it):
+            it["encantos"] = list(lista) + [None] * (3 - len(lista))
+    gravar(g.j.equip.get("arma"), ["brasa:2", "brasa", "carrasco"])
+    gravar(g.j.equip.get("armadura"), ["vigilia:3", "revide:2", "geada"])
+    gravar(FICHA.corpo(g, "odete").get("secundaria"), ["eco:3", "eco:2"])
+    gravar(FICHA.corpo(g, "odete").get("arma"), ["eco:2"])
+    gravar(FICHA.corpo(g, "morel").get("armadura"), ["revide:2"])
+    for k in E.ORDEM:
+        for t in E.TIERS:
+            materiais(g)[E.material(k, t)] = max(materiais(g).get(E.material(k, t), 0), 3)
+    g.j.ouro = max(g.j.ouro, 2000)
+    for m in comitiva.membros(g):
+        FICHA.atualizar(g, m["id"])
+    g.j.recalcular()
+    g.forja_ultimo = None
+    registrar(g, "essencias_teste")
+
+
+def transferencia_de_teste(g):
+    """Peças para testar a transferência (a faixa da demonstração): na bolsa, duas armas comuns de Guerreiro, uma +10 e
+    outra +2 (com uma gravação, que não se move), e um peito incomum +6 com outro incomum +0. Ouro de sobra."""
+    dar_uid(g)
+    rng = random.Random(28)
+
+    def peca(slot, raridade, n, gravacao=None):
+        while True:
+            it = itens.gerar_equip(rng, "guerreiro", 5, slot=slot, raridade=raridade)
+            if it.get("raridade") == raridade and not it.get("unico"):
+                break
+        com_sulcos(it)
+        it.setdefault("bonus_base", dict(it["bonus"]))
+        it.setdefault("preco_base", it.get("preco", 0))
+        aplicar_nivel(it, n)
+        if gravacao and it.get("encantos"):
+            it["encantos"][0] = gravacao
+        return it
+    novas = [peca("arma", "comum", 10), peca("arma", "comum", 2, "brasa"), peca("armadura", "magico", 6), peca("armadura", "magico", 0)]
+    from rpg.regras import LIMITE_MOCHILA
+    g.j.mochila = (novas + g.j.mochila)[:LIMITE_MOCHILA]
+    dar_uid(g)
+    g.j.ouro = max(g.j.ouro, 5000)
+    g.forja_ultimo = None
+    registrar(g, "transferencia_teste")
+
+
 def luta_de_teste(g):
     """A luta de teste do laboratório: dois Esqueletos do nível do herói, sem fuga perdida nem saque, e o grupo volta
     como estava (vida, recurso, experiência): só para ver as gravações agindo."""
@@ -504,7 +647,7 @@ def luta_de_teste(g):
         m["hp"] = hp
     g.j.efeitos.clear()
     contagem = {}
-    for k, _ in g.encanto_log:
+    for k, *_ in g.encanto_log:
         contagem[k] = contagem.get(k, 0) + 1
     resumo = ", ".join(f"{E.ESSENCIAS[k]['nome']} ×{n}" for k, n in contagem.items()) or "nenhuma gravação disparou"
     g.ui.efeito(f"Luta de teste: {resumo}.", "info")
@@ -540,6 +683,16 @@ def forja(self):
         elif d.get("op") == "niveis_teste":
             niveis_de_teste(self)
             continue
+        elif d.get("op") == "essencias_teste":
+            essencias_de_teste(self)
+            continue
+        elif d.get("op") == "transferencia_teste":
+            transferencia_de_teste(self)
+            continue
+        elif d.get("op") == "transferir" and d.get("confirmar") is True:
+            ok, texto = transferir(self, d.get("origem"), d.get("destino"), d.get("pedido"))
+            if texto is None:
+                continue
         else:
             continue
         if not ok:  # o sucesso a própria janela mostra (a bancada acende; o topo conta ouro e fragmentos)
@@ -615,6 +768,10 @@ def ativar():
         d["reforco"] = it.get("reforco", 0)
         if it.get("encantos") is not None:
             d["encantos"] = [encanto_tela(k) for k in it["encantos"]]
+            g = JOGO[0]
+            if g is not None:  # o total de quem veste a peça (só as peças vestidas por ele contam)
+                quem = dono_de(g, it)
+                d["gravacao_total"] = gravacao_total(g, quem)
         return d
     itens.ficha = ficha_com_gravacao
     criar_peca()
@@ -630,6 +787,7 @@ def ativar():
     heroi = web_estado.heroi
 
     def heroi_com_materiais(g):
+        JOGO[0] = g
         h = heroi(g)
         m = materiais(g)
         h["materiais"] = [{"id": k, "nome": d["nome"], "plural": d["plural"], "icone": d["icone"], "qtd": m.get(k, 0),
@@ -642,9 +800,53 @@ def ativar():
         sortear(self)
         if self.chance(0.5):
             dar_material(self, "fragmento", 1, "bau")
-        if self.chance(0.25):  # e, às vezes, uma essência (hipótese do laboratório)
-            dar_material(self, E.ESSENCIAS[self.rng.choice(E.ORDEM)]["material"], 1, "bau")
+        if self.chance(0.25):  # e, às vezes, uma essência qualquer, do tier do nível do herói (hipótese do laboratório)
+            dar_material(self, E.material(self.rng.choice(E.ORDEM), tier_do_nivel(self.j.nivel)), 1, "bau")
     Inventario.sortear_bau = sortear_bau
+    from rpg.sistemas.confronto import Confronto
+    if not getattr(Confronto, "_materiais", False):  # uma vez só, mesmo se ativar() for chamado de novo
+        Confronto._materiais = True
+        saque = Confronto.saque_de_combate
+
+        def saque_com_materiais(self, derrotados):
+            saque(self, derrotados)
+            materiais_da_luta(self, derrotados)
+        Confronto.saque_de_combate = saque_com_materiais
+
+
+# ------------------------------------------------------------------ de onde vêm os materiais (hipóteses do laboratório)
+# a essência que cada criatura deixa: a fonte identificável de cada efeito (quem quer Geada caça lobos gélidos e afogados)
+ESSENCIA_DA_FAMILIA = {
+    "cao_infernal": "brasa", "cultista": "brasa", "caido": "brasa", "xama_caido": "brasa",
+    "bandido": "carrasco", "mercenario": "carrasco", "cavaleiro_sombrio": "carrasco", "carnical": "carrasco",
+    "espectro": "eco", "bruxa_brejo": "eco", "cria_vazio": "eco", "harpia": "eco",
+    "golem": "vigilia", "ent_jovem": "vigilia", "troll": "vigilia", "esqueleto": "vigilia",
+    "javali": "revide", "grifo": "revide", "abominacao": "revide", "rato": "revide", "aranha": "revide",
+    "lobo_gelido": "geada", "afogado": "geada", "sapo": "geada", "sanguessuga": "geada", "lobo": "geada",
+}
+
+
+def tier_do_nivel(nivel):
+    """O tier pelo nível do conteúdo: I até o 4, II do 5 ao 8, III do 9 em diante."""
+    return 1 if nivel < 5 else 2 if nivel < 9 else 3
+
+
+def materiais_da_luta(g, derrotados):
+    """O que uma luta vencida deixa, pelo caminho real do saque: fragmentos (a luta comum às vezes, a elite mais, o chefe
+    sempre) e, mais raro, a essência da criatura, do tier do nível dela (o chefe, um tier acima, sempre)."""
+    if not derrotados:
+        return
+    chefe = any(e.chefe for e in derrotados)
+    elites = sum(1 for e in derrotados if e.afixo or e.unico)
+    forte = max(derrotados, key=lambda e: e.nivel)
+    if chefe:
+        dar_material(g, "fragmento", 2 + (forte.nivel >= 6), "chefe")
+    elif g.chance(0.25 + 0.15 * elites):
+        dar_material(g, "fragmento", 1, "luta")
+    if chefe or g.chance(0.06 + 0.2 * elites):
+        essencia = ESSENCIA_DA_FAMILIA.get(forte.familia) or g.rng.choice(E.ORDEM)
+        tier = min(3, tier_do_nivel(forte.nivel) + chefe)
+        dar_material(g, E.material(essencia, tier), 1, "chefe" if chefe else "luta")
 
 
 def preparar(g):
@@ -701,8 +903,8 @@ def recompensa_de_teste(g):
     g.abrir_espolio(titulo="recompensa de teste",
                     frase="Cenário de teste: uma caixa do ferreiro do Vau, para experimentar o reforço.")
     dar_material(g, "fragmento", 1 if os.environ.get("CASOS") else 12, "teste")
-    for k in E.ORDEM:  # o laboratório do encantamento: 2 essências de cada (recurso de teste)
-        dar_material(g, E.ESSENCIAS[k]["material"], 2, "teste")
+    for k in E.ORDEM:  # o laboratório do encantamento: 2 essências I de cada (recurso de teste)
+        dar_material(g, E.material(k, 1), 2, "teste")
     g.fechar_espolio()
     # a página espera quem joga (o navegador abre depois do jogo começar: a cena atual é a desta recompensa)
     g.menu("Os fragmentos ficam na seção Materiais do Inventário, fora dos 12 espaços da bolsa.",

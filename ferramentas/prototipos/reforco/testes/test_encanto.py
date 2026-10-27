@@ -32,7 +32,8 @@ def jogo(seed=11):
     D.preparar(g)
     D.dar_uid(g)
     for k in E.ORDEM:
-        D.materiais(g)[E.ESSENCIAS[k]["material"]] = 2
+        for t in E.TIERS:
+            D.materiais(g)[E.material(k, t)] = 2
     return g
 
 
@@ -85,9 +86,12 @@ class TestGravar(unittest.TestCase):
         self.assertEqual(arma["encantos"][0], "carrasco")
         self.assertEqual(D.materiais(g)["essencia_brasa"], 1)  # a Brasa gasta não volta
         self.assertEqual(g.forja_ultimo["de"]["id"], "brasa")
-        # a mesma essência que já está: recusa (no mesmo sulco e no outro)
-        self.assertFalse(D.encantar(g, arma["uid"], "carrasco", pedido="d", substitui="carrasco")[0])
-        self.assertFalse(D.encantar(g, arma["uid"], "carrasco", 1, pedido="e")[0])
+        # repetir é permitido (28/10): a mesma essência no outro sulco; substituir por ela mesma num tier maior também
+        self.assertTrue(D.encantar(g, arma["uid"], "carrasco", 1, pedido="d")[0])
+        D.materiais(g)["essencia_carrasco_2"] = 1
+        self.assertTrue(D.encantar(g, arma["uid"], "carrasco:2", 0, pedido="e", substitui="carrasco")[0])
+        self.assertEqual(arma["encantos"], ["carrasco:2", "carrasco"])
+        self.assertEqual(E.niveis_peca(arma), {"carrasco": 3})
 
     def test_sulcos_sorteados_e_o_segundo_sulco(self):
         g = jogo()
@@ -100,8 +104,8 @@ class TestGravar(unittest.TestCase):
         self.assertTrue(D.encantar(g, arma["uid"], "eco", 1, pedido="b")[0])
         self.assertEqual(arma["encantos"], ["brasa", "eco"])
         self.assertFalse(D.encantar(g, arma["uid"], "carrasco", 2, pedido="c")[0])  # não há terceiro sulco
-        # as duas valem na luta (cada uma uma vez)
-        self.assertEqual(E.encantos(g.j), {"brasa", "eco"})
+        # as duas valem na luta, cada uma no nível dela
+        self.assertEqual((E.nivel(g.j, "brasa"), E.nivel(g.j, "eco"), E.nivel(g.j, "carrasco")), (1, 1, 0))
 
     def test_elegibilidade_e_falta(self):
         g = jogo()
@@ -196,7 +200,7 @@ class TestNaLuta(unittest.TestCase):
         FICHA.corpo(g, "odete")["arma"]["encantos"] = ["eco"]
         visto = set()
         for _ in range(8):
-            visto |= {k for k, _ in lutar(g, n=3)}
+            visto |= {k for k, *_ in lutar(g, n=3)}
             if {"brasa", "vigilia", "revide"} <= visto:
                 break
         self.assertTrue({"brasa", "vigilia", "revide"} <= visto, visto)
@@ -206,7 +210,7 @@ class TestNaLuta(unittest.TestCase):
         g.j.equip["armadura"]["encantos"] = ["geada"]
         visto = set()
         for _ in range(10):
-            visto |= {k for k, _ in lutar(g, n=3)}
+            visto |= {k for k, *_ in lutar(g, n=3)}
             if "geada" in visto:
                 break
         self.assertIn("geada", visto)
@@ -217,17 +221,20 @@ class TestNaLuta(unittest.TestCase):
         cb.memoria = getattr(cb, "memoria", None) or {}
         return cb, cb.inimigos[0]
 
-    def test_carrasco_soma_30_por_cento_abaixo_de_35(self):
+    def test_carrasco_pela_tabela_abaixo_de_35(self):
         g = jogo()
         cb, alvo = self._luta_montada(g)
-        alvo.hp = int(alvo.max_hp * 0.3)
-        danos = []
-        for gravado in (None, "carrasco"):
-            g.j.equip["arma"]["encantos"] = [gravado]
-            alvo.hp = int(alvo.max_hp * 0.3)
-            g.rng.seed(5)
-            danos.append(cb.atacar(cb.j, alvo, 1.0, pode_esquivar=False))
-        self.assertAlmostEqual(danos[1] / danos[0], 1.3, delta=0.08)
+        for gravado, esperado in ((["carrasco", None], 1.20), (["carrasco:2", "carrasco"], 1.30)):  # nível 1: +20%; 3: +30%
+            danos = []
+            for lista in ([None, None], gravado):
+                g.j.equip["arma"]["encantos"] = lista
+                alvo.hp = int(alvo.max_hp * 0.3)
+                alvo.max_hp = alvo.hp = 10000
+                alvo.hp = 3000
+                g.rng.seed(5)
+                danos.append(cb.atacar(cb.j, alvo, 8.0, pode_esquivar=False))  # um golpe grande: o arredondamento some
+            self.assertAlmostEqual(danos[1] / danos[0], esperado, delta=0.03)
+        g.j.equip["arma"]["encantos"] = ["carrasco"]
         # acima de 35% da vida, igual
         alvo.hp = alvo.max_hp
         g.rng.seed(5)
@@ -249,7 +256,7 @@ class TestNaLuta(unittest.TestCase):
             e.hp = 0
             cb.ao_morrer(e, por=cb.j)
             ganhos.append(g.j.rec)
-        self.assertEqual(ganhos[:2], [round(g.j.max_rec * 0.25)] * 2)
+        self.assertEqual(ganhos[:2], [round(g.j.max_rec * 0.15)] * 2)  # Eco 1: 15% (a tabela)
         self.assertEqual(ganhos[2], 0)
 
     def test_limites_e_nada_acumula_entre_lutas(self):
@@ -258,19 +265,28 @@ class TestNaLuta(unittest.TestCase):
         g.j.equip["arma"]["encantos"] = ["eco"]
         for _ in range(3):
             log = lutar(g, n=3)
-            self.assertEqual(sum(1 for k, q in log if k == "vigilia"), 1)  # uma barreira por luta
-            self.assertLessEqual(sum(1 for k, q in log if k == "eco" and q == g.j.nome), 2)  # até 2 por luta
+            self.assertEqual(sum(1 for k, q, _ in log if k == "vigilia"), 1)  # uma barreira por luta
+            self.assertLessEqual(sum(1 for k, q, _ in log if k == "eco" and q == g.j.nome), 2)  # até 2 por luta
 
-    def test_o_mesmo_efeito_conta_uma_vez_e_o_revide_nao_se_repete(self):
+    def test_revide_pelo_nivel_total_e_no_maximo_2_por_rodada(self):
         g = jogo()
         corpo = FICHA.corpo(g, "morel")
-        corpo["armadura"]["encantos"] = ["revide", "revide"]  # mesmo forçado em dois sulcos
-        if corpo.get("secundaria"):
-            corpo["secundaria"]["encantos"] = ["revide"]
-        self.assertEqual(E.encantos(type("U", (), {"equip": corpo})()), {"revide"})
-        for _ in range(4):
+        corpo["armadura"]["encantos"] = ["revide:3", "revide:2", "revide"]  # 6 níveis: o teto (5) vale
+        u = type("U", (), {"equip": corpo})()
+        self.assertEqual((E.niveis_equip(corpo)["revide"], E.nivel(u, "revide")), (6, 5))
+        for _ in range(3):
             log = lutar(g, n=3)
-            self.assertLess(sum(1 for k, _ in log if k == "revide"), 40)
+            # um efeito só (não uma instância por essência), sempre no nível 5
+            self.assertTrue(all(n == 5 for k, _, n in log if k == "revide"))
+        # 30 golpes corpo a corpo na mesma rodada: no máximo 2 respostas
+        g.j.equip["armadura"]["encantos"] = ["revide:3", "revide:2"]
+        cb, e = self._luta_montada(g)
+        g.encanto_log = []
+        g.rng.seed(1)
+        for _ in range(30):
+            e.hp, cb.j.hp = e.max_hp, cb.j.max_hp
+            E.ao_golpear(cb, e, cb.j, 5, "corpo", False, None)
+        self.assertLessEqual(sum(1 for k, *_ in g.encanto_log if k == "revide"), 2)
 
     def test_luta_de_teste_devolve_o_grupo_como_estava(self):
         g = jogo()
@@ -280,7 +296,73 @@ class TestNaLuta(unittest.TestCase):
         D.luta_de_teste(g)
         self.assertEqual((g.j.hp, g.j.rec, g.j.xp, g.j.ouro), antes)
         self.assertNotIn("barreira", g.j.efeitos)
-        self.assertIn("vigilia", [k for k, _ in g.lutas_teste[-1]])
+        self.assertIn("vigilia", [k for k, *_ in g.lutas_teste[-1]])
+
+
+
+class TestTiers(unittest.TestCase):
+    def test_tiers_somam_e_so_conta_o_que_o_personagem_veste(self):
+        g = jogo()
+        arma, peito = g.j.equip["arma"], g.j.equip["armadura"]
+        arma["encantos"] = ["brasa", "brasa"]  # duas Brasas I: Brasa 2
+        self.assertEqual(E.nivel(g.j, "brasa"), 2)
+        arma["encantos"] = ["brasa:2", "brasa"]  # Brasa II + Brasa I: Brasa 3
+        self.assertEqual(E.nivel(g.j, "brasa"), 3)
+        odete = FICHA.corpo(g, "odete")  # entre peças: o Eco na arma e no tomo de quem veste os dois
+        odete["arma"]["encantos"] = ["eco:2"]
+        odete["secundaria"]["encantos"] = ["eco:3", "eco:2"]
+        self.assertEqual(E.niveis_equip(odete)["eco"], 7)
+        self.assertEqual(E.nivel(type("U", (), {"equip": odete})(), "eco"), E.TETO)
+        bolsa = next(it for it in g.j.mochila if E.tipo(it))  # a bolsa e as peças dos outros não contam
+        bolsa["encantos"] = ["vigilia:3"] + [None] * (len(bolsa["encantos"]) - 1)
+        self.assertEqual(E.nivel(g.j, "vigilia"), 0)
+        peito["encantos"] = ["vigilia"] + [None] * (len(peito["encantos"]) - 1)
+        self.assertEqual(E.nivel(g.j, "vigilia"), 1)
+
+    def test_brasa_em_area_aplica_uma_vez_por_rodada(self):
+        g = jogo()
+        g.j.equip["arma"]["encantos"] = ["brasa:3", "brasa:2"]  # Brasa 5: 53%
+        from rpg.combate import Combate
+        alvos = [criar(random.Random(20 + i), "esqueleto", g.j.nivel) for i in range(4)]
+        cb = Combate(g, alvos)
+        cb.memoria = getattr(cb, "memoria", None) or {}
+        for rodada in (1, 2):
+            cb.turno = rodada
+            g.encanto_log = []
+            for _ in range(5):  # um golpe em área: os quatro alvos, cinco vezes na mesma rodada
+                for a in alvos:
+                    a.hp = a.max_hp
+                    E.ao_golpear(cb, cb.j, a, 5, "corpo", False, None)
+            self.assertEqual(sum(1 for k, *_ in g.encanto_log if k == "brasa"), 1)
+
+    def test_os_textos_saem_da_tabela_de_cada_nivel(self):
+        for k in E.ORDEM:
+            textos = [E.texto(k, n)[0] for n in range(1, E.TETO + 1)]
+            self.assertEqual(len(set(textos)), E.TETO, k)  # cada nível diz o seu número
+        self.assertEqual(E.texto("eco", 1), ("Ao abater um inimigo, recupera 15% do recurso máximo.", "Até 2 vezes por luta."))
+        self.assertEqual(E.texto("brasa", 9), E.texto("brasa", E.TETO))  # acima do teto, o do teto
+
+    def test_a_ficha_mostra_o_total_de_quem_veste(self):
+        g = jogo()
+        g.j.equip["arma"]["encantos"] = ["brasa:2", "brasa"]
+        D.JOGO[0] = g
+        f = D.itens.ficha(g.j.equip["arma"])
+        tot = {x["id"]: x for x in f["gravacao_total"]}
+        self.assertEqual((tot["brasa"]["total"], tot["brasa"]["efetivo"]), (3, 3))
+        self.assertEqual([x["titulo"] for x in f["encantos"]], ["Brasa II", "Brasa I"])
+        bolsa = next(it for it in g.j.mochila if E.tipo(it))
+        self.assertEqual(D.itens.ficha(bolsa)["gravacao_total"], [])  # na bolsa: ninguém veste
+
+    def test_o_saque_de_verdade_da_materiais_pela_criatura(self):
+        g = jogo()
+        g.ui.efeito = lambda *a, **k: None
+        antes = dict(D.materiais(g))
+        chefe = criar(random.Random(4), "lobo_gelido", 6)
+        chefe.chefe = True
+        g.saque_de_combate([chefe])
+        m = D.materiais(g)
+        self.assertGreaterEqual(m.get("fragmento", 0) - antes.get("fragmento", 0), 3)  # o chefe: 2 + 1 no nível 6
+        self.assertEqual(m.get("essencia_geada_3", 0) - antes.get("essencia_geada_3", 0), 1)  # lobo gélido: Geada; II + 1
 
 
 if __name__ == "__main__":

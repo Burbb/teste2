@@ -96,9 +96,12 @@ def ganhos():
     from rpg import itens
     rng = random.Random(3)
     exemplos = [("guerreiro", "arma", 1, "comum"), ("guerreiro", "arma", 6, "comum"), ("guerreiro", "arma", 12, "raro"),
-                ("mago", "arma", 6, "magico"), ("guerreiro", "armadura", 1, "comum"), ("guerreiro", "armadura", 6, "raro"),
-                ("guerreiro", "secundaria", 3, "comum"), ("mago", "secundaria", 6, "magico")]
-    print("\n| Peça | Base | +4 | +8 | +12 | Base comum nova do gerador, nível +6 / +12 |")
+                ("mago", "arma", 6, "magico"), ("arqueiro", "arma", 4, "comum"), ("guerreiro", "armadura", 1, "comum"),
+                ("guerreiro", "armadura", 6, "raro"), ("guerreiro", "secundaria", 3, "comum"), ("guerreiro", "secundaria", 8, "magico"),
+                ("mago", "secundaria", 6, "magico"), ("arqueiro", "secundaria", 2, "comum"), ("arqueiro", "secundaria", 7, "raro"),
+                ("guerreiro", "cabeca", 4, "comum"), ("mago", "maos", 6, "magico"), ("guerreiro", "anel", 3, "magico"),
+                ("arqueiro", "amuleto", 8, "raro")]
+    print("\n| Peça | +0 | +4 | +8 | +12 | Substituta (base comum do gerador), nível +6 / +12 |")
     print("|---|---|---|---|---|---|")
     for classe, slot, nivel, rar in exemplos:
         it = itens.gerar_equip(rng, classe, nivel, slot=slot, raridade=rar)
@@ -111,7 +114,7 @@ def ganhos():
             o = itens.gerar_equip(random.Random(7), classe, nivel + mais, slot=slot, raridade="comum")
             novas.append(f"{o['nome']}: {b(o['bonus'])}")
         nomes = "/".join(R.NOMES.get(s, s) for s in ls)
-        print(f"| {it['nome']} (nível {nivel}, {NOMES_RAR[rar].lower()}) | {nomes} {b(base)} | {com(4)} | {com(8)} | {com(12)} | {'; '.join(novas)} |")
+        print(f"| {it['nome']} (nível {nivel}, {NOMES_RAR[rar].lower()}) | {nomes}: {b(base)} | {com(4)} | {com(8)} | {com(12)} | {'; '.join(novas)} |")
 
 
 if __name__ == "__main__":

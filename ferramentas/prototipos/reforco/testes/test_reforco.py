@@ -36,26 +36,47 @@ def jogo():
     return g
 
 
-def peca(classe, slot, nivel, material=None):
+def peca(classe, slot, nivel, material=None, raridade="comum"):
     rng = random.Random(5)
     while True:
-        it = itens.gerar_equip(rng, classe, nivel, slot=slot, raridade="comum")
-        if not material or material in it["base"]:
+        it = itens.gerar_equip(rng, classe, nivel, slot=slot, raridade=raridade)
+        if not material or material in (it.get("base") or ""):
             return it
 
 
 class TestFormula(unittest.TestCase):
-    def test_cada_passo_melhora_algo_e_nunca_cai(self):
-        for classe, slot in (("guerreiro", "arma"), ("arqueiro", "arma"), ("mago", "arma"), ("guerreiro", "armadura"),
-                             ("mago", "armadura"), ("guerreiro", "secundaria"), ("mago", "secundaria")):
+    def test_todo_espaco_cresce_sem_cair_e_a_arma_sente_cada_passo_ate_o_4(self):
+        espacos = [(c, s) for c in ("guerreiro", "arqueiro", "mago")
+                   for s in ("arma", "armadura", "secundaria", "cabeca", "maos", "pernas", "pes", "anel", "amuleto")]
+        for classe, slot in espacos:
             for nivel in (1, 3, 6, 9, 12):
-                it = peca(classe, slot, nivel)
-                anterior = {}
-                for n in range(1, R.LIMITE + 1):
-                    g = R.ganho_total(it, n)
-                    self.assertTrue(any(g[s] > anterior.get(s, 0) for s in g), (it["nome"], n, g))
-                    self.assertTrue(all(g[s] >= anterior.get(s, 0) for s in g))
-                    anterior = g
+                for rar in ("comum", "magico", "raro"):
+                    it = peca(classe, slot, nivel, raridade=rar)
+                    self.assertTrue(R.tipo(it), it["nome"])
+                    anterior = {}
+                    for n in range(1, R.LIMITE + 1):
+                        g = R.ganho_total(it, n)
+                        self.assertTrue(all(g[st] >= anterior.get(st, 0) for st in g), (it["nome"], n, g))
+                        if slot == "arma" and n <= 4:  # a principal da arma: +1 por passo na faixa aprovada
+                            principal = [st for st, _, piso in R.linhas(it) if piso][0]
+                            self.assertGreater(g[principal], anterior.get(principal, 0), (it["nome"], n))
+                        anterior = g
+                    total = R.ganho_total(it, R.LIMITE)  # a % não passa do teto da peça
+                    for st, teto in R.TETO_PCT.items():
+                        self.assertLessEqual((it.get("bonus_base") or it["bonus"]).get(st, 0) + total.get(st, 0), max(teto, it["bonus"].get(st, 0)))
+
+    def test_forma_fechada_sem_deriva_ao_cair_e_subir(self):
+        for classe, slot in (("guerreiro", "secundaria"), ("arqueiro", "secundaria"), ("mago", "secundaria"), ("guerreiro", "anel")):
+            it = peca(classe, slot, 5, raridade="raro")
+            base = dict(it["bonus"])
+            it["bonus_base"] = dict(base)
+            vistos = {}
+            for n in (3, 7, 6, 5, 6, 7, 12, 11, 0, 7):  # quedas e subidas
+                D.aplicar_nivel(it, n)
+                vistos.setdefault(n, dict(it["bonus"]))
+                self.assertEqual(it["bonus"], vistos[n], (it["nome"], n))
+            D.aplicar_nivel(it, 0)
+            self.assertEqual(it["bonus"], base)
 
     def test_arma_inicial_alcanca_uma_base_mais_nova_por_um_tempo(self):
         velha = peca("guerreiro", "arma", 1, "Enferrujad")  # Ataque 2
@@ -76,11 +97,39 @@ class TestFormula(unittest.TestCase):
         it = peca("guerreiro", "arma", 6)
         self.assertEqual([st for st, _, piso in R.linhas(it) if piso], ["atk"])  # a principal tem o piso de +1
 
-    def test_quem_nao_recebe_reforco(self):
-        for slot, classe in (("cabeca", "guerreiro"), ("anel", None), ("amuleto", None), ("secundaria", "arqueiro")):
+    def test_todo_espaco_recebe_reforco(self):
+        for slot, classe, t in (("cabeca", "guerreiro", "cabeca"), ("anel", None, "anel"), ("amuleto", None, "amuleto"),
+                                ("secundaria", "arqueiro", "aljava"), ("secundaria", "guerreiro", "escudo")):
             it = {"slot": slot, "classe": classe, "bonus": {"defesa": 1}, "nome": "x"}
-            self.assertIsNone(R.tipo(it))
-            self.assertTrue(R.motivo_sem_reforco(it))
+            self.assertEqual(R.tipo(it), t)
+            self.assertIsNone(R.motivo_sem_reforco(it))
+
+    def test_transferencia(self):
+        g = jogo()
+        g.ui.efeito = lambda *a, **k: None
+        D.transferencia_de_teste(g)
+        o, dd, p6, p0 = g.j.mochila[:4]
+        base_o, sulcos_o, grav_d = dict(o["bonus_base"]), list(o["encantos"]), list(dd["encantos"])
+        venda_antes = o["preco"] // 2 + dd["preco"] // 2
+        rende_antes = sum(sum(R.desmontar_rende(x)) for x in (o, dd))
+        ouro = g.j.ouro
+        custo = g.preco(R.custo_transferencia(8))
+        ok, txt = D.transferir(g, o["uid"], dd["uid"], pedido="t1")
+        self.assertTrue(ok, txt)
+        self.assertEqual((o["reforco"], dd["reforco"], g.j.ouro), (0, 8, ouro - custo))
+        self.assertEqual((o["bonus"], o["encantos"], dd["encantos"]), (base_o, sulcos_o, grav_d))  # nada mais se move
+        self.assertFalse(D.transferir(g, o["uid"], dd["uid"], pedido="t1")[0])  # o mesmo pedido: nada
+        self.assertEqual(g.j.ouro, ouro - custo)
+        # nada se cria: a venda e a desmontagem das duas valem menos que antes
+        self.assertLess(o["preco"] // 2 + dd["preco"] // 2, venda_antes)
+        self.assertLessEqual(sum(sum(R.desmontar_rende(x)) for x in (o, dd)), rende_antes)
+        # recusas: sem subir, outra raridade, outro espaço, a origem +0
+        self.assertEqual(R.transferencia(p6, dd)[1], "Só entre peças do mesmo espaço.")
+        self.assertIsNotNone(R.transferencia(o, dd)[1])  # a origem +0 não dá nada
+        # em cadeia: +8 → (destino +6), e o destino de antes fica +0
+        self.assertTrue(D.transferir(g, dd["uid"], o["uid"], pedido="t3")[0])
+        self.assertEqual((dd["reforco"], o["reforco"]), (0, 6))
+        self.assertEqual(R.transferencia(p6, p0), (4, None))
 
 
 class TestReforcar(unittest.TestCase):
