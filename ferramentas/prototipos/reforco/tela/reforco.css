@@ -13,7 +13,7 @@
   --rf-aresta: inset 1px 1px 0 var(--rf-luz), inset -1px -2px 0 var(--rf-sombra);
   --rf-rebite: radial-gradient(circle at 40% 35%, #9a9da4 0 1.5px, #45474d 2px 3px, #000 3.5px, transparent 4px);
 }
-.forja-proto .rf-servicos { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.forja-proto .rf-servicos { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 
 /* ------------------------------------------------------------ a janela */
 .rf-janela { position: fixed; z-index: 60; display: flex; flex-direction: column; overflow: hidden; color: var(--rf-texto);
@@ -432,4 +432,192 @@
   .rf-chance b { font-size: 20px; }
   .rf-pe-chapa .rf-botao.principal { width: 180px; }
   .rf-nota { min-height: 18px; font-size: 14px; }
+}
+
+/* ------------------------------------------------------------ 7ª versão, acabamento: desmontagem, impacto, máximo, saldos */
+/* a desmontagem na mesma bancada: o encaixe do que a peça rende, à direita */
+.rf-recebe { display: flex; align-items: center; gap: 8px; }
+.rf-recebe b { min-width: 34px; font-family: var(--num); font-size: 24px; font-weight: 400; color: #fff3d6; }
+.rf-recebe.vazio { opacity: 0.35; }
+.rf-chapa.desmonte .rf-conduto.seta { visibility: visible; }
+/* a transformação: a peça clareia, se parte em degraus e some; o material chega ao encaixe; a seleção fica vazia */
+@keyframes rf-desfaz { 0% { filter: brightness(1.6); opacity: 1; } 30% { filter: brightness(1.2) grayscale(0.4); opacity: 1; }
+  100% { filter: grayscale(1) brightness(0.6); opacity: 0; } }
+.rf-desfaz img, .rf-desfaz canvas { animation: rf-desfaz 0.45s steps(5) both; }
+@keyframes rf-chega { 0% { scale: 1.5; opacity: 0; } 40% { scale: 0.9; opacity: 1; } 70% { scale: 1.05; } 100% { scale: 1; opacity: 1; } }
+.transformando .rf-recebe.chegou :is(.rf-encaixe, b) { animation: rf-chega 0.3s steps(4) 0.35s both; }
+.rf-recebe.chegou .rf-encaixe { box-shadow: inset 2px 2px 0 #000, inset 0 0 0 1px var(--latao); }
+/* o botão destrutivo no eixo, com o tamanho do Reforçar */
+.rf-botao.principal.perigo { color: #ffd2c8; background: linear-gradient(rgba(70, 26, 20, 0.94), rgba(70, 26, 20, 0.94)), url(/static/hud/textura-botao.png) 0 0 / 128px;
+  box-shadow: inset 0 0 0 1px #8a3328, inset 0 2px 0 rgba(255, 180, 160, 0.15), inset 0 -3px 0 rgba(0, 0, 0, 0.55), 0 3px 0 #000; }
+.rf-botao.principal.perigo:hover { background: linear-gradient(rgba(92, 34, 26, 0.94), rgba(92, 34, 26, 0.94)), url(/static/hud/textura-botao.png) 0 0 / 128px; }
+.rf-botao.principal.perigo[aria-disabled] { color: #c9b4ad; }
+/* a confirmação cabe no pé (a bancada não cresce) */
+.rf-pe-chapa .rf-confirmar { gap: 4px; }
+.rf-pe-chapa .rf-confirmar b { max-width: 520px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rf-pe-chapa .rf-botoes { margin-top: 2px; }
+
+/* o desfecho domina: os dados da tentativa ficam no lugar, apagados */
+.desfecho :is(.rf-lado.esq, .rf-linha-chance, .rf-pe-chapa > .rf-botao, .rf-pe-chapa > .rf-nota) { opacity: 0.3; transition: opacity 0.1s steps(1); }
+/* a falha, legível sem parecer prêmio */
+.rf-dsf.mau .rf-dsf-palavra { color: #ee9584; }
+.rf-dsf.mau .rf-dsf-nivel { color: #e2dacb; text-shadow: 0 2px 0 #000, 1px 0 0 #000, -1px 0 0 #000; }
+.rf-dsf.mau small { color: #b6ad9e; }
+/* o máximo: o contorno do molde se completa barra a barra e fica aceso um instante */
+@keyframes rf-max-barra { 0% { background: #2c2e33; } 15%, 75% { background: var(--rf-brasa5); box-shadow: 0 0 6px var(--rf-brasa4); } 100% { background: var(--latao); box-shadow: none; } }
+@keyframes rf-max-berco { 0%, 20% { box-shadow: inset 1px 1px 0 #4a4d54; } 30%, 80% { box-shadow: inset 1px 1px 0 var(--rf-brasa5), 0 0 0 2px var(--rf-brasa4), 0 0 0 4px rgba(255, 208, 96, 0.35); }
+  100% { box-shadow: inset 1px 1px 0 #4a4d54, 0 0 0 1px var(--latao); } }
+.desfecho.maximo .rf-barra { animation: rf-max-barra 1.5s steps(8) both; }
+.desfecho.maximo .rf-barra.r { animation-delay: 0.08s; } .desfecho.maximo .rf-barra.b { animation-delay: 0.16s; } .desfecho.maximo .rf-barra.l { animation-delay: 0.24s; }
+.desfecho.maximo .rf-berco { z-index: 3; animation: rf-max-berco 1.6s steps(8) both; }  /* por cima do selo do efeito */
+/* o saldo que mudou acende um instante: o que saiu em cor de cobrança, o que entrou em verde */
+@keyframes rf-saldo-desce { 0% { color: var(--rf-perigo); } 100% { color: #fff3d6; } }
+@keyframes rf-saldo-sobe { 0% { color: var(--rf-verde); text-shadow: 0 0 6px rgba(159, 224, 124, 0.6); } 100% { color: #fff3d6; } }
+.rf-rec.desce b { animation: rf-saldo-desce 0.9s steps(5) both; }
+.rf-rec.sobe b { animation: rf-saldo-sobe 0.9s steps(5) 0.4s both; }
+/* a peça da esteira acende o +N quando o resultado aparece (a seleção continua) */
+.revelou .rf-esteira .rf-peca.marcada .rf-canto { animation: rf-acende 1.2s steps(6) both; }
+
+/* o reflexo como luz que atravessa o material: o miolo claro, as bordas na cor do nível, a textura por baixo (screen) */
+.rf-reflexo { mix-blend-mode: screen;
+  background: linear-gradient(45deg, transparent 0 42%, var(--borda) 42% 44.5%, var(--miolo) 44.5% 46.5%, var(--borda) 46.5% 49%,
+    transparent 49% 50.5%, var(--borda) 50.5% 51.5%, transparent 51.5%) 0 0 / 300% 300% no-repeat; }
+.rf-reflexo[data-nivel="1"] { --borda: rgba(255, 244, 214, 0.28); --miolo: rgba(255, 252, 240, 0.6); }
+.rf-reflexo[data-nivel="2"] { --borda: rgba(96, 224, 120, 0.55); --miolo: rgba(226, 255, 226, 0.9); }
+.rf-reflexo[data-nivel="3"] { --borda: rgba(70, 140, 255, 0.75); --miolo: rgba(214, 232, 255, 0.95); }
+.rf-reflexo[data-nivel="4"] { --borda: rgba(255, 190, 60, 0.75); --miolo: rgba(255, 248, 214, 0.95); }
+/* o +4: uma luz baixa e permanente na própria peça (contorno de 1 px, sem borrão), além do reflexo periódico */
+.rf-mais4 > :is(img, canvas) { filter: drop-shadow(1px 0 0 rgba(255, 196, 70, 0.45)) drop-shadow(-1px 0 0 rgba(255, 196, 70, 0.45))
+  drop-shadow(0 1px 0 rgba(255, 196, 70, 0.35)) drop-shadow(0 -1px 0 rgba(255, 220, 120, 0.5)); }
+
+@media (max-width: 1500px) {
+  .rf-recebe { gap: 5px; }
+  .rf-recebe b { font-size: 19px; min-width: 26px; }
+  .rf-pe-chapa .rf-confirmar b { font-size: 14px; max-width: 360px; }
+  .rf-pe-chapa .rf-confirmar .rf-aviso { font-size: 13px; }
+  .rf-pe-chapa .rf-botoes .rf-botao { padding: 4px 14px 5px; font-size: 14px; }
+  .rf-dsf.mau .rf-dsf-palavra { font-size: calc(var(--px) * 22); }
+  .rf-dsf.mau .rf-dsf-nivel { font-size: 22px; }
+  .rf-dsf.mau small { font-size: 15px; }
+}
+
+/* ------------------------------------------------------------ o encantamento (laboratório): gravar uma essência */
+.rf-encantar .rf-rec.ess { gap: 3px; }
+.rf-encantar .rf-rec.ess b { font-size: 19px; }
+.rf-encantar .rf-rec.ess :is(img, canvas) { width: 22px; height: 22px; }
+.rf-encantar .rf-recursos { gap: 10px; }
+/* a gravação atual, em cima da peça, e a essência que entra, à direita: o nome na cor dela */
+.rf-grav-nome { font-family: var(--titulo); font-size: calc(var(--px) * 22); color: var(--ess); text-shadow: 0 2px 0 #000; }
+.rf-grav-nome.vazia { font-family: var(--texto); font-size: 15px; color: var(--rf-sec); text-shadow: none; }
+.rf-ess-visor { min-width: 130px; align-items: flex-start; box-shadow: inset 2px 2px 0 #000, inset -1px -1px 0 #2b2d32, inset 3px 0 0 var(--ess); }
+.rf-ess-visor b { font-family: var(--titulo); font-weight: 400; font-size: calc(var(--px) * 22); color: var(--ess); text-shadow: 0 2px 0 #000; }
+/* o trilho das essências: encaixes pequenos, a cor de cada uma no fio de baixo, a quantidade no canto */
+.rf-essencias { display: flex; justify-content: center; gap: 8px; padding: 2px 14px 6px; }
+.rf-essencia { position: relative; display: grid; place-items: center; width: 46px; height: 46px; padding: 0; cursor: pointer;
+  background: var(--rf-nicho); border: 2px solid #000; box-shadow: inset 2px 2px 0 #000, inset -1px -1px 0 #2b2d32; }
+.rf-essencia::after { content: ""; position: absolute; left: 3px; right: 3px; bottom: 3px; height: 2px; background: var(--ess); }
+.rf-essencia :is(img, canvas) { width: 28px; height: 28px; }
+.rf-essencia:hover { background: #121317; }
+.rf-essencia:focus-visible { outline: 2px solid var(--latao-claro); outline-offset: 2px; }
+.rf-essencia.apagada > :is(img, canvas) { opacity: 0.35; filter: grayscale(0.8); }
+.rf-essencia.escolhida { box-shadow: inset 2px 2px 0 #000, inset 0 0 0 1px var(--ess); }
+.rf-essencia.escolhida::before { content: ""; position: absolute; inset: -6px; pointer-events: none;
+  background: linear-gradient(var(--latao-claro), var(--latao-claro)) 0 0 / 8px 2px no-repeat, linear-gradient(var(--latao-claro), var(--latao-claro)) 0 0 / 2px 8px no-repeat,
+    linear-gradient(var(--latao-claro), var(--latao-claro)) 100% 0 / 8px 2px no-repeat, linear-gradient(var(--latao-claro), var(--latao-claro)) 100% 0 / 2px 8px no-repeat,
+    linear-gradient(var(--latao-claro), var(--latao-claro)) 0 100% / 8px 2px no-repeat, linear-gradient(var(--latao-claro), var(--latao-claro)) 0 100% / 2px 8px no-repeat,
+    linear-gradient(var(--latao-claro), var(--latao-claro)) 100% 100% / 8px 2px no-repeat, linear-gradient(var(--latao-claro), var(--latao-claro)) 100% 100% / 2px 8px no-repeat; }
+.rf-essencia.gravada .rf-canto { color: var(--ess); }
+.rf-essencia .rf-canto { font-size: 13px; line-height: 14px; min-width: 14px; }
+/* a regra da essência escolhida: curta, duas linhas no máximo, altura fixa */
+.rf-ess-regra { min-height: 40px; max-width: 560px; margin: 0 auto 6px; padding: 0 14px; font-size: 15px; line-height: 1.35; color: var(--rf-texto); text-align: center; }
+
+/* a borda de luz da gravação: um trecho curto na cor da essência dá a volta por dentro do encaixe; o resto da borda
+   fica levemente tingido (a peça é reconhecível parada). Pixel: passos, sem brilho borrado. */
+@property --rf-ang { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
+.rf-gravura { position: absolute; inset: 4px; z-index: 1; pointer-events: none; padding: 2px;
+  background: conic-gradient(from var(--rf-ang), color-mix(in srgb, var(--ess) 13%, transparent) 0 76%, color-mix(in srgb, var(--ess) 60%, transparent) 82%,
+    var(--ess) 88%, #fff 90%, color-mix(in srgb, var(--ess) 13%, transparent) 92%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  animation: rf-gira 4.2s steps(56) infinite; }
+@keyframes rf-gira { to { --rf-ang: 360deg; } }
+.rf-encaixe.grande .rf-gravura { inset: 5px; }
+.slot-px > .rf-gravura { inset: 3px; }
+
+/* a cena da gravação: as barras do molde acendem na cor da essência, uma a uma; depois, o resultado junto da peça */
+@keyframes rf-buril { 0% { background: #2c2e33; } 50% { background: #fff; } 100% { background: var(--ess); box-shadow: 0 0 4px var(--ess); } }
+.gravando .rf-barra { animation: rf-buril 0.22s steps(3) both; }
+.gravando .rf-barra.t { animation-delay: 0s; } .gravando .rf-barra.r { animation-delay: 0.22s; }
+.gravando .rf-barra.b { animation-delay: 0.45s; } .gravando .rf-barra.l { animation-delay: 0.67s; }
+.gravando.gravado .rf-barra { animation: none; background: var(--ess); }
+.gravando .rf-encaixe.grande .rf-gravura { animation: rf-gira 4.2s steps(56) infinite, rf-surge 0.3s steps(3) both; }
+.gravando:not(.gravado) .rf-encaixe.grande .rf-gravura { visibility: hidden; }
+.gravando :is(.rf-lado.esq, .rf-essencias, .rf-ess-regra, .rf-linha-chance, .rf-pe-chapa > .rf-botao, .rf-pe-chapa > .rf-nota) { opacity: 0.3; }
+.gravando.gravado :is(.rf-nivel, .rf-lado.dir > .rf-conduto, .rf-lado.dir > .rf-resultado) { visibility: hidden; }
+.gravado .rf-dsf { display: flex; }
+.rf-dsf.grav .rf-dsf-palavra { color: var(--ess); text-shadow: 0 2px 0 #000; }
+.rf-dsf.grav .rf-dsf-nivel { font: 400 calc(var(--px) * 44)/0.95 var(--titulo); color: #fff3d6; text-shadow: 0 3px 0 #000; }
+.rf-dsf.grav small { font-family: var(--texto); font-size: 14px; color: var(--rf-sec); }
+.gravado .rf-dsf.grav { animation: rf-surge 0.2s steps(2) both; }
+/* a gravação na ficha: o nome na cor da essência e a regra */
+.rf-gravacao { margin-top: 8px; padding: 6px 8px; background: var(--rf-nicho); box-shadow: inset 2px 0 0 var(--ess); font-size: 14px; color: var(--rf-sec); }
+.rf-gravacao b { font-family: var(--titulo); font-weight: 400; font-size: calc(var(--px) * 20); color: var(--ess); }
+.rf-gravacao p { margin: 2px 0 0; color: var(--rf-texto); }
+.rf-janela:has(.gravado) .rf-gravacao { animation: rf-acende 1.2s steps(6) both; }
+@media (prefers-reduced-motion: reduce) {
+  .rf-gravura { animation: none; --rf-ang: 300deg; }
+  .gravando .rf-barra { animation: none; background: var(--ess); }
+  .gravado .rf-dsf.grav, .rf-janela:has(.gravado) .rf-gravacao { animation: none; }
+}
+@media (max-width: 1500px) {
+  .rf-essencias { gap: 6px; padding: 0 8px 4px; }
+  .rf-essencia { width: 38px; height: 38px; }
+  .rf-essencia :is(img, canvas) { width: 24px; height: 24px; }
+  .rf-ess-regra { min-height: 34px; font-size: 13px; margin-bottom: 3px; }
+  .rf-grav-nome { font-size: calc(var(--px) * 18); }
+  .rf-ess-visor b { font-size: calc(var(--px) * 18); }
+  .rf-ess-visor { min-width: 96px; }
+  .rf-dsf.grav .rf-dsf-nivel { font-size: calc(var(--px) * 30); }
+  .rf-encantar .rf-rec.ess b { font-size: 16px; }
+  .rf-encantar .rf-rec.ess :is(img, canvas) { width: 18px; height: 18px; }
+  .rf-encantar .rf-recursos { gap: 6px; }
+}
+@media (max-width: 1500px) {
+  /* o encantamento a 1280: a mesma bancada um pouco mais baixa, para caber sem rolar (o trilho e a regra a mais) */
+  .rf-chapa.encanto .rf-leito { min-height: 104px; padding: 6px 6px; margin: 4px 8px; }
+  .rf-chapa.encanto .rf-marcas { display: none; }
+  .rf-chapa.encanto .rf-pe-chapa { height: 78px; }
+  .rf-chapa.encanto .rf-essencias { padding-bottom: 2px; }
+  .rf-essencia { width: 34px; height: 34px; }
+  .rf-essencia :is(img, canvas) { width: 22px; height: 22px; }
+  .rf-ess-regra { min-height: 32px; line-height: 1.25; }
+}
+@media (max-width: 1500px) {
+  /* a 1280, as essências saem do cabeçalho (o Fechar ficava fora da janela): a quantidade de cada uma está no trilho */
+  .rf-encantar .rf-rec.ess { display: none; }
+}
+
+/* os sulcos da peça, em cima dela: escolher onde gravar ("Vazio" ou o nome da gravação, na cor da essência) */
+.rf-sulcos { display: flex; justify-content: center; gap: 6px; font-family: var(--texto); font-size: 14px; }
+.rf-sulco { min-width: 74px; padding: 2px 8px 3px; font: inherit; font-family: var(--titulo); font-size: calc(var(--px) * 16); line-height: 1.2; color: var(--ess, var(--rf-sec));
+  cursor: pointer; background: var(--rf-nicho); border: 1px solid #000; box-shadow: inset 1px 1px 0 #000, inset -1px -1px 0 #2b2d32, inset 0 -2px 0 var(--ess, #3a3c40); }
+.rf-sulco.vazio { font-family: var(--texto); font-size: 13px; color: var(--rf-apagado); }
+.rf-sulco:hover { background: #121317; }
+.rf-sulco.escolhido { outline: 2px solid var(--latao); outline-offset: 1px; }
+.rf-sulco:focus-visible { outline: 2px solid var(--latao-claro); outline-offset: 2px; }
+@media (max-width: 1500px) {
+  .rf-sulco { min-width: 58px; padding: 1px 6px 2px; font-size: calc(var(--px) * 14); }
+  .rf-sulco.vazio { font-size: 12px; }
+}
+/* três serviços no cabeçalho: a 1280 as abas encolhem e o Fechar não quebra */
+.rf-botao.fechar { white-space: nowrap; }
+@media (max-width: 1500px) {
+  .rf-servico { padding: 5px 9px 6px; font-size: calc(var(--px) * 20); }
+  .rf-cab { gap: 8px; }
+}
+/* movimento reduzido na desmontagem: o estado final direto (a peça já saiu; o material já está no encaixe) */
+@media (prefers-reduced-motion: reduce) {
+  .rf-desfaz img, .rf-desfaz canvas { animation: none; opacity: 0; }
+  .transformando .rf-recebe.chegou :is(.rf-encaixe, b) { animation: none; }
+  .rf-rec.sobe b, .rf-rec.desce b, .revelou .rf-esteira .rf-peca.marcada .rf-canto { animation: none; }
 }
