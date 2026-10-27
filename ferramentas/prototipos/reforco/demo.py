@@ -22,6 +22,7 @@ if RAIZ not in sys.path:
 if AQUI not in sys.path:
     sys.path.insert(0, AQUI)
 
+import encanto as E  # noqa: E402
 import regras as R  # noqa: E402
 from rpg import balanceamento as bal  # noqa: E402
 from rpg import comitiva, itens  # noqa: E402
@@ -32,6 +33,7 @@ from rpg.telemetria import registrar  # noqa: E402
 
 FICHA = comitiva.ficha
 HEROI = FICHA.HEROI
+MATS = {**R.MATERIAIS, **E.MATERIAIS}  # os fragmentos do reforço e as essências do encantamento (laboratório)
 
 
 # ------------------------------------------------------------------ materiais do grupo
@@ -47,10 +49,10 @@ def dar_material(g, chave, n, origem):
     m = materiais(g)
     entra = max(0, min(n, R.PILHA_MAX - m.get(chave, 0)))
     if not entra:
-        g.ui.efeito(f"A pilha de {R.MATERIAIS[chave]['plural']} está cheia ({R.PILHA_MAX}).", "info")
+        g.ui.efeito(f"A pilha de {MATS[chave]['plural']} está cheia ({R.PILHA_MAX}).", "info")
         return 0
     m[chave] = m.get(chave, 0) + entra
-    d = R.MATERIAIS[chave]
+    d = MATS[chave]
     if not g.achou(chave, d["nome"], entra):
         g.ui.efeito(f"+{entra} {d['nome'] if entra == 1 else d['plural']}", "ganho")
     registrar(g, "material", id=chave, qtd=entra, origem=origem)
@@ -77,6 +79,8 @@ def dar_uid(g):
         if "uid" not in it:
             it["uid"] = f"p{prox}"
             prox += 1
+        if E.tipo(it) and "encantos" not in it:  # o sorteio dos sulcos (o drop; aqui, a primeira vez que a peça aparece)
+            E.sortear_sulcos(it, random.Random(f"{it['uid']}:{it.get('nome')}"))
 
 
 def achar(g, uid):
@@ -286,7 +290,16 @@ def ficha_peca(g, it, quem, s):
             c = comparar(g, quem, vestida_em(g, quem, s, sub))
             d["substitutas"].append({"uid": sub["uid"], "nome": itens.rotulo(sub), "item": itens.ficha(sub, rec), **c})
     d["aba"] = quem or "bolsa"
+    d["encantos"] = [encanto_tela(k) for k in it.get("encantos") or []]
+    d["encantar"] = {"motivo": E.motivo(it), "essencias": [
+        {"id": k, "nome": e["nome"], "cor": e["cor"], "icone": e["icone"], "desc": e["desc"],
+         "qtd": materiais(g).get(e["material"], 0), "motivo": E.motivo(it, k)} for k, e in ((k, E.ESSENCIAS[k]) for k in E.ORDEM)]}
     return d
+
+
+def encanto_tela(k):
+    e = E.ESSENCIAS.get(k)
+    return {"id": k, "nome": e["nome"], "cor": e["cor"], "icone": e["icone"], "desc": e["desc"], "fx": e["fx"]} if e else None
 
 
 def painel(g):
@@ -295,7 +308,8 @@ def painel(g):
     abas = [{"id": q, "nome": FICHA.nome_de(g, q), "retrato": g.j.classe if q == HEROI else q}
             for q in FICHA.personagens(g)] + [{"id": "bolsa", "nome": "Bolsa", "retrato": None}]
     return {"ouro": g.j.ouro, "limite": R.LIMITE, "abas": abas, "ultimo": getattr(g, "forja_ultimo", None),
-            "materiais": [{"id": k, **R.MATERIAIS[k], "qtd": m.get(k, 0)} for k in R.MATERIAIS],
+            "materiais": [{"id": k, **MATS[k], "qtd": m.get(k, 0)} for k in MATS],
+            "custo_encanto": g.preco(E.CUSTO_OURO),
             "pecas": [ficha_peca(g, it, quem, s) for it, quem, s in pecas(g)]}
 
 
@@ -382,7 +396,7 @@ def desmontar(g, uid, nome):
     it, quem, _ = achar(g, uid)
     if it is None or quem is not None:
         return False, "Só se desmonta uma peça da bolsa." if it else "Essa peça não está mais na bolsa."
-    if it["nome"] != nome:
+    if nome not in (it["nome"], itens.rotulo(it)):  # a tela mostra o rótulo (o único vem com ★ e o tipo)
         return False, "A peça mudou desde a confirmação. Escolha de novo."
     investido, propria = R.desmontar_rende(it)
     total = investido + propria
@@ -397,6 +411,69 @@ def desmontar(g, uid, nome):
     registrar(g, "desmontar", item=it["nome"], fragmentos=total, investimento=investido, da_peca=propria,
               prototipo="reforco")
     return True, f"Desmontado: {it['nome']} · +{total} {'Fragmento' if total == 1 else 'Fragmentos'} de Têmpera"
+
+
+def encantar(g, uid, essencia, sulco=0, pedido=None, substitui=None):
+    """Grava `essencia` no `sulco` da peça, uma vez por pedido. `substitui`: a gravação que a tela mostrou naquele sulco
+    (None se vazio); se ela mudou desde então, nada acontece. Cobra 1 essência e o ouro; nunca falha."""
+    if pedido is not None and pedido == getattr(g, "forja_pedido", None):
+        return False, None
+    it, quem, _ = achar(g, uid)
+    if it is None:
+        return False, "Essa peça não está mais com o grupo."
+    if essencia not in E.ESSENCIAS:
+        return False, "Escolha uma essência."
+    if not isinstance(sulco, int):
+        return False, "Escolha um sulco."
+    motivo = E.motivo(it, essencia, sulco)
+    if motivo:
+        return False, motivo
+    if (it["encantos"][sulco] or None) != (substitui or None):
+        return False, "A gravação da peça mudou. Escolha de novo."
+    mat, ouro = E.ESSENCIAS[essencia]["material"], g.preco(E.CUSTO_OURO)
+    if materiais(g).get(mat, 0) < 1 or g.j.ouro < ouro:
+        return False, "Faltam recursos para esta gravação."
+    g.forja_pedido = pedido
+    efeito, g.ui.efeito = g.ui.efeito, (lambda *a, **k: None)
+    try:
+        g.perder_ouro(ouro, destino="ferreiro")
+    finally:
+        g.ui.efeito = efeito
+    materiais(g)[mat] -= 1
+    antes = E.gravar(it, essencia, sulco)
+    if quem:
+        FICHA.atualizar(g, quem)
+    g.forja_ultimo = {"id": (getattr(g, "forja_ultimo", None) or {}).get("id", 0) + 1, "tipo": "encanto", "uid": uid,
+                      "sulco": sulco, "de": encanto_tela(antes), "para": encanto_tela(essencia)}
+    registrar(g, "encantar", item=it["nome"], essencia=essencia, sulco=sulco, substituiu=antes, ouro=ouro, em=quem or "bolsa",
+              prototipo="encanto")
+    return True, f"Gravado: {E.ESSENCIAS[essencia]['nome']} · {it['nome']}"
+
+
+def luta_de_teste(g):
+    """A luta de teste do laboratório: dois Esqueletos do nível do herói, sem fuga perdida nem saque, e o grupo volta
+    como estava (vida, recurso, experiência): só para ver as gravações agindo."""
+    from rpg.inimigos import criar
+    from rpg.sistemas.confronto import Derrota
+    guarda = {"hp": g.j.hp, "rec": g.j.rec, "xp": g.j.xp, "ouro": g.j.ouro,
+              "comitiva": [(m, m.get("hp")) for m in comitiva.membros(g)]}
+    g.encanto_log = []
+    rng = random.Random(len(getattr(g, "lutas_teste", [])) + 3)
+    inimigos = [criar(rng, "esqueleto", g.j.nivel) for _ in range(2)]
+    try:
+        g.combate(inimigos, pode_fugir=True, titulo="Luta de teste (laboratório)", saque=False)
+    except Derrota:
+        pass
+    g.lutas_teste = getattr(g, "lutas_teste", []) + [list(g.encanto_log)]
+    g.j.hp, g.j.rec, g.j.xp, g.j.ouro = guarda["hp"], guarda["rec"], guarda["xp"], guarda["ouro"]
+    for m, hp in guarda["comitiva"]:
+        m["hp"] = hp
+    g.j.efeitos.clear()
+    contagem = {}
+    for k, _ in g.encanto_log:
+        contagem[k] = contagem.get(k, 0) + 1
+    resumo = ", ".join(f"{E.ESSENCIAS[k]['nome']} ×{n}" for k, n in contagem.items()) or "nenhuma gravação disparou"
+    g.ui.efeito(f"Luta de teste: {resumo}.", "info")
 
 
 def forja(self):
@@ -419,6 +496,13 @@ def forja(self):
                 continue
         elif d.get("op") == "desmontar" and d.get("confirmar") is True:
             ok, texto = desmontar(self, d.get("uid"), d.get("nome"))
+        elif d.get("op") == "encantar":
+            ok, texto = encantar(self, d.get("uid"), d.get("essencia"), d.get("sulco"), d.get("pedido"), d.get("substitui"))
+            if texto is None:
+                continue
+        elif d.get("op") == "luta_teste":
+            luta_de_teste(self)
+            continue
         else:
             continue
         if not ok:  # o sucesso a própria janela mostra (a bancada acende; o topo conta ouro e fragmentos)
@@ -434,12 +518,28 @@ def ativar():
     if "materiais" not in persistencia.CAMPOS_SAVE:
         persistencia.CAMPOS_SAVE = persistencia.CAMPOS_SAVE + ("materiais",)
     Servicos.ferreiro = forja
+    E.ativar()
+    ficha_item = itens.ficha
+
+    def ficha_com_gravacao(it, recurso=None, **extra):
+        """A ficha das telas (mercado, inventário, dicas, forja) com as gravações: a chave `encantos` (uma por sulco,
+        None no vazio) e, na linha de efeito, o nome e a regra de cada uma (somadas à do único, quando a peça tem)."""
+        d = ficha_item(it, recurso, **extra)
+        if d and it.get("encantos"):
+            d["encantos"] = [encanto_tela(k) for k in it["encantos"]]
+            linhas = [f"Gravação · {E.ESSENCIAS[k]['nome']}: {E.ESSENCIAS[k]['desc']}" for k in it["encantos"] if k in E.ESSENCIAS]
+            if linhas:
+                d["efeito"] = " ".join(([d["efeito"]] if d.get("efeito") else []) + linhas)
+                d.setdefault("efeito_nome", " · ".join(f"Gravação {E.ESSENCIAS[k]['nome']}" for k in it["encantos"] if k in E.ESSENCIAS))
+        return d
+    itens.ficha = ficha_com_gravacao
+    web_estado._item = ficha_com_gravacao
     para_tela = itens.para_tela
 
     def para_tela_com_materiais():
         d = para_tela()
         d.update({k: {"icone": m["icone"], "nome": m["nome"], "desc": m["desc"], "hud": None}
-                  for k, m in R.MATERIAIS.items()})
+                  for k, m in MATS.items()})
         return d
     itens.para_tela = para_tela_com_materiais
     heroi = web_estado.heroi
@@ -448,7 +548,7 @@ def ativar():
         h = heroi(g)
         m = materiais(g)
         h["materiais"] = [{"id": k, "nome": d["nome"], "plural": d["plural"], "icone": d["icone"], "qtd": m.get(k, 0),
-                           "desc": d["desc"], "fontes": d["fontes"]} for k, d in R.MATERIAIS.items()]
+                           "desc": d["desc"], "fontes": d["fontes"]} for k, d in MATS.items() if k in R.MATERIAIS or m.get(k)]
         return h
     web_estado.heroi = heroi_com_materiais
     sortear = Inventario.sortear_bau
@@ -457,12 +557,14 @@ def ativar():
         sortear(self)
         if self.chance(0.5):
             dar_material(self, "fragmento", 1, "bau")
+        if self.chance(0.25):  # e, às vezes, uma essência (hipótese do laboratório)
+            dar_material(self, E.ESSENCIAS[self.rng.choice(E.ORDEM)]["material"], 1, "bau")
     Inventario.sortear_bau = sortear_bau
 
 
 def preparar(g):
-    """O cenário de teste (CASOS=1: a armadura de Morel já no +4 e 1 fragmento, para a falta de material no segundo
-    passo): o Guerreiro no nível 4 no Vau, com Morel e Odette, 380 de ouro e as peças dos exemplos."""
+    """O cenário de teste (CASOS=1: a armadura de Morel já no +4, três peças da bolsa no +1, +2 e +3 e 1 fragmento, para
+    a falta de material no segundo passo): o Guerreiro no nível 4 no Vau, com Morel e Odette, 380 de ouro e as peças dos exemplos."""
     from rpg import missoes
     rng = random.Random(11)
     missoes.registro(g, "febre_do_turvo")["cenas"].append("abertura")
@@ -494,6 +596,8 @@ def preparar(g):
         peca("arqueiro", "arma", 3, "magico"),                            # ninguém do grupo usa: vender ou desmontar
         peca("guerreiro", "anel", 3, "magico"),
     ]
+    # o laboratório do encantamento: a arma do herói com 2 sulcos (as outras peças sorteiam os delas ao aparecer)
+    g.j.equip["arma"]["encantos"] = [None, None]
     g.j.ouro = 380
     g.j.consumiveis["bau"] = 2
     for m in comitiva.membros(g):
@@ -512,6 +616,8 @@ def recompensa_de_teste(g):
     g.abrir_espolio(titulo="recompensa de teste",
                     frase="Cenário de teste: uma caixa do ferreiro do Vau, para experimentar o reforço.")
     dar_material(g, "fragmento", 1 if os.environ.get("CASOS") else 12, "teste")
+    for k in E.ORDEM:  # o laboratório do encantamento: 2 essências de cada (recurso de teste)
+        dar_material(g, E.ESSENCIAS[k]["material"], 2, "teste")
     g.fechar_espolio()
     # a página espera quem joga (o navegador abre depois do jogo começar: a cena atual é a desta recompensa)
     g.menu("Os fragmentos ficam na seção Materiais do Inventário, fora dos 12 espaços da bolsa.",
@@ -533,6 +639,10 @@ def rodar(ui, pasta):
         g.j.ouro, materiais(g)["fragmento"] = 9999, 99
         for _ in range(R.LIMITE):
             reforcar(g, FICHA.corpo(g, "morel")["armadura"]["uid"], teste="sucesso")
+        # e peças da bolsa reforçadas de verdade (+1, +2, +3), para conferir o reflexo de cada nível lado a lado
+        for it, n in zip(g.j.mochila[:3], (1, 2, 3)):
+            for _ in range(n):
+                reforcar(g, it["uid"], veio="fio", teste="sucesso")
         g.j.ouro, materiais(g)["fragmento"] = ouro, 0
         g.forja_ultimo = None
     g.ui, ui.jogo = ui, g
