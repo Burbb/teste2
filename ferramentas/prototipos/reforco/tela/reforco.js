@@ -944,6 +944,58 @@
    *  A presença sobe pela cor e pelo brilho, não pela velocidade: o mesmo ritmo em todos. Cada peça começa num
    *  ponto diferente da volta (nada pisca em sincronia). `n` 0 a 3 tira tudo (uma queda também tira). */
   const BRILHOS = { 8: 1, 9: 1, 10: 2, 11: 3, 12: 4 };
+  // o contorno do nível (do +4): a cor e a luz de cima; do +9, a cor gira pelo matiz (CSS)
+  const CONTORNO = {
+    4: ["rgba(255,196,70,0.45)", "rgba(255,220,120,0.5)"], 5: ["rgba(70,226,204,0.55)", "rgba(170,255,240,0.6)"],
+    6: ["rgba(80,130,255,0.65)", "rgba(170,200,255,0.7)"], 7: ["rgba(180,100,255,0.7)", "rgba(225,190,255,0.75)"],
+    8: ["rgba(255,60,96,0.75)", "rgba(255,180,190,0.8)"], 9: ["rgba(255,60,96,0.8)", "rgba(255,200,120,0.85)"],
+  };
+  /** A silhueta de fora do desenho, em pixels do desenho: o que é transparente e alcançável pela borda é "fora"; um
+   *  vazado fechado (o furo do anel) conta como dentro. Guardada por desenho. */
+  const silhuetas = new Map();
+  function silhueta(img) {
+    const src = img.tagName === "IMG" ? img.currentSrc || img.src : null;
+    if (src && silhuetas.has(src)) return silhuetas.get(src);
+    if (img.tagName === "IMG" && !img.complete) return null;  // ainda carregando: tenta na próxima passada
+    const w = img.naturalWidth || img.width, hh = img.naturalHeight || img.height;
+    if (!w || !hh) return null;
+    const cv = document.createElement("canvas");
+    cv.width = w; cv.height = hh;
+    const ctx = cv.getContext("2d");
+    try { ctx.drawImage(img, 0, 0); } catch (e) { return null; }
+    let dados;
+    try { dados = ctx.getImageData(0, 0, w, hh).data; } catch (e) { return null; }
+    const cheio = new Uint8Array(w * hh), fora = new Uint8Array(w * hh), fila = [];
+    let algum = 0;
+    for (let i = 0; i < w * hh; i++) algum += cheio[i] = dados[i * 4 + 3] > 0 ? 1 : 0;
+    if (!algum) return null;  // nada desenhado ainda (a imagem não decodificou): não guarda o vazio
+    const entra = (x, y) => { const i = y * w + x; if (!cheio[i] && !fora[i]) { fora[i] = 1; fila.push(i); } };
+    for (let x = 0; x < w; x++) { entra(x, 0); entra(x, hh - 1); }
+    for (let y = 0; y < hh; y++) { entra(0, y); entra(w - 1, y); }
+    while (fila.length) {
+      const i = fila.pop(), x = i % w, y = (i / w) | 0;
+      if (x > 0) entra(x - 1, y); if (x < w - 1) entra(x + 1, y); if (y > 0) entra(x, y - 1); if (y < hh - 1) entra(x, y + 1);
+    }
+    const r = { w, hh, fora };
+    if (src) silhuetas.set(src, r);
+    return r;
+  }
+  /** O contorno de 1 pixel do desenho em volta da silhueta de fora (sem contornar furos), na cor do nível; a luz nas
+   *  bordas de cima. Um canvas um pixel maior de cada lado, ampliado sem suavização junto com a peça. */
+  function pintarContorno(cv, sil, nivel) {
+    const [cor, luz] = CONTORNO[Math.min(nivel, 9)];
+    const { w, hh, fora } = sil, W = w + 2, H = hh + 2;
+    cv.width = W; cv.height = H;
+    const ctx = cv.getContext("2d");
+    const dentro = (x, y) => x >= 0 && y >= 0 && x < w && y < hh && !fora[y * w + x];
+    for (let y = -1; y <= hh; y++) for (let x = -1; x <= w; x++) {
+      if (dentro(x, y)) continue;
+      const baixo = dentro(x, y + 1), cima = dentro(x, y - 1), lado = dentro(x - 1, y) || dentro(x + 1, y);
+      if (!baixo && !cima && !lado) continue;
+      ctx.fillStyle = baixo && !cima && !lado ? luz : cor;  // a borda de cima, mais clara
+      ctx.fillRect(x + 1, y + 1, 1, 1);
+    }
+  }
   // o veio de cada nível: a sequência de cores ao longo da diagonal, um pixel do desenho por entrada (0: sem cor)
   const R_ = "#ff3c60", O_ = "#ffb032", E_ = "#46e2a0", A_ = "#468cff", V_ = "#aa64ff", M_ = "#ff6edc", W_ = "#fff4c8";
   const z = (n) => Array(n).fill(0), x = (c, n) => Array(n).fill(c);
@@ -983,6 +1035,22 @@
     const img = caixa.querySelector(":scope > img, :scope > canvas, :scope > .icone-px > img") || caixa.querySelector("img, canvas");
     const nivel = Math.min(n || 0, 12);
     if (nivel >= 4) caixa.dataset.acab = nivel; else delete caixa.dataset.acab;
+    // o contorno do nível (do +4): só a silhueta de fora (antes, uma sombra contornava também o furo do anel)
+    let contorno = caixa.querySelector(":scope > .rf-contorno");
+    const sil = nivel >= 4 && img ? silhueta(img) : null;
+    if (!sil) contorno?.remove();
+    else {
+      const chave = `${img.currentSrc || img.src || ""}|${Math.min(nivel, 9)}`;
+      if (!contorno) {
+        contorno = document.createElement("canvas");
+        contorno.className = "rf-contorno";
+        contorno.setAttribute("aria-hidden", "true");
+        caixa.appendChild(contorno);
+      }
+      if (contorno._chave !== chave) { contorno._chave = chave; pintarContorno(contorno, sil, nivel); }
+      const s = img.offsetWidth / sil.w;
+      Object.assign(contorno.style, { left: `${img.offsetLeft - s}px`, top: `${img.offsetTop - s}px`, width: `${img.offsetWidth + 2 * s}px`, height: `${img.offsetHeight + 2 * s}px` });
+    }
     const veio = caixa.querySelector(":scope > .rf-acab"), pontos = caixa.querySelector(":scope > .rf-acab-brilhos");
     if (nivel < 5 || !img) { veio?.remove(); pontos?.remove(); return; }
     const src = img.tagName === "IMG" ? img.currentSrc || img.src : img.toDataURL();
@@ -1275,7 +1343,7 @@
       const teste = testeProximo;
       if (pedir({ op: "reforcar", uid: p.uid, pedido, ...(teste ? { teste } : {}) }, ref,
         "[data-reforcar]:not([aria-disabled]), [data-uid].marcada")) {
-        esperandoId = (d.ultimo ? d.ultimo.id : 0) + 1;
+        esperandoId = d.proximo_id;  // o número que o motor vai dar (não recomeça depois dos cenários de teste)
         testeProximo = null;
         window.dispatchEvent(new Event("reforco-teste"));
       }
@@ -1303,7 +1371,7 @@
         confirmandoTransf = null;
         if (pedir({ op: "transferir", origem: c.origem, destino: c.destino, pedido: `x${Date.now()}`, confirmar: true }, tSim,
           "[data-uid].marcada, .rf-janela [data-fechar]")) {
-          esperandoId = (d.ultimo ? d.ultimo.id : 0) + 1;
+          esperandoId = d.proximo_id;  // o número que o motor vai dar (não recomeça depois dos cenários de teste)
         }
       });
     }
@@ -1325,7 +1393,7 @@
       const atual = (p.encantos || [])[sulcoSel];
       if (pedir({ op: "encantar", uid: p.uid, essencia: essSel, sulco: sulcoSel, pedido, substitui: atual ? atual.id : null }, botao,
         "[data-gravar]:not([aria-disabled]), [data-uid].marcada")) {
-        esperandoId = (d.ultimo ? d.ultimo.id : 0) + 1;
+        esperandoId = d.proximo_id;  // o número que o motor vai dar (não recomeça depois dos cenários de teste)
       }
     };
     const grav = jan.querySelector("[data-gravar]");
@@ -1380,7 +1448,7 @@
         selUid = null;  // depois de desmontar, nada fica escolhido
         pedidoDesmonte = { icone: iconePeca(p.item), raridade: p.item.raridade };
         if (pedir({ op: "desmontar", uid: c.uid, nome: c.nome, confirmar: true }, sim, ".rf-janela .rf-peca, .rf-janela [data-fechar]")) {
-          esperandoId = (d.ultimo ? d.ultimo.id : 0) + 1;
+          esperandoId = d.proximo_id;  // o número que o motor vai dar (não recomeça depois dos cenários de teste)
         }
       });
     }

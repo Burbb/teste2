@@ -448,13 +448,9 @@
 .rf-reflexo[data-nivel="4"] { --borda: rgba(255, 190, 60, 0.75); --miolo: rgba(255, 248, 214, 0.95); }
 /* o +4: uma luz baixa e permanente na própria peça (contorno de 1 px, sem borrão), além do reflexo periódico; do +5 em
    diante, o mesmo contorno na cor do nível (12ª versão, no fim do arquivo) */
-[data-acab="4"] > :is(img, canvas) { --acab-baixo: rgba(255, 196, 70, 0.35); }
-[data-acab] > :is(img, canvas) { --acab-cor: rgba(255, 196, 70, 0.45); --acab-luz: rgba(255, 220, 120, 0.5);
-  filter: drop-shadow(var(--acab-px, 1px) 0 0 var(--acab-cor)) drop-shadow(calc(var(--acab-px, 1px) * -1) 0 0 var(--acab-cor))
-    drop-shadow(0 var(--acab-px, 1px) 0 var(--acab-baixo, var(--acab-cor))) drop-shadow(0 calc(var(--acab-px, 1px) * -1) 0 var(--acab-luz)); }
-/* o contorno tem um pixel do desenho: 2 px de tela onde a peça aparece ampliada 2× (o molde e o resultado a 1920) */
-:is(.rf-encaixe.grande, .rf-res-arte) { --acab-px: 2px; }
-@media (max-width: 1500px) { :is(.rf-encaixe.grande, .rf-res-arte) { --acab-px: 1px; } }
+/* o contorno do nível (do +4): um canvas em pixel em volta da silhueta de fora (reforco.js, pintarContorno); antes era
+   uma sombra em todo contorno transparente, e o furo de um anel ganhava contorno também */
+.rf-contorno { position: absolute; z-index: 0; pointer-events: none; image-rendering: pixelated; }
 
 @media (max-width: 1500px) {
   .rf-recebe { gap: 5px; }
@@ -806,23 +802,11 @@ body.rf-em-cena #rf-vela { opacity: 1; }
    ametista, rubi), mais presente a cada nível; o +8 com um ponto de brilho. +9 a +12: o veio em várias cores, contínuo, o contorno
    trocando de cor continuamente e pontos de brilho. Tudo mascarado pelo desenho (só os pixels da peça), em degraus de
    pixel, sem borrão. A raridade fica na borda do encaixe; as gravações, nos rastros da borda. */
-@property --acab-cor { syntax: "<color>"; inherits: true; initial-value: transparent; }
-@property --acab-luz { syntax: "<color>"; inherits: true; initial-value: transparent; }
-[data-acab="5"] > :is(img, canvas) { --acab-cor: rgba(70, 226, 204, 0.55); --acab-luz: rgba(170, 255, 240, 0.6); }
-[data-acab="6"] > :is(img, canvas) { --acab-cor: rgba(80, 130, 255, 0.65); --acab-luz: rgba(170, 200, 255, 0.7); }
-[data-acab="7"] > :is(img, canvas) { --acab-cor: rgba(180, 100, 255, 0.7); --acab-luz: rgba(225, 190, 255, 0.75); }
-[data-acab="8"] > :is(img, canvas) { --acab-cor: rgba(255, 60, 96, 0.75); --acab-luz: rgba(255, 180, 190, 0.8); }
-:is([data-acab="9"], [data-acab="10"], [data-acab="11"], [data-acab="12"]) > :is(img, canvas) { animation: rf-acab-contorno 3s linear infinite; }  /* a cor corre pelo contorno, sem saltos */
-[data-acab="9"] > :is(img, canvas) { animation: rf-acab-contorno-9 2s linear infinite; }
-@keyframes rf-acab-contorno {
-  0%, 100% { --acab-cor: rgba(255, 60, 96, 0.8); --acab-luz: rgba(255, 200, 120, 0.85); }
-  17% { --acab-cor: rgba(255, 176, 50, 0.8); --acab-luz: rgba(255, 240, 170, 0.85); }
-  33% { --acab-cor: rgba(70, 226, 160, 0.8); --acab-luz: rgba(200, 255, 230, 0.85); }
-  50% { --acab-cor: rgba(70, 170, 255, 0.85); --acab-luz: rgba(200, 230, 255, 0.85); }
-  67% { --acab-cor: rgba(170, 100, 255, 0.85); --acab-luz: rgba(230, 200, 255, 0.85); }
-  83% { --acab-cor: rgba(255, 110, 220, 0.8); --acab-luz: rgba(255, 220, 245, 0.85); } }
-@keyframes rf-acab-contorno-9 { 0%, 100% { --acab-cor: rgba(255, 60, 96, 0.8); --acab-luz: rgba(255, 200, 120, 0.85); }
-  50% { --acab-cor: rgba(255, 176, 50, 0.8); --acab-luz: rgba(255, 240, 170, 0.85); } }
+/* do +9, a cor do contorno corre pelo matiz, sem saltos (o +9 só entre o rubi e o ouro) */
+:is([data-acab="10"], [data-acab="11"], [data-acab="12"]) > .rf-contorno { animation: rf-acab-matiz 3s linear infinite; }
+[data-acab="9"] > .rf-contorno { animation: rf-acab-matiz-9 2s linear infinite alternate; }
+@keyframes rf-acab-matiz { from { filter: hue-rotate(0deg); } to { filter: hue-rotate(360deg); } }
+@keyframes rf-acab-matiz-9 { from { filter: hue-rotate(0deg); } to { filter: hue-rotate(40deg); } }
 /* o reflexo das cores novas (a passada periódica, como no +1 ao +4) */
 .rf-reflexo[data-nivel="5"] { --borda: rgba(70, 226, 204, 0.7); --miolo: rgba(220, 255, 250, 0.95); }
 .rf-reflexo[data-nivel="6"] { --borda: rgba(80, 130, 255, 0.8); --miolo: rgba(220, 232, 255, 0.95); }
@@ -843,8 +827,7 @@ body.rf-em-cena #rf-vela { opacity: 1; }
   opacity: 0; animation: rf-acab-brilho 1.6s steps(1) infinite; }
 @keyframes rf-acab-brilho { 0%, 62% { opacity: 0; } 66% { opacity: 0.6; } 72%, 80% { opacity: 1; } 86% { opacity: 0.5; } 90%, 100% { opacity: 0; } }
 @media (prefers-reduced-motion: reduce) {
-  [data-acab] > :is(img, canvas) { animation: none !important; }
-  :is([data-acab="9"], [data-acab="10"], [data-acab="11"], [data-acab="12"]) > :is(img, canvas) { --acab-cor: rgba(255, 176, 50, 0.8); --acab-luz: rgba(255, 240, 200, 0.9); }
+  [data-acab] > .rf-contorno { animation: none !important; }
   .rf-acab-brilhos > i { animation: none; opacity: 0.85; }
 }
 /* a dica: o +N do nome na cor do nível */

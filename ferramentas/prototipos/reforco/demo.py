@@ -360,12 +360,22 @@ def gravacao_total(g, quem):
     return out
 
 
+def proximo_id(g, consumir=True):
+    """O número do próximo resultado da forja: só cresce (os cenários de teste limpam o último resultado, e a numeração
+    recomeçando do 1 fazia a tela tomar o resultado novo por um já visto e pular a cena)."""
+    n = max(getattr(g, "forja_seq", 0), (getattr(g, "forja_ultimo", None) or {}).get("id", 0)) + 1
+    if consumir:
+        g.forja_seq = n
+    return n
+
+
 def painel(g):
     dar_uid(g)
     m = materiais(g)
     abas = [{"id": q, "nome": FICHA.nome_de(g, q), "retrato": g.j.classe if q == HEROI else q}
             for q in FICHA.personagens(g)] + [{"id": "bolsa", "nome": "Bolsa", "retrato": None}]
     return {"ouro": g.j.ouro, "limite": R.LIMITE, "abas": abas, "ultimo": getattr(g, "forja_ultimo", None),
+            "proximo_id": proximo_id(g, consumir=False),
             "materiais": [{"id": k, **MATS[k], "qtd": m.get(k, 0)} for k in MATS],
             "custo_encanto": g.preco(E.CUSTO_OURO),
             "pecas": [ficha_peca(g, it, quem, s) for it, quem, s in pecas(g)]}
@@ -438,7 +448,7 @@ def reforcar(g, uid, veio=None, pedido=None, teste=None):
     gasto["tentativas"] = gasto.get("tentativas", 0) + 1
     if quem:
         FICHA.atualizar(g, quem)
-    g.forja_ultimo = {"id": (getattr(g, "forja_ultimo", None) or {}).get("id", 0) + 1, "tipo": "reforco", "uid": uid,
+    g.forja_ultimo = {"id": proximo_id(g), "tipo": "reforco", "uid": uid,
                       "sucesso": sucesso, "de": n, "para": para, "chance": chance, "linhas": linhas,
                       "teste": teste if n and teste in ("sucesso", "falha") else None}
     registrar(g, "ferreiro", item=it["nome"], sucesso=sucesso, de=n, para=para, chance=chance, ouro=ouro,
@@ -462,7 +472,7 @@ def desmontar(g, uid, nome):
         return False, f"Fragmentos no máximo ({R.PILHA_MAX})."
     g.j.mochila.remove(it)
     materiais(g)["fragmento"] = materiais(g).get("fragmento", 0) + total
-    g.forja_ultimo = {"id": (getattr(g, "forja_ultimo", None) or {}).get("id", 0) + 1, "tipo": "desmonte", "nome": it["nome"],
+    g.forja_ultimo = {"id": proximo_id(g), "tipo": "desmonte", "nome": it["nome"],
                       "total": total}
     registrar(g, "desmontar", item=it["nome"], fragmentos=total, investimento=investido, da_peca=propria,
               prototipo="reforco")
@@ -499,7 +509,7 @@ def encantar(g, uid, essencia, sulco=0, pedido=None, substitui=None):
     antes = E.gravar(it, essencia, sulco)
     if quem:
         FICHA.atualizar(g, quem)
-    g.forja_ultimo = {"id": (getattr(g, "forja_ultimo", None) or {}).get("id", 0) + 1, "tipo": "encanto", "uid": uid,
+    g.forja_ultimo = {"id": proximo_id(g), "tipo": "encanto", "uid": uid,
                       "sulco": sulco, "de": encanto_tela(antes), "para": encanto_tela(essencia)}
     registrar(g, "encantar", item=it["nome"], essencia=essencia, sulco=sulco, substituiu=antes, ouro=ouro, em=quem or "bolsa",
               prototipo="encanto")
@@ -565,7 +575,7 @@ def transferir(g, origem_uid, destino_uid, pedido=None):
     aplicar_nivel(dd, novo)
     for q in {qo, qd} - {None}:
         FICHA.atualizar(g, q)
-    g.forja_ultimo = {"id": (getattr(g, "forja_ultimo", None) or {}).get("id", 0) + 1, "tipo": "transfere",
+    g.forja_ultimo = {"id": proximo_id(g), "tipo": "transfere",
                       "origem": origem_uid, "destino": destino_uid, "de_origem": de_o, "de_destino": de_d, "novo": novo,
                       "ouro": ouro}
     registrar(g, "transferir", origem=o["nome"], destino=dd["nome"], de_origem=de_o, de_destino=de_d, novo=novo, ouro=ouro,
