@@ -7782,3 +7782,17 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   fragmentos por tentativa (simulação no LEIA-ME: mediana de 6 a 10 tentativas de +0 a +4; no 90%, 14 a 24); a cena de
   forja com sucesso e falha, adiantável e resolvida uma vez; a chapa, o molde e os condutos refeitos; casos de teste
   na faixa. 22 testes; conferido a 1920×945 e 1280×720. Aguarda avaliação; não integrado.
+
+### 26/10/2026 (data do computador local) — Reforço: a 6ª versão da bancada (protótipo)
+
+- **Pedido:** refinar a bancada só no protótipo, sem mudar chances, custos e consequências da 5ª: os dados mais
+  diretos e um desfecho com presença. Retomada de uma sessão interrompida (o trabalho estava só no disco).
+- **Feito:** materiais como ícone e quantidade; "+1 → +2", o ganho e a chance numa linha; a ajuda (i) com a falha e o
+  custo por tentativa; Ataque ou Poder na arma do Guerreiro; a cena com aquecimento e o desfecho pela FX do Estouro
+  ("SUCESSO +N" / "FALHOU +N"), recortado no leito, mais forte no +3 e no +4; a volta à próxima oferta. A 5ª fica em
+  `tela/historico/v5`.
+- **Corrigido na conferência:** o clarão pontilhado que cobria a bancada (o impacto ficou em volta da peça e do
+  resultado), o nome da ficha que mostrava o nível novo no aquecimento, o Enter que não adiantava a cena.
+- **Conferido:** sequência contínua de sucesso e falha a 1920×945 e 1280×720, cobrança única, os dados da mesma
+  tentativa em todos os quadros, falta, reforço máximo, movimento reduzido, teclado e mouse; folha nova. Aguarda a
+  avaliação visual do Jean; não integrado.

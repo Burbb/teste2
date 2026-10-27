@@ -418,6 +418,13 @@ raridade; 20/35/55/80 de ouro e 1/1/2/2 fragmentos por tentativa. Simulado de +0
 conservados. Cena de 1,35 s com aquecimento, sucesso e falha, adiantável. Tabelas, resultados e pendências no
 LEIA-ME do protótipo.
 
+**6ª versão do protótipo (só a tela; regras e números da 5ª):** os dados na ordem de leitura de Soul Knight Prequel
+e MapleStory M (saldos no cabeçalho; materiais como ícone e quantidade; "+1 → +2" junto da peça; o ganho no visor; a
+chance numa linha; o resto na ajuda), a escolha da arma como Ataque ou Poder, e o desfecho com a biblioteca FX do
+Estouro ("SUCESSO +N" ou "FALHOU +N" sobre a peça, o efeito recortado no leito, mais forte no +3 e no +4), voltando
+sozinho à próxima oferta. Conferido em sequência contínua a 1920×945 e 1280×720 (uma cobrança por tentativa; nível,
+atributo, saldos e custo da mesma tentativa em todos os quadros). Candidata em avaliação; a v5 fica como histórico.
+
 ## 6. Pontos que a proposta anterior precisa resolver
 
 1. **Arredondamento e ganho:** incremento percentual arredondado a cada nível pode deixar atributos pequenos sem crescer; mínimo +1 pode causar ganho relativo excessivo. Comparar resultados acumulados e exemplos de bases diferentes antes de escolher fórmula.
