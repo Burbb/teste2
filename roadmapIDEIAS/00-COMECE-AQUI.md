@@ -7811,3 +7811,6 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   antes da hora, o efeito sem interceptar cliques, falta, máximo, movimento reduzido; folha nova. Referências (Epic
   Seven, Ragnarok Origin, Guardian Tales) aplicadas pelos princípios indicados: não achei capturas nesta rodada.
   Aguarda a avaliação visual do Jean; não integrado.
+- **Ajuste pedido pelo Jean (7ª versão):** o reflexo passa em todo slot da peça reforçada (forja, Inventário, ficha
+  lateral), sozinho: 2 s depois de a peça aparecer e então a cada ~3 s, defasado entre as peças; parado com movimento
+  reduzido; pausado durante a cena. Só na demonstração.

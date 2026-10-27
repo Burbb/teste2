@@ -431,7 +431,8 @@ indisponível) e peça sem reforço; durante a cena, os dados da tentativa e os 
 resultado; sem a faixa do resultado; a ficha compacta; a comparação de teste na faixa do protótipo; os efeitos do
 Estouro soltos além da bancada e um pouco da moldura, com a leitura e os controles por cima; sucesso e falha com
 tratamentos diferentes (a falha sóbria); movimento reduzido parado com selo e contorno; um reflexo diagonal na
-silhueta da peça pela cor do nível (+1 claro, +2 verde, +3 azul, +4 dourado), só na janela de reforço. Conferido na
+silhueta da peça pela cor do nível (+1 claro, +2 verde, +3 azul, +4 dourado), em todo slot da peça reforçada na
+demonstração (forja, Inventário, ficha lateral), sozinho a cada ~3 s depois de 2 s de espera, defasado entre as peças. Conferido na
 sequência real até o máximo a 1920×945 e 1280×720 (LEIA-ME). A v6 fica como histórico.
 
 **Ideias registradas, não feitas:** laranja para um eventual +5 (o nível não existe); no encantamento, uma luz
