@@ -1,6 +1,6 @@
 /* A demonstração do reforço: a faixa no alto (o que é protótipo fica aqui, fora da tela do jogador) e a tela da forja
-   escolhida pelo endereço (?tela=v11, v10, v9, v8, v7, v6, v5, v4, v3, v2 ou v1: as versões antigas, guardadas como histórico;
-   sem ele, a atual, a 12ª, com o Encantar do laboratório). A v3 tem a A anterior e a B, trocadas aqui. Na atual, a faixa também escolhe o caso de teste da próxima
+   escolhida pelo endereço (?tela=v12, v11, v10, v9, v8, v7, v6, v5, v4, v3, v2 ou v1: as versões antigas, guardadas como histórico;
+   sem ele, a atual, a 13ª, com o Encantar do laboratório). A v3 tem a A anterior e a B, trocadas aqui. Na atual, a faixa também escolhe o caso de teste da próxima
    tentativa (sucesso ou falha forçados, uma vez), separado do sorteio normal, e abre a comparação de teste da peça
    escolhida (o dano contra um alvo fixo: medição do laboratório, fora da tela do jogador). Trocar de versão
    recarrega a página; a partida continua (ela mora no servidor). */
@@ -8,7 +8,7 @@
 
 (() => {
   const params = new URLSearchParams(location.search);
-  const versao = ["v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v11"].includes(params.get("tela")) ? params.get("tela") : "atual";
+  const versao = ["v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v11", "v12"].includes(params.get("tela")) ? params.get("tela") : "atual";
   const base = versao === "atual" ? "/proto/" : `/proto/historico/${versao}/`;
   const css = document.createElement("link");
   css.rel = "stylesheet";
@@ -34,8 +34,10 @@
       if (P.comparacao) extra += `<button type="button" data-comparar aria-pressed="false">Comparação (teste)</button>`;
       if (P.lutaTeste) extra += `<button type="button" data-luta>Luta de teste</button>`;
       if (P.niveisTeste) extra += `<button type="button" data-niveis>Níveis altos (teste)</button>`;
+      if (P.essenciasTeste) extra += `<button type="button" data-essteste>Essências (teste)</button>`;
+      if (P.transferenciaTeste) extra += `<button type="button" data-trfteste>Transferência (teste)</button>`;
     }
-    const versoes = [["atual", "atual"], ["v11", "v11"], ["v10", "v10"], ["v9", "v9"], ["v8", "v8"], ["v7", "v7"], ["v6", "v6"], ["v5", "v5"], ["v4", "v4"], ["v3", "v3 (A e B)"], ["v2", "v2"], ["v1", "v1"]].map(([id, nome]) =>
+    const versoes = [["atual", "atual"], ["v12", "v12"], ["v11", "v11"], ["v10", "v10"], ["v9", "v9"], ["v8", "v8"], ["v7", "v7"], ["v6", "v6"], ["v5", "v5"], ["v4", "v4"], ["v3", "v3 (A e B)"], ["v2", "v2"], ["v1", "v1"]].map(([id, nome]) =>
       id === versao ? `<b>${nome}</b>` : `<a href="${para(id)}">${nome}</a>`).join(" · ");
     f.innerHTML = `<strong>Protótipo do reforço</strong>${extra}<span class="faixa-hist">versões: ${versoes}</span>`;
     document.body.appendChild(f);
@@ -52,6 +54,9 @@
     // os níveis altos de teste: peças do grupo em +4, +8, +9, +11 e +12 (duas com três gravações), ouro e fragmentos
     const niveis = f.querySelector("[data-niveis]");
     if (niveis) niveis.addEventListener("click", () => { if (!P.niveisTeste()) aviso("Abra a forja para os níveis de teste.", "info", "pergaminho"); });
+    // as composições de essências e as peças da transferência (só no save temporário da demonstração)
+    f.querySelector("[data-essteste]")?.addEventListener("click", () => { if (!P.essenciasTeste()) aviso("Abra a forja para as essências de teste.", "info", "pergaminho"); });
+    f.querySelector("[data-trfteste]")?.addEventListener("click", () => { if (!P.transferenciaTeste()) aviso("Abra a forja para a transferência de teste.", "info", "pergaminho"); });
     // a comparação de teste: um painel embaixo da faixa, com a peça escolhida (atualizado a cada desenho da forja)
     const comparar = f.querySelector("[data-comparar]");
     if (comparar) {

@@ -611,10 +611,6 @@ button.rf-sq:focus-visible { outline: 2px solid var(--latao-claro); outline-offs
 /* a seção de encantamentos (a ficha da forja, a do Inventário, as dicas): os sulcos e, por gravação, o nome e a regra */
 .rf-encantos { margin-top: 8px; padding-top: 6px; border-top: 1px solid var(--rf-fio, #24262b); text-align: left; }
 .rf-encantos-cab { display: flex; align-items: center; gap: 8px; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--tinta-3, #a59f92); }
-.rf-encanto { margin-top: 6px; padding-left: 8px; box-shadow: inset 2px 0 0 var(--ess); }
-.rf-encanto b { display: block; font-family: var(--titulo); font-weight: 400; font-size: calc(var(--px, 1px) * 19); line-height: 1.1; color: var(--ess); }
-.rf-encanto p { margin: 1px 0 0; font-size: 14px; line-height: 1.3; color: var(--rf-texto, #e6dbc2); }
-.rf-encanto p.lim { color: var(--rf-sec, #a59f92); font-size: 13px; }
 #dica-item .rf-encantos { max-width: 300px; }
 
 /* a regra da essência escolhida, embaixo do trilho: um bloco de largura controlada, à esquerda */
@@ -937,3 +933,78 @@ body.rf-res-aberto .rf-janela :is(.rf-titulo, .rf-molde, .rf-ficha, .rf-lado.dir
   .rf-res-pe { gap: 10px; }
   #rf-res .rf-banner.grav { font-size: calc(var(--px) * 30); }
 }
+
+/* ------------------------------------------------------------ 13ª versão: tiers, ficha compacta e transferência */
+/* a ficha das gravações em leitura rápida: os sulcos e os nomes numa linha; um efeito por linha, o nome do efeito com o
+   nível em negrito pequeno (sem o título grande de antes) e o resumo mecânico; o limite em tom secundário. Os detalhes
+   (gatilho, alvo, o que cresce, limite, interações) abrem por clique ou teclado. */
+.rf-encantos-cab { flex-wrap: wrap; }
+.rf-grs { display: inline-flex; flex-wrap: wrap; gap: 0 8px; text-transform: none; letter-spacing: 0; font-size: 13px; }
+.rf-gr { font-weight: 700; color: var(--ess); }
+.rf-gr + .rf-gr::before { content: "·"; margin-right: 8px; color: var(--rf-sec, #a59f92); font-weight: 400; }
+.rf-ef { margin-top: 4px; font-size: 14px; line-height: 1.3; color: var(--rf-texto, #e6dbc2); }
+.rf-ef b { color: var(--ess); font-weight: 700; }
+.rf-ef .lim, .rf-ef small { color: var(--rf-sec, #a59f92); }
+.rf-ef small { font-size: 12px; }
+.rf-detalhes { margin-top: 6px; font-size: 13px; color: var(--rf-sec, #a59f92); }
+.rf-detalhes summary { cursor: pointer; width: max-content; color: var(--rf-sec, #a59f92); }
+.rf-detalhes summary:focus-visible { outline: 2px solid var(--latao-claro, #f2d27a); outline-offset: 2px; }
+.rf-detalhes dl { margin: 4px 0 0; }
+.rf-detalhes dt { font-weight: 700; color: var(--ess); }
+.rf-detalhes dd { margin: 0 0 4px; line-height: 1.3; }
+#dica-item .rf-detalhes { display: none; }  /* a dica some com o mouse: os detalhes ficam na ficha e na forja */
+/* o encantamento: a escolha do tier e a previsão (o nível na peça e em quem veste) */
+.rf-ess-niveis { color: var(--rf-sec, #a59f92); font-size: 13px; }
+.rf-ess-regra p.pior { color: #e2574c; font-size: 13px; }
+/* a transferência: os destinos possíveis na coluna da direita (rolam se forem muitos) */
+.rf-destinos { display: flex; flex-direction: column; gap: 4px; min-width: 0; width: 100%; max-height: 168px; overflow-y: auto; }
+.rf-destino { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 8px; padding: 3px 8px 3px 3px; font: inherit;
+  text-align: left; color: var(--rf-texto, #e6dbc2); cursor: pointer; border: 1px solid #000; background: var(--rf-chapa);
+  box-shadow: inset 0 0 0 1px #4a4e56, 0 2px 0 #000; }
+.rf-destino:hover { background: var(--rf-chapa-viva); }
+.rf-destino.escolhido { background: var(--rf-nicho); box-shadow: inset 2px 2px 0 #000, inset 0 0 0 1px var(--latao), inset 4px 0 0 var(--latao); }
+.rf-destino.apagada { opacity: 0.55; }
+.rf-destino:focus-visible { outline: 2px solid var(--latao-claro); outline-offset: 2px; }
+.rf-destino .rf-encaixe.pequeno { width: 36px; height: 36px; }
+.rf-destino-nome { display: flex; flex-direction: column; min-width: 0; }
+.rf-destino-nome b { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font-weight: 700; font-size: 13px; line-height: 1.15; }
+.rf-destino-nome small { font-size: 12px; color: var(--rf-sec); }
+.rf-destino em { font: 400 18px/1 var(--num); font-style: normal; color: var(--rf-verde); white-space: nowrap; }
+.rf-destino.apagada em { color: var(--rf-sec); }
+@media (max-width: 1500px) {
+  .rf-destinos { max-height: 120px; }
+  .rf-destino { gap: 5px; padding: 2px 5px 2px 2px; }
+  .rf-destino .rf-encaixe.pequeno { width: 28px; height: 28px; }
+  .rf-destino-nome b { font-size: 12px; }
+  .rf-destino em { font-size: 14px; }
+  .rf-ef { font-size: 13px; }
+}
+.rf-tiers { display: flex; gap: 4px; margin-bottom: 4px; }
+.rf-tier-op { min-width: 46px; padding: 1px 8px; font: 700 13px/1.4 var(--texto); color: var(--rf-texto, #e6dbc2); cursor: pointer; border: 1px solid #000;
+  background: var(--rf-chapa); box-shadow: inset 0 0 0 1px #4a4e56, 0 2px 0 #000; }
+.rf-tier-op small { font-weight: 400; color: var(--rf-sec); }
+.rf-tier-op.escolhido { background: var(--rf-nicho); box-shadow: inset 2px 2px 0 #000, inset 0 0 0 1px var(--ess, var(--latao)); }
+.rf-tier-op.apagada { opacity: 0.5; }
+.rf-tier-op:focus-visible { outline: 2px solid var(--latao-claro); outline-offset: 2px; }
+.rf-prev-cab { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; }
+.rf-prev-cab .rf-tiers { margin: 0; }
+.rf-prev-cab b { display: inline; }
+.rf-ess-regra .lim { color: var(--rf-sec); }
+.rf-chapa.encanto .rf-ess-regra { width: min(560px, calc(100% - 28px)); }
+/* nas dicas, os nomes das gravações no corpo do texto (a regra das dicas para <b> é a do título) */
+#dica-item :is(.rf-ef b, .rf-gr, .rf-detalhes dt) { font: 700 inherit/inherit var(--texto); font-size: inherit; letter-spacing: 0; text-transform: none; }
+:root :is(#texto, body) .rf-chapa.encanto .rf-ess-regra p.pior { color: #e2574c; }  /* o #texto do jogo vencia */
+@media (max-width: 1500px) {
+  .rf-chapa.encanto .rf-ess-regra { height: 100px; }
+  .rf-chapa.encanto .rf-ess-regra p { font-size: 12px; line-height: 1.2; }
+  .rf-tier-op { min-width: 34px; padding: 0 5px; font-size: 11px; }
+  .rf-prev-cab { gap: 2px 8px; }
+  .rf-prev-cab b { font-size: calc(var(--px) * 15); }
+}
+.rf-lado.dir > .rf-destinos { flex: 1 1 auto; }
+/* o nome do efeito no corpo do texto, em toda ficha (as regras do jogo para <b> nas fichas são as do título) */
+:root body .rf-encantos .rf-ef { font-weight: 400; }
+:root body .rf-encantos :is(.rf-ef b, .rf-detalhes dt) { display: inline; font: 700 1em/inherit var(--texto); letter-spacing: 0; text-transform: none; text-shadow: none; }
+:root body .rf-encantos .rf-detalhes dt { display: block; }
+#dica-item .rf-encantos .rf-ef { font-weight: 400; }
+#dica-item .rf-encantos .rf-ef b { display: inline; font: 700 1em/inherit var(--texto); }
