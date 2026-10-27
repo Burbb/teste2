@@ -82,6 +82,39 @@ mostra a peça, o dono e o resultado; o texto só nomeia o que cada número é e
 - Nada de fala de personagem para explicar regra (o ferreiro não justifica o sistema).
 - As propriedades da peça continuam inteiras na ficha: limpar a escrita não esconde dado necessário à escolha.
 
+## Critérios gerais para telas de sistema (forja, 27/10/2026)
+
+Valem para todo sistema novo com quantidades, custos e regras na tela (forja, encantamento, desmontagem, e os que
+vierem). São critérios, não uma lista de palavras proibidas: a mesma palavra pode servir numa frase e sobrar numa
+legenda solta.
+
+- **Quantidade de um item ou material:** o nome (ou o ícone) e `×N`, juntos e na mesma linha: "Brasa ×2",
+  "Fragmento de Têmpera ×3". Não uma linha avulsa embaixo ("Tem 2"): ela separa o número do que ele conta.
+  "Tem" continua válido numa frase ou ao lado do custo ("Custo 35 · Tem 360").
+- **Custo:** o recurso e o número junto da ação que gasta (o ícone e "30" ao lado do Gravar), não num parágrafo.
+- **Descrição de efeito:** o efeito, a condição e o limite, nessa ordem; o limite numa linha própria quando existe
+  ("Ao abater um inimigo, recupera 25% do recurso máximo." / "Até 2 vezes por luta.").
+- **Sem repetir o que a tela já mostra:** se o encaixe mostra a essência que entra, o nome aparece uma vez (no bloco da
+  regra), não também numa legenda do lado; se o botão está indisponível, o motivo aparece uma vez, junto dele.
+- **Mesmos termos e formatos em todas as telas:** a mesma coisa com o mesmo nome e o mesmo formato na forja, no
+  Inventário, nas dicas e no mercado ("Sulcos" e os mesmos encaixes; "Brasa" com a mesma cor e o mesmo texto).
+- **Alinhamento:** regra em texto corrido alinhada à esquerda, num bloco de largura controlada (uma linha muito larga e
+  centrada vira legenda solta). Títulos e resultados curtos ("GRAVADO", "+3", "Sai Brasa · Entra Carrasco") podem ser
+  centralizados.
+- **Títulos de seção, não rótulos colados:** uma seção "Encantamentos" com o nome de cada essência como título e o
+  efeito embaixo, em vez de "Gravação" grudado no nome ("GravaçãoCarrasco").
+- **O motivo de indisponível à vista:** junto da ação, sem depender do mouse ("Geada grava em peito.", "Falta 1 Essência
+  de Eco"). A dica pode repetir; não pode ser o único lugar.
+- **Troca que apaga algo:** dizer o que sai e o que entra antes de confirmar ("Sai Brasa · Entra Carrasco" /
+  "Brasa se perde."), sem aviso repetido pelo resto da janela.
+
+| Antes | Depois |
+|---|---|
+| Dica: "Brasa" / (regra) / "Tem 2" numa linha à parte | "Brasa ×2" no título; a regra embaixo |
+| Regra centralizada numa linha larga, com uma segunda linha curta | Bloco à esquerda: **Brasa** / efeito / limite |
+| Ficha: "GravaçãoCarrasco" + texto | Seção "Encantamentos": "Carrasco" (título) / efeito |
+| "Substituir Brasa por Carrasco?" + "A gravação Brasa se perde." | "Sai Brasa · Entra Carrasco" / "Brasa se perde." |
+
 ## Vocabulário (etapa 4)
 
 - **turno** (ou **vez**): a ação de um combatente na ordem. **Rodada**: todos agiram (inclusive quem perdeu a vez).
