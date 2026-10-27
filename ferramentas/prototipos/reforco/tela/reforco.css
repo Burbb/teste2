@@ -847,6 +847,8 @@ body.rf-em-cena #rf-vela { opacity: 1; }
 .rf-banner.mau::before, .rf-banner.mau::after { width: 48px; height: 2px; opacity: 0.6; }
 /* o título e o ganho por cima dos raios (o efeito passa por trás da leitura) */
 .forjando :is(.rf-titulo, .rf-lado) { position: relative; z-index: 3; }
+/* no sucesso, o selo de raios passa por cima dos dois lados (os materiais e o ganho); o título continua por cima */
+.forjando.ok .rf-lado { z-index: 1; }
 /* no sucesso, o molde quadrado dá lugar a um disco escuro em degraus (como o item no achado): o selo de raios não é
    cortado por uma borda seca */
 .forjando.ok.desfecho .rf-berco { background: transparent; border-color: transparent; box-shadow: none; animation: none; }

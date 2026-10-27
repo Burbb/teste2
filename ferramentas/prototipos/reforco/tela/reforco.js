@@ -662,8 +662,9 @@
   /* O ciclo: toda peça reforçada à vista brilha sozinha, de tempos em tempos. Na forja (a esteira e o molde), no
      Inventário (o equipado e a bolsa, e as opções de um espaço) e no "Equipado" da ficha lateral. A primeira passada
      vem 2 s depois de a peça aparecer; depois, a cada ~3 s, cada peça na sua vez (defasadas, nunca todas juntas). O
-     horário de cada uma fica guardado pelo lugar dela, para um redesenho da tela não recomeçar a espera. Durante a cena
-     do reforço, todas esperam (a cor do nível novo não pode aparecer antes do desfecho). Só nesta demonstração. */
+     horário de cada uma fica guardado pelo lugar dela, para um redesenho da tela não recomeçar a espera. Durante o
+     aquecimento, todas esperam (a cor do nível novo não pode aparecer antes do desfecho); no resultado mantido, já
+     brilham com o nível novo (o +4 com a luz dele). Só nesta demonstração. */
   const PRIMEIRA = 2000, PERIODO = 3000, DEFASAGEM = 450;
   const agenda = new Map();  // lugar → {proxima, visto}
   function pecasReforcadas() {
@@ -708,7 +709,7 @@
    *  200 ms sem a aparência e a borda recomeçava a volta, e isso piscava. */
   function decorar() {
     bordasGravadas();
-    if (fase()) return;
+    if (fase() === "forja") return;  // no aquecimento, o nível novo ainda não apareceu; do desfecho em diante, sim
     pecasReforcadas().forEach(([el, , n]) => {
       el.classList.toggle("rf-mais4", n >= 4);
       if (reduzido()) reflexo(el, n, true, true);
@@ -718,7 +719,7 @@
     decorar();
     const luta = !!(App.estado && App.estado.combate);
     document.querySelectorAll(".forja-proto").forEach((f) => f.classList.toggle("rf-em-luta", luta));
-    if (fase() || document.hidden) return;  // durante a cena, nenhuma peça brilha (nem a da ficha lateral, com o nome novo)
+    if (fase() === "forja" || document.hidden) return;  // no aquecimento, nenhuma peça brilha (a cor do nível novo vem no desfecho)
     const agora = performance.now();
     for (const [k, a] of agenda) if (agora - a.visto > 8000) agenda.delete(k);  // o que saiu da tela não fica na agenda
     pecasReforcadas().forEach(([el, lugar, n], i) => {
