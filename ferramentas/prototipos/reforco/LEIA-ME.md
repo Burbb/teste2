@@ -14,6 +14,84 @@ para parar. Folha compacta: `folha.png`.
 Só nesta execução, `demo.py` troca a forja (o balcão novo), o baú (que pode dar fragmento), a seção "Materiais" do
 Inventário e a venda da peça reforçada. O resto é o jogo: o Inventário do grupo, o mercado, a luta, a estrada.
 
+## 5ª versão: o reforço com chance (direção aprovada; números e tela em avaliação)
+
+**Decisões aprovadas (25, 5.6):** o +1 é garantido; depois a chance cai com o nível pretendido e, menos, com a
+raridade; sucesso +1; falha −1, sem passar de +0; a peça nunca quebra; afixos, especiais e Fio/Runas ficam, também no
++0; a tela mostra antes de pagar a chance, o nível, a falha, o custo e o que o grupo tem; cada tentativa consome o
+custo; a desmontagem conta o reforço conservado; sem proteção paga, failstacks ou garantia acumulada. O reforço
+garantido das versões 1 a 4 fica **substituído** (histórico em `tela/historico/v4`, com as regras daquela versão).
+
+### Hipóteses numéricas desta rodada
+
+| Tentar | Chance (comum / incomum / raro / lendário) | Ouro | Fragmentos |
+|---|---|---|---|
+| +1 | 100% (todas) | 20 | 1 |
+| +2 | 85 / 81 / 77 / 73% | 35 | 1 |
+| +3 | 70 / 66 / 62 / 58% | 55 | 2 |
+| +4 | 55 / 51 / 47 / 43% | 80 | 2 |
+
+A raridade tira 4 pontos por degrau (12 no lendário), menos que os 15 que separam um nível do seguinte. Os preços
+ficaram **mais baixos** que os da 4ª versão (25/50/90/140 e 1/2/3/4) porque agora se paga por tentativa: o caminho
+feliz até o +4 custa 190 de ouro e 6 fragmentos (antes 305 e 10).
+
+**Custo real de +0 a +4** (simulação, 40.000 caminhos por raridade, preços sem a reputação; mediana · 90% · 99%):
+
+| Raridade | Tentativas | Ouro | Fragmentos | Quedas |
+|---|---|---|---|---|
+| Comum | 6 · 14 · 24 | 325 · 695 · 1.235 | 10 · 22 · 39 | 1 · 5 · 10 |
+| Incomum | 8 · 16 · 28 | 335 · 820 · 1.460 | 11 · 25 · 46 | 2 · 6 · 12 |
+| Raro | 8 · 20 · 34 | 390 · 955 · 1.725 | 13 · 30 · 55 | 2 · 8 · 15 |
+| Lendário | 10 · 24 · 44 | 460 · 1.135 · 2.120 | 14 · 36 · 68 | 3 · 10 · 20 |
+
+Leitura: a mediana fica entre 1,7 e 2,4 vezes o caminho feliz; 1 em 10 jogadores paga de 3,7 a 6 vezes; o pior 1%
+de um lendário passa de 2.000 de ouro. Uma primeira hipótese mais dura (80/60/45 no comum) dava 48 tentativas no 90%
+de um lendário: repetição demais; ficou a atual. O +4 continua sendo uma aposta (43–55%); parar no +3 é uma escolha
+legítima. Para avaliar: se o pior caso do lendário é aceitável quando a campanha crescer, ou se o +4 de raros e
+lendários pede mais chance.
+
+**Recuperação:** desmontar devolve metade dos fragmentos **nominais** dos níveis que a peça conserva (+1: 1, +2: 1,
++3: 2, +4: 3), mais o da peça (comum 0, incomum 1, raro 2, lendário 3); vender devolve 25% do ouro nominal desses
+níveis (+4: 47). As tentativas perdidas não contam. Testado: qualquer sequência de sucessos e falhas seguida de
+desmontar ou vender deixa o grupo com menos ouro e com no máximo o material da própria peça a mais.
+
+### A tela e a cena
+
+- **Antes de pagar:** "Próxima tentativa +2 → +3 · Sucesso: 70% · Falha: +2 → +1"; no +1, "Sucesso garantido"; o
+  custo em encaixes com Custo e Tem; "Cada tentativa consome o custo." sob o botão.
+- **A cena (1,35 s):** os condutos aquecem (vermelho fundo → laranja → amarelo); a luz percorre as quatro barras do
+  molde com fagulhas; no sucesso, o contorno fecha, pulsa e acende a peça; na falha, a luz apaga em trechos e caem
+  cinzas, sem quebrar nada. No +3 e no +4 há mais fagulhas, na mesma duração. Durante a cena, a oferta, o botão, as
+  marcas e o valor da ficha esperam (sem deslocar nada). Um clique, Enter, Espaço ou Esc revela; com movimento
+  reduzido, o resultado aparece direto.
+- **O resultado** fica numa placa de altura fixa acima da bancada: "Reforço bem-sucedido · +3" ou "Reforço falhou ·
+  +2 → +1", com o ganho ou a perda real. A próxima oferta fica embaixo, separada.
+- **Uma vez só:** o motor resolve e cobra no pedido; a tela só encena. Cada pedido leva um id; repetido, não tenta de
+  novo. Fechar, trocar de aba, adiantar ou repetir a entrada não cancela, não rerrola e não compra outra vez.
+- **Acabamento:** a chapa em três planos (a oferta, o leito afundado onde a operação acontece, o pé); o molde é um
+  berço de ferro com garras e barras, não um pedestal; os condutos têm colares e o canal que aquece; os botões seguem
+  a família da HUD; o indisponível mantém o corpo do botão, apagado. "Escolha Fio ou Runas" em cor neutra, com "O
+  caminho fica com a peça." Desmontar mostra "Fragmento de Têmpera ×N"; depois, "Desmontado · Fragmento de Têmpera ×1
+  · [peça]" e a seleção vazia. A seleção vazia mostra só "Escolha uma peça".
+- **Casos de teste:** na faixa, "Próxima tentativa: Sorteio / Sucesso (teste) / Falha (teste)", uma vez; a placa
+  marca "teste". `CASOS=1` abre com a armadura de Morel no +4 e 1 fragmento.
+
+### Resultados observados
+
+- 22 testes: chance exibida = calculada; o +1 garantido mesmo forçando a falha; cobrança na falha; queda até +0 com a
+  base, os afixos e o nome restaurados; Fio/Runas preservado no +0; pedido repetido; o sorteio dentro de 3 pontos da
+  chance em 2.000 tentativas; o único cresce pela base original; limite; falta de recurso sem cobrança; recuperação
+  pelo nível conservado; ciclos; o jogo não carrega o protótipo.
+- Na tela, 1920×945 e 1280×720: duplo clique, tecla segurada (15 repetições) e clique durante a cena compraram um passo
+  só; Esc revela, cancela e fecha nessa ordem; fechar no meio da cena manteve a cobrança e o resultado. Achados e
+  corrigidos: o foco do teclado sumia depois da compra (o botão ficava oculto na cena; agora volta ao Reforçar na
+  revelação) e a tentativa quebrava depois do `CASOS=1`. A 1280 a bancada cabe sem rolar.
+
+### Pendências
+
+Calibrar as chances com partida de verdade (o robô não representa); decidir o pior caso dos lendários; elevação de
+base e encantamento; arte do material (o saco segue provisório); som; integração.
+
 ## A tela, 4ª versão: a A · Bancada refinada (candidata em avaliação)
 
 **Direção escolhida pelo Jean: A · Bancada.** Esta versão é a candidata refinada dela, ainda não aprovada nem

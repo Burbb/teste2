@@ -368,7 +368,7 @@ def reforcar(g, uid, veio=None, pedido=None, teste=None):
     gasto["tentativas"] = gasto.get("tentativas", 0) + 1
     if quem:
         FICHA.atualizar(g, quem)
-    g.forja_ultimo = {"id": getattr(g, "forja_ultimo", {}).get("id", 0) + 1, "tipo": "reforco", "uid": uid,
+    g.forja_ultimo = {"id": (getattr(g, "forja_ultimo", None) or {}).get("id", 0) + 1, "tipo": "reforco", "uid": uid,
                       "sucesso": sucesso, "de": n, "para": para, "chance": chance, "linhas": linhas,
                       "teste": teste if n and teste in ("sucesso", "falha") else None}
     registrar(g, "ferreiro", item=it["nome"], sucesso=sucesso, de=n, para=para, chance=chance, ouro=ouro,
@@ -392,7 +392,7 @@ def desmontar(g, uid, nome):
         return False, f"Fragmentos no máximo ({R.PILHA_MAX})."
     g.j.mochila.remove(it)
     materiais(g)["fragmento"] = materiais(g).get("fragmento", 0) + total
-    g.forja_ultimo = {"id": getattr(g, "forja_ultimo", {}).get("id", 0) + 1, "tipo": "desmonte", "nome": it["nome"],
+    g.forja_ultimo = {"id": (getattr(g, "forja_ultimo", None) or {}).get("id", 0) + 1, "tipo": "desmonte", "nome": it["nome"],
                       "total": total}
     registrar(g, "desmontar", item=it["nome"], fragmentos=total, investimento=investido, da_peca=propria,
               prototipo="reforco")
@@ -461,7 +461,8 @@ def ativar():
 
 
 def preparar(g):
-    """O cenário de teste: o Guerreiro no nível 4 no Vau, com Morel e Odette, 380 de ouro e as peças dos exemplos."""
+    """O cenário de teste (CASOS=1: a armadura de Morel já no +4 e 1 fragmento, para a falta de material no segundo
+    passo): o Guerreiro no nível 4 no Vau, com Morel e Odette, 380 de ouro e as peças dos exemplos."""
     from rpg import missoes
     rng = random.Random(11)
     missoes.registro(g, "febre_do_turvo")["cenas"].append("abertura")
@@ -510,7 +511,7 @@ def recompensa_de_teste(g):
     g.ui.cena("Cenário de teste", "Recompensa de demonstração", "evento")
     g.abrir_espolio(titulo="recompensa de teste",
                     frase="Cenário de teste: uma caixa do ferreiro do Vau, para experimentar o reforço.")
-    dar_material(g, "fragmento", 2 if os.environ.get("CASOS") else 12, "teste")
+    dar_material(g, "fragmento", 1 if os.environ.get("CASOS") else 12, "teste")
     g.fechar_espolio()
     # a página espera quem joga (o navegador abre depois do jogo começar: a cena atual é a desta recompensa)
     g.menu("Os fragmentos ficam na seção Materiais do Inventário, fora dos 12 espaços da bolsa.",

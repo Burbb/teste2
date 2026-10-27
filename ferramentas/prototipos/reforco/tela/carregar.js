@@ -1,12 +1,13 @@
 /* A demonstração do reforço: a faixa no alto (o que é protótipo fica aqui, fora da tela do jogador) e a tela da forja
-   escolhida pelo endereço (?tela=v3, v2 ou v1: as versões antigas, guardadas como histórico; sem ele, a atual, a
-   A · Bancada refinada). A v3 tem a A anterior e a B, trocadas aqui. Trocar de versão recarrega a página; a partida
-   continua (ela mora no servidor). */
+   escolhida pelo endereço (?tela=v4, v3, v2 ou v1: as versões antigas, guardadas como histórico; sem ele, a atual, a
+   5ª: o reforço com chance). A v3 tem a A anterior e a B, trocadas aqui. Na atual, a faixa também escolhe o caso de
+   teste da próxima tentativa (sucesso ou falha forçados, uma vez), separado do sorteio normal. Trocar de versão
+   recarrega a página; a partida continua (ela mora no servidor). */
 "use strict";
 
 (() => {
   const params = new URLSearchParams(location.search);
-  const versao = ["v1", "v2", "v3"].includes(params.get("tela")) ? params.get("tela") : "atual";
+  const versao = ["v1", "v2", "v3", "v4"].includes(params.get("tela")) ? params.get("tela") : "atual";
   const base = versao === "atual" ? "/proto/" : `/proto/historico/${versao}/`;
   const css = document.createElement("link");
   css.rel = "stylesheet";
@@ -21,22 +22,31 @@
   function faixa() {
     const f = document.createElement("div");
     f.id = "faixa-demo";
-    const direcoes = versao === "v3" && window.ReforcoProto
-      ? `<span>Forja:</span>${[["A", "A · Bancada"], ["B", "B · Arsenal"]].map(([id, nome]) =>
-        `<button type="button" data-direcao="${id}" aria-pressed="${window.ReforcoProto.direcao() === id}">${nome}</button>`).join("")}` : "";
-    const versoes = [["atual", "A refinada"], ["v3", "v3 (A e B)"], ["v2", "v2"], ["v1", "v1"]].map(([id, nome]) =>
+    const P = window.ReforcoProto;
+    let extra = "";
+    if (versao === "v3" && P && P.direcao) {
+      extra = `<span>Forja:</span>${[["A", "A · Bancada"], ["B", "B · Arsenal"]].map(([id, nome]) =>
+        `<button type="button" data-direcao="${id}" aria-pressed="${P.direcao() === id}">${nome}</button>`).join("")}`;
+    } else if (versao === "atual" && P && P.teste) {
+      extra = `<span>Próxima tentativa:</span>${[["", "Sorteio"], ["sucesso", "Sucesso (teste)"], ["falha", "Falha (teste)"]].map(([id, nome]) =>
+        `<button type="button" data-teste="${id}" aria-pressed="${(P.teste() || "") === id}">${nome}</button>`).join("")}`;
+    }
+    const versoes = [["atual", "atual"], ["v4", "v4"], ["v3", "v3 (A e B)"], ["v2", "v2"], ["v1", "v1"]].map(([id, nome]) =>
       id === versao ? `<b>${nome}</b>` : `<a href="${para(id)}">${nome}</a>`).join(" · ");
-    f.innerHTML = `<strong>Protótipo do reforço</strong>${direcoes}<span class="faixa-hist">versões: ${versoes}</span>`;
+    f.innerHTML = `<strong>Protótipo do reforço</strong>${extra}<span class="faixa-hist">versões: ${versoes}</span>`;
     document.body.appendChild(f);
     f.querySelectorAll("[data-direcao]").forEach((b) => b.addEventListener("click", () => {
-      window.ReforcoProto.direcao(b.dataset.direcao);
+      P.direcao(b.dataset.direcao);
       f.querySelectorAll("[data-direcao]").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
     }));
+    const marcarTeste = () => f.querySelectorAll("[data-teste]").forEach((x) => x.setAttribute("aria-pressed", String((P.teste() || "") === x.dataset.teste)));
+    f.querySelectorAll("[data-teste]").forEach((b) => b.addEventListener("click", () => { P.teste(b.dataset.teste); marcarTeste(); }));
+    window.addEventListener("reforco-teste", marcarTeste);  // usado uma vez, o caso volta para o sorteio
   }
   const estilo = document.createElement("style");
   estilo.textContent = `#faixa-demo { position: fixed; z-index: 90; top: 6px; left: 50%; translate: -50% 0; display: flex; align-items: center;
     gap: 8px; padding: 3px 10px; font: 13px/1.3 var(--texto, sans-serif); color: #cfc6b2; background: #1d1407; border: 1px solid #8a6a2a;
-    box-shadow: 0 2px 6px rgba(0,0,0,.6); }
+    box-shadow: 0 2px 6px rgba(0,0,0,.6); white-space: nowrap; }
   #faixa-demo strong { color: #f2d27a; letter-spacing: .06em; text-transform: uppercase; font-size: 12px; }
   #faixa-demo button { font: inherit; color: #cfc6b2; background: #2a2116; border: 1px solid #5a4632; padding: 1px 8px; cursor: pointer; }
   #faixa-demo button[aria-pressed="true"] { color: #1d1407; background: #f2d27a; border-color: #f2d27a; }

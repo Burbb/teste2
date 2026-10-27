@@ -198,6 +198,15 @@ class TestReforcar(unittest.TestCase):
         self.assertIn("Ninguém do grupo", D.reforcar(g, arco["uid"])[1])
 
 
+class TestCasosDaDemonstracao(unittest.TestCase):
+    def test_depois_dos_casos_de_conferencia_a_tentativa_funciona(self):
+        g = jogo()
+        g.forja_ultimo = None  # como o CASOS=1 deixa
+        g.j.ouro, D.materiais(g)["fragmento"] = 999, 9
+        self.assertTrue(D.reforcar(g, g.j.equip["arma"]["uid"], "runas", pedido="x")[0])
+        self.assertEqual(g.forja_ultimo["id"], 1)
+
+
 class TestDesmontar(unittest.TestCase):
     def test_recupera_pelo_nivel_conservado(self):
         g = jogo()
