@@ -88,6 +88,22 @@ class TestReforcar(unittest.TestCase):
         self.assertEqual((arma["reforco"], arma["bonus"]["atk"], arma["veio"]), (1, atk + 1, "fio"))
         self.assertTrue(g.forja_ultimo["sucesso"])
 
+    def test_oferta_e_resultado_com_os_mesmos_nomes(self):
+        # o recurso pelo nome de quem leva a peça: o tomo na bolsa do Guerreiro oferece e entrega "Vigor" (não "Mana")
+        g = jogo()
+        D.materiais(g)["fragmento"], g.j.ouro = 99, 9999
+        vistos = 0
+        for p in D.painel(g)["pecas"]:
+            passos = p.get("passos") or []
+            if not passos:
+                continue
+            x = passos[0]
+            ok, texto = D.reforcar(g, p["uid"], x["veio"], teste="sucesso")
+            self.assertTrue(ok, texto)
+            self.assertEqual([l["nome"] for l in x["linhas"]], [l["nome"] for l in g.forja_ultimo["linhas"]], p["item"]["nome"])
+            vistos += any(l["nome"] == g.j.nome_recurso for l in x["linhas"])
+        self.assertGreater(vistos, 0)  # alguma peça com o recurso entrou na conferência
+
     def test_chance_exibida_e_a_calculada(self):
         g = jogo()
         for p in D.painel(g)["pecas"]:

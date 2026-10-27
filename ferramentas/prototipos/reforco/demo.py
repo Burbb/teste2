@@ -253,7 +253,8 @@ def ficha_peca(g, it, quem, s):
             it["veio"] = antigo
             if not antigo:
                 it.pop("veio", None)
-            linhas = [{"nome": R.NOMES.get(st, st), "antes": it["bonus"].get(st, 0),
+            # o recurso pelo nome de quem leva a peça (Vigor, Mana, Foco), como a ficha e o resultado
+            linhas = [{"nome": nome_stat(st, rec) if st == "max_rec" else R.NOMES.get(st, st), "antes": it["bonus"].get(st, 0),
                        "depois": it["bonus"].get(st, 0) + v_} for st, v_ in ganho.items()]
             ch = R.chance(it, n + 1)
             d["passos"].append({"veio": v, "rotulo": {"fio": "Fio", "runas": "Runas"}.get(v), "chance": ch,
