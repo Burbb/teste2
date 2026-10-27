@@ -810,3 +810,57 @@ body.rf-em-cena #rf-vela { opacity: 1; }
 #sobre-achado .rf-encantos { margin-top: 6px; padding-top: 0; border-top: 0; }
 #sobre-achado .rf-encantos-cab { justify-content: center; }
 #sobre-achado .compara .ficha-premio .rf-encantos-cab { justify-content: flex-end; }
+
+/* ------------------------------------------------------------ 11ª versão: o resultado em destaque */
+/* os botões: o componente atual do jogo (.botao-janela, 14-hud.css); as classes do protótipo ficam só com a posição, o
+   tamanho e a hierarquia (a ação principal com a letra maior) */
+:root body .rf-janela .botao-janela.rf-botao { font-weight: 400; filter: none; color: var(--tinta); }
+:root body .rf-janela .botao-janela.rf-botao.principal { font-size: 18px; color: #f0e2c0; }
+:root body .rf-janela .botao-janela.rf-botao:is(:hover, :focus-visible):not([aria-disabled="true"], :disabled) { color: #fff7e6; }
+/* a janela mora dentro de #texto, onde `#texto .perigo` (com id) pinta o texto de vermelho: as duas regras abaixo
+   levam um id no :is() para valer ali também */
+:root :is(#texto, body) .rf-janela .botao-janela.rf-botao.perigo:not([aria-disabled="true"], :disabled) { color: #ffc4b8; border-color: #8a2a1c;
+  background: var(--face), var(--t-botao) 0 0 / 128px; background-clip: padding-box; }
+:root :is(#texto, body) .rf-janela .botao-janela.rf-botao.perigo:not([aria-disabled="true"], :disabled):is(:hover, :focus-visible) { color: #ffd0c8; border-color: var(--sangue-2);
+  background: linear-gradient(rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.06) 48%, rgba(0, 0, 0, 0.08)),
+    linear-gradient(rgba(50, 53, 60, 0.62), rgba(38, 40, 46, 0.7)), var(--t-botao) 0 0 / 128px; background-clip: padding-box; }
+:root body .rf-janela .botao-janela.rf-botao { justify-content: center; }
+:root :is(#texto, body) .rf-janela .botao-janela.rf-botao:is([aria-disabled="true"], :disabled) { border-style: dashed; border-color: #4a4c50;
+  background: rgba(20, 20, 22, 0.6); color: #8c877e; box-shadow: none; cursor: not-allowed; translate: none; }
+:root body .rf-janela .botao-janela.rf-botao kbd { margin-left: 8px; font-family: var(--num); font-size: 13px; color: var(--tinta-3); padding: 0 4px;
+  border: 1px solid #4a4d53; border-image: none; background: #0b0c0e; }
+/* o resultado no pé, entre a peça e o OK, no lugar da chance e da falha (o mesmo espaço: o OK fica onde estava o
+   Reforçar); a faixa do alto saiu e o pé ganhou a altura dela */
+.rf-chapa.com-titulo .rf-pe-chapa { height: 168px; }
+.rf-chapa.com-titulo .rf-linha-chance { height: 26px; }
+.rf-chapa.com-titulo .rf-falha { height: 20px; min-height: 0; }
+.rf-pe-chapa > .rf-faixa-res { display: none; height: 50px; overflow: visible; }
+.desfecho .rf-pe-chapa > .rf-faixa-res { display: flex; }
+.desfecho.com-titulo :is(.rf-linha-chance, .rf-falha) { display: none; }
+.rf-banner { font-size: calc(var(--px) * 46); line-height: 1; letter-spacing: 0.08em; }
+.rf-banner::before, .rf-banner::after { width: 72px; height: 4px; margin: 0 16px; opacity: 1; box-shadow: 0 2px 0 #000; }
+.rf-banner.ok { color: #ffd060; text-shadow: 0 3px 0 #7a2c08, 0 5px 0 #000, 0 0 12px rgba(255, 150, 40, 0.55); }
+.desfecho .rf-banner.ok { animation: rf-banner-ok 0.6s steps(6) both; }
+@keyframes rf-banner-ok { 0% { scale: 1.8; opacity: 0; color: #fff; } 17% { scale: 0.9; opacity: 1; color: #fffbe8; text-shadow: 0 0 18px #ffb13b, 0 3px 0 #7a2c08, 0 5px 0 #000; }
+  34% { scale: 1.06; } 50% { scale: 1; color: #ffe27a; } 100% { scale: 1; } }
+.rf-banner.mau { font-size: calc(var(--px) * 36); color: #d48a7a; text-shadow: 0 3px 0 #000; }
+.rf-banner.mau::before, .rf-banner.mau::after { width: 48px; height: 2px; opacity: 0.6; }
+/* o título e o ganho por cima dos raios (o efeito passa por trás da leitura) */
+.forjando :is(.rf-titulo, .rf-lado) { position: relative; z-index: 3; }
+/* no sucesso, o molde quadrado dá lugar a um disco escuro em degraus (como o item no achado): o selo de raios não é
+   cortado por uma borda seca */
+.forjando.ok.desfecho .rf-berco { background: transparent; border-color: transparent; box-shadow: none; animation: none; }
+.forjando.ok.desfecho .rf-berco > .rf-barra { visibility: hidden; }
+.forjando.ok.desfecho .rf-encaixe.grande { border-color: transparent; box-shadow: none;
+  background: radial-gradient(circle closest-side, #0a0a0c 0 66%, rgba(10, 10, 12, 0.78) 66% 78%, rgba(10, 10, 12, 0.48) 78% 89%, rgba(10, 10, 12, 0.2) 89% 98%, transparent 98%); }
+@media (prefers-reduced-motion: reduce) { .desfecho .rf-banner.ok { animation: none; } }
+@media (max-width: 1500px) {
+  .rf-chapa.com-titulo .rf-pe-chapa { height: 124px; }
+  .rf-chapa.com-titulo .rf-linha-chance { height: 22px; }
+  .rf-chapa.com-titulo .rf-falha { height: 18px; }
+  .rf-pe-chapa > .rf-faixa-res { height: 42px; }
+  .rf-banner { font-size: calc(var(--px) * 32); }
+  .rf-banner.mau { font-size: calc(var(--px) * 26); }
+  .rf-banner::before, .rf-banner::after { width: 44px; height: 3px; margin: 0 10px; }
+  :root body .rf-janela .botao-janela.rf-botao.principal { font-size: 16px; }
+}

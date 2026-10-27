@@ -106,7 +106,7 @@
     const pos = ultimaPos ? ` style="left:${ultimaPos.left};top:${ultimaPos.top};width:${ultimaPos.width};height:${ultimaPos.height}"` : "";
     return `<div class="rf-janela m-janela${janela === "encantar" ? " rf-encantar" : ""}" role="dialog" aria-modal="true" aria-label="${rotulo}"${pos}>
       <header class="rf-cab"><nav class="rf-servicos-abas" role="tablist">${abas}</nav>${recursos}
-        <button type="button" class="rf-botao fechar" data-fechar>Fechar <kbd>Esc</kbd></button></header>${corpo(d)}</div>`;
+        <button type="button" class="botao-janela rf-botao fechar" data-fechar>Fechar <kbd>Esc</kbd></button></header>${corpo(d)}</div>`;
   }
 
   /** A tentativa em cena desta peça (o resultado do motor), ou null. */
@@ -232,13 +232,13 @@
   }
   function bancada({ p, classe = "", nivel = "", marcasDe, esq, dir, dsf = "", chance = "", falha = "", ajudas = [], botao = "Reforçar", trava = "", nota = "", neutra = false, titulo = "", faixa = "", dicaPeca = true }) {
     const m = p ? marcas({ ...p, reforco: marcasDe ?? p.reforco }) : marcas({ reforco: 0, limite: 4 });
-    return `<div class="rf-chapa${titulo ? " com-titulo" : ""}${classe}">${titulo ? `${titulo}<div class="rf-faixa-res">${faixa}</div>` : ""}
+    return `<div class="rf-chapa${titulo ? " com-titulo" : ""}${classe}">${titulo || ""}
       <div class="rf-leito"><div class="rf-lado esq">${esq}${conduto(false)}</div>
         ${molde(p, m, nivel === null ? "" : `<span class="rf-nivel">${nivel}</span>`, dicaPeca)}
         <div class="rf-lado dir">${conduto(true)}${dir}${dsf}</div></div>
-      <div class="rf-pe-chapa"><div class="rf-linha-chance">${chance}${ajuda(ajudas)}</div>${titulo ? `<span class="rf-falha">${falha}</span>` : ""}
-        <div class="rf-acao"><button type="button" class="rf-botao principal" data-reforcar${trava ? ` aria-disabled="true"${trava === true ? "" : ` title="${h(trava)}"`}` : ""}>${botao}</button>
-        ${titulo ? `<button type="button" class="rf-botao principal rf-ok" data-ok>OK <kbd>Enter</kbd></button>` : ""}</div>
+      <div class="rf-pe-chapa">${titulo ? `<div class="rf-faixa-res">${faixa}</div>` : ""}<div class="rf-linha-chance">${chance}${ajuda(ajudas)}</div>${titulo ? `<span class="rf-falha">${falha}</span>` : ""}
+        <div class="rf-acao"><button type="button" class="botao-janela rf-botao principal" data-reforcar${trava ? ` aria-disabled="true"${trava === true ? "" : ` title="${h(trava)}"`}` : ""}>${botao}</button>
+        ${titulo ? `<button type="button" class="botao-janela rf-botao principal rf-ok" data-ok>OK <kbd>Enter</kbd></button>` : ""}</div>
         <span class="rf-nota${neutra ? " neutra" : ""}">${h(nota)}</span></div></div>`;
   }
   const semCusto = () => insumos();
@@ -295,13 +295,13 @@
       pe = conf
         ? `<div class="rf-confirmar" role="alertdialog" aria-label="Confirmar a desmontagem"><b>Desmontar ${h(p.item.nome)}?</b>
             <span class="rf-aviso">O equipamento será destruído.</span>
-            <div class="rf-botoes"><button type="button" class="rf-botao" data-desmontar-nao>Cancelar</button>
-            <button type="button" class="rf-botao perigo" data-desmontar-sim disabled>Desmontar</button></div></div>`
-        : `<div class="rf-linha-chance"></div><button type="button" class="rf-botao principal perigo" data-desmontar${motivo ? ` aria-disabled="true" title="${h(motivo)}"` : ""}>Desmontar</button>
+            <div class="rf-botoes"><button type="button" class="botao-janela rf-botao" data-desmontar-nao>Cancelar</button>
+            <button type="button" class="botao-janela rf-botao perigo" data-desmontar-sim disabled>Desmontar</button></div></div>`
+        : `<div class="rf-linha-chance"></div><button type="button" class="botao-janela rf-botao principal perigo" data-desmontar${motivo ? ` aria-disabled="true" title="${h(motivo)}"` : ""}>Desmontar</button>
             <span class="rf-nota neutra">${h(motivo)}</span>`;
     } else {
       if (chegou) n = chegou.total;
-      pe = `<div class="rf-linha-chance"></div><button type="button" class="rf-botao principal perigo" aria-disabled="true" title="Escolha uma peça">Desmontar</button>
+      pe = `<div class="rf-linha-chance"></div><button type="button" class="botao-janela rf-botao principal perigo" aria-disabled="true" title="Escolha uma peça">Desmontar</button>
           <span class="rf-nota neutra">Escolha uma peça</span>`;
     }
     const resultado = `<div class="rf-recebe${n === null ? " vazio" : ""}${chegou ? " chegou" : ""}" ${n ? Telas.dica(`<b>Fragmento de Têmpera ×${n}</b>`, true) : ""}
@@ -354,12 +354,12 @@
     if (conf) {
       pe = `<div class="rf-confirmar" role="alertdialog" aria-label="Confirmar a substituição"><span class="rf-troca">Sai <b style="color:${h(atual.cor)}">${h(atual.nome)}</b> · Entra <b style="color:${h(e.cor)}">${h(e.nome)}</b></span>
           <span class="rf-aviso">${h(atual.nome)} se perde.</span>
-          <div class="rf-botoes"><button type="button" class="rf-botao" data-gravar-nao>Cancelar</button>
-          <button type="button" class="rf-botao principal" data-gravar-sim disabled>Substituir</button></div></div>`;
+          <div class="rf-botoes"><button type="button" class="botao-janela rf-botao" data-gravar-nao>Cancelar</button>
+          <button type="button" class="botao-janela rf-botao principal" data-gravar-sim disabled>Substituir</button></div></div>`;
     } else {
       const troca = atual && e && !motivo ? `<span class="rf-chance">Substitui <b style="color:${h(atual.cor)}">${h(atual.nome)}</b></span>` : "";
       pe = `<div class="rf-linha-chance">${troca}</div>
-        <button type="button" class="rf-botao principal" data-gravar${motivo || g ? ` aria-disabled="true"${motivo ? ` title="${h(motivo)}"` : ""}` : ""}>${atual ? "Substituir" : "Gravar"}</button>
+        <button type="button" class="botao-janela rf-botao principal" data-gravar${motivo || g ? ` aria-disabled="true"${motivo ? ` title="${h(motivo)}"` : ""}` : ""}>${atual ? "Substituir" : "Gravar"}</button>
         <span class="rf-nota${!motivo || /^Falta/.test(motivo) ? "" : " neutra"}">${h(motivo && p ? motivo : !p ? "Escolha uma peça" : "")}</span>`;
     }
     const nome = `<div class="rf-nivel rf-sulcos" role="radiogroup" aria-label="Sulcos">${filaSulcos(sulcos, sulcoSel)}</div>`;
@@ -458,17 +458,17 @@
       const a = palco.de(alvo), R = Math.max(a.rx, a.ry);
       if (u.sucesso && parado) {
         // movimento reduzido: o quadro já assentado (não o pico): o selo menor, raios curtos e apagados, a leitura livre
-        const re = R + palco.t(forte ? 22 : 16);
+        const re = R + Math.round(R * (forte ? 0.46 : 0.33));  // o selo proporcional ao molde (menor a 1280)
         FX.raios(palco, { cx: a.x, cy: a.y, n: 18, ang: 0.15, larg: 0.32, r0: R, r1: Math.round(re * 1.5), pal: pal.slice(1), esbate: 0.2, achata: 0.72, alterna: 0.62, vis: 7 });
         FX.estrela(palco, { cx: a.x, cy: a.y, pontas: 14, ri: R + 2, re, pal, cores: ["z", "o", "O", "Y"] });
         if (grupo) { const g = palco.de(grupo); FX.poco(palco, { cx: g.x, cy: g.y, rx: g.rx + palco.t(14), ry: g.ry + palco.t(10), forca: 14 }); }
         return;
       }
       if (u.sucesso) {
-        const re = R + palco.t(forte ? 46 : 34);
-        // os raios abrem e, com o resultado parado (ele fica até o OK), se apagam: o selo fica; o nome e o ganho, legíveis
-        const vis = t < 900 ? Math.round(FX.rampa(t, 500, 400, 16, 11)) : Math.round(FX.rampa(t, 900, 700, 11, 0));
-        FX.raios(palco, { cx: a.x, cy: a.y, n: 18, ang: 0.15 + (parado ? 0 : q * 0.012), larg: 0.32, r0: R, r1: Math.round(re * (forte ? 3.4 : 2.6)), pal: pal.slice(1), esbate: 0.3, achata: 0.72, alterna: 0.62, vis });
+        const re = R + Math.round(R * (forte ? 0.96 : 0.71));  // o selo proporcional ao molde (menor a 1280)
+        // os raios abrem e continuam girando, um pouco mais calmos, até o OK; o título, o ganho e o pé ficam por cima
+        const vis = t < 900 ? Math.round(FX.rampa(t, 500, 400, 16, 11)) : 10 + Math.round(Math.sin(t / 420));
+        FX.raios(palco, { cx: a.x, cy: a.y, n: 18, ang: 0.15 + (parado ? 0 : q * 0.012), larg: 0.32, r0: R, r1: Math.round(re * (t < 900 ? (forte ? 3.4 : 2.6) : FX.rampa(t, 900, 500, forte ? 3.4 : 2.6, forte ? 2.1 : 1.9))), pal: pal.slice(1), esbate: 0.3, achata: t < 900 ? 0.72 : FX.rampa(t, 900, 500, 0.72, 0.5), alterna: 0.62, vis });
         FX.estrela(palco, { cx: a.x, cy: a.y, pontas: 14, ri: R + 2, re, pal, cores: ["z", "o", "O", "Y"] });
         // um poço escuro atrás do conjunto do resultado: os raios e o selo passam por trás da leitura sem disputar com ela
         if (grupo) { const g = palco.de(grupo); FX.poco(palco, { cx: g.x, cy: g.y, rx: g.rx + palco.t(14), ry: g.ry + palco.t(10), forca: 14 }); }
@@ -735,12 +735,15 @@
   setInterval(ciclo, 200);
   /** O véu da cena: um recorte do tamanho da janela com a sombra para fora. A janela mora num contexto de camadas
    *  (a mesa da HUD), e um véu de tela inteira por cima escureceria a bancada junto com o entorno. */
-  function vela(jan) {
-    const v = document.getElementById("rf-vela");
-    if (!v || !jan) return;
-    const r = jan.getBoundingClientRect();
-    Object.assign(v.style, { left: `${Math.round(r.left)}px`, top: `${Math.round(r.top)}px`, width: `${Math.round(r.width)}px`, height: `${Math.round(r.height)}px` });
+  function vela() {
+    requestAnimationFrame(() => {
+      const v = document.getElementById("rf-vela"), jan = document.querySelector(".rf-janela");
+      if (!v || !jan) return;
+      const r = jan.getBoundingClientRect();
+      Object.assign(v.style, { left: `${Math.round(r.left)}px`, top: `${Math.round(r.top)}px`, width: `${Math.round(r.width)}px`, height: `${Math.round(r.height)}px` });
+    });
   }
+  addEventListener("resize", vela);
   if (!document.getElementById("rf-vela")) document.body.insertAdjacentHTML("beforeend", '<div id="rf-vela" aria-hidden="true"></div>');
 
   // ------------------------------------------------------------------ ligar
@@ -806,7 +809,7 @@
     limparRelogios();
     pararFx();
     document.body.classList.toggle("rf-em-cena", !!f || (janela === "encantar" && !!faseGrav()));
-    vela(jan);
+    vela();
     if (f) {
       jan.classList.add("em-cena");
       const e = performance.now() - cena.t0;
