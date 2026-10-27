@@ -508,7 +508,7 @@ nascem com a peça (drop, mercado, saque, únicos) e as telas só leem; os sulco
 som, adiada até a interface estar satisfatória como 1.0; os ícones das essências em tamanhos pequenos. Detalhes e
 roteiro no LEIA-ME.
 
-### 5.10 A 11ª versão: o resultado em destaque (27/10/2026) — candidata em avaliação
+### 5.10 A 11ª versão: o resultado em destaque (27/10/2026) — substituída pela 12ª
 
 Depois de ver a 10ª, o Jean pediu o sucesso claro e em destaque. **Corrigido:** o véu da cena cobria a bancada (o
 recorte era medido antes de a janela existir); os feixes seguem girando até o OK, por trás da leitura; "Sucesso"
@@ -516,6 +516,53 @@ grande no pé, entre a peça e o OK ("Falhou" sóbrio no mesmo lugar); no sucess
 degraus (sem o quadrado cortando o selo); todos os botões da forja no componente atual do jogo (`.botao-janela`), com a
 colisão `#texto .perigo` resolvida; a linha de raridade fora do resultado e nas cores do jogo (o lendário era roxo); a
 oferta com o nome do recurso de quem leva a peça (dizia sempre "Mana"). Regras iguais. Detalhes no LEIA-ME.
+
+### 5.11 A 12ª versão: o resultado em destaque, o +12 e a peça inteira (27/10/2026) — candidata em avaliação
+
+**Decisões do Jean nesta rodada:**
+- **O limite candidato passa de +4 a +12**, com as mesmas regras: o +1 garantido, a falha −1 (sem passar de +0), a
+  peça que não quebra, uma cobrança por tentativa, e afixos, gravações e sulcos mantidos. Sem proteção, garantia
+  acumulada, destruição ou material novo.
+- **A peça inteira melhora:** sai a escolha de Ataque ou Poder (Fio ou Runas) e todas as linhas crescem, cada uma
+  condizente com o atributo.
+
+**Números provisórios** (detalhes, tabelas e a simulação no LEIA-ME, `simular.py`):
+- **Chances e custos:** do +1 ao +4, os de antes; do +5 ao +12, 52% caindo 2 pontos por nível até 38% (comum). Acima
+  do +4, a raridade tira 2/4/6 pontos (com 4/8/12, a queda composta fazia o lendário pedir dezenas de vezes as
+  tentativas do comum).
+- **O ganho:** cada + vale a mesma peça alguns níveis acima: 1,5 nível por passo até o +4, 1 até o +8, 0,75 até o +12.
+  Cada linha fixa cresce na proporção do próprio valor; Crítico e Roubo de vida, 0,25 ponto por nível de peça; o dobro
+  só nas linhas da base dos apoios, do +1 ao +4.
+- **Leitura da simulação (mediana):**
+  - +12: 164 tentativas para um comum e 676 para um lendário; +8, entre 34 e 70;
+  - uma curva mais dura (30% no +12, pena inteira) deixa 56% dos lendários sem chegar em 20.000 tentativas: descartada;
+  - o ouro do +12 (27 mil a 475 mil) não cabe na campanha curta e precisa ser ligado à renda da campanha ampliada.
+
+**A tela:**
+- **O resultado do reforço e o da gravação saem da bancada** para uma apresentação na linguagem do achado:
+  - o véu na tela inteira;
+  - o nome com o nível no alto;
+  - a peça com os efeitos;
+  - as propriedades em "antes → depois";
+  - "SUCESSO", "FALHOU" ou "GRAVADO", e o OK.
+
+  O resultado fica até OK, Enter ou Esc, com as proteções de gesto.
+- **O efeito** muda de cor por faixa: ouro, depois a cor do nível do +5 ao +8, e o prisma do +9. Também cresce em
+  força nos marcos, sem alongar a tentativa.
+- **O acabamento do +1 ao +12:**
+  - +4: o contorno dourado;
+  - +5 a +8: turquesa, safira, ametista e rubi;
+  - +9 a +12: o veio multicolorido em pixel, mascarado pelo desenho.
+
+  A referência foi o MU Online: as cores por faixa e o multicolorido do Excellent. "Ruby" e "Diamond" não apareceram
+  como regra nas fontes; foram tratados como impressão de cor. O acabamento segue a peça em todas as telas e sobrevive a
+  salvar e carregar.
+
+**Pendências:**
+- o preço e as fontes de material do +5 ao +12;
+- o piso em linhas de 1;
+- a aljava;
+- o som, na 1.0.
 
 ## 6. Pontos que a proposta anterior precisa resolver
 

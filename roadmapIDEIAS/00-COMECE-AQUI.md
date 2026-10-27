@@ -7871,3 +7871,27 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Depois, pelo retorno do Jean:** a linha de raridade sai do resultado de sucesso e usa as cores do jogo (o
   lendário do protótipo era roxo); a oferta com o nome do recurso de quem leva a peça (dizia sempre "Mana").
 - **Próximo:** a avaliação do Jean. Nada integrado; som adiado para a 1.0.
+
+### 27/10/2026 (data do computador local) — Forja: a 12ª versão, o resultado em destaque, o +12 e o acabamento (protótipo)
+
+- **Pedido:**
+  - o resultado separado da bancada, também na gravação;
+  - **autorizado o +12** (as mesmas regras);
+  - **a peça inteira melhora** (sem Fio ou Runas);
+  - a progressão visual do +1 ao +12 (referência: MU Online);
+  - a explosão em outras cores e mais forte nos níveis altos.
+- **Feito (LEIA-ME e 25, 5.11):**
+  - a apresentação do resultado na linguagem do achado (reforço e gravação);
+  - a curva do +5 ao +12, com `simular.py` (percentis e os casos que não chegam);
+  - o ganho linha por linha;
+  - o acabamento em pixel do +5 ao +12 em todas as telas;
+  - o botão "Níveis altos (teste)".
+- **A 11ª** está em `tela/historico/v11`.
+- **Conferido:**
+  - 1920×945 e 1280×720: a sequência da mesma tentativa, +5, +10, +12, falha, gravação e substituição, gestos,
+    movimento reduzido, salvar e carregar;
+  - os testes do projeto.
+- **Decisões abertas:** o ouro do +5 ao +12 não cabe na campanha curta (ligá-lo à renda da campanha ampliada); as
+  fontes de fragmento.
+- **Próximo:** a avaliação do Jean. Nada integrado; som adiado para a 1.0.
+

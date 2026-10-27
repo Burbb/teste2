@@ -9,18 +9,278 @@ jogo não mudaram. Os números são hipóteses desta rodada, não balanceamento.
 Dê dois cliques em `demo.bat` (ou `python ferramentas/prototipos/reforco/demo.py` na raiz). O jogo de sempre abre no
 navegador num **save temporário** (uma pasta nova a cada vez; os saves pessoais não são lidos nem tocados): o Guerreiro
 no nível 4, no Vau, com Morel e Odette, 380 de ouro, dois baús e as peças dos exemplos. Feche a janela do terminal
-para parar. Folhas: `folha.png` (reforço e desmontagem) e `folha-encantar.png` (encantamento).
+para parar. Folhas: `folha.png` (o resultado do reforço), `folha-encantar.png` (a gravação) e `folha-acabamento.png`
+(o acabamento do +1 ao +12).
 
 Só nesta execução, `demo.py` troca a forja (o balcão novo), o baú (que pode dar fragmento ou essência), a seção
 "Materiais" do Inventário, a venda da peça reforçada, a ficha das peças nas telas (as gravações) e liga os efeitos das
 gravações na luta. O resto é o jogo: o Inventário do grupo, o mercado, a luta, a estrada.
 
-## 11ª versão: o resultado em destaque (candidata em avaliação)
+## 12ª versão: o resultado em destaque, o encantamento, o reforço até +12 e o acabamento (candidata em avaliação)
+
+Pedidos do Jean (27/10/2026): separar a tentativa (a bancada) da apresentação do resultado; o mesmo destaque na
+gravação; **autorizado** trocar o limite candidato +4 por **+12**, com as mesmas regras; uma progressão visual do +1 ao
++12 (referência: os itens coloridos do MU Online); a explosão do sucesso em outras cores e mais "barulho" nos níveis
+altos; e, no meio da rodada, **a peça inteira melhora** (sem escolher Ataque ou Poder). Nada integrado; som adiado. A
+11ª está em `tela/historico/v11` (a faixa abre "v11"; ela roda com as regras novas). Folhas: `folha.png` (o resultado
+do reforço), `folha-encantar.png` (a gravação) e `folha-acabamento.png` (do +1 ao +12).
+
+### Decisões desta rodada (do Jean)
+
+- **Limite candidato +12** (substitui o +4). Mantidos: o +1 garantido; sucesso +1; falha −1, mínimo +0; a peça não
+  quebra; cada tentativa cobra uma vez; afixos, gravações e sulcos ficam. Nada de proteção, garantia acumulada,
+  destruição ou material novo.
+- **A peça inteira melhora.** Acabou a escolha da arma do Guerreiro (Fio ou Runas): todas as linhas da peça crescem,
+  da base e dos afixos, cada uma "condizente com o atributo" (abaixo).
+
+### Números provisórios
+
+**Chances e custos.** Do +1 ao +4, os mesmos da 5ª versão. Do +5 ao +12, a curva provisória:
+
+| Tentar | Chance (comum / incomum / raro / lendário) | Ouro | Fragmentos |
+|---|---|---|---|
+| +5 | 52 / 50 / 48 / 46% | 110 | 3 |
+| +6 | 50 / 48 / 46 / 44% | 145 | 3 |
+| +7 | 48 / 46 / 44 / 42% | 185 | 4 |
+| +8 | 46 / 44 / 42 / 40% | 230 | 4 |
+| +9 | 44 / 42 / 40 / 38% | 280 | 5 |
+| +10 | 42 / 40 / 38 / 36% | 335 | 5 |
+| +11 | 40 / 38 / 36 / 34% | 395 | 6 |
+| +12 | 38 / 36 / 34 / 32% | 460 | 6 |
+
+A raridade tira **2/4/6 pontos** acima do +4 (4/8/12 até o +4). Motivo: com a queda de um nível, a diferença se
+compõe a cada passo. Com a pena inteira e a curva dura abaixo, o +12 de um lendário pede em média umas 50 vezes as
+tentativas de um comum; com a curva atual e a metade, umas 4 vezes. A raridade continua influindo.
+
+**O ganho: cada + vale "a mesma peça alguns níveis acima", linha por linha.** Os passos valem 1,5 nível de peça do +1
+ao +4, 1 do +5 ao +8 e 0,75 do +9 ao +12 (o +12 soma 13 níveis). As linhas fixas (Ataque, Poder, Defesa, Vida, recurso,
+Agilidade, Espinhos, Regeneração, Vida por abate) crescem na proporção do próprio valor, pela escala que o gerador usa
+para o nível da peça; Crítico e Roubo de vida, em %, crescem como no gerador, 0,25 ponto por nível de peça (+3 no
++12). A linha principal da arma ganha pelo menos 1 por passo, e todo passo melhora alguma linha. Nas linhas da base dos
+apoios (escudo e tomo), os passos do +1 ao +4 valem o dobro, como antes. Os afixos dos apoios não ganham esse dobro:
+com ele, o Tomo do Urso ia a +26 de Vida no +4.
+
+Efeito colateral do "peça inteira", do +1 ao +4: as peças de uma linha não mudam. Nas de duas linhas, o valor sai
+agora do próprio número da peça, e não do material: a Cota de Malha Enferrujada no +4 fica com Vida +6 (antes +7). Os
+afixos, que antes não cresciam, agora crescem (a Brasa Sem Nome no +4: Crítico +2, Espinhos +5).
+
+Em peças reais do gerador (`simular.py`), comparadas com uma base comum nova mais adiante:
+
+| Peça | Base | +4 | +8 | +12 | Base comum nova do gerador, nível +6 / +12 |
+|---|---|---|---|---|---|
+| Martelo Enferrujado (nível 1, comum) | Ataque 2 | 6 | 10 | 14 | Machado de Aço: 7; Machado Rúnico: 14 |
+| Martelo de Aço (nível 6, comum) | Ataque 6 | 11 | 15 | 19 | Machado Rúnico: 13; Machado Rúnico: 18 |
+| Pranto Sangrento (nível 12, raro) | Ataque/Crítico/Defesa 12/6/5 | 17/8/7 | 21/9/9 | 25/9/10 | Machado Rúnico: 18/0/0; Machado Rúnico: 23/0/0 |
+| Grimório de Aço do Vampiro (nível 6, incomum) | Poder/Roubo de vida 6/4 | 11/6 | 15/7 | 19/7 | Varinha Rúnica: 13/0; Varinha Rúnica: 18/0 |
+| Peitoral Enferrujado (nível 1, comum) | Defesa/Vida 1/3 | 3/9 | 4/13 | 5/17 | Peitoral de Aço: 5/14; Peitoral Rúnico: 9/27 |
+| Presa da Forca (nível 6, raro) | Defesa/Vida/Ataque/Regeneração 5/13/3/2 | 9/23/5/4 | 11/29/7/5 | 13/34/8/5 | Peitoral Rúnico: 9/25/0/0; Peitoral Rúnico: 13/36/0/0 |
+| Broquel Enferrujado (nível 3, comum) | Defesa/Vida 1/1 | 4/4 | 5/7 | 5/11 | Escudo Temperado: 3/5; Escudo Rúnico: 5/8 |
+| Foco Arcano da Regeneração (nível 6, incomum) | Poder/Mana/Regeneração 2/6/2 | 5/15/4 | 6/18/5 | 7/21/5 | Tomo: 4/12/0; Tomo: 5/18/0 |
+
+**Leitura:** uma arma do começo (Martelo Enferrujado) no +12 empata com a base do gerador 12 níveis acima, que ainda
+pode ser reforçada. A peça antiga dura, mas não fica à frente para sempre, e uma peça melhor ganha mais por passo
+(Pranto Sangrento). O escudo pequeno (Broquel Enferrujado, nível 3) no +12 fica um pouco acima do Escudo Rúnico do
+nível 15 ainda no +0, porque o piso de "todo passo melhora" pesa em linhas de 1. É um ponto para olhar.
+
+### A simulação até +8, +10 e +12
+
+`python ferramentas/prototipos/reforco/simular.py`: 4.000 caminhos por raridade, de +0 até o alvo, com as quedas e a
+recuperação dos níveis perdidos. O orçamento é de 20.000 tentativas por caminho. Quem não chega dentro dele é contado à
+parte, e os percentis são só de quem chegou. Preços sem a reputação. Mediana · 90% · 99%:
+
+| Raridade | Alvo | Média exata | Tentativas | Ouro | Fragmentos | Quedas | Não chegou |
+|---|---|---|---|---|---|---|---|
+| Comum | +8 | 44 | 34 · 88 · 160 | 3.415 · 9.040 · 16.380 | 83 · 221 · 405 | 13 · 40 · 76 | 0 de 4000 |
+| Comum | +10 | 93 | 70 · 190 · 382 | 9.430 · 24.895 · 49.570 | 207 · 552 · 1.113 | 30 · 90 · 186 | 0 de 4000 |
+| Comum | +12 | 219 | 164 · 480 · 954 | 26.615 · 78.110 · 152.250 | 536 · 1.597 · 3.079 | 76 · 234 · 471 | 0 de 4000 |
+| Incomum | +8 | 54 | 40 · 108 · 214 | 3.975 · 10.545 · 21.145 | 98 · 262 · 533 | 16 · 50 · 103 | 0 de 4000 |
+| Incomum | +10 | 125 | 92 · 260 · 512 | 11.590 · 33.265 · 63.865 | 262 · 747 · 1.432 | 41 · 125 · 251 | 0 de 4000 |
+| Incomum | +12 | 333 | 236 · 758 · 1.492 | 35.360 · 112.070 · 222.820 | 738 · 2.352 · 4.609 | 112 · 373 · 740 | 0 de 4000 |
+| Raro | +8 | 70 | 52 · 144 · 296 | 4.960 · 13.280 · 26.760 | 125 · 337 · 686 | 22 · 68 · 144 | 0 de 4000 |
+| Raro | +10 | 178 | 128 · 382 · 736 | 14.990 · 43.520 · 82.745 | 343 · 1.015 · 1.942 | 59 · 186 · 363 | 0 de 4000 |
+| Raro | +12 | 543 | 388 · 1.212 · 2.550 | 51.990 · 159.115 · 326.385 | 1.128 · 3.478 · 7.221 | 188 · 600 · 1.269 | 0 de 4000 |
+| Lendário | +8 | 94 | 70 · 198 · 368 | 5.980 · 16.910 · 32.120 | 155 · 443 · 830 | 31 · 95 · 180 | 0 de 4000 |
+| Lendário | +10 | 267 | 184 · 568 · 1.132 | 19.630 · 58.820 · 114.740 | 472 · 1.413 · 2.775 | 87 · 279 · 561 | 0 de 4000 |
+| Lendário | +12 | 957 | 676 · 2.162 · 4.160 | 79.165 · 250.085 · 474.750 | 1.793 · 5.699 · 10.996 | 332 · 1.075 · 2.074 | 0 de 4000 |
+
+Caminho feliz (sem falhar nenhuma vez): +8 custa 860 de ouro e 20 fragmentos; +10, 1.475 e 30; +12, 2.330 e 42.
+
+**A alternativa dura, para comparar** (`simular.py --dura`): 50% no +5, caindo 3 pontos por nível até 30% no +12,
+com a pena inteira 4/8/12:
+
+| Raridade | Alvo | Média exata | Tentativas | Ouro | Fragmentos | Quedas | Não chegou |
+|---|---|---|---|---|---|---|---|
+| Comum | +8 | 55 | 42 · 114 · 214 | 4.365 · 11.870 · 22.520 | 107 · 291 · 551 | 17 · 53 · 103 | 0 de 4000 |
+| Comum | +10 | 163 | 122 · 356 · 710 | 15.700 · 46.135 · 90.515 | 351 · 1.033 · 2.040 | 56 · 173 · 350 | 0 de 4000 |
+| Comum | +12 | 680 | 464 · 1.526 · 2.966 | 67.965 · 223.235 · 426.130 | 1.454 · 4.727 · 9.166 | 226 · 757 · 1.477 | 0 de 4000 |
+| Incomum | +8 | 84 | 62 · 178 · 352 | 6.105 · 17.455 · 34.430 | 152 · 435 · 862 | 27 · 85 · 172 | 0 de 4000 |
+| Incomum | +10 | 327 | 238 · 756 · 1.556 | 27.465 · 86.280 · 179.480 | 642 · 2.020 · 4.170 | 114 · 373 · 773 | 0 de 4000 |
+| Incomum | +12 | 2.011 | 1.388 · 4.572 · 8.748 | 172.130 · 560.525 · 1.080.295 | 3.884 · 12.741 · 24.526 | 688 · 2.280 · 4.368 | 0 de 4000 |
+| Raro | +8 | 141 | 102 · 308 · 608 | 9.170 · 27.665 · 53.785 | 235 · 712 · 1.395 | 47 · 150 · 300 | 0 de 4000 |
+| Raro | +10 | 768 | 544 · 1.708 · 3.408 | 54.655 · 171.965 · 343.975 | 1.346 · 4.254 · 8.482 | 267 · 849 · 1.699 | 0 de 4000 |
+| Raro | +12 | 7.399 | 4.524 · 13.418 · 19.164 | 470.025 · 1.404.525 · 2.004.550 | 11.365 · 33.824 · 48.319 | 2.256 · 6.703 · 9.576 | 267 de 4000 (6,7%) |
+| Lendário | +8 | 262 | 184 · 598 · 1.216 | 15.025 · 48.380 · 98.090 | 398 · 1.292 · 2.634 | 88 · 295 · 604 | 0 de 4000 |
+| Lendário | +10 | 2.144 | 1.490 · 4.970 · 10.020 | 131.075 · 431.320 · 868.165 | 3.381 · 11.162 · 22.497 | 740 · 2.480 · 5.005 | 0 de 4000 |
+| Lendário | +12 | 34.408 | 8.428 · 17.304 · 19.782 | 744.650 · 1.532.980 · 1.755.755 | 19.088 · 39.377 · 45.079 | 4.208 · 8.646 · 9.885 | 2233 de 4000 (55,8%) |
+
+**Avaliação honesta:**
+- **A curva atual torna o +12 muito difícil, sem ficar impossível.** Um comum leva umas 160 tentativas na mediana, um
+  lendário umas 680. O +8 fica entre 34 e 70.
+- **A dura passa do ponto.** O lendário no +12 não chega em 56% dos caminhos, mesmo com 20.000 tentativas, porque abaixo
+  de 50% de chance a queda de um nível faz o custo crescer em progressão geométrica. Foi descartada.
+- **O ouro é o número desproporcional.** O +12 custa de 27 mil (comum, mediana) a 475 mil (lendário, 99%) de ouro, e a
+  campanha curta de hoje rende centenas. O preço por tentativa precisa ser ligado à renda da campanha ampliada e à
+  oferta de material, que ainda estão em definição. Não calibrei pela campanha curta.
+- **Os fragmentos na mesma escala** (536 na mediana do comum no +12) pedem fontes que hoje não existem. A pilha de 99
+  não impede (cada tentativa pede até 6), mas a fonte precisa existir.
+- **Duas alternativas fundamentadas, se o custo incomodar:**
+  - o ouro do +5 ao +12 crescendo menos (o mesmo +80 de hoje, constante);
+  - ou as chances do +9 ao +12 subindo para 50%, o ponto em que a falha deixa de compor. Assim o +12 vira questão de
+    custo, e não de sorte.
+
+  As duas são decisão de design, não de tela.
+
+### O resultado em destaque (reforço)
+
+- **A bancada é a tela da tentativa**, como estava: a seleção, os materiais, a previsão do ganho, a chance, o botão e
+  o aquecimento pelos condutos.
+- **Na revelação, o resultado sai da bancada** para uma apresentação própria, na linguagem do achado:
+  - o véu na tela inteira, com a força do véu do achado (0,9), e sem moldura;
+  - o nome com o nível no alto, na cor da raridade, com a marca quente no número novo (o antigo apaga no mesmo lugar);
+  - a peça no tamanho atual, com o acabamento e as gravações do nível novo, sem o quadrado do molde;
+  - as propriedades ao lado, como na ficha do achado: as que mudaram em "antes → depois", com o novo em verde; as outras
+    secundárias, sem seta;
+  - os sulcos, com o nome de cada gravação, sem as descrições longas;
+  - "SUCESSO" grande e o OK no acabamento do jogo.
+- **O que fica atrás:** materiais e controles, escurecidos e sem interação. O nome, a peça e a ficha da bancada saem
+  do fundo, para não aparecerem duas vezes.
+- **O efeito acompanha o marco sem durar mais:**
+  - do +1 ao +4, o ouro já aprovado;
+  - do +5 ao +8, a cor do nível (turquesa, safira, ametista, rubi);
+  - do +9, o prisma: os raios repartidos em 2, 3, 4 e 6 cores.
+
+  A força sobe por faixa (+3, +5, +9, +12): raios mais longos, mais pontas na estrela, dois e depois três anéis de
+  impacto, mais estilhaços, tremor de tela do +3 em diante e brilhos depois do golpe. O golpe e o clarão acontecem uma
+  vez; depois os raios acomodam e continuam girando até o OK.
+- **A falha** tem a mesma organização: "FALHOU", "+9 → +8" embaixo do nome e a propriedade que caiu em vermelho. A peça
+  aparece inteira, esfriando, com cinzas e um anel cinza, sem dourado.
+- **O máximo:** "Reforço máximo" embaixo do nome; a volta mostra a bancada no máximo. Não existe tentativa acima de
+  +12, então não existe queda de +12 para +11.
+- **Controles:**
+  - OK, Enter e Esc dispensam e devolvem a mesma bancada, com a peça e a próxima oferta (ou o máximo);
+  - o foco fica no OK enquanto a apresentação está aberta (o Tab fica dentro dela) e volta ao Reforçar ou à peça;
+  - o gesto que adianta não dispensa;
+  - o resto do gesto que dispensa (o segundo clique, o Espaço que solta) não chega à bancada por 450 ms;
+  - a tecla segurada e o clique duplo continuam protegidos;
+  - fechar a janela durante o aquecimento não refaz nem desfaz a compra;
+  - encerrar limpa o efeito e o véu.
+- **Movimento reduzido:** a mesma composição, parada.
+
+### A gravação em destaque (encantamento)
+
+- **A inscrição continua na bancada** (a luz percorre a borda do molde, 0,9 s). Depois, a mesma apresentação:
+  - o nome da peça;
+  - a peça com as bordas das gravações e o acabamento do reforço;
+  - os sulcos ao lado, com a gravação nova em destaque: o encaixe aceso, o símbolo, o nome e o efeito dela; as outras
+    só pelo nome;
+  - na substituição, "Saiu Brasa", riscado;
+  - "GRAVADO" na cor da essência e o OK.
+- **Sem sorteio, sem suspense:** um anel curto na cor da essência, brilhos e, até o OK, um anel fino de tempos em
+  tempos. Sem raios.
+- **Permanência e controles:** o resultado fica até OK, Enter ou Esc, com as mesmas proteções. A confirmação da
+  substituição não mudou.
+- **A desmontagem continua com o retorno curto**, sem celebração e sem OK.
+
+### O acabamento do +1 ao +12
+
+**A referência.** Pesquisei o MU Online, onde o reforço também vai além do +9.
+- O guia oficial da Webzen descreve um tom vermelho-escuro nos +3/+4 e azul-escuro nos +5/+6, um brilho leve "na cor do
+  item" nos +7/+8 e mais forte no +9. Do +10 ao +15, diz só que cada dois níveis têm um efeito de luz diferente, sem
+  descrever.
+- Wikis de servidores descrevem o Excellent com um brilho multicolorido, "arco-íris", e com variações por temporada.
+- Não achei fonte que ligue "Ruby" ou "Diamond" a uma regra do jogo. Tratei esses nomes como impressão de cor (pedra
+  vermelha, pedra lapidada) e não como mecânica.
+- O que aproveitei: a cor ganhando força por faixa, a energia passando sobre a peça, o multicolorido nos níveis altos.
+
+**O que fiz.**
+- **+1 a +4:** como aprovado. O reflexo passa a cada poucos segundos, e o +4 tem o contorno dourado.
+- **+5 a +8, uma cor por nível:** turquesa, safira, ametista e rubi. Cada nível tem o contorno de 1 px, o reflexo e um
+  veio da mesma cor atravessando a peça, cada vez mais presente; o +8 ganha um ponto de brilho.
+- **+9 a +12:**
+  - o veio multicolorido contínuo: 2, 3, 4 cores e, no +12, todas, com fios claros entre elas, como pedra lapidada;
+  - o contorno trocando de cor em degraus;
+  - pontos de brilho em cruz de pixel (1 a 4) acendendo em lugares diferentes da peça.
+- **Pixel art de verdade:**
+  - o veio é pintado num canvas do tamanho do desenho e ampliado sem suavização: as cores andam um pixel do desenho por
+    passo, sem degradê nem borrão;
+  - tudo é mascarado pelo desenho, então os pixels transparentes ficam vazios;
+  - o veio tinge sem apagar o sombreado, e a silhueta e os detalhes continuam legíveis.
+- **O +12 tem mais presença sem ser mais rápido:** mais cores, mais brilhos e o contorno mudando. A volta é a mesma,
+  lenta, em todos os níveis, e cada peça começa num ponto dela, então nada pisca em sincronia.
+- **Informação separada:**
+  - a raridade fica na borda do encaixe;
+  - o reforço, no desenho;
+  - as gravações, nos rastros da borda;
+  - a seleção e o foco, como estavam.
+- **Em todas as telas:**
+  - bancada, esteira, Inventário (equipado e bolsa), Equipado da ficha lateral e o achado;
+  - nas dicas, que não têm o desenho, o +N do nome na cor do nível.
+- **Persistência e desempenho:**
+  - a aparência entra no mesmo instante em que a tela redesenha o slot;
+  - não some ao trocar de equipamento, ao apertar Continuar nem ao salvar e carregar;
+  - um relógio só, de 250 ms, pinta todos os veios;
+  - medido: depois de várias tentativas, nenhuma camada duplicada e nenhum palco de efeito sobrando.
+- **Movimento reduzido:** a mesma aparência, parada (o veio, o contorno e os brilhos fixos).
+
+### Casos de teste
+
+O botão **"Níveis altos (teste)"** na faixa da demonstração (com a forja aberta) prepara o save temporário da
+demonstração; nada disso é conteúdo, e os saves pessoais não são tocados:
+- a arma de Jean no +11, com três gravações (para tentar o +12);
+- a peça de Morel no +12, com três gravações;
+- na bolsa, peças no +8, +4, +9 e +12;
+- as peças de Odette no +5 e no +7;
+- ouro e fragmentos de sobra.
+
+### Conferido
+
+Os 39 testes do protótipo. A 1920×945 e a 1280×720:
+- **a sequência da mesma tentativa:** oferta, aquecimento, contenção, impacto, resultado mantido e volta à bancada;
+- **os casos de reforço:** +4 → +5 (peça única, nome longo, três propriedades), +9 → +10, +11 → +12 (o máximo, três
+  gravações), falha +9 → +8 e o movimento reduzido;
+- **a gravação:** num sulco vazio, e a substituição com a confirmação;
+- **os gestos:** Enter segurado 12 vezes dispensa uma vez e não compra; clique duplo no OK dispensa sem comprar;
+  clique duplo no Reforçar compra uma vez; Esc dispensa, e o foco volta ao Reforçar;
+- **a desmontagem:** inalterada;
+- **salvar pela interface e carregar:** as peças voltam com o acabamento;
+- **a folha:** os doze níveis em seis peças (clara, escura, fina e vazada, o anel pequeno), no tamanho do molde e no da
+  esteira.
+
+### Pendências
+
+- **Os números são candidatos.** O preço do +5 ao +12 e as fontes de fragmento dependem da campanha ampliada (ver a
+  avaliação acima).
+- **O piso de "todo passo melhora"** em linhas de 1 (o escudo pequeno) e o crescimento dos afixos especiais (Espinhos,
+  Vida por abate) merecem um olhar na luta.
+- **A aljava continua sem reforço** (linhas de 1 e 2). Com "a peça inteira", a pergunta volta.
+- **Som adiado para a 1.0.** O impacto mais forte nos níveis altos ainda não tem som próprio.
+- **Ícones das essências** em 16 e 24 px; a demonstração não tem tela de carregar.
+
+### Roteiro (uns 4 minutos)
+
+1. **Ferreiro → Reforçar → Níveis altos (teste)**: a esteira com peças do +4 ao +12, cada nível com o seu acabamento.
+   Passe o mouse e veja o +N colorido na dica.
+2. **Bolsa → Lamento de Gharbad +4 → Sucesso (teste)**: o resultado em destaque em turquesa (o +5). Enter.
+3. **Jean → a arma +11 → Sucesso (teste)**: o +12, com o prisma, "Reforço máximo" e as três gravações; OK. **Falha
+   (teste)** numa peça +9: a falha sóbria.
+4. **Encantar → Martelo**: grave uma essência e depois substitua: "Gravado" e "Saiu ...".
+5. **Inventário**: o acabamento nas peças; salve, se quiser, e confira depois de carregar.
+
+## 11ª versão: o resultado em destaque (histórico)
 
 Pedido do Jean depois de ver a 10ª: o sucesso escurecia junto com o resto da tela, os feixes paravam, o OK tinha a
 estética antiga, o "Sucesso" era pequeno e o quadrado do molde cortava o efeito. Regras, chances, custos e o +4 iguais;
-a 10ª está em `tela/historico/v10`. Folha: `folha.png` (a 10ª × a 11ª na mesma tentativa, a sequência nas duas
-resoluções, o +3, a falha, o movimento reduzido e os outros botões). A `folha-encantar.png` continua a da 10ª.
+a 10ª está em `tela/historico/v10`. As folhas desta versão estão no git.
 
 - **A bancada clara.** Causa: o recorte do véu da cena era medido antes de a janela ser desenhada e ficava 0×0 no
   canto; o véu cobria a tela inteira, bancada incluída (na captura da 10ª a ordem saiu favorável por acaso). Agora é
