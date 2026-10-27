@@ -232,6 +232,20 @@ com a pena inteira 4/8/12:
   - medido: depois de várias tentativas, nenhuma camada duplicada e nenhum palco de efeito sobrando.
 - **Movimento reduzido:** a mesma aparência, parada (o veio, o contorno e os brilhos fixos).
 
+### Depois do primeiro retorno do Jean
+
+- **O efeito contínuo a 30 quadros por segundo.** A biblioteca de efeitos das celebrações roda a 15, e com o resultado
+  parado na tela o giro dos raios parecia lento perto do resto do jogo. A apresentação tem um relógio próprio, de 30:
+  os raios, anéis e clarões andam a cada quadro, e as partículas seguem no compasso de 15, com a mesma física. A
+  biblioteca do jogo não mudou. Medido: 30 quadros por segundo no +5 e no prisma do +12.
+- **A peça nítida no resultado.** Eram três causas:
+  - a ampliação de 40 para 80 px estava sem `pixelated` (outra regra vencia);
+  - o conjunto centrado caía em meio pixel (x = 757,98);
+  - o contorno do acabamento tinha 1 px de tela, meio pixel do desenho.
+
+  Agora a renderização é sem suavização, a peça fica em pixel inteiro e o contorno tem um pixel do desenho (2 px onde
+  a peça aparece a 2×, no resultado e no molde a 1920; 1 px a 1280 e na esteira).
+
 ### Casos de teste
 
 O botão **"Níveis altos (teste)"** na faixa da demonstração (com a forja aberta) prepara o save temporário da

@@ -438,7 +438,11 @@
    diante, o mesmo contorno na cor do nível (12ª versão, no fim do arquivo) */
 [data-acab="4"] > :is(img, canvas) { --acab-baixo: rgba(255, 196, 70, 0.35); }
 [data-acab] > :is(img, canvas) { --acab-cor: rgba(255, 196, 70, 0.45); --acab-luz: rgba(255, 220, 120, 0.5);
-  filter: drop-shadow(1px 0 0 var(--acab-cor)) drop-shadow(-1px 0 0 var(--acab-cor)) drop-shadow(0 1px 0 var(--acab-baixo, var(--acab-cor))) drop-shadow(0 -1px 0 var(--acab-luz)); }
+  filter: drop-shadow(var(--acab-px, 1px) 0 0 var(--acab-cor)) drop-shadow(calc(var(--acab-px, 1px) * -1) 0 0 var(--acab-cor))
+    drop-shadow(0 var(--acab-px, 1px) 0 var(--acab-baixo, var(--acab-cor))) drop-shadow(0 calc(var(--acab-px, 1px) * -1) 0 var(--acab-luz)); }
+/* o contorno tem um pixel do desenho: 2 px de tela onde a peça aparece ampliada 2× (o molde e o resultado a 1920) */
+:is(.rf-encaixe.grande, .rf-res-arte) { --acab-px: 2px; }
+@media (max-width: 1500px) { :is(.rf-encaixe.grande, .rf-res-arte) { --acab-px: 1px; } }
 
 @media (max-width: 1500px) {
   .rf-recebe { gap: 5px; }
@@ -862,7 +866,7 @@ body.rf-res-aberto .rf-janela :is(.rf-titulo, .rf-molde, .rf-ficha) { visibility
 /* a peça no meio do selo: o espaço onde os raios acontecem (sem caixa nem borda que os corte) */
 .rf-res-peca { display: grid; place-items: center; width: 300px; height: 260px; }
 .rf-res-arte { position: relative; display: grid; place-items: center; width: 96px; height: 96px; }
-.rf-res-arte > :is(img, canvas) { width: 80px; height: 80px; image-rendering: pixelated; }
+:root body #rf-res .rf-res-arte > :is(img, canvas) { width: 80px; height: 80px; image-rendering: pixelated; }  /* nítido: sem suavização */
 .rf-res-arte .rf-gravura { inset: 0; }
 .rf-res-ficha { display: flex; flex-direction: column; gap: 6px; min-width: 260px; max-width: 380px; text-align: left; }
 .rf-res-rotulo { font: 700 11px/1.4 var(--texto); letter-spacing: 0.22em; text-transform: uppercase; color: #8a8070; }
@@ -914,7 +918,7 @@ body.rf-res-aberto .rf-janela :is(.rf-titulo, .rf-molde, .rf-ficha) { visibility
   .rf-res-meio { gap: 0 40px; }
   .rf-res-peca { width: 220px; height: 190px; }
   .rf-res-arte { width: 58px; height: 58px; }
-  .rf-res-arte > :is(img, canvas) { width: 40px; height: 40px; }
+  :root body #rf-res .rf-res-arte > :is(img, canvas) { width: 40px; height: 40px; }
   .rf-res-linha span { font-size: 14px; }
   .rf-res-linha b { font-size: 17px; }
   .rf-res-linha.muda b { font-size: 20px; }

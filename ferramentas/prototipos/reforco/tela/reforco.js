@@ -454,6 +454,30 @@
   }
   const rotuloPeca = (p) => `<span class="rf-res-rotulo">${h(Telas.nomeEspaco(p.item.slot, p.item.classe) || "")} · ${h(dono(p))}</span>`;
 
+  /** O relógio dos efeitos da apresentação: 30 quadros por segundo (o FX das celebrações roda a 15; com a apresentação
+   *  parada na tela, o giro contínuo dos raios a 15 parecia lento perto do resto do jogo). Os raios, anéis e clarões
+   *  seguem o tempo a cada quadro; as partículas e o que nasce num quadro marcado (`passo`) continuam no compasso de 15
+   *  do FX, para a física e as contagens serem as mesmas. */
+  const QUADRO_RES = 1000 / 30;
+  function animarRes(p, desenhar) {
+    let fim = false, t0 = performance.now(), n = -1, q = -1;
+    const um = (t) => {
+      const nq = Math.floor(t / FX.QUADRO), passo = nq !== q;
+      q = nq;
+      p.limpar(); desenhar(t, q, false, passo); p.mostrar();
+    };
+    if (reduzido()) { p.limpar(); desenhar(1500, 0, true, false); p.mostrar(); return { parar() { fim = true; }, pular() {} }; }
+    const laco = (agora) => {
+      if (fim || !p.el.isConnected) return;
+      const k = Math.floor((agora - t0) / QUADRO_RES);
+      if (k !== n) { n = k; um(k * QUADRO_RES); }
+      requestAnimationFrame(laco);
+    };
+    um(0); n = 0;
+    requestAnimationFrame(laco);
+    return { parar() { fim = true; }, pular(ms) { const ja = performance.now() - t0; if (ja < ms) t0 = performance.now() - ms; } };
+  }
+
   /** Abre a apresentação (uma por resultado: um redesenho da forja não a repete nem recomeça o efeito). */
   function abrirRes({ id, classe, aria, titulo, arte, ficha, banner, nivel, fx }) {
     if (res && res.id === id && res.el.isConnected) return res;
@@ -468,6 +492,9 @@
       <div class="rf-res-meio"><div class="rf-res-peca">${arte}</div><div class="rf-res-ficha">${ficha}</div></div>
       <div class="rf-res-pe">${banner}<button type="button" class="botao-janela rf-botao principal" data-res-ok>OK <kbd>Enter</kbd></button></div></div>`;
     document.body.appendChild(el);
+    // a peça em pixel inteiro: o conjunto centrado pode cair em meio pixel, e a peça ampliada sairia borrada
+    const conj = el.querySelector(".rf-res-conj"), r = el.querySelector(".rf-res-arte").getBoundingClientRect();
+    conj.style.translate = `${Math.round(r.left) - r.left}px ${Math.round(r.top) - r.top}px`;
     document.body.classList.add("rf-res-aberto");  // o nome e a peça da bancada saem do fundo (não aparecem duas vezes)
     res = { id, el, ctl: null, palco: null };
     const caixa = el.querySelector(".rf-res-arte");
@@ -515,7 +542,7 @@
         if (u.sucesso) { soar("predio_ferreiro", ...(f >= 1 ? ["golpe"] : [])); if (f >= 1) FX.tremer([0, 3, 4, 6, 9][f]); }
         else soar("golpe_leve");
       }
-      const ctl = FX.animar(palco, (t, q, parado) => {
+      const ctl = animarRes(palco, (t, q, parado, passo) => {
         const a = palco.de(alvo), R = Math.max(a.rx, a.ry);
         if (ficha) { const g = palco.de(ficha); FX.poco(palco, { cx: g.x, cy: g.y, rx: g.rx + palco.t(26), ry: g.ry + palco.t(16), forca: 15 }); }
         if (!u.sucesso) {
@@ -523,11 +550,12 @@
           if (parado) return;
           const re = R + palco.t(20);
           if (t < 700) FX.anel(palco, { cx: a.x, cy: a.y, r: re + Math.round(FX.rampa(t, 0, 700) * palco.t(40)), esp: 2, pal: ["G", "g", "d"], achata: 0.8, rastro: 3, vis: Math.round(12 * (1 - t / 700)) });
-          if (q === 1) enx.soltar(14, () => ({ x: a.x + FX.aleatorio(-re, re), y: a.y - re * 0.5, vx: FX.aleatorio(-0.4, 0.4), vy: FX.aleatorio(-0.6, 0.2), g: 0.12, arrasto: 0.95,
+          if (passo && q === 1) enx.soltar(14, () => ({ x: a.x + FX.aleatorio(-re, re), y: a.y - re * 0.5, vx: FX.aleatorio(-0.4, 0.4), vy: FX.aleatorio(-0.6, 0.2), g: 0.12, arrasto: 0.95,
             vida: Math.round(FX.aleatorio(18, 30)), desenho: "brasa", pal: ["o", "r", "G", "g", "d"] }));
-          if (q > 2 && q % 4 === 0) enx.soltar(1, () => ({ x: a.x + FX.aleatorio(-re, re), y: a.y + FX.aleatorio(-re * 0.6, 0), vx: FX.aleatorio(-0.2, 0.2), vy: FX.aleatorio(0.3, 0.8), g: 0.02, arrasto: 0.98,
+          if (passo && q > 2 && q % 4 === 0) enx.soltar(1, () => ({ x: a.x + FX.aleatorio(-re, re), y: a.y + FX.aleatorio(-re * 0.6, 0), vx: FX.aleatorio(-0.2, 0.2), vy: FX.aleatorio(0.3, 0.8), g: 0.02, arrasto: 0.98,
             vida: Math.round(FX.aleatorio(20, 30)), desenho: Math.random() < 0.5 ? "ponto" : "duplo", pal: ["w", "G", "g", "d"] }));
-          enx.passo(); enx.desenhar(palco);
+          if (passo) enx.passo();
+        enx.desenhar(palco);
           return;
         }
         const re = R + Math.round(R * [0.71, 0.96, 1.04, 1.12, 1.22][f]);
@@ -536,7 +564,7 @@
         const vis = parado ? 9 : t < 900 ? Math.round(FX.rampa(t, 500, 400, 16, 11)) : 10 + Math.round(Math.sin(t / 420));
         const r1 = Math.round(re * (parado ? calmo : t < 900 ? longo : FX.rampa(t, 900, 500, longo, calmo)));
         const achata = parado ? 0.6 : t < 900 ? 0.72 : FX.rampa(t, 900, 500, 0.72, 0.6);
-        const ang = 0.15 + (parado ? 0 : q * 0.012);
+        const ang = 0.15 + (parado ? 0 : (t / FX.QUADRO) * 0.012);  // contínuo: gira a cada quadro de 30
         if (cores) {  // o prisma: os raios repartidos entre as cores do nível, cada cor no seu lugar da volta
           const m = Math.max(2, Math.round(n / cores.length));
           cores.forEach((c, i) => FX.raios(palco, { cx: a.x, cy: a.y, n: m, ang: ang + (i * Math.PI * 2) / (m * cores.length),
@@ -552,22 +580,23 @@
           if (tt >= 0 && tt < 420) FX.anel(palco, { cx: a.x, cy: a.y, r: re + Math.round(FX.rampa(tt, 0, 400) * palco.t([50, 70, 80, 96, 110][f] - i * 12)), esp: 2,
             pal: cores ? ["W", cores[i % cores.length], cores[(i + 1) % cores.length]] : ["W", pal[1], pal[2]], achata: 0.6, rastro: 3, vis: Math.round(14 * (1 - tt / 420)) });
         });
-        if (q === 1) enx.soltar([24, 42, 52, 64, 84][f], (i) => {
+        if (passo && q === 1) enx.soltar([24, 42, 52, 64, 84][f], (i) => {
           const g = FX.aleatorio(0, Math.PI * 2), v = FX.aleatorio(3, 7.5) * [0.95, 1.25, 1.3, 1.4, 1.5][f];
           return { x: a.x + Math.cos(g) * re * 0.8, y: a.y + Math.sin(g) * re * 0.7, vx: Math.cos(g) * v, vy: Math.sin(g) * v - 2, g: 0.36, arrasto: 0.97,
             vida: Math.round(FX.aleatorio(18, 32)), desenho: ["lasca", "caco", "cruz", "duplo"][i % 4],
             pal: cores ? ["W", cores[i % cores.length], cores[(i + 2) % cores.length]] : ["W", pal[1], pal[2], pal[3]], piscar: i % 5 === 0 };
         });
         // depois do golpe: brasas subindo e, nos níveis altos, pontos de brilho em volta (sem repetir o golpe)
-        if (q > 6 && q % [3, 3, 3, 2, 2][f] === 0) enx.soltar(1, () => ({ x: a.x + FX.aleatorio(-re, re), y: a.y + re * 0.6, vx: FX.aleatorio(-0.3, 0.3), vy: FX.aleatorio(-1.4, -0.7), vida: 16,
+        if (passo && q > 6 && q % [3, 3, 3, 2, 2][f] === 0) enx.soltar(1, () => ({ x: a.x + FX.aleatorio(-re, re), y: a.y + re * 0.6, vx: FX.aleatorio(-0.3, 0.3), vy: FX.aleatorio(-1.4, -0.7), vida: 16,
           desenho: "brasa", pal: cores ? ["W", cores[q % cores.length], "D"] : ["Y", "O", "o", "r", "D"] }));
-        if (f >= 2 && q > 10 && q % (f >= 3 ? 5 : 8) === 0) { const g = FX.aleatorio(0, Math.PI * 2); enx.soltar(1, () => ({ x: a.x + Math.cos(g) * re * 1.3, y: a.y + Math.sin(g) * re * 0.9,
+        if (passo && f >= 2 && q > 10 && q % (f >= 3 ? 5 : 8) === 0) { const g = FX.aleatorio(0, Math.PI * 2); enx.soltar(1, () => ({ x: a.x + Math.cos(g) * re * 1.3, y: a.y + Math.sin(g) * re * 0.9,
           vx: 0, vy: 0, vida: 7, desenho: "brilho", pal: cores ? ["W", cores[q % cores.length]] : ["W", pal[1], pal[2]] })); }
         // a marca quente no título: poucas fagulhas saindo do número novo
-        if (numero && q === 2) { const m = palco.de(numero); enx.soltar([8, 12, 14, 16, 18][f], () => ({ x: m.x + FX.aleatorio(-m.rx, m.rx), y: m.y + FX.aleatorio(-m.ry * 0.5, m.ry * 0.5),
+        if (passo && numero && q === 2) { const m = palco.de(numero); enx.soltar([8, 12, 14, 16, 18][f], () => ({ x: m.x + FX.aleatorio(-m.rx, m.rx), y: m.y + FX.aleatorio(-m.ry * 0.5, m.ry * 0.5),
           vx: FX.aleatorio(-1.6, 1.6), vy: FX.aleatorio(-2.6, -0.8), g: 0.2, arrasto: 0.95, vida: Math.round(FX.aleatorio(8, 16)), desenho: Math.random() < 0.5 ? "ponto" : "brasa",
           pal: cores ? ["W", cores[0], cores[1]] : ["W", "Y", "O", "o"] })); }
-        enx.passo(); enx.desenhar(palco);
+        if (passo) enx.passo();
+        enx.desenhar(palco);
       });
       if (desde > 0 && ctl.pular) ctl.pular(desde);
       return ctl;
@@ -615,7 +644,7 @@
     return (palco, el) => {
       const alvo = el.querySelector(".rf-res-arte"), ficha = el.querySelector(".rf-res-ficha"), enx = FX.enxame();
       const pal = g.para.fx || ["W", "Y", "O", "o"], cor = g.para.cor;
-      const ctl = FX.animar(palco, (t, q, parado) => {
+      const ctl = animarRes(palco, (t, q, parado, passo) => {
         const a = palco.de(alvo), R = Math.max(a.rx, a.ry) + palco.t(8);
         if (ficha) { const f = palco.de(ficha); FX.poco(palco, { cx: f.x, cy: f.y, rx: f.rx + palco.t(26), ry: f.ry + palco.t(16), forca: 15 }); }
         FX.poco(palco, { cx: a.x, cy: a.y, rx: R + 2, ry: R + 2, forca: 12 });
@@ -623,11 +652,12 @@
         const tp = (t - 900) % 2400;  // depois da entrada, um anel fino de tempos em tempos (a gravação acesa)
         if (t > 900 && tp < 520) FX.anel(palco, { cx: a.x, cy: a.y, r: R + Math.round((tp / 520) * palco.t(34)), esp: 1, pal: [cor, cor, cor], achata: 0.85, rastro: 2, vis: Math.round(9 * (1 - tp / 520)) });
         if (t < 420) FX.anel(palco, { cx: a.x, cy: a.y, r: R + Math.round(FX.rampa(t, 0, 400) * palco.t(60)), esp: 2, pal: ["W", cor, cor], achata: 0.85, rastro: 3, vis: Math.round(14 * (1 - t / 420)) });
-        if (q === 1) enx.soltar(14, () => ({ x: a.x + FX.aleatorio(-R, R), y: a.y + FX.aleatorio(-R, R * 0.4), vx: FX.aleatorio(-1, 1), vy: FX.aleatorio(-1.8, -0.6), g: 0.05,
+        if (passo && q === 1) enx.soltar(14, () => ({ x: a.x + FX.aleatorio(-R, R), y: a.y + FX.aleatorio(-R, R * 0.4), vx: FX.aleatorio(-1, 1), vy: FX.aleatorio(-1.8, -0.6), g: 0.05,
           vida: Math.round(FX.aleatorio(10, 18)), desenho: Math.random() < 0.4 ? "brilho" : "ponto", pal }));
-        if (q > 8 && q % 6 === 0) { const ang = FX.aleatorio(0, Math.PI * 2); enx.soltar(1, () => ({ x: a.x + Math.cos(ang) * R * 1.3, y: a.y + Math.sin(ang) * R,
+        if (passo && q > 8 && q % 6 === 0) { const ang = FX.aleatorio(0, Math.PI * 2); enx.soltar(1, () => ({ x: a.x + Math.cos(ang) * R * 1.3, y: a.y + Math.sin(ang) * R,
           vx: 0, vy: -0.2, vida: 9, desenho: "brilho", pal })); }
-        enx.passo(); enx.desenhar(palco);
+        if (passo) enx.passo();
+        enx.desenhar(palco);
       });
       if (desde > 0 && ctl.pular) ctl.pular(desde);
       return ctl;
