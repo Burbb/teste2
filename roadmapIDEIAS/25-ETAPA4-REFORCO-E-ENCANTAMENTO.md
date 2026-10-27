@@ -302,7 +302,7 @@ As decisões abaixo substituem os pontos antes abertos correspondentes; não apr
 - Não aumentar automaticamente todos os atributos, afixos, crítico, roubo de vida ou modificadores especiais junto com o reforço. O mapeamento por tipo de peça será explicitado e testado.
 - Separar qualidade da base e nível de reforço. Uma peça inicial reforçada pode competir por um período com uma nova base melhor, mas nem toda peça inicial deve acompanhar indefinidamente a campanha.
 - Peças excepcionais poderão elevar sua base em momentos posteriores da campanha, mediante investimento e material mais raro, preservando a identidade que sustenta a build. É uma direção futura aprovada, não serviço a implementar nesta rodada. Critérios de elegibilidade, marcos, tratamento do reforço existente e custos permanecem abertos.
-- Reforço comum garantido, sem falha, quebra ou perda de níveis.
+- ~~Reforço comum garantido, sem falha, quebra ou perda de níveis.~~ **Substituída em 26/10/2026 pela 5.6** (reforço com chance; falha perde um nível; a peça nunca quebra).
 - Ao substituir uma peça, desmontá-la permite recuperar parte dos materiais investidos no reforço. O jogador também pode guardar para outro companheiro ou vender. Não transferir automaticamente o +N para a substituta.
 - Percentuais de recuperação, materiais próprios da peça, eventual recuperação de ouro, preços, fórmulas, espaços elegíveis e limites ainda precisam de teste. +5/+10 e 20% não são decisões finais.
 - A espada que faz Lâmina Rúnica atingir um segundo alvo foi um exemplo de peça excepcional; não constitui aprovação de novo item ou habilidade.
@@ -394,6 +394,24 @@ na ação, e o reforço feito tem um retorno curto. A A anterior e a B ficam com
 destino do reforço abertos); encantamento (conversa própria); arte, celebração e som; fontes concretas na campanha; a
 aljava. A etapa 4 continua aberta.
 
+### 5.6 Reforço com chance — direção aprovada em 26/10/2026 (substitui o reforço garantido)
+
+O reforço deixa de ser garantido. As regras de reforço garantido acima (5.1, o 5.5 e as versões 1 a 4 do protótipo)
+ficam como histórico, **substituídas**.
+
+- O primeiro reforço (+0 → +1) é garantido.
+- Nos seguintes, a chance de sucesso diminui conforme o nível pretendido.
+- Peças mais raras são mais difíceis de reforçar, mas a raridade pesa menos que o nível de reforço.
+- Sucesso sobe um nível. Falha reduz um nível, sem passar de +0. O equipamento nunca quebra.
+- Afixos, propriedades especiais e o caminho Fio/Runas permanecem, mesmo se a peça voltar a +0.
+- Antes de pagar, a tela mostra a chance exata, o nível pretendido, a consequência da falha, o custo e o que o grupo
+  tem. No protótipo, cada tentativa consome o custo informado, qualquer que seja o resultado.
+- A desmontagem recupera materiais conforme o reforço que a peça **conserva**; tentativas fracassadas não viram saldo
+  recuperável.
+- Nesta rodada: sem proteção paga, sem acúmulo de falhas (failstacks), sem garantia acumulada.
+- Percentuais e custos são hipóteses do protótipo, calibrados contra tentativas perdidas e quedas (LEIA-ME do
+  protótipo). A etapa 4 continua aberta; nada desta rodada entra em produção.
+
 ## 6. Pontos que a proposta anterior precisa resolver
 
 1. **Arredondamento e ganho:** incremento percentual arredondado a cada nível pode deixar atributos pequenos sem crescer; mínimo +1 pode causar ganho relativo excessivo. Comparar resultados acumulados e exemplos de bases diferentes antes de escolher fórmula.
@@ -470,7 +488,7 @@ Depois de definida a direção suficiente, o Claude poderá verificar implicaç�
 | Peças que orientam builds serem realmente pouco frequentes | Direção acordada; taxas e tiers abertos |
 | Reforço, encantamento e propriedade excepcional com papéis distintos | Direção acordada |
 | Arquitetura A anterior, 20%, +5, preços e 17 essências | Proposta histórica, não aprovada em bloco |
-| Reforço garantido e função principal da peça | Direção aprovada; fórmula, slots e limites para teste |
+| Reforço com chance (5.6) e função principal da peça | Direção aprovada; o reforço garantido foi substituído; percentuais, custos, slots e limites para teste |
 | Desmontagem e recuperação parcial de materiais de reforço | Aprovadas como direção; taxas provisórias; sem transferência automática do +N |
 | Materiais do grupo fora dos 12 espaços | Aprovado; seção Materiais, ouro + material no reforço |
 | Elevação de base de peças excepcionais | Direção futura aprovada; não implementar nesta rodada |

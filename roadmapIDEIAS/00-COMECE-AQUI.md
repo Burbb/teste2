@@ -7770,3 +7770,11 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   ferro (Cancelar · Desmontar, o vermelho no aviso e na ação); o retorno curto do reforço.
 - **Conferido** a 1920×945 e 1280×720: o fluxo com recursos (um passo por ação, custo e próximo preço, seleção e foco
   mantidos), Fio e Runas, falta, limite, nome longo, seleção vazia, desmontar cancelado e confirmado. Não integrado.
+
+### 26/10/2026 (data do computador local) — Reforço: a regra muda para chance (decisão do Jean)
+
+- **Direção aprovada:** o reforço deixa de ser garantido (25, 5.6). O primeiro é garantido; os seguintes têm chance
+  que cai com o nível pretendido e, menos, com a raridade; sucesso +1, falha −1 (não abaixo de +0); a peça nunca
+  quebra; afixos, especiais e Fio/Runas ficam. As regras do reforço garantido ficam como histórico, substituídas.
+- **Nesta rodada (protótipo, nada em produção):** percentuais e custos recalibrados, animação de aquecimento, sucesso e
+  falha na bancada, acabamento e clareza dos estados. Resultados no fim desta entrada quando prontos.
