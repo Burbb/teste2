@@ -7796,3 +7796,18 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Conferido:** sequência contínua de sucesso e falha a 1920×945 e 1280×720, cobrança única, os dados da mesma
   tentativa em todos os quadros, falta, reforço máximo, movimento reduzido, teclado e mouse; folha nova. Aguarda a
   avaliação visual do Jean; não integrado.
+
+### 26/10/2026 (data do computador local) — Reforço: a 7ª versão da bancada (protótipo)
+
+- **Pedido:** corrigir composição, estados e efeitos da candidata, sem mudar regras, chances, custos nem o limite +4.
+- **Candidata (7ª versão):** nível, peça, chance e Reforçar num eixo (medido igual em todos os estados, nas duas
+  resoluções); a mesma bancada em oferta, cena, falta, máximo e peça sem reforço; na cena, os dados da tentativa e os
+  valores de antes na ficha; sem a faixa do resultado; ficha compacta; a comparação de teste na faixa do protótipo;
+  efeitos soltos além da bancada, com a leitura por cima; falha sóbria; movimento reduzido parado com selo e
+  contorno; o reflexo do reforço na silhueta da peça (+1 claro, +2 verde, +3 azul, +4 dourado). A 6ª fica em
+  `tela/historico/v6`.
+- **Ideias registradas (não feitas):** laranja para um eventual +5; luz numa borda própria para o encantamento.
+- **Conferido:** a sequência real até o máximo a 1920×945 (mouse) e 1280×720 (teclado), cobrança única, nada revelado
+  antes da hora, o efeito sem interceptar cliques, falta, máximo, movimento reduzido; folha nova. Referências (Epic
+  Seven, Ragnarok Origin, Guardian Tales) aplicadas pelos princípios indicados: não achei capturas nesta rodada.
+  Aguarda a avaliação visual do Jean; não integrado.

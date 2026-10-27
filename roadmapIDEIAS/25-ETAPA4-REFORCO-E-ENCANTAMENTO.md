@@ -423,7 +423,19 @@ e MapleStory M (saldos no cabeçalho; materiais como ícone e quantidade; "+1 �
 chance numa linha; o resto na ajuda), a escolha da arma como Ataque ou Poder, e o desfecho com a biblioteca FX do
 Estouro ("SUCESSO +N" ou "FALHOU +N" sobre a peça, o efeito recortado no leito, mais forte no +3 e no +4), voltando
 sozinho à próxima oferta. Conferido em sequência contínua a 1920×945 e 1280×720 (uma cobrança por tentativa; nível,
-atributo, saldos e custo da mesma tentativa em todos os quadros). Candidata em avaliação; a v5 fica como histórico.
+atributo, saldos e custo da mesma tentativa em todos os quadros). A v5 fica como histórico.
+
+**7ª versão do protótipo (só a tela; regras, números e limite +4 iguais), candidata em avaliação:** o nível, a peça, a
+chance e o Reforçar num eixo; a mesma bancada em oferta, cena, falta, máximo (inteira, com "Reforço máximo"
+indisponível) e peça sem reforço; durante a cena, os dados da tentativa e os valores de antes na ficha, sem revelar o
+resultado; sem a faixa do resultado; a ficha compacta; a comparação de teste na faixa do protótipo; os efeitos do
+Estouro soltos além da bancada e um pouco da moldura, com a leitura e os controles por cima; sucesso e falha com
+tratamentos diferentes (a falha sóbria); movimento reduzido parado com selo e contorno; um reflexo diagonal na
+silhueta da peça pela cor do nível (+1 claro, +2 verde, +3 azul, +4 dourado), só na janela de reforço. Conferido na
+sequência real até o máximo a 1920×945 e 1280×720 (LEIA-ME). A v6 fica como histórico.
+
+**Ideias registradas, não feitas:** laranja para um eventual +5 (o nível não existe); no encantamento, uma luz
+percorrendo uma borda própria da peça, quando o sistema for definido.
 
 ## 6. Pontos que a proposta anterior precisa resolver
 
