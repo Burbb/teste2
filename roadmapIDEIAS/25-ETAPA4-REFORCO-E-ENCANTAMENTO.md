@@ -412,6 +412,12 @@ ficam como histórico, **substituídas**.
 - Percentuais e custos são hipóteses do protótipo, calibrados contra tentativas perdidas e quedas (LEIA-ME do
   protótipo). A etapa 4 continua aberta; nada desta rodada entra em produção.
 
+**Hipóteses da 5ª versão do protótipo:** chance 100/85/70/55% para tentar +1/+2/+3/+4, menos 4 pontos por degrau de
+raridade; 20/35/55/80 de ouro e 1/1/2/2 fragmentos por tentativa. Simulado de +0 a +4: mediana de 6 (comum) a 10
+(lendário) tentativas e 325 a 460 de ouro; no 90%, 14 a 24 tentativas e 695 a 1.135 de ouro. Recuperação pelos níveis
+conservados. Cena de 1,35 s com aquecimento, sucesso e falha, adiantável. Tabelas, resultados e pendências no
+LEIA-ME do protótipo.
+
 ## 6. Pontos que a proposta anterior precisa resolver
 
 1. **Arredondamento e ganho:** incremento percentual arredondado a cada nível pode deixar atributos pequenos sem crescer; mínimo +1 pode causar ganho relativo excessivo. Comparar resultados acumulados e exemplos de bases diferentes antes de escolher fórmula.

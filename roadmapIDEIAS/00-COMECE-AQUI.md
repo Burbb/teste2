@@ -7778,3 +7778,7 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   quebra; afixos, especiais e Fio/Runas ficam. As regras do reforço garantido ficam como histórico, substituídas.
 - **Nesta rodada (protótipo, nada em produção):** percentuais e custos recalibrados, animação de aquecimento, sucesso e
   falha na bancada, acabamento e clareza dos estados. Resultados no fim desta entrada quando prontos.
+- **Feito (5ª versão do protótipo):** chances 100/85/70/55% (−4 por raridade), 20/35/55/80 de ouro e 1/1/2/2
+  fragmentos por tentativa (simulação no LEIA-ME: mediana de 6 a 10 tentativas de +0 a +4; no 90%, 14 a 24); a cena de
+  forja com sucesso e falha, adiantável e resolvida uma vez; a chapa, o molde e os condutos refeitos; casos de teste
+  na faixa. 22 testes; conferido a 1920×945 e 1280×720. Aguarda avaliação; não integrado.
