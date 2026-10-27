@@ -7830,3 +7830,17 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   demonstração; a borda de luz por gravação; a luta de teste na faixa. Regras no 25 (5.7) e no LEIA-ME.
 - **Conferido:** 34 testes do protótipo; a 1920×945 e 1280×720, cobrança única, fechar no meio sem repetir, teclado,
   clique duplo, reduzido; folhas `folha.png` e `folha-encantar.png`. Nada integrado; a avaliação é do Jean.
+
+### 27/10/2026 (data do computador local) — Forja: a 9ª versão, consistência visual e de interação (protótipo)
+
+- **Pedido:** corrigir defeitos de uso (sprite borrado, efeito do reforço sumindo, tremor que não reinicia), mostrar os
+  sulcos nas fichas, arrumar o texto do encantamento, atualizar a skill de texto, retirar a peça da bancada, refinar a
+  borda luminosa; sem mudar regras nem redesenhar a bancada.
+- **Corrigido (causas no LEIA-ME e no 25, 5.8):** a regra da HUD que deixava o desenho em `auto`, esticado a 1,8×; as
+  telas que liam o "+N" no nome (a peça única não termina nele); o impacto que dependia de atraso zero do temporizador;
+  os sulcos nas fichas e dicas (achado, Inventário, Equipado, mercado, forja), sorteados uma vez; o texto e a altura fixa
+  do encantamento; retirar a peça; a borda em pixel; a linha de raridade após desmontar; a forja parada na luta de teste.
+- **Skill:** `texto-regras-fenda` com os critérios gerais (×N, custo junto da ação, efeito/condição/limite, sem repetir,
+  mesmos termos, alinhamento) e exemplos.
+- **Conferido:** 36 testes do protótipo; a 1920×945 e 1280×720, a reprodução completa do efeito, os quadros nítidos,
+  mouse, teclado e movimento reduzido; folhas novas. Nada integrado.

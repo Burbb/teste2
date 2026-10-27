@@ -15,7 +15,80 @@ Só nesta execução, `demo.py` troca a forja (o balcão novo), o baú (que pode
 "Materiais" do Inventário, a venda da peça reforçada, a ficha das peças nas telas (as gravações) e liga os efeitos das
 gravações na luta. O resto é o jogo: o Inventário do grupo, o mercado, a luta, a estrada.
 
-## 8ª versão: acabamento do reforço, desmontagem refeita e o Encantar de laboratório (candidata em avaliação)
+## 9ª versão: consistência visual e de interação (candidata em avaliação)
+
+Regras, chances, custos, o limite +4 e as regras candidatas do encantamento iguais; a bancada não foi redesenhada. A 8ª
+está em `tela/historico/v8` (a faixa abre "v8"). Folhas: `folha.png` (as correções) e `folha-encantar.png` (o texto e a
+composição do encantamento), antes (v8) × depois com a mesma peça.
+
+### Corrigido
+
+- **O sprite borrado.** Causa real, isolada por partes (o normal, um `filter` como o da falha, o deslocamento do tremor,
+  o quadro real): não era a falha nem o tremor. A HUD declara `:root body img.desenho { image-rendering: auto }` (os
+  desenhos feitos à mão aparecem no tamanho nativo) e essa regra vencia a do protótipo; no molde, o desenho de 40 px
+  era esticado a 72 (1,8×) a 1920 e a 44 a 1280, e o navegador o suavizava em todos os estados (no escuro da falha, ficava
+  evidente). Agora: escala inteira (80 px = 2× a 1920; 40 px = 1× a 1280), `pixelated` com uma regra que vence a da HUD
+  só dentro da janela, e a janela em coordenadas inteiras. Conferido nítido no aquecimento, na falha, no impacto com o
+  golpe e na volta à oferta, nas duas resoluções.
+- **O efeito do reforço que sumia.** As representações fora da forja descobriam o nível pelo "+N" no fim do nome; a
+  peça única tem o rótulo "★ Lamento de Gharbad +2 (Machado)", que não termina em "+N", e ficava sem o efeito (na forja,
+  o nível vinha da própria peça, por isso ele "voltava" lá). Agora a ficha das telas leva o `reforco` da peça e todas as
+  representações leem dela. Reproduzido: reforçar até +4 → guardar na bolsa → equipar → trocar pela outra arma → abrir e
+  fechar o Inventário → trocar de personagem → voltar à forja: em cada passo, a ficha lateral, o Inventário (corpo e
+  bolsa) e a forja com o efeito; a peça única equipada, com o reflexo no Equipado. Salvar e carregar: testado nos dados
+  (a peça volta com o reforço, os sulcos e as gravações).
+- **O tremor que não reiniciava.** O golpe só saía quando o temporizador do desfecho chegava com atraso zero; chega
+  alguns milissegundos depois, e às vezes o +4 não tremia. E um redesenho no meio cancelava os passos. Agora o impacto
+  sai uma vez por resultado (inclusive adiantado), num relógio próprio que um redesenho não corta; um golpe novo cancela
+  o anterior e a volta à oferta zera o deslocamento.
+- **Os sulcos nas fichas.** Encaixes quadrados (o vazio escuro com contorno; o ocupado com o símbolo da essência), na
+  quantidade real da peça, na dica e na ficha: achado, Inventário (a ficha e as dicas da bolsa e do corpo), Equipado,
+  mercado e forja; na forja, os mesmos encaixes são os botões de escolher o sulco. A dica de cada slot pequeno os mostra;
+  o ícone da bolsa não. Os sulcos são sorteados uma vez, na primeira ficha em que a peça aparece (no lugar do drop),
+  pela própria peça; consultar ou redesenhar não sorteia de novo (testado).
+- **O texto do encantamento** (a skill `texto-regras-fenda` ganhou os critérios gerais): a regra num bloco à esquerda,
+  de largura controlada, com o nome, o efeito e o limite; a dica da essência "Brasa ×2" (sem o "Tem 2" avulso); a ficha
+  com a seção de encantamentos (o nome de cada essência como título, o efeito e o limite embaixo; saiu
+  "GravaçãoCarrasco"); a essência que entra como símbolo num encaixe, o nome só no bloco; o motivo de indisponível
+  sempre junto do botão; a substituição "Sai Brasa · Entra Carrasco" / "Brasa se perde."; o sucesso em latão ("Gravado"),
+  com a cor da essência só no nome (o vermelho do Carrasco lia como falha). O bloco da regra tem altura fixa: a
+  bancada do encantamento não muda de tamanho entre essências, peças e confirmações (500 px a 1920; 320 a 1280).
+- **Retirar a peça da bancada.** Clique (ou Enter/Espaço) na peça do molde: o encaixe fica vazio, a peça continua onde
+  estava, o foco volta para ela na esteira. Durante uma cena, o clique só adianta; o segundo clique de um clique duplo
+  não faz nada.
+- **A borda luminosa.** Um núcleo claro de 2 px, três tons, um rastro curto em degraus, sem brilho difuso, seguindo a
+  borda do slot (os cantos também); sem o tom de base na borda inteira (a quantidade de sulcos está nas fichas).
+  Conferida numa bolsa com reforço, gravação, raridade, seleção e foco juntos; parada com movimento reduzido.
+- **A desmontagem:** a peça que se desfaz não deixa a linha de raridade no encaixe vazio (duas desmontagens seguidas,
+  12 → 13 → 14).
+- **A luta de teste:** durante a luta, os cartões da forja ficam apagados e não respondem ("Durante a luta, a forja
+  espera."); o botão da faixa fecha a janela antes de começar.
+
+### Investigado, sem mudança
+
+- O tremor em si (`top` na chapa, não `translate`) não borrava o sprite; o filtro da falha também não (o borrão estava
+  em todos os estados). O brilho difuso do impacto do sucesso (`drop-shadow` de 4 px) é o clarão da peça, não do
+  sprite: ficou.
+- O achado (o espólio de uma luta com saque) usa o mesmo caminho das dicas que foi conferido no Equipado, na bolsa e
+  no mercado; não foi exercitado na tela nesta rodada (a luta de teste não tem saque).
+
+### Pendências
+
+- Os ícones das essências em tamanhos pequenos (16 e 24 px a partir de desenhos de 32) ainda são reduzidos pelo
+  navegador; um desenho próprio por tamanho fica com a arte das essências.
+- Na dica por nome, duas peças com o mesmo nome e sulcos diferentes podem trocar a seção (a forja, o Equipado e a bolsa
+  usam a peça do dono; o mercado e o achado usam o nome).
+- Sons não ouvidos (sem saída de áudio nas conferências).
+
+### Roteiro (uns 3 minutos)
+
+1. Ferreiro → **Reforçar** → o martelo até o +4 com **Sucesso (teste)**: o sprite nítido, o golpe do +3 e o do +4.
+2. Clique na peça do molde: ela sai da bancada. Feche a forja; no Inventário (`i`), guarde e equipe o martelo, troque
+   pelo Martelo de Aço, mude para Morel e volte: o efeito do +4 em todos os lugares.
+3. Passe o mouse no Equipado e na bolsa: os sulcos na dica. No **Encantar**: a regra à esquerda, "Brasa ×2", os sulcos
+   como encaixes, uma substituição ("Sai · Entra") e a ficha com a seção de encantamentos.
+
+## 8ª versão: acabamento do reforço, desmontagem refeita e o Encantar de laboratório (histórico; as folhas desta versão estão no git)
 
 Duas frentes, cada uma com a sua folha: `folha.png` (Lote 1: reforço e desmontagem, v7 × v8 com os mesmos dados) e
 `folha-encantar.png` (Lote 2: o encantamento). A 7ª está em `tela/historico/v7` (a faixa abre "v7"). As regras,

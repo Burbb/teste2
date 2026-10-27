@@ -478,6 +478,20 @@ Diablo III (o que se aproveitou, no LEIA-ME).
 **Pendências:** a distribuição dos sulcos, custos e fontes de essência; remover sem substituir; recuperação ao
 desmontar; arte das essências; equilíbrio dos efeitos com partida de verdade; integração (nada disso está no jogo).
 
+### 5.8 A 9ª versão: consistência visual e de interação (27/10/2026) — candidata em avaliação
+
+Sem mudança de regras, chances, custos, limite +4 ou regras candidatas. **Corrigido:** o sprite da peça suavizado
+(causa: a regra da HUD `img.desenho { image-rendering: auto }` vencia a do protótipo e o desenho de 40 px era esticado a
+72; agora escala inteira e `pixelated`); o efeito do reforço que sumia fora da forja (as telas liam o "+N" no nome, e a
+peça única não termina nele; agora leem o reforço da peça); o tremor do +4 que às vezes não saía (o impacto dependia
+de o temporizador chegar com atraso zero; agora uma vez por resultado, num relógio próprio); os sulcos visíveis em
+encaixes quadrados nas fichas e dicas de todas as telas, sorteados uma vez no achado; o texto do encantamento (bloco à
+esquerda, "Brasa ×2", seção de encantamentos, "Sai · Entra", sucesso em latão) e a altura fixa da bancada; retirar a
+peça da bancada; a borda luminosa em pixel; a desmontagem sem a linha de raridade no encaixe vazio; a forja parada
+durante a luta de teste. A skill `texto-regras-fenda` ganhou os critérios gerais de texto de telas de sistema.
+**Pendências:** ícones das essências em tamanhos pequenos; a dica por nome em peças homônimas; sons não ouvidos.
+Detalhes, o que foi só investigado e o roteiro no LEIA-ME.
+
 ## 6. Pontos que a proposta anterior precisa resolver
 
 1. **Arredondamento e ganho:** incremento percentual arredondado a cada nível pode deixar atributos pequenos sem crescer; mínimo +1 pode causar ganho relativo excessivo. Comparar resultados acumulados e exemplos de bases diferentes antes de escolher fórmula.
