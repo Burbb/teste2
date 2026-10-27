@@ -36,6 +36,12 @@ resoluções, o +3, a falha, o movimento reduzido e os outros botões). A `folha
 - **Os botões do jogo atual** (`.botao-janela`, o mesmo do achado e das janelas) em todas as ações da forja: Reforçar,
   OK, Gravar, Substituir, Desmontar, Cancelar e Fechar. Junto, uma colisão de nome: a janela mora em `#texto`, e a
   regra `#texto .perigo` pintava de vermelho o Desmontar bloqueado; corrigido.
+- **A linha de raridade do encaixe** (a faixa fina embaixo da peça: cinza comum, azul mágico, latão raro, laranja
+  lendário) sai no resultado de sucesso, onde cortava o selo de raios; a raridade continua na cor do título. As cores
+  passaram às do jogo (14-hud.css): o lendário do protótipo era roxo, um resto antigo; agora é o laranja do jogo.
+- **O nome do recurso na oferta:** a oferta escrevia sempre "Mana" (uma tabela fixa do protótipo), e o resultado, o
+  recurso de quem leva a peça (o tomo na bolsa do Guerreiro: "Mana 5 → 7" na oferta, "Vigor 5 → 7" no resultado).
+  Agora a oferta usa o mesmo nome da ficha e do resultado; um teste confere oferta e resultado em todas as peças.
 - **Conferido:** a 1920×945 e 1280×720, a sequência contínua da mesma tentativa, o +3 aos 4,0 e 4,6 s (os raios em
   outra posição: continuam girando), a falha, o movimento reduzido (o resultado parado com o OK), os gestos (Enter
   segurado compra uma vez e não dispensa; clique duplo no OK dispensa sem comprar; clique duplo no Reforçar compra uma

@@ -7868,4 +7868,6 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   a bancada); raios contínuos e mais calmos depois do impacto; o banner no pé; o disco em degraus no lugar do quadrado;
   `.botao-janela` em todas as ações da forja (e a colisão `#texto .perigo`). A 10ª em `tela/historico/v10`.
 - **Conferido:** 1920×945 e 1280×720, sequência contínua, +3, falha, movimento reduzido, gestos; testes do projeto.
+- **Depois, pelo retorno do Jean:** a linha de raridade sai do resultado de sucesso e usa as cores do jogo (o
+  lendário do protótipo era roxo); a oferta com o nome do recurso de quem leva a peça (dizia sempre "Mana").
 - **Próximo:** a avaliação do Jean. Nada integrado; som adiado para a 1.0.

@@ -514,7 +514,8 @@ Depois de ver a 10ª, o Jean pediu o sucesso claro e em destaque. **Corrigido:**
 recorte era medido antes de a janela existir); os feixes seguem girando até o OK, por trás da leitura; "Sucesso"
 grande no pé, entre a peça e o OK ("Falhou" sóbrio no mesmo lugar); no sucesso, o molde vira um disco escuro em
 degraus (sem o quadrado cortando o selo); todos os botões da forja no componente atual do jogo (`.botao-janela`), com a
-colisão `#texto .perigo` resolvida. Regras iguais. Detalhes no LEIA-ME.
+colisão `#texto .perigo` resolvida; a linha de raridade fora do resultado e nas cores do jogo (o lendário era roxo); a
+oferta com o nome do recurso de quem leva a peça (dizia sempre "Mana"). Regras iguais. Detalhes no LEIA-ME.
 
 ## 6. Pontos que a proposta anterior precisa resolver
 
