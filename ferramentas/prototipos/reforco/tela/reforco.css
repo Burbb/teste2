@@ -39,7 +39,7 @@
   box-shadow: inset 0 0 0 1px var(--aresta-face, #4a4e56), inset 0 2px 0 rgba(255, 255, 255, 0.08), inset 0 -2px 0 rgba(0, 0, 0, 0.5), 0 2px 0 #000; }
 .rf-botao:hover { background: var(--rf-chapa-viva); color: #fff7e6; box-shadow: inset 0 0 0 1px var(--aresta-viva, #6f737b), inset 0 2px 0 rgba(255, 255, 255, 0.1), inset 0 -2px 0 rgba(0, 0, 0, 0.5), 0 2px 0 #000; }
 .rf-botao:active { translate: 0 2px; box-shadow: inset 0 0 0 1px var(--aresta-face, #4a4e56), inset 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 0 #000; }
-:is(.rf-botao, .rf-servico, .rf-dono, .rf-peca, .rf-veio, .rf-teste summary):focus-visible { outline: 2px solid var(--latao-claro); outline-offset: 2px; }
+:is(.rf-botao, .rf-servico, .rf-dono, .rf-peca, .rf-teste summary):focus-visible { outline: 2px solid var(--latao-claro); outline-offset: 2px; }
 .rf-botao.principal { min-width: 220px; padding: 10px 28px 11px; font-size: 19px; color: var(--latao-claro);
   background: linear-gradient(rgba(70, 55, 24, 0.94), rgba(70, 55, 24, 0.94)), url(/static/hud/textura-botao.png) 0 0 / 128px;
   box-shadow: inset 0 0 0 1px #a7832f, inset 0 2px 0 rgba(242, 210, 122, 0.3), inset 0 -3px 0 rgba(0, 0, 0, 0.55), 0 3px 0 #000; }
@@ -175,21 +175,14 @@
 .rf-insumo.falta dl div + div dd, .rf-insumo.falta dl div + div dt { color: var(--rf-perigo); }
 .rf-insumo.falta .rf-encaixe { box-shadow: inset 2px 2px 0 #000, inset 0 0 0 1px #8a3328; }
 
-/* o resultado: o visor do que sai da peça; com dois caminhos, cada um é uma opção */
+/* o resultado: o visor do que sai da peça */
 .rf-resultado { display: flex; flex-direction: column; gap: 4px; min-width: 150px; padding: 8px 12px; background: var(--rf-nicho);
   box-shadow: inset 2px 2px 0 #000, inset -1px -1px 0 #2b2d32; }
-.rf-resultado.veios { padding: 0; background: none; box-shadow: none; gap: 4px; }
-.rf-resultado.veios > div { display: flex; flex-direction: column; gap: 6px; }
 .rf-resultado.recebe { align-items: flex-start; }
 .rf-ganho { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
-.rf-ganho span { font-size: 15px; color: var(--rf-sec); }
+.rf-ganho span { font-size: 15px; color: var(--rf-sec); white-space: nowrap; }
 .rf-ganho b { font-family: var(--num); font-size: 24px; font-weight: 400; white-space: nowrap; }
 .rf-ganho em { font-style: normal; color: var(--rf-verde); }
-.rf-veio { display: flex; flex-direction: column; gap: 2px; min-width: 170px; padding: 5px 10px 6px; font: inherit; text-align: left; color: var(--rf-sec);
-  cursor: pointer; border: 1px solid #000; background: var(--rf-chapa); box-shadow: inset 0 0 0 1px #4a4e56, inset 0 2px 0 rgba(255, 255, 255, 0.06), 0 2px 0 #000; }
-.rf-veio:hover { background: var(--rf-chapa-viva); }
-.rf-veio .rf-ganho b { font-size: 20px; }
-.rf-veio.escolhido { background: var(--rf-nicho); box-shadow: inset 2px 2px 0 #000, inset 0 0 0 1px var(--latao), inset 4px 0 0 var(--latao); }
 .rf-confirmar { display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; }
 .rf-confirmar b { font-size: 16px; color: #fff3d6; }
 .rf-aviso { font-size: 14px; font-weight: 700; color: var(--rf-perigo); }
@@ -276,8 +269,6 @@
   .rf-insumo dl div { min-width: 30px; }
   .rf-insumo dd { font-size: 18px; }
   .rf-resultado { min-width: 0; padding: 5px 7px; }
-  .rf-veio { min-width: 0; padding: 3px 6px 4px; }
-  .rf-veio .rf-ganho b, .rf-ganho b { font-size: 17px; }
   .rf-ganho span { font-size: 13px; }
   .rf-pe-chapa { padding: 5px 10px 8px; gap: 3px; }
   .rf-botao.principal { min-width: 160px; padding: 6px 18px 7px; font-size: 17px; }
@@ -289,9 +280,6 @@
   .rf-placa-linha b, .rf-material b { font-size: 17px; }
   .rf-pe-chapa { flex-direction: row; justify-content: center; gap: 10px; }
   .rf-pe-chapa .rf-confirmar { flex-direction: column; }
-  .rf-resultado.veios > div { gap: 3px; }
-  .rf-veio { flex-direction: row; align-items: baseline; gap: 5px; padding: 2px 6px 3px; }
-  .rf-veio .rf-ganho b { font-size: 16px; }
   .rf-chapa.vazia { padding-bottom: 8px; }
   .rf-ficha-cab b { font-size: calc(var(--px) * 24); }
 }
@@ -320,9 +308,6 @@
 .rf-insumo:focus-visible { outline: 2px solid var(--latao-claro); outline-offset: 2px; }
 .rf-resultado { min-height: 46px; justify-content: center; }
 .rf-resultado.vazio { min-width: 130px; opacity: 0.45; }
-.rf-resultado.veios { flex-direction: column; gap: 6px; min-height: 0; }
-.rf-veio { min-width: 150px; }
-.rf-veio.escolhido .rf-ganho span { color: var(--latao-claro); }
 /* o pé: a chance, o botão e a nota, empilhados no eixo, numa altura fixa; a ajuda (i) ao lado da chance, fora do eixo */
 .rf-pe-chapa { flex-direction: column; justify-content: center; height: 118px; gap: 6px; }
 .rf-linha-chance { position: relative; display: flex; align-items: center; justify-content: center; min-height: 28px; }
@@ -352,33 +337,14 @@
 /* a tentativa em cena: o de antes no aquecimento, o de agora do desfecho em diante (sem redesenhar) */
 .rf-v-antes, .aquecendo .rf-v-agora, .aquecendo .rf-canto.sem-antes, .rf-janela:not(.aquecendo) .rf-canto.sem-agora { display: none; }
 .aquecendo .rf-v-antes { display: inline; }
-/* no desfecho, o conjunto do resultado ocupa o lugar do nível, do conduto da direita e do ganho */
-.desfecho :is(.rf-nivel, .rf-marcas, .rf-lado.dir > .rf-conduto, .rf-lado.dir > .rf-resultado) { visibility: hidden; }
-
-/* o desfecho: um conjunto junto da peça */
-.rf-dsf { position: absolute; left: 30px; top: 50%; translate: 0 -50%; display: none; flex-direction: column; align-items: flex-start; gap: 2px;
-  z-index: 4; white-space: nowrap; pointer-events: none; }
-.desfecho .rf-dsf { display: flex; }
-.rf-dsf-palavra { font: 400 calc(var(--px) * 30)/1 var(--titulo); letter-spacing: 0.04em; text-transform: uppercase; }
-.rf-dsf small { display: flex; flex-direction: column; margin-top: 4px; font-family: var(--num); font-size: 19px; color: #e6dbc2;
-  text-shadow: 0 2px 0 #000, 1px 0 0 #000, -1px 0 0 #000, 0 -1px 0 #000; }
-.rf-dsf small em { font-style: normal; }
 /* sucesso: dourado, o +N grande, o ganho com o valor novo em verde */
-.rf-dsf.ok .rf-dsf-palavra { color: #ffe27a; text-shadow: 0 2px 0 #8a6a14, 0 4px 0 #000; }
-.rf-dsf.ok .rf-dsf-nivel { font: 400 calc(var(--px) * 60)/0.9 var(--titulo); color: #ffe27a; text-shadow: 0 3px 0 #8a6a14, 0 6px 0 #000; }
-.rf-dsf.ok small em { color: var(--rf-verde); }
-.desfecho .rf-dsf.ok { animation: rf-bate 0.27s steps(1) both; }
+
 @keyframes rf-bate { 0% { scale: 1.6; opacity: 0; } 25% { scale: 0.9; opacity: 1; } 50% { scale: 1.05; } 75%, 100% { scale: 1; } }
 /* falha: sóbrio, sem nível grande nem dourado: a palavra, a queda e o que se perdeu */
-.rf-dsf.mau .rf-dsf-palavra { font-size: calc(var(--px) * 26); color: #d48a7a; text-shadow: 0 2px 0 #000; }
-.rf-dsf.mau .rf-dsf-nivel { font-family: var(--num); font-size: 24px; font-weight: 400; color: #bdb5a6; text-shadow: 0 2px 0 #000; }
-.rf-dsf.mau small { font-size: 16px; color: #8f887c; }
-.rf-dsf.mau small em { color: #c98a7c; }
-.desfecho .rf-dsf.mau { animation: rf-surge 0.16s steps(2) both; }
+
 @keyframes rf-surge { 0% { opacity: 0; } 100% { opacity: 1; } }
 /* a falha: o calor se desfaz; a peça escurece um instante e volta (inteira) */
 @keyframes rf-esfria { 0% { filter: brightness(1.3) sepia(0.6); } 60% { filter: brightness(0.55) grayscale(0.6); } 100% { filter: none; } }
-.desfecho.falhou .rf-encaixe.grande img, .desfecho.falhou .rf-encaixe.grande canvas { animation: rf-esfria 0.9s steps(6) both; }
 
 /* o reflexo do reforço: uma faixa diagonal curta, mascarada pelo desenho da peça (só os pixels dela brilham) */
 .rf-reflexo { position: absolute; z-index: 1; pointer-events: none; opacity: 0;
@@ -394,10 +360,8 @@
 
 /* movimento reduzido: o desfecho parado, com o selo (no canvas) e o contorno do molde; o reflexo parado e discreto */
 @media (prefers-reduced-motion: reduce) {
-  .desfecho .rf-dsf, .desfecho.falhou .rf-encaixe.grande img, .revelou .rf-props li.tocou b { animation: none; }
-  .desfecho.ok .rf-berco { box-shadow: inset 1px 1px 0 var(--rf-brasa5), 0 0 0 2px var(--rf-brasa4); }
-  .desfecho.ok .rf-barra { background: var(--rf-brasa4); }
-  .desfecho.falhou .rf-berco { box-shadow: inset 1px 1px 0 #4a4d54, 0 0 0 2px #5a1810; }
+   .revelou .rf-props li.tocou b { animation: none; }
+
   .rf-reflexo.passa { animation: none; opacity: 0.45; background-position: 50% 50%; }
 }
 
@@ -417,15 +381,7 @@
   .rf-insumo b { font-size: 19px; min-width: 18px; }
   .rf-resultado { min-height: 36px; }
   .rf-resultado.vazio { min-width: 96px; }
-  .rf-veio { min-width: 0; }
-  .rf-veio .rf-ganho span { display: inline; }
-  .rf-dsf { left: 22px; }
-  .rf-dsf-palavra { font-size: calc(var(--px) * 22); }
-  .rf-dsf.ok .rf-dsf-nivel { font-size: calc(var(--px) * 42); }
-  .rf-dsf small { font-size: 15px; margin-top: 2px; }
-  .rf-dsf.mau .rf-dsf-palavra { font-size: calc(var(--px) * 20); }
-  .rf-dsf.mau .rf-dsf-nivel { font-size: 19px; }
-  .rf-dsf.mau small { font-size: 14px; }
+
   .rf-pe-chapa { flex-direction: column; flex-wrap: nowrap; height: 92px; padding: 4px 10px 6px; gap: 3px; }
   .rf-linha-chance { min-height: 22px; }
   .rf-chance { font-size: 15px; }
@@ -457,20 +413,12 @@
 .rf-pe-chapa .rf-confirmar b { max-width: 520px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .rf-pe-chapa .rf-botoes { margin-top: 2px; }
 
-/* o desfecho domina: os dados da tentativa ficam no lugar, apagados */
-.desfecho :is(.rf-lado.esq, .rf-linha-chance, .rf-pe-chapa > .rf-botao, .rf-pe-chapa > .rf-nota) { opacity: 0.3; transition: opacity 0.1s steps(1); }
-/* a falha, legível sem parecer prêmio */
-.rf-dsf.mau .rf-dsf-palavra { color: #ee9584; }
-.rf-dsf.mau .rf-dsf-nivel { color: #e2dacb; text-shadow: 0 2px 0 #000, 1px 0 0 #000, -1px 0 0 #000; }
-.rf-dsf.mau small { color: #b6ad9e; }
 /* o máximo: o contorno do molde se completa barra a barra e fica aceso um instante */
 @keyframes rf-max-barra { 0% { background: #2c2e33; } 15%, 75% { background: var(--rf-brasa5); box-shadow: 0 0 6px var(--rf-brasa4); } 100% { background: var(--latao); box-shadow: none; } }
 @keyframes rf-max-berco { 0%, 20% { box-shadow: inset 1px 1px 0 #4a4d54; } 30%, 80% { box-shadow: inset 1px 1px 0 var(--rf-brasa5), 0 0 0 2px var(--rf-brasa4), 0 0 0 4px rgba(255, 208, 96, 0.35); }
   100% { box-shadow: inset 1px 1px 0 #4a4d54, 0 0 0 1px var(--latao); } }
-.desfecho.maximo .rf-barra { animation: rf-max-barra 1.5s steps(8) both; }
-.desfecho.maximo .rf-barra.r { animation-delay: 0.08s; } .desfecho.maximo .rf-barra.b { animation-delay: 0.16s; } .desfecho.maximo .rf-barra.l { animation-delay: 0.24s; }
-.desfecho.maximo .rf-berco { z-index: 3; animation: rf-max-berco 1.6s steps(8) both; }  /* por cima do selo do efeito */
-/* o saldo que mudou acende um instante: o que saiu em cor de cobrança, o que entrou em verde */
+
+  /* o saldo que mudou acende um instante: o que saiu em cor de cobrança, o que entrou em verde */
 @keyframes rf-saldo-desce { 0% { color: var(--rf-perigo); } 100% { color: #fff3d6; } }
 @keyframes rf-saldo-sobe { 0% { color: var(--rf-verde); text-shadow: 0 0 6px rgba(159, 224, 124, 0.6); } 100% { color: #fff3d6; } }
 .rf-rec.desce b { animation: rf-saldo-desce 0.9s steps(5) both; }
@@ -486,9 +434,11 @@
 .rf-reflexo[data-nivel="2"] { --borda: rgba(96, 224, 120, 0.55); --miolo: rgba(226, 255, 226, 0.9); }
 .rf-reflexo[data-nivel="3"] { --borda: rgba(70, 140, 255, 0.75); --miolo: rgba(214, 232, 255, 0.95); }
 .rf-reflexo[data-nivel="4"] { --borda: rgba(255, 190, 60, 0.75); --miolo: rgba(255, 248, 214, 0.95); }
-/* o +4: uma luz baixa e permanente na própria peça (contorno de 1 px, sem borrão), além do reflexo periódico */
-.rf-mais4 > :is(img, canvas) { filter: drop-shadow(1px 0 0 rgba(255, 196, 70, 0.45)) drop-shadow(-1px 0 0 rgba(255, 196, 70, 0.45))
-  drop-shadow(0 1px 0 rgba(255, 196, 70, 0.35)) drop-shadow(0 -1px 0 rgba(255, 220, 120, 0.5)); }
+/* o +4: uma luz baixa e permanente na própria peça (contorno de 1 px, sem borrão), além do reflexo periódico; do +5 em
+   diante, o mesmo contorno na cor do nível (12ª versão, no fim do arquivo) */
+[data-acab="4"] > :is(img, canvas) { --acab-baixo: rgba(255, 196, 70, 0.35); }
+[data-acab] > :is(img, canvas) { --acab-cor: rgba(255, 196, 70, 0.45); --acab-luz: rgba(255, 220, 120, 0.5);
+  filter: drop-shadow(1px 0 0 var(--acab-cor)) drop-shadow(-1px 0 0 var(--acab-cor)) drop-shadow(0 1px 0 var(--acab-baixo, var(--acab-cor))) drop-shadow(0 -1px 0 var(--acab-luz)); }
 
 @media (max-width: 1500px) {
   .rf-recebe { gap: 5px; }
@@ -496,9 +446,7 @@
   .rf-pe-chapa .rf-confirmar b { font-size: 14px; max-width: 360px; }
   .rf-pe-chapa .rf-confirmar .rf-aviso { font-size: 13px; }
   .rf-pe-chapa .rf-botoes .rf-botao { padding: 4px 14px 5px; font-size: 14px; }
-  .rf-dsf.mau .rf-dsf-palavra { font-size: calc(var(--px) * 22); }
-  .rf-dsf.mau .rf-dsf-nivel { font-size: 22px; }
-  .rf-dsf.mau small { font-size: 15px; }
+
 }
 
 /* ------------------------------------------------------------ o encantamento (laboratório): gravar uma essência */
@@ -554,11 +502,7 @@
 .gravando:not(.gravado) .rf-encaixe.grande .rf-gravura { visibility: hidden; }
 .gravando :is(.rf-lado.esq, .rf-essencias, .rf-ess-regra, .rf-linha-chance, .rf-pe-chapa > .rf-botao, .rf-pe-chapa > .rf-nota) { opacity: 0.3; }
 .gravando.gravado :is(.rf-nivel, .rf-lado.dir > .rf-conduto, .rf-lado.dir > .rf-resultado) { visibility: hidden; }
-.gravado .rf-dsf { display: flex; }
-.rf-dsf.grav .rf-dsf-palavra { color: var(--ess); text-shadow: 0 2px 0 #000; }
-.rf-dsf.grav .rf-dsf-nivel { font: 400 calc(var(--px) * 44)/0.95 var(--titulo); color: #fff3d6; text-shadow: 0 3px 0 #000; }
-.rf-dsf.grav small { font-family: var(--texto); font-size: 14px; color: var(--rf-sec); }
-.gravado .rf-dsf.grav { animation: rf-surge 0.2s steps(2) both; }
+
 /* a gravação na ficha: o nome na cor da essência e a regra */
 .rf-gravacao { margin-top: 8px; padding: 6px 8px; background: var(--rf-nicho); box-shadow: inset 2px 0 0 var(--ess); font-size: 14px; color: var(--rf-sec); }
 .rf-gravacao b { font-family: var(--titulo); font-weight: 400; font-size: calc(var(--px) * 20); color: var(--ess); }
@@ -567,7 +511,7 @@
 @media (prefers-reduced-motion: reduce) {
   .rf-gravura { animation: none; --rf-ang: 300deg; }
   .gravando .rf-barra { animation: none; background: var(--ess); }
-  .gravado .rf-dsf.grav, .rf-janela:has(.gravado) .rf-gravacao { animation: none; }
+   .rf-janela:has(.gravado) .rf-gravacao { animation: none; }
 }
 @media (max-width: 1500px) {
   .rf-essencias { gap: 6px; padding: 0 8px 4px; }
@@ -577,7 +521,7 @@
   .rf-grav-nome { font-size: calc(var(--px) * 18); }
   .rf-ess-visor b { font-size: calc(var(--px) * 18); }
   .rf-ess-visor { min-width: 96px; }
-  .rf-dsf.grav .rf-dsf-nivel { font-size: calc(var(--px) * 30); }
+
   .rf-encantar .rf-rec.ess b { font-size: 16px; }
   .rf-encantar .rf-rec.ess :is(img, canvas) { width: 18px; height: 18px; }
   .rf-encantar .rf-recursos { gap: 6px; }
@@ -670,11 +614,6 @@ button.rf-sq:focus-visible { outline: 2px solid var(--latao-claro); outline-offs
 /* a substituição: o que sai e o que entra, numa linha */
 .rf-troca { font-size: 15px; color: var(--rf-texto); }
 .rf-troca b { font-family: var(--titulo); font-weight: 400; font-size: calc(var(--px) * 17); }
-/* o sucesso da gravação em latão (a cor de "feito" da bancada); a essência só no nome: um vermelho de essência não lê
-   como falha */
-.rf-dsf.grav .rf-dsf-palavra { color: var(--latao-claro); }
-.rf-dsf.grav .rf-dsf-nivel { color: var(--ess); text-shadow: 0 3px 0 #000; }
-
 /* a borda luminosa da gravação, em pixel: um núcleo claro de 2 px, três tons, um rastro curto em degraus, sem brilho
    difuso; o trecho segue a borda do encaixe (os cantos também). A quantidade de sulcos está nas fichas, não aqui. */
 .rf-gravura { background: conic-gradient(from var(--rf-ang), transparent 0 80%, color-mix(in srgb, var(--ess) 45%, transparent) 80% 84%,
@@ -728,44 +667,35 @@ button.rf-sq:focus-visible { outline: 2px solid var(--latao-claro); outline-offs
 .rf-tit-sulcos { display: flex; align-items: center; gap: 6px; min-height: 24px; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--rf-sec); }
 .rf-titulo .rf-n { position: relative; display: inline-block; white-space: nowrap; }
 /* a faixa do resultado, entre o título e o leito (a altura reservada em todos os estados) */
-.rf-faixa-res { display: flex; justify-content: center; align-items: center; height: 30px; }
+
 .rf-banner { display: none; font-family: var(--titulo); font-size: calc(var(--px) * 24); letter-spacing: 0.06em; text-transform: uppercase; }
 .rf-banner::before, .rf-banner::after { content: ""; display: inline-block; width: 48px; height: 2px; margin: 0 12px; vertical-align: middle; background: currentColor; opacity: 0.6; }
 .rf-banner.ok { color: var(--latao-claro); text-shadow: 0 2px 0 #000; }
 .rf-banner.mau { color: #d48a7a; text-shadow: 0 2px 0 #000; }
-.desfecho .rf-banner { display: inline-block; animation: rf-surge 0.16s steps(2) both; }
+
 .rf-chapa.com-titulo .rf-leito { margin-top: 0; }
 /* o visor: o ganho oferecido até a revelação; então o que de fato mudou */
 .rf-vis-res { display: none; }
-.desfecho .rf-vis-oferta { display: none; }
-.desfecho .rf-vis-res { display: block; }
-.desfecho .rf-lado.dir > .rf-vis-res .rf-resultado { visibility: visible; box-shadow: inset 2px 2px 0 #000, inset 0 0 0 1px var(--latao); }
+
 .rf-vis-res.perda .rf-ganho em { color: var(--rf-perigo); }
-.desfecho .rf-lado.dir > .rf-vis-res.perda .rf-resultado { box-shadow: inset 2px 2px 0 #000, inset 0 0 0 1px #5a3a34; }
+
 /* o pé: a chance e a falha junto da ação; o OK no mesmo lugar do Reforçar */
 .rf-chapa.com-titulo .rf-pe-chapa { height: 138px; gap: 4px; }
 .rf-falha { min-height: 20px; font-size: 15px; color: var(--rf-sec); }
 .rf-acao { position: relative; display: grid; }
 .rf-acao > .rf-botao { grid-area: 1 / 1; }
-.rf-ok { visibility: hidden; }
-.rf-ok kbd { margin-left: 8px; padding: 0 4px; font-size: 12px; border: 1px solid #a7832f; background: rgba(0, 0, 0, 0.25); }
-.desfecho .rf-ok { visibility: visible; }
-.desfecho .rf-acao > [data-reforcar] { visibility: hidden; }
-.desfecho :is(.rf-linha-chance, .rf-falha, .rf-pe-chapa > .rf-nota) { visibility: hidden; }
-/* o desfecho do reforço: o resultado na faixa, no título e no visor; os materiais da tentativa apagados */
-.forjando.desfecho.com-titulo .rf-lado.dir > .rf-conduto { visibility: visible; }
+
 /* o número do nível: o de antes até a revelação; então o novo, como uma marca quente gravada no ferro (sucesso) ou
    sóbrio (falha); o de antes some. Só o número anima. */
 .rf-n-agora { display: none; }
-.desfecho .rf-n-agora { display: inline-block; }
-.desfecho .rf-n-antes { position: absolute; left: 100%; margin-left: 0.25em; animation: rf-apaga-n 0.5s steps(5) both; }
+
 @keyframes rf-apaga-n { 0% { opacity: 1; } 100% { opacity: 0; visibility: hidden; } }
 .rf-n-agora.rf-quente { color: #ffd060; text-shadow: 0 0 0 #000, 0 2px 0 #7a2c08, 0 0 6px rgba(255, 140, 30, 0.75); }
-.desfecho .rf-n-agora.rf-quente { animation: rf-marca 0.7s steps(7) both; }
+
 @keyframes rf-marca { 0% { scale: 1.7; opacity: 0; color: #fff; } 14% { scale: 0.86; opacity: 1; color: #fff8e0; text-shadow: 0 0 10px #ffb13b, 0 2px 0 #7a2c08; }
   28% { scale: 1.08; } 42% { scale: 1; color: #ffe27a; } 100% { scale: 1; color: #ffd060; text-shadow: 0 2px 0 #7a2c08, 0 0 6px rgba(255, 140, 30, 0.75); } }
 .rf-n-agora.rf-sobrio { color: #d8d0c2; text-shadow: 0 2px 0 #000; }
-.desfecho .rf-n-agora.rf-sobrio { animation: rf-surge 0.3s steps(3) both; }
+
 /* o entorno escurece durante o processo (a bancada fica em foco: o véu é a sombra em volta de um recorte do tamanho da
    janela); sem desfoque nem clarão */
 #rf-vela { position: fixed; z-index: 59; pointer-events: none; box-shadow: 0 0 0 200vmax rgba(0, 0, 0, 0.38); opacity: 0; transition: opacity 0.2s steps(3); }
@@ -782,8 +712,7 @@ body.rf-em-cena #rf-vela { opacity: 1; }
 /* a dica da essência: a compatibilidade como linha secundária */
 .rf-compat { color: var(--tinta-3, #a59f92); font-size: 13px; }
 @media (prefers-reduced-motion: reduce) {
-  .desfecho :is(.rf-n-agora, .rf-banner), .desfecho .rf-n-antes { animation: none; }
-  .desfecho .rf-n-antes { visibility: hidden; }
+
   #rf-vela, .rf-janela.em-cena :is(.rf-donos, .rf-esteira, .rf-cab) { transition: none; }
 }
 @media (max-width: 1500px) {
@@ -793,7 +722,7 @@ body.rf-em-cena #rf-vela { opacity: 1; }
   .rf-titulo b { font-size: calc(var(--px) * 22); height: calc(var(--px) * 46); }
   .rf-titulo small { font-size: 13px; }
   .rf-tit-sulcos { min-height: 22px; }
-  .rf-faixa-res { height: 22px; }
+
   .rf-banner { font-size: calc(var(--px) * 18); }
   .rf-banner::before, .rf-banner::after { width: 28px; margin: 0 8px; }
   .rf-chapa.com-titulo .rf-pe-chapa { height: 104px; gap: 2px; }
@@ -804,7 +733,7 @@ body.rf-em-cena #rf-vela { opacity: 1; }
   .rf-chapa.com-titulo .rf-leito { min-height: 108px; padding-block: 6px; }
   .rf-titulo b { font-size: calc(var(--px) * 20); height: calc(var(--px) * 42); }
   .rf-chapa.com-titulo .rf-pe-chapa { height: 96px; }
-  .rf-faixa-res { height: 20px; }
+
 }
 /* os sulcos no achado: debaixo das linhas da peça, alinhados com elas */
 #sobre-achado .rf-encantos { margin-top: 6px; padding-top: 0; border-top: 0; }
@@ -834,13 +763,11 @@ body.rf-em-cena #rf-vela { opacity: 1; }
 .rf-chapa.com-titulo .rf-pe-chapa { height: 168px; }
 .rf-chapa.com-titulo .rf-linha-chance { height: 26px; }
 .rf-chapa.com-titulo .rf-falha { height: 20px; min-height: 0; }
-.rf-pe-chapa > .rf-faixa-res { display: none; height: 50px; overflow: visible; }
-.desfecho .rf-pe-chapa > .rf-faixa-res { display: flex; }
-.desfecho.com-titulo :is(.rf-linha-chance, .rf-falha) { display: none; }
+
 .rf-banner { font-size: calc(var(--px) * 46); line-height: 1; letter-spacing: 0.08em; }
 .rf-banner::before, .rf-banner::after { width: 72px; height: 4px; margin: 0 16px; opacity: 1; box-shadow: 0 2px 0 #000; }
 .rf-banner.ok { color: #ffd060; text-shadow: 0 3px 0 #7a2c08, 0 5px 0 #000, 0 0 12px rgba(255, 150, 40, 0.55); }
-.desfecho .rf-banner.ok { animation: rf-banner-ok 0.6s steps(6) both; }
+
 @keyframes rf-banner-ok { 0% { scale: 1.8; opacity: 0; color: #fff; } 17% { scale: 0.9; opacity: 1; color: #fffbe8; text-shadow: 0 0 18px #ffb13b, 0 3px 0 #7a2c08, 0 5px 0 #000; }
   34% { scale: 1.06; } 50% { scale: 1; color: #ffe27a; } 100% { scale: 1; } }
 .rf-banner.mau { font-size: calc(var(--px) * 36); color: #d48a7a; text-shadow: 0 3px 0 #000; }
@@ -849,22 +776,148 @@ body.rf-em-cena #rf-vela { opacity: 1; }
 .forjando :is(.rf-titulo, .rf-lado) { position: relative; z-index: 3; }
 /* no sucesso, o selo de raios passa por cima dos dois lados (os materiais e o ganho); o título continua por cima */
 .forjando.ok .rf-lado { z-index: 1; }
-/* no sucesso, o molde quadrado dá lugar a um disco escuro em degraus (como o item no achado): o selo de raios não é
-   cortado por uma borda seca */
-.forjando.ok.desfecho .rf-berco { background: transparent; border-color: transparent; box-shadow: none; animation: none; }
-.forjando.ok.desfecho .rf-berco > .rf-barra { visibility: hidden; }
 /* a linha de raridade do encaixe sai no sucesso: cortava o selo de raios (a raridade está na cor do título) */
-.forjando.ok.desfecho .rf-encaixe.grande::after { visibility: hidden; }
-.forjando.ok.desfecho .rf-encaixe.grande { border-color: transparent; box-shadow: none;
-  background: radial-gradient(circle closest-side, #0a0a0c 0 66%, rgba(10, 10, 12, 0.78) 66% 78%, rgba(10, 10, 12, 0.48) 78% 89%, rgba(10, 10, 12, 0.2) 89% 98%, transparent 98%); }
-@media (prefers-reduced-motion: reduce) { .desfecho .rf-banner.ok { animation: none; } }
+
 @media (max-width: 1500px) {
   .rf-chapa.com-titulo .rf-pe-chapa { height: 124px; }
   .rf-chapa.com-titulo .rf-linha-chance { height: 22px; }
   .rf-chapa.com-titulo .rf-falha { height: 18px; }
-  .rf-pe-chapa > .rf-faixa-res { height: 42px; }
+
   .rf-banner { font-size: calc(var(--px) * 32); }
   .rf-banner.mau { font-size: calc(var(--px) * 26); }
   .rf-banner::before, .rf-banner::after { width: 44px; height: 3px; margin: 0 10px; }
   :root body .rf-janela .botao-janela.rf-botao.principal { font-size: 16px; }
+}
+
+/* ------------------------------------------------------------ 12ª versão: o acabamento do +5 ao +12 */
+/* +5 a +8: uma cor por nível no contorno, no reflexo e num veio que atravessa a peça devagar (turquesa, safira,
+   ametista, rubi), mais presente a cada nível; o +8 com um ponto de brilho. +9 a +12: o veio em várias cores, contínuo, o contorno
+   trocando de cor em degraus e pontos de brilho. Tudo mascarado pelo desenho (só os pixels da peça), em degraus de
+   pixel, sem borrão. A raridade fica na borda do encaixe; as gravações, nos rastros da borda. */
+@property --acab-cor { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --acab-luz { syntax: "<color>"; inherits: true; initial-value: transparent; }
+[data-acab="5"] > :is(img, canvas) { --acab-cor: rgba(70, 226, 204, 0.55); --acab-luz: rgba(170, 255, 240, 0.6); }
+[data-acab="6"] > :is(img, canvas) { --acab-cor: rgba(80, 130, 255, 0.65); --acab-luz: rgba(170, 200, 255, 0.7); }
+[data-acab="7"] > :is(img, canvas) { --acab-cor: rgba(180, 100, 255, 0.7); --acab-luz: rgba(225, 190, 255, 0.75); }
+[data-acab="8"] > :is(img, canvas) { --acab-cor: rgba(255, 60, 96, 0.75); --acab-luz: rgba(255, 180, 190, 0.8); }
+:is([data-acab="9"], [data-acab="10"], [data-acab="11"], [data-acab="12"]) > :is(img, canvas) { animation: rf-acab-contorno 4.8s steps(1) infinite; }
+[data-acab="9"] > :is(img, canvas) { animation: rf-acab-contorno-9 3.2s steps(1) infinite; }
+@keyframes rf-acab-contorno {
+  0%, 16% { --acab-cor: rgba(255, 60, 96, 0.8); --acab-luz: rgba(255, 200, 120, 0.85); }
+  17%, 32% { --acab-cor: rgba(255, 176, 50, 0.8); --acab-luz: rgba(255, 240, 170, 0.85); }
+  33%, 49% { --acab-cor: rgba(70, 226, 160, 0.8); --acab-luz: rgba(200, 255, 230, 0.85); }
+  50%, 66% { --acab-cor: rgba(70, 170, 255, 0.85); --acab-luz: rgba(200, 230, 255, 0.85); }
+  67%, 82% { --acab-cor: rgba(170, 100, 255, 0.85); --acab-luz: rgba(230, 200, 255, 0.85); }
+  83%, 100% { --acab-cor: rgba(255, 110, 220, 0.8); --acab-luz: rgba(255, 220, 245, 0.85); } }
+@keyframes rf-acab-contorno-9 { 0%, 49% { --acab-cor: rgba(255, 60, 96, 0.8); --acab-luz: rgba(255, 200, 120, 0.85); }
+  50%, 100% { --acab-cor: rgba(255, 176, 50, 0.8); --acab-luz: rgba(255, 240, 170, 0.85); } }
+/* o reflexo das cores novas (a passada periódica, como no +1 ao +4) */
+.rf-reflexo[data-nivel="5"] { --borda: rgba(70, 226, 204, 0.7); --miolo: rgba(220, 255, 250, 0.95); }
+.rf-reflexo[data-nivel="6"] { --borda: rgba(80, 130, 255, 0.8); --miolo: rgba(220, 232, 255, 0.95); }
+.rf-reflexo[data-nivel="7"] { --borda: rgba(180, 100, 255, 0.8); --miolo: rgba(240, 225, 255, 0.95); }
+.rf-reflexo[data-nivel="8"] { --borda: rgba(255, 60, 96, 0.8); --miolo: rgba(255, 228, 232, 0.95); }
+.rf-reflexo:is([data-nivel="9"], [data-nivel="10"], [data-nivel="11"], [data-nivel="12"]) { --borda: rgba(255, 220, 140, 0.85); --miolo: rgba(255, 255, 250, 1); }
+/* o veio: faixas de cor duras, inclinadas, atravessando a peça numa volta lenta (a mesma em todos os níveis); a
+   mistura "overlay" tinge sem apagar o sombreado do desenho. As cores do veio ficam em reforco.js (VEIOS): ele é pintado
+   num canvas do tamanho do desenho e ampliado sem suavização, um pixel do desenho por passo */
+.rf-acab, .rf-acab-brilhos { position: absolute; z-index: 1; pointer-events: none;
+  -webkit-mask-size: 100% 100%; mask-size: 100% 100%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; }
+.rf-acab { mix-blend-mode: overlay; opacity: 0.55; image-rendering: pixelated; }
+.rf-acab[data-nivel="5"] { opacity: 0.45; } .rf-acab:is([data-nivel="6"], [data-nivel="7"]) { opacity: 0.5; }
+.rf-acab[data-nivel="11"] { opacity: 0.6; } .rf-acab[data-nivel="12"] { opacity: 0.65; }
+/* os pontos de brilho: uma cruz de pixel que acende e apaga num ponto da peça, depois em outro */
+.rf-acab-brilhos > i { position: absolute; width: calc(var(--px-peca, 2px) * 3); height: calc(var(--px-peca, 2px) * 3); translate: -50% -50%;
+  background: linear-gradient(#fffbe8, #fffbe8) center / var(--px-peca, 2px) 100% no-repeat, linear-gradient(#fffbe8, #fffbe8) center / 100% var(--px-peca, 2px) no-repeat;
+  opacity: 0; animation: rf-acab-brilho 2.4s steps(1) infinite; }
+@keyframes rf-acab-brilho { 0%, 62% { opacity: 0; } 66% { opacity: 0.6; } 72%, 80% { opacity: 1; } 86% { opacity: 0.5; } 90%, 100% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  [data-acab] > :is(img, canvas) { animation: none !important; }
+  :is([data-acab="9"], [data-acab="10"], [data-acab="11"], [data-acab="12"]) > :is(img, canvas) { --acab-cor: rgba(255, 176, 50, 0.8); --acab-luz: rgba(255, 240, 200, 0.9); }
+  .rf-acab-brilhos > i { animation: none; opacity: 0.85; }
+}
+/* a dica: o +N do nome na cor do nível */
+.rf-n-dica { font-weight: 700; }
+.rf-n-dica[data-nivel="2"] { color: #8cec96; } .rf-n-dica[data-nivel="3"] { color: #78aaff; } .rf-n-dica[data-nivel="4"] { color: #ffd250; }
+.rf-n-dica[data-nivel="5"] { color: #46e2cc; } .rf-n-dica[data-nivel="6"] { color: #6e96ff; } .rf-n-dica[data-nivel="7"] { color: #be78ff; }
+.rf-n-dica[data-nivel="8"] { color: #ff5a78; }
+.rf-n-dica:is([data-nivel="9"], [data-nivel="10"], [data-nivel="11"], [data-nivel="12"]) {
+  background: linear-gradient(90deg, #ff3c60, #ffb032, #46e2a0, #468cff, #aa64ff); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+/* ------------------------------------------------------------ 12ª versão: o resultado em destaque */
+/* a apresentação do resultado (reforço e gravação), na linguagem do achado: o véu na tela inteira com a força do véu do
+   achado; por cima, o nome com o nível, a peça à esquerda e as propriedades à direita, o resultado grande e o OK. A
+   bancada fica atrás, escurecida e sem interação. Nada de moldura: o conjunto flutua sobre o véu. */
+#rf-res { position: fixed; inset: 0; z-index: 85; display: grid; place-items: center; background: rgba(6, 3, 2, 0.9);
+  user-select: none; }  /* entra inteira, no impacto: sem esmaecer (a bancada sem a peça apareceria um instante) */
+#rf-res > .fx-palco { z-index: 0; }
+/* atrás do véu, o nome e a peça da bancada saem (estão na apresentação); os materiais e os controles ficam, escuros */
+body.rf-res-aberto .rf-janela :is(.rf-titulo, .rf-molde, .rf-ficha) { visibility: hidden; }
+.rf-res-conj { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 10px; max-width: min(1040px, 94vw); }
+.rf-res-tit { display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; }
+.rf-res-nome { max-width: 900px; font: 400 calc(var(--px) * 40) / 1.05 var(--titulo); text-shadow: 0 3px 0 #000; text-wrap: balance; }
+.rf-res-nome:not([class*="r-"]), .rf-res-nome.r-comum { color: #f1e4c4; }
+.rf-res-sub { font: 700 13px/1 var(--texto); letter-spacing: 0.3em; text-transform: uppercase; color: #f2d27a; }
+.rf-res-queda { font: 400 calc(var(--px) * 26) / 1 var(--titulo); color: #d8d0c2; text-shadow: 0 2px 0 #000; }
+.rf-res-meio { display: grid; grid-template-columns: auto minmax(240px, auto); align-items: center; gap: 0 64px; }
+/* a peça no meio do selo: o espaço onde os raios acontecem (sem caixa nem borda que os corte) */
+.rf-res-peca { display: grid; place-items: center; width: 300px; height: 260px; }
+.rf-res-arte { position: relative; display: grid; place-items: center; width: 96px; height: 96px; }
+.rf-res-arte > :is(img, canvas) { width: 80px; height: 80px; image-rendering: pixelated; }
+.rf-res-arte .rf-gravura { inset: 0; }
+.rf-res-ficha { display: flex; flex-direction: column; gap: 6px; min-width: 260px; max-width: 380px; text-align: left; }
+.rf-res-rotulo { font: 700 11px/1.4 var(--texto); letter-spacing: 0.22em; text-transform: uppercase; color: #8a8070; }
+.rf-res-linhas { display: flex; flex-direction: column; gap: 2px; }
+.rf-res-linha { display: flex; justify-content: space-between; align-items: baseline; gap: 28px; color: #9d958a; }
+.rf-res-linha span { font: 16px/1.35 var(--texto); }
+.rf-res-linha b { font: 400 19px/1.25 var(--num); white-space: nowrap; }
+.rf-res-linha.muda { color: #f1e4c4; }
+.rf-res-linha.muda span { color: #e8dcbe; }
+.rf-res-linha.muda b { font-size: 24px; }
+.rf-res-linha.muda em { font-style: normal; color: #8fbf6a; }
+.rf-res-linha.perde em { color: #e2574c; }
+.rf-res-efeito { margin: 2px 0 0; font: 15px/1.35 var(--texto); color: #c8b0ff; }
+.rf-res-sulcos { display: flex; flex-direction: column; gap: 4px; margin-top: 6px; padding-top: 8px; border-top: 1px solid #3a3128; }
+.rf-res-sulcos-cab { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.rf-res-gravs { display: flex; flex-wrap: wrap; gap: 2px 14px; }
+.rf-res-grav { display: inline-flex; align-items: center; gap: 6px; font: 700 16px/1.3 var(--texto); color: var(--ess); text-shadow: 0 1px 0 #000; }
+.rf-res-grav.nova { font-size: 20px; }
+.rf-res-grav.nova :is(img, canvas, svg) { width: 24px; height: 24px; image-rendering: pixelated; }
+.rf-res-saiu { font: 14px/1.3 var(--texto); color: #9d958a; }
+.rf-res-ess { margin: 2px 0 0; padding-left: 8px; border-left: 3px solid var(--ess); font: 15px/1.35 var(--texto); color: #e8dcbe; }
+.rf-res-ess span { color: #9d958a; }
+.rf-res-saiu b { text-decoration: line-through; text-decoration-thickness: 2px; }
+#rf-res .rf-sq.nova { box-shadow: 0 0 0 2px var(--ess), 0 0 0 3px #000; animation: rf-res-nova 0.5s steps(4) 2 both; }
+@keyframes rf-res-nova { 50% { box-shadow: 0 0 0 3px #fff4dc, 0 0 0 4px #000; } }
+.rf-res-pe { display: flex; flex-direction: column; align-items: center; gap: 14px; margin-top: 4px; }
+#rf-res .rf-banner { display: inline-block; }
+#rf-res .rf-banner.ok { animation: rf-banner-ok 0.6s steps(6) both; }
+#rf-res .rf-banner.mau { animation: rf-surge 0.3s steps(3) both; }
+#rf-res .rf-banner.grav { font-size: calc(var(--px) * 42); color: color-mix(in srgb, var(--ess) 65%, #fff4dc); text-shadow: 0 3px 0 #000, 0 0 10px color-mix(in srgb, var(--ess) 55%, transparent);
+  animation: rf-banner-grav 0.5s steps(5) both; }
+@keyframes rf-banner-grav { 0% { opacity: 0; letter-spacing: 0.3em; } 40% { opacity: 1; } 100% { letter-spacing: 0.08em; } }
+#rf-res [data-res-ok] { min-width: 200px; }
+/* o número novo no nome: a marca quente (sucesso) ou sóbria (falha); o de antes some */
+#rf-res .rf-n { position: relative; display: inline-block; white-space: nowrap; }
+#rf-res .rf-n-agora { display: inline-block; }
+#rf-res .rf-n-antes { position: absolute; left: 0; animation: rf-apaga-n 0.5s steps(5) both; }  /* no lugar do novo, apagando */
+#rf-res .rf-n-agora.rf-quente { animation: rf-marca 0.7s steps(7) both; }
+#rf-res .rf-n-agora.rf-sobrio { animation: rf-surge 0.3s steps(3) both; }
+/* a falha: a peça inteira e visível, esfriando (sem dourado) */
+#rf-res.mau .rf-res-arte > :is(img, canvas) { animation: rf-esfria 0.9s steps(6) both; }
+@media (prefers-reduced-motion: reduce) {
+  #rf-res .rf-banner, #rf-res .rf-n-agora, #rf-res.mau .rf-res-arte > :is(img, canvas), #rf-res .rf-sq.nova { animation: none !important; }
+  #rf-res .rf-n-antes { animation: none; visibility: hidden; }
+}
+@media (max-width: 1500px) {
+  .rf-res-conj { gap: 6px; }
+  .rf-res-nome { font-size: calc(var(--px) * 30); max-width: 720px; }
+  .rf-res-meio { gap: 0 40px; }
+  .rf-res-peca { width: 220px; height: 190px; }
+  .rf-res-arte { width: 58px; height: 58px; }
+  .rf-res-arte > :is(img, canvas) { width: 40px; height: 40px; }
+  .rf-res-linha span { font-size: 14px; }
+  .rf-res-linha b { font-size: 17px; }
+  .rf-res-linha.muda b { font-size: 20px; }
+  .rf-res-pe { gap: 10px; }
+  #rf-res .rf-banner.grav { font-size: calc(var(--px) * 30); }
 }

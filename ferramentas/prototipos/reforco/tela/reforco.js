@@ -1,14 +1,14 @@
-/* Protótipo do reforço, 7ª versão (roadmapIDEIAS/25, 5.6): a A · Bancada com o reforço com chance, num eixo central e
-   com as mesmas dimensões em todos os estados. A forja (painel "forja_proto", demo.py) e a seção "Materiais" do
-   inventário. Só esta demonstração carrega este arquivo; o jogo não. As versões anteriores ficam em historico/.
+/* Protótipo do reforço, 12ª versão (roadmapIDEIAS/25, 5.6 a 5.11): a A · Bancada com o reforço com chance, num eixo
+   central e com as mesmas dimensões em todos os estados. A forja (painel "forja_proto", demo.py) e a seção "Materiais"
+   do inventário. Só esta demonstração carrega este arquivo; o jogo não. As versões anteriores ficam em historico/.
 
-   A bancada é sempre a mesma estrutura: o nível, a peça no molde, a chance e o Reforçar num eixo vertical; os
-   materiais à esquerda e o ganho à direita, em colunas de largura igual (a largura deles não desloca a peça). Oferta,
-   aquecimento, desfecho, falta, reforço máximo e peça sem reforço só mudam o conteúdo. A tentativa é resolvida uma vez
-   pelo motor; a tela encena com os dados da tentativa (o nível, a chance, o custo pago, o ganho e, na ficha, os valores
-   de antes), para nada contar o resultado nem a próxima oferta antes da hora. No impacto, o efeito em pixel das
-   celebrações (FX, o do Estouro) sai da peça e passa da bancada; "SUCESSO", o +N e o ganho formam um conjunto junto
-   dela; na falha, "FALHOU" e a queda, sóbrios. A peça reforçada tem um reflexo diagonal pela cor do nível. */
+   A bancada é a tela da tentativa: a peça no molde, os materiais à esquerda e o ganho à direita (colunas de largura
+   igual), a chance e o Reforçar no eixo; o aquecimento corre nos condutos. A tentativa é resolvida uma vez pelo motor;
+   a tela encena com os dados da tentativa (o nível, a chance, o custo pago, o ganho), para nada contar o resultado nem a
+   próxima oferta antes da hora. Na revelação, o resultado sai da bancada para uma apresentação própria (a linguagem do
+   achado): o véu na tela inteira, o nome com o nível novo, a peça com os efeitos, as propriedades, "SUCESSO" ou
+   "FALHOU" e o OK. A gravação (encantamento) usa a mesma apresentação. O acabamento do reforço (do +1 ao +12) segue a
+   peça em todas as telas. */
 "use strict";
 
 (() => {
@@ -19,7 +19,6 @@
   let janela = null;       // "reforcar", "desmontar" ou null (o balcão)
   let aba = "heroi";       // de quem são as peças na esteira
   let selUid = null;       // a peça escolhida (sobrevive ao redesenho da forja)
-  const veioSel = {};      // a arma do Guerreiro sem veio: o caminho escolhido antes do primeiro reforço
   let confirmando = null;  // {uid, nome}: a desmontagem pedida, esperando a confirmação
   let enviando = false;
   let focoDepois = null;   // o seletor que recebe o foco quando a forja volta desenhada
@@ -34,12 +33,11 @@
   let sulcoSel = 0, sulcoDe = null;  // o sulco escolhido (e de que peça: outra peça começa no primeiro vazio)
   let confirmandoGrav = null; // {uid}: a substituição pedida, esperando a confirmação
   let gravando = null;        // {id, t0, uid, de, para}: a cena da última gravação
-  const GRAVA_TRACO = 900, GRAVA_FIM = 2300;  // a essência percorre a borda; depois o resultado à vista
+  const GRAVA_TRACO = 900;  // a essência percorre a borda; depois o resultado em destaque, até o OK
   function faseGrav() {
     if (!gravando || gravando.fim) return "";
-    const e = performance.now() - gravando.t0;
-    if (reduzido()) return e < GRAVA_FIM - GRAVA_TRACO ? "gravado" : "";
-    return e < GRAVA_TRACO ? "traco" : e < GRAVA_FIM ? "gravado" : "";
+    if (reduzido()) return "gravado";
+    return performance.now() - gravando.t0 < GRAVA_TRACO ? "traco" : "gravado";
   }
   let testeProximo = null; // "sucesso" ou "falha": o caso de teste da faixa para a próxima tentativa (só uma)
   let esperandoId = 0;     // o id do resultado que o último pedido vai produzir (só ele acende a placa e a cena)
@@ -65,12 +63,8 @@
     return performance.now() - cena.t0 < IMPACTO ? "forja" : "desfecho";  // o desfecho fica até OK, Enter ou Esc
   }
 
-  /** O passo de agora: o do veio escolhido (a arma do Guerreiro sem veio pede a escolha) ou o único. */
-  function passoDe(p) {
-    if (!p.passos) return null;
-    if (p.passos.length === 1) return p.passos[0];
-    return p.passos.find((x) => x.veio === veioSel[p.uid]) || null;
-  }
+  /** O passo de agora (um só: a peça inteira melhora, sem caminho a escolher). */
+  const passoDe = (p) => (p.passos ? p.passos[0] : null);
 
   // ------------------------------------------------------------------ o balcão
   /** Um resultado novo do motor (o do último pedido): a placa passa a mostrá-lo; a cena toca uma vez (sem ela com
@@ -205,40 +199,30 @@
     if (!linhas.length) return "";
     return `<button type="button" class="rf-ajuda" aria-label="Detalhes" ${Telas.dica(`<ul class="dica-lista">${linhas.map((l) => `<li>${h(l)}</li>`).join("")}</ul>`, true)}>i</button>`;
   }
-  /** O desfecho: um conjunto junto da peça. No sucesso, "Sucesso", o +N e o ganho; na falha, "Falhou", a queda e o
-   *  que se perdeu, sóbrios (o nível que ficou não pode parecer prêmio). */
-  function desfecho(u) {
-    const ganho = u.linhas.map((l) => `<span>${h(l.nome)} ${l.antes} → <em>${l.depois}</em></span>`).join("");
-    return u.sucesso
-      ? `<div class="rf-dsf ok"><b class="rf-dsf-palavra">Sucesso</b><b class="rf-dsf-nivel">+${u.para}</b>${ganho ? `<small>${ganho}</small>` : ""}</div>`
-      : `<div class="rf-dsf mau"><b class="rf-dsf-palavra">Falhou</b><b class="rf-dsf-nivel">+${u.de} → +${u.para}</b>${ganho ? `<small>${ganho}</small>` : ""}</div>`;
-  }
+
 
   /** A bancada do reforço: a mesma estrutura em todos os estados (oferta, cena, falta, máximo, peça sem reforço, sem
    *  peça), para a peça e o Reforçar não mudarem de lugar. O nível, a peça, a chance e o botão no eixo do meio; os
    *  materiais e o ganho nas colunas dos lados, de largura igual. */
   /** O título da bancada: o nome da peça com o reforço, na cor da raridade; embaixo, o dono e os sulcos. Na cena, o
-   *  número de antes fica até a revelação; então o novo surge como uma marca quente (no sucesso) ou sóbria (na falha), e
-   *  o antigo some. Só o número anima; o nome não. */
+   *  número de antes (o novo entra na apresentação do resultado). */
   function tituloPeca(p, t) {
     if (!p) return `<div class="rf-titulo vazio"><b>&nbsp;</b><small>&nbsp;</small><div class="rf-tit-sulcos"></div></div>`;
     const nome = p.item.nome, m = / \+(\d+)/.exec(nome);
     const base = m ? nome.slice(0, m.index) : nome, resto = m ? nome.slice(m.index + m[0].length) : "";
-    const num = t
-      ? `<span class="rf-n"><span class="rf-n-antes">${t.de ? `+${t.de}` : ""}</span><span class="rf-n-agora ${t.sucesso ? "rf-quente" : "rf-sobrio"}">${p.reforco ? `+${p.reforco}` : ""}</span></span>`
-      : p.reforco ? `<span class="rf-n">+${p.reforco}</span>` : "";
+    const n = t ? t.de : p.reforco;  // na cena, o nível de antes (o novo aparece na apresentação do resultado)
+    const num = n ? `<span class="rf-n">+${n}</span>` : "";
     const sulcos = (p.encantos || []).length ? `<span>Sulcos</span><span class="rf-sq-fila">${filaSulcos(p.encantos)}</span>` : "";
     return `<div class="rf-titulo"><b class="r-${h(p.item.raridade)}">${h(base)} ${num}${h(resto)}</b><small>${h(dono(p))}</small><div class="rf-tit-sulcos">${sulcos}</div></div>`;
   }
-  function bancada({ p, classe = "", nivel = "", marcasDe, esq, dir, dsf = "", chance = "", falha = "", ajudas = [], botao = "Reforçar", trava = "", nota = "", neutra = false, titulo = "", faixa = "", dicaPeca = true }) {
+  function bancada({ p, classe = "", nivel = "", marcasDe, esq, dir, dsf = "", chance = "", falha = "", ajudas = [], botao = "Reforçar", trava = "", nota = "", neutra = false, titulo = "", dicaPeca = true }) {
     const m = p ? marcas({ ...p, reforco: marcasDe ?? p.reforco }) : marcas({ reforco: 0, limite: 4 });
     return `<div class="rf-chapa${titulo ? " com-titulo" : ""}${classe}">${titulo || ""}
       <div class="rf-leito"><div class="rf-lado esq">${esq}${conduto(false)}</div>
         ${molde(p, m, nivel === null ? "" : `<span class="rf-nivel">${nivel}</span>`, dicaPeca)}
         <div class="rf-lado dir">${conduto(true)}${dir}${dsf}</div></div>
-      <div class="rf-pe-chapa">${titulo ? `<div class="rf-faixa-res">${faixa}</div>` : ""}<div class="rf-linha-chance">${chance}${ajuda(ajudas)}</div>${titulo ? `<span class="rf-falha">${falha}</span>` : ""}
-        <div class="rf-acao"><button type="button" class="botao-janela rf-botao principal" data-reforcar${trava ? ` aria-disabled="true"${trava === true ? "" : ` title="${h(trava)}"`}` : ""}>${botao}</button>
-        ${titulo ? `<button type="button" class="botao-janela rf-botao principal rf-ok" data-ok>OK <kbd>Enter</kbd></button>` : ""}</div>
+      <div class="rf-pe-chapa"><div class="rf-linha-chance">${chance}${ajuda(ajudas)}</div>${titulo ? `<span class="rf-falha">${falha}</span>` : ""}
+        <div class="rf-acao"><button type="button" class="botao-janela rf-botao principal" data-reforcar${trava ? ` aria-disabled="true"${trava === true ? "" : ` title="${h(trava)}"`}` : ""}>${botao}</button></div>
         <span class="rf-nota${neutra ? " neutra" : ""}">${h(nota)}</span></div></div>`;
   }
   const semCusto = () => insumos();
@@ -251,12 +235,10 @@
     const t = emCena(p, u);
     if (t) {
       const x = cena.pago || { de: t.de, chance: 0, linhas: [] };
-      const classe = ` forjando ${t.sucesso ? "ok" : "falhou"}${fase() === "desfecho" ? " desfecho" : ""}${t.sucesso && t.para >= 3 ? " forte" : ""}${t.sucesso && t.para >= p.limite ? " maximo" : ""}`;
-      // o visor: o ganho oferecido até a revelação; então o que de fato mudou (o ganho ou a perda)
-      const dir = `<div class="rf-vis-oferta">${visor(x.linhas)}</div><div class="rf-vis-res${t.sucesso ? "" : " perda"}">${visor(t.linhas)}</div>`;
-      const faixa = `<span class="rf-banner ${t.sucesso ? "ok" : "mau"}">${t.sucesso ? "Sucesso" : "Falhou"}</span>`;
-      return bancada({ p, classe, nivel: null, titulo: tituloPeca(p, t), faixa, marcasDe: t.de, esq: insumos(x.ouro, Infinity, x.fragmentos, Infinity),
-        dir, chance: chanceHtml(x.chance), falha: x.chance >= 100 ? "" : `Falha: +${t.de} → +${Math.max(0, t.de - 1)}`,
+      // a bancada da tentativa, como a oferta estava (o resultado aparece na apresentação em destaque, por cima)
+      const classe = ` forjando ${t.sucesso ? "ok" : "falhou"}${t.sucesso && t.para >= 3 ? " forte" : ""}`;
+      return bancada({ p, classe, nivel: null, titulo: tituloPeca(p, t), marcasDe: t.de, esq: insumos(x.ouro, Infinity, x.fragmentos, Infinity),
+        dir: visor(x.linhas), chance: chanceHtml(x.chance), falha: x.chance >= 100 ? "" : `Falha: +${t.de} → +${Math.max(0, t.de - 1)}`,
         botao: `Reforçar +${t.de} → +${t.de + 1}`, trava: true, dicaPeca: false });
     }
     if (p.no_limite) {
@@ -266,18 +248,11 @@
       return bancada({ ...comum, p, esq: semCusto(), dir: visor([]), trava: true, nota: p.sem_reforco, neutra: true });
     }
     const passo = passoDe(p);
-    const custo = passo || p.passos[0];  // o custo e a chance são os mesmos nos dois caminhos
-    const escolha = p.passos.length > 1;
-    const dir = escolha
-      ? `<div class="rf-resultado veios" role="radiogroup" aria-label="Atributo que a arma reforça">${p.passos.map((x) => `<button type="button" role="radio" class="rf-veio${veioSel[p.uid] === x.veio ? " escolhido" : ""}" data-veio="${x.veio}" aria-checked="${veioSel[p.uid] === x.veio}">
-          ${x.linhas.map(linhaGanho).join("")}</button>`).join("")}</div>`
-      : visor(passo.linhas);
     const ajudas = ["O equipamento não quebra.", "A tentativa custa o mesmo, dê certo ou não."];  // a falha está à vista
-    if (escolha) ajudas.push("O atributo escolhido fica com a arma, mesmo se ela voltar a +0.");
-    const motivo = !passo ? "Escolha o atributo" : passo.motivo;
-    return bancada({ ...comum, p, esq: insumos(custo.ouro, custo.ouro_tem, custo.fragmentos, custo.tem), dir,
-      chance: chanceHtml(custo.chance), falha: custo.chance >= 100 ? "" : `Falha: +${p.reforco} → +${custo.falha}`, ajudas,
-      botao: `Reforçar +${p.reforco} → +${p.reforco + 1}`, trava: motivo || "", nota: motivo || "", neutra: !passo });
+    const motivo = passo.motivo;
+    return bancada({ ...comum, p, esq: insumos(passo.ouro, passo.ouro_tem, passo.fragmentos, passo.tem), dir: visor(passo.linhas),
+      chance: chanceHtml(passo.chance), falha: passo.chance >= 100 ? "" : `Falha: +${p.reforco} → +${passo.falha}`, ajudas,
+      botao: `Reforçar +${p.reforco} → +${p.reforco + 1}`, trava: motivo || "", nota: motivo || "" });
   }
   /** A desmontagem na mesma bancada do reforço: a peça no molde, no eixo do botão; à direita, o encaixe do que ela
    *  rende (ícone e quantidade). O botão vira a confirmação no próprio pé, com o nome da peça e a destruição. Depois de
@@ -363,13 +338,12 @@
         <span class="rf-nota${!motivo || /^Falta/.test(motivo) ? "" : " neutra"}">${h(motivo && p ? motivo : !p ? "Escolha uma peça" : "")}</span>`;
     }
     const nome = `<div class="rf-nivel rf-sulcos" role="radiogroup" aria-label="Sulcos">${filaSulcos(sulcos, sulcoSel)}</div>`;
-    const dsf = g ? `<div class="rf-dsf grav" style="--ess:${h(g.para.cor)}"><b class="rf-dsf-palavra">Gravado</b><b class="rf-dsf-nivel">${h(g.para.nome)}</b>${g.de ? `<small>no lugar de ${h(g.de.nome)}</small>` : ""}</div>` : "";
     if (g) sulcoSel = gravando.sulco ?? sulcoSel;
     const classe = g ? ` gravando${faseGrav() === "gravado" ? " gravado" : ""}` : "";
     return `<div class="rf-chapa encanto${classe}"${g ? ` style="--ess:${h(g.para.cor)}"` : e ? ` style="--ess:${h(e.cor)}"` : ""}>
       <div class="rf-leito"><div class="rf-lado esq">${insumosHtml}${conduto(false)}</div>
         ${molde(p, p ? marcas(p) : marcas({ reforco: 0, limite: 4 }), nome)}
-        <div class="rf-lado dir">${conduto(true)}${visorHtml}${dsf}</div></div>
+        <div class="rf-lado dir">${conduto(true)}${visorHtml}</div></div>
       ${trilho}${regra}
       <div class="rf-pe-chapa">${pe}</div></div>`;
   }
@@ -414,8 +388,8 @@
 
   /** Um golpe seco na bancada: só a chapa, só na vertical, um deslocamento por quadro (`passos`, em px). Por top, não
    *  por translate: um translate faria da chapa um contexto de empilhamento, e a peça e o resultado passariam para
-   *  baixo do efeito. +3: desce e volta; +4: desce mais, um rebote menor e assenta; a desmontagem: um toque. */
-  const BAQUE = { 3: [3, 1, 0], 4: [5, -2, 1, 0], desmonte: [2, 0] };
+   *  baixo do efeito. A desmontagem: um toque (o reforço treme a tela na apresentação do resultado, nos marcos altos). */
+  const BAQUE = { desmonte: [2, 0] };
   // Num relógio próprio: o redesenho da forja (limparRelogios) não corta o golpe no meio, e cada passo vale para a
   // chapa que estiver na tela. Um golpe novo cancela o anterior; sem `passos`, a chapa volta ao lugar na hora.
   let baqueRel = [];
@@ -431,72 +405,233 @@
    *  +3 e no +4, o golpe leve na falha, os estalos de metal na desmontagem. */
   function soar(...nomes) { if (typeof Som !== "undefined") nomes.forEach((n) => Som.tocar(n)); }
 
-  /** O efeito do desfecho, em pixel (FX das celebrações): no sucesso, o selo de raios atrás do molde, o halo intenso
-   *  em volta da peça, um anel curto e os estilhaços, que passam do leito, da chapa e um pouco da moldura da janela
-   *  (mais fortes no +3 e no +4, com a chapa tremendo); na falha, um anel fraco que apaga e cinzas caindo. O recorte é a
-   *  janela com uma margem (nada na tela inteira); a peça, o desfecho, o pé da bancada e a ficha ficam por cima do
-   *  efeito, e o canvas não recebe cliques. `desde`: quanto do desfecho já passou (um redesenho no meio). */
-  function efeito(jan, u, desde = 0) {
-    pararFx();
-    if (typeof FX === "undefined") return;
-    const leito = jan.querySelector(".rf-chapa .rf-leito"), alvo = jan.querySelector(".rf-chapa .rf-encaixe.grande");
-    if (!leito || !alvo) return;
-    palco = FX.palco(jan, { z: 2, classe: "rf-fx" });
-    const r = jan.getBoundingClientRect(), folga = 22;
-    palco.el.style.clipPath = `inset(${Math.max(0, r.top - folga)}px ${Math.max(0, innerWidth - r.right - folga)}px ${Math.max(0, innerHeight - r.bottom - folga)}px ${Math.max(0, r.left - folga)}px)`;
-    const enx = FX.enxame(), forte = u.sucesso && u.para >= 3, grupo = jan.querySelector(".rf-chapa .rf-dsf"), numero = jan.querySelector(".rf-titulo .rf-n-agora");
-    const pal = forte ? FX.PALETAS.lendario : ["W", "Y", "O", "o", "C"];
-    // o impacto (golpe e som) uma vez por resultado: o temporizador do desfecho chega alguns milissegundos depois do
-    // previsto, e antes o golpe só saía quando o atraso era zero (o +3 tremia, o +4 seguinte às vezes não)
-    if (!impactados.has(u.id) && desde < 400) {
-      impactados.add(u.id);
-      if (u.sucesso) baque(BAQUE[u.para]);
-      if (u.sucesso) soar("predio_ferreiro", ...(forte ? ["golpe"] : []));
-      else soar("golpe_leve");
-    }
-    ctl = FX.animar(palco, (t, q, parado) => {
-      const a = palco.de(alvo), R = Math.max(a.rx, a.ry);
-      if (u.sucesso && parado) {
-        // movimento reduzido: o quadro já assentado (não o pico): o selo menor, raios curtos e apagados, a leitura livre
-        const re = R + Math.round(R * (forte ? 0.46 : 0.33));  // o selo proporcional ao molde (menor a 1280)
-        FX.raios(palco, { cx: a.x, cy: a.y, n: 18, ang: 0.15, larg: 0.32, r0: R, r1: Math.round(re * 1.5), pal: pal.slice(1), esbate: 0.2, achata: 0.72, alterna: 0.62, vis: 7 });
-        FX.estrela(palco, { cx: a.x, cy: a.y, pontas: 14, ri: R + 2, re, pal, cores: ["z", "o", "O", "Y"] });
-        if (grupo) { const g = palco.de(grupo); FX.poco(palco, { cx: g.x, cy: g.y, rx: g.rx + palco.t(14), ry: g.ry + palco.t(10), forca: 14 }); }
-        return;
-      }
-      if (u.sucesso) {
-        const re = R + Math.round(R * (forte ? 0.96 : 0.71));  // o selo proporcional ao molde (menor a 1280)
-        // os raios abrem e continuam girando, um pouco mais calmos, até o OK; o título, o ganho e o pé ficam por cima
-        const vis = t < 900 ? Math.round(FX.rampa(t, 500, 400, 16, 11)) : 10 + Math.round(Math.sin(t / 420));
-        FX.raios(palco, { cx: a.x, cy: a.y, n: 18, ang: 0.15 + (parado ? 0 : q * 0.012), larg: 0.32, r0: R, r1: Math.round(re * (t < 900 ? (forte ? 3.4 : 2.6) : FX.rampa(t, 900, 500, forte ? 3.4 : 2.6, forte ? 2.1 : 1.9))), pal: pal.slice(1), esbate: 0.3, achata: t < 900 ? 0.72 : FX.rampa(t, 900, 500, 0.72, 0.5), alterna: 0.62, vis });
-        FX.estrela(palco, { cx: a.x, cy: a.y, pontas: 14, ri: R + 2, re, pal, cores: ["z", "o", "O", "Y"] });
-        // um poço escuro atrás do conjunto do resultado: os raios e o selo passam por trás da leitura sem disputar com ela
-        if (grupo) { const g = palco.de(grupo); FX.poco(palco, { cx: g.x, cy: g.y, rx: g.rx + palco.t(14), ry: g.ry + palco.t(10), forca: 14 }); }
-        // o clarão intenso só em volta da peça (sem o pontilhado na área inteira) e um anel achatado, que não desce até a chance
-        FX.claraoLocal(palco, { cx: a.x, cy: a.y, r: R + palco.t(forte ? 30 : 24), t, dur: forte ? 200 : 160, espalha: 0 });
-        if (t < 420) FX.anel(palco, { cx: a.x, cy: a.y, r: re + Math.round(FX.rampa(t, 0, 400) * palco.t(forte ? 70 : 50)), esp: 2, pal: ["W", pal[1], pal[2]], achata: 0.6, rastro: 3, vis: Math.round(14 * (1 - t / 420)) });
-        if (q === 1) enx.soltar(forte ? 42 : 24, (i) => {
-          const ang = FX.aleatorio(0, Math.PI * 2), v = FX.aleatorio(3, 7.5) * (forte ? 1.25 : 0.95);
-          return { x: a.x + Math.cos(ang) * re * 0.8, y: a.y + Math.sin(ang) * re * 0.7, vx: Math.cos(ang) * v, vy: Math.sin(ang) * v - 2, g: 0.36, arrasto: 0.97,
-            vida: Math.round(FX.aleatorio(18, 32)), desenho: ["lasca", "caco", "cruz", "duplo"][i % 4], pal: ["W", "Y", "O", "o", "r"], piscar: i % 5 === 0 };
-        });
-        if (q > 6 && q % 3 === 0) enx.soltar(1, () => ({ x: a.x + FX.aleatorio(-re, re), y: a.y + re * 0.6, vx: FX.aleatorio(-0.3, 0.3), vy: FX.aleatorio(-1.4, -0.7), vida: 16, desenho: "brasa", pal: ["Y", "O", "o", "r", "D"] }));
-        // a marca quente no título: poucas fagulhas saindo do número novo
-        if (numero && q === 2) { const n = palco.de(numero); enx.soltar(forte ? 12 : 8, () => ({ x: n.x + FX.aleatorio(-n.rx, n.rx), y: n.y + FX.aleatorio(-n.ry * 0.5, n.ry * 0.5),
-          vx: FX.aleatorio(-1.6, 1.6), vy: FX.aleatorio(-2.6, -0.8), g: 0.2, arrasto: 0.95, vida: Math.round(FX.aleatorio(8, 16)), desenho: Math.random() < 0.5 ? "ponto" : "brasa", pal: ["W", "Y", "O", "o"] })); }
-      } else {
-        if (parado) { FX.poco(palco, { cx: a.x, cy: a.y, rx: R + palco.t(30), ry: R + palco.t(24), forca: 10 }); return; }
-        const re = R + palco.t(20);
-        if (t < 700) FX.anel(palco, { cx: a.x, cy: a.y, r: re + Math.round(FX.rampa(t, 0, 700) * palco.t(40)), esp: 2, pal: ["o", "r", "D"], achata: 0.8, rastro: 3, vis: Math.round(12 * (1 - t / 700)) });
-        if (q === 1) enx.soltar(12, () => ({ x: a.x + FX.aleatorio(-re, re), y: a.y - re * 0.5, vx: FX.aleatorio(-0.4, 0.4), vy: FX.aleatorio(-0.6, 0.2), g: 0.12, arrasto: 0.95,
-          vida: Math.round(FX.aleatorio(18, 30)), desenho: "brasa", pal: ["O", "o", "r", "G", "g"] }));
-        if (q > 2 && q < 18 && q % 2 === 0) enx.soltar(2, () => ({ x: a.x + FX.aleatorio(-re, re), y: a.y + FX.aleatorio(-re * 0.4, re * 0.2), vx: FX.aleatorio(-0.2, 0.2), vy: FX.aleatorio(0.4, 1), g: 0.04, arrasto: 0.98,
-          vida: Math.round(FX.aleatorio(18, 26)), desenho: Math.random() < 0.5 ? "ponto" : "duplo", pal: ["w", "G", "g", "d"] }));
-        if (grupo) { const g = palco.de(grupo); FX.poco(palco, { cx: g.x, cy: g.y, rx: g.rx + palco.t(10), ry: g.ry + palco.t(8), forca: 12 }); }
-      }
-      enx.passo(); enx.desenhar(palco);
+  // ------------------------------------------------------------------ o resultado em destaque (12ª versão)
+  /* Na revelação, o resultado sai da bancada e ganha uma apresentação própria, na linguagem do achado: um véu na tela
+     inteira (a mesma força do véu do achado) e, por cima, o nome com o nível no alto, a peça com o acabamento e os efeitos
+     à esquerda, as propriedades à direita, o resultado grande embaixo e o OK. A bancada fica atrás, escurecida e sem
+     interação; OK, Enter ou Esc a devolvem, com a próxima oferta. O mesmo molde serve à gravação (encantamento). */
+  let res = null;  // {id, el, ctl, palco}: a apresentação aberta
+  let calmaAte = 0;  // logo depois de dispensar, o resto do gesto (o 2º clique, o Espaço que solta) não chega à bancada
+  /** A faixa de intensidade do nível alcançado: 0 (+1, +2), 1 (+3, +4), 2 (+5 a +8), 3 (+9 a +11), 4 (+12). */
+  const faixaNivel = (n) => (n >= 12 ? 4 : n >= 9 ? 3 : n >= 5 ? 2 : n >= 3 ? 1 : 0);
+  // as cores do efeito pelo nível: o ouro até o +4 (já aprovado); do +5 ao +8, a cor do nível (a mesma do acabamento);
+  // do +9, o prisma (os raios em várias cores, mais cores a cada nível)
+  const COR_NIVEL = {
+    5: ["W", "#c8fff4", "#46e2cc", "#1f9a8c", "#0e4a46"], 6: ["W", "#c8dcff", "#5a8cff", "#2a4cc0", "#14205a"],
+    7: ["W", "#ecd2ff", "#b064ff", "#6a2cb0", "#2c1050"], 8: ["W", "#ffd0d8", "#ff3c60", "#a8102e", "#4a0614"],
+  };
+  const PRISMA = ["#ff3c60", "#ffb032", "#46e2a0", "#468cff", "#aa64ff", "#ff6edc"];
+  const paletaNivel = (n) => (n >= 9 ? ["W", "#fff4c8", "#ffb032", "#ff3c60", "#5a1030"] : COR_NIVEL[n] || (n >= 3 ? FX.PALETAS.lendario : ["W", "Y", "O", "o", "C"]));
+
+  /** As propriedades da peça, como a ficha do achado: as que mudaram com antes → depois (o novo em verde; na queda,
+   *  em vermelho), as outras secundárias, sem seta. */
+  function linhasRes(p, mudou, perde) {
+    const muda = new Map((mudou || []).map((l) => [l.nome, l]));
+    const linha = (nome, b, classe = "") => `<div class="rf-res-linha${classe}"><span>${h(nome)}</span><b>${b}</b></div>`;
+    const html = p.propriedades.map((pr) => {
+      const l = muda.get(pr.nome);
+      return l ? linha(pr.nome, `${h(String(l.antes))} → <em>${h(String(l.depois))}</em>`, perde ? " muda perde" : " muda") : linha(pr.nome, valor(pr, pr.valor));
     });
-    if (desde > 0 && ctl.pular) ctl.pular(desde);
+    (mudou || []).filter((l) => !p.propriedades.some((pr) => pr.nome === l.nome))
+      .forEach((l) => html.push(linha(l.nome, `${h(String(l.antes))} → <em>${h(String(l.depois))}</em>`, perde ? " muda perde" : " muda")));
+    return html.join("");
+  }
+  /** Os sulcos da peça: os encaixes e o nome de cada gravação, na cor dela (o efeito inteiro fica na dica). `nova`: o
+   *  sulco que acabou de receber a gravação (em destaque); `saiu`: a gravação substituída. */
+  function sulcosRes(lista, nova = -1, saiu = null) {
+    if (!Array.isArray(lista) || !lista.length) return "";
+    const nomes = lista.map((e, i) => e ? `<span class="rf-res-grav${i === nova ? " nova" : ""}" style="--ess:${h(e.cor)}">${i === nova ? `${iconeDe(e.icone)}` : ""}${h(e.nome)}</span>` : "").filter(Boolean);
+    return `<div class="rf-res-sulcos"><div class="rf-res-sulcos-cab"><span class="rf-res-rotulo">Sulcos</span><span class="rf-sq-fila">${lista.map((x, i) => filaSulcos([x]).replace('class="rf-sq', `class="rf-sq${i === nova ? " nova" : ""}`)).join("")}</span></div>
+      ${nomes.length ? `<div class="rf-res-gravs">${nomes.join("")}</div>` : ""}${saiu ? `<div class="rf-res-saiu">Saiu <b style="color:${h(saiu.cor)}">${h(saiu.nome)}</b></div>` : ""}</div>`;
+  }
+  /** O nome com o nível: o de antes some e o novo entra como marca quente (sucesso) ou sóbria (falha). */
+  function nomeRes(p, t) {
+    const nome = p.item.nome, m = / \+(\d+)/.exec(nome);
+    const base = m ? nome.slice(0, m.index) : nome, resto = m ? nome.slice(m.index + m[0].length) : "";
+    const num = t ? `<span class="rf-n"><span class="rf-n-antes">${t.de ? `+${t.de}` : ""}</span><span class="rf-n-agora ${t.sucesso ? "rf-quente" : "rf-sobrio"}">${p.reforco ? `+${p.reforco}` : ""}</span></span>`
+      : p.reforco ? `<span class="rf-n">+${p.reforco}</span>` : "";
+    return `<b class="rf-res-nome r-${h(p.item.raridade)}">${h(base)} ${num}${h(resto)}</b>`;
+  }
+  const rotuloPeca = (p) => `<span class="rf-res-rotulo">${h(Telas.nomeEspaco(p.item.slot, p.item.classe) || "")} · ${h(dono(p))}</span>`;
+
+  /** Abre a apresentação (uma por resultado: um redesenho da forja não a repete nem recomeça o efeito). */
+  function abrirRes({ id, classe, aria, titulo, arte, ficha, banner, nivel, fx }) {
+    if (res && res.id === id && res.el.isConnected) return res;
+    fecharRes();
+    const el = document.createElement("div");
+    el.id = "rf-res";
+    el.className = `rf-res ${classe}`;
+    el.setAttribute("role", "dialog");
+    el.setAttribute("aria-modal", "true");
+    el.setAttribute("aria-label", aria);
+    el.innerHTML = `<div class="rf-res-conj"><header class="rf-res-tit">${titulo}</header>
+      <div class="rf-res-meio"><div class="rf-res-peca">${arte}</div><div class="rf-res-ficha">${ficha}</div></div>
+      <div class="rf-res-pe">${banner}<button type="button" class="botao-janela rf-botao principal" data-res-ok>OK <kbd>Enter</kbd></button></div></div>`;
+    document.body.appendChild(el);
+    document.body.classList.add("rf-res-aberto");  // o nome e a peça da bancada saem do fundo (não aparecem duas vezes)
+    res = { id, el, ctl: null, palco: null };
+    const caixa = el.querySelector(".rf-res-arte");
+    acabamento(caixa, nivel);  // o acabamento do nível novo já na revelação
+    if (nivel) relogios.push(setTimeout(() => reflexo(caixa, nivel, true), reduzido() ? 0 : 280));
+    // nada passa para trás: um clique fora do OK não faz nada; o 2º clique de um clique duplo no OK não chega à bancada
+    el.addEventListener("click", (ev) => {
+      ev.stopPropagation();
+      if (ev.target.closest("[data-res-ok]") && ev.detail <= 1) dispensarRes();
+    });
+    el.addEventListener("pointerdown", (ev) => ev.stopPropagation());
+    el.querySelector("[data-res-ok]").focus({ preventScroll: true });
+    if (fx && typeof FX !== "undefined") {
+      res.palco = FX.palco(el, { z: 0, classe: "rf-fx" });
+      res.ctl = fx(res.palco, el);
+    }
+    return res;
+  }
+  function fecharRes() {
+    if (!res) return;
+    if (res.ctl) res.ctl.parar();
+    res.el.remove();
+    res = null;
+    document.body.classList.remove("rf-res-aberto");
+  }
+  /** OK, Enter ou Esc: a apresentação sai e a bancada volta (o reforço ou a gravação). */
+  function dispensarRes() {
+    if (fase() === "desfecho") dispensar();
+    else if (faseGrav() === "gravado") dispensarGrav();
+    else fecharRes();
+  }
+
+  /** O efeito do resultado do reforço, no palco da apresentação: no sucesso, o selo de raios atrás da peça, o clarão,
+   *  os anéis e os estilhaços, mais fortes e mais coloridos nos marcos (+3, +5, +9, +12) sem durar mais; depois do
+   *  impacto, os raios acomodam numa intensidade que deixa ler e continuam girando até o OK. Na falha, um anel fraco que
+   *  apaga, cinzas e o esfriar, sem dourado. */
+  function efeitoReforco(u, desde) {
+    return (palco, el) => {
+      const alvo = el.querySelector(".rf-res-arte"), ficha = el.querySelector(".rf-res-ficha"), numero = el.querySelector(".rf-res-nome .rf-n-agora");
+      const f = faixaNivel(u.para), pal = paletaNivel(u.para), enx = FX.enxame();
+      const cores = u.para >= 9 ? PRISMA.slice(0, u.para >= 12 ? 6 : u.para - 7) : null;
+      const estrelaCores = u.para >= 9 ? ["z", "#5a1030", "#ffb032", "#fff4c8"] : u.para >= 5 ? ["z", pal[4], pal[2], pal[1]] : ["z", "o", "O", "Y"];
+      if (!impactados.has(u.id) && desde < 400) {
+        impactados.add(u.id);
+        if (u.sucesso) { soar("predio_ferreiro", ...(f >= 1 ? ["golpe"] : [])); if (f >= 1) FX.tremer([0, 3, 4, 6, 9][f]); }
+        else soar("golpe_leve");
+      }
+      const ctl = FX.animar(palco, (t, q, parado) => {
+        const a = palco.de(alvo), R = Math.max(a.rx, a.ry);
+        if (ficha) { const g = palco.de(ficha); FX.poco(palco, { cx: g.x, cy: g.y, rx: g.rx + palco.t(26), ry: g.ry + palco.t(16), forca: 15 }); }
+        if (!u.sucesso) {
+          FX.poco(palco, { cx: a.x, cy: a.y, rx: R + palco.t(30), ry: R + palco.t(24), forca: 10 });
+          if (parado) return;
+          const re = R + palco.t(20);
+          if (t < 700) FX.anel(palco, { cx: a.x, cy: a.y, r: re + Math.round(FX.rampa(t, 0, 700) * palco.t(40)), esp: 2, pal: ["G", "g", "d"], achata: 0.8, rastro: 3, vis: Math.round(12 * (1 - t / 700)) });
+          if (q === 1) enx.soltar(14, () => ({ x: a.x + FX.aleatorio(-re, re), y: a.y - re * 0.5, vx: FX.aleatorio(-0.4, 0.4), vy: FX.aleatorio(-0.6, 0.2), g: 0.12, arrasto: 0.95,
+            vida: Math.round(FX.aleatorio(18, 30)), desenho: "brasa", pal: ["o", "r", "G", "g", "d"] }));
+          if (q > 2 && q % 4 === 0) enx.soltar(1, () => ({ x: a.x + FX.aleatorio(-re, re), y: a.y + FX.aleatorio(-re * 0.6, 0), vx: FX.aleatorio(-0.2, 0.2), vy: FX.aleatorio(0.3, 0.8), g: 0.02, arrasto: 0.98,
+            vida: Math.round(FX.aleatorio(20, 30)), desenho: Math.random() < 0.5 ? "ponto" : "duplo", pal: ["w", "G", "g", "d"] }));
+          enx.passo(); enx.desenhar(palco);
+          return;
+        }
+        const re = R + Math.round(R * [0.71, 0.96, 1.04, 1.12, 1.22][f]);
+        const longo = [2.6, 3.4, 3.6, 3.9, 4.3][f], calmo = [1.9, 2.1, 2.2, 2.35, 2.55][f];
+        const n = 18 + 2 * Math.max(0, f - 1);
+        const vis = parado ? 9 : t < 900 ? Math.round(FX.rampa(t, 500, 400, 16, 11)) : 10 + Math.round(Math.sin(t / 420));
+        const r1 = Math.round(re * (parado ? calmo : t < 900 ? longo : FX.rampa(t, 900, 500, longo, calmo)));
+        const achata = parado ? 0.6 : t < 900 ? 0.72 : FX.rampa(t, 900, 500, 0.72, 0.6);
+        const ang = 0.15 + (parado ? 0 : q * 0.012);
+        if (cores) {  // o prisma: os raios repartidos entre as cores do nível, cada cor no seu lugar da volta
+          const m = Math.max(2, Math.round(n / cores.length));
+          cores.forEach((c, i) => FX.raios(palco, { cx: a.x, cy: a.y, n: m, ang: ang + (i * Math.PI * 2) / (m * cores.length),
+            larg: 0.32 / cores.length, r0: R, r1, pal: ["W", "#fff4c8", c, c], esbate: 0.3, achata, alterna: 0.62, vis }));
+        } else FX.raios(palco, { cx: a.x, cy: a.y, n, ang, larg: 0.32, r0: R, r1, pal: pal.slice(1), esbate: 0.3, achata, alterna: 0.62, vis });
+        FX.estrela(palco, { cx: a.x, cy: a.y, pontas: 14 + 2 * Math.max(0, f - 1), ri: R + 2, re, pal, cores: estrelaCores });
+        FX.poco(palco, { cx: a.x, cy: a.y, rx: R + 2, ry: R + 2, forca: 14 });  // a peça lê sobre o selo
+        if (parado) return;
+        FX.claraoLocal(palco, { cx: a.x, cy: a.y, r: R + palco.t([24, 30, 34, 38, 44][f]), t, dur: f >= 3 ? 240 : 200, espalha: 0 });
+        // os anéis do impacto: um até o +2, dois do +3, três do +9 (um só golpe, sem repetir)
+        [0, 110, 220].slice(0, f >= 3 ? 3 : f >= 1 ? 2 : 1).forEach((d, i) => {
+          const tt = t - d;
+          if (tt >= 0 && tt < 420) FX.anel(palco, { cx: a.x, cy: a.y, r: re + Math.round(FX.rampa(tt, 0, 400) * palco.t([50, 70, 80, 96, 110][f] - i * 12)), esp: 2,
+            pal: cores ? ["W", cores[i % cores.length], cores[(i + 1) % cores.length]] : ["W", pal[1], pal[2]], achata: 0.6, rastro: 3, vis: Math.round(14 * (1 - tt / 420)) });
+        });
+        if (q === 1) enx.soltar([24, 42, 52, 64, 84][f], (i) => {
+          const g = FX.aleatorio(0, Math.PI * 2), v = FX.aleatorio(3, 7.5) * [0.95, 1.25, 1.3, 1.4, 1.5][f];
+          return { x: a.x + Math.cos(g) * re * 0.8, y: a.y + Math.sin(g) * re * 0.7, vx: Math.cos(g) * v, vy: Math.sin(g) * v - 2, g: 0.36, arrasto: 0.97,
+            vida: Math.round(FX.aleatorio(18, 32)), desenho: ["lasca", "caco", "cruz", "duplo"][i % 4],
+            pal: cores ? ["W", cores[i % cores.length], cores[(i + 2) % cores.length]] : ["W", pal[1], pal[2], pal[3]], piscar: i % 5 === 0 };
+        });
+        // depois do golpe: brasas subindo e, nos níveis altos, pontos de brilho em volta (sem repetir o golpe)
+        if (q > 6 && q % [3, 3, 3, 2, 2][f] === 0) enx.soltar(1, () => ({ x: a.x + FX.aleatorio(-re, re), y: a.y + re * 0.6, vx: FX.aleatorio(-0.3, 0.3), vy: FX.aleatorio(-1.4, -0.7), vida: 16,
+          desenho: "brasa", pal: cores ? ["W", cores[q % cores.length], "D"] : ["Y", "O", "o", "r", "D"] }));
+        if (f >= 2 && q > 10 && q % (f >= 3 ? 5 : 8) === 0) { const g = FX.aleatorio(0, Math.PI * 2); enx.soltar(1, () => ({ x: a.x + Math.cos(g) * re * 1.3, y: a.y + Math.sin(g) * re * 0.9,
+          vx: 0, vy: 0, vida: 7, desenho: "brilho", pal: cores ? ["W", cores[q % cores.length]] : ["W", pal[1], pal[2]] })); }
+        // a marca quente no título: poucas fagulhas saindo do número novo
+        if (numero && q === 2) { const m = palco.de(numero); enx.soltar([8, 12, 14, 16, 18][f], () => ({ x: m.x + FX.aleatorio(-m.rx, m.rx), y: m.y + FX.aleatorio(-m.ry * 0.5, m.ry * 0.5),
+          vx: FX.aleatorio(-1.6, 1.6), vy: FX.aleatorio(-2.6, -0.8), g: 0.2, arrasto: 0.95, vida: Math.round(FX.aleatorio(8, 16)), desenho: Math.random() < 0.5 ? "ponto" : "brasa",
+          pal: cores ? ["W", cores[0], cores[1]] : ["W", "Y", "O", "o"] })); }
+        enx.passo(); enx.desenhar(palco);
+      });
+      if (desde > 0 && ctl.pular) ctl.pular(desde);
+      return ctl;
+    };
+  }
+
+  /** A apresentação do resultado do reforço (a mesma organização no sucesso e na falha). */
+  function apresentarReforco(u) {
+    const d = ultimoDesenho, p = d && d.pecas.find((x) => x.uid === u.uid);
+    if (!p) return;
+    const maximo = u.sucesso && u.para >= p.limite;
+    const sub = u.sucesso ? (maximo ? `<span class="rf-res-sub">Reforço máximo</span>` : "") : `<span class="rf-res-queda">+${u.de} → +${u.para}</span>`;
+    abrirRes({
+      id: `r${u.id}`, classe: `reforco ${u.sucesso ? "ok" : "mau"} f${faixaNivel(u.para)}${maximo ? " maximo" : ""}`,
+      aria: `Reforço: ${u.sucesso ? "sucesso" : "falhou"}, ${p.item.nome}`,
+      titulo: `${nomeRes(p, u)}${sub}`,
+      arte: `<div class="rf-res-arte r-${h(p.item.raridade)}">${iconePeca(p.item)}${gravura(p.encantos)}</div>`,
+      ficha: `${rotuloPeca(p)}<div class="rf-res-linhas">${linhasRes(p, u.linhas, !u.sucesso)}</div>${p.efeito ? `<p class="rf-res-efeito">${h(p.efeito)}</p>` : ""}${sulcosRes(p.encantos)}`,
+      banner: `<span class="rf-banner ${u.sucesso ? "ok" : "mau"}">${u.sucesso ? "Sucesso" : "Falhou"}</span>`,
+      nivel: p.reforco,
+      fx: efeitoReforco(u, cena && !reduzido() ? Math.max(0, performance.now() - cena.t0 - IMPACTO) : 0),
+    });
+  }
+
+  /** A gravação concluída, em destaque: o nome da peça, a peça com a borda de luz das gravações e o acabamento do
+   *  reforço, os sulcos ao lado com a gravação nova em destaque (o nome, o símbolo e o efeito dela; as outras só pelo
+   *  nome), a que saiu (na substituição), "Gravado" na cor da essência e o OK. Sem sorteio: nada de suspense. */
+  function apresentarGravacao(g) {
+    const d = ultimoDesenho, p = d && d.pecas.find((x) => x.uid === g.uid);
+    if (!p) return;
+    const nova = (p.encantos || [])[g.sulco];
+    abrirRes({
+      id: `g${g.id}`, classe: "gravacao", aria: `Gravação: ${g.para.nome} em ${p.item.nome}`,
+      titulo: nomeRes(p, null),
+      arte: `<div class="rf-res-arte r-${h(p.item.raridade)}">${iconePeca(p.item)}${gravura(p.encantos)}</div>`,
+      ficha: `${rotuloPeca(p)}${sulcosRes(p.encantos, g.sulco, g.de)}${nova ? `<p class="rf-res-ess" style="--ess:${h(nova.cor)}">${h(nova.efeito)}${nova.limite ? ` <span>${h(nova.limite)}</span>` : ""}</p>` : ""}`,
+      banner: `<span class="rf-banner grav" style="--ess:${h(g.para.cor)}">Gravado</span>`,
+      nivel: p.reforco,
+      fx: efeitoGravacao(g, reduzido() ? 0 : Math.max(0, performance.now() - g.t0 - GRAVA_TRACO)),
+    });
+  }
+  /** O efeito da gravação: a inscrição termina num anel curto na cor da essência e num punhado de brilhos; depois,
+   *  poucos brilhos em volta da peça até o OK (sem raios: não é sorte, é trabalho). */
+  function efeitoGravacao(g, desde) {
+    return (palco, el) => {
+      const alvo = el.querySelector(".rf-res-arte"), ficha = el.querySelector(".rf-res-ficha"), enx = FX.enxame();
+      const pal = g.para.fx || ["W", "Y", "O", "o"], cor = g.para.cor;
+      const ctl = FX.animar(palco, (t, q, parado) => {
+        const a = palco.de(alvo), R = Math.max(a.rx, a.ry) + palco.t(8);
+        if (ficha) { const f = palco.de(ficha); FX.poco(palco, { cx: f.x, cy: f.y, rx: f.rx + palco.t(26), ry: f.ry + palco.t(16), forca: 15 }); }
+        FX.poco(palco, { cx: a.x, cy: a.y, rx: R + 2, ry: R + 2, forca: 12 });
+        if (parado) return;
+        const tp = (t - 900) % 2400;  // depois da entrada, um anel fino de tempos em tempos (a gravação acesa)
+        if (t > 900 && tp < 520) FX.anel(palco, { cx: a.x, cy: a.y, r: R + Math.round((tp / 520) * palco.t(34)), esp: 1, pal: [cor, cor, cor], achata: 0.85, rastro: 2, vis: Math.round(9 * (1 - tp / 520)) });
+        if (t < 420) FX.anel(palco, { cx: a.x, cy: a.y, r: R + Math.round(FX.rampa(t, 0, 400) * palco.t(60)), esp: 2, pal: ["W", cor, cor], achata: 0.85, rastro: 3, vis: Math.round(14 * (1 - t / 420)) });
+        if (q === 1) enx.soltar(14, () => ({ x: a.x + FX.aleatorio(-R, R), y: a.y + FX.aleatorio(-R, R * 0.4), vx: FX.aleatorio(-1, 1), vy: FX.aleatorio(-1.8, -0.6), g: 0.05,
+          vida: Math.round(FX.aleatorio(10, 18)), desenho: Math.random() < 0.4 ? "brilho" : "ponto", pal }));
+        if (q > 8 && q % 6 === 0) { const ang = FX.aleatorio(0, Math.PI * 2); enx.soltar(1, () => ({ x: a.x + Math.cos(ang) * R * 1.3, y: a.y + Math.sin(ang) * R,
+          vx: 0, vy: -0.2, vida: 9, desenho: "brilho", pal })); }
+        enx.passo(); enx.desenhar(palco);
+      });
+      if (desde > 0 && ctl.pular) ctl.pular(desde);
+      return ctl;
+    };
   }
 
   /** A desmontagem: um toque na bancada, a peça se desfaz em fragmentos de pixel que voam para o encaixe do material,
@@ -539,11 +674,6 @@
         const pts = [[a.x - R + 2 * R * f, a.y - R], [a.x + R, a.y - R + 2 * R * f], [a.x + R - 2 * R * f, a.y + R], [a.x - R, a.y + R - 2 * R * f]][lado];
         if (q % 1 === 0) enx.soltar(2, () => ({ x: pts[0], y: pts[1], vx: FX.aleatorio(-1.2, 1.2), vy: FX.aleatorio(-1.6, 0.4), g: 0.12, arrasto: 0.95,
           vida: Math.round(FX.aleatorio(6, 12)), desenho: Math.random() < 0.5 ? "ponto" : "duplo", pal }));
-      } else if (t < GRAVA_TRACO + 420) {
-        const v = t - GRAVA_TRACO;
-        FX.anel(palco, { cx: a.x, cy: a.y, r: R + Math.round(FX.rampa(v, 0, 400) * palco.t(36)), esp: 2, pal: ["W", "Y", "y"], achata: 0.85, rastro: 3, vis: Math.round(13 * (1 - v / 420)) });
-        if (v < 70) enx.soltar(3, () => ({ x: a.x + FX.aleatorio(-R, R), y: a.y - R, vx: FX.aleatorio(-0.6, 0.6), vy: FX.aleatorio(-1.6, -0.6), g: 0.05,
-          vida: 14, desenho: "brilho", pal }));
       }
       enx.passo(); enx.desenhar(palco);
     });
@@ -557,10 +687,12 @@
     sulcoDe = null;  // a seleção vai para o próximo sulco vazio (ou o primeiro, se a peça está cheia)
     limparRelogios();
     pararFx();
+    fecharRes();
     if (ultimoRaiz && ultimoRaiz.isConnected && ultimoDesenho) ultimoRaiz.replaceWith(Telas.painel({ tipo: "forja_proto", dados: ultimoDesenho }));
     const jan = document.querySelector(".rf-janela");
-    if (jan && focoDepois && (document.activeElement === document.body || !jan.contains(document.activeElement))) {
-      const alvo = primeiro(jan, focoDepois);
+    if (jan && (document.activeElement === document.body || !jan.contains(document.activeElement))) {
+      // o foco volta à ação da bancada (a próxima oferta), à peça escolhida, ou ao Fechar
+      const alvo = primeiro(jan, focoDepois || "[data-reforcar]:not([aria-disabled]), [data-gravar]:not([aria-disabled]), [data-uid].marcada, [data-fechar]");
       if (alvo) alvo.focus();
     }
   }
@@ -570,30 +702,28 @@
     gravando.fim = true;
     sulcoDe = null;
     pararFx();
+    fecharRes();
   }
   function adiantarGrav() {
     const f = faseGrav();
     if (f === "traco") { gravando.t0 = performance.now() - GRAVA_TRACO; if (ultimoRaiz && ultimoDesenho) ultimoRaiz.replaceWith(Telas.painel({ tipo: "forja_proto", dados: ultimoDesenho })); }
-    else if (f === "gravado") assentarGrav();
   }
+  function dispensarGrav() { if (faseGrav() === "gravado") { calmaAte = performance.now() + 450; assentarGrav(); } }
 
-  /** O impacto: a chapa passa ao desfecho e o efeito começa. Só classes e o canvas; nada é pedido ao motor. */
+  /** O impacto: o resultado sai da bancada para a apresentação em destaque (o efeito, o nome com o nível novo, as
+   *  propriedades, o resultado e o OK). Só classes, a apresentação e o canvas; nada é pedido ao motor. */
   function entrarDesfecho(u) {
-    const jan = document.querySelector(".rf-janela"), chapa = jan && jan.querySelector(".rf-chapa.forjando");
-    if (!chapa) return;
-    chapa.classList.add("desfecho");
+    const jan = document.querySelector(".rf-janela");
+    if (!jan || !cena || cena.fim) return;
     jan.classList.add("em-cena", "revelou");
-    jan.classList.remove("aquecendo");  // a ficha, o nome e o +N da esteira passam ao resultado
-    efeito(jan, u, cena && !reduzido() ? Math.max(0, performance.now() - cena.t0 - IMPACTO) : 0);
-    // o foco no OK (o mesmo lugar do Reforçar): Enter confirma; a tecla que adiantou não confirma (um aperto, uma coisa)
-    const ok = jan.querySelector("[data-ok]");
-    if (ok && (!document.activeElement || document.activeElement === document.body || jan.contains(document.activeElement))) ok.focus({ preventScroll: true });
-    if (u.sucesso) relogios.push(setTimeout(() => reflexo(jan.querySelector(".rf-chapa .rf-encaixe.grande"), u.para, true), reduzido() ? 0 : 280));
+    jan.classList.remove("aquecendo");  // a esteira passa ao resultado (atrás do véu)
+    apresentarReforco(u);
   }
   /** Fim da cena: a bancada volta para a próxima oferta, a placa resume o resultado e o foco volta à ação. */
   function assentar() {
     limparRelogios();
     pararFx();
+    fecharRes();
     baque(null);  // a oferta volta sem deslocamento, mesmo se o golpe ainda corria
     const estava = cena && !cena.fim;
     if (cena) cena.fim = true;
@@ -604,8 +734,9 @@
     const jan = document.querySelector(".rf-janela");
     jan?.classList.remove("em-cena", "aquecendo", "revelou");
     document.body.classList.remove("rf-em-cena");
-    if (jan && focoDepois && (document.activeElement === document.body || !jan.contains(document.activeElement))) {
-      const alvo = primeiro(jan, focoDepois);
+    if (jan && (document.activeElement === document.body || !jan.contains(document.activeElement))) {
+      // o foco volta à ação da bancada (a próxima oferta), à peça escolhida, ou ao Fechar
+      const alvo = primeiro(jan, focoDepois || "[data-reforcar]:not([aria-disabled]), [data-gravar]:not([aria-disabled]), [data-uid].marcada, [data-fechar]");
       if (alvo) alvo.focus();
     }
   }
@@ -614,7 +745,7 @@
   function adiantar(u) {
     if (fase() === "forja") { cena.t0 = performance.now() - IMPACTO; limparRelogios(); entrarDesfecho(u); }
   }
-  function dispensar() { if (fase() === "desfecho") assentar(); }
+  function dispensar() { if (fase() === "desfecho") { calmaAte = performance.now() + 450; assentar(); } }
   const revelar = assentar;  // os gestos que interrompem (trocar de peça, fechar) assentam a cena
 
   // ------------------------------------------------------------------ o reflexo do reforço
@@ -627,7 +758,7 @@
     const img = caixa.querySelector("img, canvas");
     if (!img) return;
     const ja = caixa.querySelector(".rf-reflexo");
-    if (parado && ja && ja.classList.contains("passa") && ja.dataset.nivel === String(Math.min(nivel, 4))) return;
+    if (parado && ja && ja.classList.contains("passa") && ja.dataset.nivel === String(Math.min(nivel, 12))) return;
     const agora = performance.now();
     if (!fixo && caixa._reflexo && agora - caixa._reflexo < 1500) return;
     caixa._reflexo = agora;
@@ -641,12 +772,99 @@
       caixa.appendChild(r);
     }
     Object.assign(r.style, { left: `${img.offsetLeft}px`, top: `${img.offsetTop}px`, width: `${img.offsetWidth}px`, height: `${img.offsetHeight}px` });
-    r.dataset.nivel = Math.min(nivel, 4);
+    r.dataset.nivel = Math.min(nivel, 12);
     r.classList.remove("passa");
     void r.offsetWidth;  // recomeça a passada
     r.classList.add("passa");
   }
   function apagarReflexo() {}  // parado (movimento reduzido), o reflexo fica: é o acabamento da peça reforçada
+
+  /** O acabamento permanente do reforço sobre o desenho da peça (o próprio desenho é a máscara: só os pixels dela
+   *  recebem cor e brilho; a borda de raridade, a seleção, o foco e os rastros das gravações não mudam):
+   *    +4        o contorno dourado de 1 px (já aprovado);
+   *    +5 a +8   o contorno na cor do nível (turquesa, safira, ametista, rubi) e um veio da mesma cor que atravessa
+   *              a peça devagar, mais presente a cada nível; o +8 com um ponto de brilho;
+   *    +9 a +12  o veio em várias cores, contínuo (2, 3, 4 cores; o +12 em todas, como pedra lapidada), o contorno
+   *              trocando de cor em degraus e pontos de brilho (1 a 4).
+   *  A presença sobe pela cor e pelo brilho, não pela velocidade: a mesma volta lenta em todos. Cada peça começa num
+   *  ponto diferente da volta (nada pisca em sincronia). `n` 0 a 3 tira tudo (uma queda também tira). */
+  const BRILHOS = { 8: 1, 9: 1, 10: 2, 11: 3, 12: 4 };
+  // o veio de cada nível: a sequência de cores ao longo da diagonal, um pixel do desenho por entrada (0: sem cor)
+  const R_ = "#ff3c60", O_ = "#ffb032", E_ = "#46e2a0", A_ = "#468cff", V_ = "#aa64ff", M_ = "#ff6edc", W_ = "#fff4c8";
+  const z = (n) => Array(n).fill(0), x = (c, n) => Array(n).fill(c);
+  const VEIOS = {
+    5: [...x("#46e2cc", 2), ...z(18)],
+    6: [...x("#5a8cff", 2), ...z(6), "#a8c4ff", ...z(11)],
+    7: [...x("#b064ff", 2), ...z(5), "#d9a8ff", ...z(10)],
+    8: [...x(R_, 3), ...z(3), "#ff8090", ...z(11)],
+    9: [...x(R_, 3), ...z(5), ...x(O_, 3), ...z(9)],
+    10: [...x(R_, 3), ...z(3), ...x(O_, 3), ...z(3), ...x(A_, 3), ...z(7)],
+    11: [...x(R_, 3), ...x(O_, 3), ...z(3), ...x(E_, 3), ...x(A_, 3), ...z(7)],
+    12: [...x(R_, 3), ...x(O_, 3), W_, ...z(3), ...x(E_, 3), ...x(A_, 3), W_, ...z(3), ...x(V_, 3), ...x(M_, 2), W_, ...z(4)],
+  };
+  /** O veio em pixel: a peça inteira na resolução do desenho, ampliada sem suavização; a cada passo, as cores andam um
+   *  pixel na diagonal (um relógio só para todas as peças, cada uma na sua fase). */
+  function pintarVeio(cv) {
+    const seq = VEIOS[cv.dataset.nivel], ctx = cv.getContext("2d");
+    if (!seq || !ctx) return;
+    const w = cv.width, hh = cv.height, fase = (cv._fase || 0) + (reduzido() ? 0 : cv._passo || 0);
+    ctx.clearRect(0, 0, w, hh);
+    for (let d = 0; d < w + hh; d++) {
+      const cor = seq[((d + fase) % seq.length + seq.length) % seq.length];
+      if (!cor) continue;
+      ctx.fillStyle = cor;
+      for (let x = Math.max(0, d - hh + 1); x <= Math.min(d, w - 1); x++) ctx.fillRect(x, d - x, 1, 1);
+    }
+  }
+  setInterval(() => {
+    if (document.hidden) return;
+    document.querySelectorAll("canvas.rf-acab").forEach((cv) => { cv._passo = (cv._passo || 0) + 1; pintarVeio(cv); });
+  }, 250);
+  function acabamento(caixa, n) {
+    if (!caixa) return;
+    const img = caixa.querySelector(":scope > img, :scope > canvas, :scope > .icone-px > img") || caixa.querySelector("img, canvas");
+    const nivel = Math.min(n || 0, 12);
+    if (nivel >= 4) caixa.dataset.acab = nivel; else delete caixa.dataset.acab;
+    const veio = caixa.querySelector(":scope > .rf-acab"), pontos = caixa.querySelector(":scope > .rf-acab-brilhos");
+    if (nivel < 5 || !img) { veio?.remove(); pontos?.remove(); return; }
+    const src = img.tagName === "IMG" ? img.currentSrc || img.src : img.toDataURL();
+    const pos = { left: `${img.offsetLeft}px`, top: `${img.offsetTop}px`, width: `${img.offsetWidth}px`, height: `${img.offsetHeight}px` };
+    const camada = (atual, classe, tag = "i") => {
+      let el = atual;
+      if (!el || el._src !== src) {
+        el?.remove();
+        el = document.createElement(tag);
+        el.className = classe;
+        el.setAttribute("aria-hidden", "true");
+        el.style.maskImage = el.style.webkitMaskImage = `url("${src}")`;
+        el._src = src;
+        el.style.animationDelay = `-${(Math.random() * 9).toFixed(2)}s`;  // cada peça num ponto da volta
+        caixa.appendChild(el);
+      }
+      Object.assign(el.style, pos);
+      return el;
+    };
+    const cv = camada(veio, "rf-acab", "canvas");
+    const lado = img.naturalWidth || img.width || 32;
+    if (cv.width !== lado) { cv.width = lado; cv.height = img.naturalHeight || img.height || lado; cv._fase = Math.floor(Math.random() * 24); }
+    if (cv.dataset.nivel !== String(nivel)) { cv.dataset.nivel = nivel; pintarVeio(cv); }
+    const k = BRILHOS[nivel] || 0;
+    if (!k) { pontos?.remove(); return; }
+    const b = camada(pontos, "rf-acab-brilhos");
+    const px = Math.max(1, Math.round(img.offsetWidth / (img.naturalWidth || img.width || 32)));  // um pixel do desenho
+    b.style.setProperty("--px-peca", `${px}px`);
+    if (b.childElementCount !== k) {
+      b.innerHTML = Array.from({ length: k }, (_, i) => `<i style="animation-delay:-${(Math.random() * 2.4 + i * 0.6).toFixed(2)}s"></i>`).join("");
+      b.querySelectorAll("i").forEach((p) => {
+        const mover = () => {  // um ponto novo da peça a cada volta (perto do miolo, onde o desenho tem pixel)
+          p.style.left = `${Math.round(20 + Math.random() * 60)}%`;
+          p.style.top = `${Math.round(18 + Math.random() * 62)}%`;
+        };
+        mover();
+        p.addEventListener("animationiteration", mover);
+      });
+    }
+  }
   /** Mouse e foco do teclado nas peças da esteira: cada uma brilha sozinha, só quando é a vez dela. */
   function ligarReflexos(jan) {
     jan.querySelectorAll(".rf-esteira .rf-peca").forEach((b) => {
@@ -711,9 +929,11 @@
     bordasGravadas();
     if (fase() === "forja") return;  // no aquecimento, o nível novo ainda não apareceu; do desfecho em diante, sim
     pecasReforcadas().forEach(([el, , n]) => {
-      el.classList.toggle("rf-mais4", n >= 4);
-      if (reduzido()) reflexo(el, n, true, true);
+      acabamento(el, n);
+      if (reduzido() && n) reflexo(el, n, true, true);
     });
+    acabamentoNoAchado();
+    nivelNaDica();
   }
   function ciclo() {
     decorar();
@@ -832,10 +1052,12 @@
       const e = performance.now() - gravando.t0;
       if (fg === "traco") {
         if (!gravando.som) { gravando.som = true; soar("predio_ferreiro"); }
+        requestAnimationFrame(() => gravar(jan, gravando));
         relogios.push(setTimeout(() => { if (raiz.isConnected) redesenhar(focoDepois); }, GRAVA_TRACO - e));
-      } else if (!gravando.somFim) { gravando.somFim = true; soar("aprender"); }
-      requestAnimationFrame(() => gravar(jan, gravando));
-      relogios.push(setTimeout(assentarGrav, (reduzido() ? GRAVA_FIM - GRAVA_TRACO : GRAVA_FIM) - e));
+      } else {
+        if (!gravando.somFim) { gravando.somFim = true; soar("aprender"); }
+        requestAnimationFrame(() => apresentarGravacao(gravando));  // a gravação concluída, em destaque até o OK
+      }
     }
     if (desmonte && janela === "desmontar" && performance.now() - desmonte.t0 < DESMONTE_MS) {
       if (!desmonte.fx) { desmonte.fx = true; requestAnimationFrame(() => fragmentar(jan)); }
@@ -847,16 +1069,14 @@
     // ouvinte do documento, lá embaixo). Fechar, trocar de serviço, de dono ou de peça continuam valendo (o motor já
     // resolveu a tentativa).
     jan.addEventListener("click", (ev) => {
+      if (performance.now() < calmaAte) { ev.preventDefault(); ev.stopPropagation(); return; }  // o resto do gesto que dispensou
       if (!fase() && !faseGrav()) return;
       if (ev.detail > 1) { ev.preventDefault(); ev.stopPropagation(); return; }  // o 2º clique de um clique duplo: nada
       if (ev.target.closest("[data-fechar], [data-janela], [data-aba], [data-uid]")) return;
-      if (fase() === "desfecho" && ev.target.closest("[data-ok]")) return;  // o OK confirma (o ouvinte dele)
       ev.preventDefault();
       ev.stopPropagation();
-      if (faseGrav()) adiantarGrav(); else adiantar(d.ultimo);  // no resultado, um clique fora do OK não faz nada
+      if (faseGrav() === "traco") adiantarGrav(); else if (fase() === "forja") adiantar(d.ultimo);  // no resultado, só o OK
     }, true);
-    const okBotao = jan.querySelector("[data-ok]");
-    if (okBotao) okBotao.addEventListener("click", (ev) => { if (ev.detail <= 1) dispensar(); });
     jan.querySelector("[data-fechar]").addEventListener("click", fechar);
     // as dicas dos materiais e da ajuda também abrem pelo foco do teclado (o jogo só faz isso no mercado)
     jan.querySelectorAll(".rf-insumo, .rf-ajuda, .rf-chapa [data-retirar][data-dica]").forEach((el) => {
@@ -886,11 +1106,6 @@
       todas[(i + (ev.key === "ArrowLeft" || ev.key === "ArrowUp" ? -1 : 1) + todas.length) % todas.length].focus();
     });
     const p = d.pecas.find((x) => x.uid === selUid);
-    jan.querySelectorAll("[data-veio]").forEach((b) => b.addEventListener("click", () => {
-      veioSel[p.uid] = b.dataset.veio;
-      limpar();
-      redesenhar(`[data-veio="${b.dataset.veio}"]`);
-    }));
     const ref = jan.querySelector("[data-reforcar]");
     if (ref) ref.addEventListener("click", (ev) => {
       if (ev.detail > 1) return;  // o segundo clique de um duplo clique não compra outro passo
@@ -899,7 +1114,7 @@
       pago = { de: p.reforco, chance: x.chance, linhas: x.linhas, ouro: x.ouro, fragmentos: x.fragmentos };
       const pedido = `t${Date.now()}`;
       const teste = testeProximo;
-      if (pedir({ op: "reforcar", uid: p.uid, pedido, ...(x.veio ? { veio: x.veio } : {}), ...(teste ? { teste } : {}) }, ref,
+      if (pedir({ op: "reforcar", uid: p.uid, pedido, ...(teste ? { teste } : {}) }, ref,
         "[data-reforcar]:not([aria-disabled]), [data-uid].marcada")) {
         esperandoId = (d.ultimo ? d.ultimo.id : 0) + 1;
         testeProximo = null;
@@ -997,7 +1212,7 @@
 
   // Tab e Shift+Tab ficam dentro da janela aberta (ela é um diálogo: a oficina atrás não recebe o foco)
   document.addEventListener("keydown", (ev) => {
-    const jan = document.querySelector(".rf-janela");
+    const jan = document.getElementById("rf-res") || document.querySelector(".rf-janela");  // a apresentação aberta prende o foco
     if (ev.key !== "Tab" || !janela || !jan) return;
     const focaveis = [...jan.querySelectorAll("button:not([disabled]), summary, [tabindex]:not([tabindex='-1'])")]
       .filter((el) => el.offsetParent !== null);
@@ -1013,7 +1228,10 @@
     if ((ev.key !== "Enter" && ev.key !== " ") || !janela || (!fase() && !faseGrav()) || !document.querySelector(".rf-janela")) return;
     ev.preventDefault();
     ev.stopImmediatePropagation();
-    if (!ev.repeat) { if (faseGrav()) adiantarGrav(); else if (fase() === "forja") adiantar(ultimoDesenho && ultimoDesenho.ultimo); else dispensar(); }
+    if (!ev.repeat) {
+      if (faseGrav() === "traco") adiantarGrav(); else if (faseGrav()) dispensarGrav();
+      else if (fase() === "forja") adiantar(ultimoDesenho && ultimoDesenho.ultimo); else dispensar();
+    }
   }, true);
 
   // Esc com a janela aberta: revela a cena, cancela a confirmação, fecha a janela; só então o Voltar da forja.
@@ -1023,7 +1241,8 @@
     ev.stopImmediatePropagation();
     if (fase() === "forja") { adiantar(ultimoDesenho && ultimoDesenho.ultimo); return; }
     if (fase() === "desfecho") { dispensar(); return; }
-    if (faseGrav()) { adiantarGrav(); return; }
+    if (faseGrav() === "traco") { adiantarGrav(); return; }
+    if (faseGrav()) { dispensarGrav(); return; }
     if (confirmando) { document.querySelector("[data-desmontar-nao]")?.click(); return; }
     if (confirmandoGrav) { document.querySelector("[data-gravar-nao]")?.click(); return; }
     document.querySelector(".rf-janela [data-fechar]")?.click();
@@ -1043,6 +1262,14 @@
       document.querySelector(".rf-janela [data-fechar]")?.click();  // a janela fecha antes (a luta não acontece sob ela)
       return !!App.acao({ forja: true }, null, { op: "luta_teste" });
     },
+    /** O acabamento de um nível num elemento qualquer (a folha de comparação da demonstração). */
+    acabamento(el, n, passar = false) { acabamento(el, n); if (passar && n) reflexo(el, n, true); },
+    /** Os níveis altos de teste (laboratório): peças do grupo levadas direto a níveis altos. Só com a forja aberta. */
+    niveisTeste() {
+      if (!document.querySelector(".forja-proto")) return false;
+      revelar();
+      return !!App.acao({ forja: true }, null, { op: "niveis_teste" });
+    },
   };
 
   /* Os sulcos nas fichas e dicas de item de todas as telas (achado, Inventário, Equipado, mercado, forja). A ficha do
@@ -1058,6 +1285,25 @@
   let achado = null;
   const abrirAchadoJogo = Telas.abrirAchado;
   Telas.abrirAchado = (d, ...resto) => { achado = d && d.item; return abrirAchadoJogo(d, ...resto); };
+  /** O acabamento do reforço no item achado (a arte grande da janela "Você encontrou"). */
+  function acabamentoNoAchado() {
+    const arte = achado && achado.reforco && document.querySelector("#sobre-achado .achado-cartao.novo .achado-arte");
+    if (arte) { arte.style.position ||= "relative"; acabamento(arte, achado.reforco); }
+  }
+  /** Na dica da peça, o +N do nome na cor do nível (a dica não tem o desenho; o nível se reconhece pela cor). */
+  function nivelNaDica() {
+    const t = document.querySelector("#dica-item:not([hidden]) > b");
+    if (!t || t.querySelector(".rf-n-dica")) return;
+    const m = / \+(\d+)/.exec(t.textContent);
+    if (!m || +m[1] < 1) return;
+    const no = [...t.childNodes].find((x) => x.nodeType === 3 && x.textContent.includes(m[0]));
+    if (!no) return;
+    const i = no.textContent.indexOf(m[0]);
+    const resto = no.splitText(i);
+    resto.textContent = resto.textContent.slice(m[0].length);
+    no.after(" ", Object.assign(document.createElement("span"), { className: "rf-n-dica", textContent: `+${m[1]}` }));
+    t.querySelector(".rf-n-dica").dataset.nivel = Math.min(+m[1], 12);
+  }
   function sulcosNoAchado() {
     const alvo = achado && document.querySelector("#sobre-achado :is(.ficha-premio, .ficha-grupo) > .ficha-linhas");
     if (!alvo || (alvo.nextElementSibling && alvo.nextElementSibling.classList.contains("rf-encantos"))) return;
