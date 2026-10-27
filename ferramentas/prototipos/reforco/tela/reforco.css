@@ -439,7 +439,10 @@
 .revelou .rf-esteira .rf-peca.marcada .rf-canto { animation: rf-acende 1.2s steps(6) both; }
 
 /* o reflexo como luz que atravessa o material: o miolo claro, as bordas na cor do nível, a textura por baixo (screen) */
-.rf-reflexo { mix-blend-mode: screen;
+/* sem mistura de cor: com "screen", durante a passada o navegador desenhava a peça noutro grupo de composição e, numa
+   tela com escala de 125% ou 150%, ela mudava de pixel e parecia mexer (medido na Manopla de Ferro +2); a faixa é clara, a cor
+   normal dá o mesmo brilho */
+.rf-reflexo {
   background: linear-gradient(45deg, transparent 0 42%, var(--borda) 42% 44.5%, var(--miolo) 44.5% 46.5%, var(--borda) 46.5% 49%,
     transparent 49% 50.5%, var(--borda) 50.5% 51.5%, transparent 51.5%) 0 0 / 300% 300% no-repeat; }
 .rf-reflexo[data-nivel="1"] { --borda: rgba(255, 244, 214, 0.28); --miolo: rgba(255, 252, 240, 0.6); }
@@ -932,9 +935,6 @@ body.rf-res-aberto .rf-janela :is(.rf-titulo, .rf-molde, .rf-ficha, .rf-lado.dir
 .rf-detalhes { margin-top: 6px; font-size: 13px; color: var(--rf-sec, #a59f92); }
 .rf-detalhes summary { cursor: pointer; width: max-content; color: var(--rf-sec, #a59f92); }
 .rf-detalhes summary:focus-visible { outline: 2px solid var(--latao-claro, #f2d27a); outline-offset: 2px; }
-.rf-detalhes dl { margin: 4px 0 0; }
-.rf-detalhes dt { font-weight: 700; color: var(--ess); }
-.rf-detalhes dd { margin: 0 0 4px; line-height: 1.3; }
 #dica-item .rf-detalhes { display: none; }  /* a dica some com o mouse: os detalhes ficam na ficha e na forja */
 /* o encantamento: a escolha do tier e a previsão (o nível na peça e em quem veste) */
 .rf-ess-niveis { color: var(--rf-sec, #a59f92); font-size: 13px; }
@@ -975,7 +975,7 @@ body.rf-res-aberto .rf-janela :is(.rf-titulo, .rf-molde, .rf-ficha, .rf-lado.dir
 .rf-ess-regra .lim { color: var(--rf-sec); }
 .rf-chapa.encanto .rf-ess-regra { width: min(560px, calc(100% - 28px)); }
 /* nas dicas, os nomes das gravações no corpo do texto (a regra das dicas para <b> é a do título) */
-#dica-item :is(.rf-ef b, .rf-gr, .rf-detalhes dt) { font: 700 inherit/inherit var(--texto); font-size: inherit; letter-spacing: 0; text-transform: none; }
+#dica-item :is(.rf-ef b, .rf-gr) { font: 700 inherit/inherit var(--texto); font-size: inherit; letter-spacing: 0; text-transform: none; }
 :root :is(#texto, body) .rf-chapa.encanto .rf-ess-regra p.pior { color: #e2574c; }  /* o #texto do jogo vencia */
 @media (max-width: 1500px) {
   .rf-chapa.encanto .rf-ess-regra { height: 100px; }
@@ -987,7 +987,185 @@ body.rf-res-aberto .rf-janela :is(.rf-titulo, .rf-molde, .rf-ficha, .rf-lado.dir
 .rf-lado.dir > .rf-destinos { flex: 1 1 auto; }
 /* o nome do efeito no corpo do texto, em toda ficha (as regras do jogo para <b> nas fichas são as do título) */
 :root body .rf-encantos .rf-ef { font-weight: 400; }
-:root body .rf-encantos :is(.rf-ef b, .rf-detalhes dt) { display: inline; font: 700 1em/inherit var(--texto); letter-spacing: 0; text-transform: none; text-shadow: none; }
-:root body .rf-encantos .rf-detalhes dt { display: block; }
+:root body .rf-encantos .rf-ef b { display: inline; font: 700 1em/inherit var(--texto); letter-spacing: 0; text-transform: none; text-shadow: none; }
 #dica-item .rf-encantos .rf-ef { font-weight: 400; }
 #dica-item .rf-encantos .rf-ef b { display: inline; font: 700 1em/inherit var(--texto); }
+
+/* ------------------------------------------------------------ 14ª versão: a mesma janela para os quatro serviços */
+/* a bancada de Encantar, Transferir e Desmontar com a largura e a altura da do Reforçar (a referência aprovada); o
+   conteúdo de dentro muda, a moldura não */
+.rf-corpo.so-mesa { grid-template-columns: minmax(0, 1fr); }
+.rf-chapa.enc2, .rf-chapa.tr2 { width: 760px; max-width: 100%; min-height: 489px; }
+.rf-chapa.desmonte.com-titulo { width: 700px; }
+/* o material junto da operação: o custo e, embaixo, o que o grupo tem */
+.rf-insumo .rf-tem { display: block; margin-top: -2px; font-size: 12px; line-height: 1.1; color: var(--rf-sec); white-space: nowrap; }
+.rf-insumo.falta .rf-tem { color: var(--rf-perigo, #e2574c); }
+/* o pé estável dos serviços novos: o custo à esquerda, a ação no meio, a nota embaixo dela */
+.rf-pe-linha { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; width: 100%; gap: 16px; }
+.rf-pe-linha > .rf-insumos { justify-self: end; flex-direction: row; gap: 10px; }
+.rf-pe-acao { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.rf-chapa:is(.enc2, .tr2) .rf-pe-chapa { margin-top: auto; height: 118px; }
+
+/* ---- Encantar: a peça e os sulcos | as essências e a previsão */
+.rf-enc-corpo { flex: 1; display: grid; grid-template-columns: 300px minmax(0, 1fr); min-height: 0; }
+.rf-enc-item { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 10px 14px 12px; border-right: 2px solid #0b0c0e;
+  box-shadow: 1px 0 0 #3a3d44; }
+.rf-enc-item .rf-titulo { padding: 0; }
+.rf-enc-item .rf-titulo b { height: auto; max-height: calc(var(--px) * 56); font-size: calc(var(--px) * 24); }
+.rf-sulcos-op { display: flex; flex-direction: column; gap: 6px; width: 100%; }
+.rf-sulco-op { display: flex; align-items: center; gap: 10px; padding: 4px 10px 4px 4px; font: inherit; text-align: left; color: var(--rf-texto); cursor: pointer;
+  border: 1px solid #000; background: var(--rf-chapa); box-shadow: inset 0 0 0 1px #4a4e56, 0 2px 0 #000; }
+.rf-sulco-op:hover { background: var(--rf-chapa-viva); }
+.rf-sulco-op.vazio { color: var(--rf-sec); box-shadow: inset 0 0 0 1px #2e3036, 0 2px 0 #000; background: #15161a; }
+.rf-sulco-op.escolhido { background: var(--rf-nicho); box-shadow: inset 2px 2px 0 #000, inset 0 0 0 1px var(--latao), inset 4px 0 0 var(--latao); }
+.rf-sulco-op:focus-visible { outline: 2px solid var(--latao-claro); outline-offset: 2px; }
+.rf-sulco-ic { display: grid; place-items: center; width: 34px; height: 34px; background: #0b0c0e; box-shadow: inset 0 0 0 1px var(--ess, #2e3036); }
+.rf-sulco-ic :is(img, canvas) { width: 24px; height: 24px; image-rendering: pixelated; }
+.rf-sulco-nome { font-size: 15px; }
+.rf-sulco-nome b { color: var(--ess); }
+.rf-enc-ess { display: flex; flex-direction: column; gap: 10px; padding: 12px 18px; min-width: 0; }
+.rf-familias { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+.rf-familia { display: flex; align-items: center; gap: 8px; padding: 4px 8px 4px 4px; font: 700 14px/1.2 var(--texto); color: var(--rf-texto); cursor: pointer;
+  border: 1px solid #000; background: var(--rf-chapa); box-shadow: inset 0 0 0 1px #4a4e56, 0 2px 0 #000; }
+.rf-familia:hover { background: var(--rf-chapa-viva); }
+.rf-familia.escolhida { background: var(--rf-nicho); box-shadow: inset 2px 2px 0 #000, inset 0 0 0 1px var(--ess), inset 4px 0 0 var(--ess); }
+.rf-familia.apagada { opacity: 0.5; }
+.rf-familia:focus-visible { outline: 2px solid var(--latao-claro); outline-offset: 2px; }
+.rf-familia-ic { display: grid; place-items: center; width: 28px; height: 28px; background: #0b0c0e; }
+.rf-familia-ic :is(img, canvas) { width: 22px; height: 22px; image-rendering: pixelated; }
+.rf-enc-ess .rf-tiers { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; margin: 0; }
+.rf-enc-ess .rf-tier-op { display: flex; justify-content: space-between; align-items: baseline; gap: 6px; min-width: 0; padding: 5px 10px; font: 400 15px/1.2 var(--texto); }
+.rf-enc-ess .rf-tier-op b { color: var(--ess); font-weight: 700; }
+.rf-tier-qtd { font: 400 15px/1 var(--num); color: var(--rf-sec); }
+.rf-prev { display: flex; flex-direction: column; gap: 6px; padding: 10px 12px; background: var(--rf-nicho); box-shadow: inset 2px 2px 0 #000, inset -1px -1px 0 #2b2d32; }
+.rf-prev-tit { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.rf-prev-tit b { font: 400 calc(var(--px) * 22) / 1 var(--titulo); color: var(--ess); }
+.rf-prev-tit span { font-size: 13px; color: var(--rf-sec); }
+.rf-prev-linhas { display: grid; grid-template-columns: auto 1fr; gap: 3px 16px; margin: 0; font-size: 15px; }
+.rf-prev-linhas dt { color: var(--rf-sec); }
+.rf-prev-linhas dd { margin: 0; color: var(--rf-texto); font-family: var(--num); }
+.rf-prev-troca { margin: 0; font-size: 14px; color: var(--rf-texto); }
+:root :is(#texto, body) .rf-prev p.pior { margin: 0; font-size: 14px; color: #e2574c; }
+
+/* ---- Transferir: duas peças de mesma importância e o conduto entre elas */
+.rf-tr-par { flex: 1; display: grid; grid-template-columns: 1fr 120px 1fr; align-items: center; gap: 0; padding: 18px 22px; }
+.rf-tr-slot { display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 0; padding: 12px 10px; font: inherit; color: var(--rf-texto); cursor: pointer;
+  border: 1px solid #000; background: var(--rf-chapa); box-shadow: inset 0 0 0 1px #4a4e56, 0 2px 0 #000; }
+.rf-tr-slot:hover { background: var(--rf-chapa-viva); }
+.rf-tr-slot.aberto { background: var(--rf-nicho); box-shadow: inset 2px 2px 0 #000, inset 0 0 0 1px var(--latao); }
+.rf-tr-slot[aria-disabled] { cursor: default; }
+.rf-tr-slot.vazio[aria-disabled] { opacity: 0.55; }
+.rf-tr-slot:focus-visible { outline: 2px solid var(--latao-claro); outline-offset: 2px; }
+.rf-tr-rotulo { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--rf-sec); }
+.rf-tr-nome { display: flex; flex-direction: column; align-items: center; gap: 2px; min-height: 52px; text-align: center; }
+.rf-tr-nome b { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font: 400 calc(var(--px) * 20) / 1.1 var(--titulo); }
+.rf-tr-nome small { font-size: 13px; color: var(--rf-sec); }
+.rf-tr-nivel { min-height: 28px; font: 400 26px/1 var(--num); }
+.rf-tr-nivel em { font-style: normal; color: var(--rf-verde); }
+.rf-tr-slot.origem .rf-tr-nivel em { color: var(--rf-sec); }
+.rf-tr-conduto { position: relative; justify-self: stretch; height: 14px; margin: 0 -2px; background: #0b0c0e;
+  box-shadow: inset 0 0 0 1px #2b2d32, 0 -2px 0 #4a4e56, 0 2px 0 #000; }
+.rf-tr-conduto::after { content: ""; position: absolute; right: -8px; top: 50%; translate: 0 -50%; border: 9px solid transparent; border-left: 10px solid #4a4e56; border-right: 0; }
+/* a cena: a luz sai da origem e percorre o conduto em degraus até o destino */
+.transferindo .rf-tr-conduto .rf-canal { position: absolute; inset: 3px 0; background: linear-gradient(90deg, #ffd060 0 30%, #fff4dc 30% 38%, transparent 38%) no-repeat;
+  background-size: 300% 100%; animation: rf-tr-luz 0.9s steps(9) 0.2s both; }
+@keyframes rf-tr-luz { from { background-position: 150% 0; } to { background-position: -60% 0; } }
+.transferindo .rf-tr-slot.origem .rf-encaixe { animation: rf-tr-cede 0.7s steps(5) both; }
+@keyframes rf-tr-cede { 0% { box-shadow: 0 0 0 0 transparent; } 30% { box-shadow: 0 0 0 3px #ffd060, 0 0 0 5px #000; } 100% { box-shadow: 0 0 0 0 transparent; } }
+.transferindo .rf-tr-slot.destino .rf-encaixe { animation: rf-tr-recebe 0.5s steps(4) 1s both; }
+@keyframes rf-tr-recebe { 0% { box-shadow: 0 0 0 0 transparent; } 40% { box-shadow: 0 0 0 3px #fff4dc, 0 0 0 5px #000; } 100% { box-shadow: 0 0 0 1px var(--latao); } }
+/* o seletor: uma lista sobre a bancada, com rolagem própria; o pé e o Fechar ficam acessíveis */
+.rf-tr-seletor { position: absolute; z-index: 6; left: 22px; right: 22px; top: 16px; bottom: 128px; display: flex; flex-direction: column;
+  background: #121317; box-shadow: inset 0 0 0 1px var(--latao), 0 0 0 1px #000, 0 6px 0 #000; }
+.rf-tr-seletor.destino { left: 22px; }
+.rf-tr-sel-cab { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 8px 12px; border-bottom: 1px solid #2b2d32; }
+.rf-tr-sel-cab b { font: 400 calc(var(--px) * 20) / 1 var(--titulo); color: var(--latao-claro, #f2d27a); }
+.rf-tr-sel-cab small { font-size: 13px; color: var(--rf-sec); }
+.rf-tr-lista { flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; padding: 6px; }
+.rf-tr-op { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 10px; padding: 4px 10px 4px 4px; font: inherit; text-align: left;
+  color: var(--rf-texto); cursor: pointer; border: 1px solid #000; background: var(--rf-chapa); box-shadow: inset 0 0 0 1px #4a4e56; }
+.rf-tr-op:hover { background: var(--rf-chapa-viva); }
+.rf-tr-op.escolhida { background: var(--rf-nicho); box-shadow: inset 0 0 0 1px var(--latao), inset 4px 0 0 var(--latao); }
+.rf-tr-op.apagada { opacity: 0.55; cursor: default; }
+.rf-tr-op:focus-visible { outline: 2px solid var(--latao-claro); outline-offset: 1px; }
+.rf-tr-op .rf-encaixe.pequeno { width: 40px; height: 40px; }
+.rf-tr-op-nome { display: flex; flex-direction: column; min-width: 0; }
+.rf-tr-op-nome b { font-weight: 700; font-size: 15px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rf-tr-op-nome small { font-size: 13px; color: var(--rf-sec); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rf-tr-op-fim { display: flex; flex-direction: column; align-items: flex-end; }
+.rf-tr-op-fim em { font: 400 18px/1 var(--num); font-style: normal; color: var(--rf-verde); white-space: nowrap; }
+.rf-tr-op.apagada .rf-tr-op-fim em { color: var(--rf-sec); }
+.rf-tr-op-fim small { font-size: 12px; color: var(--rf-sec); }
+.rf-aviso.neutro { color: var(--rf-sec); }
+/* o resultado da transferência: os rótulos das duas peças e o aviso neutro */
+#rf-res.transferencia .rf-res-rotulo + .rf-res-linhas { margin-bottom: 6px; }
+#rf-res .rf-res-efeito.neutro { color: var(--rf-sec); }
+
+/* ---- as fichas: o tier no próprio encaixe; os detalhes curtos */
+.rf-sq-tier { position: absolute; right: -1px; bottom: -3px; font: 700 10px/1 var(--texto); color: #fff4dc; text-shadow: 1px 0 0 #000, -1px 0 0 #000, 0 1px 0 #000, 0 -1px 0 #000; }
+.rf-detalhes ul { margin: 4px 0 0; padding-left: 16px; }
+.rf-detalhes li { margin: 0 0 3px; line-height: 1.3; }
+.rf-detalhes li b { color: var(--ess); }
+/* o nome no item da lista no corpo do texto, não na fonte de título que a ficha do jogo dá ao <b> */
+:root body .rf-encantos .rf-detalhes li b { display: inline; font-family: var(--texto); font-size: 1em; font-weight: 700;
+  line-height: inherit; letter-spacing: 0; text-transform: none; text-shadow: none; }
+
+@media (max-width: 1500px) {
+  .rf-chapa.enc2, .rf-chapa.tr2 { width: 100%; max-width: 640px; min-height: 0; }
+  .rf-chapa:is(.enc2, .tr2) .rf-pe-chapa { height: 100px; }
+  .rf-enc-corpo { grid-template-columns: 210px minmax(0, 1fr); }
+  .rf-enc-item { padding: 6px 8px 8px; gap: 5px; }
+  .rf-enc-item .rf-titulo b { font-size: calc(var(--px) * 18); max-height: calc(var(--px) * 40); }
+  .rf-sulco-op { padding: 2px 6px 2px 2px; gap: 6px; }
+  .rf-sulco-ic { width: 26px; height: 26px; }
+  .rf-sulco-ic :is(img, canvas) { width: 20px; height: 20px; }
+  .rf-sulco-nome { font-size: 13px; }
+  .rf-enc-ess { gap: 6px; padding: 8px 10px; }
+  .rf-familia { font-size: 13px; padding: 2px 6px 2px 2px; gap: 5px; }
+  .rf-familia-ic { width: 24px; height: 24px; }
+  .rf-familia-ic :is(img, canvas) { width: 20px; height: 20px; }
+  .rf-enc-ess .rf-tier-op { padding: 3px 7px; font-size: 13px; }
+  .rf-tier-qtd { font-size: 13px; }
+  .rf-prev { padding: 6px 8px; gap: 3px; }
+  .rf-prev-tit b { font-size: calc(var(--px) * 17); }
+  .rf-prev-linhas { font-size: 13px; gap: 1px 10px; }
+  .rf-prev-troca, :root :is(#texto, body) .rf-prev p.pior { font-size: 13px; }
+  .rf-tr-par { grid-template-columns: 1fr 70px 1fr; padding: 10px 12px; }
+  .rf-tr-slot { padding: 8px 6px; gap: 5px; }
+  .rf-tr-nome { min-height: 40px; }
+  .rf-tr-nome b { font-size: calc(var(--px) * 16); }
+  .rf-tr-nivel { font-size: 20px; min-height: 22px; }
+  .rf-tr-seletor { left: 10px; right: 10px; top: 8px; bottom: 108px; }
+  .rf-tr-op .rf-encaixe.pequeno { width: 32px; height: 32px; }
+  .rf-tr-op-nome b { font-size: 14px; }
+}
+/* com o seletor aberto, as duas peças encolhem numa faixa em cima e a lista ocupa o resto (não cobre os encaixes) */
+.rf-tr-seletor { position: static; flex: 1; min-height: 0; margin: 0 22px 10px; }
+.tr2.com-seletor .rf-tr-par { flex: none; padding: 8px 22px; grid-template-columns: 1fr 60px 1fr; }
+.tr2.com-seletor .rf-tr-slot { flex-direction: row; justify-content: flex-start; gap: 10px; padding: 4px 10px 4px 4px; }
+.tr2.com-seletor .rf-tr-slot .rf-encaixe.grande { width: 44px; height: 44px; }
+.tr2.com-seletor .rf-tr-slot .rf-encaixe.grande :is(img, canvas) { width: 40px; height: 40px; }
+.tr2.com-seletor .rf-tr-rotulo { writing-mode: vertical-rl; rotate: 180deg; font-size: 10px; }
+.tr2.com-seletor .rf-tr-nome { min-height: 0; align-items: flex-start; text-align: left; }
+.tr2.com-seletor .rf-tr-nome b { font-size: calc(var(--px) * 16); -webkit-line-clamp: 1; }
+.tr2.com-seletor .rf-tr-nivel { margin-left: auto; font-size: 18px; min-height: 0; }
+.rf-tr-sel-cab { align-items: center; }
+.rf-tr-sel-cab small { margin-right: auto; }
+@media (max-width: 1500px) {
+  .rf-tr-seletor { margin: 0 10px 6px; }
+  .tr2.com-seletor .rf-tr-par { padding: 4px 10px; grid-template-columns: 1fr 30px 1fr; }
+  .tr2.com-seletor .rf-tr-slot .rf-encaixe.grande { width: 34px; height: 34px; }
+  .tr2.com-seletor .rf-tr-slot .rf-encaixe.grande :is(img, canvas) { width: 32px; height: 32px; }
+}
+@media (max-width: 1500px) {  /* a 1280, o molde do Encantar menor: os três sulcos cabem */
+  .enc2 .rf-enc-item .rf-garra { display: none; }
+  .enc2 .rf-enc-item .rf-encaixe.grande { width: 48px; height: 48px; }
+  .enc2 .rf-enc-item .rf-encaixe.grande :is(img, canvas) { width: 40px; height: 40px; }
+  .enc2 .rf-sulcos-op { gap: 3px; }
+}
+.rf-enc-ess { overflow-y: auto; }  /* a garantia: se a previsão crescer, ela rola dentro da área, sem invadir o pé */
+@media (max-width: 1500px) {  /* a 1280, as famílias numa linha, só o ícone (o nome na dica e no leitor de tela) */
+  .rf-familias { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 4px; }
+  .rf-familia { justify-content: center; padding: 2px; }
+  .rf-familia-nome { display: none; }
+}
