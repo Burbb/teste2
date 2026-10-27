@@ -1,13 +1,13 @@
 /* A demonstração do reforço: a faixa no alto (o que é protótipo fica aqui, fora da tela do jogador) e a tela da forja
-   escolhida pelo endereço (?tela=v4, v3, v2 ou v1: as versões antigas, guardadas como histórico; sem ele, a atual, a
-   5ª: o reforço com chance). A v3 tem a A anterior e a B, trocadas aqui. Na atual, a faixa também escolhe o caso de
+   escolhida pelo endereço (?tela=v5, v4, v3, v2 ou v1: as versões antigas, guardadas como histórico; sem ele, a atual,
+   a 6ª). A v3 tem a A anterior e a B, trocadas aqui. Na atual, a faixa também escolhe o caso de
    teste da próxima tentativa (sucesso ou falha forçados, uma vez), separado do sorteio normal. Trocar de versão
    recarrega a página; a partida continua (ela mora no servidor). */
 "use strict";
 
 (() => {
   const params = new URLSearchParams(location.search);
-  const versao = ["v1", "v2", "v3", "v4"].includes(params.get("tela")) ? params.get("tela") : "atual";
+  const versao = ["v1", "v2", "v3", "v4", "v5"].includes(params.get("tela")) ? params.get("tela") : "atual";
   const base = versao === "atual" ? "/proto/" : `/proto/historico/${versao}/`;
   const css = document.createElement("link");
   css.rel = "stylesheet";
@@ -31,7 +31,7 @@
       extra = `<span>Próxima tentativa:</span>${[["", "Sorteio"], ["sucesso", "Sucesso (teste)"], ["falha", "Falha (teste)"]].map(([id, nome]) =>
         `<button type="button" data-teste="${id}" aria-pressed="${(P.teste() || "") === id}">${nome}</button>`).join("")}`;
     }
-    const versoes = [["atual", "atual"], ["v4", "v4"], ["v3", "v3 (A e B)"], ["v2", "v2"], ["v1", "v1"]].map(([id, nome]) =>
+    const versoes = [["atual", "atual"], ["v5", "v5"], ["v4", "v4"], ["v3", "v3 (A e B)"], ["v2", "v2"], ["v1", "v1"]].map(([id, nome]) =>
       id === versao ? `<b>${nome}</b>` : `<a href="${para(id)}">${nome}</a>`).join(" · ");
     f.innerHTML = `<strong>Protótipo do reforço</strong>${extra}<span class="faixa-hist">versões: ${versoes}</span>`;
     document.body.appendChild(f);

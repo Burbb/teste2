@@ -14,6 +14,57 @@ para parar. Folha compacta: `folha.png`.
 Só nesta execução, `demo.py` troca a forja (o balcão novo), o baú (que pode dar fragmento), a seção "Materiais" do
 Inventário e a venda da peça reforçada. O resto é o jogo: o Inventário do grupo, o mercado, a luta, a estrada.
 
+## 6ª versão: a informação reorganizada e o desfecho (candidata em avaliação)
+
+Só a tela mudou: as regras, as chances, os custos e as consequências são os da 5ª versão (abaixo). A estrutura da
+bancada, o molde, os encaixes e a seleção das peças ficaram. A 5ª versão está em `tela/historico/v5` (a faixa abre
+"v5"). Folha: `folha.png` (v5 × v6 com os mesmos itens e saldos; as duas sequências a 1920×945 e a 1280×720; os casos).
+
+- **Os dados, na ordem de leitura** (referências: Soul Knight Prequel e MapleStory M): os saldos no cabeçalho; na
+  bancada, os materiais como ícone e quantidade (o nome e quanto o grupo tem na dica, por mouse e teclado; faltando, o
+  número fica vermelho e o pé diz "Falta 1 Fragmento"); o nível junto da peça ("+1 → +2"); o ganho no visor ("Ataque
+  4 → 5"); no pé, a chance numa linha ("Sucesso 85%") e o Reforçar. O que a falha faz, que a tentativa custa o mesmo
+  e que o atributo escolhido fica com a arma estão na ajuda (i). Saíram a tabela Custo/Tem, "Próxima tentativa" e
+  "Cada tentativa consome o custo.". Na arma do Guerreiro, a escolha aparece como **Ataque** ou **Poder** (o ganho de
+  cada um), não Fio e Runas.
+- **A cena (1,05 s de aquecimento + 1,7 s de desfecho):** os condutos e o molde aquecem; no impacto, o desfecho ocupa a
+  região da peça com a biblioteca FX das celebrações aprovadas do Estouro: no sucesso, o selo de raios, o clarão, um
+  anel curto e os estilhaços, "SUCESSO" sobre a peça e o +N grande com o ganho; na falha, o calor que se desfaz, as
+  cinzas e "FALHOU" com o nível que ficou. No +3 e no +4, a paleta lendária, mais estilhaços e a chapa treme. Depois, a
+  bancada volta sozinha para a próxima oferta, com a placa resumindo o resultado.
+- **O impacto fica na peça:** o efeito é recortado no leito (a área funda da peça e do resultado); o clarão é um halo
+  em volta da peça, sem o pontilhado sobre a bancada inteira que a primeira montagem desta versão tinha no +3 e no +4,
+  e o anel não passa muito do selo. O tremor é só da chapa (o do Estouro sacode a página).
+- **Uma tentativa por quadro:** durante a cena, os encaixes mostram o custo pago (o motor já calculou a próxima), a
+  ficha mantém o nome e os valores de antes (o +N novo só aparece no desfecho) e o cabeçalho já mostra os saldos
+  cobrados; no fim, a bancada é redesenhada com a próxima oferta.
+- **Gestos:** clique duplo e tecla segurada compram uma tentativa; durante a cena, um clique, Enter ou Espaço (com o
+  foco em qualquer lugar) adianta: do aquecimento ao desfecho, do desfecho à oferta; Esc faz o mesmo e, na oferta,
+  fecha. Com movimento reduzido, o desfecho aparece parado e a bancada volta depois de 1,7 s; o foco volta ao
+  Reforçar (ou à peça, se o Reforçar ficou indisponível).
+
+### Conferido (6ª versão)
+
+Na demonstração, a 1920×945 (mouse) e a 1280×720 (teclado), uma sequência contínua cada: +0 → +1 garantido, sucesso
+no +2, sucesso no +3, falha no +4. Em cada quadro (oferta, aquecimento, impacto, desfecho, próxima oferta), o nível, o
+atributo, os saldos e o custo são da mesma tentativa: 380/12 → 360/11 → 325/10 → 270/8 → 190/6, uma cobrança por
+tentativa. Também: 15 repetições de Enter seguradas compram uma vez; clique duplo, uma; Enter e clique durante a cena
+adiantam sem comprar; Esc → desfecho → oferta → fecha; `CASOS=1` para a falta (o Reforçar indisponível, "Falta 1
+Fragmento", a ajuda) e o reforço máximo (o nome longo em duas linhas, sem corte); movimento reduzido nas duas.
+
+**Achados e corrigidos nesta conferência:** o nome da ficha mostrava o nível novo já no aquecimento (até na falha); o
+Enter durante a cena não adiantava porque o foco caía na página; o clarão pontilhado cobria a bancada no +3 e no +4.
+
+### Roteiro (uns 3 minutos)
+
+1. `demo.bat` → Continuar → Ir para a vila → Ferreiro → **Reforçar**. Na aba Jean, o **Martelo de Ferro**: escolha
+   **Ataque** e Reforçar (o +1 é garantido).
+2. Na faixa, **Sucesso (teste)** e Reforçar: o aquecimento, "SUCESSO +2" e a volta à oferta (+2 → +3, 70%).
+3. **Sucesso (teste)** de novo: o +3, com o efeito mais forte e a chapa tremendo.
+4. **Falha (teste)**: "FALHOU +2" e a oferta de novo em +2 → +3. Repare nos saldos do topo: uma cobrança por vez.
+5. Pelo teclado: Tab até o Reforçar, Enter; Enter de novo adianta, Esc volta à oferta, outro Esc fecha.
+6. Passe o mouse no (i) e nos materiais. Com `CASOS=1`: a falta de fragmento e a armadura de Morel no +4.
+
 ## 5ª versão: o reforço com chance (direção aprovada; números e tela em avaliação)
 
 **Decisões aprovadas (25, 5.6):** o +1 é garantido; depois a chance cai com o nível pretendido e, menos, com a
