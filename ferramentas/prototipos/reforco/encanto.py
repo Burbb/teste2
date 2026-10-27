@@ -33,7 +33,8 @@ ESSENCIAS = {
     "brasa": {
         "nome": "Brasa", "material": "essencia_brasa", "tipos": ("arma",), "cor": "#f07a18", "icone": "chama",
         "fx": ["Y", "O", "o", "r"], "cresce": "a chance",
-        "chance": (25, 32, 39, 46, 53),
+        "chance": (25, 32, 39, 46, 53), "medida": ("Chance de Queimadura", "chance", "%"),
+        "nota": "Só golpes que acertam; o dano da Queimadura não dispara de novo.",
         "texto": lambda n, t: (f"Ao acertar um golpe, {t['chance'][n - 1]}% de chance de aplicar 1 camada de Queimadura (até 3).",
                                "No máximo 1 vez por rodada."),
         "ficha": {"gatilho": "golpe do portador que acerta um inimigo (não reações nem tiques)", "alvo": "o inimigo atingido",
@@ -44,7 +45,8 @@ ESSENCIAS = {
     "carrasco": {
         "nome": "Carrasco", "material": "essencia_carrasco", "tipos": ("arma",), "cor": "#d84a4a", "icone": "caveira",
         "fx": ["W", "R", "r", "D"], "cresce": "o dano a mais",
-        "bonus": (20, 25, 30, 35, 40),
+        "bonus": (20, 25, 30, 35, 40), "medida": ("Dano a mais", "bonus", "%"),
+        "nota": "Vale em cada alvo de um golpe em área; não vale no dano por turno.",
         "texto": lambda n, t: (f"Causa {t['bonus'][n - 1]}% a mais de dano a inimigos abaixo de 35% da vida.", ""),
         "ficha": {"gatilho": "cada golpe do portador num inimigo abaixo de 35% da vida", "alvo": "o inimigo atingido",
                   "magnitude": "o dano a mais da tabela", "limite": "nenhum (vale em cada alvo de um golpe em área)",
@@ -52,7 +54,8 @@ ESSENCIAS = {
     "eco": {
         "nome": "Eco", "material": "essencia_eco", "tipos": ("arma", "foco", "escudo"), "cor": "#a070f0", "icone": "pocao_azul",
         "fx": ["W", "M", "m", "x"], "cresce": "o recurso recuperado",
-        "pct": (15, 20, 25, 30, 35),
+        "pct": (15, 20, 25, 30, 35), "medida": ("Recurso por abate", "pct", "%"),
+        "nota": "Num golpe em área, cada inimigo derrubado conta.",
         "texto": lambda n, t: (f"Ao abater um inimigo, recupera {t['pct'][n - 1]}% do recurso máximo.", "Até 2 vezes por luta."),
         "ficha": {"gatilho": "um inimigo cai pelo golpe do portador", "alvo": "o portador",
                   "magnitude": "a % da Mana, Vigor ou Foco máximos", "limite": "2 vezes por luta (fixo: evita recurso sem fim)",
@@ -60,7 +63,8 @@ ESSENCIAS = {
     "vigilia": {
         "nome": "Vigília", "material": "essencia_vigilia", "tipos": ("peito", "escudo", "foco"), "cor": "#e8c860", "icone": "escudo",
         "fx": ["W", "Y", "y", "c"], "cresce": "a barreira",
-        "pct": (10, 13, 16, 19, 22),
+        "pct": (10, 13, 16, 19, 22), "medida": ("Barreira", "pct", "% da vida"),
+        "nota": "Não soma com outra barreira: vale a maior.",
         "texto": lambda n, t: (f"Começa a luta com uma barreira de {t['pct'][n - 1]}% da vida máxima, por 3 turnos seus.",
                                "1 vez por luta."),
         "ficha": {"gatilho": "começo da luta", "alvo": "o portador", "magnitude": "a barreira da tabela",
@@ -69,7 +73,8 @@ ESSENCIAS = {
     "revide": {
         "nome": "Revide", "material": "essencia_revide", "tipos": ("peito", "escudo"), "cor": "#b8c0cc", "icone": "espada",
         "fx": ["W", "w", "G", "g"], "cresce": "a chance",
-        "chance": (15, 20, 25, 30, 35),
+        "chance": (15, 20, 25, 30, 35), "medida": ("Chance de revidar", "chance", "%"),
+        "nota": "Só golpes corpo a corpo; o revide não provoca outro revide.",
         "texto": lambda n, t: (f"Ao receber um golpe corpo a corpo, {t['chance'][n - 1]}% de chance de revidar com 60% do Ataque.",
                                "No máximo 2 vezes por rodada."),
         "ficha": {"gatilho": "golpe corpo a corpo de um inimigo que acerta o portador (não à distância, nem tiques)",
@@ -79,7 +84,8 @@ ESSENCIAS = {
     "geada": {
         "nome": "Geada", "material": "essencia_geada", "tipos": ("peito",), "cor": "#78c8f0", "icone": "gota",
         "fx": ["W", "M", "U", "u"], "cresce": "a chance",
-        "chance": (15, 20, 25, 30, 35),
+        "chance": (15, 20, 25, 30, 35), "medida": ("Chance de congelar", "chance", "%"),
+        "nota": "Chefes e gigantes resistem metade das vezes.",
         "texto": lambda n, t: (f"Ao receber um golpe corpo a corpo, {t['chance'][n - 1]}% de chance de congelar o atacante: "
                                "ele perde a próxima vez.", "1 vez por luta."),
         "ficha": {"gatilho": "golpe corpo a corpo de um inimigo que acerta o portador", "alvo": "quem bateu",
@@ -108,6 +114,13 @@ def ler(k):
 
 def material(essencia, tier=1):
     return ESSENCIAS[essencia]["material"] + ("" if tier == 1 else f"_{tier}")
+
+
+def medida(essencia):
+    """(rótulo, [o valor em cada nível, já formatado]) da dimensão que cresce: "Chance de Queimadura", ["25%", ...]."""
+    e = ESSENCIAS[essencia]
+    rotulo, chave_tabela, unidade = e["medida"]
+    return rotulo, [f"{v}{unidade}" for v in e[chave_tabela]]
 
 
 def nome(essencia, tier=1):

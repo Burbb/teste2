@@ -72,6 +72,17 @@ class TestGravar(unittest.TestCase):
         self.assertEqual(arma["encantos"][0], "brasa")
         self.assertEqual(g.j.ouro, ouro - g.preco(E.CUSTO_OURO))
 
+    def test_substituicao_identica_e_recusada_sem_cobrar(self):
+        g = jogo()
+        arma = g.j.equip["arma"]
+        D.materiais(g)["essencia_carrasco_3"] = 3
+        self.assertTrue(D.encantar(g, arma["uid"], "carrasco:3", 0, pedido="a")[0])
+        ouro, qtd = g.j.ouro, D.materiais(g)["essencia_carrasco_3"]
+        self.assertEqual(D.encantar(g, arma["uid"], "carrasco:3", 0, pedido="b", substitui="carrasco:3"), (False, "Já gravado."))
+        self.assertEqual((g.j.ouro, D.materiais(g)["essencia_carrasco_3"], arma["encantos"][0]), (ouro, qtd, "carrasco:3"))
+        # outro tier da mesma essência muda o nível: é uma substituição de verdade
+        self.assertTrue(D.encantar(g, arma["uid"], "carrasco", 0, pedido="c", substitui="carrasco:3")[0])
+
     def test_substituir_pede_a_gravacao_vista_e_apaga_a_anterior(self):
         g = jogo()
         arma = g.j.equip["arma"]

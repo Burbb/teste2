@@ -316,7 +316,7 @@ def encanto_tela(k):
     return {"id": k, "essencia": e, "tier": t, "numeral": E.NUMERAL[t], "nome": d["nome"], "titulo": E.nome(e, t),
             "cor": d["cor"], "icone": d["icone"], "efeito": ef, "limite": lim, "fx": d["fx"],
             "textos": [list(E.texto(e, n)) for n in range(1, E.TETO + 1)], "teto": E.TETO, "cresce": d["cresce"],
-            "detalhe": d["ficha"]}
+            "medida": E.medida(e)[0], "valores": E.medida(e)[1], "nota": d["nota"], "detalhe": d["ficha"]}
 
 
 JOGO = [None]  # a partida desta execução (as fichas das telas precisam de quem veste a peça)
@@ -496,6 +496,8 @@ def encantar(g, uid, essencia, sulco=0, pedido=None, substitui=None):
         return False, motivo
     if (it["encantos"][sulco] or None) != (substitui or None):
         return False, "A gravação da peça mudou. Escolha de novo."
+    if it["encantos"][sulco] == essencia:  # a mesma essência no mesmo tier: nada mudaria (sem cobrança)
+        return False, "Já gravado."
     mat, ouro = E.material(*E.ler(essencia)), g.preco(E.CUSTO_OURO)
     if materiais(g).get(mat, 0) < 1 or g.j.ouro < ouro:
         return False, "Faltam recursos para esta gravação."
