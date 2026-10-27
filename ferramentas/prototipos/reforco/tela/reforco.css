@@ -714,3 +714,99 @@ button.rf-sq:focus-visible { outline: 2px solid var(--latao-claro); outline-offs
   .rf-chapa.encanto .rf-ess-regra { height: 88px; }
   .rf-chapa.encanto .rf-essencias { min-height: 36px; }
 }
+
+/* ------------------------------------------------------------ 10ª versão: a ficha na bancada e o resultado até OK */
+/* o reforço sem a coluna da ficha: o nome, o dono e os sulcos vão para o título da bancada; a ficha completa, na dica
+   da peça (mouse e foco) */
+.rf-corpo.sem-ficha { grid-template-columns: 84px minmax(0, 1fr); }
+.rf-chapa.com-titulo { width: 700px; }
+.rf-titulo { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 8px 18px 0; text-align: center; }
+.rf-titulo b { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; height: calc(var(--px) * 64); align-content: end;
+  font-family: var(--titulo); font-weight: 400; font-size: calc(var(--px) * 30); line-height: 1.05; }
+.rf-titulo b:not([class*="r-"]) { color: #fff3d6; }
+.rf-titulo small { font-size: 15px; color: var(--rf-sec); }
+.rf-tit-sulcos { display: flex; align-items: center; gap: 6px; min-height: 24px; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--rf-sec); }
+.rf-titulo .rf-n { position: relative; display: inline-block; white-space: nowrap; }
+/* a faixa do resultado, entre o título e o leito (a altura reservada em todos os estados) */
+.rf-faixa-res { display: flex; justify-content: center; align-items: center; height: 30px; }
+.rf-banner { display: none; font-family: var(--titulo); font-size: calc(var(--px) * 24); letter-spacing: 0.06em; text-transform: uppercase; }
+.rf-banner::before, .rf-banner::after { content: ""; display: inline-block; width: 48px; height: 2px; margin: 0 12px; vertical-align: middle; background: currentColor; opacity: 0.6; }
+.rf-banner.ok { color: var(--latao-claro); text-shadow: 0 2px 0 #000; }
+.rf-banner.mau { color: #d48a7a; text-shadow: 0 2px 0 #000; }
+.desfecho .rf-banner { display: inline-block; animation: rf-surge 0.16s steps(2) both; }
+.rf-chapa.com-titulo .rf-leito { margin-top: 0; }
+/* o visor: o ganho oferecido até a revelação; então o que de fato mudou */
+.rf-vis-res { display: none; }
+.desfecho .rf-vis-oferta { display: none; }
+.desfecho .rf-vis-res { display: block; }
+.desfecho .rf-lado.dir > .rf-vis-res .rf-resultado { visibility: visible; box-shadow: inset 2px 2px 0 #000, inset 0 0 0 1px var(--latao); }
+.rf-vis-res.perda .rf-ganho em { color: var(--rf-perigo); }
+.desfecho .rf-lado.dir > .rf-vis-res.perda .rf-resultado { box-shadow: inset 2px 2px 0 #000, inset 0 0 0 1px #5a3a34; }
+/* o pé: a chance e a falha junto da ação; o OK no mesmo lugar do Reforçar */
+.rf-chapa.com-titulo .rf-pe-chapa { height: 138px; gap: 4px; }
+.rf-falha { min-height: 20px; font-size: 15px; color: var(--rf-sec); }
+.rf-acao { position: relative; display: grid; }
+.rf-acao > .rf-botao { grid-area: 1 / 1; }
+.rf-ok { visibility: hidden; }
+.rf-ok kbd { margin-left: 8px; padding: 0 4px; font-size: 12px; border: 1px solid #a7832f; background: rgba(0, 0, 0, 0.25); }
+.desfecho .rf-ok { visibility: visible; }
+.desfecho .rf-acao > [data-reforcar] { visibility: hidden; }
+.desfecho :is(.rf-linha-chance, .rf-falha, .rf-pe-chapa > .rf-nota) { visibility: hidden; }
+/* o desfecho do reforço: o resultado na faixa, no título e no visor; os materiais da tentativa apagados */
+.forjando.desfecho.com-titulo .rf-lado.dir > .rf-conduto { visibility: visible; }
+/* o número do nível: o de antes até a revelação; então o novo, como uma marca quente gravada no ferro (sucesso) ou
+   sóbrio (falha); o de antes some. Só o número anima. */
+.rf-n-agora { display: none; }
+.desfecho .rf-n-agora { display: inline-block; }
+.desfecho .rf-n-antes { position: absolute; left: 100%; margin-left: 0.25em; animation: rf-apaga-n 0.5s steps(5) both; }
+@keyframes rf-apaga-n { 0% { opacity: 1; } 100% { opacity: 0; visibility: hidden; } }
+.rf-n-agora.rf-quente { color: #ffd060; text-shadow: 0 0 0 #000, 0 2px 0 #7a2c08, 0 0 6px rgba(255, 140, 30, 0.75); }
+.desfecho .rf-n-agora.rf-quente { animation: rf-marca 0.7s steps(7) both; }
+@keyframes rf-marca { 0% { scale: 1.7; opacity: 0; color: #fff; } 14% { scale: 0.86; opacity: 1; color: #fff8e0; text-shadow: 0 0 10px #ffb13b, 0 2px 0 #7a2c08; }
+  28% { scale: 1.08; } 42% { scale: 1; color: #ffe27a; } 100% { scale: 1; color: #ffd060; text-shadow: 0 2px 0 #7a2c08, 0 0 6px rgba(255, 140, 30, 0.75); } }
+.rf-n-agora.rf-sobrio { color: #d8d0c2; text-shadow: 0 2px 0 #000; }
+.desfecho .rf-n-agora.rf-sobrio { animation: rf-surge 0.3s steps(3) both; }
+/* o entorno escurece durante o processo (a bancada fica em foco: o véu é a sombra em volta de um recorte do tamanho da
+   janela); sem desfoque nem clarão */
+#rf-vela { position: fixed; z-index: 59; pointer-events: none; box-shadow: 0 0 0 200vmax rgba(0, 0, 0, 0.38); opacity: 0; transition: opacity 0.2s steps(3); }
+body.rf-em-cena #rf-vela { opacity: 1; }
+.rf-janela.em-cena :is(.rf-donos, .rf-esteira, .rf-cab) { filter: brightness(0.55); transition: filter 0.2s steps(3); }
+/* a contenção: no fim do aquecimento, a luz do molde se concentra num instante antes do impacto (dentro da mesma duração) */
+@keyframes rf-contem { 0% { box-shadow: inset 1px 1px 0 #4a4d54, 0 0 0 4px rgba(255, 160, 40, 0.5); } 60% { box-shadow: inset 1px 1px 0 var(--rf-brasa5), 0 0 0 1px var(--rf-brasa4); }
+  100% { box-shadow: inset 1px 1px 0 #fff, 0 0 0 0 transparent; } }
+.forjando.ok .rf-berco { animation: rf-contem 0.2s steps(4) 0.85s both, rf-pulso 0.32s steps(4) 1.05s both; }
+.forjando.ok .rf-encaixe.grande :is(img, canvas) { animation: rf-luz 0.32s steps(4) 1.05s both; }
+/* os rastros da borda das gravações mais longos (a mesma espessura): com três, quase se encontram */
+.rf-gravura { background: conic-gradient(from var(--rf-ang), transparent 0 56%, color-mix(in srgb, var(--ess) 30%, transparent) 56% 66%,
+    color-mix(in srgb, var(--ess) 55%, transparent) 66% 76%, var(--ess) 76% 87.5%, #fff4dc 87.5% 90.5%, transparent 90.5%); }
+/* a dica da essência: a compatibilidade como linha secundária */
+.rf-compat { color: var(--tinta-3, #a59f92); font-size: 13px; }
+@media (prefers-reduced-motion: reduce) {
+  .desfecho :is(.rf-n-agora, .rf-banner), .desfecho .rf-n-antes { animation: none; }
+  .desfecho .rf-n-antes { visibility: hidden; }
+  #rf-vela, .rf-janela.em-cena :is(.rf-donos, .rf-esteira, .rf-cab) { transition: none; }
+}
+@media (max-width: 1500px) {
+  .rf-corpo.sem-ficha { grid-template-columns: 56px minmax(0, 1fr); }
+  .rf-chapa.com-titulo { width: 100%; max-width: 560px; }
+  .rf-titulo { padding: 4px 12px 0; gap: 0; }
+  .rf-titulo b { font-size: calc(var(--px) * 22); height: calc(var(--px) * 46); }
+  .rf-titulo small { font-size: 13px; }
+  .rf-tit-sulcos { min-height: 22px; }
+  .rf-faixa-res { height: 22px; }
+  .rf-banner { font-size: calc(var(--px) * 18); }
+  .rf-banner::before, .rf-banner::after { width: 28px; margin: 0 8px; }
+  .rf-chapa.com-titulo .rf-pe-chapa { height: 104px; gap: 2px; }
+  .rf-falha { min-height: 18px; font-size: 13px; }
+}
+@media (max-width: 1500px) {
+  /* a 1280, a bancada com o título cabe sem rolar */
+  .rf-chapa.com-titulo .rf-leito { min-height: 108px; padding-block: 6px; }
+  .rf-titulo b { font-size: calc(var(--px) * 20); height: calc(var(--px) * 42); }
+  .rf-chapa.com-titulo .rf-pe-chapa { height: 96px; }
+  .rf-faixa-res { height: 20px; }
+}
+/* os sulcos no achado: debaixo das linhas da peça, alinhados com elas */
+#sobre-achado .rf-encantos { margin-top: 6px; padding-top: 0; border-top: 0; }
+#sobre-achado .rf-encantos-cab { justify-content: center; }
+#sobre-achado .compara .ficha-premio .rf-encantos-cab { justify-content: flex-end; }
