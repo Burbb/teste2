@@ -253,6 +253,12 @@ com a pena inteira 4/8/12:
   - os pontos de brilho acendem a cada 1,6 s (antes 2,4).
 
   Medido na demonstração: 14 passos por segundo e o contorno mudando entre um quadro e outro.
+- **O reflexo contínuo no resultado:** a peça do resultado tinha uma passada só, na entrada (e o redesenho da forja às
+  vezes a cancelava). Agora ela entra no mesmo ciclo das peças do jogo: passa na entrada e depois a cada ~3 s até o OK
+  (medido: 0,3 s, 3,3 s, 6,5 s).
+- **Sem o rastro das gravações no resultado do reforço:** a borda quadrada cortava o selo. As gravações continuam
+  em "Sulcos", ao lado; na gravação, onde o rastro novo é a notícia, ele fica. O visor de ganho da bancada, que
+  aparecia fraco atrás da ficha, também sai do fundo.
 
 ### Casos de teste
 

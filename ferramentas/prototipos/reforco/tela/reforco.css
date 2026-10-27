@@ -855,7 +855,7 @@ body.rf-em-cena #rf-vela { opacity: 1; }
   user-select: none; }  /* entra inteira, no impacto: sem esmaecer (a bancada sem a peça apareceria um instante) */
 #rf-res > .fx-palco { z-index: 0; }
 /* atrás do véu, o nome e a peça da bancada saem (estão na apresentação); os materiais e os controles ficam, escuros */
-body.rf-res-aberto .rf-janela :is(.rf-titulo, .rf-molde, .rf-ficha) { visibility: hidden; }
+body.rf-res-aberto .rf-janela :is(.rf-titulo, .rf-molde, .rf-ficha, .rf-lado.dir) { visibility: hidden; }
 .rf-res-conj { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 10px; max-width: min(1040px, 94vw); }
 .rf-res-tit { display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; }
 .rf-res-nome { max-width: 900px; font: 400 calc(var(--px) * 40) / 1.05 var(--titulo); text-shadow: 0 3px 0 #000; text-wrap: balance; }

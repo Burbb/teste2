@@ -499,7 +499,12 @@
     res = { id, el, ctl: null, palco: null };
     const caixa = el.querySelector(".rf-res-arte");
     acabamento(caixa, nivel);  // o acabamento do nível novo já na revelação
-    if (nivel) relogios.push(setTimeout(() => reflexo(caixa, nivel, true), reduzido() ? 0 : 280));
+    if (nivel) {
+      // num relógio próprio: o redesenho da forja (limparRelogios) não a cancela
+      setTimeout(() => { if (caixa.isConnected) reflexo(caixa, nivel, true); }, reduzido() ? 0 : 280);
+      // depois da passada da entrada, o ciclo de todas as peças (a cada ~3 s), sem a espera de quem acabou de aparecer
+      agenda.set(`resultado:${nivel}`, { proxima: performance.now() + 280 + PERIODO, visto: performance.now() });
+    }
     // nada passa para trás: um clique fora do OK não faz nada; o 2º clique de um clique duplo no OK não chega à bancada
     el.addEventListener("click", (ev) => {
       ev.stopPropagation();
@@ -613,7 +618,7 @@
       id: `r${u.id}`, classe: `reforco ${u.sucesso ? "ok" : "mau"} f${faixaNivel(u.para)}${maximo ? " maximo" : ""}`,
       aria: `Reforço: ${u.sucesso ? "sucesso" : "falhou"}, ${p.item.nome}`,
       titulo: `${nomeRes(p, u)}${sub}`,
-      arte: `<div class="rf-res-arte r-${h(p.item.raridade)}">${iconePeca(p.item)}${gravura(p.encantos)}</div>`,
+      arte: `<div class="rf-res-arte r-${h(p.item.raridade)}" data-reforco="${p.reforco}">${iconePeca(p.item)}</div>`,  // sem o rastro quadrado das gravações (corta o selo); elas estão nos sulcos
       ficha: `${rotuloPeca(p)}<div class="rf-res-linhas">${linhasRes(p, u.linhas, !u.sucesso)}</div>${p.efeito ? `<p class="rf-res-efeito">${h(p.efeito)}</p>` : ""}${sulcosRes(p.encantos)}`,
       banner: `<span class="rf-banner ${u.sucesso ? "ok" : "mau"}">${u.sucesso ? "Sucesso" : "Falhou"}</span>`,
       nivel: p.reforco,
@@ -631,7 +636,7 @@
     abrirRes({
       id: `g${g.id}`, classe: "gravacao", aria: `Gravação: ${g.para.nome} em ${p.item.nome}`,
       titulo: nomeRes(p, null),
-      arte: `<div class="rf-res-arte r-${h(p.item.raridade)}">${iconePeca(p.item)}${gravura(p.encantos)}</div>`,
+      arte: `<div class="rf-res-arte r-${h(p.item.raridade)}" data-reforco="${p.reforco}">${iconePeca(p.item)}${gravura(p.encantos)}</div>`,
       ficha: `${rotuloPeca(p)}${sulcosRes(p.encantos, g.sulco, g.de)}${nova ? `<p class="rf-res-ess" style="--ess:${h(nova.cor)}">${h(nova.efeito)}${nova.limite ? ` <span>${h(nova.limite)}</span>` : ""}</p>` : ""}`,
       banner: `<span class="rf-banner grav" style="--ess:${h(g.para.cor)}">Gravado</span>`,
       nivel: p.reforco,
@@ -930,8 +935,9 @@
       const it = pecaDoDono(el);
       lista.push([el, `inv:${el.dataset.espaco || el.dataset.mochila || "o" + i}:${it ? it.nome : ""}`, nivel(it)]);
     });
-    document.querySelectorAll(".rf-janela .rf-esteira .rf-peca, .rf-janela .rf-chapa .rf-encaixe.grande[data-reforco]").forEach((el) => {
-      lista.push([el, `forja:${el.dataset.uid || "molde"}:${el.getAttribute("aria-label") || ""}:${el.dataset.reforco}`, +el.dataset.reforco || 0]);
+    // a peça da apresentação do resultado também (o reflexo continua passando enquanto ela está na tela)
+    document.querySelectorAll(".rf-janela .rf-esteira .rf-peca, .rf-janela .rf-chapa .rf-encaixe.grande[data-reforco], #rf-res .rf-res-arte[data-reforco]").forEach((el) => {
+      lista.push([el, el.closest("#rf-res") ? `resultado:${el.dataset.reforco}` : `forja:${el.dataset.uid || "molde"}:${el.getAttribute("aria-label") || ""}:${el.dataset.reforco}`, +el.dataset.reforco || 0]);
     });
     return lista.filter((x) => x[2] > 0 && x[0].offsetParent !== null);  // só o que está à vista
   }
