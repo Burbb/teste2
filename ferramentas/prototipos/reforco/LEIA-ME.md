@@ -259,6 +259,20 @@ com a pena inteira 4/8/12:
 - **Sem o rastro das gravações no resultado do reforço:** a borda quadrada cortava o selo. As gravações continuam
   em "Sulcos", ao lado; na gravação, onde o rastro novo é a notícia, ele fica. O visor de ganho da bancada, que
   aparecia fraco atrás da ficha, também sai do fundo.
+- **A peça tremia na passada do reflexo** (Jean: a Montante de Ferro, do +1 ao +3), numa tela com escala de 125% ou
+  150%.
+  - **Causa, medida pixel a pixel numa Montante +2:** a animação do reflexo usava opacidade, e o navegador a leva para
+    a placa de vídeo numa camada própria. A partir daí, a peça ampliada embaixo passava a ser desenhada suavizada e
+    deslocada, inclusive depois da passada (462 pixels do desenho diferentes antes × depois). Do +4 em diante, o
+    filtro do contorno já punha a peça noutro caminho, por isso lá não acontecia.
+  - **Correção:** o reflexo aparece e some por visibilidade, que não vai para a placa. Na apresentação do resultado,
+    a peça usa uma ampliação inteira em pixels reais da tela e fica alinhada a um pixel inteiro do aparelho (a 125%,
+    566 px de CSS caíam em 707,5).
+  - **Medido a 100%, 125% e 150%:** depois da passada, o desenho fica idêntico ao de antes, e durante ela só a faixa
+    de luz muda.
+- **O texto do visor de ganho saía da caixa** ("Vida por abate 14 → 16", com a peça inteira melhorando). O visor
+  agora cabe na coluna: o nome quebra em até duas linhas e os números ficam inteiros. A 1280, a letra é um pouco menor
+  e os espaços, mais curtos. Medido: dentro do leito nas duas resoluções.
 
 ### Casos de teste
 

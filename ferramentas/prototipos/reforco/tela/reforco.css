@@ -180,8 +180,18 @@
   box-shadow: inset 2px 2px 0 #000, inset -1px -1px 0 #2b2d32; }
 .rf-resultado.recebe { align-items: flex-start; }
 .rf-ganho { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
-.rf-ganho span { font-size: 15px; color: var(--rf-sec); white-space: nowrap; }
-.rf-ganho b { font-family: var(--num); font-size: 24px; font-weight: 400; white-space: nowrap; }
+.rf-ganho span { flex: 1 1 auto; min-width: 0; font-size: 15px; line-height: 1.15; color: var(--rf-sec); text-wrap: balance; }
+/* o visor cabe na coluna dele: com a peça inteira melhorando, os nomes ficaram longos ("Vida por abate"); o nome quebra
+   em até duas linhas, os números ficam inteiros */
+.rf-lado.dir > :is(.rf-resultado, .rf-vis-oferta, .rf-vis-res) { flex: 0 1 auto; min-width: 0; max-width: 100%; }
+@media (max-width: 1500px) {  /* a 1280 a coluna é estreita: o nome em no máximo duas linhas */
+  .rf-ganho { gap: 6px; }
+  .rf-lado .rf-conduto { width: 26px; }
+  .rf-lado.dir > .rf-resultado, .rf-lado.dir > :is(.rf-vis-oferta, .rf-vis-res) > .rf-resultado { padding: 5px 6px; }
+  .rf-chapa .rf-lado.dir .rf-ganho span { font-size: 12px; }
+  .rf-chapa .rf-lado.dir .rf-ganho b { font-size: 15px; }
+}
+.rf-ganho b { flex: none; font-family: var(--num); font-size: 24px; font-weight: 400; white-space: nowrap; }
 .rf-ganho em { font-style: normal; color: var(--rf-verde); }
 .rf-confirmar { display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; }
 .rf-confirmar b { font-size: 16px; color: #fff3d6; }
@@ -347,7 +357,7 @@
 @keyframes rf-esfria { 0% { filter: brightness(1.3) sepia(0.6); } 60% { filter: brightness(0.55) grayscale(0.6); } 100% { filter: none; } }
 
 /* o reflexo do reforço: uma faixa diagonal curta, mascarada pelo desenho da peça (só os pixels dela brilham) */
-.rf-reflexo { position: absolute; z-index: 1; pointer-events: none; opacity: 0;
+.rf-reflexo { position: absolute; z-index: 1; pointer-events: none; visibility: hidden;
   -webkit-mask-size: 100% 100%; mask-size: 100% 100%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
   background: linear-gradient(45deg, transparent 0 44%, var(--brilho) 44% 47.5%, transparent 47.5% 50%, var(--brilho) 50% 51%, transparent 51%) 0 0 / 300% 300% no-repeat; }
 .rf-reflexo[data-nivel="1"] { --brilho: rgba(255, 248, 228, 0.5); }
@@ -355,14 +365,16 @@
 .rf-reflexo[data-nivel="3"] { --brilho: rgba(96, 164, 255, 0.95); }
 .rf-reflexo[data-nivel="4"] { --brilho: rgba(255, 210, 80, 0.95); }
 .rf-reflexo.passa { animation: rf-reflexo 0.6s steps(10) both; }
-@keyframes rf-reflexo { 0% { opacity: 1; background-position: 0 100%; } 99% { opacity: 1; } 100% { opacity: 0; background-position: 100% 0; } }
+/* por visibilidade, não por opacidade: a animação de opacidade ia para a placa de vídeo numa camada própria, e a peça
+   ampliada embaixo passava a ser desenhada suavizada e deslocada numa tela a 125% ou 150% (tremia e borrava) */
+@keyframes rf-reflexo { 0% { visibility: visible; background-position: 0 100%; } 99% { visibility: visible; } 100% { visibility: hidden; background-position: 100% 0; } }
 .rf-canto { z-index: 2; }
 
 /* movimento reduzido: o desfecho parado, com o selo (no canvas) e o contorno do molde; o reflexo parado e discreto */
 @media (prefers-reduced-motion: reduce) {
    .revelou .rf-props li.tocou b { animation: none; }
 
-  .rf-reflexo.passa { animation: none; opacity: 0.45; background-position: 50% 50%; }
+  .rf-reflexo.passa { animation: none; visibility: visible; opacity: 0.45; background-position: 50% 50%; }
 }
 
 /* 1280: as mesmas peças menores; o pé continua empilhado no eixo */

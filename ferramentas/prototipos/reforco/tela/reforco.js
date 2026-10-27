@@ -478,6 +478,25 @@
     return { parar() { fim = true; }, pular(ms) { const ja = performance.now() - t0; if (ja < ms) t0 = performance.now() - ms; } };
   }
 
+  /** A peça do resultado nítida e parada, em pixels reais da tela: a ampliação é um múltiplo inteiro do desenho em
+   *  pixels do aparelho (numa tela a 125%, 80 px de CSS seriam 2,5× e cada pixel do desenho sairia com 2 ou 3 de largura,
+   *  conforme a posição), e o conjunto é deslocado até a peça cair num pixel inteiro do aparelho (lá, 566 px de CSS
+   *  são 707,5). Sem isso, qualquer redesenho (a passada do reflexo) mudava o arredondamento, e a peça tremia. */
+  function nitida(el) {
+    const img = el.querySelector(".rf-res-arte > img, .rf-res-arte > canvas"), conj = el.querySelector(".rf-res-conj");
+    if (!img || !conj) return;
+    // o tamanho do desenho: o do arquivo, ou, antes de ele carregar, o que o jogo declara na imagem (width="40")
+    const dpr = window.devicePixelRatio || 1, nat = img.naturalWidth || +img.getAttribute("width") || img.width;
+    if (!nat) { img.addEventListener("load", () => nitida(el), { once: true }); return; }
+    img.style.width = img.style.height = "";  // a medida do CSS (80 a 1920, 40 a 1280), antes do ajuste
+    const vez = Math.max(1, Math.round((img.getBoundingClientRect().width * dpr) / nat));
+    img.style.width = img.style.height = `${(nat * vez) / dpr}px`;
+    conj.style.translate = "";
+    const r = img.getBoundingClientRect();
+    conj.style.translate = `${(Math.round(r.left * dpr) - r.left * dpr) / dpr}px ${(Math.round(r.top * dpr) - r.top * dpr) / dpr}px`;
+  }
+  addEventListener("resize", () => { const el = document.getElementById("rf-res"); if (el) nitida(el); });
+
   /** Abre a apresentação (uma por resultado: um redesenho da forja não a repete nem recomeça o efeito). */
   function abrirRes({ id, classe, aria, titulo, arte, ficha, banner, nivel, fx }) {
     if (res && res.id === id && res.el.isConnected) return res;
@@ -492,9 +511,7 @@
       <div class="rf-res-meio"><div class="rf-res-peca">${arte}</div><div class="rf-res-ficha">${ficha}</div></div>
       <div class="rf-res-pe">${banner}<button type="button" class="botao-janela rf-botao principal" data-res-ok>OK <kbd>Enter</kbd></button></div></div>`;
     document.body.appendChild(el);
-    // a peça em pixel inteiro: o conjunto centrado pode cair em meio pixel, e a peça ampliada sairia borrada
-    const conj = el.querySelector(".rf-res-conj"), r = el.querySelector(".rf-res-arte").getBoundingClientRect();
-    conj.style.translate = `${Math.round(r.left) - r.left}px ${Math.round(r.top) - r.top}px`;
+    nitida(el);
     document.body.classList.add("rf-res-aberto");  // o nome e a peça da bancada saem do fundo (não aparecem duas vezes)
     res = { id, el, ctl: null, palco: null };
     const caixa = el.querySelector(".rf-res-arte");
