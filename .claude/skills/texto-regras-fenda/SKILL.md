@@ -103,8 +103,12 @@ legenda solta.
   centralizados.
 - **Títulos de seção, não rótulos colados:** uma seção "Encantamentos" com o nome de cada essência como título e o
   efeito embaixo, em vez de "Gravação" grudado no nome ("GravaçãoCarrasco").
-- **O motivo de indisponível à vista:** junto da ação, sem depender do mouse ("Geada grava em peito.", "Falta 1 Essência
-  de Eco"). A dica pode repetir; não pode ser o único lugar.
+- **O motivo de indisponível à vista:** junto da ação, sem depender do mouse ("Incompatível com peitorais", "Falta 1
+  Essência de Eco"). A dica pode repetir; não pode ser o único lugar.
+- **Compatibilidade:** na dica do material ou do item, a lista do que aceita, em plural e com "e" no fim:
+  "Compatível com: armas, focos e escudos". Junto da ação bloqueada, o caso específico da peça escolhida, sem ponto
+  final: "Incompatível com peitorais". Não a regra inteira do lado do botão ("Geada grava em peito."), nem a lista
+  geral no lugar do motivo.
 - **Troca que apaga algo:** dizer o que sai e o que entra antes de confirmar ("Sai Brasa · Entra Carrasco" /
   "Brasa se perde."), sem aviso repetido pelo resto da janela.
 
@@ -114,6 +118,7 @@ legenda solta.
 | Regra centralizada numa linha larga, com uma segunda linha curta | Bloco à esquerda: **Brasa** / efeito / limite |
 | Ficha: "GravaçãoCarrasco" + texto | Seção "Encantamentos": "Carrasco" (título) / efeito |
 | "Substituir Brasa por Carrasco?" + "A gravação Brasa se perde." | "Sai Brasa · Entra Carrasco" / "Brasa se perde." |
+| Dica: "Grava em arma, foco, escudo."; motivo: "Geada grava em peito." | Dica: "Compatível com: armas, focos e escudos"; motivo: "Incompatível com peitorais" |
 
 ## Vocabulário (etapa 4)
 
