@@ -210,6 +210,20 @@ def ninguem_usa(g, it):
     return f"Ninguém do grupo usa peças de {FICHA.NOME_CLASSE.get(it.get('classe'), it.get('classe'))}."
 
 
+def nome_linha(st, rec):
+    """O nome de uma linha como a ficha escreve ("Crítico", "Roubo de vida", e o recurso de quem leva: Vigor, Mana, Foco)."""
+    from rpg.entidades import nome_stat
+    n = nome_stat(st, rec).lstrip("% ")
+    return n[:1].upper() + n[1:]
+
+
+def linhas_ganho(it, ganho, rec):
+    """As linhas que mudam, antes → depois, na ordem da peça (a de %, com o %)."""
+    pct = lambda st, v: f"{v}%" if st in itens.PERCENTUAIS else v  # noqa: E731
+    return [{"nome": nome_linha(st, rec), "antes": pct(st, it["bonus"].get(st, 0)), "depois": pct(st, it["bonus"].get(st, 0) + v)}
+            for st, v in ganho.items() if v]
+
+
 def ficha_peca(g, it, quem, s):
     rec = g.j.nome_recurso if quem in (None, HEROI) else comitiva.luta.RECURSO.get(quem, g.j.nome_recurso)
     n = it.get("reforco", 0)
@@ -217,12 +231,10 @@ def ficha_peca(g, it, quem, s):
     tem = materiais(g).get("fragmento", 0)
     d = {"uid": it["uid"], "item": itens.ficha(it, rec), "quem": quem, "onde": _nome_quem(g, quem), "espaco": s,
          "reforco": n, "limite": R.LIMITE, "tipo": t,
-         "acumulado": R.texto_ganho(R.ganho_total(it, n)) if n else "",
-         "veio": {"fio": "Fio", "runas": "Runas"}.get(it.get("veio"))}
+         "acumulado": R.texto_ganho(R.ganho_total(it, n)) if n else ""}
     # todas as propriedades da peça, na ordem dela; as que o reforço faz crescer vêm marcadas (a ficha não esconde nada)
-    from rpg.entidades import nome_stat
     cresce = {st for st, _, _ in R.linhas(it)}
-    d["propriedades"] = [{"stat": st, "nome": nome_stat(st, rec).lstrip("% ")[:1].upper() + nome_stat(st, rec).lstrip("% ")[1:], "valor": v,
+    d["propriedades"] = [{"stat": st, "nome": nome_linha(st, rec), "valor": v,
                           "pct": st in itens.PERCENTUAIS, "cresce": st in cresce}
                          for st, v in it["bonus"].items() if v]
     d["efeito"] = (itens.unico_de(it) or {}).get("efeito")
@@ -241,23 +253,15 @@ def ficha_peca(g, it, quem, s):
         # "Faltam 2 Fragmentos", "Falta 1 Fragmento", "Faltam 40 de ouro e 2 Fragmentos": a frase inteira, sem parágrafo
         plural = len(falta) > 1 or (falta and not falta[0].startswith("1 "))
         motivo = longe or (f"{'Faltam' if plural else 'Falta'} {' e '.join(falta)}" if falta else None)
-        # a arma do Guerreiro escolhe o veio no primeiro reforço: um passo para cada caminho
-        veios = ["fio", "runas"] if t == "arma" and it.get("classe") == "guerreiro" and not it.get("veio") else [None]
+        # a peça inteira melhora (todas as linhas): um passo só
         d["passos"] = []
-        for v in veios:
-            antigo = it.get("veio")
-            if v:
-                it["veio"] = v
+        for v in (None,):
             ganho = R.proximo(it)
             luta = comparar(g, quem, com_reforco(it, ganho)) if quem else None
-            it["veio"] = antigo
-            if not antigo:
-                it.pop("veio", None)
             # o recurso pelo nome de quem leva a peça (Vigor, Mana, Foco), como a ficha e o resultado
-            linhas = [{"nome": nome_stat(st, rec) if st == "max_rec" else R.NOMES.get(st, st), "antes": it["bonus"].get(st, 0),
-                       "depois": it["bonus"].get(st, 0) + v_} for st, v_ in ganho.items()]
+            linhas = linhas_ganho(it, ganho, rec)
             ch = R.chance(it, n + 1)
-            d["passos"].append({"veio": v, "rotulo": {"fio": "Fio", "runas": "Runas"}.get(v), "chance": ch,
+            d["passos"].append({"veio": v, "rotulo": None, "chance": ch,
                                 "falha": None if ch >= 100 else max(0, n - 1),
                                 "ganho": R.texto_ganho(ganho), "linhas": linhas, "ouro": ouro, "fragmentos": frag,
                                 "tem": tem, "ouro_tem": g.j.ouro, "falta": falta, "motivo": motivo, "luta": luta})
@@ -317,11 +321,16 @@ def painel(g):
 
 # ------------------------------------------------------------------ as ações (a tela pede; tudo é conferido aqui)
 def aplicar_nivel(it, n):
-    """Leva a peça ao nível +n: as linhas da base ficam com o ganho de +n (subindo ou caindo), e o nome e o preço
-    acompanham. Afixos, especiais e o veio não mudam."""
-    antes, depois = R.ganho_total(it, it.get("reforco", 0)), R.ganho_total(it, n)
-    for st in set(antes) | set(depois):
-        it["bonus"][st] = it["bonus"].get(st, 0) + depois.get(st, 0) - antes.get(st, 0)
+    """Leva a peça ao nível +n: cada linha fica com a da peça de antes do primeiro reforço mais o ganho de +n (subindo
+    ou caindo), e o nome e o preço acompanham. Contado sempre da peça original: uma regra de ganho nova vale inteira
+    também para a peça que já tinha níveis."""
+    base, ganho = it.setdefault("bonus_base", dict(it["bonus"])), R.ganho_total(it, n)
+    for st in set(base) | set(ganho) | set(it["bonus"]):
+        v = base.get(st, 0) + ganho.get(st, 0)
+        if v:
+            it["bonus"][st] = v
+        else:
+            it["bonus"].pop(st, None)
     it["reforco"] = n
     it["preco"] = R.preco_com_reforco(it)
     base = it["nome"].split(" +")[0]
@@ -329,7 +338,7 @@ def aplicar_nivel(it, n):
 
 
 def reforcar(g, uid, veio=None, pedido=None, teste=None):
-    """Uma tentativa, resolvida uma única vez. `pedido`: o id que a tela manda; o mesmo id de novo não tenta outra vez.
+    """Uma tentativa, resolvida uma única vez (`veio`: ignorado desde a 12ª versão; a peça inteira melhora). `pedido`: o id que a tela manda; o mesmo id de novo não tenta outra vez.
     `teste`: "sucesso" ou "falha" forçados (só os casos de teste da demonstração; o +1 continua garantido)."""
     if pedido is not None and pedido == getattr(g, "forja_pedido", None):
         return False, None  # repetição da mesma entrada: nada
@@ -345,16 +354,11 @@ def reforcar(g, uid, veio=None, pedido=None, teste=None):
         return False, ninguem_usa(g, it)
     if quem not in (None, HEROI) and FICHA.motivo_indisponivel(g, quem):
         return False, FICHA.motivo_indisponivel(g, quem)
-    escolhe = t == "arma" and it.get("classe") == "guerreiro" and not it.get("veio")
-    if escolhe and veio not in ("fio", "runas"):
-        return False, "Escolha Fio ou Runas."
     ouro, frag = custo_passo(g, n)
     tem = materiais(g).get("fragmento", 0)
     if g.j.ouro < ouro or tem < frag:
         return False, "Faltam recursos para este reforço."
     g.forja_pedido = pedido
-    if escolhe:
-        it["veio"] = veio  # o caminho fica com a peça, mesmo que ela volte a +0
     it.setdefault("bonus_base", dict(it["bonus"]))
     it.setdefault("preco_base", it.get("preco", 0))
     # cobra a tentativa (o custo informado, qualquer que seja o resultado); o aviso de ouro do jogo não cobre a janela
@@ -375,9 +379,7 @@ def reforcar(g, uid, veio=None, pedido=None, teste=None):
     para = n + 1 if sucesso else max(0, n - 1)
     aplicar_nivel(it, para)
     rec = g.j.nome_recurso if quem in (None, HEROI) else comitiva.luta.RECURSO.get(quem, g.j.nome_recurso)
-    from rpg.entidades import nome_stat
-    linhas = [{"nome": nome_stat(st, rec), "antes": antes.get(st, 0), "depois": it["bonus"].get(st, 0)}
-              for st in it["bonus"] if it["bonus"].get(st, 0) != antes.get(st, 0)]
+    linhas = linhas_ganho({"bonus": antes}, {st: it["bonus"].get(st, 0) - antes.get(st, 0) for st in it["bonus"]}, rec)
     gasto = it.setdefault("reforco_gasto", {"ouro": 0, "fragmento": 0, "tentativas": 0})
     gasto["ouro"] += ouro
     gasto["fragmento"] += frag
@@ -452,6 +454,36 @@ def encantar(g, uid, essencia, sulco=0, pedido=None, substitui=None):
     return True, f"Gravado: {E.ESSENCIAS[essencia]['nome']} · {it['nome']}"
 
 
+def niveis_de_teste(g):
+    """Os níveis altos de teste (a faixa da demonstração; nada disto é conteúdo): peças do grupo levadas direto a +4, +8,
+    +9, +11 e +12, duas com os sulcos cheios (três gravações), e ouro e fragmentos de sobra para tentar o resto. Só
+    no save temporário da demonstração."""
+    dar_uid(g)
+    sulcos_do_grupo(g)
+
+    def levar(it, n, gravacoes=()):
+        if not it or not R.tipo(it):
+            return
+        it.setdefault("bonus_base", dict(it["bonus"]))
+        it.setdefault("preco_base", it.get("preco", 0))
+        aplicar_nivel(it, n)
+        if gravacoes:
+            it["encantos"] = list(gravacoes)
+    levar(g.j.equip.get("arma"), 11, ("brasa", "carrasco", "eco"))          # tentar o +12 (o máximo)
+    levar(FICHA.corpo(g, "morel").get("armadura"), 12, ("vigilia", "revide", "geada"))  # +12 com três gravações
+    for it, n in zip(g.j.mochila, (8, 4, 9, 12)):                           # a bolsa: um de cada faixa
+        levar(it, n)
+    levar(FICHA.corpo(g, "odete").get("arma"), 5)
+    levar(FICHA.corpo(g, "odete").get("secundaria"), 7)
+    g.j.ouro = max(g.j.ouro, 99999)
+    materiais(g)["fragmento"] = R.PILHA_MAX
+    for m in comitiva.membros(g):
+        FICHA.atualizar(g, m["id"])
+    g.j.recalcular()
+    g.forja_ultimo = None
+    registrar(g, "niveis_teste")
+
+
 def luta_de_teste(g):
     """A luta de teste do laboratório: dois Esqueletos do nível do herói, sem fuga perdida nem saque, e o grupo volta
     como estava (vida, recurso, experiência): só para ver as gravações agindo."""
@@ -504,6 +536,9 @@ def forja(self):
                 continue
         elif d.get("op") == "luta_teste":
             luta_de_teste(self)
+            continue
+        elif d.get("op") == "niveis_teste":
+            niveis_de_teste(self)
             continue
         else:
             continue
@@ -693,7 +728,7 @@ def rodar(ui, pasta):
         # e peças da bolsa reforçadas de verdade (+1, +2, +3), para conferir o reflexo de cada nível lado a lado
         for it, n in zip(g.j.mochila[:3], (1, 2, 3)):
             for _ in range(n):
-                reforcar(g, it["uid"], veio="fio", teste="sucesso")
+                reforcar(g, it["uid"], teste="sucesso")
         g.j.ouro, materiais(g)["fragmento"] = ouro, 0
         g.forja_ultimo = None
     g.ui, ui.jogo = ui, g

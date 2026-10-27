@@ -60,14 +60,21 @@ class TestFormula(unittest.TestCase):
     def test_arma_inicial_alcanca_uma_base_mais_nova_por_um_tempo(self):
         velha = peca("guerreiro", "arma", 1, "Enferrujad")  # Ataque 2
         self.assertEqual(velha["bonus"]["atk"], 2)
-        self.assertEqual(R.ganho_total(velha, R.LIMITE)["atk"], 4)  # +4: 6, como uma de Aço do nível 6
+        self.assertEqual(R.ganho_total(velha, 4)["atk"], 4)  # +4: 6, como uma de Aço do nível 6
         nova = peca("guerreiro", "arma", 6, "de Aço")
         self.assertGreater(nova["bonus"]["atk"] + R.ganho_total(nova, R.LIMITE)["atk"], 6 + 3)
 
-    def test_so_as_linhas_da_base_crescem(self):
+    def test_a_peca_inteira_cresce_cada_linha_pela_sua_regra(self):
         it = peca("guerreiro", "armadura", 4)
-        it["bonus"].update(poder=3, critico=4)  # afixos: o reforço não mexe neles
-        self.assertEqual(set(R.ganho_total(it, 2)), {"defesa", "max_hp"})
+        it["bonus"].update(poder=3, critico=4)  # os afixos também crescem (12ª versão)
+        g12 = R.ganho_total(it, R.LIMITE)
+        self.assertEqual(set(g12), {"defesa", "max_hp", "poder", "critico"})
+        self.assertEqual(g12["critico"], 3)  # em %: 0,25 ponto por nível de peça (13 níveis no +12), como no gerador
+        self.assertGreater(g12["max_hp"], g12["defesa"])  # cada linha na proporção do próprio valor
+
+    def test_sem_caminho_na_arma(self):
+        it = peca("guerreiro", "arma", 6)
+        self.assertEqual([st for st, _, piso in R.linhas(it) if piso], ["atk"])  # a principal tem o piso de +1
 
     def test_quem_nao_recebe_reforco(self):
         for slot, classe in (("cabeca", "guerreiro"), ("anel", None), ("amuleto", None), ("secundaria", "arqueiro")):
@@ -81,11 +88,11 @@ class TestReforcar(unittest.TestCase):
         g = jogo()
         arma = g.j.equip["arma"]
         ouro, atk = g.j.ouro, arma["bonus"]["atk"]
-        ok, texto = D.reforcar(g, arma["uid"], "fio", teste="falha")  # o +1 é garantido, até forçando a falha
+        ok, texto = D.reforcar(g, arma["uid"], teste="falha")  # o +1 é garantido, até forçando a falha
         self.assertTrue(ok, texto)
         self.assertEqual(g.j.ouro, ouro - g.preco(R.OURO[0]))
         self.assertEqual(D.materiais(g)["fragmento"], 8 - R.FRAGMENTOS[0])
-        self.assertEqual((arma["reforco"], arma["bonus"]["atk"], arma["veio"]), (1, atk + 1, "fio"))
+        self.assertEqual((arma["reforco"], arma["bonus"]["atk"]), (1, atk + 1))
         self.assertTrue(g.forja_ultimo["sucesso"])
 
     def test_oferta_e_resultado_com_os_mesmos_nomes(self):
@@ -135,17 +142,20 @@ class TestReforcar(unittest.TestCase):
         self.assertEqual(it["bonus"], base)  # de volta a +0: a base inteira, afixos e especiais intactos
         self.assertFalse(it["nome"].endswith("+0"))
 
-    def test_veio_fica_mesmo_em_zero(self):
+    def test_falha_volta_e_recupera_os_mesmos_numeros(self):
         g = jogo()
         g.j.ouro, D.materiais(g)["fragmento"] = 9999, 50
         arma = g.j.equip["arma"]
-        self.assertEqual(D.reforcar(g, arma["uid"])[1], "Escolha Fio ou Runas.")
-        self.assertEqual(D.materiais(g)["fragmento"], 50)
-        D.reforcar(g, arma["uid"], "runas")
-        D.reforcar(g, arma["uid"], "fio", teste="falha")
-        self.assertEqual((arma["reforco"], arma["veio"]), (0, "runas"))
-        D.reforcar(g, arma["uid"], "fio")
-        self.assertGreater(arma["bonus"].get("poder", 0), 0)  # o caminho continua Runas
+        base = dict(arma["bonus"])
+        D.reforcar(g, arma["uid"])
+        D.reforcar(g, arma["uid"], teste="sucesso")
+        dois = dict(arma["bonus"])
+        D.reforcar(g, arma["uid"], teste="falha")
+        D.reforcar(g, arma["uid"], teste="falha")
+        self.assertEqual((arma["reforco"], arma["bonus"]), (0, base))  # no +0, a peça original (nada some, nada sobra)
+        D.reforcar(g, arma["uid"])
+        D.reforcar(g, arma["uid"], teste="sucesso")
+        self.assertEqual(arma["bonus"], dois)
 
     def test_mesmo_pedido_nao_tenta_de_novo(self):
         g = jogo()

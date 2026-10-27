@@ -5,20 +5,25 @@ hipóteses desta rodada.
 
 5ª versão: o reforço tem chance (o +1 garantido; falha volta um nível, sem quebrar a peça); ver CHANCE abaixo.
 
-O que o reforço melhora (a função principal da peça, as linhas da BASE, nunca os afixos nem os especiais):
-    arma        Guerreiro: Ataque (Fio) ou Poder (Runas, o caminho arcano), escolhido no primeiro reforço;
-                Arqueiro: Ataque; Mago: Poder. Piso de +1 por passo (linha única: cada passo se sente)
-    peito       Defesa e Vida (a proteção da base)
-    escudo      Defesa e Vida            (apoio do Guerreiro)
-    tomo/foco   Poder e Mana             (apoio do Mago)
+O que o reforço melhora: a peça inteira (12ª versão, pedido do Jean em 27/10/2026). Todas as linhas dela, da base e dos
+afixos (Ataque, Poder, Defesa, Vida, Mana, Agilidade, Espinhos, Regeneração, Vida por abate, Crítico, Roubo de vida),
+cada uma pela regra de crescimento que o jogo já usa para ela: um + vale "a mesma peça alguns níveis acima".
+    arma, peito, escudo (apoio do Guerreiro), tomo/foco (apoio do Mago)
     não aceitam aljava (linhas de 1 e 2: qualquer passo inteiro distorce; a propriedade dela fica para decidir),
                 cabeça, mãos, pernas e pés (peças complementares, linhas pequenas), anel e amuleto (a identidade
                 deles são os afixos)
+Não há mais o caminho escolhido na arma do Guerreiro (Fio ou Runas): cresce o que a arma tem.
 
-O ganho: cada + vale K níveis de peça na linha da base, na mesma proporção que a base tem (a qualidade do material e
-o peso da linha): G(N) = arredonda(q × 0,75 × K × N), com q = força da linha por ponto de escala (o material × o
-peso da linha no gerador, itens.gerar_equip). K = 1,5 em arma e peito; 3 nos apoios (linhas menores). Uma base
-melhor ganha mais por passo; uma peça antiga reforçada alcança uma base nova por um tempo, não para sempre.
+O ganho: cada passo vale um tanto de níveis de peça (PASSO_NIVEIS: 1,5 do +1 ao +4, 1 do +5 ao +8, 0,75 do +9 ao +12;
+L(N) é a soma até +N). Uma linha fixa de valor v numa peça de nível n cresce na proporção da escala do gerador:
+G(N) = arredonda(v / escala(n) × 0,75 × L(N)); nas linhas da base dos apoios (pequenas), os passos do +1 ao +4 valem o
+dobro. Crítico e roubo de vida, em %,
+crescem como no gerador: + 0,25 ponto por nível de peça, G(N) = arredonda(0,25 × L(N)) (o +12: +3%). A linha principal
+da arma (a maior) ganha pelo menos 1 por passo; todo passo melhora alguma linha. Uma peça melhor ganha mais por passo; uma
+peça antiga reforçada alcança uma base nova por um tempo, não para sempre.
+
+12ª versão (27/10/2026): o limite candidato passa de +4 a +12, com as mesmas regras (o +1 garantido, a falha volta um
+nível, sem quebrar). Os números do +1 ao +4 ficam; os do +5 ao +12 são uma curva provisória (simular.py e o LEIA-ME).
 """
 
 import math
@@ -26,14 +31,24 @@ import math
 from rpg import balanceamento as bal
 from rpg import itens
 
-LIMITE = 4
+LIMITE = 12
 # 5ª versão (26/10/2026): o reforço tem chance (roadmapIDEIAS/25, 5.6). Cada TENTATIVA custa o preço do nível
 # pretendido, dê certo ou não. Hipóteses calibradas contra tentativas perdidas e quedas (LEIA-ME, "Chances e custos").
-OURO = (20, 35, 55, 80)           # tentar o +1, ..., tentar o +4 (antes do desconto da reputação)
-FRAGMENTOS = (1, 1, 2, 2)
-CHANCE = {1: 100, 2: 85, 3: 70, 4: 55}                           # % de sucesso pelo nível pretendido (o +1, garantido)
+# 12ª versão: do +5 ao +12, a curva provisória (os do +1 ao +4 não mudaram).
+OURO = (20, 35, 55, 80, 110, 145, 185, 230, 280, 335, 395, 460)  # tentar o +1, ..., o +12 (antes da reputação)
+FRAGMENTOS = (1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6)
+CHANCE = {1: 100, 2: 85, 3: 70, 4: 55,                           # % de sucesso pelo nível pretendido (o +1, garantido)
+          5: 52, 6: 50, 7: 48, 8: 46, 9: 44, 10: 42, 11: 40, 12: 38}
 PENA_RARIDADE = {"comum": 0, "magico": 4, "raro": 8, "lendario": 12}  # pontos a menos (menos que um degrau de nível)
-K_PECA, K_APOIO = 1.5, 3.0
+# acima do +4, metade: a queda de um nível compõe a diferença a cada passo (com 4/8/12, o +12 de um lendário pedia
+# umas 8 vezes as tentativas de um comum; com 2/4/6, umas 3 vezes; simular.py)
+PENA_RARIDADE_ALTA = {"comum": 0, "magico": 2, "raro": 4, "lendario": 6}
+# os níveis de peça que cada passo vale (arma e peito; o dobro nos apoios): o passo alto rende menos, para um
+# equipamento do começo reforçado não ficar à frente das bases novas para sempre
+PASSO_NIVEIS = (1.5,) * 4 + (1.0,) * 4 + (0.75,) * 4
+APOIO = 2.0  # as linhas da base dos apoios (escudo, tomo): o dobro do +1 ao +4
+BASE_APOIO = {"escudo": ("defesa", "max_hp"), "foco": ("poder", "max_rec")}
+PCT_POR_NIVEL = bal.ITEM_AFIXO_FIXO_POR_NIVEL  # crítico e roubo de vida: 0,25 ponto por nível de peça, como no gerador
 DA_PECA = {"comum": 0, "magico": 1, "raro": 2, "lendario": 3}   # o material da própria peça ao desmontar
 VENDA_DO_OURO = 0.25              # a venda devolve 25% do ouro nominal dos níveis que a peça CONSERVA
 PILHA_MAX = 99
@@ -44,8 +59,9 @@ MATERIAIS = {
                   "fontes": "Baús, recompensas e a desmontagem de peças."},
 }
 
-NOMES = {"atk": "Ataque", "poder": "Poder", "defesa": "Defesa", "max_hp": "Vida", "max_rec": "Mana", "agi": "Agilidade"}
-PESO_ARMADURA = {"guerreiro": 0.7, "arqueiro": 0.5, "mago": 0.35}
+NOMES = {"atk": "Ataque", "poder": "Poder", "defesa": "Defesa", "max_hp": "Vida", "max_rec": "Mana", "agi": "Agilidade",
+         "critico": "Crítico", "roubo_vida": "Roubo de vida", "espinhos": "Espinhos", "regen_vida": "Regeneração",
+         "vida_abate": "Vida por abate"}
 
 
 def _rh(x):
@@ -55,16 +71,6 @@ def _rh(x):
 
 def _escala(nivel):
     return bal.ITEM_FORCA_BASE + bal.ITEM_FORCA_POR_NIVEL * nivel
-
-
-def _material(item):
-    """O multiplicador do material, lido do nome da base ("Espada de Aço" → 1,0); peças sem material, 1,0."""
-    base = item.get("base") or ""
-    for lista in (itens.MATERIAIS, itens.MATERIAIS_COURO, itens.MATERIAIS_TECIDO):
-        for m, f, mult in lista:
-            if base.endswith(" " + m) or base.endswith(" " + f):
-                return mult
-    return 1.0
 
 
 def tipo(item):
@@ -91,42 +97,33 @@ def motivo_sem_reforco(item):
 
 
 def linhas(item):
-    """[(stat, q, piso)]: as linhas que o reforço faz crescer, a força de cada uma por ponto de escala e se tem o piso
-    de +1 por passo. A arma do Guerreiro segue o veio escolhido (Fio ou Runas)."""
-    t = tipo(item)
-    if not t:
+    """[(stat, q, piso)]: as linhas que o reforço faz crescer (todas as da peça, na ordem dela), a força de cada uma por
+    ponto de escala (None nas de %, que crescem por soma) e se tem o piso de +1 por passo (a principal da arma)."""
+    if not tipo(item):
         return []
-    classe = item.get("classe")
-    unico = item.get("unico")
+    base = item.get("bonus_base") or item["bonus"]  # a peça de antes do primeiro reforço (o reforço não a altera)
     esc = _escala(item.get("nivel") or 1)
-
-    base = item.get("bonus_base") or item["bonus"]  # a base de antes do primeiro reforço (o reforço não a altera)
-
-    def q(stat, peso):
-        if unico:  # o único não tem material: a linha dele é intrínseca
-            return max(0.3, base.get(stat, 0) / esc)
-        return _material(item) * peso
-    if t == "arma":
-        if classe == "mago":
-            return [("poder", q("poder", 1.0), True)]
-        if classe == "arqueiro":
-            return [("atk", q("atk", 0.8), True)]
-        qa = q("atk", 1.0)
-        return [("poder" if item.get("veio") == "runas" else "atk", qa, True)]
-    if t == "peito":
-        return [("defesa", q("defesa", PESO_ARMADURA.get(classe, 0.6)), False), ("max_hp", q("max_hp", 2.0), False)]
-    if t == "escudo":
-        return [("defesa", q("defesa", 0.65 * 0.55), False), ("max_hp", q("max_hp", 0.65 * 0.8), False)]
-    return [("poder", q("poder", 0.65 * 0.45), False), ("max_rec", q("max_rec", 0.65 * 1.5), False)]
+    fixas = [st for st, v in base.items() if v and st not in itens.PERCENTUAIS]
+    principal = max(fixas, key=lambda st: (base[st], st in ("atk", "poder")), default=None) if tipo(item) == "arma" else None
+    return [(st, None if st in itens.PERCENTUAIS else max(0.3, v / esc), st == principal) for st, v in base.items() if v]
 
 
 def ganho_total(item, n):
     """O que N reforços somam a cada linha: {stat: valor}."""
-    k = K_APOIO if tipo(item) in ("escudo", "foco") else K_PECA
-    total = {}
-    for stat, q, piso in linhas(item):
-        v = _rh(q * bal.ITEM_FORCA_POR_NIVEL * k * n)
-        total[stat] = max(n, v) if piso else v
+    dobra = BASE_APOIO.get(tipo(item), ())  # as linhas da base do apoio (os afixos dele crescem como em qualquer peça)
+    ls = linhas(item)
+    total = {stat: 0 for stat, _, _ in ls}
+    for i in range(1, n + 1):  # passo a passo: cada um melhora alguma linha (também onde o passo alto vale menos)
+        antes = dict(total)
+        L = sum(PASSO_NIVEIS[:i])
+        # os apoios valem o dobro do +1 ao +4 (linhas pequenas: cada passo se sente); do +5, como as outras peças
+        Lf = L + sum(PASSO_NIVEIS[:min(i, 4)]) * (APOIO - 1)
+        for stat, q, piso in ls:
+            w = _rh(PCT_POR_NIVEL * L) if q is None else _rh(q * bal.ITEM_FORCA_POR_NIVEL * (Lf if stat in dobra else L))
+            total[stat] = max(antes[stat] + 1, w) if piso else max(antes[stat], w)
+        fixas = [(q, st) for st, q, _ in ls if q is not None]
+        if fixas and total == antes:  # as linhas pequenas não subiram: a maior linha fixa ganha 1
+            total[max(fixas)[1]] += 1
     return total
 
 
@@ -153,7 +150,8 @@ def chance(item, alvo):
     a pena da raridade."""
     if alvo <= 1:
         return 100
-    return CHANCE[alvo] - PENA_RARIDADE.get(item.get("raridade", "comum"), 0)
+    pena = PENA_RARIDADE if alvo <= 4 else PENA_RARIDADE_ALTA
+    return CHANCE[alvo] - pena.get(item.get("raridade", "comum"), 0)
 
 
 def nominal(n):
