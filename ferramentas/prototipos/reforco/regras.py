@@ -3,6 +3,8 @@
 O jogo não carrega este arquivo: só a demonstração (demo.py) o liga, num save temporário. Todos os números são
 hipóteses desta rodada.
 
+5ª versão: o reforço tem chance (o +1 garantido; falha volta um nível, sem quebrar a peça); ver CHANCE abaixo.
+
 O que o reforço melhora (a função principal da peça, as linhas da BASE, nunca os afixos nem os especiais):
     arma        Guerreiro: Ataque (Fio) ou Poder (Runas, o caminho arcano), escolhido no primeiro reforço;
                 Arqueiro: Ataque; Mago: Poder. Piso de +1 por passo (linha única: cada passo se sente)
@@ -25,11 +27,15 @@ from rpg import balanceamento as bal
 from rpg import itens
 
 LIMITE = 4
-OURO = (25, 50, 90, 140)          # do +0 para o +1, ..., do +3 para o +4 (antes do desconto da reputação)
-FRAGMENTOS = (1, 2, 3, 4)
+# 5ª versão (26/10/2026): o reforço tem chance (roadmapIDEIAS/25, 5.6). Cada TENTATIVA custa o preço do nível
+# pretendido, dê certo ou não. Hipóteses calibradas contra tentativas perdidas e quedas (LEIA-ME, "Chances e custos").
+OURO = (20, 35, 55, 80)           # tentar o +1, ..., tentar o +4 (antes do desconto da reputação)
+FRAGMENTOS = (1, 1, 2, 2)
+CHANCE = {1: 100, 2: 85, 3: 70, 4: 55}                           # % de sucesso pelo nível pretendido (o +1, garantido)
+PENA_RARIDADE = {"comum": 0, "magico": 4, "raro": 8, "lendario": 12}  # pontos a menos (menos que um degrau de nível)
 K_PECA, K_APOIO = 1.5, 3.0
 DA_PECA = {"comum": 0, "magico": 1, "raro": 2, "lendario": 3}   # o material da própria peça ao desmontar
-VENDA_DO_OURO = 0.25              # a venda devolve 25% do ouro investido (o preço da peça sobe metade do gasto)
+VENDA_DO_OURO = 0.25              # a venda devolve 25% do ouro nominal dos níveis que a peça CONSERVA
 PILHA_MAX = 99
 
 MATERIAIS = {
@@ -94,9 +100,11 @@ def linhas(item):
     unico = item.get("unico")
     esc = _escala(item.get("nivel") or 1)
 
+    base = item.get("bonus_base") or item["bonus"]  # a base de antes do primeiro reforço (o reforço não a altera)
+
     def q(stat, peso):
         if unico:  # o único não tem material: a linha dele é intrínseca
-            return max(0.3, item["bonus"].get(stat, 0) / esc)
+            return max(0.3, base.get(stat, 0) / esc)
         return _material(item) * peso
     if t == "arma":
         if classe == "mago":
@@ -140,8 +148,26 @@ def texto_ganho(g):
     return ", ".join(f"+{v} {NOMES.get(s, s)}" for s, v in g.items() if v)
 
 
+def chance(item, alvo):
+    """A chance de sucesso (inteiro, %) de tentar o +alvo: o primeiro é garantido; depois, a do nível pretendido menos
+    a pena da raridade."""
+    if alvo <= 1:
+        return 100
+    return CHANCE[alvo] - PENA_RARIDADE.get(item.get("raridade", "comum"), 0)
+
+
+def nominal(n):
+    """O custo nominal dos níveis +1..+n (um passo de cada, sem as tentativas perdidas): (ouro, fragmentos)."""
+    return sum(OURO[:n]), sum(FRAGMENTOS[:n])
+
+
 def desmontar_rende(item):
-    """O que desmontar devolve: (do investimento, da própria peça). Metade dos fragmentos investidos, arredondada
-    para cima, mais o material da peça pela raridade."""
-    investido = (item.get("reforco_gasto") or {}).get("fragmento", 0)
-    return math.ceil(investido / 2), DA_PECA.get(item.get("raridade", "comum"), 0)
+    """O que desmontar devolve: (do reforço, da própria peça). Metade dos fragmentos nominais dos níveis que a peça
+    conserva, arredondada para cima, mais o material da peça pela raridade. Tentativas que falharam não contam."""
+    return math.ceil(nominal(item.get("reforco", 0))[1] / 2), DA_PECA.get(item.get("raridade", "comum"), 0)
+
+
+def preco_com_reforco(item):
+    """O preço da peça com os níveis que ela conserva: a venda (metade do preço) devolve 25% do ouro nominal deles."""
+    base = item.get("preco_base", item.get("preco", 0))
+    return base + int(nominal(item.get("reforco", 0))[0] * VENDA_DO_OURO * 2)

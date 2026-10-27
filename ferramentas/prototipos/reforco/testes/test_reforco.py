@@ -77,50 +77,116 @@ class TestFormula(unittest.TestCase):
 
 
 class TestReforcar(unittest.TestCase):
-    def test_paga_e_aplica_junto(self):
+    def test_primeiro_garantido_paga_e_aplica(self):
         g = jogo()
         arma = g.j.equip["arma"]
         ouro, atk = g.j.ouro, arma["bonus"]["atk"]
-        ok, texto = D.reforcar(g, arma["uid"], "fio")
+        ok, texto = D.reforcar(g, arma["uid"], "fio", teste="falha")  # o +1 é garantido, até forçando a falha
         self.assertTrue(ok, texto)
         self.assertEqual(g.j.ouro, ouro - g.preco(R.OURO[0]))
-        self.assertEqual(D.materiais(g)["fragmento"], 7)
+        self.assertEqual(D.materiais(g)["fragmento"], 8 - R.FRAGMENTOS[0])
         self.assertEqual((arma["reforco"], arma["bonus"]["atk"], arma["veio"]), (1, atk + 1, "fio"))
-        self.assertTrue(arma["nome"].endswith(" +1"))
+        self.assertTrue(g.forja_ultimo["sucesso"])
 
-    def test_guerreiro_escolhe_o_veio_uma_vez(self):
+    def test_chance_exibida_e_a_calculada(self):
         g = jogo()
+        for p in D.painel(g)["pecas"]:
+            for x in p.get("passos") or []:
+                it = D.achar(g, p["uid"])[0]
+                self.assertEqual(x["chance"], R.chance(it, p["reforco"] + 1))
+        self.assertEqual([R.chance({"raridade": r}, 4) for r in ("comum", "magico", "raro", "lendario")], [55, 51, 47, 43])
+        self.assertEqual(R.chance({"raridade": "lendario"}, 1), 100)
+        # a raridade pesa menos que um degrau de nível
+        self.assertLess(max(R.PENA_RARIDADE.values()), min(R.CHANCE[k] - R.CHANCE[k + 1] for k in (2, 3)))
+
+    def test_falha_desce_um_cobra_e_preserva(self):
+        g = jogo()
+        g.j.ouro, D.materiais(g)["fragmento"] = 9999, 50
+        it = next(x for x in g.j.mochila if x.get("raridade") == "magico" and R.tipo(x) == "peito")
+        base = dict(it["bonus"])
+        D.reforcar(g, it["uid"])
+        D.reforcar(g, it["uid"], teste="sucesso")
+        self.assertEqual(it["reforco"], 2)
+        ouro, frag = g.j.ouro, D.materiais(g)["fragmento"]
+        ok, texto = D.reforcar(g, it["uid"], teste="falha")
+        self.assertTrue(ok)
+        self.assertEqual(texto, "Reforço falhou · +2 → +1")
+        self.assertEqual(it["reforco"], 1)
+        self.assertEqual(g.j.ouro, ouro - g.preco(R.OURO[2]))  # a tentativa custou, mesmo falhando
+        self.assertEqual(D.materiais(g)["fragmento"], frag - R.FRAGMENTOS[2])
+        D.reforcar(g, it["uid"], teste="falha")
+        self.assertEqual(it["reforco"], 0)
+        self.assertEqual(it["bonus"], base)  # de volta a +0: a base inteira, afixos e especiais intactos
+        self.assertFalse(it["nome"].endswith("+0"))
+
+    def test_veio_fica_mesmo_em_zero(self):
+        g = jogo()
+        g.j.ouro, D.materiais(g)["fragmento"] = 9999, 50
         arma = g.j.equip["arma"]
-        self.assertFalse(D.reforcar(g, arma["uid"])[0])  # sem escolher, nada
-        self.assertEqual(D.materiais(g)["fragmento"], 8)
+        self.assertEqual(D.reforcar(g, arma["uid"])[1], "Escolha Fio ou Runas.")
+        self.assertEqual(D.materiais(g)["fragmento"], 50)
         D.reforcar(g, arma["uid"], "runas")
-        self.assertIn("poder", arma["bonus"])
-        D.reforcar(g, arma["uid"], "fio")  # o veio já está escolhido: segue Runas
-        self.assertEqual(arma["veio"], "runas")
-        self.assertEqual(arma["bonus"]["poder"], R.ganho_total(arma, 2)["poder"])
+        D.reforcar(g, arma["uid"], "fio", teste="falha")
+        self.assertEqual((arma["reforco"], arma["veio"]), (0, "runas"))
+        D.reforcar(g, arma["uid"], "fio")
+        self.assertGreater(arma["bonus"].get("poder", 0), 0)  # o caminho continua Runas
+
+    def test_mesmo_pedido_nao_tenta_de_novo(self):
+        g = jogo()
+        g.j.ouro, D.materiais(g)["fragmento"] = 9999, 50
+        arma = g.j.equip["arma"]
+        self.assertTrue(D.reforcar(g, arma["uid"], "fio", pedido="p1")[0])
+        ouro = g.j.ouro
+        self.assertEqual(D.reforcar(g, arma["uid"], "fio", pedido="p1"), (False, None))
+        self.assertEqual((g.j.ouro, arma["reforco"]), (ouro, 1))
+        self.assertTrue(D.reforcar(g, arma["uid"], "fio", pedido="p2", teste="sucesso")[0])
+        self.assertEqual(arma["reforco"], 2)
+
+    def test_sorteio_normal_segue_a_chance(self):
+        g = jogo()
+        g.j.ouro, D.materiais(g)["fragmento"] = 10 ** 6, 99
+        it = next(x for x in g.j.mochila if x.get("raridade") == "comum" and R.tipo(x) == "arma")
+        D.reforcar(g, it["uid"], "fio")
+        acertos = tentativas = 0
+        for _ in range(2000):  # sempre tentando o +2 a partir do +1
+            if it["reforco"] != 1:
+                D.aplicar_nivel(it, 1)
+            D.materiais(g)["fragmento"] = 99
+            D.reforcar(g, it["uid"])
+            tentativas += 1
+            acertos += it["reforco"] == 2
+        self.assertAlmostEqual(acertos / tentativas, R.chance(it, 2) / 100, delta=0.03)
 
     def test_falta_recurso_nao_cobra_nada(self):
         g = jogo()
         arma = g.j.equip["arma"]
         D.materiais(g)["fragmento"] = 0
         antes = (g.j.ouro, dict(arma["bonus"]), arma.get("reforco", 0))
-        ok, texto = D.reforcar(g, arma["uid"], "fio")
-        self.assertFalse(ok)
-        self.assertEqual((g.j.ouro, dict(arma["bonus"]), arma.get("reforco", 0)), antes)
-        g.j.ouro = 0
-        D.materiais(g)["fragmento"] = 9
         self.assertFalse(D.reforcar(g, arma["uid"], "fio")[0])
-        self.assertEqual(D.materiais(g)["fragmento"], 9)
+        self.assertEqual((g.j.ouro, dict(arma["bonus"]), arma.get("reforco", 0)), antes)
 
     def test_limite(self):
         g = jogo()
         g.j.ouro, D.materiais(g)["fragmento"] = 9999, 99
         arma = g.j.equip["arma"]
         for _ in range(R.LIMITE):
-            self.assertTrue(D.reforcar(g, arma["uid"], "fio")[0])
+            self.assertTrue(D.reforcar(g, arma["uid"], "fio", teste="sucesso")[0])
         ok, texto = D.reforcar(g, arma["uid"], "fio")
         self.assertFalse(ok)
         self.assertIn("limite", texto)
+
+    def test_unico_cresce_pela_base_original(self):
+        g = jogo()
+        g.j.ouro, D.materiais(g)["fragmento"] = 9999, 99
+        lam = next(x for x in g.j.mochila if x.get("unico"))
+        atk = lam["bonus"]["atk"]
+        for _ in range(3):
+            D.reforcar(g, lam["uid"], "fio", teste="sucesso")
+        self.assertEqual(lam["bonus"]["atk"], atk + R.ganho_total(lam, 3)["atk"])
+        for _ in range(2):  # no +3, tentar o +4 e falhar duas vezes: +3 → +2 → +1
+            D.reforcar(g, lam["uid"], "fio", teste="falha")
+        self.assertEqual(lam["reforco"], 1)
+        self.assertEqual(lam["bonus"]["atk"], atk + R.ganho_total(lam, 1)["atk"])
 
     def test_companheiro_e_peca_que_ninguem_usa(self):
         g = jogo()
@@ -133,18 +199,22 @@ class TestReforcar(unittest.TestCase):
 
 
 class TestDesmontar(unittest.TestCase):
-    def test_devolve_metade_do_investido_e_o_da_peca(self):
+    def test_recupera_pelo_nivel_conservado(self):
         g = jogo()
-        g.j.ouro, D.materiais(g)["fragmento"] = 9999, 20
+        g.j.ouro, D.materiais(g)["fragmento"] = 9999, 60
         it = next(x for x in g.j.mochila if x.get("raridade") == "magico" and R.tipo(x) == "peito")
-        for _ in range(3):  # 1 + 2 + 3 = 6 investidos
-            D.reforcar(g, it["uid"])
-        self.assertEqual(R.desmontar_rende(it), (3, 1))
+        D.reforcar(g, it["uid"])
+        for teste in ("sucesso", "falha", "sucesso", "sucesso"):  # 5 tentativas, termina no +3
+            D.reforcar(g, it["uid"], teste=teste)
+        self.assertEqual(it["reforco"], 3)
+        self.assertEqual(R.desmontar_rende(it), (2, 1))  # metade de 1+1+2, para cima; as falhas não contam
         antes = D.materiais(g)["fragmento"]
-        ok, texto = D.desmontar(g, it["uid"], it["nome"])
+        nome = it["nome"]
+        ok, texto = D.desmontar(g, it["uid"], nome)
         self.assertTrue(ok, texto)
-        self.assertEqual(D.materiais(g)["fragmento"], antes + 4)
+        self.assertEqual(D.materiais(g)["fragmento"], antes + 3)
         self.assertNotIn(it, g.j.mochila)
+        self.assertEqual((g.forja_ultimo["tipo"], g.forja_ultimo["nome"], g.forja_ultimo["total"]), ("desmonte", nome, 3))
 
     def test_selecao_antiga_ou_peca_vestida_nao_desmonta(self):
         g = jogo()
@@ -154,7 +224,7 @@ class TestDesmontar(unittest.TestCase):
         self.assertFalse(D.desmontar(g, g.j.equip["arma"]["uid"], g.j.equip["arma"]["nome"])[0])
         n = len(g.j.mochila)
         self.assertTrue(D.desmontar(g, alvo["uid"], alvo["nome"])[0])
-        self.assertFalse(D.desmontar(g, alvo["uid"], alvo["nome"])[0])  # já foi: o mesmo pedido de novo não pega outra
+        self.assertFalse(D.desmontar(g, alvo["uid"], alvo["nome"])[0])
         self.assertEqual(len(g.j.mochila), n - 1)
 
     def test_peca_comum_sem_reforco_nao_rende(self):
@@ -166,36 +236,51 @@ class TestDesmontar(unittest.TestCase):
         g = jogo()
         while len(g.j.mochila) < LIMITE_MOCHILA:
             g.j.mochila.append(peca("guerreiro", "anel", 3))
-        self.assertEqual(D.dar_material(g, "fragmento", 5, "teste"), 5)  # bolsa cheia: o material entra mesmo assim
+        self.assertEqual(D.dar_material(g, "fragmento", 5, "teste"), 5)
         self.assertEqual(len(g.j.mochila), LIMITE_MOCHILA)
         D.materiais(g)["fragmento"] = R.PILHA_MAX
         self.assertEqual(D.dar_material(g, "fragmento", 1, "teste"), 0)
         lendaria = next(x for x in g.j.mochila if x.get("raridade") == "lendario")
-        ok, texto = D.desmontar(g, lendaria["uid"], lendaria["nome"])
-        self.assertFalse(ok)
+        self.assertFalse(D.desmontar(g, lendaria["uid"], lendaria["nome"])[0])
         self.assertIn(lendaria, g.j.mochila)
 
 
 class TestCiclos(unittest.TestCase):
-    def test_reforcar_e_desfazer_nunca_rende_mais_do_que_custou(self):
-        """Reforçar e depois desmontar ou vender: o grupo sai com menos ouro e menos fragmentos do que tinha."""
-        for passos in range(1, R.LIMITE + 1):
+    def test_tentar_cair_desmontar_ou_vender_nunca_rende(self):
+        """Qualquer sequência de tentativas (com quedas) e depois desmontar ou vender deixa o grupo com menos ouro e
+        com no máximo o material da própria peça a mais."""
+        import itertools
+        for seq in itertools.product(("sucesso", "falha"), repeat=5):
             for fim in ("desmontar", "vender"):
                 g = jogo()
-                g.j.ouro, D.materiais(g)["fragmento"] = 2000, 30
+                g.j.ouro, D.materiais(g)["fragmento"] = 5000, 60
                 it = next(x for x in g.j.mochila if R.tipo(x) == "peito")
-                preco_base = it["preco"]
+                preco0 = it["preco"]
                 ouro0, frag0 = g.j.ouro, D.materiais(g)["fragmento"]
-                for _ in range(passos):
-                    self.assertTrue(D.reforcar(g, it["uid"])[0])
+                D.reforcar(g, it["uid"])
+                for t in seq:
+                    if it["reforco"] < R.LIMITE:
+                        D.reforcar(g, it["uid"], teste=t)
                 if fim == "desmontar":
                     D.desmontar(g, it["uid"], it["nome"])
-                    ganho_ouro = 0
+                    volta = 0
                 else:
-                    ganho_ouro = it["preco"] // 2
+                    volta = it["preco"] // 2 - preco0 // 2
                     g.j.mochila.remove(it)
-                self.assertLess(g.j.ouro + ganho_ouro - preco_base // 2, ouro0, (passos, fim))
-                self.assertLessEqual(D.materiais(g)["fragmento"], frag0 + R.DA_PECA[it["raridade"]], (passos, fim))
+                self.assertLess(g.j.ouro + volta, ouro0, (seq, fim))
+                self.assertLessEqual(D.materiais(g)["fragmento"], frag0 + R.DA_PECA[it["raridade"]], (seq, fim))
+
+    def test_preco_acompanha_o_nivel_conservado(self):
+        g = jogo()
+        g.j.ouro, D.materiais(g)["fragmento"] = 5000, 60
+        it = next(x for x in g.j.mochila if R.tipo(x) == "peito")
+        p0 = it["preco"]
+        D.reforcar(g, it["uid"])
+        D.reforcar(g, it["uid"], teste="sucesso")
+        self.assertEqual(it["preco"], p0 + int(R.nominal(2)[0] * R.VENDA_DO_OURO * 2))
+        D.reforcar(g, it["uid"], teste="falha")
+        D.reforcar(g, it["uid"], teste="falha")
+        self.assertEqual(it["preco"], p0)
 
 
 class TestIsolamento(unittest.TestCase):

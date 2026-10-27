@@ -252,7 +252,9 @@ def ficha_peca(g, it, quem, s):
                 it.pop("veio", None)
             linhas = [{"nome": R.NOMES.get(st, st), "antes": it["bonus"].get(st, 0),
                        "depois": it["bonus"].get(st, 0) + v_} for st, v_ in ganho.items()]
-            d["passos"].append({"veio": v, "rotulo": {"fio": "Fio", "runas": "Runas"}.get(v),
+            ch = R.chance(it, n + 1)
+            d["passos"].append({"veio": v, "rotulo": {"fio": "Fio", "runas": "Runas"}.get(v), "chance": ch,
+                                "falha": None if ch >= 100 else max(0, n - 1),
                                 "ganho": R.texto_ganho(ganho), "linhas": linhas, "ouro": ouro, "fragmentos": frag,
                                 "tem": tem, "ouro_tem": g.j.ouro, "falta": falta, "motivo": motivo, "luta": luta})
     if quem is None:
@@ -292,13 +294,29 @@ def painel(g):
     m = materiais(g)
     abas = [{"id": q, "nome": FICHA.nome_de(g, q), "retrato": g.j.classe if q == HEROI else q}
             for q in FICHA.personagens(g)] + [{"id": "bolsa", "nome": "Bolsa", "retrato": None}]
-    return {"ouro": g.j.ouro, "limite": R.LIMITE, "abas": abas,
+    return {"ouro": g.j.ouro, "limite": R.LIMITE, "abas": abas, "ultimo": getattr(g, "forja_ultimo", None),
             "materiais": [{"id": k, **R.MATERIAIS[k], "qtd": m.get(k, 0)} for k in R.MATERIAIS],
             "pecas": [ficha_peca(g, it, quem, s) for it, quem, s in pecas(g)]}
 
 
 # ------------------------------------------------------------------ as ações (a tela pede; tudo é conferido aqui)
-def reforcar(g, uid, veio=None):
+def aplicar_nivel(it, n):
+    """Leva a peça ao nível +n: as linhas da base ficam com o ganho de +n (subindo ou caindo), e o nome e o preço
+    acompanham. Afixos, especiais e o veio não mudam."""
+    antes, depois = R.ganho_total(it, it.get("reforco", 0)), R.ganho_total(it, n)
+    for st in set(antes) | set(depois):
+        it["bonus"][st] = it["bonus"].get(st, 0) + depois.get(st, 0) - antes.get(st, 0)
+    it["reforco"] = n
+    it["preco"] = R.preco_com_reforco(it)
+    base = it["nome"].split(" +")[0]
+    it["nome"] = f"{base} +{n}" if n else base
+
+
+def reforcar(g, uid, veio=None, pedido=None, teste=None):
+    """Uma tentativa, resolvida uma única vez. `pedido`: o id que a tela manda; o mesmo id de novo não tenta outra vez.
+    `teste`: "sucesso" ou "falha" forçados (só os casos de teste da demonstração; o +1 continua garantido)."""
+    if pedido is not None and pedido == getattr(g, "forja_pedido", None):
+        return False, None  # repetição da mesma entrada: nada
     it, quem, s = achar(g, uid)
     if it is None:
         return False, "Essa peça não está mais com o grupo."
@@ -313,35 +331,49 @@ def reforcar(g, uid, veio=None):
         return False, FICHA.motivo_indisponivel(g, quem)
     escolhe = t == "arma" and it.get("classe") == "guerreiro" and not it.get("veio")
     if escolhe and veio not in ("fio", "runas"):
-        return False, "Escolha o veio: Fio (Ataque) ou Runas (Poder)."
+        return False, "Escolha Fio ou Runas."
     ouro, frag = custo_passo(g, n)
     tem = materiais(g).get("fragmento", 0)
     if g.j.ouro < ouro or tem < frag:
         return False, "Faltam recursos para este reforço."
+    g.forja_pedido = pedido
     if escolhe:
-        it["veio"] = veio
-    ganho = R.proximo(it)
-    # tudo conferido: paga e aplica junto (nada cobrado sem o resultado)
-    # a janela da forja mostra o resultado e o ouro no topo: o aviso de "−N ouro" do jogo ficaria por cima da bancada
+        it["veio"] = veio  # o caminho fica com a peça, mesmo que ela volte a +0
+    it.setdefault("bonus_base", dict(it["bonus"]))
+    it.setdefault("preco_base", it.get("preco", 0))
+    # cobra a tentativa (o custo informado, qualquer que seja o resultado); o aviso de ouro do jogo não cobre a janela
     efeito, g.ui.efeito = g.ui.efeito, (lambda *a, **k: None)
     try:
         g.perder_ouro(ouro, destino="ferreiro")
     finally:
         g.ui.efeito = efeito
     materiais(g)["fragmento"] = tem - frag
-    for st, v in ganho.items():
-        it["bonus"][st] = it["bonus"].get(st, 0) + v
-    it["reforco"] = n + 1
-    gasto = it.setdefault("reforco_gasto", {"ouro": 0, "fragmento": 0})
+    chance = R.chance(it, n + 1)
+    if n == 0:
+        sucesso = True  # o primeiro é garantido, até nos casos de teste
+    elif teste in ("sucesso", "falha"):
+        sucesso = teste == "sucesso"
+    else:
+        sucesso = g.rng.random() * 100 < chance
+    antes = dict(it["bonus"])
+    para = n + 1 if sucesso else max(0, n - 1)
+    aplicar_nivel(it, para)
+    rec = g.j.nome_recurso if quem in (None, HEROI) else comitiva.luta.RECURSO.get(quem, g.j.nome_recurso)
+    from rpg.entidades import nome_stat
+    linhas = [{"nome": nome_stat(st, rec), "antes": antes.get(st, 0), "depois": it["bonus"].get(st, 0)}
+              for st in it["bonus"] if it["bonus"].get(st, 0) != antes.get(st, 0)]
+    gasto = it.setdefault("reforco_gasto", {"ouro": 0, "fragmento": 0, "tentativas": 0})
     gasto["ouro"] += ouro
     gasto["fragmento"] += frag
-    it["preco"] = it.get("preco", 0) + int(ouro * R.VENDA_DO_OURO * 2)  # a venda (metade do preço) devolve 25%
-    it["nome"] = it["nome"].split(" +")[0] + f" +{it['reforco']}"
+    gasto["tentativas"] = gasto.get("tentativas", 0) + 1
     if quem:
         FICHA.atualizar(g, quem)
-    registrar(g, "ferreiro", item=it["nome"], ganho=ganho, ouro=ouro, fragmentos=frag, em=quem or "bolsa",
-              prototipo="reforco")
-    return True, f"{it['nome']} · {R.texto_ganho(ganho)}"
+    g.forja_ultimo = {"id": getattr(g, "forja_ultimo", {}).get("id", 0) + 1, "tipo": "reforco", "uid": uid,
+                      "sucesso": sucesso, "de": n, "para": para, "chance": chance, "linhas": linhas,
+                      "teste": teste if n and teste in ("sucesso", "falha") else None}
+    registrar(g, "ferreiro", item=it["nome"], sucesso=sucesso, de=n, para=para, chance=chance, ouro=ouro,
+              fragmentos=frag, em=quem or "bolsa", teste=g.forja_ultimo["teste"], prototipo="reforco")
+    return True, (f"Reforço bem-sucedido · +{para}" if sucesso else f"Reforço falhou · +{n} → +{para}")
 
 
 def desmontar(g, uid, nome):
@@ -360,6 +392,8 @@ def desmontar(g, uid, nome):
         return False, f"Fragmentos no máximo ({R.PILHA_MAX})."
     g.j.mochila.remove(it)
     materiais(g)["fragmento"] = materiais(g).get("fragmento", 0) + total
+    g.forja_ultimo = {"id": getattr(g, "forja_ultimo", {}).get("id", 0) + 1, "tipo": "desmonte", "nome": it["nome"],
+                      "total": total}
     registrar(g, "desmontar", item=it["nome"], fragmentos=total, investimento=investido, da_peca=propria,
               prototipo="reforco")
     return True, f"Desmontado: {it['nome']} · +{total} {'Fragmento' if total == 1 else 'Fragmentos'} de Têmpera"
@@ -380,7 +414,9 @@ def forja(self):
             return
         d = getattr(self.ui, "extra_resposta", None) or {}
         if d.get("op") == "reforcar":
-            ok, texto = reforcar(self, d.get("uid"), d.get("veio"))
+            ok, texto = reforcar(self, d.get("uid"), d.get("veio"), d.get("pedido"), d.get("teste"))
+            if texto is None:
+                continue
         elif d.get("op") == "desmontar" and d.get("confirmar") is True:
             ok, texto = desmontar(self, d.get("uid"), d.get("nome"))
         else:
@@ -474,7 +510,7 @@ def recompensa_de_teste(g):
     g.ui.cena("Cenário de teste", "Recompensa de demonstração", "evento")
     g.abrir_espolio(titulo="recompensa de teste",
                     frase="Cenário de teste: uma caixa do ferreiro do Vau, para experimentar o reforço.")
-    dar_material(g, "fragmento", 2 if os.environ.get("CASOS") else 8, "teste")
+    dar_material(g, "fragmento", 2 if os.environ.get("CASOS") else 12, "teste")
     g.fechar_espolio()
     # a página espera quem joga (o navegador abre depois do jogo começar: a cena atual é a desta recompensa)
     g.menu("Os fragmentos ficam na seção Materiais do Inventário, fora dos 12 espaços da bolsa.",
@@ -495,8 +531,9 @@ def rodar(ui, pasta):
         ouro = g.j.ouro
         g.j.ouro, materiais(g)["fragmento"] = 9999, 99
         for _ in range(R.LIMITE):
-            reforcar(g, FICHA.corpo(g, "morel")["armadura"]["uid"])
+            reforcar(g, FICHA.corpo(g, "morel")["armadura"]["uid"], teste="sucesso")
         g.j.ouro, materiais(g)["fragmento"] = ouro, 0
+        g.forja_ultimo = None
     g.ui, ui.jogo = ui, g
     g.ui.cena("Cenário de teste", "Recompensa de demonstração", "evento")
     g.ui.atualizar()
