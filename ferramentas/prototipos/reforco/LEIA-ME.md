@@ -14,11 +14,86 @@ para parar. Folha compacta: `folha.png`.
 Só nesta execução, `demo.py` troca a forja (o balcão novo), o baú (que pode dar fragmento), a seção "Materiais" do
 Inventário e a venda da peça reforçada. O resto é o jogo: o Inventário do grupo, o mercado, a luta, a estrada.
 
-## 6ª versão: a informação reorganizada e o desfecho (candidata em avaliação)
+## 7ª versão: eixo central, bancada fixa, efeitos soltos e reflexo (candidata em avaliação)
+
+Só a tela mudou: regras, chances, custos, consequências e o limite +4 são os da 5ª versão. A 6ª está em
+`tela/historico/v6` (a faixa abre "v6"). Folha: `folha.png` (v6 × v7 com os mesmos itens e saldos; a sequência real até o
+máximo a 1920×945 e a 1280×720; os casos; as quatro cores do reflexo).
+
+### A candidata
+
+- **Um eixo:** o nível, o centro da peça, a chance e o Reforçar ficam na mesma vertical. O leito tem três colunas, as
+  dos lados de largura igual (os materiais à esquerda, o ganho à direita), e a largura delas não desloca a peça; o pé
+  empilha a chance, o botão e a nota também a 1280, e a ajuda (i) fica ao lado da chance, fora do eixo. Medido em
+  todos os estados: a 1920, x = 852 e a bancada 640 × 342; a 1280, x = 560 e 404 × 238.
+- **A mesma bancada em todos os estados:** oferta, aquecimento, desfecho, falta, reforço máximo, peça que ninguém usa e
+  sem peça escolhida. No máximo, a bancada inteira fica, com "+4", as quatro marcas, os encaixes de material apagados e
+  o botão indisponível "Reforço máximo". O Reforçar não se desloca nem some durante a cena (fica indisponível).
+- **A cena mostra a tentativa, não o resultado:** no aquecimento, a bancada tem o nível, o custo pago, o ganho e a
+  chance da tentativa, e a ficha, o nome, o +N da esteira e o valor do atributo de antes ("Ataque" nunca fica sem
+  número). No desfecho, a ficha passa aos valores novos e a propriedade que mudou acende um instante; depois, a
+  próxima oferta. Nada mostra antes da hora o sucesso, a falha ou a chegada ao máximo (a dica da peça na esteira
+  também espera).
+- **Sem a faixa do resultado:** "Reforço bem-sucedido · +N · Ataque…" saiu; o resultado é a cena. A placa ficou só na
+  desmontagem.
+- **A ficha:** um cartão compacto no alto da coluna (mais estreita: 260 px a 1920, 196 a 1280) com o nome, o dono e as
+  propriedades, cada valor junto do nome.
+- **A comparação de teste** ("Esqueleto nível 4…") saiu da tela: é o botão "Comparação (teste)" da faixa do
+  protótipo, que abre um painel com a peça escolhida.
+- **O desfecho:** o efeito (FX do Estouro) não é mais recortado no leito: os raios, os estilhaços e as fagulhas passam
+  da bancada e um pouco da moldura (recorte: a janela com 22 px de folga; nada na tela inteira). O halo intenso fica
+  junto da peça e o anel é achatado, para não descer até a chance. A peça, o conjunto do resultado, o pé, o cabeçalho,
+  a ficha e a esteira ficam por cima do efeito; o canvas não recebe cliques nem muda o tamanho de nada. Um poço escuro
+  atrás do conjunto do resultado mantém a leitura sobre os raios. O sprite tem o tamanho de antes.
+- **Sucesso:** "SUCESSO", o +N grande e o ganho (o valor novo em verde) num conjunto à direita da peça.
+- **Falha:** "FALHOU" num vermelho apagado, a queda "+3 → +2" e o ganho perdido em cinza, menores; nada dourado nem
+  grande.
+- **Movimento reduzido:** o desfecho parado com o selo de raios e o contorno do molde, sem tremor nem movimento; o
+  reflexo parado e discreto.
+- **O reflexo do reforço:** uma faixa diagonal curta atravessa a silhueta da peça (o próprio desenho é a máscara: só os
+  pixels da peça brilham), na cor do nível: +1 claro e discreto, +2 verde, +3 azul, +4 dourado. A borda de raridade
+  não muda. Passa uma vez ao concluir um sucesso, ao escolher a peça e no mouse ou no foco do teclado sobre uma peça da
+  esteira, sem repetir antes de 1,5 s (nunca todas juntas). Só nos itens da janela de reforço.
+
+**Referências:** Epic Seven (a estrutura mantida no máximo), Ragnarok Origin (a peça perto do resultado) e Guardian
+Tales (o ganho compacto), pelas indicações do Jean. Não achei capturas dessas telas nesta rodada (as buscas só deram
+guias de regra), então apliquei esses princípios sem copiar nada; o acabamento e os efeitos seguem o jogo e o Estouro.
+
+### Conferido (7ª versão)
+
+- A sequência real até o máximo, a 1920×945 (mouse) e a 1280×720 (teclado): +1, +2, +3, falha (+3 → +2), +3, +4 e o
+  "Reforço máximo". Em cada quadro (oferta, aquecimento, impacto, desfecho, próxima oferta), nível, atributo, saldos e
+  custo da mesma tentativa; uma cobrança por tentativa (380/12 → 360/11 → 325/10 → 270/8 → 190/6 → 135/4 → 55/2).
+- O eixo e as dimensões, medidos (acima), iguais em todos os estados nas duas resoluções, sem rolar a mesa.
+- Gestos: Enter compra, adianta e volta à oferta com o foco no Reforçar; 15 repetições seguradas e o clique duplo
+  compram uma vez; Esc adianta e depois fecha; o Fechar funciona no meio da cena; no centro do desfecho, o elemento
+  sob o ponteiro é a bancada, não o efeito.
+- `CASOS=1`: a falta ("Falta 1 Fragmento", a ajuda) e a armadura de Morel no +4; o arco que ninguém usa; o movimento
+  reduzido em toda a sequência; o reflexo no mouse, no foco do teclado, na escolha e no sucesso.
+
+### Roteiro (uns 3 minutos)
+
+1. `demo.bat` → Continuar → Ir para a vila → Ferreiro → **Reforçar** → o **Martelo de Ferro** (o reflexo passa se ele
+   já tiver reforço). Escolha **Ataque** e Reforçar.
+2. Na faixa, **Sucesso (teste)** duas vezes: o +2 (reflexo verde) e o +3 (efeito forte, reflexo azul). Repare que a
+   peça, a chance e o botão não mudam de lugar e que a ficha só muda no desfecho.
+3. **Falha (teste)**: "FALHOU", +3 → +2, sóbrio. Depois **Sucesso (teste)** até o +4: a bancada fica inteira, com
+   "Reforço máximo".
+4. Passe o mouse ou o Tab pelas peças da esteira: cada uma brilha na cor do nível, uma por vez.
+5. **Comparação (teste)** na faixa abre a medição de laboratório da peça escolhida.
+
+### Para depois (ideias, não feitas)
+
+- **+5 em laranja:** a cor do reflexo para um eventual +5. O nível não existe; o limite continua +4.
+- **Encantamento:** uma luz percorrendo uma borda própria da peça, distinta do reflexo do reforço. Depende da definição
+  do sistema de encantamento.
+- O reflexo fora da janela de reforço (inventário, mercado, loot) só depois de aprovado aqui.
+
+## 6ª versão: a informação reorganizada e o desfecho (histórico)
 
 Só a tela mudou: as regras, as chances, os custos e as consequências são os da 5ª versão (abaixo). A estrutura da
 bancada, o molde, os encaixes e a seleção das peças ficaram. A 5ª versão está em `tela/historico/v5` (a faixa abre
-"v5"). Folha: `folha.png` (v5 × v6 com os mesmos itens e saldos; as duas sequências a 1920×945 e a 1280×720; os casos).
+"v5"). A folha desta versão foi substituída pela da 7ª (está no histórico do git).
 
 - **Os dados, na ordem de leitura** (referências: Soul Knight Prequel e MapleStory M): os saldos no cabeçalho; na
   bancada, os materiais como ícone e quantidade (o nome e quanto o grupo tem na dica, por mouse e teclado; faltando, o

@@ -1,13 +1,14 @@
 /* A demonstração do reforço: a faixa no alto (o que é protótipo fica aqui, fora da tela do jogador) e a tela da forja
-   escolhida pelo endereço (?tela=v5, v4, v3, v2 ou v1: as versões antigas, guardadas como histórico; sem ele, a atual,
-   a 6ª). A v3 tem a A anterior e a B, trocadas aqui. Na atual, a faixa também escolhe o caso de
-   teste da próxima tentativa (sucesso ou falha forçados, uma vez), separado do sorteio normal. Trocar de versão
+   escolhida pelo endereço (?tela=v6, v5, v4, v3, v2 ou v1: as versões antigas, guardadas como histórico; sem ele, a
+   atual, a 7ª). A v3 tem a A anterior e a B, trocadas aqui. Na atual, a faixa também escolhe o caso de teste da próxima
+   tentativa (sucesso ou falha forçados, uma vez), separado do sorteio normal, e abre a comparação de teste da peça
+   escolhida (o dano contra um alvo fixo: medição do laboratório, fora da tela do jogador). Trocar de versão
    recarrega a página; a partida continua (ela mora no servidor). */
 "use strict";
 
 (() => {
   const params = new URLSearchParams(location.search);
-  const versao = ["v1", "v2", "v3", "v4", "v5"].includes(params.get("tela")) ? params.get("tela") : "atual";
+  const versao = ["v1", "v2", "v3", "v4", "v5", "v6"].includes(params.get("tela")) ? params.get("tela") : "atual";
   const base = versao === "atual" ? "/proto/" : `/proto/historico/${versao}/`;
   const css = document.createElement("link");
   css.rel = "stylesheet";
@@ -30,8 +31,9 @@
     } else if (versao === "atual" && P && P.teste) {
       extra = `<span>Próxima tentativa:</span>${[["", "Sorteio"], ["sucesso", "Sucesso (teste)"], ["falha", "Falha (teste)"]].map(([id, nome]) =>
         `<button type="button" data-teste="${id}" aria-pressed="${(P.teste() || "") === id}">${nome}</button>`).join("")}`;
+      if (P.comparacao) extra += `<button type="button" data-comparar aria-pressed="false">Comparação (teste)</button>`;
     }
-    const versoes = [["atual", "atual"], ["v5", "v5"], ["v4", "v4"], ["v3", "v3 (A e B)"], ["v2", "v2"], ["v1", "v1"]].map(([id, nome]) =>
+    const versoes = [["atual", "atual"], ["v6", "v6"], ["v5", "v5"], ["v4", "v4"], ["v3", "v3 (A e B)"], ["v2", "v2"], ["v1", "v1"]].map(([id, nome]) =>
       id === versao ? `<b>${nome}</b>` : `<a href="${para(id)}">${nome}</a>`).join(" · ");
     f.innerHTML = `<strong>Protótipo do reforço</strong>${extra}<span class="faixa-hist">versões: ${versoes}</span>`;
     document.body.appendChild(f);
@@ -42,6 +44,21 @@
     const marcarTeste = () => f.querySelectorAll("[data-teste]").forEach((x) => x.setAttribute("aria-pressed", String((P.teste() || "") === x.dataset.teste)));
     f.querySelectorAll("[data-teste]").forEach((b) => b.addEventListener("click", () => { P.teste(b.dataset.teste); marcarTeste(); }));
     window.addEventListener("reforco-teste", marcarTeste);  // usado uma vez, o caso volta para o sorteio
+    // a comparação de teste: um painel embaixo da faixa, com a peça escolhida (atualizado a cada desenho da forja)
+    const comparar = f.querySelector("[data-comparar]");
+    if (comparar) {
+      const painel = document.createElement("div");
+      painel.id = "faixa-comparacao";
+      painel.hidden = true;
+      document.body.appendChild(painel);
+      const encher = () => { painel.innerHTML = P.comparacao() || "<p>Escolha uma peça com reforço disponível.</p>"; };
+      comparar.addEventListener("click", () => {
+        painel.hidden = !painel.hidden;
+        comparar.setAttribute("aria-pressed", String(!painel.hidden));
+        encher();
+      });
+      window.addEventListener("reforco-comparacao", () => { if (!painel.hidden) encher(); });
+    }
   }
   const estilo = document.createElement("style");
   estilo.textContent = `#faixa-demo { position: fixed; z-index: 90; top: 6px; left: 50%; translate: -50% 0; display: flex; align-items: center;
@@ -52,6 +69,14 @@
   #faixa-demo button[aria-pressed="true"] { color: #1d1407; background: #f2d27a; border-color: #f2d27a; }
   #faixa-demo button:focus-visible { outline: 2px solid #f2d27a; outline-offset: 1px; }
   #faixa-demo a { color: #f2d27a; }
-  #faixa-demo .faixa-hist { color: #9d978b; }`;
+  #faixa-demo .faixa-hist { color: #9d978b; }
+  #faixa-comparacao { position: fixed; z-index: 90; top: 34px; left: 50%; translate: -50% 0; width: 340px; padding: 8px 12px;
+    font: 13px/1.35 var(--texto, sans-serif); color: #cfc6b2; background: #1d1407; border: 1px dashed #8a6a2a; box-shadow: 0 2px 6px rgba(0,0,0,.6); }
+  #faixa-comparacao .rf-teste { margin: 0; padding: 0; border: 0; }
+  #faixa-comparacao b { color: #f2d27a; }
+  #faixa-comparacao p { margin: 2px 0 6px; color: #9d978b; }
+  #faixa-comparacao .rf-teste-bloco small { color: #9d978b; }
+  #faixa-comparacao .rf-teste-linha { display: flex; justify-content: space-between; gap: 8px; }
+  #faixa-comparacao .melhor { color: #9fe07c; } #faixa-comparacao .pior { color: #ff8c78; }`;
   document.head.appendChild(estilo);
 })();

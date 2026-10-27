@@ -1,4 +1,5 @@
-/* Protótipo do reforço, 6ª versão (a 5ª, com a informação reorganizada e o desfecho): a A · Bancada com o reforço com chance, sobre a HUD aprovada (14-hud.css). Planos
+/* Protótipo do reforço, 7ª versão (o eixo central, a bancada de dimensões fixas, o desfecho e o reflexo): a A · Bancada
+   com o reforço com chance, sobre a HUD aprovada (14-hud.css). Planos
    de ferro definidos (a chapa, o leito afundado onde a operação acontece, a placa do pé), arestas duras de 1 e 2 px,
    encaixes escuros, latão só na seleção, no foco e na ação principal; vermelho só no aviso e na ação destrutiva. A cena
    do reforço usa as cores do metal no fogo (vermelho fundo, laranja, amarelo quente) e passos de pixel (steps). Os
@@ -236,11 +237,6 @@
 .forjando.falhou .rf-cinza { animation: rf-cinza 0.35s steps(4) forwards; }
 .forjando.falhou .c0 { animation-delay: 1.0s; } .forjando.falhou .c1 { animation-delay: 1.08s; } .forjando.falhou .c2 { animation-delay: 1.12s; } .forjando.falhou .c3 { animation-delay: 1.2s; }
 .forjando.falhou .rf-canal { animation: rf-aquecer 0.55s steps(5) forwards, rf-apaga 0.3s steps(4) 1.0s forwards; }
-/* durante a cena, o que contaria o resultado antes da hora espera (sem deslocar nada) */
-.forjando :is(.rf-resultado, .rf-pe-chapa, .rf-marcas, .rf-nivel) { visibility: hidden; }
-.em-cena .rf-ficha .tocou b, .em-cena .rf-peca.marcada .rf-canto { visibility: hidden; }
-.rf-nome-antes, .em-cena .rf-ficha-cab .rf-nome-agora:has(+ .rf-nome-antes) { display: none; }
-.em-cena .rf-nome-antes { display: inline; }
 @media (prefers-reduced-motion: reduce) { .forjando * { animation: none !important; } }
 
 /* a comparação de teste: fechada, marcada, discreta (a avaliação, não o serviço) */
@@ -300,68 +296,140 @@
   .rf-ficha-cab b { font-size: calc(var(--px) * 24); }
 }
 
-/* ------------------------------------------------------------ 6ª versão: a informação e o desfecho */
+/* ------------------------------------------------------------ 7ª versão: o eixo, a bancada fixa, o desfecho, o reflexo */
 .rf-janela .rf-fx { pointer-events: none; }
+/* por cima do efeito: a peça, o desfecho, o pé da bancada (chance e botão), o cabeçalho, a ficha, a esteira e os donos */
 .rf-encaixe.grande { position: relative; z-index: 3; }
-.rf-chapa { padding-top: 6px; }
-/* o nível, junto da peça: "+1 → +2" (ou "Reforço máximo +4") */
-.rf-nivel { margin-bottom: 8px; font-family: var(--num); font-size: 26px; line-height: 1; color: #fff3d6; white-space: nowrap; }
-/* os materiais: o ícone e a quantidade exigida; o resto na dica */
+:is(.rf-cab, .rf-ficha, .rf-esteira, .rf-donos, .rf-pe-chapa) { position: relative; z-index: 3; }
+
+/* a bancada: a mesma caixa em todos os estados; o leito em três colunas, as dos lados de largura igual, para a peça
+   ficar no eixo do botão qualquer que seja a largura dos materiais e do ganho */
+.rf-chapa { width: 640px; max-width: 100%; padding-top: 6px; }
+.rf-leito { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; min-height: 176px; padding: 14px 10px; }
+.rf-leito.so { display: flex; min-height: 0; }
+.rf-lado { position: relative; display: flex; align-items: center; min-width: 0; }
+.rf-lado.esq { justify-content: flex-end; }
+.rf-lado.dir { justify-content: flex-start; }
+.rf-nivel { display: block; min-height: 26px; margin-bottom: 8px; text-align: center; font-family: var(--num); font-size: 26px; line-height: 1; color: #fff3d6; white-space: nowrap; }
+/* os materiais: o ícone e a quantidade exigida; o resto na dica. Sem custo (máximo, sem peça), o encaixe apagado */
 .rf-insumos { flex-direction: column; gap: 8px; }
 .rf-insumo { display: flex; align-items: center; gap: 8px; cursor: help; }
 .rf-insumo b { font-family: var(--num); font-size: 24px; font-weight: 400; color: #fff3d6; min-width: 26px; }
 .rf-insumo.falta b { color: var(--rf-perigo); }
+.rf-insumo.vazio { cursor: default; opacity: 0.35; }
 .rf-insumo:focus-visible { outline: 2px solid var(--latao-claro); outline-offset: 2px; }
-/* os dois lados da peça: o conteúdo de sempre e, no desfecho, o resultado por cima */
-.rf-lado { position: relative; display: flex; align-items: center; min-height: 100%; }
-.rf-lado.esq { justify-content: flex-end; }
-.rf-dsf { position: absolute; top: 50%; translate: 0 -50%; display: none; flex-direction: column; z-index: 4; white-space: nowrap; pointer-events: none; }
-.rf-molde > .rf-dsf.palavra { top: -8px; left: 50%; translate: -50% 0; align-items: center; }
-.rf-lado.dir .rf-dsf { left: 4px; align-items: flex-start; }
-.rf-dsf.palavra b { font: 400 calc(var(--px) * 40)/1 var(--titulo); letter-spacing: 0.04em; text-transform: uppercase; }
-.rf-dsf.numero b { font: 400 calc(var(--px) * 64)/0.9 var(--titulo); }
-.rf-dsf.ok b { color: #ffe27a; text-shadow: 0 3px 0 #8a6a14, 0 6px 0 #000; }
-.rf-dsf.mau b { color: #d9d2c4; text-shadow: 0 3px 0 #3a3530, 0 6px 0 #000; }
-.rf-dsf.mau.palavra b { color: #ff9a84; text-shadow: 0 3px 0 #5a1810, 0 6px 0 #000; }
-.rf-dsf small { margin-top: 6px; display: flex; flex-direction: column; font-family: var(--num); font-size: 19px; color: #e6dbc2; text-shadow: 0 2px 0 #000; }
-.desfecho .rf-dsf { display: flex; animation: rf-bate 0.27s steps(1) both; }
-.desfecho .rf-dsf.numero { animation-delay: 0.07s; }
-.desfecho :is(.rf-insumos, .rf-resultado, .rf-nivel, .rf-marcas, .rf-pe-chapa) { visibility: hidden; }
-@keyframes rf-bate { 0% { scale: 1.9; opacity: 0; } 25% { scale: 0.88; opacity: 1; } 50% { scale: 1.06; } 75%, 100% { scale: 1; } }
-/* a falha: o calor se desfaz; a peça escurece um instante e volta (inteira) */
-@keyframes rf-esfria { 0% { filter: brightness(1.3) sepia(0.6); } 60% { filter: brightness(0.55) grayscale(0.6); } 100% { filter: none; } }
-.desfecho.falhou .rf-encaixe.grande img, .desfecho.falhou .rf-encaixe.grande canvas { animation: rf-esfria 0.9s steps(6) both; }
-/* o pé: a chance numa linha, a ajuda, a ação */
-.rf-pe-chapa { flex-direction: column; }
-.rf-linha-chance { display: flex; align-items: center; gap: 8px; }
-.rf-chance { font-size: 17px; color: var(--rf-sec); }
+.rf-resultado { min-height: 46px; justify-content: center; }
+.rf-resultado.vazio { min-width: 130px; opacity: 0.45; }
+.rf-resultado.veios { flex-direction: column; gap: 6px; min-height: 0; }
+.rf-veio { min-width: 150px; }
+.rf-veio.escolhido .rf-ganho span { color: var(--latao-claro); }
+/* o pé: a chance, o botão e a nota, empilhados no eixo, numa altura fixa; a ajuda (i) ao lado da chance, fora do eixo */
+.rf-pe-chapa { flex-direction: column; justify-content: center; height: 118px; gap: 6px; }
+.rf-linha-chance { position: relative; display: flex; align-items: center; justify-content: center; min-height: 28px; }
+.rf-chance { font-size: 17px; color: var(--rf-sec); white-space: nowrap; text-shadow: 0 1px 0 #000, 1px 0 0 #000, -1px 0 0 #000, 0 -1px 0 #000; }
 .rf-chance b { font-family: var(--num); font-size: 26px; font-weight: 400; color: var(--latao-claro); }
-.rf-ajuda { width: 20px; height: 20px; padding: 0; font: italic 700 13px/18px var(--texto); color: var(--rf-sec); cursor: help; text-align: center;
+.rf-ajuda { position: absolute; left: calc(100% + 8px); top: 50%; translate: 0 -50%; width: 20px; height: 20px; padding: 0;
+  font: italic 700 13px/18px var(--texto); color: var(--rf-sec); cursor: help; text-align: center;
   background: var(--rf-nicho); border: 1px solid #45484e; border-radius: 50%; }
 .rf-ajuda:is(:hover, :focus-visible) { color: var(--latao-claro); border-color: var(--latao); outline: none; }
 .rf-ajuda:focus-visible { box-shadow: 0 0 0 2px var(--latao-claro); }
-/* a escolha do atributo da arma: duas opções, cada uma com o ganho */
-.rf-resultado.veios { flex-direction: column; gap: 6px; }
-.rf-veio { min-width: 150px; }
-.rf-veio.escolhido .rf-ganho span { color: var(--latao-claro); }
-.rf-veio.escolhido::before { content: ""; position: absolute; }
-@media (prefers-reduced-motion: reduce) { .desfecho .rf-dsf, .desfecho.falhou .rf-encaixe.grande img { animation: none; } }
+.rf-pe-chapa .rf-botao.principal { width: 240px; min-width: 0; }
+.rf-nota { min-height: 20px; max-width: 460px; font-size: 15px; font-weight: 700; line-height: 1.3; color: var(--rf-perigo); text-align: center; }
+.rf-nota.neutra { font-weight: 400; color: var(--rf-sec); }
+
+/* a ficha: um cartão no alto da coluna, cada valor junto do nome da propriedade */
+.rf-corpo { grid-template-columns: 84px minmax(0, 1fr) 260px; }
+.rf-ficha:empty { visibility: hidden; }
+.rf-ficha { align-self: start; margin: 10px 10px 0 0; padding: 10px 12px 12px; border: 2px solid var(--rf-sombra); box-shadow: inset 1px 1px 0 var(--rf-fio); }
+.rf-ficha-cab b { font-size: calc(var(--px) * 22); }
+.rf-props { display: grid; grid-template-columns: max-content max-content; align-items: baseline; gap: 4px 14px; margin-top: 8px; }
+.rf-props li { display: contents; }
+.rf-props li span { font-size: 15px; color: var(--rf-sec); }
+.rf-props b { min-width: 0; text-align: left; font-size: 21px; }
+@keyframes rf-acende { 0% { color: #fff7e0; text-shadow: 0 0 6px var(--rf-brasa4); } 100% { text-shadow: none; } }
+.revelou .rf-props li.tocou b { animation: rf-acende 1.2s steps(6) both; }
+
+/* a tentativa em cena: o de antes no aquecimento, o de agora do desfecho em diante (sem redesenhar) */
+.rf-v-antes, .aquecendo .rf-v-agora, .aquecendo .rf-canto.sem-antes, .rf-janela:not(.aquecendo) .rf-canto.sem-agora { display: none; }
+.aquecendo .rf-v-antes { display: inline; }
+/* no desfecho, o conjunto do resultado ocupa o lugar do nível, do conduto da direita e do ganho */
+.desfecho :is(.rf-nivel, .rf-marcas, .rf-lado.dir > .rf-conduto, .rf-lado.dir > .rf-resultado) { visibility: hidden; }
+
+/* o desfecho: um conjunto junto da peça */
+.rf-dsf { position: absolute; left: 30px; top: 50%; translate: 0 -50%; display: none; flex-direction: column; align-items: flex-start; gap: 2px;
+  z-index: 4; white-space: nowrap; pointer-events: none; }
+.desfecho .rf-dsf { display: flex; }
+.rf-dsf-palavra { font: 400 calc(var(--px) * 30)/1 var(--titulo); letter-spacing: 0.04em; text-transform: uppercase; }
+.rf-dsf small { display: flex; flex-direction: column; margin-top: 4px; font-family: var(--num); font-size: 19px; color: #e6dbc2;
+  text-shadow: 0 2px 0 #000, 1px 0 0 #000, -1px 0 0 #000, 0 -1px 0 #000; }
+.rf-dsf small em { font-style: normal; }
+/* sucesso: dourado, o +N grande, o ganho com o valor novo em verde */
+.rf-dsf.ok .rf-dsf-palavra { color: #ffe27a; text-shadow: 0 2px 0 #8a6a14, 0 4px 0 #000; }
+.rf-dsf.ok .rf-dsf-nivel { font: 400 calc(var(--px) * 60)/0.9 var(--titulo); color: #ffe27a; text-shadow: 0 3px 0 #8a6a14, 0 6px 0 #000; }
+.rf-dsf.ok small em { color: var(--rf-verde); }
+.desfecho .rf-dsf.ok { animation: rf-bate 0.27s steps(1) both; }
+@keyframes rf-bate { 0% { scale: 1.6; opacity: 0; } 25% { scale: 0.9; opacity: 1; } 50% { scale: 1.05; } 75%, 100% { scale: 1; } }
+/* falha: sóbrio, sem nível grande nem dourado: a palavra, a queda e o que se perdeu */
+.rf-dsf.mau .rf-dsf-palavra { font-size: calc(var(--px) * 26); color: #d48a7a; text-shadow: 0 2px 0 #000; }
+.rf-dsf.mau .rf-dsf-nivel { font-family: var(--num); font-size: 24px; font-weight: 400; color: #bdb5a6; text-shadow: 0 2px 0 #000; }
+.rf-dsf.mau small { font-size: 16px; color: #8f887c; }
+.rf-dsf.mau small em { color: #c98a7c; }
+.desfecho .rf-dsf.mau { animation: rf-surge 0.16s steps(2) both; }
+@keyframes rf-surge { 0% { opacity: 0; } 100% { opacity: 1; } }
+/* a falha: o calor se desfaz; a peça escurece um instante e volta (inteira) */
+@keyframes rf-esfria { 0% { filter: brightness(1.3) sepia(0.6); } 60% { filter: brightness(0.55) grayscale(0.6); } 100% { filter: none; } }
+.desfecho.falhou .rf-encaixe.grande img, .desfecho.falhou .rf-encaixe.grande canvas { animation: rf-esfria 0.9s steps(6) both; }
+
+/* o reflexo do reforço: uma faixa diagonal curta, mascarada pelo desenho da peça (só os pixels dela brilham) */
+.rf-reflexo { position: absolute; z-index: 1; pointer-events: none; opacity: 0;
+  -webkit-mask-size: 100% 100%; mask-size: 100% 100%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+  background: linear-gradient(45deg, transparent 0 44%, var(--brilho) 44% 47.5%, transparent 47.5% 50%, var(--brilho) 50% 51%, transparent 51%) 0 0 / 300% 300% no-repeat; }
+.rf-reflexo[data-nivel="1"] { --brilho: rgba(255, 248, 228, 0.5); }
+.rf-reflexo[data-nivel="2"] { --brilho: rgba(140, 236, 150, 0.75); }
+.rf-reflexo[data-nivel="3"] { --brilho: rgba(96, 164, 255, 0.95); }
+.rf-reflexo[data-nivel="4"] { --brilho: rgba(255, 210, 80, 0.95); }
+.rf-reflexo.passa { animation: rf-reflexo 0.6s steps(10) both; }
+@keyframes rf-reflexo { 0% { opacity: 1; background-position: 0 100%; } 99% { opacity: 1; } 100% { opacity: 0; background-position: 100% 0; } }
+.rf-canto { z-index: 2; }
+
+/* movimento reduzido: o desfecho parado, com o selo (no canvas) e o contorno do molde; o reflexo parado e discreto */
+@media (prefers-reduced-motion: reduce) {
+  .desfecho .rf-dsf, .desfecho.falhou .rf-encaixe.grande img, .revelou .rf-props li.tocou b { animation: none; }
+  .desfecho.ok .rf-berco { box-shadow: inset 1px 1px 0 var(--rf-brasa5), 0 0 0 2px var(--rf-brasa4); }
+  .desfecho.ok .rf-barra { background: var(--rf-brasa4); }
+  .desfecho.falhou .rf-berco { box-shadow: inset 1px 1px 0 #4a4d54, 0 0 0 2px #5a1810; }
+  .rf-reflexo.passa { animation: none; opacity: 0.7; background-position: 50% 50%; }
+}
+
+/* 1280: as mesmas peças menores; o pé continua empilhado no eixo */
 @media (max-width: 1500px) {
-  .rf-nivel { margin-bottom: 4px; font-size: 20px; }
+  .rf-corpo { grid-template-columns: 56px minmax(0, 1fr) 196px; }
+  .rf-ficha { margin: 6px 6px 0 0; padding: 8px 10px 10px; }
+  .rf-ficha-cab b { font-size: calc(var(--px) * 20); }
+  .rf-props { gap: 2px 10px; margin-top: 6px; }
+  .rf-props li span { font-size: 14px; }
+  .rf-props b { font-size: 18px; }
+  .rf-mesa { justify-content: center; }
+  .rf-leito { min-height: 124px; padding: 8px 6px; }
+  .rf-nivel { min-height: 20px; margin-bottom: 4px; font-size: 20px; }
   .rf-insumos { gap: 4px; }
   .rf-insumo { gap: 5px; }
   .rf-insumo b { font-size: 19px; min-width: 18px; }
-  .rf-dsf.palavra b { font-size: calc(var(--px) * 28); }
-  .rf-dsf.numero b { font-size: calc(var(--px) * 44); }
-  .rf-dsf small { font-size: 15px; margin-top: 3px; }
-  .rf-chance { font-size: 15px; }
-  .rf-chance b { font-size: 20px; }
-  .rf-pe-chapa { flex-direction: row; }
+  .rf-resultado { min-height: 36px; }
+  .rf-resultado.vazio { min-width: 96px; }
   .rf-veio { min-width: 0; }
   .rf-veio .rf-ganho span { display: inline; }
-}
-.rf-chance, .rf-falta { white-space: nowrap; }
-@media (max-width: 1500px) {
-  .rf-pe-chapa { flex-wrap: wrap; row-gap: 2px; }
-  .rf-pe-chapa .rf-falta { flex-basis: 100%; text-align: center; }
+  .rf-dsf { left: 22px; }
+  .rf-dsf-palavra { font-size: calc(var(--px) * 22); }
+  .rf-dsf.ok .rf-dsf-nivel { font-size: calc(var(--px) * 42); }
+  .rf-dsf small { font-size: 15px; margin-top: 2px; }
+  .rf-dsf.mau .rf-dsf-palavra { font-size: calc(var(--px) * 20); }
+  .rf-dsf.mau .rf-dsf-nivel { font-size: 19px; }
+  .rf-dsf.mau small { font-size: 14px; }
+  .rf-pe-chapa { flex-direction: column; flex-wrap: nowrap; height: 92px; padding: 4px 10px 6px; gap: 3px; }
+  .rf-linha-chance { min-height: 22px; }
+  .rf-chance { font-size: 15px; }
+  .rf-chance b { font-size: 20px; }
+  .rf-pe-chapa .rf-botao.principal { width: 180px; }
+  .rf-nota { min-height: 18px; font-size: 14px; }
 }
