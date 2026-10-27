@@ -492,7 +492,7 @@ durante a luta de teste. A skill `texto-regras-fenda` ganhou os critérios gerai
 **Pendências:** ícones das essências em tamanhos pequenos; a dica por nome em peças homônimas; sons não ouvidos.
 Detalhes, o que foi só investigado e o roteiro no LEIA-ME.
 
-### 5.9 A 10ª versão: a bancada com o título e o resultado até o OK (27/10/2026) — candidata em avaliação
+### 5.9 A 10ª versão: a bancada com o título e o resultado até o OK (27/10/2026) — substituída pela 11ª
 
 Sem mudança de regras, chances, custos ou limite +4; o sprite em escala inteira (sem 3×). **Composição:** sem a ficha
 lateral no Reforçar; o nome inteiro com o nível no topo da bancada, na cor da raridade, com o dono e os sulcos embaixo;
@@ -507,6 +507,14 @@ redesenho, medido: 27 quadros sem borda na 9ª, 0 agora); a identidade das peça
 nascem com a peça (drop, mercado, saque, únicos) e as telas só leem; os sulcos no achado. **Pendências:** a revisão de
 som, adiada até a interface estar satisfatória como 1.0; os ícones das essências em tamanhos pequenos. Detalhes e
 roteiro no LEIA-ME.
+
+### 5.10 A 11ª versão: o resultado em destaque (27/10/2026) — candidata em avaliação
+
+Depois de ver a 10ª, o Jean pediu o sucesso claro e em destaque. **Corrigido:** o véu da cena cobria a bancada (o
+recorte era medido antes de a janela existir); os feixes seguem girando até o OK, por trás da leitura; "Sucesso"
+grande no pé, entre a peça e o OK ("Falhou" sóbrio no mesmo lugar); no sucesso, o molde vira um disco escuro em
+degraus (sem o quadrado cortando o selo); todos os botões da forja no componente atual do jogo (`.botao-janela`), com a
+colisão `#texto .perigo` resolvida. Regras iguais. Detalhes no LEIA-ME.
 
 ## 6. Pontos que a proposta anterior precisa resolver
 

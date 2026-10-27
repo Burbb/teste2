@@ -7859,3 +7859,13 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   interface; folhas novas. A 9ª em `tela/historico/v9`.
 - **Adiado:** a revisão de som, para quando a interface estiver satisfatória como 1.0.
 - **Próximo:** a avaliação do Jean. Nada integrado.
+
+### 27/10/2026 (data do computador local) — Forja: a 11ª versão, o resultado em destaque (protótipo)
+
+- **Pedido:** o sucesso não pode escurecer com o resto; os feixes rodando até o OK; nada da estética antiga de botão,
+  nem em teste; "Sucesso" maior, embaixo, entre a peça e o OK; o molde sem o corte seco no efeito.
+- **Feito (causas no LEIA-ME e no 25, 5.10):** o recorte do véu medido depois do desenho (antes ficava 0×0 e cobria
+  a bancada); raios contínuos e mais calmos depois do impacto; o banner no pé; o disco em degraus no lugar do quadrado;
+  `.botao-janela` em todas as ações da forja (e a colisão `#texto .perigo`). A 10ª em `tela/historico/v10`.
+- **Conferido:** 1920×945 e 1280×720, sequência contínua, +3, falha, movimento reduzido, gestos; testes do projeto.
+- **Próximo:** a avaliação do Jean. Nada integrado; som adiado para a 1.0.

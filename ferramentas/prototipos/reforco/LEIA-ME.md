@@ -15,11 +15,37 @@ Só nesta execução, `demo.py` troca a forja (o balcão novo), o baú (que pode
 "Materiais" do Inventário, a venda da peça reforçada, a ficha das peças nas telas (as gravações) e liga os efeitos das
 gravações na luta. O resto é o jogo: o Inventário do grupo, o mercado, a luta, a estrada.
 
-## 10ª versão: a bancada com o título, o resultado até o OK e as pendências de dados (candidata em avaliação)
+## 11ª versão: o resultado em destaque (candidata em avaliação)
+
+Pedido do Jean depois de ver a 10ª: o sucesso escurecia junto com o resto da tela, os feixes paravam, o OK tinha a
+estética antiga, o "Sucesso" era pequeno e o quadrado do molde cortava o efeito. Regras, chances, custos e o +4 iguais;
+a 10ª está em `tela/historico/v10`. Folha: `folha.png` (a 10ª × a 11ª na mesma tentativa, a sequência nas duas
+resoluções, o +3, a falha, o movimento reduzido e os outros botões). A `folha-encantar.png` continua a da 10ª.
+
+- **A bancada clara.** Causa: o recorte do véu da cena era medido antes de a janela ser desenhada e ficava 0×0 no
+  canto; o véu cobria a tela inteira, bancada incluída (na captura da 10ª a ordem saiu favorável por acaso). Agora é
+  medido no quadro seguinte ao desenho (e ao redimensionar): só o entorno escurece; o título, a peça, o ganho e o
+  efeito ficam claros.
+- **Os feixes continuam até o OK.** Abrem no impacto e seguem girando, mais curtos e achatados depois do primeiro
+  segundo, por trás do título, do ganho e do pé (a leitura fica por cima); as brasas continuam subindo. O selo de
+  raios é proporcional ao molde (a 1280 não invade "Sulcos").
+- **"Sucesso" grande, no pé**, entre a peça e o OK, no lugar da chance e da falha (o OK continua onde estava o
+  Reforçar): entra com um impacto curto e brilho. "Falhou" no mesmo lugar, sóbrio. A faixa do alto saiu.
+- **O molde sem corte seco:** no sucesso, o quadrado do encaixe dá lugar a um disco escuro em degraus, como o item no
+  achado; o selo de raios aparece inteiro em volta.
+- **Os botões do jogo atual** (`.botao-janela`, o mesmo do achado e das janelas) em todas as ações da forja: Reforçar,
+  OK, Gravar, Substituir, Desmontar, Cancelar e Fechar. Junto, uma colisão de nome: a janela mora em `#texto`, e a
+  regra `#texto .perigo` pintava de vermelho o Desmontar bloqueado; corrigido.
+- **Conferido:** a 1920×945 e 1280×720, a sequência contínua da mesma tentativa, o +3 aos 4,0 e 4,6 s (os raios em
+  outra posição: continuam girando), a falha, o movimento reduzido (o resultado parado com o OK), os gestos (Enter
+  segurado compra uma vez e não dispensa; clique duplo no OK dispensa sem comprar; clique duplo no Reforçar compra uma
+  vez; Esc dispensa), a desmontagem e o encantamento com os botões novos.
+
+## 10ª versão: a bancada com o título, o resultado até o OK e as pendências de dados (histórico)
 
 Regras, chances, custos e o limite +4 iguais; o sprite continua em escala inteira (2× a 1920), sem ampliar a 3×. A 9ª
-está em `tela/historico/v9` (a faixa abre "v9"). Folhas: `folha.png` (a sequência contínua de uma tentativa, nas duas
-resoluções, e a 9ª ao lado) e `folha-encantar.png` (casos, identidade das peças, sulcos e encantamento).
+está em `tela/historico/v9` (a faixa abre "v9"). A `folha-encantar.png` é desta versão (casos, identidade das peças,
+sulcos e encantamento); a folha da sequência da 10ª está no git.
 
 ### A composição do Reforçar
 
