@@ -438,6 +438,46 @@ sequência real até o máximo a 1920×945 e 1280×720 (LEIA-ME). A v6 fica como
 **Ideias registradas, não feitas:** laranja para um eventual +5 (o nível não existe); no encantamento, uma luz
 percorrendo uma borda própria da peça, quando o sistema for definido.
 
+### 5.7 A 8ª versão da forja e o encantamento de laboratório (27/10/2026) — candidatas em avaliação
+
+**Pedido do Jean:** concluir o acabamento do reforço e da desmontagem sem mudar regras, chances, custos e o limite +4;
+criar um protótipo jogável de encantamento como proposta de laboratório (não regra aprovada).
+
+**Decisões do Jean nesta rodada:** uma peça pode ter mais de um espaço de gravação, sorteado no drop como os outros
+efeitos; a ordem dos serviços é Reforçar, Encantar, Desmontar; reforço e encantamento coexistem; o encantamento não
+herda a chance de falha nem o rebaixamento do reforço; materiais do grupo fora da bolsa; o +5 continua só registrado.
+
+**Lote 1 (feito, no protótipo):** a desmontagem na mesma bancada do reforço (eixo e dimensões iguais), a confirmação no
+pé, uma transformação curta (a peça se desfaz em fragmentos, o material chega ao encaixe, o saldo acende), a seleção
+vazia depois; o golpe seco no +3 e no +4 (só a chapa), o contorno aceso do máximo, a falha legível a 1280, os dados da
+tentativa apagados no desfecho, o quadro assentado no movimento reduzido; o reflexo conferido nos níveis reais e
+refeito como luz que atravessa o material, com a luz baixa permanente no +4; os sons do jogo no reforço e na
+desmontagem (não ouvidos nas conferências). Na produção, só a correção do Inventário (1.213.2).
+
+**Lote 2 (hipóteses de laboratório):** gravar uma essência num sulco da peça (1 a 3 sulcos sorteados pela raridade),
+1 essência + 30 de ouro, nunca falha; substituir apaga a gravação daquele sulco (a essência antiga se perde, dito antes
+na confirmação); a mesma essência não entra duas vezes na peça e o mesmo efeito conta uma vez por corpo; a gravação vai
+com a peça; desmontar a perde. Seis essências: **Brasa** (arma: 35% de aplicar Queimadura ao acertar, 1 por rodada),
+**Carrasco** (arma: +30% de dano abaixo de 35% da vida), **Eco** (arma, foco, escudo: 25% do recurso ao abater, 2 por
+luta), **Vigília** (peito, escudo, foco: barreira de 15% da vida no começo da luta), **Revide** (peito, escudo: 25% de
+revidar golpes corpo a corpo com 60% do Ataque), **Geada** (peito: 30% de congelar quem bate corpo a corpo, 1 por luta).
+Alvo, gatilho, magnitude, duração, limite e interação de cada uma no LEIA-ME; nenhum efeito secundário dispara outro.
+Essências de teste (2 de cada) e, no baú, 25% de uma. A borda de luz do slot marca cada gravação (um trecho por
+gravação); o reflexo continua sendo o reforço. Luta de teste na faixa do protótipo.
+
+**Conflito registrado:** o pedido desta rodada partia de "uma essência por peça, salvo decisão posterior"; o Jean decidiu
+durante a rodada os sulcos múltiplos sorteados no drop, e o laboratório seguiu a decisão. A seção 5.3 ("não implementar
+o sistema por inferência") fica atendida no sentido de que nada vai à produção: o laboratório foi pedido explicitamente.
+
+**Resultados observados:** 34 testes do protótipo (cobrança única, pedido repetido, substituição, sulcos, elegibilidade,
+troca de dono, desmontagem, os seis efeitos em lutas reais ou montadas, nada acumulando entre lutas, a luta de teste
+devolvendo o grupo); na tela, a 1920×945 e 1280×720, quatro gravações e quatro cobranças, fechar no meio sem repetir,
+teclado, clique duplo e movimento reduzido. Pesquisa visual em capturas: a Forja do Last Epoch e o item encantado do
+Diablo III (o que se aproveitou, no LEIA-ME).
+
+**Pendências:** a distribuição dos sulcos, custos e fontes de essência; remover sem substituir; recuperação ao
+desmontar; arte das essências; equilíbrio dos efeitos com partida de verdade; integração (nada disso está no jogo).
+
 ## 6. Pontos que a proposta anterior precisa resolver
 
 1. **Arredondamento e ganho:** incremento percentual arredondado a cada nível pode deixar atributos pequenos sem crescer; mínimo +1 pode causar ganho relativo excessivo. Comparar resultados acumulados e exemplos de bases diferentes antes de escolher fórmula.
@@ -518,7 +558,7 @@ Depois de definida a direção suficiente, o Claude poderá verificar implicaç�
 | Desmontagem e recuperação parcial de materiais de reforço | Aprovadas como direção; taxas provisórias; sem transferência automática do +N |
 | Materiais do grupo fora dos 12 espaços | Aprovado; seção Materiais, ouro + material no reforço |
 | Elevação de base de peças excepcionais | Direção futura aprovada; não implementar nesta rodada |
-| Encantamento, essências e receitas | Debate posterior; sem implementação autorizada |
+| Encantamento, essências e receitas | Protótipo de laboratório pedido (5.7): sulcos múltiplos sorteados no drop (decisão do Jean, 27/10); efeitos, custos e fontes são hipóteses; nada em produção |
 | Próxima entrega | Protótipo isolado da seção 5.4; avaliação antes da produção |
 | Tipos de dano, escalas e resistências explícitos | Direção aprovada para v3; fórmulas e catálogo provisórios |
 | Vontade aumentando reserva de recurso | Aprovado para teste; sem Sabedoria nova nem regeneração automática |

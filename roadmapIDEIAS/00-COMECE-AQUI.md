@@ -7814,3 +7814,19 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Ajuste pedido pelo Jean (7ª versão):** o reflexo passa em todo slot da peça reforçada (forja, Inventário, ficha
   lateral), sozinho: 2 s depois de a peça aparecer e então a cada ~3 s, defasado entre as peças; parado com movimento
   reduzido; pausado durante a cena. Só na demonstração.
+
+### 27/10/2026 (data do computador local) — Forja: a 8ª versão e o encantamento de laboratório (protótipo)
+
+- **Pedido:** dois lotes, sem parar no plano: o acabamento do reforço e da desmontagem (regras, chances, custos e +4
+  iguais) e um protótipo jogável de encantamento (proposta de laboratório). Durante a rodada, o Jean decidiu: as peças
+  podem ter mais de um espaço de gravação, sorteado no drop; a ordem é Reforçar, Encantar, Desmontar.
+- **Lote 1 (feito):** a desmontagem na mesma bancada (eixo e dimensões do reforço), a confirmação no pé, a
+  transformação em fragmentos e a seleção vazia depois; o golpe seco no +3/+4, o contorno aceso do máximo, a falha
+  legível a 1280, o desfecho dominando, o reduzido assentado; o reflexo nos níveis reais, como luz no material, e a
+  luz baixa do +4; sons do jogo (não ouvidos). Corrigidos: a desmontagem de peça única e o clique duplo que atravessava
+  a janela num redesenho. Na produção, só o Inventário sem a instrução (1.213.2).
+- **Lote 2 (hipóteses):** Encantar na forja; sulcos de 1 a 3; 1 essência + 30 de ouro, sem falha; substituir apaga o
+  sulco, com confirmação; seis essências (Brasa, Carrasco, Eco, Vigília, Revide, Geada) ligadas à luta só na
+  demonstração; a borda de luz por gravação; a luta de teste na faixa. Regras no 25 (5.7) e no LEIA-ME.
+- **Conferido:** 34 testes do protótipo; a 1920×945 e 1280×720, cobrança única, fechar no meio sem repetir, teclado,
+  clique duplo, reduzido; folhas `folha.png` e `folha-encantar.png`. Nada integrado; a avaliação é do Jean.

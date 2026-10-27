@@ -1,4 +1,4 @@
-# Protótipo: reforço, materiais e desmontagem
+# Protótipo: reforço, materiais, desmontagem e encantamento (laboratório)
 
 A demonstração jogável da seção 5 do [25](../../../roadmapIDEIAS/25-ETAPA4-REFORCO-E-ENCANTAMENTO.md) (26/10/2026).
 **Não é integração.** O jogo de produção não carrega esta pasta (um teste confere); a forja, o mercado e os saves do
@@ -9,16 +9,152 @@ jogo não mudaram. Os números são hipóteses desta rodada, não balanceamento.
 Dê dois cliques em `demo.bat` (ou `python ferramentas/prototipos/reforco/demo.py` na raiz). O jogo de sempre abre no
 navegador num **save temporário** (uma pasta nova a cada vez; os saves pessoais não são lidos nem tocados): o Guerreiro
 no nível 4, no Vau, com Morel e Odette, 380 de ouro, dois baús e as peças dos exemplos. Feche a janela do terminal
-para parar. Folha compacta: `folha.png`.
+para parar. Folhas: `folha.png` (reforço e desmontagem) e `folha-encantar.png` (encantamento).
 
-Só nesta execução, `demo.py` troca a forja (o balcão novo), o baú (que pode dar fragmento), a seção "Materiais" do
-Inventário e a venda da peça reforçada. O resto é o jogo: o Inventário do grupo, o mercado, a luta, a estrada.
+Só nesta execução, `demo.py` troca a forja (o balcão novo), o baú (que pode dar fragmento ou essência), a seção
+"Materiais" do Inventário, a venda da peça reforçada, a ficha das peças nas telas (as gravações) e liga os efeitos das
+gravações na luta. O resto é o jogo: o Inventário do grupo, o mercado, a luta, a estrada.
 
-## 7ª versão: eixo central, bancada fixa, efeitos soltos e reflexo (candidata em avaliação)
+## 8ª versão: acabamento do reforço, desmontagem refeita e o Encantar de laboratório (candidata em avaliação)
+
+Duas frentes, cada uma com a sua folha: `folha.png` (Lote 1: reforço e desmontagem, v7 × v8 com os mesmos dados) e
+`folha-encantar.png` (Lote 2: o encantamento). A 7ª está em `tela/historico/v7` (a faixa abre "v7"). As regras,
+chances, custos e o limite +4 do reforço são os da 5ª versão; o +5 continua só registrado.
+
+### Lote 1: reforço e desmontagem
+
+**Desmontagem (refeita):** a mesma bancada do reforço, com as mesmas dimensões (640 × 342 a 1920; 404 × 238 a 1280): a
+peça no molde, no eixo do botão; à direita, o conduto e o encaixe do que ela rende (ícone e quantidade). Saíram o
+título "Desmontar" na borda, o conduto solto e a faixa "Desmontado · material · nome". A confirmação fica no pé, com o
+nome da peça e "O equipamento será destruído.". Depois de confirmar, uma transformação de 0,7 s (hipótese): um toque na
+bancada e um clarão pequeno, a peça clareia e se parte, fragmentos de pixel voam ao encaixe do material, que aparece com
+a quantidade; o saldo de Fragmentos acende em verde. A seleção fica vazia (nada é escolhido sozinho) e o encaixe
+do material mostra o que chegou até a próxima ação. Achado e corrigido: desmontar uma peça única (o Lamento) falhava
+com "A peça mudou desde a confirmação" (a tela mandava o rótulo com ★; o motor esperava o nome).
+
+**Reforço:**
+- Golpe seco na bancada no +3 e no +4, só a chapa e só na vertical (+3: desce e volta; +4: desce mais, um rebote menor
+  e assenta), na mesma duração; a página não treme.
+- O máximo: no sucesso que chega ao +4, o contorno do molde se completa barra a barra e fica aceso ~1,5 s.
+- A falha mais legível a 1280 ("+3 → +2" claro, maior; "Falhou" num vermelho apagado; nada dourado).
+- No desfecho, os dados da tentativa (materiais, chance, botão, nota) ficam no lugar, apagados: o resultado domina.
+- Movimento reduzido: um quadro assentado (selo pequeno, raios curtos e apagados), não o pico do efeito.
+- Os saldos acendem quando mudam (a cobrança em cor de custo; o que entra em verde); o +N da peça na esteira acende no
+  desfecho, sem perder a seleção.
+- A janela nasce já no lugar: antes, num redesenho, ela passava um quadro sem posição e o segundo clique de um clique
+  duplo atravessava para o balcão atrás (o cartão Desmontar). Achado nesta rodada; corrigido.
+
+**Reflexo e acabamento:**
+- Conferido nos níveis reais, lado a lado (`CASOS=1` agora põe peças da bolsa no +1, +2 e +3, além da armadura de Morel
+  no +4): +1 claro e discreto, +2 verde, +3 azul, +4 dourado, cada peça na sua vez (as passadas registradas aos 1,6 s,
+  2,2 s e 2,6 s, depois em ciclo; nunca juntas).
+- A faixa como luz que atravessa o material: o miolo claro, as bordas na cor do nível, a textura por baixo (mistura
+  "screen"), mascarada pelo desenho da peça.
+- O +4 tem também uma luz baixa e permanente na própria peça (um contorno de 1 px dourado, sem borrão).
+- O ciclo só anima o que está à vista, para em aba oculta e esquece o que saiu da tela há 8 s; a raridade, o +N, a
+  seleção e o foco não mudam.
+- Sons do jogo (sintetizados, respeitam o som desligado): o martelo na bigorna no sucesso, o golpe junto no +3 e no +4,
+  o golpe leve na falha, os estalos de metal na desmontagem. **Não ouvidos:** as conferências rodam sem saída de áudio;
+  o jogo não tem um som de fragmentação (usei os estalos de metal, que existem).
+
+**Produção (separado, 1.213.2):** o Inventário não mostra mais "Clique numa peça da bolsa ou num espaço do corpo…";
+sem peça marcada, a caixa da ficha fica oculta (a coluna mantém a largura).
+
+### Lote 2: encantamento (gravação), proposta de laboratório
+
+**Não é regra aprovada nem integração.** O código é `encanto.py` (regras e a ligação com a luta) e a janela Encantar em
+`tela/reforco.js`; o jogo não carrega nada disso (o teste de isolamento confere).
+
+**Pesquisa (capturas observadas):** a Forja do Last Epoch (wiki oficial, captura da tela): a peça no centro, os
+modificadores dos lados, um canal aceso ligando o escolhido à peça, o custo e um botão, e o resultado escrito no
+próprio painel; aproveitei o canal aceso (os condutos da bancada) e o resultado no painel. O item encantado do Diablo
+III (wiki, captura da ficha): a propriedade encantada fica na lista da peça, com um marcador diferente; aproveitei a
+gravação dentro da ficha da peça, com a cor da essência. Sem captura de interface nesta rodada: Maxroll (404), UESP
+(Skyrim) e Fextralife (Elden Ring) só tinham ícones e guias. Nada foi copiado; o acabamento é o da bancada e o efeito é
+o do jogo.
+
+**Decisão do Jean (27/10):** uma peça pode ter mais de um espaço de gravação, sorteado no drop como os outros
+efeitos; a ordem dos serviços é Reforçar, Encantar, Desmontar.
+
+**Hipóteses desta rodada (provisórias):**
+
+| Assunto | Hipótese |
+|---|---|
+| Sulcos | 1 a 3 por peça, sorteados pela raridade (comum 1–2; incomum 1–3; raro 1–3; lendário 2–3). No laboratório, o sorteio acontece na primeira vez que a peça aparece (semeado pela peça); a arma do herói tem 2 no cenário |
+| Elegíveis | As peças que aceitam reforço (arma, peito, escudo, foco), de qualquer um do grupo ou da bolsa; cada essência diz em que tipo entra |
+| Custo | 1 essência + 30 de ouro (com a reputação); nunca falha; não rebaixa nada; não herda a chance do reforço |
+| Substituir | Gravar num sulco ocupado custa o mesmo e apaga a gravação daquele sulco; a essência antiga não volta. Confirmação no pé: "Substituir X por Y? A gravação X se perde." |
+| Repetição | A mesma essência não entra duas vezes na mesma peça; o mesmo efeito conta uma vez por corpo |
+| Essências | Materiais do grupo, fora da bolsa. Fontes: recompensa de teste (2 de cada, marcada teste); baú (25%, 1 aleatória) |
+| A peça | A gravação vai junto quando a peça troca de dono; desmontar perde a gravação (não devolve essência); vender não muda o preço |
+| Coexistência | Reforço na superfície (o reflexo); gravação na borda própria do slot (a luz que percorre a borda, um trecho por gravação, defasados), sem níveis de encantamento |
+
+**As seis essências:**
+
+| Essência | Alvo | Gatilho | Magnitude | Duração | Limite | Interação |
+|---|---|---|---|---|---|---|
+| Brasa | arma | golpe do portador que acerta (não reações nem tiques) | 35%: 1 camada de Queimadura (até 3), valor 25% do maior entre Ataque e Poder (mín. 2) | a da Queimadura | 1 por rodada | soma com a Queimadura do Mago; o tique não dispara nada |
+| Carrasco | arma | golpe num inimigo abaixo de 35% da vida | +30% de dano | — | — | multiplica com os outros bônus; não vale em tiques nem reações |
+| Eco | arma, foco, escudo | inimigo abatido pelo portador | 25% da Mana, Vigor ou Foco máximos | — | 2 por luta | soma com Colheita e Assassino |
+| Vigília | peito, escudo, foco | começo da luta | barreira de 15% da vida máxima | 3 turnos do portador | 1 por luta | não soma com outra barreira: vale a maior |
+| Revide | peito, escudo | golpe corpo a corpo de um inimigo que acerta | 25%: golpe de 60% do Ataque | — | 1 resposta por golpe | o revide não aciona revide nem Brasa |
+| Geada | peito | golpe corpo a corpo de um inimigo que acerta | 30%: congela o atacante (perde a próxima vez) | 1 turno dele | 1 por luta | chefes e gigantes resistem metade das vezes |
+
+Sem ciclos: os efeitos secundários (o revide, o tique da Queimadura) não passam pelo gatilho. Na luta, os efeitos
+valem para o herói e para os companheiros (os envoltórios do golpe, do início da luta e da morte de um inimigo, só
+nesta demonstração); o que dura fica na memória da luta e some com ela.
+
+**A janela:** a bancada (a essência escolhida e o ouro à esquerda, a peça no eixo, a essência que entra à direita), os
+sulcos em cima da peça ("Vazio" ou o nome, na cor da essência; escolher é clicar), o trilho das seis essências com a
+quantidade no canto, a regra curta da escolhida e, no pé, Gravar ou Substituir com a nota (falta, inelegível). A
+gravação (2,3 s, adiantável): as barras do molde acendem na cor da essência uma a uma, um ponto de luz percorre a
+borda soltando fagulhas, um anel curto, "GRAVADO" e o nome junto da peça; a borda de luz fica. O saldo, a ficha (cada
+gravação com a regra), a esteira, o Inventário e o Equipado da ficha lateral mostram o resultado. A 1280, as essências
+saem do cabeçalho (a quantidade está no trilho) e a bancada encolhe para caber sem rolar.
+
+**Luta de teste:** o botão "Luta de teste" na faixa do protótipo (com a forja aberta): dois Esqueletos do nível do
+herói; o grupo volta com a vida, o recurso, a experiência e o ouro de antes. Um aviso resume o que disparou.
+
+### Conferido (8ª versão)
+
+- 34 testes do protótipo (22 do reforço, 12 do encantamento): uma cobrança por gravação; o mesmo pedido de novo não
+  grava; substituir pede a gravação vista e apaga a anterior; os sulcos sorteados (1 a 3) e o segundo sulco; a mesma
+  essência recusada no outro sulco; elegibilidade e falta sem cobrança; a gravação vai com a peça a Morel; desmontar
+  não devolve essência; Brasa, Vigília, Revide e Geada disparando em lutas de verdade (o robô); Carrasco (+30% abaixo de
+  35%) e Eco (2 por luta) numa luta montada; uma barreira por luta, nada acumulando entre lutas; a luta de teste devolve o
+  grupo como estava.
+- Na tela, 1920×945 e 1280×720: o eixo e as dimensões medidos iguais no reforço e na desmontagem; a desmontagem (12 →
+  15, uma vez, nada selecionado depois); o reforço até o máximo; o encantamento com quatro gravações e quatro cobranças
+  (380 → 350 → 320 → 290 → 260), dois sulcos e uma substituição; fechar no meio da gravação mantém a gravação e não
+  cobra de novo; Enter grava, adianta e assenta; Esc adianta e cancela a confirmação; Enter segurado e clique duplo sem
+  repetir; movimento reduzido nos três serviços; a borda de luz no Inventário e na ficha lateral; a luta de teste.
+
+### Roteiros (uns 3 minutos cada)
+
+**Lote 1:** `demo.bat` → Continuar → Ir para a vila → Ferreiro → **Reforçar**: o martelo, Ataque, Reforçar; na faixa,
+**Sucesso (teste)** até o +3 (o golpe seco) e o +4 (o rebote e o contorno aceso); uma **Falha (teste)** no caminho.
+**Desmontar**: o Lamento de Gharbad → Desmontar → confirme (a peça se desfaz, ×3 chega, o saldo acende). Com
+`CASOS=1`, a bolsa mostra o reflexo em +1, +2, +3 e a armadura de Morel em +4.
+
+**Lote 2:** Ferreiro → **Encantar**: o Peitoral, **Vigília**, Gravar; o Martelo (2 sulcos): **Brasa** no primeiro,
+**Eco** no segundo; clique no sulco da Brasa, escolha **Carrasco** e Substituir (a confirmação diz o que se perde).
+Feche: o Inventário (`i`) e o Equipado mostram a borda de luz. Volte à forja e use **Luta de teste** na faixa.
+
+### Pendências
+
+- As regras do encantamento são candidatas: a quantidade e a distribuição dos sulcos, os custos, as fontes de
+  essência, a recuperação ao desmontar, a remoção sem substituir (não há) e o equilíbrio dos seis efeitos.
+- Os ícones das essências são desenhos que o jogo já tem (chama, caveira, poção azul, escudo, espada, gota); arte
+  própria fica para depois da aprovação das regras.
+- Sons não ouvidos (sem saída de áudio nas conferências); um som de fragmentação próprio não existe.
+- Ideias registradas, não feitas: laranja para um eventual +5; os níveis de encantamento não existem.
+
+## 7ª versão: eixo central, bancada fixa, efeitos soltos e reflexo (histórico)
 
 Só a tela mudou: regras, chances, custos, consequências e o limite +4 são os da 5ª versão. A 6ª está em
-`tela/historico/v6` (a faixa abre "v6"). Folha: `folha.png` (v6 × v7 com os mesmos itens e saldos; a sequência real até o
-máximo a 1920×945 e a 1280×720; os casos; as quatro cores do reflexo).
+`tela/historico/v6` (a faixa abre "v6"). A folha desta versão (v6 × v7 com os mesmos itens e saldos; a sequência real até o
+máximo a 1920×945 e a 1280×720; os casos; as quatro cores do reflexo) foi substituída pela da 8ª (está no histórico do
+git). A tela desta versão está em `tela/historico/v7`.
 
 ### A candidata
 
