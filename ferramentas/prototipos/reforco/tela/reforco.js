@@ -146,7 +146,7 @@
     const cinzas = Array.from({ length: 4 }, (_, i) => `<i class="rf-cinza c${i}"></i>`).join("");
     return `<div class="rf-molde">${topo}<span class="rf-garra e" aria-hidden="true"></span>
       <div class="rf-berco"><span class="rf-barra t"></span><span class="rf-barra r"></span><span class="rf-barra b"></span><span class="rf-barra l"></span>
-        <div class="rf-encaixe grande${p ? ` r-${h(p.item.raridade)}` : " vazio"}">${p ? iconePeca(p.item) : ""}</div>
+        <div class="rf-encaixe grande${p ? ` r-${h(p.item.raridade)}` : " vazio"}"${p ? ` data-reforco="${p.reforco || 0}"` : ""}>${p ? iconePeca(p.item) : ""}</div>
         <span class="rf-faiscas" aria-hidden="true">${faiscas}${cinzas}</span></div>
       <span class="rf-garra d" aria-hidden="true"></span>${extra}</div>`;
   }
@@ -377,12 +377,14 @@
   // ------------------------------------------------------------------ o reflexo do reforço
   /** Um reflexo diagonal curto atravessa a silhueta da peça (o próprio desenho é a máscara: só o que tem pixel
    *  brilha), na cor do nível: +1 claro e discreto, +2 esverdeado, +3 azul, +4 dourado. A borda de raridade do encaixe
-   *  não muda. Passa uma vez por gesto (o sucesso, a escolha da peça, o mouse ou o foco) e não repete antes de 1,5 s;
-   *  com movimento reduzido, fica parado e discreto enquanto dura o gesto. */
-  function reflexo(caixa, nivel, fixo = false) {
+   *  não muda. Passa no sucesso, na escolha da peça, no mouse e no foco, e sozinho em ciclo (abaixo); um gesto não o
+   *  repete antes de 1,5 s. Com movimento reduzido, fica parado e discreto. */
+  function reflexo(caixa, nivel, fixo = false, parado = false) {
     if (!caixa || !nivel) return;
     const img = caixa.querySelector("img, canvas");
     if (!img) return;
+    const ja = caixa.querySelector(".rf-reflexo");
+    if (parado && ja && ja.classList.contains("passa") && ja.dataset.nivel === String(Math.min(nivel, 4))) return;
     const agora = performance.now();
     if (!fixo && caixa._reflexo && agora - caixa._reflexo < 1500) return;
     caixa._reflexo = agora;
@@ -401,7 +403,7 @@
     void r.offsetWidth;  // recomeça a passada
     r.classList.add("passa");
   }
-  function apagarReflexo(caixa) { const r = caixa && caixa.querySelector(".rf-reflexo"); if (r && reduzido()) r.classList.remove("passa"); }
+  function apagarReflexo() {}  // parado (movimento reduzido), o reflexo fica: é o acabamento da peça reforçada
   /** Mouse e foco do teclado nas peças da esteira: cada uma brilha sozinha, só quando é a vez dela. */
   function ligarReflexos(jan) {
     jan.querySelectorAll(".rf-esteira .rf-peca").forEach((b) => {
@@ -413,6 +415,50 @@
       b.addEventListener("blur", () => apagarReflexo(b));
     });
   }
+
+  /* O ciclo: toda peça reforçada à vista brilha sozinha, de tempos em tempos. Na forja (a esteira e o molde), no
+     Inventário (o equipado e a bolsa, e as opções de um espaço) e no "Equipado" da ficha lateral. A primeira passada
+     vem 2 s depois de a peça aparecer; depois, a cada ~3 s, cada peça na sua vez (defasadas, nunca todas juntas). O
+     horário de cada uma fica guardado pelo lugar dela, para um redesenho da tela não recomeçar a espera. Durante a cena
+     do reforço, todas esperam (a cor do nível novo não pode aparecer antes do desfecho). Só nesta demonstração. */
+  const PRIMEIRA = 2000, PERIODO = 3000, DEFASAGEM = 450;
+  const agenda = new Map();  // lugar → {proxima, visto}
+  const nivelDoNome = (nome) => { const m = / \+(\d+)$/.exec(nome || ""); return m ? +m[1] : 0; };
+  function pecasReforcadas() {
+    const lista = [];
+    const heroi = App.estado && App.estado.heroi;
+    document.querySelectorAll(".slot-px.mini[data-mini]").forEach((el) => {
+      const it = heroi && heroi.equip && heroi.equip[el.dataset.mini];
+      lista.push([el, `mini:${el.dataset.mini}:${it ? it.nome : ""}`, nivelDoNome(it && it.nome)]);
+    });
+    document.querySelectorAll(".tela.inventario .slot-px[aria-label]").forEach((el) => {
+      const nome = el.getAttribute("aria-label").replace(/^[^:]*: /, "");
+      lista.push([el, `inv:${el.dataset.espaco || "m" + el.dataset.mochila}:${nome}`, nivelDoNome(nome)]);
+    });
+    document.querySelectorAll(".tela.inventario .peca-opcao").forEach((el, i) => {
+      const nome = el.querySelector("span") ? el.querySelector("span").firstChild.textContent : "";
+      lista.push([el, `opcao:${i}:${nome}`, nivelDoNome(nome)]);
+    });
+    document.querySelectorAll(".rf-janela .rf-esteira .rf-peca, .rf-janela .rf-chapa .rf-encaixe.grande[data-reforco]").forEach((el) => {
+      lista.push([el, `forja:${el.dataset.uid || "molde"}:${el.getAttribute("aria-label") || ""}:${el.dataset.reforco}`, +el.dataset.reforco || 0]);
+    });
+    return lista.filter((x) => x[2] > 0);
+  }
+  function ciclo() {
+    if (fase()) return;  // durante a cena, nenhuma peça brilha (nem a da ficha lateral, que já tem o nome novo)
+    const agora = performance.now();
+    pecasReforcadas().forEach(([el, lugar, n], i) => {
+      let a = agenda.get(lugar);
+      if (!a || agora - a.visto > 8000) {  // apareceu (ou voltou depois de um tempo fora): a espera de 2 s
+        a = { proxima: agora + PRIMEIRA + (i % 8) * DEFASAGEM };
+        agenda.set(lugar, a);
+      }
+      a.visto = agora;
+      if (reduzido()) { reflexo(el, n, true, true); return; }  // parado, sempre à vista
+      if (agora >= a.proxima) { reflexo(el, n, true); a.proxima = agora + PERIODO + (i % 3) * 150; }
+    });
+  }
+  setInterval(ciclo, 200);
 
   // ------------------------------------------------------------------ ligar
   function pedir(dados, botao, foco) {

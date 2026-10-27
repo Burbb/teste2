@@ -398,7 +398,7 @@
   .desfecho.ok .rf-berco { box-shadow: inset 1px 1px 0 var(--rf-brasa5), 0 0 0 2px var(--rf-brasa4); }
   .desfecho.ok .rf-barra { background: var(--rf-brasa4); }
   .desfecho.falhou .rf-berco { box-shadow: inset 1px 1px 0 #4a4d54, 0 0 0 2px #5a1810; }
-  .rf-reflexo.passa { animation: none; opacity: 0.7; background-position: 50% 50%; }
+  .rf-reflexo.passa { animation: none; opacity: 0.45; background-position: 50% 50%; }
 }
 
 /* 1280: as mesmas peças menores; o pé continua empilhado no eixo */

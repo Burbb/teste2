@@ -52,8 +52,12 @@ máximo a 1920×945 e a 1280×720; os casos; as quatro cores do reflexo).
   reflexo parado e discreto.
 - **O reflexo do reforço:** uma faixa diagonal curta atravessa a silhueta da peça (o próprio desenho é a máscara: só os
   pixels da peça brilham), na cor do nível: +1 claro e discreto, +2 verde, +3 azul, +4 dourado. A borda de raridade
-  não muda. Passa uma vez ao concluir um sucesso, ao escolher a peça e no mouse ou no foco do teclado sobre uma peça da
-  esteira, sem repetir antes de 1,5 s (nunca todas juntas). Só nos itens da janela de reforço.
+  não muda. **Em todo slot onde a peça reforçada aparece** (na forja, a esteira e o molde; no Inventário, o corpo, a
+  bolsa e as opções de um espaço; na ficha lateral, o Equipado), ele passa sozinho: a primeira vez 2 s depois de a peça
+  aparecer, depois a cada ~3 s, cada peça na sua vez (defasadas). Também passa ao concluir um sucesso, ao escolher a
+  peça e no mouse ou no foco do teclado. Durante a cena do reforço, nenhuma brilha (a cor do nível novo esperaria o
+  desfecho). Com movimento reduzido, fica parado e discreto em todos esses slots. Só na demonstração: o código está no
+  script do protótipo, e o jogo não muda.
 
 **Referências:** Epic Seven (a estrutura mantida no máximo), Ragnarok Origin (a peça perto do resultado) e Guardian
 Tales (o ganho compacto), pelas indicações do Jean. Não achei capturas dessas telas nesta rodada (as buscas só deram
@@ -70,6 +74,9 @@ guias de regra), então apliquei esses princípios sem copiar nada; o acabamento
   sob o ponteiro é a bancada, não o efeito.
 - `CASOS=1`: a falta ("Falta 1 Fragmento", a ajuda) e a armadura de Morel no +4; o arco que ninguém usa; o movimento
   reduzido em toda a sequência; o reflexo no mouse, no foco do teclado, na escolha e no sucesso.
+- O reflexo em ciclo (registro das passadas): na forja, o molde, a esteira e a ficha lateral; no Inventário, o espaço
+  Arma aos 3,2 s (2 s + a defasagem) e depois a cada ~3 s, alternando com a ficha lateral; durante a cena, só a passada
+  do próprio sucesso, no desfecho; com movimento reduzido, parado (sem animação) no Inventário e na ficha lateral.
 
 ### Roteiro (uns 3 minutos)
 
@@ -79,7 +86,8 @@ guias de regra), então apliquei esses princípios sem copiar nada; o acabamento
    peça, a chance e o botão não mudam de lugar e que a ficha só muda no desfecho.
 3. **Falha (teste)**: "FALHOU", +3 → +2, sóbrio. Depois **Sucesso (teste)** até o +4: a bancada fica inteira, com
    "Reforço máximo".
-4. Passe o mouse ou o Tab pelas peças da esteira: cada uma brilha na cor do nível, uma por vez.
+4. Espere uns segundos: as peças reforçadas brilham sozinhas na cor do nível, uma de cada vez. Feche a forja e abra o
+   **Inventário** (`i`): o mesmo no espaço da arma e no Equipado da ficha lateral.
 5. **Comparação (teste)** na faixa abre a medição de laboratório da peça escolhida.
 
 ### Para depois (ideias, não feitas)
@@ -87,7 +95,7 @@ guias de regra), então apliquei esses princípios sem copiar nada; o acabamento
 - **+5 em laranja:** a cor do reflexo para um eventual +5. O nível não existe; o limite continua +4.
 - **Encantamento:** uma luz percorrendo uma borda própria da peça, distinta do reflexo do reforço. Depende da definição
   do sistema de encantamento.
-- O reflexo fora da janela de reforço (inventário, mercado, loot) só depois de aprovado aqui.
+- O reflexo no resto do jogo (mercado, loot, comitiva) e de verdade na produção, só depois de aprovado aqui.
 
 ## 6ª versão: a informação reorganizada e o desfecho (histórico)
 
