@@ -7895,3 +7895,26 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   fontes de fragmento.
 - **Próximo:** a avaliação do Jean. Nada integrado; som adiado para a 1.0.
 
+### 28/10/2026 (data do computador local) — Forja: a 13ª versão e a especificação consolidada (protótipo)
+
+- **Pedido:**
+  - reforço em todo espaço;
+  - essências com tiers e repetição;
+  - sulcos e fontes de material;
+  - transferência de reforço;
+  - fichas compactas;
+  - um documento que explique o sistema inteiro.
+- **Feito:**
+  - **[roadmapIDEIAS/27-FORJA-ESPECIFICACAO.md](27-FORJA-ESPECIFICACAO.md):** a fonte única das regras, conferida
+    contra o código, separando aprovado, protótipo, provisório, produção, adiado e substituído; o 25 aponta para ele;
+  - o ganho em forma fechada, sem deriva, sem +1 imposto e com tetos de %;
+  - as seis tabelas das essências de 1 a 5, com o teto de 5;
+  - materiais do saque real (pela criatura) e dos chefes;
+  - a aba Transferir;
+  - as fichas e a skill de texto.
+- **A 12ª** está em `tela/historico/v12`.
+- **Conferido:** 46 testes do protótipo; as duas resoluções; os testes do projeto.
+- **Decisões abertas:** o equilíbrio (chances, ouro, tabelas, teto), que o Jean vai julgar jogando; as fontes da
+  campanha ampliada.
+- **Próximo:** a avaliação do Jean. Nada integrado; som adiado; a etapa 4 continua aberta.
+

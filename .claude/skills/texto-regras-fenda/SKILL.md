@@ -120,6 +120,49 @@ legenda solta.
 | "Substituir Brasa por Carrasco?" + "A gravação Brasa se perde." | "Sai Brasa · Entra Carrasco" / "Brasa se perde." |
 | Dica: "Grava em arma, foco, escudo."; motivo: "Geada grava em peito." | Dica: "Compatível com: armas, focos e escudos"; motivo: "Incompatível com peitorais" |
 
+## Fichas de item: leitura rápida, completa (forja, 28/10/2026)
+
+A ficha de um item é lida em segundos (comparar, escolher) e consultada às vezes (como funciona). As duas coisas não
+disputam o mesmo espaço.
+
+- **Ordem:** o nome do item é o título. Tipo e raridade vêm numa linha secundária. Atributos e afixos ficam um por
+  linha, curtos. Depois vêm os sulcos e as gravações, e por fim o resto (venda, lore).
+- **Sulcos legíveis, vazios também:** os encaixes na quantidade real da peça, e os nomes das gravações com o tier numa
+  linha só ("Brasa II · Brasa I · Carrasco I").
+- **Uma linha por efeito, não um bloco por gravação:** o nome do efeito com o nível, em negrito do corpo do texto (nada
+  de fonte de título), seguido do resumo mecânico e do limite em tom secundário. Essências repetidas somam num efeito
+  só: "Brasa 3", e não três blocos de Brasa.
+- **Contribuição × total:** numa peça vestida, o nível é o total de quem veste, com a parte desta peça entre
+  parênteses quando difere ("Eco 5 … (5 desta peça · 7 em Odette, teto 5)"). Na bolsa, o que a peça dá sozinha. O
+  nível que a peça fornece nunca se confunde com o nível do personagem.
+- **O que decide fica à vista:** o gatilho, o número, o limite e a condição estão no resumo ("Ao abater um inimigo,
+  recupera 15% do recurso máximo. Até 2 vezes por luta."). Vai para os detalhes o que explica o termo ou a conta: o
+  alvo, as interações, "não vale nos tiques".
+- **Detalhes por clique e teclado:** um "Como funcionam" que abre com Enter, nunca só com o mouse em cima. Nas dicas,
+  que somem, os detalhes não aparecem; a ficha do Inventário, a forja e o achado os têm.
+- **Comparação separada:** o que muda ao trocar é um bloco próprio (o jogo já faz), não misturado às linhas da peça.
+- **Números do motor:** os textos de cada nível saem da tabela implementada (`encanto.texto`). Mudou a tabela, mudou
+  o texto; nada de número copiado de uma rodada antiga.
+
+| Antes | Depois |
+|---|---|
+| "Eco" (título grande) / "Ao abater um inimigo, recupera 25% do recurso máximo." / "Até 2 vezes por luta." (bloco de três linhas por gravação) | "Eco 1 Ao abater um inimigo, recupera 15% do recurso máximo. Até 2 vezes por luta." (uma linha; o número é o da tabela do nível 1) |
+| Duas gravações de Revide: dois blocos iguais | "Revide 5 Ao receber um golpe corpo a corpo, 35% de chance de revidar com 60% do Ataque. No máximo 2 vezes por rodada. (3 desta peça · 6 em Morel, teto 5)" |
+| "No máximo 1 vez por turno seu." (a regra contava a rodada) | "No máximo 1 vez por rodada." |
+
+**Referências examinadas (28/10/2026):**
+- **Last Epoch:** a captura da prévia da ficha 0.7.1 (fórum oficial, "Social_Tooltip_1"). Nome em destaque, tipo menor
+  embaixo, um afixo por faixa curta; os detalhes atrás de ALT/CTRL, com os botões visíveis na própria ficha; a
+  comparação ("Stat changes if equipped") num bloco separado, em verde e vermelho.
+- **Path of Exile:** a ficha da Mageblood (poewiki). Nome e base em duas linhas, filetes separando o implícito dos
+  afixos, cada afixo uma frase mecânica numa linha, o texto de sabor por último, em itálico.
+- **Grim Dawn:** as notas da versão 1.2.1.0, citadas pelo designer no fórum oficial. A ficha passou a esconder por
+  padrão o detalhe de componentes, aprimoramentos e habilidades (Ctrl mostra), com uma opção de ficha detalhada, para
+  reduzir o inchaço.
+- **Diablo IV:** só o texto das notas da temporada "Loot Reborn" (menos afixos, mais claros). As capturas não foram
+  examinadas: o post oficial pedia data de nascimento, e a cópia da Icy Veins estava atrás de uma checagem da
+  Cloudflare.
+
 ## Vocabulário (etapa 4)
 
 - **turno** (ou **vez**): a ação de um combatente na ordem. **Rodada**: todos agiram (inclusive quem perdeu a vez).

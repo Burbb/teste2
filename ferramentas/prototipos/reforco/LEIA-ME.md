@@ -9,14 +9,110 @@ jogo não mudaram. Os números são hipóteses desta rodada, não balanceamento.
 Dê dois cliques em `demo.bat` (ou `python ferramentas/prototipos/reforco/demo.py` na raiz). O jogo de sempre abre no
 navegador num **save temporário** (uma pasta nova a cada vez; os saves pessoais não são lidos nem tocados): o Guerreiro
 no nível 4, no Vau, com Morel e Odette, 380 de ouro, dois baús e as peças dos exemplos. Feche a janela do terminal
-para parar. Folhas: `folha.png` (o resultado do reforço), `folha-encantar.png` (a gravação) e `folha-acabamento.png`
-(o acabamento do +1 ao +12).
+para parar. Folhas: `folha-fichas.png` (as fichas), `folha-encantar.png` (encantamento com tiers e transferência),
+`folha.png` (o resultado do reforço) e `folha-acabamento.png` (o acabamento do +1 ao +12). A especificação do sistema
+inteiro: [27](../../../roadmapIDEIAS/27-FORJA-ESPECIFICACAO.md).
 
 Só nesta execução, `demo.py` troca a forja (o balcão novo), o baú (que pode dar fragmento ou essência), a seção
 "Materiais" do Inventário, a venda da peça reforçada, a ficha das peças nas telas (as gravações) e liga os efeitos das
 gravações na luta. O resto é o jogo: o Inventário do grupo, o mercado, a luta, a estrada.
 
-## 12ª versão: o resultado em destaque, o encantamento, o reforço até +12 e o acabamento (candidata em avaliação)
+## 13ª versão: reforço em todo espaço, essências com tiers, transferência e fichas compactas (candidata em avaliação)
+
+**O sistema inteiro está no [27 — especificação da forja](../../../roadmapIDEIAS/27-FORJA-ESPECIFICACAO.md)**, conferido
+contra este código. Esta seção registra só o que mudou. A 12ª está em `tela/historico/v12`. Folhas:
+- `folha-fichas.png`: as fichas na 12ª × na 13ª, a mesma composição, nas duas resoluções;
+- `folha-encantar.png`: o encantamento com tiers e a transferência;
+- `folha.png` e `folha-acabamento.png`: continuam as da 12ª.
+
+### Decisões do Jean nesta rodada
+- **Reforço em todo espaço:** inclusive aljava, as outras armaduras, anéis e amuletos. A peça inteira melhora, mas
+  não as gravações. Sem Fio ou Runas.
+- **Mantidos:** o limite +12, as chances e os custos (sem recalibrar pelas simulações), o +1 garantido, a falha −1 até
+  +0, a peça que nunca quebra e a cobrança única.
+- **Essências com tiers (I, II e III = 1, 2 e 3 níveis) e repetição permitida.** Cada efeito é resolvido uma vez pelo
+  nível total das peças que o personagem veste, com teto de 5 (hipótese).
+- **Sulcos de 1 a 3, sorteados uma vez.** Os materiais vêm de lutas, chefes, baús e da desmontagem. Sem fusão de
+  essências.
+- **Transferência de reforço** (regras para testar): mesma raridade e mesmo espaço; a origem fica +0; o destino
+  recebe o nível da origem menos 2, que substitui o dele; garantida e paga.
+
+### O ganho revisado (correção matemática, separada do equilíbrio)
+- **Forma fechada** a partir da peça original: cair e subir dá o mesmo número, sem deriva (testado).
+- **Sem +1 imposto:** só a linha principal da arma sobe ao menos 1 por passo, e só do +1 ao +4.
+- **Meio para baixo nos valores pequenos:** uma aljava de Agilidade 1 ia a 3 no +4; agora vai a 2.
+- **Porcentagens:** crítico e roubo de vida sobem 0,25 ponto por nível de peça, com teto por peça (15% e 10%).
+- **O dobro dos apoios saiu:** o Tomo da Coruja ia de Poder 5 a 13 no +4; agora vai a 9.
+- **Exemplos reais** do +0 ao +12 em todos os espaços, com substitutas: no 27, seção 1.2. Leitura: o Martelo
+  Enferrujado +12 (Ataque 11) fica abaixo do Machado Rúnico do nível 13 (14).
+
+### As essências
+- **Tabelas de 1 a 5,** uma dimensão crescendo por efeito: as chances da Brasa, do Revide e da Geada; o dano a mais do
+  Carrasco; o recurso do Eco; a barreira da Vigília. O resto fica.
+- **Novos limites:**
+  - o Revide responde no máximo 2 vezes por rodada (sem ciclo com muitos atacantes);
+  - o Eco segue em 2 vezes por luta (sem recurso sem fim).
+- **Texto corrigido:** a Brasa dizia "1 vez por turno seu", mas a regra contava a rodada. Agora diz "1 vez por
+  rodada".
+- **Fonte identificável:** a essência vem da criatura (Geada de lobos gélidos e afogados, Brasa de cães infernais e
+  cultistas…), no tier do nível dela; o chefe dá um tier acima. Os fragmentos vêm do saque real das lutas e dos
+  chefes. Os botões de teste continuam separados.
+
+### A tela
+- **Encantar:**
+  - um botão por essência; o tier (I, II, III, com as quantidades) se escolhe ao lado da previsão;
+  - a previsão diz "Nesta peça 3 → 6 · Jean 3 → 5", o efeito no nível novo e o aviso quando parte (ou tudo) passa do
+    teto;
+  - o topo mostra um contador por essência, com os tiers na dica: dezoito contadores não cabiam.
+- **Transferir** (aba e cartão novos, no estilo da forja):
+  - a origem no molde e os destinos possíveis à direita, cada um com "+2 → +8" ou o motivo;
+  - a confirmação com os dois resultados e o preço;
+  - a volta com "Transferido".
+- **Desmontar:** a confirmação lista as gravações que se perdem.
+- **Fichas** (Inventário, Equipado, dicas, achado, forja e resultado):
+  - os sulcos com os nomes e o tier numa linha;
+  - um efeito por linha, com o nível total de quem veste ("Eco 5 … (5 desta peça · 7 em Odette, teto 5)");
+  - os detalhes em "Como funcionam", que abre por clique e teclado (não nas dicas).
+- **Correções de exibição:** as regras do jogo para `<b>` nas fichas e nas dicas faziam o nome do efeito sair como
+  título. Corrigido, com o seletor que vence, achado no próprio navegador.
+- **Pesquisa das fichas:** Last Epoch, Path of Exile, Grim Dawn e Diablo IV, com as imagens que de fato foram
+  examinadas, na skill `texto-regras-fenda`.
+
+### Conferido
+- **Testes do protótipo (46):**
+  - todo espaço cresce sem cair;
+  - forma fechada sem deriva;
+  - tetos de %;
+  - transferência (cobrança única, nada se cria, cadeia, recusas);
+  - tiers que somam, e só o que se veste conta;
+  - teto;
+  - textos por nível;
+  - ficha com o total;
+  - saque real dando materiais pela criatura;
+  - Brasa em área uma vez por rodada;
+  - Revide no máximo 2 por rodada, pelo nível total;
+  - Carrasco pela tabela;
+  - lutas de verdade;
+  - salvar e carregar.
+- **A 1920×945 e 1280×720:**
+  - encantar com tiers e teto;
+  - transferência inteira, incluindo o clique duplo na confirmação (uma cobrança);
+  - o anel no resultado em destaque;
+  - as fichas no Inventário, nas dicas e na ficha lateral, com "Como funcionam" aberto pelo teclado (a ficha
+    lateral rola);
+  - o achado de um saque real;
+  - a dica do mercado (o Broquel com o sulco vazio, dentro da tela).
+
+### Roteiro (uns 5 minutos)
+1. **Ferreiro → Encantar → Essências (teste).** Jean, o martelo: escolha o 3º sulco, Brasa e o tier III. A previsão
+   diz "3 → 6 · Jean 3 → 5" e avisa o teto. Passe o mouse no martelo e no tomo de Odette (Eco 5, 7 em Odette).
+2. **Inventário:** clique na arma de Jean. Na ficha lateral, Tab até "Como funcionam" e Enter.
+3. **Transferir → Transferência (teste) → Bolsa:** a arma +10, um destino, Transferir. Confira a confirmação e o
+   resultado; depois venda ou desmonte e compare.
+4. **Reforçar** um anel ou uma aljava (todo espaço) e veja o ganho na oferta.
+5. **Desmontar** uma peça gravada: a confirmação lista as gravações perdidas.
+
+## 12ª versão: o resultado em destaque, o encantamento, o reforço até +12 e o acabamento (histórico)
 
 Pedidos do Jean (27/10/2026): separar a tentativa (a bancada) da apresentação do resultado; o mesmo destaque na
 gravação; **autorizado** trocar o limite candidato +4 por **+12**, com as mesmas regras; uma progressão visual do +1 ao
