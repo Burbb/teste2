@@ -208,15 +208,15 @@ com a pena inteira 4/8/12:
   veio da mesma cor atravessando a peça, cada vez mais presente; o +8 ganha um ponto de brilho.
 - **+9 a +12:**
   - o veio multicolorido contínuo: 2, 3, 4 cores e, no +12, todas, com fios claros entre elas, como pedra lapidada;
-  - o contorno trocando de cor em degraus;
+  - o contorno trocando de cor continuamente;
   - pontos de brilho em cruz de pixel (1 a 4) acendendo em lugares diferentes da peça.
 - **Pixel art de verdade:**
   - o veio é pintado num canvas do tamanho do desenho e ampliado sem suavização: as cores andam um pixel do desenho por
     passo, sem degradê nem borrão;
   - tudo é mascarado pelo desenho, então os pixels transparentes ficam vazios;
   - o veio tinge sem apagar o sombreado, e a silhueta e os detalhes continuam legíveis.
-- **O +12 tem mais presença sem ser mais rápido:** mais cores, mais brilhos e o contorno mudando. A volta é a mesma,
-  lenta, em todos os níveis, e cada peça começa num ponto dela, então nada pisca em sincronia.
+- **O +12 tem mais presença sem ser mais rápido:** mais cores, mais brilhos e o contorno mudando. O ritmo é o mesmo
+  em todos os níveis, e cada peça começa num ponto dele, então nada pisca em sincronia.
 - **Informação separada:**
   - a raridade fica na borda do encaixe;
   - o reforço, no desenho;
@@ -228,7 +228,7 @@ com a pena inteira 4/8/12:
 - **Persistência e desempenho:**
   - a aparência entra no mesmo instante em que a tela redesenha o slot;
   - não some ao trocar de equipamento, ao apertar Continuar nem ao salvar e carregar;
-  - um relógio só, de 250 ms, pinta todos os veios;
+  - um relógio só, de 70 ms, pinta todos os veios;
   - medido: depois de várias tentativas, nenhuma camada duplicada e nenhum palco de efeito sobrando.
 - **Movimento reduzido:** a mesma aparência, parada (o veio, o contorno e os brilhos fixos).
 
@@ -245,6 +245,14 @@ com a pena inteira 4/8/12:
 
   Agora a renderização é sem suavização, a peça fica em pixel inteiro e o contorno tem um pixel do desenho (2 px onde
   a peça aparece a 2×, no resultado e no molde a 1920; 1 px a 1280 e na esteira).
+- **O acabamento contínuo no ritmo do jogo** (o que o Jean apontou na armadura +6):
+  - o veio andava um passo a cada 250 ms (4 por segundo) e parecia parado e aos saltos; agora anda a cada 70 ms (14 por
+    segundo), ainda um pixel do desenho por passo;
+  - o contorno do +9 ao +12 trocava de cor em saltos lentos (0,8 s por cor); agora corre pelas cores continuamente
+    (3 s a volta; 2 s no +9);
+  - os pontos de brilho acendem a cada 1,6 s (antes 2,4).
+
+  Medido na demonstração: 14 passos por segundo e o contorno mudando entre um quadro e outro.
 
 ### Casos de teste
 

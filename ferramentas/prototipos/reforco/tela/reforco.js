@@ -815,8 +815,8 @@
    *    +5 a +8   o contorno na cor do nível (turquesa, safira, ametista, rubi) e um veio da mesma cor que atravessa
    *              a peça devagar, mais presente a cada nível; o +8 com um ponto de brilho;
    *    +9 a +12  o veio em várias cores, contínuo (2, 3, 4 cores; o +12 em todas, como pedra lapidada), o contorno
-   *              trocando de cor em degraus e pontos de brilho (1 a 4).
-   *  A presença sobe pela cor e pelo brilho, não pela velocidade: a mesma volta lenta em todos. Cada peça começa num
+   *              trocando de cor continuamente e pontos de brilho (1 a 4).
+   *  A presença sobe pela cor e pelo brilho, não pela velocidade: o mesmo ritmo em todos. Cada peça começa num
    *  ponto diferente da volta (nada pisca em sincronia). `n` 0 a 3 tira tudo (uma queda também tira). */
   const BRILHOS = { 8: 1, 9: 1, 10: 2, 11: 3, 12: 4 };
   // o veio de cada nível: a sequência de cores ao longo da diagonal, um pixel do desenho por entrada (0: sem cor)
@@ -846,10 +846,13 @@
       for (let x = Math.max(0, d - hh + 1); x <= Math.min(d, w - 1); x++) ctx.fillRect(x, d - x, 1, 1);
     }
   }
+  // um passo a cada 70 ms (~14 por segundo): as faixas correm sobre a peça no ritmo das animações do jogo (a 250 ms,
+  // o primeiro valor, pareciam paradas e aos saltos)
+  const PASSO_VEIO = 70;
   setInterval(() => {
-    if (document.hidden) return;
+    if (document.hidden || reduzido()) return;
     document.querySelectorAll("canvas.rf-acab").forEach((cv) => { cv._passo = (cv._passo || 0) + 1; pintarVeio(cv); });
-  }, 250);
+  }, PASSO_VEIO);
   function acabamento(caixa, n) {
     if (!caixa) return;
     const img = caixa.querySelector(":scope > img, :scope > canvas, :scope > .icone-px > img") || caixa.querySelector("img, canvas");
@@ -884,7 +887,7 @@
     const px = Math.max(1, Math.round(img.offsetWidth / (img.naturalWidth || img.width || 32)));  // um pixel do desenho
     b.style.setProperty("--px-peca", `${px}px`);
     if (b.childElementCount !== k) {
-      b.innerHTML = Array.from({ length: k }, (_, i) => `<i style="animation-delay:-${(Math.random() * 2.4 + i * 0.6).toFixed(2)}s"></i>`).join("");
+      b.innerHTML = Array.from({ length: k }, (_, i) => `<i style="animation-delay:-${(Math.random() * 1.6 + i * 0.4).toFixed(2)}s"></i>`).join("");
       b.querySelectorAll("i").forEach((p) => {
         const mover = () => {  // um ponto novo da peça a cada volta (perto do miolo, onde o desenho tem pixel)
           p.style.left = `${Math.round(20 + Math.random() * 60)}%`;
