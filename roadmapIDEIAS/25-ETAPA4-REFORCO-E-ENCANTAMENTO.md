@@ -478,7 +478,7 @@ Diablo III (o que se aproveitou, no LEIA-ME).
 **Pendências:** a distribuição dos sulcos, custos e fontes de essência; remover sem substituir; recuperação ao
 desmontar; arte das essências; equilíbrio dos efeitos com partida de verdade; integração (nada disso está no jogo).
 
-### 5.8 A 9ª versão: consistência visual e de interação (27/10/2026) — candidata em avaliação
+### 5.8 A 9ª versão: consistência visual e de interação (27/10/2026) — substituída pela 10ª
 
 Sem mudança de regras, chances, custos, limite +4 ou regras candidatas. **Corrigido:** o sprite da peça suavizado
 (causa: a regra da HUD `img.desenho { image-rendering: auto }` vencia a do protótipo e o desenho de 40 px era esticado a
@@ -491,6 +491,22 @@ peça da bancada; a borda luminosa em pixel; a desmontagem sem a linha de rarida
 durante a luta de teste. A skill `texto-regras-fenda` ganhou os critérios gerais de texto de telas de sistema.
 **Pendências:** ícones das essências em tamanhos pequenos; a dica por nome em peças homônimas; sons não ouvidos.
 Detalhes, o que foi só investigado e o roteiro no LEIA-ME.
+
+### 5.9 A 10ª versão: a bancada com o título e o resultado até o OK (27/10/2026) — candidata em avaliação
+
+Sem mudança de regras, chances, custos ou limite +4; o sprite em escala inteira (sem 3×). **Composição:** sem a ficha
+lateral no Reforçar; o nome inteiro com o nível no topo da bancada, na cor da raridade, com o dono e os sulcos embaixo;
+a chance e "Falha: +2 → +1" junto do botão "Reforçar +2 → +3"; a ficha completa na dica da peça. **Impacto:** o entorno
+escurece durante a cena (um recorte em volta da janela; o véu de tela inteira escurecia a bancada junto), uma contenção
+antes do impacto e, no sucesso, o número novo como marca quente no título (só o número anima); a falha sóbria.
+**Resultado até OK/Enter/Esc**, sem espera forçada, com os gestos protegidos (tecla segurada, clique duplo, o gesto que
+adianta não dispensa); movimento reduzido igual, parado. **Corrigido:** retirar pela miniatura; "Compatível com: armas,
+focos e escudos" na dica e "Incompatível com peitorais" junto da ação (padrão na skill `texto-regras-fenda`); rastros
+da borda mais longos; o efeito que piscava ao Continuar (a aparência da peça voltava só no ciclo seguinte; agora no
+redesenho, medido: 27 quadros sem borda na 9ª, 0 agora); a identidade das peças nas dicas (nunca pelo nome); os sulcos
+nascem com a peça (drop, mercado, saque, únicos) e as telas só leem; os sulcos no achado. **Pendências:** a revisão de
+som, adiada até a interface estar satisfatória como 1.0; os ícones das essências em tamanhos pequenos. Detalhes e
+roteiro no LEIA-ME.
 
 ## 6. Pontos que a proposta anterior precisa resolver
 

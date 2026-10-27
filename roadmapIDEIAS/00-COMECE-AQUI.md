@@ -7844,3 +7844,18 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   mesmos termos, alinhamento) e exemplos.
 - **Conferido:** 36 testes do protótipo; a 1920×945 e 1280×720, a reprodução completa do efeito, os quadros nítidos,
   mouse, teclado e movimento reduzido; folhas novas. Nada integrado.
+
+### 27/10/2026 (data do computador local) — Forja: a 10ª versão, a bancada com o título e o resultado até o OK (protótipo)
+
+- **Pedido:** uma candidata pela referência do Jean (sem a ficha lateral; nome com o nível, dono e sulcos no topo; a
+  chance e a falha junto da ação), o impacto do nível (entorno escurecido, contenção, número como marca quente), o
+  resultado mantido até OK/Enter/Esc e as pendências de interação e dados; sem mudar regras, sem 3×, sem som, sem vídeo.
+- **Corrigido (causas no LEIA-ME e no 25, 5.9):** retirar pela miniatura; o texto de compatibilidade; rastros mais
+  longos; o efeito que piscava (a aparência só voltava no ciclo seguinte ao redesenho); as dicas pela peça exata, nunca
+  pelo nome; os sulcos nascendo com a peça (o mercado e o saque importavam a criação pelo nome); os sulcos no achado; o
+  véu da cena que escurecia a bancada junto.
+- **Conferido:** 37 testes do protótipo; a 1920×945 e 1280×720, a sequência contínua da mesma tentativa, os gestos,
+  casos (nome longo, peça única, máximo, falta), movimento reduzido, peças homônimas, saque real, salvar e carregar pela
+  interface; folhas novas. A 9ª em `tela/historico/v9`.
+- **Adiado:** a revisão de som, para quando a interface estiver satisfatória como 1.0.
+- **Próximo:** a avaliação do Jean. Nada integrado.

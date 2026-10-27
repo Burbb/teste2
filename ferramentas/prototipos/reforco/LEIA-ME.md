@@ -15,11 +15,93 @@ Só nesta execução, `demo.py` troca a forja (o balcão novo), o baú (que pode
 "Materiais" do Inventário, a venda da peça reforçada, a ficha das peças nas telas (as gravações) e liga os efeitos das
 gravações na luta. O resto é o jogo: o Inventário do grupo, o mercado, a luta, a estrada.
 
-## 9ª versão: consistência visual e de interação (candidata em avaliação)
+## 10ª versão: a bancada com o título, o resultado até o OK e as pendências de dados (candidata em avaliação)
+
+Regras, chances, custos e o limite +4 iguais; o sprite continua em escala inteira (2× a 1920), sem ampliar a 3×. A 9ª
+está em `tela/historico/v9` (a faixa abre "v9"). Folhas: `folha.png` (a sequência contínua de uma tentativa, nas duas
+resoluções, e a 9ª ao lado) e `folha-encantar.png` (casos, identidade das peças, sulcos e encantamento).
+
+### A composição do Reforçar
+
+- **Sem a ficha lateral.** No topo da bancada, o nome inteiro da peça com o nível ("Martelo de Ferro +2"), na cor da
+  raridade do jogo; embaixo, menores, o dono e os sulcos. A peça no centro do molde, os materiais à esquerda e o ganho à
+  direita. A chance e a consequência da falha junto da ação ("Falha: +2 → +1"); o botão diz "Reforçar +2 → +3". A
+  ficha completa continua na dica da peça (mouse e foco do teclado).
+- **O mesmo eixo e as mesmas dimensões** na oferta, na cena, no resultado e no máximo (700 × 489 a 1920; a 1280 cabe
+  sem rolagem). Nome longo, peça única e peça bloqueada conferidos (no máximo duas linhas no título).
+
+### O impacto do nível e o foco
+
+- **O entorno escurece** durante a cena (moderado, sem desfoque nem clarão de tela inteira); a bancada fica clara. O
+  véu é a sombra em volta de um recorte do tamanho da janela: a janela mora num contexto de camadas da HUD (a mesa), e
+  um véu de tela inteira escurecia a bancada junto (achado na sequência contínua e corrigido).
+- **Contenção:** no fim do aquecimento, a luz do molde se fecha num instante antes do impacto, dentro da mesma duração.
+- **Sucesso:** o nível antigo fica no título até a revelação; então o número novo entra como uma marca quente (impacto
+  breve, brilho e fagulhas pequenas saindo do número); o antigo some. Só o número anima; o nome, a peça e o ganho
+  continuam legíveis. **Falha:** sóbria, sem a marca (o número novo em cinza claro).
+
+### O resultado até o OK
+
+- O resultado do reforço fica na tela até **OK**, **Enter** ou **Esc**. A chance, a falha e a nota somem do resultado
+  (o espaço fica); o botão vira OK no mesmo lugar. Depois do OK, a próxima oferta ou o máximo. Sem espera forçada.
+- O gesto que adianta a animação não dispensa o resultado; tecla segurada e clique duplo não dispensam nem compram de
+  novo (testado: Enter compra, Enter adianta, Enter dispensa; Enter segurado 15 vezes compra uma vez; clique duplo no
+  Reforçar compra uma vez; clique duplo no OK dispensa uma vez; clique fora do OK no resultado não faz nada).
+- Fechar a janela continua possível e não altera a compra. Movimento reduzido: o resultado parado, com o mesmo OK. A
+  desmontagem não ganhou confirmação extra.
+
+### Corrigido
+
+- **Retirar pela miniatura:** clicar de novo na miniatura selecionada tira a peça da bancada (como clicar na peça do
+  molde).
+- **O texto de compatibilidade:** a dica da essência diz "Compatível com: armas, focos e escudos"; junto do Gravar
+  bloqueado, o caso da peça: "Incompatível com peitorais". O padrão está na skill `texto-regras-fenda`.
+- **Os rastros da borda** das gravações mais longos (a mesma espessura): com três essências, quase se encontram, cada
+  um na sua cor, em degraus de pixel.
+- **O efeito que piscava** na ficha ao apertar Continuar ou numa ação que não muda o equipamento. Causa: a tela do jogo
+  redesenha os painéis a cada atualização, e a aparência da peça (a borda das gravações, a luz do +4) só voltava no
+  próximo ciclo do protótipo (até 200 ms depois), com a borda recomeçando a volta. Agora a aparência entra no mesmo
+  instante em que o slot é redesenhado, e a borda continua a volta pelo relógio. Medido quadro a quadro num slot com
+  gravação ao longo de 5 redesenhos: 27 quadros sem a borda na 9ª, 0 agora.
+- **A identidade das peças:** as dicas não acham mais a peça pelo nome. Cada elemento diz qual peça mostra (a forja, o
+  Equipado, o Inventário pela aba do personagem e o espaço, a bolsa pela posição, o mercado pela posição na lista da
+  loja). Conferido com dois "Martelo de Ferro" (o de Jean com Brasa, o de Morel com 1 sulco vazio) e dois "Broquel
+  Enferrujado" no mercado.
+- **Quando os sulcos nascem:** com a peça, uma vez (o drop, o mercado, o saque, a recompensa, o único), pela semente
+  da própria peça, sem gastar o sorteio do jogo; as peças que já existiam ganham os delas ao começar e ao carregar um
+  save antigo. Abrir uma ficha só lê (antes, a primeira ficha decidia). O mercado e o saque importavam a criação pelo
+  nome e ficavam sem sulcos: corrigido, com um teste que confere todos os módulos que criam peças.
+- **Os sulcos no achado:** a janela "Você encontrou" monta a ficha em pedaços, sem a função das outras telas; os
+  sulcos da peça achada entram embaixo das linhas dela (conferido com um saque real de chefe, nas duas resoluções).
+
+### Conferido
+
+- 37 testes do protótipo; a 1920×945 e 1280×720: a sequência contínua da mesma tentativa (oferta, aquecimento,
+  contenção, impacto, resultado mantido, próxima oferta), falha, máximo, falta de recursos, nome longo, peça única,
+  movimento reduzido; os gestos acima; retirar pela miniatura e pelo molde; Continuar sem piscar; peças homônimas;
+  saque real; **salvar pela interface e carregar** (o Martelo +2 com Brasa e os sulcos de cada peça voltam iguais, na
+  dica e na forja).
+
+### Pendências
+
+- **Revisão de som adiada:** fica para quando a interface estiver satisfatória como 1.0 (a cena e o resultado mantido
+  não tiveram o som revisto; os sons não foram ouvidos nas conferências).
+- Os ícones das essências em 16 e 24 px ainda são reduzidos pelo navegador (desenho próprio por tamanho, com a arte).
+- A demonstração não tem tela de carregar: o carregamento foi conferido com um lançador de conferência que abre, pelo
+  `carregar` do jogo, o save gravado pelo botão Salvar.
+
+### Roteiro (uns 3 minutos)
+
+1. Ferreiro → **Reforçar** → o martelo com **Sucesso (teste)**: o entorno escurece, o número novo entra quente no
+   título, o resultado espera o **OK** (Enter). Experimente segurar Enter e o clique duplo.
+2. **Falha (teste)**: a falha sóbria. Clique de novo na miniatura selecionada: a peça sai da bancada.
+3. **Encantar** no peitoral: passe o mouse na Brasa ("Compatível com: armas") e veja "Incompatível com peitorais"
+   junto do Gravar. Grave duas essências no martelo e aperte Continuar na vila: a borda não pisca.
+
+## 9ª versão: consistência visual e de interação (histórico; as folhas desta versão estão no git)
 
 Regras, chances, custos, o limite +4 e as regras candidatas do encantamento iguais; a bancada não foi redesenhada. A 8ª
-está em `tela/historico/v8` (a faixa abre "v8"). Folhas: `folha.png` (as correções) e `folha-encantar.png` (o texto e a
-composição do encantamento), antes (v8) × depois com a mesma peça.
+está em `tela/historico/v8` (a faixa abre "v8").
 
 ### Corrigido
 
