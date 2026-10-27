@@ -79,8 +79,7 @@ def dar_uid(g):
         if "uid" not in it:
             it["uid"] = f"p{prox}"
             prox += 1
-        if E.tipo(it):  # os sulcos (sorteados uma vez, no achado; aqui, se a peça ainda não passou por uma tela)
-            E.sortear_sulcos(it)
+
 
 
 def achar(g, uid):
@@ -293,7 +292,7 @@ def ficha_peca(g, it, quem, s):
     d["encantos"] = [encanto_tela(k) for k in it.get("encantos") or []]
     d["encantar"] = {"motivo": E.motivo(it), "essencias": [
         {"id": k, "nome": e["nome"], "cor": e["cor"], "icone": e["icone"], "desc": e["desc"], "efeito": e["efeito"],
-         "limite": e["limite"], "tipos": list(e["tipos"]),
+         "limite": e["limite"], "tipos": list(e["tipos"]), "compativel": E.compativel(k),
          "qtd": materiais(g).get(e["material"], 0), "motivo": E.motivo(it, k)} for k, e in ((k, E.ESSENCIAS[k]) for k in E.ORDEM)]}
     return d
 
@@ -512,6 +511,46 @@ def forja(self):
 
 
 # ------------------------------------------------------------------ ligar ao jogo, só nesta execução
+def com_sulcos(it):
+    if it and E.tipo(it):
+        E.sortear_sulcos(it)
+    return it
+
+
+def criar_peca():
+    """Os sulcos nascem com a peça: a criação de equipamento (o drop, o mercado, as recompensas, os únicos) passa a
+    sortear os sulcos da peça nova, pela semente dela (o sorteio do jogo não muda). Os módulos que importaram a função
+    pelo nome também são trocados. As peças que já existiam ganham os delas ao começar e ao carregar (sulcos_do_grupo)."""
+    import rpg.dev
+    import rpg.eventos.biomas
+    import rpg.eventos.classe
+    import rpg.eventos.comuns
+    import rpg.jogo
+    import rpg.sistemas.confronto
+    import rpg.sistemas.loja
+    if getattr(itens, "_sulcos", False):
+        return
+    itens._sulcos = True
+    gerar, unico = itens.gerar_equip, itens.fazer_unico
+
+    def gerar_com_sulcos(*a, **k):
+        return com_sulcos(gerar(*a, **k))
+
+    def unico_com_sulcos(*a, **k):
+        return com_sulcos(unico(*a, **k))
+    itens.gerar_equip, itens.fazer_unico = gerar_com_sulcos, unico_com_sulcos
+    for m in (rpg.dev, rpg.eventos.biomas, rpg.eventos.classe, rpg.eventos.comuns, rpg.jogo,
+              rpg.sistemas.confronto, rpg.sistemas.loja):
+        if getattr(m, "gerar_equip", None) is gerar:
+            m.gerar_equip = gerar_com_sulcos
+
+
+def sulcos_do_grupo(g):
+    """As peças que nasceram antes do laboratório (o cenário, um save antigo): os sulcos delas, uma vez."""
+    for it, _, _ in pecas(g):
+        com_sulcos(it)
+
+
 def ativar():
     from rpg.sistemas import persistencia
     from rpg.sistemas.inventario import Inventario
@@ -521,6 +560,13 @@ def ativar():
         persistencia.CAMPOS_SAVE = persistencia.CAMPOS_SAVE + ("materiais",)
     Servicos.ferreiro = forja
     E.ativar()
+    carregar = persistencia.Persistencia.carregar.__func__ if hasattr(persistencia, "Persistencia") else None
+    if carregar:
+        def carregar_com_sulcos(cls, *a, **k):
+            g = carregar(cls, *a, **k)
+            sulcos_do_grupo(g)
+            return g
+        persistencia.Persistencia.carregar = classmethod(carregar_com_sulcos)
     ficha_item = itens.ficha
 
     def ficha_com_gravacao(it, recurso=None, **extra):
@@ -531,12 +577,11 @@ def ativar():
         if not d:
             return d
         d["reforco"] = it.get("reforco", 0)
-        if E.tipo(it):
-            E.sortear_sulcos(it)
         if it.get("encantos") is not None:
             d["encantos"] = [encanto_tela(k) for k in it["encantos"]]
         return d
     itens.ficha = ficha_com_gravacao
+    criar_peca()
     web_estado._item = ficha_com_gravacao
     para_tela = itens.para_tela
 
@@ -637,6 +682,7 @@ def rodar(ui, pasta):
     g = Jogo(BotUI(random.Random(1)), seed=11, pasta_saves=pasta, hardcore=False)
     g.iniciar("Jean", "guerreiro", "turvo")
     preparar(g)
+    sulcos_do_grupo(g)
     if os.environ.get("CASOS"):  # os casos de conferência: a armadura de Morel já no limite (+4); poucos fragmentos
         dar_uid(g)
         ouro = g.j.ouro

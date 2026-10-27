@@ -93,8 +93,8 @@ def semente(item):
 
 
 def sortear_sulcos(item, rng=None):
-    """No achado (no laboratório: a primeira vez que a peça aparece numa tela): os sulcos dela, vazios. Uma peça que já
-    tem sulcos nunca é sorteada de novo (consultar ou redesenhar uma ficha não muda nada)."""
+    """Quando a peça nasce (o drop, o mercado, a recompensa; no laboratório, os envoltórios da criação em demo.py): os
+    sulcos dela, vazios. Uma peça que já tem sulcos nunca é sorteada de novo; as telas só leem."""
     if "encantos" not in item:
         import random
         rng = rng or random.Random(semente(item))
@@ -105,6 +105,15 @@ def sortear_sulcos(item, rng=None):
 MATERIAIS = {e["material"]: {"nome": f"Essência de {e['nome']}", "plural": f"Essências de {e['nome']}", "icone": e["icone"],
                              "desc": f"Grava {e['nome']} numa peça na forja.", "fontes": "Recompensa de teste; baú (às vezes)."}
              for e in ESSENCIAS.values()}
+
+
+PLURAL = {"arma": "armas", "peito": "peitorais", "escudo": "escudos", "foco": "focos"}
+
+
+def compativel(essencia):
+    """"Compatível com: armas, focos e escudos" (a dica da essência)."""
+    nomes = [PLURAL[t] for t in ESSENCIAS[essencia]["tipos"]]
+    return "Compatível com: " + (nomes[0] if len(nomes) == 1 else ", ".join(nomes[:-1]) + " e " + nomes[-1])
 
 
 def tipo(item):
@@ -120,8 +129,7 @@ def motivo(item, essencia=None, sulco=None):
     if essencia:
         e = ESSENCIAS[essencia]
         if t not in e["tipos"]:
-            nomes = {"arma": "arma", "peito": "peito", "escudo": "escudo", "foco": "foco"}
-            return f"{e['nome']} grava em {', '.join(nomes[x] for x in e['tipos'])}."
+            return f"Incompatível com {PLURAL[t]}"
         if essencia in (item.get("encantos") or []):
             return f"Esta peça já tem {e['nome']}."
     if sulco is not None and not 0 <= sulco < len(item.get("encantos") or []):

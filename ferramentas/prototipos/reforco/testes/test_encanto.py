@@ -136,20 +136,40 @@ class TestGravar(unittest.TestCase):
 
 
 class TestSulcosDaPeca(unittest.TestCase):
-    def test_sorteados_uma_vez_na_primeira_ficha(self):
+    def test_nascem_com_a_peca_e_a_ficha_so_le(self):
         g = jogo()
-        nova = D.itens.gerar_equip(random.Random(9), "guerreiro", 5, slot="arma", raridade="raro")
-        self.assertNotIn("encantos", nova)
-        d = D.itens.ficha(nova)  # a primeira tela em que a peça aparece (o achado, o mercado)
-        self.assertIn("encantos", nova)
+        r1, r2 = random.Random(9), random.Random(9)
+        nova = D.itens.gerar_equip(r1, "guerreiro", 5, slot="arma", raridade="raro")
+        self.assertTrue(1 <= len(nova["encantos"]) <= 3)  # a capacidade nasce com a peça (o drop)
         primeiro = list(nova["encantos"])
-        self.assertEqual(d["encantos"], [None] * len(primeiro))
-        self.assertEqual(d["reforco"], 0)
-        nova["nome"] += " +2"  # consultar ou redesenhar a ficha, mesmo com a peça mudada, não sorteia de novo
+        # o sorteio dos sulcos não gasta o sorteio do jogo: o mesmo estado que a criação sem o laboratório deixaria
+        import rpg.itens as itens_jogo
+        original = itens_jogo.gerar_equip.__closure__[0].cell_contents if itens_jogo.gerar_equip.__closure__ else None
+        if callable(original):
+            original(r2, "guerreiro", 5, slot="arma", raridade="raro")
+            self.assertEqual(r1.getstate(), r2.getstate())
+        nova["nome"] += " +2"  # consultar ou redesenhar a ficha, mesmo com a peça mudada, não mexe na capacidade
         for _ in range(5):
-            D.itens.ficha(nova)
+            self.assertEqual(D.itens.ficha(nova)["encantos"], [None] * len(primeiro))
         self.assertEqual(nova["encantos"], primeiro)
-        self.assertIsNone(E.motivo(g.j.equip["arma"]))
+        sem = {k: v for k, v in nova.items() if k != "encantos"}
+        D.itens.ficha(sem)
+        self.assertNotIn("encantos", sem)  # a ficha nunca decide a capacidade
+        for it, _, _ in D.pecas(g):  # as peças do cenário já têm os delas antes de qualquer tela
+            if E.tipo(it):
+                self.assertIn("encantos", it)
+
+    def test_todo_lugar_que_cria_pecas_usa_a_criacao_com_sulcos(self):
+        # o mercado e o saque importaram a função pelo nome: o estoque e o espólio também nascem com os sulcos
+        for nome, m in list(sys.modules.items()):
+            if nome.startswith("rpg") and getattr(m, "gerar_equip", None) is not None:
+                self.assertIs(m.gerar_equip, D.itens.gerar_equip, nome)
+        g = jogo()
+        estoque = g.estoque()  # o mercado da vila (o Jogo é a Loja)
+        self.assertTrue(estoque)
+        for it in estoque:
+            if E.tipo(it):
+                self.assertIn("encantos", it)
 
     def test_salvar_e_carregar_mantem_sulcos_gravacoes_e_reforco(self):
         g = jogo()
