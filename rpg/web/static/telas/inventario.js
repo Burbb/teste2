@@ -147,9 +147,7 @@
   /** A ficha da peça marcada: a ficha do jogo comparada com o selecionado e as ações à vista (sem depender do botão
    *  direito nem do arrasto). Num espaço marcado, as peças que servem nele. */
   function detalheHtml(p) {
-    if (!marcado) {
-      return `<div class="detalhe-vazio">Clique numa peça da bolsa ou num espaço do corpo para ver a ficha${fichas().length > 1 ? ` e comparar com o que ${h(quemTexto(p))} usa` : ""}.</div>`;
-    }
+    if (!marcado) return "";  // nada marcado: a caixa fica vazia e oculta (a coluna mantém a largura)
     const it = pecaMarcada(p);
     let html = "";
     if (it) {

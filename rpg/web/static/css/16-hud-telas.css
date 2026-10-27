@@ -164,6 +164,7 @@
 :root body .peca-detalhe { width: 260px; padding: 8px 10px 10px; font-size: 14px; line-height: 1.4;
   border: 1px solid var(--aresta-face); border-radius: 2px; background: var(--hud-face); box-shadow: var(--hud-relevo); }
 :root body .peca-detalhe .detalhe-vazio { font-size: 13px; color: var(--tinta-3); }
+:root body .peca-detalhe:empty { visibility: hidden; }
 :root body .peca-detalhe .detalhe-ficha b { display: block; font-family: var(--titulo); font-weight: 400; font-size: calc(var(--px) * 24); line-height: 1.05; color: #fff3d6; }
 :root body .peca-detalhe .tipo { font-size: 12px; color: var(--tinta-3); text-transform: uppercase; letter-spacing: 0.06em; margin: 2px 0 4px; }
 :root body .peca-detalhe .bonus { font-family: var(--num); font-size: 18px; line-height: 1.15; }
