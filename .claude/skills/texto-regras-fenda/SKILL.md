@@ -127,18 +127,18 @@ disputam o mesmo espaço.
 
 - **Ordem:** o nome do item é o título. Tipo e raridade vêm numa linha secundária. Atributos e afixos ficam um por
   linha, curtos. Depois vêm os sulcos e as gravações, e por fim o resto (venda, lore).
-- **Sulcos legíveis, vazios também:** os encaixes na quantidade real da peça, e os nomes das gravações com o tier numa
-  linha só ("Brasa II · Brasa I · Carrasco I").
+- **Sulcos legíveis, vazios também:** os encaixes na quantidade real da peça, cada um com o ícone da essência e o tier
+  dentro dele. Os nomes não se repetem numa linha à parte: os efeitos embaixo já os dizem.
 - **Uma linha por efeito, não um bloco por gravação:** o nome do efeito com o nível, em negrito do corpo do texto (nada
   de fonte de título), seguido do resumo mecânico e do limite em tom secundário. Essências repetidas somam num efeito
   só: "Brasa 3", e não três blocos de Brasa.
-- **Contribuição × total:** numa peça vestida, o nível é o total de quem veste, com a parte desta peça entre
-  parênteses quando difere ("Eco 5 … (5 desta peça · 7 em Odette, teto 5)"). Na bolsa, o que a peça dá sozinha. O
-  nível que a peça fornece nunca se confunde com o nível do personagem.
+- **Contribuição × total:** numa peça vestida, o nível é o ativo de quem veste, com a parte desta peça entre
+  parênteses quando difere ("Eco 5 … (2 desta peça · teto 5)"). Na bolsa, o que a peça dá sozinha. O nível que a peça
+  fornece nunca se confunde com o nível do personagem, e um número acima do teto nunca aparece como o ativo.
 - **O que decide fica à vista:** o gatilho, o número, o limite e a condição estão no resumo ("Ao abater um inimigo,
   recupera 15% do recurso máximo. Até 2 vezes por luta."). Vai para os detalhes o que explica o termo ou a conta: o
   alvo, as interações, "não vale nos tiques".
-- **Detalhes por clique e teclado:** um "Como funcionam" que abre com Enter, nunca só com o mouse em cima. Nas dicas,
+- **Detalhes por clique e teclado:** um "Detalhes" que abre com Enter, nunca só com o mouse em cima. Nas dicas,
   que somem, os detalhes não aparecem; a ficha do Inventário, a forja e o achado os têm.
 - **Comparação separada:** o que muda ao trocar é um bloco próprio (o jogo já faz), não misturado às linhas da peça.
 - **Números do motor:** os textos de cada nível saem da tabela implementada (`encanto.texto`). Mudou a tabela, mudou
@@ -162,6 +162,41 @@ disputam o mesmo espaço.
 - **Diablo IV:** só o texto das notas da temporada "Loot Reborn" (menos afixos, mais claros). As capturas não foram
   examinadas: o post oficial pedia data de nascimento, e a cópia da Icy Veins estava atrás de uma checagem da
   Cloudflare.
+
+## Janelas de serviço e fichas: uma hierarquia só (forja, 14ª, 27/10/2026)
+
+Critérios gerais que saíram da revisão da forja inteira; valem para qualquer janela de serviço e para as fichas.
+
+- **Uma moldura para o sistema inteiro:** as operações de um serviço (reforçar, encantar, transferir, desmontar) usam
+  a mesma janela, com o mesmo tamanho, o mesmo cabeçalho e o Fechar no mesmo lugar. Trocar de aba não move a janela.
+  O cabeçalho leva só o que vale para todas as abas (as abas, o recurso comum, o Fechar); material de uma operação
+  aparece junto dela, com o custo.
+- **Cada informação num lugar:** o mesmo dado não aparece no título, na ficha lateral e na prévia. Escolha o lugar em
+  que ele decide (a prévia, perto do botão) e tire dos outros. Uma ficha lateral permanente que repete a peça
+  escolhida sobra; a inspeção fica no mouse e no teclado.
+- **Prévia com os números do motor:** antes de gastar, a tela diz o que a peça passa a dar, o que muda no personagem e
+  quanto vale o efeito antes e depois (a dimensão que cresce, com o valor real). Na bolsa, só a contribuição da peça.
+  Numa troca, o que sai e o que entra. Excesso acima do teto numa nota curta.
+- **O que não muda nada não cobra:** uma operação sem efeito (gravar a mesma essência no mesmo tier) é recusada pelo
+  motor antes da cobrança, e a tela mostra o motivo em duas ou três palavras ("Já gravado").
+- **Duas peças, mesmo peso:** numa operação entre duas peças, os dois encaixes têm o mesmo tamanho e o mesmo tipo de
+  rótulo, com o resultado de cada um ("+10 → +0", "+2 → +8"). Peças de mesmo nome se distinguem pela identidade
+  (raridade, reforço, dono), nunca por suposição. Escolha que deixa de valer é limpa às claras, com uma linha dizendo
+  por quê.
+- **Confirmação mostra o fim:** antes de cobrar algo irreversível, os dois resultados e o preço. Depois, um resultado
+  que fica até o OK, e a animação só representa o que o motor já resolveu.
+- **Detalhe é complemento, não despejo:** "Detalhes" traz uma frase por efeito com a condição ou a interação que muda a
+  decisão (o que não dispara de novo, o que não soma, quem resiste). Nada de listas Gatilho/Alvo/Limite que repetem o
+  resumo. Cada frase conferida contra o código.
+- **Sem instrução permanente:** rodapés "Clique para…" saem das dicas; o gesto continua funcionando e mora na ajuda.
+  Na tela onde a peça já está marcada, a dica dela não abre de novo por cima da ficha.
+- **Hierarquia uniforme nas fichas:** nome como título; tipo e raridade numa linha secundária; linhas curtas; efeitos
+  agregados com o nome pequeno; ícones e nomes não se repetem em listas paralelas.
+
+**Referências examinadas (27/10/2026):** o Todd's Hammer do MapleStory SEA (duas imagens do aviso oficial, a janela e
+a confirmação: origem, destino e resultado separados; só peças elegíveis; o destino só depois da origem; confirmação
+antes de cobrar). As regras de destruição dele não vieram junto.
+Last Epoch e Grim Dawn seguem como acima (fichas e detalhes atrás de uma tecla); desta vez não foram reexaminados.
 
 ## Vocabulário (etapa 4)
 

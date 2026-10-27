@@ -7918,3 +7918,27 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   campanha ampliada.
 - **Próximo:** a avaliação do Jean. Nada integrado; som adiado; a etapa 4 continua aberta.
 
+
+### 27/10/2026 (data do computador local) — Forja: a 14ª versão, uma janela só e a transferência entre duas peças (protótipo)
+
+- **Pedido:**
+  - o reforço que às vezes acontecia sem cena;
+  - o contorno do anel por dentro;
+  - a Manopla de Ferro +2 se mexendo na passada do reflexo;
+  - a mesma janela para as quatro abas;
+  - o Encantar em duas áreas;
+  - a transferência entre duas peças, com cena curta;
+  - fichas uniformes e a skill com critérios gerais.
+- **Feito (LEIA-ME do protótipo e 27, seções 3.3, 8, 9 e 10):**
+  - a numeração dos resultados que só cresce (os cenários de teste a reiniciavam e a tela ignorava o resultado);
+  - o contorno pela silhueta de fora;
+  - o reflexo sem modo de mistura (a 125% e 150% de escala, a peça parecia se mexer);
+  - a janela única, com o cabeçalho só com abas, ouro e Fechar;
+  - o Encantar com sulcos, família, tier e prévia pelos números do motor;
+  - a mesma gravação recusada sem cobrar ("Já gravado");
+  - a transferência com origem, conduto e destino, listas de escolha, a cena e o resultado até o OK;
+  - fichas com o tier no sulco, o teto entre parênteses e "Detalhes" curtos; sem rodapés "Clique para…";
+  - a skill `texto-regras-fenda` com os critérios gerais da rodada.
+- **A 13ª** está em `tela/historico/v13`.
+- **Conferido:** 47 testes do protótipo; as duas resoluções; os testes do projeto.
+- **Próximo:** a avaliação do Jean. Nada integrado; som adiado; a etapa 4 continua aberta.

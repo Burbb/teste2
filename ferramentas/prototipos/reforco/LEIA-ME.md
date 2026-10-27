@@ -9,21 +9,85 @@ jogo não mudaram. Os números são hipóteses desta rodada, não balanceamento.
 Dê dois cliques em `demo.bat` (ou `python ferramentas/prototipos/reforco/demo.py` na raiz). O jogo de sempre abre no
 navegador num **save temporário** (uma pasta nova a cada vez; os saves pessoais não são lidos nem tocados): o Guerreiro
 no nível 4, no Vau, com Morel e Odette, 380 de ouro, dois baús e as peças dos exemplos. Feche a janela do terminal
-para parar. Folhas: `folha-fichas.png` (as fichas), `folha-encantar.png` (encantamento com tiers e transferência),
-`folha.png` (o resultado do reforço) e `folha-acabamento.png` (o acabamento do +1 ao +12). A especificação do sistema
-inteiro: [27](../../../roadmapIDEIAS/27-FORJA-ESPECIFICACAO.md).
+para parar. Folhas: `folha-comparacao.png` (a 13ª × a 14ª, as quatro abas e a ficha), `folha-transferir.png` (os
+estados da transferência), `folha.png` (o resultado do reforço) e `folha-acabamento.png` (o acabamento do +1 ao
++12). A especificação do sistema inteiro: [27](../../../roadmapIDEIAS/27-FORJA-ESPECIFICACAO.md).
 
 Só nesta execução, `demo.py` troca a forja (o balcão novo), o baú (que pode dar fragmento ou essência), a seção
 "Materiais" do Inventário, a venda da peça reforçada, a ficha das peças nas telas (as gravações) e liga os efeitos das
 gravações na luta. O resto é o jogo: o Inventário do grupo, o mercado, a luta, a estrada.
 
-## 13ª versão: reforço em todo espaço, essências com tiers, transferência e fichas compactas (candidata em avaliação)
+## 14ª versão: uma janela só, o Encantar em duas áreas, a transferência entre duas peças (candidata em avaliação)
+
+**O sistema inteiro está no [27](../../../roadmapIDEIAS/27-FORJA-ESPECIFICACAO.md)** (seções 3.3, 8, 9 e 10). Regras,
+chances e custos não mudaram; a única regra nova é a recusa da mesma gravação. A 13ª está em `tela/historico/v13`
+(`?tela=v13`). Folhas:
+- `folha-comparacao.png`: a 13ª × a 14ª com os mesmos dados, nas duas resoluções (Reforçar, Encantar, Desmontar,
+  Transferir e a ficha do Inventário);
+- `folha-transferir.png`: os estados da transferência, da escolha ao resultado, e o movimento reduzido.
+
+### Correções pedidas pelo Jean
+- **Reforçar sem cena:** depois dos botões de teste, o reforço às vezes acontecia sem animação. Os cenários de teste
+  zeravam o último resultado e a numeração recomeçava; a tela, que espera um número maior que o último visto, ignorava
+  o resultado. Agora o número só cresce (`forja_seq`) e o motor diz à tela qual vem (`proximo_id`). Reproduzido antes
+  (o Gharbad caiu de +4 a +3 sem cena) e conferido depois.
+- **Contorno do anel por dentro:** o contorno do +4 em diante era uma sombra do desenho inteiro e contornava também o
+  furo do anel. Agora é desenhado só pela silhueta de fora (o furo conta como dentro).
+- **A Manopla de Ferro +2 se mexendo na passada do reflexo verde:** a 125% e 150% de escala, o modo de mistura do
+  reflexo fazia o navegador amostrar o desenho de outro jeito durante a passada. O reflexo passa sem mistura; medido
+  quadro a quadro, só a faixa do reflexo muda.
+
+### A tela
+- **Uma janela para as quatro abas:** mesma moldura, mesmo tamanho, o Fechar no mesmo lugar (antes ele era cortado).
+  O cabeçalho leva só as abas, o ouro e o Fechar; o material aparece junto da operação, com "tem N".
+- **Encantar em duas áreas, sem ficha lateral:**
+  - a peça (nome, dono, desenho) e os sulcos como botões, com o ícone e o tier da essência dentro;
+  - a família, depois o tier ("III ×3"), e a prévia com os números do motor: a contribuição, o nível do efeito em
+    quem veste (na bolsa, só a peça), o valor antes → depois, o que sai e o que entra numa troca, e a nota do teto;
+  - a mesma gravação sobre ela mesma: "Já gravado", sem cobrar (o motor recusa; teste novo).
+- **Transferir entre duas peças:** origem e destino do mesmo tamanho, com o conduto entre eles; a lista de escolha
+  com ícone, nome, raridade, reforço e dono; os destinos possíveis primeiro, os outros com o motivo; trocar a origem
+  limpa o destino que deixou de servir, com uma linha dizendo isso; a confirmação com os dois resultados e o preço.
+- **A cena da transferência (1,4 s):** a origem acende, a luz corre pelo conduto, a origem perde o acabamento e o
+  destino o recebe; depois "Transferência concluída", até o OK. Movimento reduzido: o resultado parado. Adiantar não
+  dispensa; fechar a janela no meio não desfaz nem cobra de novo; depois do OK as escolhas se limpam e o foco volta à
+  origem.
+- **Desmontar:** o nome da peça como título e a venda no mercado numa linha.
+- **Fichas:** o tier dentro do sulco (sem a linha de nomes); a parte da peça e o teto entre parênteses ("2 desta peça
+  · teto 5"), nunca um nível acima do teto como o ativo; "Detalhes" no lugar de "Como funcionam", com uma frase por
+  essência (o que não dispara de novo, o que não soma, quem resiste) conferida contra o código. Sem os rodapés
+  "Clique para…" nas dicas (os gestos continuam); no Inventário, a peça marcada não abre a dica por cima da ficha.
+- **Referências:** o Todd's Hammer do MapleStory SEA (as duas imagens do aviso oficial, a janela e a confirmação,
+  examinadas). Last Epoch e Grim Dawn não foram reexaminados nesta rodada; valem as notas da 13ª. Os critérios gerais
+  foram para a skill `texto-regras-fenda`.
+
+### Conferido
+- **Testes do protótipo (47):** os de antes e a mesma gravação recusada sem cobrar.
+- **A 1920×945 e 1280×720:** as quatro abas com o Fechar dentro da janela; o Encantar com a mesma gravação, troca,
+  teto e peça na bolsa; a transferência inteira (listas, sem destino, destino invalidado, confirmação, clique duplo
+  numa cobrança só, cena, resultado, Enter segurado dispensando uma vez, foco de volta, Fechar no meio da cena com uma
+  cobrança só, movimento reduzido); a ficha do Inventário com os Detalhes abertos pelo teclado e a dica da peça
+  marcada sem repetir.
+- **A Manopla de Ferro +2** a 100%, 125% e 150% de escala: a peça parada durante a passada.
+
+### Roteiro (uns 5 minutos)
+1. **Ferreiro → Essências (teste) → Encantar.** O martelo de Jean: o 3º sulco (Carrasco I), Brasa, tier III. A
+   prévia: +3 níveis, Brasa em Jean 3 → 5, a chance, Carrasco 1 → 0, "Sai Carrasco I · entra Brasa III" e o teto.
+   Escolha Carrasco I no mesmo sulco: "Já gravado", sem botão.
+2. **Transferência (teste) → Transferir.** Clique na origem: o Machado de Ferro +2 diz "Nenhum destino". Escolha o
+   Machado Enferrujado +10, depois um destino; troque a origem para o Peitoral +6 e veja o destino limpo com o aviso.
+   Volte ao machado, escolha o Martelo de Aço, Transferir, confirme. Veja a cena e o resultado; OK.
+3. **Níveis altos (teste) → Reforçar** um anel: o contorno só por fora. Depois os botões de teste e outro reforço: a
+   cena aparece.
+4. **Inventário:** clique na arma de Jean; Tab até "Detalhes" e Enter. Passe o mouse na peça marcada (sem dica por
+   cima) e numa da bolsa (sem "Clique para…").
+5. **Reforce uma Manopla** (Mãos) a +2 e olhe a passada do reflexo verde.
+
+## 13ª versão: reforço em todo espaço, essências com tiers, transferência e fichas compactas (histórico)
 
 **O sistema inteiro está no [27 — especificação da forja](../../../roadmapIDEIAS/27-FORJA-ESPECIFICACAO.md)**, conferido
-contra este código. Esta seção registra só o que mudou. A 12ª está em `tela/historico/v12`. Folhas:
-- `folha-fichas.png`: as fichas na 12ª × na 13ª, a mesma composição, nas duas resoluções;
-- `folha-encantar.png`: o encantamento com tiers e a transferência;
-- `folha.png` e `folha-acabamento.png`: continuam as da 12ª.
+contra este código. Esta seção registra só o que mudou. A 12ª está em `tela/historico/v12`. As folhas desta versão
+(`folha-fichas.png` e `folha-encantar.png`) estão no git.
 
 ### Decisões do Jean nesta rodada
 - **Reforço em todo espaço:** inclusive aljava, as outras armaduras, anéis e amuletos. A peça inteira melhora, mas

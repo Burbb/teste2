@@ -1,9 +1,9 @@
 # 27 — A forja: especificação do sistema (reforço, materiais, encantamento, transferência)
 
 Documento de referência da etapa 4. Ele descreve o sistema inteiro como está hoje, sem precisar da conversa nem dos
-históricos de protótipo. Atualizado em 28/10/2026, conferido contra o código do protótipo
-(`ferramentas/prototipos/reforco`: `regras.py`, `encanto.py`, `demo.py`, `tela/reforco.js`) e o de produção
-(`rpg/sistemas/servicos.py`).
+históricos de protótipo. Atualizado em 28/10/2026 (14ª versão do protótipo), conferido contra o código do
+protótipo (`ferramentas/prototipos/reforco`: `regras.py`, `encanto.py`, `demo.py`, `tela/reforco.js`) e o de
+produção (`rpg/sistemas/servicos.py`).
 
 **Fonte única.** As regras vigentes estão aqui. O [25](25-ETAPA4-REFORCO-E-ENCANTAMENTO.md) guarda a pesquisa, o
 debate e as rodadas, e aponta para cá. O [LEIA-ME do protótipo](../ferramentas/prototipos/reforco/LEIA-ME.md) guarda o
@@ -195,6 +195,9 @@ As outras peças (cabeça, mãos, pernas, pés, aljava, anel, amuleto) recebem r
 - **Gravar:** consome 1 essência do tier escolhido e 30 de ouro, com reputação. Nunca falha.
 - **Substituir:** gravar num sulco ocupado custa o mesmo e apaga a gravação anterior. A essência antiga não volta e
   não há extração. A tela pede confirmação e diz o que sai.
+- **A mesma gravação:** a mesma essência no mesmo tier sobre ela mesma (Carrasco III sobre Carrasco III) não muda
+  nada; o motor recusa sem cobrar ("Já gravado."), e a tela mostra o motivo no lugar do botão. Outro tier da mesma
+  essência é uma substituição normal.
 - **Peça e dono:** a gravação é da peça e vai com ela quando ela troca de dono.
 - **Desmontar** perde as gravações. A confirmação lista quais ("Perde as gravações: Brasa II, Eco I.").
 - **Compatibilidade por essência:**
@@ -310,24 +313,46 @@ Cobrado uma vez por pedido. A confirmação mostra os dois resultados e o preço
 - **No save:** os materiais entram no save.
 - **Peças sem sulcos** (um save antigo) ganham os delas ao carregar, uma vez.
 - **Pedidos repetidos:** reforço, gravação e transferência carregam um id de pedido; o mesmo id não age duas vezes.
+- **Numeração dos resultados:** cada resultado da forja tem um número que só cresce (`forja_seq`), também depois dos
+  cenários de teste que limpam o último resultado; a tela espera o número que o motor anuncia (`proximo_id`). Antes,
+  os cenários reiniciavam a contagem e o reforço seguinte acontecia sem a cena.
 
 ## 9. Fluxos da interface [Protótipo]
-- **Abas e espaço da janela:** Reforçar, Encantar, Transferir e Desmontar, na mesma janela e na mesma bancada. A
-  peça fica no eixo, os materiais à esquerda, o ganho (ou a essência, ou os destinos) à direita, e o botão no pé.
+- **Uma janela para as quatro operações:** Reforçar, Encantar, Transferir e Desmontar usam a mesma moldura, do mesmo
+  tamanho, com o mesmo cabeçalho e o Fechar no mesmo lugar; trocar de aba não move a janela. O cabeçalho leva só as
+  abas, o ouro e o Fechar; cada material aparece junto da operação que o gasta ("tem N" ao lado do custo). As listas
+  rolam por dentro. Reforçar e o resultado em destaque são a referência das outras abas.
 - **Reforçar:**
   - o aquecimento corre na bancada;
   - na revelação, o resultado sai da bancada para a apresentação em destaque, com o véu, o nome com o nível, a peça,
     as propriedades antes → depois, "SUCESSO" ou "FALHOU" e o OK;
   - o resultado fica até OK, Enter ou Esc.
-- **Encantar:**
-  - um botão por essência (a quantidade soma os tiers);
-  - o tier se escolhe ao lado da previsão, que mostra "Nesta peça 3 → 6 · Jean 3 → 5", o efeito no nível novo e o
-    aviso quando parte (ou tudo) passa do teto;
-  - substituir pede confirmação;
+- **Encantar** (sem ficha lateral; a peça se inspeciona com o mouse e o teclado):
+  - **a peça e os sulcos:** o nome, o dono, o desenho e um botão por sulco, com o ícone e o tier da essência dentro;
+    vazio, ocupado e escolhido se distinguem. Retirar a peça: o molde ou a miniatura;
+  - **a essência:** primeiro a família (o ícone e o nome; a 1280, só o ícone), depois o tier I, II ou III, com o tier e
+    a quantidade separados ("III ×3");
+  - **a prévia**, com os números do motor: a contribuição da peça (antes → depois), o nível do efeito em quem veste
+    (na bolsa, só a contribuição), o valor que muda ("Chance 39% → 53%"), numa troca a essência que sai e a que
+    entra, e uma nota curta quando parte passa do teto;
+  - o pé fixo, com o custo e Gravar ou Substituir; substituir pede confirmação; a mesma gravação aparece como
+    "Já gravado" e não cobra;
   - a gravação concluída aparece na mesma apresentação em destaque, sem suspense.
-- **Transferir:** a peça escolhida é a origem; à direita, os destinos possíveis, cada um com "+2 → +8" ou o motivo de
-  não poder; a confirmação mostra os dois resultados e o preço.
-- **Desmontar:** a confirmação no pé, com as perdas; a transformação é curta, sem celebração.
+- **Transferir** (duas peças):
+  - origem e destino em dois encaixes do mesmo tamanho, ligados por um conduto, cada um com "+a → +b"; o preço e o
+    Transferir embaixo;
+  - clicar num encaixe abre a lista de escolha: ícone, nome, raridade, reforço e dono (duas peças de mesmo nome se
+    distinguem por isso e pelo id). Com a origem escolhida, os destinos possíveis vêm primeiro e os outros dizem por
+    quê ("Nenhum destino" na origem que não tem para onde ir);
+  - trocar a origem limpa o destino que deixou de servir, com uma linha dizendo isso, e reabre a lista dos destinos;
+  - a confirmação mostra os dois resultados e o preço antes de cobrar;
+  - a cena (1,4 s): a origem acende, a luz corre pelo conduto, a origem perde o acabamento e o destino recebe o nível
+    e o acabamento; depois, "Transferência concluída" com os dois resultados, até o OK. Sem suspense e sem a explosão
+    do reforço máximo. Com movimento reduzido, o resultado parado. Adiantar não dispensa nem repete; fechar a janela
+    não desfaz nem duplica; a cena só representa a transação já resolvida;
+  - depois do OK, as escolhas se limpam (nenhum par novo é escolhido sozinho) e o foco volta ao encaixe da origem.
+- **Desmontar:** o nome da peça como título, "No mercado, vende por X." e a confirmação no pé, com as perdas; a
+  transformação é curta, sem celebração.
 - **Gestos:**
   - as confirmações só aceitam o clique depois de 400 ms;
   - o segundo clique de um clique duplo não age;
@@ -339,12 +364,19 @@ Cobrado uma vez por pedido. A confirmação mostra os dois resultados e o preço
 ## 10. Linguagem visual [Protótipo]
 - **Raridade:** a cor da borda do encaixe e do nome.
 - **Reforço:** o acabamento sobre o desenho da peça.
-  - +1 a +4: o reflexo; o +4 com contorno dourado.
+  - +1 a +4: o reflexo; o +4 com contorno dourado. O contorno segue só a silhueta de fora da peça (o furo do anel não
+    ganha contorno por dentro).
   - +5 a +8: turquesa, safira, ametista e rubi.
   - +9 a +12: o veio multicolorido em pixel, com brilhos.
   - O +N fica no canto do encaixe e, nas dicas, colorido pelo nível.
-- **Gravação:** um rastro de luz na cor da essência percorre a borda do encaixe. A ficha mostra os sulcos (os vazios
-  também), os nomes com o tier e um efeito por linha; os detalhes ficam em "Como funcionam", por clique ou teclado.
+- **Reflexo:** passa por cima do desenho sem modo de mistura; com mistura, a 125% e 150% de escala o navegador
+  amostrava o desenho de outro jeito e a peça parecia se mexer (a Manopla de Ferro +2).
+- **Gravação:** um rastro de luz na cor da essência percorre a borda do encaixe.
+- **Fichas:** o nome é o título; tipo e raridade numa linha secundária; os sulcos (os vazios também) com o ícone e o
+  tier dentro; um efeito por linha, com o nome pequeno, no nível ativo (nunca acima do teto) e a parte desta peça
+  entre parênteses quando difere. "Detalhes" abre por clique ou teclado: uma frase por essência (a condição ou a
+  interação que muda a decisão) e a regra do nível total. Sem rodapés "Clique para…" nas dicas; no Inventário, a
+  peça marcada não abre a dica por cima da ficha ao lado.
 - **Seleção e foco:** os cantos de latão e o anel de foco não mudam com o acabamento.
 
 ## 11. Casos de teste e exemplos
@@ -370,12 +402,15 @@ Cobrado uma vez por pedido. A confirmação mostra os dois resultados e o preço
   - Odette: Eco 7, acima do teto;
   - Morel: Revide II;
   - 3 essências de cada tier.
-- **Transferência (teste):** na bolsa, uma arma comum +10, outra +2 (com Brasa), um peito incomum +6 e outro +0.
+- **Transferência (teste):** na bolsa, uma arma comum +10, outra +2 (com Brasa, sem destino possível), um peito
+  incomum +6 e outro +0; o Martelo de Ferro de Jean e o de Morel têm o mesmo nome.
 - Os demais: Sucesso e Falha (teste), Comparação e Luta de teste.
 
 **Exemplo completo:** Jean veste a arma com Brasa II + Brasa I (Brasa 3). Na bolsa, uma armadura com Vigília III não
-conta. Ao gravar Brasa III no terceiro sulco, a previsão diz "Nesta peça 3 → 6 · Jean 3 → 5" e avisa que 1 nível passa
-do teto. Na luta, cada golpe que acerta tem 53% de chance de Queimadura, no máximo 1 vez por rodada.
+conta. Ao escolher Brasa III para o terceiro sulco (onde está Carrasco I), a prévia diz "Contribuição +3 níveis",
+"Brasa em Jean nível 3 → 5", a chance que muda, "Carrasco em Jean nível 1 → 0", "Sai Carrasco I · entra Brasa III" e
+"Teto 5: +1 nível sem efeito". Na luta, cada golpe que acerta tem 53% de chance de Queimadura, no máximo 1 vez por
+rodada.
 
 ## 12. Pendências para integrar e assuntos futuros
 - **Equilíbrio em avaliação:** chances e custos do +5 ao +12 e o ouro (alto para a campanha curta); as tabelas das
