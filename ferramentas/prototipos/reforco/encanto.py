@@ -27,7 +27,8 @@ ESSENCIAS = {
     "brasa": {
         "nome": "Brasa", "material": "essencia_brasa", "tipos": ("arma",), "cor": "#f07a18", "icone": "chama",
         "fx": ["Y", "O", "o", "r"],
-        "desc": "Ao acertar um golpe, 35% de chance de aplicar 1 camada de Queimadura (até 3). No máximo 1 vez por turno seu.",
+        "efeito": "Ao acertar um golpe, 35% de chance de aplicar 1 camada de Queimadura (até 3).",
+        "limite": "No máximo 1 vez por turno seu.",
         "ficha": {"alvo": "arma", "gatilho": "golpe do portador que acerta (não reações nem tiques)",
                   "magnitude": "1 camada de Queimadura, valor do portador (mín. 2), 35%", "duracao": "a da Queimadura",
                   "limite": "1 vez por rodada", "interacao": "soma com a Queimadura do Mago (até 3 camadas); o tique não dispara"}},
@@ -35,7 +36,8 @@ ESSENCIAS = {
     "carrasco": {
         "nome": "Carrasco", "material": "essencia_carrasco", "tipos": ("arma",), "cor": "#d84a4a", "icone": "caveira",
         "fx": ["W", "R", "r", "D"],
-        "desc": "Causa 30% a mais de dano a inimigos abaixo de 35% da vida.",
+        "efeito": "Causa 30% a mais de dano a inimigos abaixo de 35% da vida.",
+        "limite": "",
         "ficha": {"alvo": "arma", "gatilho": "cada golpe do portador num inimigo abaixo de 35% da vida",
                   "magnitude": "+30% de dano", "duracao": "—", "limite": "—",
                   "interacao": "multiplica com os outros bônus de dano; não vale nos tiques"}},
@@ -43,7 +45,8 @@ ESSENCIAS = {
     "eco": {
         "nome": "Eco", "material": "essencia_eco", "tipos": ("arma", "foco", "escudo"), "cor": "#a070f0", "icone": "pocao_azul",
         "fx": ["W", "M", "m", "x"],
-        "desc": "Ao abater um inimigo, recupera 25% do recurso máximo. Até 2 vezes por luta.",
+        "efeito": "Ao abater um inimigo, recupera 25% do recurso máximo.",
+        "limite": "Até 2 vezes por luta.",
         "ficha": {"alvo": "arma, foco, escudo", "gatilho": "um inimigo cai pelo golpe do portador",
                   "magnitude": "25% da Mana, Vigor ou Foco máximos", "duracao": "—", "limite": "2 por luta",
                   "interacao": "soma com Colheita e Assassino"}},
@@ -51,7 +54,8 @@ ESSENCIAS = {
     "vigilia": {
         "nome": "Vigília", "material": "essencia_vigilia", "tipos": ("peito", "escudo", "foco"), "cor": "#e8c860", "icone": "escudo",
         "fx": ["W", "Y", "y", "c"],
-        "desc": "Começa cada luta com uma barreira de 15% da vida máxima, por 3 turnos seus.",
+        "efeito": "Começa cada luta com uma barreira de 15% da vida máxima, por 3 turnos seus.",
+        "limite": "1 vez por luta.",
         "ficha": {"alvo": "peito, escudo, foco", "gatilho": "começo da luta", "magnitude": "barreira de 15% da vida máxima",
                   "duracao": "3 turnos do portador", "limite": "1 por luta",
                   "interacao": "não soma com outra barreira: vale a maior (Aura de Proteção)"}},
@@ -59,7 +63,8 @@ ESSENCIAS = {
     "revide": {
         "nome": "Revide", "material": "essencia_revide", "tipos": ("peito", "escudo"), "cor": "#b8c0cc", "icone": "espada",
         "fx": ["W", "w", "G", "g"],
-        "desc": "Ao receber um golpe corpo a corpo, 25% de chance de revidar com 60% do ataque.",
+        "efeito": "Ao receber um golpe corpo a corpo, 25% de chance de revidar com 60% do Ataque.",
+        "limite": "O revide não provoca outro revide.",
         "ficha": {"alvo": "peito, escudo", "gatilho": "golpe corpo a corpo de um inimigo que acerta o portador",
                   "magnitude": "um golpe de 60% do Ataque", "duracao": "—", "limite": "1 resposta por golpe",
                   "interacao": "o revide não aciona outro revide nem a Brasa; não soma com o Contra-ataque no mesmo golpe"}},
@@ -67,20 +72,32 @@ ESSENCIAS = {
     "geada": {
         "nome": "Geada", "material": "essencia_geada", "tipos": ("peito",), "cor": "#78c8f0", "icone": "gota",
         "fx": ["W", "M", "U", "u"],
-        "desc": "Ao receber um golpe corpo a corpo, 30% de chance de congelar o atacante: ele perde a próxima vez. 1 vez por luta.",
+        "efeito": "Ao receber um golpe corpo a corpo, 30% de chance de congelar o atacante: ele perde a próxima vez.",
+        "limite": "1 vez por luta.",
         "ficha": {"alvo": "peito", "gatilho": "golpe corpo a corpo de um inimigo que acerta o portador",
                   "magnitude": "congela (perde a próxima vez)", "duracao": "1 turno do atacante", "limite": "1 por luta",
                   "interacao": "chefes e gigantes resistem metade das vezes (a regra do Atordoado)"}},
 }
 ORDEM = ("brasa", "carrasco", "eco", "vigilia", "revide", "geada")
+for _e in ESSENCIAS.values():  # a regra inteira, numa frase só (as dicas e o registro); o efeito e o limite separados (a ficha)
+    _e["desc"] = f"{_e['efeito']} {_e['limite']}".strip()
 CUSTO_OURO = 30
 # quantos sulcos a peça traz, pela raridade (o sorteio do drop): {n: peso}
 SULCOS = {"comum": {1: 75, 2: 25}, "magico": {1: 50, 2: 40, 3: 10}, "raro": {1: 25, 2: 50, 3: 25}, "lendario": {2: 50, 3: 50}}
 
 
-def sortear_sulcos(item, rng):
-    """No drop (ou na primeira vez que a peça aparece no laboratório): os sulcos dela, vazios."""
+def semente(item):
+    """A semente do sorteio dos sulcos, pela própria peça (nome, nível, raridade, base): não gasta o sorteio do jogo e dá o
+    mesmo resultado para a mesma peça. Só vale uma vez: depois, os sulcos ficam gravados nela."""
+    return f"{item.get('nome', '').split(' +')[0]}|{item.get('nivel')}|{item.get('raridade')}|{sorted((item.get('bonus_base') or item.get('bonus') or {}).items())}"
+
+
+def sortear_sulcos(item, rng=None):
+    """No achado (no laboratório: a primeira vez que a peça aparece numa tela): os sulcos dela, vazios. Uma peça que já
+    tem sulcos nunca é sorteada de novo (consultar ou redesenhar uma ficha não muda nada)."""
     if "encantos" not in item:
+        import random
+        rng = rng or random.Random(semente(item))
         pesos = SULCOS.get(item.get("raridade", "comum"), SULCOS["comum"])
         n = rng.choices(list(pesos), weights=list(pesos.values()))[0]
         item["encantos"] = [None] * n

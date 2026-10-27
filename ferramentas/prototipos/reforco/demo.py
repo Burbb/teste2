@@ -79,8 +79,8 @@ def dar_uid(g):
         if "uid" not in it:
             it["uid"] = f"p{prox}"
             prox += 1
-        if E.tipo(it) and "encantos" not in it:  # o sorteio dos sulcos (o drop; aqui, a primeira vez que a peça aparece)
-            E.sortear_sulcos(it, random.Random(f"{it['uid']}:{it.get('nome')}"))
+        if E.tipo(it):  # os sulcos (sorteados uma vez, no achado; aqui, se a peça ainda não passou por uma tela)
+            E.sortear_sulcos(it)
 
 
 def achar(g, uid):
@@ -292,14 +292,16 @@ def ficha_peca(g, it, quem, s):
     d["aba"] = quem or "bolsa"
     d["encantos"] = [encanto_tela(k) for k in it.get("encantos") or []]
     d["encantar"] = {"motivo": E.motivo(it), "essencias": [
-        {"id": k, "nome": e["nome"], "cor": e["cor"], "icone": e["icone"], "desc": e["desc"],
+        {"id": k, "nome": e["nome"], "cor": e["cor"], "icone": e["icone"], "desc": e["desc"], "efeito": e["efeito"],
+         "limite": e["limite"], "tipos": list(e["tipos"]),
          "qtd": materiais(g).get(e["material"], 0), "motivo": E.motivo(it, k)} for k, e in ((k, E.ESSENCIAS[k]) for k in E.ORDEM)]}
     return d
 
 
 def encanto_tela(k):
     e = E.ESSENCIAS.get(k)
-    return {"id": k, "nome": e["nome"], "cor": e["cor"], "icone": e["icone"], "desc": e["desc"], "fx": e["fx"]} if e else None
+    return {"id": k, "nome": e["nome"], "cor": e["cor"], "icone": e["icone"], "desc": e["desc"], "efeito": e["efeito"],
+            "limite": e["limite"], "fx": e["fx"]} if e else None
 
 
 def painel(g):
@@ -522,15 +524,17 @@ def ativar():
     ficha_item = itens.ficha
 
     def ficha_com_gravacao(it, recurso=None, **extra):
-        """A ficha das telas (mercado, inventário, dicas, forja) com as gravações: a chave `encantos` (uma por sulco,
-        None no vazio) e, na linha de efeito, o nome e a regra de cada uma (somadas à do único, quando a peça tem)."""
+        """A ficha das telas (achado, mercado, inventário, dicas, forja) com o estado da peça: o nível de reforço e os
+        sulcos (`encantos`: uma entrada por sulco, None no vazio). A tela desenha a partir disso, nunca do nome. Uma peça
+        que pode ser gravada e ainda não tem sulcos ganha os dela aqui, uma vez (no lugar do drop)."""
         d = ficha_item(it, recurso, **extra)
-        if d and it.get("encantos"):
+        if not d:
+            return d
+        d["reforco"] = it.get("reforco", 0)
+        if E.tipo(it):
+            E.sortear_sulcos(it)
+        if it.get("encantos") is not None:
             d["encantos"] = [encanto_tela(k) for k in it["encantos"]]
-            linhas = [f"Gravação · {E.ESSENCIAS[k]['nome']}: {E.ESSENCIAS[k]['desc']}" for k in it["encantos"] if k in E.ESSENCIAS]
-            if linhas:
-                d["efeito"] = " ".join(([d["efeito"]] if d.get("efeito") else []) + linhas)
-                d.setdefault("efeito_nome", " · ".join(f"Gravação {E.ESSENCIAS[k]['nome']}" for k in it["encantos"] if k in E.ESSENCIAS))
         return d
     itens.ficha = ficha_com_gravacao
     web_estado._item = ficha_com_gravacao

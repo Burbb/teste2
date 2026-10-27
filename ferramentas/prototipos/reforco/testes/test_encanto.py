@@ -126,13 +126,45 @@ class TestGravar(unittest.TestCase):
         self.assertEqual(arma["encantos"][0], "eco")
         # na ficha das telas (dicas, inventário), a gravação aparece
         self.assertEqual(D.itens.ficha(arma)["encantos"][0]["id"], "eco")
-        self.assertIn("Gravação · Eco", D.itens.ficha(arma)["efeito"])
+        self.assertNotIn("Gravação", D.itens.ficha(arma).get("efeito") or "")  # a gravação tem a seção dela, fora do efeito
         # desmontar uma peça gravada: rende o mesmo do reforço; a gravação some com a peça
         FICHA.tirar(g, "morel", "arma")
         antes = D.materiais(g).get("essencia_eco", 0)
         ok, _ = D.desmontar(g, arma["uid"], arma["nome"])
         if ok:
             self.assertEqual(D.materiais(g).get("essencia_eco", 0), antes)
+
+
+class TestSulcosDaPeca(unittest.TestCase):
+    def test_sorteados_uma_vez_na_primeira_ficha(self):
+        g = jogo()
+        nova = D.itens.gerar_equip(random.Random(9), "guerreiro", 5, slot="arma", raridade="raro")
+        self.assertNotIn("encantos", nova)
+        d = D.itens.ficha(nova)  # a primeira tela em que a peça aparece (o achado, o mercado)
+        self.assertIn("encantos", nova)
+        primeiro = list(nova["encantos"])
+        self.assertEqual(d["encantos"], [None] * len(primeiro))
+        self.assertEqual(d["reforco"], 0)
+        nova["nome"] += " +2"  # consultar ou redesenhar a ficha, mesmo com a peça mudada, não sorteia de novo
+        for _ in range(5):
+            D.itens.ficha(nova)
+        self.assertEqual(nova["encantos"], primeiro)
+        self.assertIsNone(E.motivo(g.j.equip["arma"]))
+
+    def test_salvar_e_carregar_mantem_sulcos_gravacoes_e_reforco(self):
+        g = jogo()
+        arma = g.j.equip["arma"]
+        D.encantar(g, arma["uid"], "brasa", 1, pedido="a")
+        D.materiais(g)["fragmento"] = 9
+        D.reforcar(g, arma["uid"], veio="fio", pedido="b")
+        g.salvar(silencioso=True)
+        from rpg.jogo import Jogo as J
+        h = J.carregar(BotUI(random.Random(1)), g.caminho_save(), pasta_saves=g.pasta_saves)
+        arma2 = h.j.equip["arma"]
+        self.assertEqual(arma2["encantos"], [None, "brasa"])
+        self.assertEqual(arma2["reforco"], 1)
+        self.assertEqual(D.itens.ficha(arma2)["encantos"][1]["id"], "brasa")
+        self.assertEqual(D.itens.ficha(arma2)["reforco"], 1)
 
 
 class TestNaLuta(unittest.TestCase):
