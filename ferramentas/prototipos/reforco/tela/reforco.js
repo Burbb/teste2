@@ -135,6 +135,25 @@
   const gravura = (lista) => (lista || []).filter(Boolean).map((e, i, todas) =>
     `<i class="rf-gravura" aria-hidden="true" style="--ess:${h(e.cor)};animation-delay:-${(i * 4.2 / todas.length).toFixed(2)}s"></i>`).join("");
 
+  /** Os sulcos de uma peça como encaixes quadrados, na quantidade real dela: o vazio escuro com contorno; o ocupado com
+   *  o símbolo da essência. Com `sel` (a forja), cada um é um botão: escolher onde gravar. */
+  function filaSulcos(lista, sel = null) {
+    return (lista || []).map((x, i) => {
+      const cor = x ? ` style="--ess:${h(x.cor)}"` : "";
+      if (sel === null) return `<i class="rf-sq${x ? "" : " vazio"}"${cor} title="${x ? h(x.nome) : "Sulco vazio"}">${x ? iconeDe(x.icone) : ""}</i>`;
+      return `<button type="button" role="radio" class="rf-sq${x ? "" : " vazio"}${i === sel ? " escolhido" : ""}" data-sulco="${i}" aria-checked="${i === sel}"
+        aria-label="Sulco ${i + 1}: ${x ? h(x.nome) : "vazio"}"${cor} ${Telas.dica(x ? `<b>${h(x.nome)}</b><div>${h(x.efeito)}</div>${x.limite ? `<div class="rodape">${h(x.limite)}</div>` : ""}` : "<b>Sulco vazio</b>", true)}>${x ? iconeDe(x.icone) : ""}</button>`;
+    }).join("");
+  }
+  /** A seção de encantamentos de uma ficha: os sulcos e, para cada gravação, o nome da essência como título e, embaixo,
+   *  o efeito e o limite. Vazia quando a peça não aceita gravação. */
+  function secaoEncantos(lista) {
+    if (!Array.isArray(lista) || !lista.length) return "";
+    const n = lista.length, k = lista.filter(Boolean).length;
+    return `<div class="rf-encantos"><div class="rf-encantos-cab"><span>Sulcos</span><span class="rf-sq-fila" aria-label="${n} ${n > 1 ? "sulcos" : "sulco"}, ${k} ${k === 1 ? "gravado" : "gravados"}">${filaSulcos(lista)}</span></div>
+      ${lista.filter(Boolean).map((e) => `<div class="rf-encanto" style="--ess:${h(e.cor)}"><b>${h(e.nome)}</b><p>${h(e.efeito)}</p>${e.limite ? `<p class="lim">${h(e.limite)}</p>` : ""}</div>`).join("")}</div>`;
+  }
+
   function corpo(d) {
     const reforco = janela !== "desmontar";  // as abas de dono valem no reforço e no encantamento
     const lista = d.pecas.filter((p) => (reforco ? p.aba === aba : !p.quem));
@@ -162,7 +181,7 @@
     const cinzas = Array.from({ length: 4 }, (_, i) => `<i class="rf-cinza c${i}"></i>`).join("");
     return `<div class="rf-molde">${topo}<span class="rf-garra e" aria-hidden="true"></span>
       <div class="rf-berco"><span class="rf-barra t"></span><span class="rf-barra r"></span><span class="rf-barra b"></span><span class="rf-barra l"></span>
-        <div class="rf-encaixe grande${p ? ` r-${h(p.item.raridade)}` : " vazio"}"${p ? ` data-reforco="${p.reforco || 0}"` : ""}>${p ? iconePeca(p.item) + gravura(p.encantos) : ""}</div>
+        <div class="rf-encaixe grande${p ? ` r-${h(p.item.raridade)}` : " vazio"}"${p ? ` data-reforco="${p.reforco || 0}" data-retirar role="button" tabindex="0" aria-label="Retirar ${h(p.item.nome)} da bancada"` : ""}>${p ? iconePeca(p.item) + gravura(p.encantos) : ""}</div>
         <span class="rf-faiscas" aria-hidden="true">${faiscas}${cinzas}</span></div>
       <span class="rf-garra d" aria-hidden="true"></span>${extra}</div>`;
   }
@@ -306,17 +325,18 @@
     const insumosHtml = e && !motivoPeca
       ? `<div class="rf-insumos" aria-label="Custo">${insumo(iconeDe(e.icone), `Essência de ${e.nome}`, 1, g ? Infinity : e.qtd)}${insumo(moeda(), "Ouro", custo, g ? Infinity : d.ouro)}</div>`
       : insumos();
-    const visorHtml = e && !motivoPeca
-      ? `<div class="rf-resultado rf-ess-visor" style="--ess:${h(e.cor)}"><b>${h(e.nome)}</b></div>` : visor([]);
+    // à direita, o encaixe da essência que entra (o símbolo; o nome e a regra ficam no bloco embaixo, uma vez só)
+    const visorHtml = `<div class="rf-recebe rf-ess-entra${e && !motivoPeca ? "" : " vazio"}"${e ? ` style="--ess:${h(e.cor)}"` : ""}><span class="rf-encaixe pequeno">${e && !motivoPeca ? iconeDe(e.icone) : ""}</span></div>`;
     const trilho = `<div class="rf-essencias" role="radiogroup" aria-label="Essência">${ess.map((x) => `<button type="button" role="radio" class="rf-essencia${x.id === essSel ? " escolhida" : ""}${x.motivo || x.qtd < 1 ? " apagada" : ""}${atual && atual.id === x.id ? " gravada" : ""}"
-        data-essencia="${h(x.id)}" aria-checked="${x.id === essSel}" style="--ess:${h(x.cor)}" ${Telas.dica(`<b>${h(x.nome)}</b><div>${h(x.desc)}</div>${x.motivo ? `<div class="pior">${h(x.motivo)}</div>` : ""}<div class="rodape">Tem ${x.qtd}</div>`, true)}
-        aria-label="${h(x.nome)}, tem ${x.qtd}">${iconeDe(x.icone)}<span class="rf-canto">${x.qtd}</span></button>`).join("")}</div>`;
-    const regra = `<p class="rf-ess-regra">${e && p ? h(e.desc) : ""}</p>`;
+        data-essencia="${h(x.id)}" aria-checked="${x.id === essSel}" style="--ess:${h(x.cor)}" ${Telas.dica(`<b>${h(x.nome)} <span class="rf-qtd">×${x.qtd}</span></b><div>${h(x.efeito)}</div>${x.limite ? `<div class="rodape">${h(x.limite)}</div>` : ""}${x.motivo ? `<div class="pior">${h(x.motivo)}</div>` : ""}`, true)}
+        aria-label="${h(x.nome)} ×${x.qtd}">${iconeDe(x.icone)}<span class="rf-canto">${x.qtd}</span></button>`).join("")}</div>`;
+    // a regra da essência escolhida: um bloco de largura controlada, à esquerda: o nome, o efeito, o limite
+    const regra = `<div class="rf-ess-regra">${e && p ? `<b style="--ess:${h(e.cor)}">${h(e.nome)}</b><p>${h(e.efeito)}</p>${e.limite ? `<p class="lim">${h(e.limite)}</p>` : ""}` : ""}</div>`;
     const conf = confirmandoGrav && p && confirmandoGrav.uid === p.uid;
     let pe;
     if (conf) {
-      pe = `<div class="rf-confirmar" role="alertdialog" aria-label="Confirmar a substituição"><b>Substituir ${h(atual.nome)} por ${h(e.nome)}?</b>
-          <span class="rf-aviso">A gravação ${h(atual.nome)} se perde.</span>
+      pe = `<div class="rf-confirmar" role="alertdialog" aria-label="Confirmar a substituição"><span class="rf-troca">Sai <b style="color:${h(atual.cor)}">${h(atual.nome)}</b> · Entra <b style="color:${h(e.cor)}">${h(e.nome)}</b></span>
+          <span class="rf-aviso">${h(atual.nome)} se perde.</span>
           <div class="rf-botoes"><button type="button" class="rf-botao" data-gravar-nao>Cancelar</button>
           <button type="button" class="rf-botao principal" data-gravar-sim disabled>Substituir</button></div></div>`;
     } else {
@@ -325,8 +345,7 @@
         <button type="button" class="rf-botao principal" data-gravar${motivo || g ? ` aria-disabled="true"${motivo ? ` title="${h(motivo)}"` : ""}` : ""}>${atual ? "Substituir" : "Gravar"}</button>
         <span class="rf-nota${!motivo || /^Falta/.test(motivo) ? "" : " neutra"}">${h(motivo && p ? motivo : !p ? "Escolha uma peça" : "")}</span>`;
     }
-    const nome = `<div class="rf-nivel rf-sulcos" role="radiogroup" aria-label="Sulco">${sulcos.map((x, i) => `<button type="button" role="radio"
-        class="rf-sulco${i === sulcoSel ? " escolhido" : ""}${x ? "" : " vazio"}" data-sulco="${i}" aria-checked="${i === sulcoSel}"${x ? ` style="--ess:${h(x.cor)}"` : ""}>${x ? h(x.nome) : "Vazio"}</button>`).join("")}</div>`;
+    const nome = `<div class="rf-nivel rf-sulcos" role="radiogroup" aria-label="Sulcos">${filaSulcos(sulcos, sulcoSel)}</div>`;
     const dsf = g ? `<div class="rf-dsf grav" style="--ess:${h(g.para.cor)}"><b class="rf-dsf-palavra">Gravado</b><b class="rf-dsf-nivel">${h(g.para.nome)}</b>${g.de ? `<small>no lugar de ${h(g.de.nome)}</small>` : ""}</div>` : "";
     if (g) sulcoSel = gravando.sulco ?? sulcoSel;
     const classe = g ? ` gravando${faseGrav() === "gravado" ? " gravado" : ""}` : "";
@@ -354,7 +373,7 @@
     const nome = t ? antesAgora(h(p.item.nome.replace(/ \+\d+$/, "") + (t.de ? ` +${t.de}` : "")), h(p.item.nome)) : h(p.item.nome);
     return `<div class="rf-ficha-cab"><b class="r-${h(p.item.raridade)}">${nome}</b><small>${h(dono(p))}</small></div>
       <ul class="rf-props">${linhas.join("")}</ul>${p.efeito ? `<p class="rf-efeito">${h(p.efeito)}</p>` : ""}
-      ${(p.encantos || []).filter(Boolean).map((e) => `<div class="rf-gravacao" style="--ess:${h(e.cor)}"><span>Gravação</span> <b>${h(e.nome)}</b><p>${h(e.desc)}</p></div>`).join("")}
+      ${secaoEncantos(p.encantos)}
       ${p.venda !== undefined ? `<div class="rf-venda">Venda: ${moeda()} ${p.venda}</div>` : ""}`;
   }
   /** A comparação contra o alvo de teste e as substitutas: um controle de laboratório, mostrado pela faixa da
@@ -380,9 +399,16 @@
    *  por translate: um translate faria da chapa um contexto de empilhamento, e a peça e o resultado passariam para
    *  baixo do efeito. +3: desce e volta; +4: desce mais, um rebote menor e assenta; a desmontagem: um toque. */
   const BAQUE = { 3: [3, 1, 0], 4: [5, -2, 1, 0], desmonte: [2, 0] };
-  function baque(chapa, passos) {
-    if (reduzido() || !chapa || !passos) return;
-    passos.forEach((y, i) => relogios.push(setTimeout(() => { chapa.style.top = y ? `${y}px` : ""; }, i * FX.QUADRO)));
+  // Num relógio próprio: o redesenho da forja (limparRelogios) não corta o golpe no meio, e cada passo vale para a
+  // chapa que estiver na tela. Um golpe novo cancela o anterior; sem `passos`, a chapa volta ao lugar na hora.
+  let baqueRel = [];
+  const impactados = new Set();  // os resultados que já tiveram o impacto (um por resultado, mesmo adiantado)
+  function baque(passos) {
+    baqueRel.forEach(clearTimeout);
+    baqueRel = [];
+    const pos = (y) => { const c = document.querySelector(".rf-janela .rf-chapa"); if (c) c.style.top = y ? `${y}px` : ""; };
+    if (reduzido() || !passos) { pos(0); return; }
+    passos.forEach((y, i) => baqueRel.push(setTimeout(() => pos(y), i * FX.QUADRO)));
   }
   /** Os sons do jogo (Som, sintetizados; respeitam o som desligado): o martelo na bigorna no reforço, o golpe junto no
    *  +3 e no +4, o golpe leve na falha, os estalos de metal na desmontagem. */
@@ -403,8 +429,11 @@
     palco.el.style.clipPath = `inset(${Math.max(0, r.top - folga)}px ${Math.max(0, innerWidth - r.right - folga)}px ${Math.max(0, innerHeight - r.bottom - folga)}px ${Math.max(0, r.left - folga)}px)`;
     const enx = FX.enxame(), forte = u.sucesso && u.para >= 3, grupo = jan.querySelector(".rf-chapa .rf-dsf");
     const pal = forte ? FX.PALETAS.lendario : ["W", "Y", "O", "o", "C"];
-    if (!desde) {
-      if (u.sucesso) baque(leito.closest(".rf-chapa"), BAQUE[u.para]);
+    // o impacto (golpe e som) uma vez por resultado: o temporizador do desfecho chega alguns milissegundos depois do
+    // previsto, e antes o golpe só saía quando o atraso era zero (o +3 tremia, o +4 seguinte às vezes não)
+    if (!impactados.has(u.id) && desde < 400) {
+      impactados.add(u.id);
+      if (u.sucesso) baque(BAQUE[u.para]);
       if (u.sucesso) soar("predio_ferreiro", ...(forte ? ["golpe"] : []));
       else soar("golpe_leve");
     }
@@ -456,7 +485,7 @@
     const alvo = jan.querySelector(".rf-chapa .rf-desfaz"), destino = jan.querySelector(".rf-chapa .rf-recebe .rf-encaixe");
     soar("equipar");
     if (typeof FX === "undefined" || !alvo || !destino || reduzido()) return;
-    baque(jan.querySelector(".rf-chapa"), BAQUE.desmonte);
+    baque(BAQUE.desmonte);
     palco = FX.palco(jan, { z: 2, classe: "rf-fx" });
     const enx = FX.enxame();
     ctl = FX.animar(palco, (t, q) => {
@@ -491,7 +520,7 @@
           vida: Math.round(FX.aleatorio(6, 12)), desenho: Math.random() < 0.5 ? "ponto" : "duplo", pal }));
       } else if (t < GRAVA_TRACO + 420) {
         const v = t - GRAVA_TRACO;
-        FX.anel(palco, { cx: a.x, cy: a.y, r: R + Math.round(FX.rampa(v, 0, 400) * palco.t(36)), esp: 2, pal: [pal[0], pal[1], pal[2]], achata: 0.85, rastro: 3, vis: Math.round(13 * (1 - v / 420)) });
+        FX.anel(palco, { cx: a.x, cy: a.y, r: R + Math.round(FX.rampa(v, 0, 400) * palco.t(36)), esp: 2, pal: ["W", "Y", "y"], achata: 0.85, rastro: 3, vis: Math.round(13 * (1 - v / 420)) });
         if (v < 70) enx.soltar(3, () => ({ x: a.x + FX.aleatorio(-R, R), y: a.y - R, vx: FX.aleatorio(-0.6, 0.6), vy: FX.aleatorio(-1.6, -0.6), g: 0.05,
           vida: 14, desenho: "brilho", pal }));
       }
@@ -540,6 +569,7 @@
   function assentar() {
     limparRelogios();
     pararFx();
+    baque(null);  // a oferta volta sem deslocamento, mesmo se o golpe ainda corria
     const estava = cena && !cena.fim;
     if (cena) cena.fim = true;
     // a bancada é desenhada de novo com a próxima oferta (durante a cena, os encaixes mostravam o que foi pago)
@@ -610,44 +640,46 @@
      do reforço, todas esperam (a cor do nível novo não pode aparecer antes do desfecho). Só nesta demonstração. */
   const PRIMEIRA = 2000, PERIODO = 3000, DEFASAGEM = 450;
   const agenda = new Map();  // lugar → {proxima, visto}
-  const nivelDoNome = (nome) => { const m = / \+(\d+)$/.exec(nome || ""); return m ? +m[1] : 0; };
   function pecasReforcadas() {
-    const lista = [];
+    const lista = [], mapa = mapaPecas();
     const heroi = App.estado && App.estado.heroi;
+    const nivel = (it) => (it && +it.reforco) || 0;
     document.querySelectorAll(".slot-px.mini[data-mini]").forEach((el) => {
       const it = heroi && heroi.equip && heroi.equip[el.dataset.mini];
-      lista.push([el, `mini:${el.dataset.mini}:${it ? it.nome : ""}`, nivelDoNome(it && it.nome)]);
+      lista.push([el, `mini:${el.dataset.mini}:${it ? it.nome : ""}`, nivel(it)]);
     });
     document.querySelectorAll(".tela.inventario .slot-px[aria-label]").forEach((el) => {
       const nome = el.getAttribute("aria-label").replace(/^[^:]*: /, "");
-      lista.push([el, `inv:${el.dataset.espaco || "m" + el.dataset.mochila}:${nome}`, nivelDoNome(nome)]);
+      lista.push([el, `inv:${el.dataset.espaco || "m" + el.dataset.mochila}:${nome}`, nivel(mapa.get(nome))]);
     });
     document.querySelectorAll(".tela.inventario .peca-opcao").forEach((el, i) => {
       const nome = el.querySelector("span") ? el.querySelector("span").firstChild.textContent : "";
-      lista.push([el, `opcao:${i}:${nome}`, nivelDoNome(nome)]);
+      lista.push([el, `opcao:${i}:${nome}`, nivel(mapa.get(nome))]);
     });
     document.querySelectorAll(".rf-janela .rf-esteira .rf-peca, .rf-janela .rf-chapa .rf-encaixe.grande[data-reforco]").forEach((el) => {
       lista.push([el, `forja:${el.dataset.uid || "molde"}:${el.getAttribute("aria-label") || ""}:${el.dataset.reforco}`, +el.dataset.reforco || 0]);
     });
     return lista.filter((x) => x[2] > 0 && x[0].offsetParent !== null);  // só o que está à vista
   }
-  /** As peças gravadas que o estado do jogo traz (herói, bolsa, comitiva), pelo nome que os slots mostram. */
-  let gravadasDe = null, gravadas = new Map();
-  function mapaGravadas() {
+  /** As peças que o estado do jogo traz (herói, bolsa, comitiva, mercado, achado), pelo nome que os slots mostram: o
+   *  reforço e as gravações vêm da própria peça (a ficha das telas, demo.py), nunca de uma visita anterior à forja. */
+  let pecasDe = null, pecasNome = new Map();
+  function mapaPecas() {
     const est = App.estado;
-    if (est === gravadasDe) return gravadas;
-    gravadasDe = est;
-    gravadas = new Map();
+    if (est === pecasDe) return pecasNome;
+    pecasDe = est;
+    pecasNome = new Map();
     const andar = (o, fundo) => {
-      if (!o || typeof o !== "object" || fundo > 6) return;
-      if (o.nome && Array.isArray(o.encantos) && o.encantos.some(Boolean)) gravadas.set(o.nome, o.encantos);
+      if (!o || typeof o !== "object" || fundo > 7) return;
+      if (typeof o.nome === "string" && ("reforco" in o || "encantos" in o)) pecasNome.set(o.nome, o);
       for (const v of Array.isArray(o) ? o : Object.values(o)) andar(v, fundo + 1);
     };
     andar(est, 0);
-    return gravadas;
+    andar(paineis, 0);  // o mercado, o espólio e os outros painéis abertos
+    return pecasNome;
   }
   function bordasGravadas() {
-    const mapa = mapaGravadas();
+    const mapa = mapaPecas();
     const marcar = (el, lista) => {
       const html = gravura(lista);
       if (el._gravuras === html) return;  // nada mudou: a borda continua a volta dela (sem recomeçar)
@@ -661,12 +693,15 @@
       marcar(el, it && it.encantos);
     });
     document.querySelectorAll(".tela.inventario .slot-px[aria-label]").forEach((el) => {
-      marcar(el, mapa.get(el.getAttribute("aria-label").replace(/^[^:]*: /, "")));
+      const it = mapa.get(el.getAttribute("aria-label").replace(/^[^:]*: /, ""));
+      marcar(el, it && it.encantos);
     });
   }
 
   function ciclo() {
     bordasGravadas();
+    const luta = !!(App.estado && App.estado.combate);
+    document.querySelectorAll(".forja-proto").forEach((f) => f.classList.toggle("rf-em-luta", luta));
     if (fase() || document.hidden) return;  // durante a cena, nenhuma peça brilha (nem a da ficha lateral, com o nome novo)
     const agora = performance.now();
     for (const [k, a] of agenda) if (agora - a.visto > 8000) agenda.delete(k);  // o que saiu da tela não fica na agenda
@@ -703,7 +738,7 @@
     const cena = document.getElementById("cena");
     if (!jan || !cena) return;
     const r = cena.getBoundingClientRect();
-    ultimaPos = { left: `${r.left + 8}px`, top: `${r.top + 8}px`, width: `${r.width - 16}px`, height: `${r.height - 16}px` };
+    ultimaPos = { left: `${Math.round(r.left + 8)}px`, top: `${Math.round(r.top + 8)}px`, width: `${Math.round(r.width - 16)}px`, height: `${Math.round(r.height - 16)}px` };
     Object.assign(jan.style, ultimaPos);
   }
   window.addEventListener("resize", posicionar);
@@ -725,7 +760,10 @@
     const limpar = () => { revelar(); encerrarGrav(); mostrarId = 0; focoDepois = null; };
     const abrir = (qual, foco) => { janela = qual; selUid = null; confirmando = null; limpar(); redesenhar(foco || ".rf-janela .rf-peca, .rf-janela [data-fechar]"); };
     const fechar = () => { const era = janela; janela = null; confirmando = null; limpar(); redesenhar(`[data-servico="${era}"]`); };
-    raiz.querySelectorAll("[data-servico]").forEach((b) => b.addEventListener("click", () => abrir(b.dataset.servico)));
+    raiz.querySelectorAll("[data-servico]").forEach((b) => b.addEventListener("click", () => {
+      if (App.estado && App.estado.combate) { App.recusar(b, "Durante a luta, a forja espera."); return; }
+      abrir(b.dataset.servico);
+    }));
     const jan = raiz.querySelector(".rf-janela");
     if (!jan) return;
     requestAnimationFrame(posicionar);
@@ -874,6 +912,19 @@
         pedirGravacao(gSim);
       });
     }
+    // retirar a peça: o encaixe fica vazio; a peça continua onde estava (no corpo ou na bolsa). Durante uma cena, o clique
+    // é do adiantar (o ouvinte de captura acima para ele aqui), e o segundo clique de um clique duplo não faz nada.
+    const ret = jan.querySelector(".rf-chapa [data-retirar]");
+    if (ret) {
+      const tirar = () => {
+        const uid = selUid;
+        selUid = null; confirmando = null; confirmandoGrav = null;
+        limpar();
+        redesenhar(`[data-uid="${uid}"]`);
+      };
+      ret.addEventListener("click", (ev) => { if (ev.detail <= 1) tirar(); });
+      ret.addEventListener("keydown", (ev) => { if ((ev.key === "Enter" || ev.key === " ") && !ev.repeat) { ev.preventDefault(); tirar(); } });
+    }
     const des = jan.querySelector("[data-desmontar]");
     if (des) des.addEventListener("click", (ev) => {
       if (ev.detail > 1) return;
@@ -954,9 +1005,39 @@
     /** A luta de teste (laboratório): dois Esqueletos; o grupo volta como estava. Só com a forja aberta. */
     lutaTeste() {
       if (!document.querySelector(".forja-proto")) return false;
+      document.querySelector(".rf-janela [data-fechar]")?.click();  // a janela fecha antes (a luta não acontece sob ela)
       return !!App.acao({ forja: true }, null, { op: "luta_teste" });
     },
   };
+
+  /* Os sulcos nas fichas e dicas de item de todas as telas (achado, Inventário, Equipado, mercado, forja). A ficha do
+     Inventário chama Telas.htmlItem na hora: ela ganha a seção. As dicas guardam a função delas desde o começo: a seção
+     entra na caixa da dica quando ela abre, pela peça do dono (a forja, o Equipado, a bolsa) ou pelo nome. */
+  const htmlItemJogo = Telas.htmlItem;
+  Telas.htmlItem = (it, ...resto) => {
+    const html = htmlItemJogo(it, ...resto), sec = secaoEncantos(it && it.encantos);
+    return sec ? html.replace(/(<div class="bonus">[\s\S]*?<\/div>)/, `$1${sec}`) : html;
+  };
+  const paineis = {};  // os últimos dados de cada painel (o mercado, o espólio...): as peças que não estão no estado
+  const painelJogo = Telas.painel;
+  Telas.painel = (m) => { if (m && m.tipo) { paineis[m.tipo] = m.dados; pecasDe = null; } return painelJogo(m); };
+  function pecaDoDono(dono) {
+    const ds = (dono && dono.dataset) || {};
+    if (ds.uid && ultimoDesenho) { const x = ultimoDesenho.pecas.find((q) => q.uid === ds.uid); if (x) return { ...x.item, encantos: x.encantos }; }
+    const heroi = App.estado && App.estado.heroi;
+    if (ds.mini && heroi) return heroi.equip[ds.mini];
+    if (ds.mochila !== undefined && heroi) return heroi.mochila[+ds.mochila];
+    return null;
+  }
+  function sulcosNaDica() {
+    const caixa = document.getElementById("dica-item");
+    if (!caixa || caixa.hidden || caixa.querySelector(".rf-encantos")) return;
+    const titulo = caixa.querySelector(":scope > b");
+    if (!titulo) return;
+    const it = pecaDoDono(caixa._dono) || mapaPecas().get(titulo.textContent);
+    const sec = it && secaoEncantos(it.encantos);
+    if (sec) (caixa.querySelector(":scope > .bonus") || titulo).insertAdjacentHTML("afterend", sec);
+  }
 
   /* A seção "Materiais" no inventário: as pilhas do grupo, fora dos espaços da bolsa. */
   function materiaisNoInventario() {
@@ -971,5 +1052,5 @@
     slots.insertAdjacentHTML("afterend", html);
     Telas.ligarDicas(lado.querySelector(".ref-mat-inv"));
   }
-  new MutationObserver(materiaisNoInventario).observe(document.body, { childList: true, subtree: true });
+  new MutationObserver(() => { materiaisNoInventario(); sulcosNaDica(); }).observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ["hidden"] });
 })();

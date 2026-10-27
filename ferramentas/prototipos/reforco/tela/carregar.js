@@ -1,6 +1,6 @@
 /* A demonstração do reforço: a faixa no alto (o que é protótipo fica aqui, fora da tela do jogador) e a tela da forja
-   escolhida pelo endereço (?tela=v7, v6, v5, v4, v3, v2 ou v1: as versões antigas, guardadas como histórico; sem
-   ele, a atual, a 8ª, com o Encantar do laboratório). A v3 tem a A anterior e a B, trocadas aqui. Na atual, a faixa também escolhe o caso de teste da próxima
+   escolhida pelo endereço (?tela=v8, v7, v6, v5, v4, v3, v2 ou v1: as versões antigas, guardadas como histórico;
+   sem ele, a atual, a 9ª, com o Encantar do laboratório). A v3 tem a A anterior e a B, trocadas aqui. Na atual, a faixa também escolhe o caso de teste da próxima
    tentativa (sucesso ou falha forçados, uma vez), separado do sorteio normal, e abre a comparação de teste da peça
    escolhida (o dano contra um alvo fixo: medição do laboratório, fora da tela do jogador). Trocar de versão
    recarrega a página; a partida continua (ela mora no servidor). */
@@ -8,7 +8,7 @@
 
 (() => {
   const params = new URLSearchParams(location.search);
-  const versao = ["v1", "v2", "v3", "v4", "v5", "v6", "v7"].includes(params.get("tela")) ? params.get("tela") : "atual";
+  const versao = ["v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8"].includes(params.get("tela")) ? params.get("tela") : "atual";
   const base = versao === "atual" ? "/proto/" : `/proto/historico/${versao}/`;
   const css = document.createElement("link");
   css.rel = "stylesheet";
@@ -34,7 +34,7 @@
       if (P.comparacao) extra += `<button type="button" data-comparar aria-pressed="false">Comparação (teste)</button>`;
       if (P.lutaTeste) extra += `<button type="button" data-luta>Luta de teste</button>`;
     }
-    const versoes = [["atual", "atual"], ["v7", "v7"], ["v6", "v6"], ["v5", "v5"], ["v4", "v4"], ["v3", "v3 (A e B)"], ["v2", "v2"], ["v1", "v1"]].map(([id, nome]) =>
+    const versoes = [["atual", "atual"], ["v8", "v8"], ["v7", "v7"], ["v6", "v6"], ["v5", "v5"], ["v4", "v4"], ["v3", "v3 (A e B)"], ["v2", "v2"], ["v1", "v1"]].map(([id, nome]) =>
       id === versao ? `<b>${nome}</b>` : `<a href="${para(id)}">${nome}</a>`).join(" · ");
     f.innerHTML = `<strong>Protótipo do reforço</strong>${extra}<span class="faixa-hist">versões: ${versoes}</span>`;
     document.body.appendChild(f);
