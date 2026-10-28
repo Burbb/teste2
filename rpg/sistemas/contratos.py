@@ -135,7 +135,7 @@ class Contratos:
         opcoes = [(f"Aceitar: {c['desc']}", ("aceitar", c), {"aceitar": c["id"]}) for c in oferta["lista"]]
         opcoes += [(f"Abandonar: {c['desc']}", ("abandonar", c), {"abandonar": c["id"]})
                    for c in self.contratos if not c.get("concluido")]
-        op = self.menu("", opcoes + [("Voltar", None, {"voltar": True})])
+        op = self.menu("", opcoes + [("Voltar", None, {"voltar": True, "lugar": True})])
         if op is None:
             return True
         acao, c = op

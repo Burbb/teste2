@@ -56,7 +56,7 @@ class Servicos:
                 # Tela gráfica: cada peça é um cartão; o clique reforça. Fora isso, só sair.
                 opcoes = [(f"Reforçar {item['nome']}", (item, stat, ganho, custo), {"reforcar": slot})
                           for slot, item, stat, ganho, custo in pecas if custo is not None]
-                esc = self.menu("", opcoes + [("Voltar", "voltar", {"voltar": True})])
+                esc = self.menu("", opcoes + [("Voltar", "voltar", {"voltar": True, "lugar": True})])
             else:
                 opcoes = []
                 for slot, item, stat, ganho, custo in pecas:
@@ -119,7 +119,7 @@ class Servicos:
                     # Tela gráfica: cada ferimento é um cartão; o clique trata. Fora isso, só sair.
                     esc = self.menu("", [(f"Tratar {sobrevivencia.FERIMENTOS[f['id']]['nome']}", (f["id"], custo),
                                           {"tratar": f["id"]}) for f, custo in zip(j.ferimentos, custos)]
-                                    + [("Voltar", None, {"voltar": True})])
+                                    + [("Voltar", None, {"voltar": True, "lugar": True})])
                 else:
                     opcoes = [(f"{sobrevivencia.FERIMENTOS[f['id']]['nome']} — "
                                + ("primeiro tratamento, grátis" if gratis else f"{custo} ouro"), (f["id"], custo))
@@ -206,7 +206,7 @@ class Servicos:
             self.templo(*escolha)
             opcoes = self.opcoes_templo()
             op = self.menu("Mais alguém precisa de cuidados?" if opcoes else "Ninguém mais precisa de cuidados.",
-                           opcoes + [("Voltar à vila", None, {"voltar": True, "balcao": "templo"})])
+                           opcoes + [("Voltar à vila", None, {"voltar": True, "lugar": True, "balcao": "templo"})])
             escolha = op[1:] if op else None
 
     def templo(self, cid, preco, falta):

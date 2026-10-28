@@ -35,6 +35,10 @@ function atalhoNoMenu(opcoes, rotulo) {
   return opcoes.findIndex((o) => { const at = atalhoDe(o); return at && at[1] === rotulo; });
 }
 const menuDoLugar = (opcoes) => opcoes.filter((o) => atalhoDe(o)).length >= 4;
+/** Uma tela de serviço do lugar (a forja, o mercado, a curandeira, o templo, o mural): o motor marca o Voltar que leva
+ *  ao menu do lugar (meta `lugar`). Dali a doca vale como numa tela dela: volta ao lugar e abre o atalho pedido. Um
+ *  evento ou uma escolha forçada (a Encruzilhada) não têm a marca: lá o atalho continua esperando a cena. */
+const telaDeServico = (opcoes) => (opcoes || []).some((o) => o.meta && o.meta.lugar);
 /** Abrir um atalho de qualquer lugar (aviso de talento no painel, tecla): usa o botão da doca se houver. */
 function pedirAtalho(rotulo) {
   const b = doca.querySelector(`.atalho[data-rotulo="${rotulo}"]`);
@@ -64,7 +68,7 @@ function acionarAtalho(rotulo, mid, i) {
   const aqui = atalhoNoMenu(pergunta.opcoes, rotulo);
   if (aqui >= 0) { docaTela = rotulo; marcarDocaAtual(); responder(pergunta.id, aqui); return; }
   if (menuDoLugar(pergunta.opcoes)) return;  // o lugar não tem esse atalho (ex.: Comitiva sem ninguém)
-  if (!docaTela) {
+  if (!docaTela && !telaDeServico(pergunta.opcoes)) {
     // Uma escolha da cena está esperando (um evento, o item encontrado): ela vem primeiro.
     recusarAtalho(rotulo);
     return;
@@ -342,6 +346,7 @@ function mostrarOpcoes(m) {
   if (corpo.classList.contains("modo-titulo")) { focoNoTitulo(lista); docaTela = null; }  // o título fecha a tela da doca
   if (naVila) montarVila(m, grupos);
   if (atalhos.childElementCount) montarDoca(atalhos, !!docaTela && m.opcoes.some(ehVoltar));
+  else if (telaDeServico(m.opcoes)) { clearTimeout(docaSono); doca.classList.remove("inativa"); doca.dataset.viva = "1"; }  // a doca vale aqui
   if (!replay) guardar("cdf-dica", String(Number(ler("cdf-dica") || 0) + 1));
   if (estado) {
     const chave = [...destinosClicaveis()].join(",") + "|" + estado.local.id;

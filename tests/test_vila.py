@@ -51,7 +51,7 @@ class TestVila(unittest.TestCase):
         (p1, o1, m1), (p2, o2, m2) = ui.perguntas
         self.assertEqual(p1, "Mais alguém precisa de cuidados?")
         self.assertEqual([o.split(" (")[0] for o in o1 if "Templo" in o], ["Templo: cuidar de Odette"])  # você já foi
-        self.assertEqual(m1[-1], {"voltar": True, "balcao": "templo"})
+        self.assertEqual(m1[-1], {"voltar": True, "lugar": True, "balcao": "templo"})  # 1.214.0: o Voltar do lugar (a doca vale)
         self.assertEqual((p2, o2), ("Ninguém mais precisa de cuidados.", ["Voltar à vila"]))
         self.assertLess(g.j.ouro, 200)
 
