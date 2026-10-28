@@ -99,7 +99,7 @@ const Festa = (() => {
     document.body.appendChild(fundo);
     const janela = fundo.firstElementChild;
     if (direcao.noPalco) Telas.noPalco(janela);
-    if (semCerimonia) { fundo.classList.add("pronto"); direcao.cerimonia({ fundo, janela, d, parado: true, adiantou: () => true }); return; }
+    if (semCerimonia) { fundo.classList.add("pronto"); direcao.cerimonia({ fundo, janela, d, parado: true, adiantou: () => true }); nitido(janela); return; }
     let adiantou = false;
     const adiantar = (ev) => {
       if (ev.type === "keydown" && (ev.repeat || ![" ", "Enter", "Escape"].includes(ev.key))) return;
@@ -115,7 +115,37 @@ const Festa = (() => {
       document.removeEventListener("keydown", adiantar, true);
     }
     fundo.classList.add("pronto");
+    nitido(janela);
   }
+  /** O sprite do achado num pixel inteiro do aparelho (1.214.0). Ele já vem no tamanho de uso (64 px do aparelho), mas
+   *  a janela centrada caía em frações (left 659,25 a 100%, meio pixel do aparelho a 125%) e o navegador interpolava o
+   *  desenho: o item borrava. O deslocamento é de layout (left/top), depois da entrada (a escala da animação já
+   *  terminou), e volta a valer quando a janela muda de tamanho. */
+  function nitido(janela) {
+    const img = janela && janela.querySelector(".achado-cartao.novo .achado-arte img");
+    if (!img || !img.isConnected) return;
+    const alinhar = () => {
+      if (!img.isConnected) return;
+      // a moldura do item assenta: sem a animação de pouso presa no último quadro e com o deslocamento dela num pixel
+      // inteiro do aparelho (18 px de CSS são 22,5 a 125%): senão ela vira uma camada composta em meio pixel
+      const arte = img.closest(".achado-arte"), dprA = window.devicePixelRatio || 1;
+      if (arte) {
+        const ty = parseFloat((getComputedStyle(arte).translate || "0 0").split(" ")[1]) || 0;
+        arte.style.animation = "none";
+        arte.style.translate = ty ? `0 ${Math.round(ty * dprA) / dprA}px` : "";
+      }
+      img.style.position = "relative";
+      img.style.left = img.style.top = "0px";
+      const dpr = window.devicePixelRatio || 1, r = img.getBoundingClientRect();
+      img.style.left = `${(Math.round(r.left * dpr) - r.left * dpr) / dpr}px`;
+      img.style.top = `${(Math.round(r.top * dpr) - r.top * dpr) / dpr}px`;
+      // no tamanho do arquivo (um pixel do desenho, um do aparelho), sem interpolação: nada a suavizar
+      img.style.imageRendering = Math.abs(r.width * dpr - img.naturalWidth) < 0.5 ? "pixelated" : "";
+    };
+    requestAnimationFrame(alinhar);
+    setTimeout(alinhar, 320);  // a janela acaba de assentar (a faixa e a ficha entram depois do item)
+  }
+  addEventListener("resize", () => nitido(document.querySelector("#sobre-achado .janela-achado")));
 
   /** O texto do item como o jogo escreve (htmlItem), com a raridade fora da linha do tipo: ela tem o selo próprio. */
   const textoItem = (it, comparando = true) => Telas.htmlItem(it, "", comparando).replace(/(<div class="tipo">[^<]*?) · [^<]*<\/div>/, "$1</div>");
