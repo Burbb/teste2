@@ -118,7 +118,12 @@ body[data-rf-placas="bancada"] {
 /* os cartões grandes que se apertam (os serviços, a Comitiva) ganham os cantos maiores; os Caminhos, a placa simples */
 :root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) :where(.tela .servico, .tela .cartas > .cartao.clicavel) { clip-path: var(--pl-recorte-g); }
 /* o ícone do serviço num nicho da própria placa (como os encaixes da bancada) */
-:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) .tela .servico > .slot-px { border: 0; border-image: none; background: #08090b; box-shadow: var(--pl-nicho); }
+/* o encaixe do ícone: um rebaixo na própria chapa (18ª, retoque antes de integrar). Antes, um quadrado preto chapado
+   encostado nos rebites; agora afastado deles, no ferro escuro com a textura da chapa, a sombra em cima e à esquerda,
+   a borda de baixo e da direita pegando luz (o ressalto), e os cantos em degrau. O ícone não muda de tamanho */
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) .tela .servico > .slot-px { border: 0; border-image: none; border-radius: 0; clip-path: var(--pl-recorte);
+  background: linear-gradient(rgba(16, 17, 20, 0.94), rgba(16, 17, 20, 0.94)), var(--pl-tex);
+  box-shadow: inset 1px 1px 0 0 #040405, inset -1px -1px 0 0 #3c3f46, inset 2px 2px 0 0 #0a0b0d, inset -2px -2px 0 0 #1d1e22; }
 
 /* ------------------------------------------------------------ o que informa: a placa fixada */
 /* os cabeçalhos dos serviços (a forja, a taverna, o templo, a curandeira, o mercado) e os cartões que só se leem */
@@ -207,7 +212,7 @@ body[data-rf-placas="bancada"] {
 /* o "›" de latão da Comitiva sai do canto, onde agora mora o pino */
 :root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) .tela .cartas > .cartao.clicavel::after { right: 14px; top: 10px; }
 /* a hierarquia do serviço: o ícone num nicho, o nome, a informação secundária; os rebites não encostam no texto */
-:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) .tela .servico { padding-left: 14px; padding-right: 18px; }
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) .tela .servico { padding-left: 20px; padding-right: 18px; }  /* o encaixe a 6 px dos rebites */
 :root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) .forja-proto .rf-servicos { gap: 10px; }
 :root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) .forja-proto .rf-servicos > .servico { min-height: 84px; }
 

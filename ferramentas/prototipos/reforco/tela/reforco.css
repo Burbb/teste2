@@ -182,7 +182,9 @@
   box-shadow: inset 2px 2px 0 #000, inset -1px -1px 0 #2b2d32; }
 .rf-resultado.recebe { align-items: flex-start; }
 .rf-ganho { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
-.rf-ganho span { flex: 1 1 auto; min-width: 0; font-size: 15px; line-height: 1.15; color: var(--rf-sec); text-wrap: balance; }
+/* o rótulo não encolhe abaixo da maior palavra dele (18ª): com min-width 0, um número longo ("12,2 → 12,7") espremia o
+   rótulo até a palavra transbordar por cima do vão e encostar no número ("Ataque12,2"); um rótulo longo quebra a linha */
+.rf-ganho span { flex: 1 1 auto; min-width: min-content; font-size: 15px; line-height: 1.15; color: var(--rf-sec); text-wrap: balance; }
 /* o visor cabe na coluna dele: com a peça inteira melhorando, os nomes ficaram longos ("Vida por abate"); o nome quebra
    em até duas linhas, os números ficam inteiros */
 .rf-lado.dir > :is(.rf-resultado, .rf-vis-oferta, .rf-vis-res) { flex: 0 1 auto; min-width: 0; max-width: 100%; }
