@@ -821,9 +821,10 @@ body.rf-em-cena #rf-vela { opacity: 1; }
    num canvas do tamanho do desenho e ampliado sem suavização, um pixel do desenho por passo */
 .rf-acab, .rf-acab-brilhos { position: absolute; z-index: 1; pointer-events: none;
   -webkit-mask-size: 100% 100%; mask-size: 100% 100%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; }
-.rf-acab { mix-blend-mode: overlay; opacity: 0.55; image-rendering: pixelated; }
-.rf-acab[data-nivel="5"] { opacity: 0.45; } .rf-acab:is([data-nivel="6"], [data-nivel="7"]) { opacity: 0.5; }
-.rf-acab[data-nivel="11"] { opacity: 0.6; } .rf-acab[data-nivel="12"] { opacity: 0.65; }
+/* o veio já vem misturado com a peça no próprio canvas (reforco.js, pintarVeio): sem mistura, sem opacidade e sem
+   máscara aqui (a mistura no CSS fazia o navegador reamostrar a peça: borrada e tremendo no resultado) */
+.rf-acab { image-rendering: pixelated; }
+:root .rf-acab { -webkit-mask: none !important; mask: none !important; }
 /* os pontos de brilho: uma cruz de pixel que acende e apaga num ponto da peça, depois em outro */
 .rf-acab-brilhos > i { position: absolute; width: calc(var(--px-peca, 2px) * 3); height: calc(var(--px-peca, 2px) * 3); translate: -50% -50%;
   background: linear-gradient(#fffbe8, #fffbe8) center / var(--px-peca, 2px) 100% no-repeat, linear-gradient(#fffbe8, #fffbe8) center / 100% var(--px-peca, 2px) no-repeat;
@@ -1102,7 +1103,6 @@ body.rf-res-aberto .rf-janela :is(.rf-titulo, .rf-molde, .rf-ficha, .rf-lado.dir
 #rf-res .rf-res-efeito.neutro { color: var(--rf-sec); }
 
 /* ---- as fichas: o tier no próprio encaixe; os detalhes curtos */
-.rf-sq-tier { position: absolute; right: -1px; bottom: -3px; font: 700 10px/1 var(--texto); color: #fff4dc; text-shadow: 1px 0 0 #000, -1px 0 0 #000, 0 1px 0 #000, 0 -1px 0 #000; }
 .rf-detalhes ul { margin: 4px 0 0; padding-left: 16px; }
 .rf-detalhes li { margin: 0 0 3px; line-height: 1.3; }
 .rf-detalhes li b { color: var(--ess); }
@@ -1169,3 +1169,91 @@ body.rf-res-aberto .rf-janela :is(.rf-titulo, .rf-molde, .rf-ficha, .rf-lado.dir
   .rf-familia { justify-content: center; padding: 2px; }
   .rf-familia-nome { display: none; }
 }
+
+/* ======================================================================== 15ª versão */
+/* o tier da essência no canto de cima à direita do símbolo, como um selo da HUD (a quantidade fica noutro canto) */
+.rf-ess-ic { position: relative; display: inline-grid; place-items: center; }
+.rf-tier-selo, .rf-sq-tier { position: absolute; top: -4px; right: -5px; bottom: auto; z-index: 1; min-width: 9px; padding: 1px 2px 0;
+  font: 700 9px/1 var(--texto); letter-spacing: 0; color: #f6dc8c; text-align: center; text-shadow: none;
+  background: #16171b; box-shadow: inset 0 0 0 1px #000, inset 0 0 0 2px #6b5424; }
+.rf-sq { position: relative; }
+.rf-enc-ess .rf-tier-op { position: relative; justify-content: center; align-items: center; padding: 6px 10px 8px; }
+.rf-enc-ess .rf-tier-op .rf-ess-ic :is(img, canvas) { width: 26px; height: 26px; image-rendering: pixelated; }
+.rf-enc-ess .rf-tier-op .rf-tier-qtd { position: absolute; right: 5px; bottom: 3px; font: 400 12px/1 var(--num); color: var(--rf-sec); }
+.rf-sulco-ic .rf-ess-ic :is(img, canvas) { width: 24px; height: 24px; }
+.rf-prev-tit { align-items: center; justify-content: flex-start; }
+.rf-prev-tit .rf-ess-ic :is(img, canvas) { width: 22px; height: 22px; image-rendering: pixelated; }
+.rf-prev-tit > span:last-child { margin-left: auto; }
+.rf-prev-ef { margin: 0; font-size: 14px; line-height: 1.3; color: var(--rf-texto); }
+.rf-prev-ef .lim { color: var(--rf-sec); }
+.rf-prev-linhas dd.melhor { color: #8fd18a; }
+.rf-prev-linhas dd.pior { color: #e2574c; }
+
+/* um efeito da peça: o nome com os tiers, pequeno, numa linha; o gatilho, o efeito e o limite embaixo (o nome e a
+   descrição não se juntam numa linha: "Revide 3 Ao receber") */
+.rf-ef { display: grid; gap: 1px; margin-top: 6px; }
+.rf-ef-nome { font: 700 12px/1.2 var(--texto); letter-spacing: 0.03em; color: var(--ess); }
+.rf-ef-txt { font-size: 14px; line-height: 1.3; color: var(--rf-texto, #e6dbc2); }
+.rf-ef-txt .lim, .rf-ef-teto { color: var(--rf-sec, #a59f92); }
+.rf-ef-teto { font-size: 12px; }
+:root body .rf-encantos .rf-ef-nome, #dica-item .rf-ef-nome { display: block; font: 700 12px/1.2 var(--texto); text-transform: none; }
+#rf-res .rf-ef.nova { margin-top: 4px; }
+
+/* o requisito de nível, à direita, depois dos sulcos; em falta, na cor do problema */
+.rf-req { margin-top: 6px; font-size: 13px; text-align: right; color: var(--rf-sec, #a59f92); }
+.rf-req.falta { color: #e2574c; }
+/* no Inventário: a peça acima do nível apagada (como a que não é da classe) */
+.tela.inventario .rf-req-falta { opacity: 0.45; filter: grayscale(0.6); }
+/* a dica maior que o espaço rola por dentro (a letra não diminui) */
+#dica-item.rf-rola { overflow-y: auto; overscroll-behavior: contain; }
+/* as essências achadas no quadro do espólio: o tier no canto do símbolo */
+.achado-espolio .rf-ess-ic { margin-right: 4px; }
+@media (max-width: 1500px) {
+  .rf-enc-ess .rf-tier-op { padding: 4px 8px 6px; }
+  .rf-enc-ess .rf-tier-op .rf-ess-ic :is(img, canvas) { width: 22px; height: 22px; }
+  .rf-ef-txt { font-size: 13px; }
+}
+
+/* a transferência: o reforço de agora no canto do encaixe; embaixo, "Após transferir" e o nível previsto (a origem
+   perde, em vermelho; o destino ganha, em verde); o custo ao lado do Transferir */
+.rf-tr-slot .rf-encaixe { position: relative; }
+.rf-tr-nivel { display: grid; justify-items: center; gap: 2px; }
+.rf-tr-nivel small { font: 400 12px/1 var(--texto); color: var(--rf-sec); }
+.rf-tr-nivel em.perde, #rf-res em.perde { color: #e2574c; }
+.rf-tr-nivel em.ganha, #rf-res em.ganha { color: var(--rf-verde, #8fd18a); }
+.rf-tr-slot.origem .rf-tr-nivel em.perde { color: #e2574c; }
+.rf-pe-linha.tr { justify-content: center; }
+.rf-tr-preco { display: inline-flex; align-items: center; gap: 4px; margin-right: 10px; font: 400 20px/1 var(--num); color: var(--rf-texto); }
+.rf-tr-preco :is(img, canvas) { width: 20px; height: 20px; image-rendering: pixelated; }
+.rf-tr-preco.falta { color: #e2574c; }
+.rf-confirmar.tr .rf-botoes { align-items: center; }
+/* o resultado da transferência num véu mais fechado: a bancada atrás (com os mesmos nomes e números) não disputa */
+#rf-res.transferencia { background: rgba(4, 2, 2, 0.97); }
+/* o OK: o rótulo principal; a tecla, uma marca discreta */
+#rf-res .rf-tecla { margin-left: 8px; padding: 1px 4px; font: 400 10px/1 var(--texto); opacity: 0.55; vertical-align: 2px; }
+.tr2.com-seletor .rf-tr-nivel { display: none; }
+/* o SUCESSO e o OK mais abaixo, com espaço de leitura, e o OK fora do lugar do Reforçar atrás (o resto de um clique
+   duplo no OK cai na bancada vazia, não no botão); a 1280 também cabe */
+#rf-res .rf-res-conj { margin-top: 128px; }
+#rf-res .rf-res-pe { margin-top: 20px; }
+@media (max-width: 1500px) {
+  #rf-res .rf-res-conj { margin-top: 104px; }
+  #rf-res .rf-res-pe { margin-top: 12px; }
+}
+.rf-pe-linha.tr .rf-pe-acao { display: grid; grid-template-columns: auto auto; justify-content: center; align-items: center; column-gap: 12px; margin: 0 auto; }
+.rf-pe-linha.tr .rf-pe-acao .rf-tr-preco { margin: 0; }
+.rf-pe-linha.tr .rf-pe-acao .rf-nota { grid-column: 1 / -1; text-align: center; }
+#rf-res.transferencia { background: rgba(4, 2, 2, 0.99); }
+/* a 1280, a prévia inteira à vista (o limite e a troca não podem ficar para a rolagem) */
+@media (max-width: 1500px) {
+  .rf-enc-ess { gap: 6px; padding: 8px 12px; }
+  .rf-prev { gap: 2px; padding: 5px 8px; }
+  .rf-prev-ef { font-size: 12px; line-height: 1.25; }
+  .rf-prev-linhas { gap: 0 12px; font-size: 13px; line-height: 1.25; }
+  .rf-prev-troca, :root :is(#texto, body) .rf-prev p.pior { font-size: 12px; line-height: 1.25; }
+  .rf-prev-tit span { font-size: 12px; }
+}
+.rf-prev-req { font-size: 13px; color: var(--rf-sec); }
+.rf-prev-req.falta { color: #e2574c; }
+@media (max-width: 1500px) { .rf-prev-tit b { font-size: calc(var(--px) * 15); } .rf-prev-req { font-size: 12px; } }
+@media (max-width: 1500px) { .rf-chapa:is(.enc2, .tr2) .rf-pe-chapa { height: 82px; padding-top: 6px; padding-bottom: 8px; } }

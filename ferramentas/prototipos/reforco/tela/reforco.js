@@ -56,6 +56,12 @@
 
   const reduzido = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
   const iconeDe = (nome) => Icones.porDesenho(nome) || S(nome, 2);
+  /** O símbolo da essência com o tier no canto de cima à direita (I, II, III); a quantidade, quando há, fica em outro
+   *  canto, fora do símbolo (o tier III e três unidades não se confundem). */
+  const icEss = (x) => `<span class="rf-ess-ic" style="--ess:${h(x.cor)}">${iconeDe(x.icone)}<span class="rf-tier-selo">${x.numeral}</span></span>`;
+  /** "Requer nível 9", na cor de falta quando quem está na tela não chega lá (o herói e os companheiros crescem juntos). */
+  const nivelGrupo = () => (App.estado && App.estado.heroi && App.estado.heroi.nivel) || 1;
+  const reqHtml = (req) => (req > 1 ? `<div class="rf-req${req > nivelGrupo() ? " falta" : ""}">Requer nível ${req}</div>` : "");
   const moeda = () => Icones.moeda() || S("moeda", 1);
   const num = (v) => String(v).replace(".", ",");
   const iconePeca = (it) => Icones.equipamento(iconeItem(it)) || S(iconeItem(it), 2);
@@ -142,50 +148,40 @@
     `<i class="rf-gravura" aria-hidden="true" style="--ess:${h(e.cor)};animation-delay:-${(((performance.now() / 1000) + i * 4.2 / todas.length) % 4.2).toFixed(2)}s"></i>`).join("");
 
   /** Os sulcos de uma peça como encaixes quadrados, na quantidade real dela: o vazio escuro com contorno; o ocupado com
-   *  o símbolo da essência. Com `sel` (a forja), cada um é um botão: escolher onde gravar. */
+   *  o símbolo da essência e o tier no canto. Com `sel` (a forja), cada um é um botão: escolher onde gravar. */
   function filaSulcos(lista, sel = null) {
     return (lista || []).map((x, i) => {
       const cor = x ? ` style="--ess:${h(x.cor)}"` : "";
-      if (sel === null) return `<i class="rf-sq${x ? "" : " vazio"}"${cor} title="${x ? `${h(x.titulo)} · +${x.tier} ${x.tier === 1 ? "nível" : "níveis"}` : "Sulco vazio"}">${x ? iconeDe(x.icone) + `<span class="rf-sq-tier">${x.numeral}</span>` : ""}</i>`;
+      const dentro = x ? iconeDe(x.icone) + `<span class="rf-sq-tier">${x.numeral}</span>` : "";
+      if (sel === null) return `<i class="rf-sq${x ? "" : " vazio"}"${cor} title="${x ? h(x.titulo) : "Sulco vazio"}">${dentro}</i>`;
       return `<button type="button" role="radio" class="rf-sq${x ? "" : " vazio"}${i === sel ? " escolhido" : ""}" data-sulco="${i}" aria-checked="${i === sel}"
-        aria-label="Sulco ${i + 1}: ${x ? h(x.nome) : "vazio"}"${cor} ${Telas.dica(x ? `<b>${h(x.nome)}</b><div>${h(x.efeito)}</div>${x.limite ? `<div class="rodape">${h(x.limite)}</div>` : ""}` : "<b>Sulco vazio</b>", true)}>${x ? iconeDe(x.icone) : ""}</button>`;
+        aria-label="Sulco ${i + 1}: ${x ? h(x.titulo) : "vazio"}"${cor} ${Telas.dica(x ? `<b>${h(x.titulo)}</b><div>${h(x.efeito)}</div>${x.limite ? `<div class="rodape">${h(x.limite)}</div>` : ""}` : "<b>Sulco vazio</b>", true)}>${dentro}</button>`;
     }).join("");
   }
-  /** A seção de encantamentos de uma ficha: os sulcos e, para cada gravação, o nome da essência como título e, embaixo,
-   *  o efeito e o limite. Vazia quando a peça não aceita gravação. */
-  /** Os efeitos das gravações de uma peça, um por essência (repetida ou não), em uma linha cada: o nome com o nível e o
-   *  resumo mecânico. Vestida, o nível é o total de quem veste (as peças dele, até o teto), com a parte desta peça ao
-   *  lado quando difere; na bolsa, o que esta peça dá sozinha. Os números e textos vêm do motor. */
-  function efeitosGravacao(lista, total) {
-    const daPeca = new Map();
-    (lista || []).filter(Boolean).forEach((e) => daPeca.set(e.essencia, { e, n: (daPeca.get(e.essencia)?.n || 0) + e.tier }));
-    return [...daPeca.values()].map(({ e, n }) => {
-      const t = (total || []).find((x) => x.id === e.essencia);
-      const nivel = t ? t.efetivo : Math.min(e.teto, n);
-      const [ef, lim] = e.textos[nivel - 1];
-      // a parte desta peça quando difere do total (o total ativo nunca passa do teto)
-      const nota = t && t.total !== n ? `${Math.min(n, e.teto)} desta peça${t.total > e.teto ? ` · teto ${e.teto}` : ""}`
-        : n > e.teto ? `teto ${e.teto}` : "";
-      return `<div class="rf-ef" style="--ess:${h(e.cor)}"><b>${h(e.nome)} ${nivel}</b> ${h(ef)}${lim ? ` <span class="lim">${h(lim)}</span>` : ""}${nota ? ` <small>(${h(nota)})</small>` : ""}</div>`;
+  /** Os efeitos que a peça fornece, um por essência (as repetidas somadas pelo motor, até o limite do efeito): o nome
+   *  com os tiers, pequeno, numa linha; embaixo, o gatilho, o efeito e o limite. É a descrição da peça, igual na bolsa e
+   *  no corpo: o total de quem veste aparece na prévia do Encantar, não aqui. */
+  function efeitosGravacao(lista, efeitos) {
+    return (efeitos || []).map((f) => {
+      const tiers = (lista || []).filter((x) => x && x.essencia === f.id).sort((a, b) => b.tier - a.tier).map((x) => x.numeral).join(" + ");
+      return `<div class="rf-ef" style="--ess:${h(f.cor)}"><span class="rf-ef-nome">${h(f.nome)} ${tiers}</span>
+        <span class="rf-ef-txt">${h(f.efeito)}${f.limite ? ` <span class="lim">${h(f.limite)}</span>` : ""}${f.excede ? ` <small class="rf-ef-teto">Limite ${h(f.teto)}.</small>` : ""}</span></div>`;
     }).join("");
   }
-  /** O que complementa o resumo (uma frase por efeito: a condição ou a interação que muda a decisão) e a regra do nível
-   *  total, fora da leitura principal: abre por clique e pelo teclado. Nas dicas, que somem, não aparece. */
-  function detalhesGravacao(lista) {
-    const vistos = new Map();
-    (lista || []).filter(Boolean).forEach((e) => vistos.set(e.essencia, e));
-    if (!vistos.size) return "";
-    const teto = [...vistos.values()][0].teto;
-    return `<details class="rf-detalhes"><summary>Detalhes</summary><ul>${[...vistos.values()].map((e) => `<li style="--ess:${h(e.cor)}"><b>${h(e.nome)}:</b> ${h(e.nota || "")}</li>`).join("")}
-      <li>O nível de cada efeito soma as peças que o personagem veste, até ${teto}. A bolsa não conta.</li></ul></details>`;
+  /** O complemento, fora da leitura principal (clique e teclado; nas dicas, que somem, não aparece): uma frase por
+   *  efeito com a condição ou a interação que muda a decisão, e o limite da repetição. */
+  function detalhesGravacao(efeitos) {
+    if (!(efeitos || []).length) return "";
+    return `<details class="rf-detalhes"><summary>Detalhes</summary><ul>${efeitos.map((f) => `<li style="--ess:${h(f.cor)}"><b>${h(f.nome)}:</b> ${h(f.nota || "")} Repetida, soma até ${h(f.teto)}.</li>`).join("")}
+      <li>Só vale na peça vestida.</li></ul></details>`;
   }
-  /** A seção das gravações de uma ficha: os sulcos (os vazios também; o tier dentro do encaixe) e, embaixo, um efeito
-   *  por linha (ver efeitosGravacao) e os detalhes. Vazia quando a peça não tem sulcos. */
-  function secaoEncantos(lista, total, detalhes = true) {
+  /** A seção dos sulcos de uma ficha: os encaixes (os vazios também; o tier no canto) e, embaixo, os efeitos da peça e
+   *  os detalhes. Vazia quando a peça não tem sulcos. */
+  function secaoEncantos(lista, efeitos, detalhes = true) {
     if (!Array.isArray(lista) || !lista.length) return "";
-    const n = lista.length, gr = lista.filter(Boolean), k = gr.length;
+    const n = lista.length, k = lista.filter(Boolean).length;
     return `<div class="rf-encantos"><div class="rf-encantos-cab"><span>Sulcos</span><span class="rf-sq-fila" aria-label="${n} ${n > 1 ? "sulcos" : "sulco"}, ${k} ${k === 1 ? "gravado" : "gravados"}">${filaSulcos(lista)}</span></div>
-      ${efeitosGravacao(lista, total)}${detalhes ? detalhesGravacao(lista) : ""}</div>`;
+      ${efeitosGravacao(lista, efeitos)}${detalhes ? detalhesGravacao(efeitos) : ""}</div>`;
   }
 
   function corpo(d) {
@@ -232,7 +228,7 @@
     if (custo === undefined) return `<div class="rf-insumo vazio" aria-hidden="true"><span class="rf-encaixe pequeno">${ic}</span><b></b></div>`;
     const dica = Telas.dica(`<b>${h(nome)}</b><div>Custo ${custo} · Tem ${tem}</div>`, true);
     return `<div class="rf-insumo${tem < custo ? " falta" : ""}" tabindex="0" ${dica} aria-label="${h(nome)}: custo ${custo}, tem ${tem}">
-      <span class="rf-encaixe pequeno">${ic}</span><b>${custo}</b>${Number.isFinite(tem) ? `<small class="rf-tem">tem ${tem}</small>` : ""}</div>`;
+      <span class="rf-encaixe pequeno">${ic}</span><b>${custo}</b>${Number.isFinite(tem) && nome !== "Ouro" ? `<small class="rf-tem">tem ${tem}</small>` : ""}</div>`;
   }
   const insumos = (ouro, ouroTem, frag, fragTem) => `<div class="rf-insumos" aria-label="Custo">${insumo(moeda(), "Ouro", ouro, ouroTem)}${insumo(iconeDe("saco"), "Fragmento de Têmpera", frag, fragTem)}</div>`;
   const linhaGanho = (l) => `<div class="rf-ganho"><span>${h(l.nome)}</span><b>${l.antes} → <em>${l.depois}</em></b></div>`;
@@ -357,11 +353,12 @@
     const slot = (lado, p, niveis) => {
       const vazio = !p, desliga = lado === "destino" && !o && !t;
       const rot = lado === "origem" ? "Origem" : "Destino";
-      const muda = niveis && niveis[1] !== null ? `+${niveis[0]} → <em>+${niveis[1]}</em>` : niveis ? `+${niveis[0]}` : "";
+      const muda = niveis && niveis[1] !== null ? `<small>Após transferir</small><em class="${lado === "origem" ? "perde" : "ganha"}">+${niveis[1]}</em>` : "";
+      const canto = p && niveis && niveis[0] ? `<span class="rf-canto">+${niveis[0]}</span>` : "";
       return `<button type="button" class="rf-tr-slot ${lado}${vazio ? " vazio" : ""}${trSeletor === lado ? " aberto" : ""}" data-tr-abrir="${lado}"${desliga || t ? ' aria-disabled="true"' : ""}
           aria-label="${rot}: ${p ? h(p.item.nome) : "escolher"}" ${p && !t ? dicaItem(p.item, "", false) : ""}>
         <span class="rf-tr-rotulo">${rot}</span>
-        <span class="rf-encaixe grande${p ? ` r-${h(p.item.raridade)}` : " vazio"}" data-reforco="${t ? niveis[0] : p ? p.reforco : 0}" data-tr-peca="${lado}">${p ? iconePeca(p.item) + gravura(p.encantos) : ""}</span>
+        <span class="rf-encaixe grande${p ? ` r-${h(p.item.raridade)}` : " vazio"}" data-reforco="${t ? niveis[0] : p ? p.reforco : 0}" data-tr-peca="${lado}">${p ? iconePeca(p.item) + canto + gravura(p.encantos) : ""}</span>
         <span class="rf-tr-nome">${p ? `<b class="r-${h(p.item.raridade)}">${h(p.item.nome.replace(/ \+\d+/, ""))}</b><small>${h(dono(p))}</small>` : `<small>${desliga ? "Escolha a origem primeiro" : `Escolher ${lado === "origem" ? "a origem" : "o destino"}`}</small>`}</span>
         <span class="rf-tr-nivel">${muda}</span></button>`;
     };
@@ -369,15 +366,14 @@
       : !dest ? "Escolha o destino" : dx.motivo || (d.ouro < dx.ouro ? `Faltam ${dx.ouro - d.ouro} de ouro` : null);
     let pe;
     if (confirmandoTransf && o && dest && dx && confirmandoTransf.origem === o.uid && confirmandoTransf.destino === dest.uid) {
-      pe = `<div class="rf-confirmar" role="alertdialog" aria-label="Confirmar a transferência"><b>Transferir o reforço?</b>
-          <span class="rf-troca">${h(o.item.nome)}: +${o.reforco} → +0 · ${h(dest.item.nome)}: +${dest.reforco} → +${dx.novo}</span>
-          <span class="rf-aviso neutro">${moeda()} ${dx.ouro} · Afixos, sulcos e gravações ficam em cada peça.</span>
-          <div class="rf-botoes"><button type="button" class="botao-janela rf-botao" data-transferir-nao>Cancelar</button>
+      pe = `<div class="rf-confirmar tr" role="alertdialog" aria-label="Transferir o reforço por ${dx.ouro} de ouro?"><b>Transferir o reforço?</b>
+          <div class="rf-botoes"><span class="rf-tr-preco">${moeda()}<b>${dx.ouro}</b></span><button type="button" class="botao-janela rf-botao" data-transferir-nao>Cancelar</button>
           <button type="button" class="botao-janela rf-botao principal" data-transferir-sim disabled>Transferir</button></div></div>`;
     } else {
-      const preco = dx && !dx.motivo ? `<div class="rf-insumos" aria-label="Custo">${insumo(moeda(), "Ouro", dx.ouro, d.ouro)}</div>` : `<div class="rf-insumos" aria-hidden="true"></div>`;
-      pe = `<div class="rf-pe-linha">${preco}<div class="rf-pe-acao"><button type="button" class="botao-janela rf-botao principal" data-transferir${motivo || t ? ` aria-disabled="true"${motivo ? ` title="${h(motivo)}"` : ""}` : ""}>Transferir</button>
-        <span class="rf-nota${/^Falta/.test(motivo || "") || trAviso ? "" : " neutra"}">${h(trAviso || motivo || (t ? "" : "O destino recebe o nível da origem menos 2, no lugar do dele."))}</span></div></div>`;
+      // o custo junto da ação: a moeda e o preço ao lado do Transferir
+      const preco = dx && !dx.motivo ? `<span class="rf-tr-preco${d.ouro < dx.ouro ? " falta" : ""}" aria-label="Custo: ${dx.ouro} de ouro">${moeda()}<b>${dx.ouro}</b></span>` : "";
+      pe = `<div class="rf-pe-linha tr"><div class="rf-pe-acao">${preco}<button type="button" class="botao-janela rf-botao principal" data-transferir${motivo || t ? ` aria-disabled="true"${motivo ? ` title="${h(motivo)}"` : ""}` : ""}>Transferir</button>
+        <span class="rf-nota${/^Falta/.test(motivo || "") || trAviso ? "" : " neutra"}">${h(trAviso || motivo || "")}</span></div></div>`;
     }
     return `<div class="rf-chapa transfere tr2${t ? " transferindo" : ""}${trSeletor && !t ? " com-seletor" : ""}">
       <div class="rf-tr-par">${slot("origem", o, nivelO)}<span class="rf-tr-conduto" aria-hidden="true"><i class="rf-canal"></i></span>${slot("destino", dest, nivelD)}</div>
@@ -427,14 +423,14 @@
     const atual = p ? sulcos[sulcoSel] : null;
     const custo = d.custo_encanto;
     const motivoPeca = p ? p.encantar.motivo : "Escolha uma peça";
-    const igual = atual && e && atual.id === e.id;
-    const motivo = motivoPeca || (!e ? "Escolha uma essência" : e.motivo || (igual ? "Já gravado" : null) || (e.qtd < 1 ? `Falta 1 Essência de ${e.titulo}` : null)
+    const prev = p && e && !e.motivo ? (p.encantar.previsao || {})[`${sulcoSel}|${e.id}`] : null;
+    const motivo = motivoPeca || (!e ? "Escolha uma essência" : e.motivo || (prev && prev.bloqueio) || (e.qtd < 1 ? `Falta 1 Essência de ${e.titulo}` : null)
       || (d.ouro < custo ? `Faltam ${custo - d.ouro} de ouro` : null));
     // à esquerda: a peça e os sulcos
     const tituloEnc = p ? `<div class="rf-titulo"><b class="r-${h(p.item.raridade)}">${h(p.item.nome)}</b><small>${h(dono(p))}</small></div>` : `<div class="rf-titulo vazio"><b>&nbsp;</b><small>Escolha uma peça</small></div>`;
     const sulcoBtns = sulcos.map((x, i) => `<button type="button" role="radio" class="rf-sulco-op${x ? "" : " vazio"}${i === sulcoSel ? " escolhido" : ""}" data-sulco="${i}" aria-checked="${i === sulcoSel}"
-        aria-label="Sulco ${i + 1}: ${x ? h(x.titulo) : "vazio"}"${x ? ` style="--ess:${h(x.cor)}"` : ""} ${Telas.dica(x ? `<b>${h(x.titulo)}</b><div>+${x.tier} ${x.tier === 1 ? "nível" : "níveis"} de ${h(x.nome)}.</div>` : "<b>Sulco vazio</b>", true)}>
-        <span class="rf-sulco-ic">${x ? iconeDe(x.icone) : ""}</span><span class="rf-sulco-nome">${x ? `${h(x.nome)} <b>${x.numeral}</b>` : "Vazio"}</span></button>`).join("");
+        aria-label="Sulco ${i + 1}: ${x ? h(x.titulo) : "vazio"}"${x ? ` style="--ess:${h(x.cor)}"` : ""} ${Telas.dica(x ? `<b>${h(x.titulo)}</b><div>${h(x.efeito)}</div>${x.limite ? `<div class="rodape">${h(x.limite)}</div>` : ""}` : "<b>Sulco vazio</b>", true)}>
+        <span class="rf-sulco-ic">${x ? icEss(x) : ""}</span><span class="rf-sulco-nome">${x ? h(x.titulo) : "Vazio"}</span></button>`).join("");
     const itemArea = `<section class="rf-enc-item">${tituloEnc}${molde(p, "", "")}${p ? `<div class="rf-sulcos-op" role="radiogroup" aria-label="Sulcos">${sulcoBtns}</div>` : ""}</section>`;
     // à direita: a família, o tier, a previsão
     const familias = [...new Set(ess.map((x) => x.essencia))].map((k) => ess.filter((x) => x.essencia === k));
@@ -442,12 +438,12 @@
       const x = ts.find((t) => t.id === essSel) || ts.find((t) => t.qtd > 0) || ts[0], qtd = ts.reduce((a, t) => a + t.qtd, 0);
       const marcada = e && e.essencia === x.essencia;
       return `<button type="button" role="radio" class="rf-familia${marcada ? " escolhida" : ""}${x.motivo || qtd < 1 ? " apagada" : ""}" data-essencia="${h(x.id)}" aria-checked="${marcada}" style="--ess:${h(x.cor)}"
-        aria-label="${h(x.nome)}: ${qtd} no total${x.motivo ? `. ${h(x.motivo)}` : ""}" ${Telas.dica(`<b>${h(x.nome)}</b>${x.motivo ? `<div class="pior">${h(x.motivo)}</div>` : ""}`, true)}><span class="rf-familia-ic">${iconeDe(x.icone)}</span><span class="rf-familia-nome">${h(x.nome)}</span></button>`;
+        aria-label="${h(x.nome)}: ${qtd} no total${x.motivo ? `. ${h(x.motivo)}` : ""}" ${Telas.dica(`${h(x.nome)}${x.motivo ? ` · <span class="pior">${h(x.motivo)}</span>` : ""}`, true)}><span class="rf-familia-ic">${iconeDe(x.icone)}</span><span class="rf-familia-nome">${h(x.nome)}</span></button>`;
     }).join("")}</div>`;
     const tierHtml = e ? `<div class="rf-tiers" role="radiogroup" aria-label="Tier">${ess.filter((x) => x.essencia === e.essencia).map((x) => `<button type="button" role="radio"
         class="rf-tier-op${x.id === e.id ? " escolhido" : ""}${x.qtd < 1 ? " apagada" : ""}" data-essencia="${h(x.id)}" aria-checked="${x.id === e.id}" style="--ess:${h(x.cor)}">
-        <b>${h(x.titulo)}</b><span class="rf-tier-qtd">×${x.qtd}</span></button>`).join("")}</div>` : "";
-    const essArea = `<section class="rf-enc-ess">${famHtml}${tierHtml}${e && p && !motivoPeca ? previsaoGravacao(p, e, atual) : `<p class="rf-nota neutra">${h(motivoPeca || "Escolha uma essência")}</p>`}</section>`;
+        ${icEss(x)}<span class="rf-tier-qtd" aria-label="${x.qtd} ${x.qtd === 1 ? "unidade" : "unidades"}">×${x.qtd}</span></button>`).join("")}</div>` : "";
+    const essArea = `<section class="rf-enc-ess">${famHtml}${tierHtml}${e && p && !motivoPeca ? previsaoGravacao(p, e, atual, prev) : `<p class="rf-nota neutra">${h(motivoPeca || "Escolha uma essência")}</p>`}</section>`;
     // o pé: o custo e a ação (ou a confirmação da substituição)
     const insumosHtml = e && !motivoPeca
       ? `<div class="rf-insumos" aria-label="Custo">${insumo(iconeDe(e.icone), `Essência de ${e.titulo}`, 1, g ? Infinity : e.qtd)}${insumo(moeda(), "Ouro", custo, g ? Infinity : d.ouro)}</div>`
@@ -459,39 +455,25 @@
           <div class="rf-botoes"><button type="button" class="botao-janela rf-botao" data-gravar-nao>Cancelar</button>
           <button type="button" class="botao-janela rf-botao principal" data-gravar-sim disabled>Substituir</button></div></div>`
       : `<div class="rf-pe-linha">${insumosHtml}<div class="rf-pe-acao"><button type="button" class="botao-janela rf-botao principal" data-gravar${motivo || g ? ` aria-disabled="true"${motivo ? ` title="${h(motivo)}"` : ""}` : ""}>${atual ? "Substituir" : "Gravar"}</button>
-          <span class="rf-nota${!motivo || /^Falta/.test(motivo) ? "" : " neutra"}">${h(motivo && p ? motivo : !p ? "Escolha uma peça" : "")}</span></div></div>`;
+          <span class="rf-nota${!motivo || /^(Falta|Requer)/.test(motivo) ? "" : " neutra"}">${h(motivo && p ? motivo : !p ? "Escolha uma peça" : "")}</span></div></div>`;
     const classe = g ? ` gravando${faseGrav() === "gravado" ? " gravado" : ""}` : "";
     return `<div class="rf-chapa encanto enc2${classe}"${g ? ` style="--ess:${h(g.para.cor)}"` : e ? ` style="--ess:${h(e.cor)}"` : ""}>
       <div class="rf-enc-corpo">${itemArea}${essArea}</div>
       <div class="rf-pe-chapa">${pe}</div></div>`;
   }
 
-  /** A previsão da gravação escolhida, em linhas curtas, com os números do motor: o tier e quantas há; a contribuição;
-   *  o nível em quem veste (ou, na bolsa, o que a peça dá sozinha); o que muda no efeito; a essência que sai, se for uma
-   *  substituição; o excedente do teto. */
-  function previsaoGravacao(p, e, atual) {
-    const teto = p.encantar.teto, dono = p.encantar.dono;
-    const sai = atual && atual.essencia === e.essencia ? atual.tier : 0;
-    const daPeca = (p.encantos || []).filter((x) => x && x.essencia === e.essencia).reduce((a, x) => a + x.tier, 0);
-    const antes = dono ? p.encantar.totais[e.essencia] || 0 : daPeca, depois = antes - sai + e.tier;
-    const ef = (n) => Math.min(teto, n);
-    const val = (n) => (n ? e.valores[ef(n) - 1] : "nada");
-    const linhas = [
-      ["Contribuição", `+${e.tier} ${e.tier === 1 ? "nível" : "níveis"}${sai ? ` (no lugar de +${sai})` : ""}`],
-      [dono ? `${e.nome} em ${dono}` : `${e.nome} nesta peça`, ef(antes) === ef(depois) ? `nível ${ef(depois)}` : `nível ${ef(antes)} → ${ef(depois)}`],
-      [e.medida, val(antes) === val(depois) ? val(depois) : `${val(antes)} → ${val(depois)}`],
-    ];
-    if (atual && atual.essencia !== e.essencia && dono) {  // a essência que sai também muda o nível dela em quem veste
-      const a = p.encantar.totais[atual.essencia] || 0;
-      linhas.push([`${atual.nome} em ${dono}`, `nível ${ef(a)} → ${ef(a - atual.tier)}`]);
-    }
-    const sobra = Math.max(0, depois - teto) - Math.max(0, antes - teto);
-    const aviso = atual && atual.id === e.id ? "" : antes >= teto && sai < e.tier ? `${dono || "A peça"} já está no teto (${teto}): não muda o efeito.`
-      : sobra > 0 ? `Teto ${teto}: +${sobra} ${sobra === 1 ? "nível" : "níveis"} sem efeito.` : "";
-    return `<div class="rf-prev"><div class="rf-prev-tit"><b style="--ess:${h(e.cor)}">${h(e.titulo)}</b><span>×${e.qtd} ${e.qtd === 1 ? "disponível" : "disponíveis"}</span></div>
-      <dl class="rf-prev-linhas">${linhas.map(([k, v]) => `<dt>${h(k)}</dt><dd>${h(v)}</dd>`).join("")}</dl>
+  /** A prévia da gravação escolhida, pronta do motor: a essência com o tier e o requisito; o efeito dela (o valor deste
+   *  tier); numa substituição, os valores que mudam (nesta peça e, quando outra peça de quem veste também
+   *  soma ou o limite corta, em quem veste); a troca; o limite. Nada de contas na tela. */
+  function previsaoGravacao(p, e, atual, prev) {
+    const falta = e.requisito > (p.encantar.nivel || nivelGrupo()) && p.encantar.dono;
+    // a quantidade já está no botão do tier: no lugar dela, o requisito
+    const linhas = ((prev && prev.linhas) || []).map((l) => [l.rotulo, `${l.antes} → ${l.depois}`, l.melhor ? "melhor" : "pior"]);
+    return `<div class="rf-prev"><div class="rf-prev-tit">${icEss(e)}<b style="--ess:${h(e.cor)}">${h(e.titulo)}</b><span class="rf-prev-req${falta ? " falta" : ""}">Requer nível ${e.requisito}</span></div>
+      <p class="rf-prev-ef">${h(e.efeito)}${e.limite ? ` <span class="lim">${h(e.limite)}</span>` : ""}</p>
+      ${linhas.length ? `<dl class="rf-prev-linhas">${linhas.map(([k, v, c]) => `<dt>${h(k)}</dt><dd${c ? ` class="${c}"` : ""}>${h(v)}</dd>`).join("")}</dl>` : ""}
       ${atual && atual.id !== e.id ? `<p class="rf-prev-troca">Sai <b style="color:${h(atual.cor)}">${h(atual.titulo)}</b> · entra <b style="color:${h(e.cor)}">${h(e.titulo)}</b></p>` : ""}
-      ${aviso ? `<p class="pior">${h(aviso)}</p>` : ""}</div>`;
+      ${prev && prev.aviso ? `<p class="pior">${h(prev.aviso)}</p>` : ""}</div>`;
   }
 
   // ------------------------------------------------------------------ a ficha
@@ -510,7 +492,7 @@
     const nome = t ? antesAgora(h(p.item.nome.replace(/ \+\d+$/, "") + (t.de ? ` +${t.de}` : "")), h(p.item.nome)) : h(p.item.nome);
     return `<div class="rf-ficha-cab"><b class="r-${h(p.item.raridade)}">${nome}</b><small>${h(dono(p))}</small></div>
       <ul class="rf-props">${linhas.join("")}</ul>${p.efeito ? `<p class="rf-efeito">${h(p.efeito)}</p>` : ""}
-      ${secaoEncantos(p.encantos, p.gravacao_total)}
+      ${secaoEncantos(p.encantos, p.efeitos)}${reqHtml(p.requisito)}
       ${p.venda !== undefined ? `<div class="rf-venda">Venda: ${moeda()} ${p.venda}</div>` : ""}`;
   }
   /** A comparação contra o alvo de teste e as substitutas: um controle de laboratório, mostrado pela faixa da
@@ -557,7 +539,12 @@
      à esquerda, as propriedades à direita, o resultado grande embaixo e o OK. A bancada fica atrás, escurecida e sem
      interação; OK, Enter ou Esc a devolvem, com a próxima oferta. O mesmo molde serve à gravação (encantamento). */
   let res = null;  // {id, el, ctl, palco}: a apresentação aberta
-  let calmaAte = 0;  // logo depois de dispensar, o resto do gesto (o 2º clique, o Espaço que solta) não chega à bancada
+  /* O resto do gesto que já agiu não age de novo: o 2º clique de um clique duplo (event.detail 2) e o clique que o
+     Espaço gera ao soltar a tecla que dispensou. Do 3º clique em diante é uma ação nova: o Windows segue contando
+     (3, 4, 5…) enquanto os cliques caem no mesmo ponto a menos de meio segundo, e tratar todo "detail > 1" como o resto
+     do gesto travava quem clicava de novo logo depois do OK, até parar de clicar. Nada de pausa por tempo. */
+  let teclaDispensou = null;  // a tecla (Enter, Espaço) que dispensou o resultado, até ser solta
+  const resto = (ev) => ev.detail === 2 || (ev.detail === 0 && !!teclaDispensou);
   /** A faixa de intensidade do nível alcançado: 0 (+1, +2), 1 (+3, +4), 2 (+5 a +8), 3 (+9 a +11), 4 (+12). */
   const faixaNivel = (n) => (n >= 12 ? 4 : n >= 9 ? 3 : n >= 5 ? 2 : n >= 3 ? 1 : 0);
   // as cores do efeito pelo nível: o ouro até o +4 (já aprovado); do +5 ao +8, a cor do nível (a mesma do acabamento);
@@ -584,12 +571,12 @@
   }
   /** Os sulcos da peça: os encaixes e o nome de cada gravação, na cor dela (o efeito inteiro fica na dica). `nova`: o
    *  sulco que acabou de receber a gravação (em destaque); `saiu`: a gravação substituída. */
-  function sulcosRes(lista, nova = -1, saiu = null, total = null) {
+  function sulcosRes(lista, nova = -1, saiu = null) {
     if (!Array.isArray(lista) || !lista.length) return "";
-    const nomes = lista.map((e, i) => e ? `<span class="rf-res-grav${i === nova ? " nova" : ""}" style="--ess:${h(e.cor)}">${i === nova ? `${iconeDe(e.icone)}` : ""}${h(e.titulo)}</span>` : "").filter(Boolean);
+    const n = nova >= 0 ? lista[nova] : null;  // a gravação: a que entrou, com o efeito dela, e a que saiu
     return `<div class="rf-res-sulcos"><div class="rf-res-sulcos-cab"><span class="rf-res-rotulo">Sulcos</span><span class="rf-sq-fila">${lista.map((x, i) => filaSulcos([x]).replace('class="rf-sq', `class="rf-sq${i === nova ? " nova" : ""}`)).join("")}</span></div>
-      ${nomes.length ? `<div class="rf-res-gravs">${nomes.join("")}</div>` : ""}${saiu ? `<div class="rf-res-saiu">Saiu <b style="color:${h(saiu.cor)}">${h(saiu.titulo)}</b></div>` : ""}
-      ${efeitosGravacao(lista, total)}</div>`;
+      ${n ? `<div class="rf-ef nova" style="--ess:${h(n.cor)}"><span class="rf-ef-nome">${h(n.titulo)}</span><span class="rf-ef-txt">${h(n.efeito)}${n.limite ? ` <span class="lim">${h(n.limite)}</span>` : ""}</span></div>` : ""}
+      ${saiu ? `<div class="rf-res-saiu">Saiu <b style="color:${h(saiu.cor)}">${h(saiu.titulo)}</b></div>` : ""}</div>`;
   }
   /** O nome com o nível: o de antes some e o novo entra como marca quente (sucesso) ou sóbria (falha). */
   function nomeRes(p, t) {
@@ -628,7 +615,9 @@
   /** A peça do resultado nítida e parada, em pixels reais da tela: a ampliação é um múltiplo inteiro do desenho em
    *  pixels do aparelho (numa tela a 125%, 80 px de CSS seriam 2,5× e cada pixel do desenho sairia com 2 ou 3 de largura,
    *  conforme a posição), e o conjunto é deslocado até a peça cair num pixel inteiro do aparelho (lá, 566 px de CSS
-   *  são 707,5). Sem isso, qualquer redesenho (a passada do reflexo) mudava o arredondamento, e a peça tremia. */
+   *  são 707,5). Sem isso, qualquer redesenho (a passada do reflexo) mudava o arredondamento, e a peça tremia. O
+   *  deslocamento é de layout (left/top), não uma transformação: com `translate` fracionário, o navegador reamostrava o
+   *  canvas do veio (do +5) com suavização, e a peça borrava e tremia no resultado. */
   function nitida(el) {
     const img = el.querySelector(".rf-res-arte > img, .rf-res-arte > canvas"), conj = el.querySelector(".rf-res-conj");
     if (!img || !conj) return;
@@ -638,9 +627,10 @@
     img.style.width = img.style.height = "";  // a medida do CSS (80 a 1920, 40 a 1280), antes do ajuste
     const vez = Math.max(1, Math.round((img.getBoundingClientRect().width * dpr) / nat));
     img.style.width = img.style.height = `${(nat * vez) / dpr}px`;
-    conj.style.translate = "";
+    conj.style.left = conj.style.top = "0px";
     const r = img.getBoundingClientRect();
-    conj.style.translate = `${(Math.round(r.left * dpr) - r.left * dpr) / dpr}px ${(Math.round(r.top * dpr) - r.top * dpr) / dpr}px`;
+    conj.style.left = `${(Math.round(r.left * dpr) - r.left * dpr) / dpr}px`;
+    conj.style.top = `${(Math.round(r.top * dpr) - r.top * dpr) / dpr}px`;
   }
   addEventListener("resize", () => { const el = document.getElementById("rf-res"); if (el) nitida(el); });
 
@@ -656,7 +646,7 @@
     el.setAttribute("aria-label", aria);
     el.innerHTML = `<div class="rf-res-conj"><header class="rf-res-tit">${titulo}</header>
       <div class="rf-res-meio"><div class="rf-res-peca">${arte}</div><div class="rf-res-ficha">${ficha}</div></div>
-      <div class="rf-res-pe">${banner}<button type="button" class="botao-janela rf-botao principal" data-res-ok>OK <kbd>Enter</kbd></button></div></div>`;
+      <div class="rf-res-pe">${banner}<button type="button" class="botao-janela rf-botao principal" data-res-ok>OK<kbd class="rf-tecla">Enter</kbd></button></div></div>`;
     document.body.appendChild(el);
     nitida(el);
     document.body.classList.add("rf-res-aberto");  // o nome e a peça da bancada saem do fundo (não aparecem duas vezes)
@@ -672,7 +662,7 @@
     // nada passa para trás: um clique fora do OK não faz nada; o 2º clique de um clique duplo no OK não chega à bancada
     el.addEventListener("click", (ev) => {
       ev.stopPropagation();
-      if (ev.target.closest("[data-res-ok]") && ev.detail <= 1) dispensarRes();
+      if (ev.target.closest("[data-res-ok]") && !resto(ev)) dispensarRes();
     });
     el.addEventListener("pointerdown", (ev) => ev.stopPropagation());
     el.querySelector("[data-res-ok]").focus({ preventScroll: true });
@@ -784,7 +774,7 @@
       aria: `Reforço: ${u.sucesso ? "sucesso" : "falhou"}, ${p.item.nome}`,
       titulo: `${nomeRes(p, u)}${sub}`,
       arte: `<div class="rf-res-arte r-${h(p.item.raridade)}" data-reforco="${p.reforco}">${iconePeca(p.item)}</div>`,  // sem o rastro quadrado das gravações (corta o selo); elas estão nos sulcos
-      ficha: `${rotuloPeca(p)}<div class="rf-res-linhas">${linhasRes(p, u.linhas, !u.sucesso)}</div>${p.efeito ? `<p class="rf-res-efeito">${h(p.efeito)}</p>` : ""}${sulcosRes(p.encantos, -1, null, p.gravacao_total)}`,
+      ficha: `${rotuloPeca(p)}<div class="rf-res-linhas">${linhasRes(p, u.linhas, !u.sucesso)}</div>${p.efeito ? `<p class="rf-res-efeito">${h(p.efeito)}</p>` : ""}${sulcosRes(p.encantos)}`,
       banner: `<span class="rf-banner ${u.sucesso ? "ok" : "mau"}">${u.sucesso ? "Sucesso" : "Falhou"}</span>`,
       nivel: p.reforco,
       fx: efeitoReforco(u, cena && !reduzido() ? Math.max(0, performance.now() - cena.t0 - IMPACTO) : 0),
@@ -803,10 +793,9 @@
       titulo: `<b class="rf-res-nome">Transferência concluída</b>`,
       arte: `<div class="rf-res-arte r-${h(ds.item.raridade)}" data-reforco="${ds.reforco}">${iconePeca(ds.item)}${gravura(ds.encantos)}</div>`,
       ficha: `<span class="rf-res-rotulo">Destino · ${h(dono(ds))}</span>
-        <div class="rf-res-linhas"><div class="rf-res-linha muda"><span class="r-${h(ds.item.raridade)}">${h(ds.item.nome.replace(/ \+\d+/, ""))}</span><b>+${u.de_destino} → <em>+${u.novo}</em></b></div></div>
+        <div class="rf-res-linhas"><div class="rf-res-linha muda"><span class="r-${h(ds.item.raridade)}">${h(ds.item.nome.replace(/ \+\d+/, ""))}</span><b>+${u.de_destino} → <em class="ganha">+${u.novo}</em></b></div></div>
         <span class="rf-res-rotulo">Origem · ${h(dono(o))}</span>
-        <div class="rf-res-linhas"><div class="rf-res-linha"><span>${h(o.item.nome.replace(/ \+\d+/, ""))}</span><b>+${u.de_origem} → +0</b></div></div>
-        <p class="rf-res-efeito neutro">Afixos, sulcos e gravações ficaram em cada peça.</p>`,
+        <div class="rf-res-linhas"><div class="rf-res-linha"><span>${h(o.item.nome.replace(/ \+\d+/, ""))}</span><b>+${u.de_origem} → <em class="perde">+0</em></b></div></div>`,
       banner: "",
       nivel: ds.reforco,
       fx: efeitoTransfere(reduzido() ? 0 : Math.max(0, performance.now() - tr.t0 - TRANSF_MS)),
@@ -837,7 +826,6 @@
   }
   function dispensarTransf() {
     if (faseTransf() !== "resultado") return;
-    calmaAte = performance.now() + 450;
     transf.fim = true;
     trOrigem = trDestino = null; trSeletor = null; trAviso = "";  // nada é escolhido sozinho depois da operação
     fecharRes();
@@ -856,7 +844,7 @@
       id: `g${g.id}`, classe: "gravacao", aria: `Gravação: ${g.para.nome} em ${p.item.nome}`,
       titulo: nomeRes(p, null),
       arte: `<div class="rf-res-arte r-${h(p.item.raridade)}" data-reforco="${p.reforco}">${iconePeca(p.item)}${gravura(p.encantos)}</div>`,
-      ficha: `${rotuloPeca(p)}${sulcosRes(p.encantos, g.sulco, g.de, p.gravacao_total)}`,
+      ficha: `${rotuloPeca(p)}${sulcosRes(p.encantos, g.sulco, g.de)}`,
       banner: `<span class="rf-banner grav" style="--ess:${h(g.para.cor)}">Gravado</span>`,
       nivel: p.reforco,
       fx: efeitoGravacao(g, reduzido() ? 0 : Math.max(0, performance.now() - g.t0 - GRAVA_TRACO)),
@@ -962,7 +950,7 @@
     const f = faseGrav();
     if (f === "traco") { gravando.t0 = performance.now() - GRAVA_TRACO; if (ultimoRaiz && ultimoDesenho) ultimoRaiz.replaceWith(Telas.painel({ tipo: "forja_proto", dados: ultimoDesenho })); }
   }
-  function dispensarGrav() { if (faseGrav() === "gravado") { calmaAte = performance.now() + 450; assentarGrav(); } }
+  function dispensarGrav() { if (faseGrav() === "gravado") assentarGrav(); }
 
   /** O impacto: o resultado sai da bancada para a apresentação em destaque (o efeito, o nome com o nível novo, as
    *  propriedades, o resultado e o OK). Só classes, a apresentação e o canvas; nada é pedido ao motor. */
@@ -999,7 +987,7 @@
   function adiantar(u) {
     if (fase() === "forja") { cena.t0 = performance.now() - IMPACTO; limparRelogios(); entrarDesfecho(u); }
   }
-  function dispensar() { if (fase() === "desfecho") { calmaAte = performance.now() + 450; assentar(); } }
+  function dispensar() { if (fase() === "desfecho") assentar(); }
   const revelar = assentar;  // os gestos que interrompem (trocar de peça, fechar) assentam a cena
 
   // ------------------------------------------------------------------ o reflexo do reforço
@@ -1080,20 +1068,26 @@
     return r;
   }
   /** O contorno de 1 pixel do desenho em volta da silhueta de fora (sem contornar furos), na cor do nível; a luz nas
-   *  bordas de cima. Um canvas um pixel maior de cada lado, ampliado sem suavização junto com a peça. */
-  function pintarContorno(cv, sil, nivel) {
-    const [cor, luz] = CONTORNO[Math.min(nivel, 9)];
-    const { w, hh, fora } = sil, W = w + 2, H = hh + 2;
-    cv.width = W; cv.height = H;
-    const ctx = cv.getContext("2d");
-    const dentro = (x, y) => x >= 0 && y >= 0 && x < w && y < hh && !fora[y * w + x];
-    for (let y = -1; y <= hh; y++) for (let x = -1; x <= w; x++) {
-      if (dentro(x, y)) continue;
-      const baixo = dentro(x, y + 1), cima = dentro(x, y - 1), lado = dentro(x - 1, y) || dentro(x + 1, y);
-      if (!baixo && !cima && !lado) continue;
-      ctx.fillStyle = baixo && !cima && !lado ? luz : cor;  // a borda de cima, mais clara
-      ctx.fillRect(x + 1, y + 1, 1, 1);
+   *  bordas de cima. Pintado num canvas fora da tela, um pixel maior de cada lado, e mostrado como imagem ampliada sem
+   *  suavização junto com a peça (guardada por desenho e nível). */
+  const contornos = new Map();
+  function pintarContorno(el, sil, nivel, chave) {
+    if (!contornos.has(chave)) {
+      const [cor, luz] = CONTORNO[Math.min(nivel, 9)];
+      const { w, hh, fora } = sil, cv = document.createElement("canvas");
+      cv.width = w + 2; cv.height = hh + 2;
+      const ctx = cv.getContext("2d");
+      const dentro = (x, y) => x >= 0 && y >= 0 && x < w && y < hh && !fora[y * w + x];
+      for (let y = -1; y <= hh; y++) for (let x = -1; x <= w; x++) {
+        if (dentro(x, y)) continue;
+        const baixo = dentro(x, y + 1), cima = dentro(x, y - 1), lado = dentro(x - 1, y) || dentro(x + 1, y);
+        if (!baixo && !cima && !lado) continue;
+        ctx.fillStyle = baixo && !cima && !lado ? luz : cor;  // a borda de cima, mais clara
+        ctx.fillRect(x + 1, y + 1, 1, 1);
+      }
+      contornos.set(chave, cv.toDataURL());
     }
+    el.src = contornos.get(chave);
   }
   // o veio de cada nível: a sequência de cores ao longo da diagonal, um pixel do desenho por entrada (0: sem cor)
   const R_ = "#ff3c60", O_ = "#ffb032", E_ = "#46e2a0", A_ = "#468cff", V_ = "#aa64ff", M_ = "#ff6edc", W_ = "#fff4c8";
@@ -1108,26 +1102,53 @@
     11: [...x(R_, 3), ...x(O_, 3), ...z(3), ...x(E_, 3), ...x(A_, 3), ...z(7)],
     12: [...x(R_, 3), ...x(O_, 3), W_, ...z(3), ...x(E_, 3), ...x(A_, 3), W_, ...z(3), ...x(V_, 3), ...x(M_, 2), W_, ...z(4)],
   };
-  /** O veio em pixel: a peça inteira na resolução do desenho, ampliada sem suavização; a cada passo, as cores andam um
-   *  pixel na diagonal (um relógio só para todas as peças, cada uma na sua fase). */
-  function pintarVeio(cv) {
-    const seq = VEIOS[cv.dataset.nivel], ctx = cv.getContext("2d");
-    if (!seq || !ctx) return;
-    const w = cv.width, hh = cv.height, fase = (cv._fase || 0) + (reduzido() ? 0 : cv._passo || 0);
-    ctx.clearRect(0, 0, w, hh);
+  /** O veio em pixel: as cores andam um pixel do desenho na diagonal a cada passo (um relógio só para todas as peças,
+   *  cada uma na sua fase). Cada passo é um quadro pronto: o desenho, as faixas misturadas por cima em "overlay" (a
+   *  mesma conta da mistura que antes era do CSS, mais forte nos níveis altos) e o recorte pela própria peça, pintados
+   *  num canvas fora da tela, na resolução do desenho, e mostrados como imagem ampliada sem suavização por cima da peça.
+   *  Com a mistura no CSS, o navegador compunha a peça num grupo à parte e a reamostrava: no resultado em destaque, o
+   *  desenho borrava (a 125%, quase todo) e o borrão mudava quando o reflexo ou os brilhos passavam, como se a peça
+   *  tremesse. Com o canvas na tela, a 125% ele também saía suavizado (a posição do resultado não cai num pixel inteiro
+   *  e o navegador não encaixa o canvas como encaixa a imagem). Os quadros são guardados por desenho e nível. */
+  const VEIO_FORCA = { 5: 0.45, 6: 0.5, 7: 0.5, 11: 0.6, 12: 0.65 };
+  const quadrosVeio = new Map();
+  function quadroVeio(img, nivel, fase) {
+    const seq = VEIOS[nivel];
+    if (!seq) return "";
+    const chave = `${img.tagName === "IMG" ? img.currentSrc || img.src : (img._chave ||= img.toDataURL())}|${nivel}`;
+    if (!quadrosVeio.has(chave)) quadrosVeio.set(chave, []);
+    const lista = quadrosVeio.get(chave), i = ((fase % seq.length) + seq.length) % seq.length;
+    if (lista[i]) return lista[i];
+    const w = img.naturalWidth || img.width, hh = img.naturalHeight || img.height, cv = document.createElement("canvas");
+    cv.width = w; cv.height = hh;
+    const ctx = cv.getContext("2d");
+    ctx.imageSmoothingEnabled = false;
+    ctx.drawImage(img, 0, 0, w, hh);
+    ctx.globalCompositeOperation = "overlay";
+    ctx.globalAlpha = VEIO_FORCA[nivel] || 0.55;
     for (let d = 0; d < w + hh; d++) {
-      const cor = seq[((d + fase) % seq.length + seq.length) % seq.length];
+      const cor = seq[(d + i) % seq.length];
       if (!cor) continue;
       ctx.fillStyle = cor;
       for (let x = Math.max(0, d - hh + 1); x <= Math.min(d, w - 1); x++) ctx.fillRect(x, d - x, 1, 1);
     }
+    ctx.globalCompositeOperation = "destination-in";  // só onde a peça tem pixel
+    ctx.globalAlpha = 1;
+    ctx.drawImage(img, 0, 0, w, hh);
+    return (lista[i] = cv.toDataURL());
+  }
+  function pintarVeio(el) {
+    const img = el._img;
+    if (!img || (img.tagName === "IMG" && !(img.complete && img.naturalWidth))) return;
+    const url = quadroVeio(img, el.dataset.nivel, (el._fase || 0) + (reduzido() ? 0 : el._passo || 0));
+    if (url && el.getAttribute("src") !== url) el.src = url;
   }
   // um passo a cada 70 ms (~14 por segundo): as faixas correm sobre a peça no ritmo das animações do jogo (a 250 ms,
   // o primeiro valor, pareciam paradas e aos saltos)
   const PASSO_VEIO = 70;
   setInterval(() => {
     if (document.hidden || reduzido()) return;
-    document.querySelectorAll("canvas.rf-acab").forEach((cv) => { cv._passo = (cv._passo || 0) + 1; pintarVeio(cv); });
+    document.querySelectorAll("img.rf-acab").forEach((el) => { el._passo = (el._passo || 0) + 1; pintarVeio(el); });
   }, PASSO_VEIO);
   function acabamento(caixa, n) {
     if (!caixa) return;
@@ -1141,17 +1162,22 @@
     else {
       const chave = `${img.currentSrc || img.src || ""}|${Math.min(nivel, 9)}`;
       if (!contorno) {
-        contorno = document.createElement("canvas");
+        contorno = document.createElement("img");
         contorno.className = "rf-contorno";
+        contorno.alt = "";
+        contorno.draggable = false;
         contorno.setAttribute("aria-hidden", "true");
         caixa.appendChild(contorno);
       }
-      if (contorno._chave !== chave) { contorno._chave = chave; pintarContorno(contorno, sil, nivel); }
+      if (contorno._chave !== chave) { contorno._chave = chave; pintarContorno(contorno, sil, nivel, chave); }
       const s = img.offsetWidth / sil.w;
       Object.assign(contorno.style, { left: `${img.offsetLeft - s}px`, top: `${img.offsetTop - s}px`, width: `${img.offsetWidth + 2 * s}px`, height: `${img.offsetHeight + 2 * s}px` });
     }
     const veio = caixa.querySelector(":scope > .rf-acab"), pontos = caixa.querySelector(":scope > .rf-acab-brilhos");
     if (nivel < 5 || !img) { veio?.remove(); pontos?.remove(); return; }
+    // o desenho ainda carregando: o veio espera por ele (antes, a largura na tela, 80, passava pela do desenho, 40, e as
+    // faixas saíam com meio pixel da peça)
+    if (img.tagName === "IMG" && !(img.complete && img.naturalWidth)) { img.addEventListener("load", () => acabamento(caixa, n), { once: true }); return; }
     const src = img.tagName === "IMG" ? img.currentSrc || img.src : img.toDataURL();
     const pos = { left: `${img.offsetLeft}px`, top: `${img.offsetTop}px`, width: `${img.offsetWidth}px`, height: `${img.offsetHeight}px` };
     const camada = (atual, classe, tag = "i") => {
@@ -1169,10 +1195,13 @@
       Object.assign(el.style, pos);
       return el;
     };
-    const cv = camada(veio, "rf-acab", "canvas");
-    const lado = img.naturalWidth || img.width || 32;
-    if (cv.width !== lado) { cv.width = lado; cv.height = img.naturalHeight || img.height || lado; cv._fase = Math.floor(Math.random() * 24); }
-    if (cv.dataset.nivel !== String(nivel)) { cv.dataset.nivel = nivel; pintarVeio(cv); }
+    const cv = camada(veio, "rf-acab", "img");
+    cv._img = img;
+    cv.alt = "";
+    cv.draggable = false;
+    cv._fase ??= Math.floor(Math.random() * 24);
+    cv.dataset.nivel = nivel;
+    pintarVeio(cv);
     const k = BRILHOS[nivel] || 0;
     if (!k) { pontos?.remove(); return; }
     const b = camada(pontos, "rf-acab-brilhos");
@@ -1410,14 +1439,13 @@
     // ouvinte do documento, lá embaixo). Fechar, trocar de serviço, de dono ou de peça continuam valendo (o motor já
     // resolveu a tentativa).
     jan.addEventListener("click", (ev) => {
-      if (performance.now() < calmaAte) { ev.preventDefault(); ev.stopPropagation(); return; }  // o resto do gesto que dispensou
+      if (resto(ev) && !ev.target.closest("[data-fechar], [data-janela]")) { ev.preventDefault(); ev.stopPropagation(); return; }  // o resto do gesto que agiu
       if (faseTransf() && !ev.target.closest("[data-fechar], [data-janela]")) {  // Fechar e as abas continuam valendo
         ev.preventDefault(); ev.stopPropagation();
-        if (ev.detail <= 1) adiantarTransf();
+        adiantarTransf();
         return;
       }
       if (!fase() && !faseGrav()) return;
-      if (ev.detail > 1) { ev.preventDefault(); ev.stopPropagation(); return; }  // o 2º clique de um clique duplo: nada
       if (ev.target.closest("[data-fechar], [data-janela], [data-aba], [data-uid]")) return;
       ev.preventDefault();
       ev.stopPropagation();
@@ -1442,7 +1470,7 @@
     }));
     jan.querySelectorAll("[data-uid]").forEach((b) => b.addEventListener("click", (ev) => {
       if (selUid !== b.dataset.uid) { selUid = b.dataset.uid; confirmando = null; confirmandoTransf = null; brilharSel = true; limpar(); redesenhar(`[data-uid="${b.dataset.uid}"]`); }
-      else if (ev.detail <= 1) { selUid = null; confirmando = null; confirmandoGrav = null; limpar(); redesenhar(`[data-uid="${b.dataset.uid}"]`); }  // de novo: retira
+      else if (!resto(ev)) { selUid = null; confirmando = null; confirmandoGrav = null; limpar(); redesenhar(`[data-uid="${b.dataset.uid}"]`); }  // de novo: retira
     }));
     jan.addEventListener("keydown", (ev) => {
       if (!["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(ev.key) || !ev.target.matches("[data-uid]")) return;
@@ -1454,7 +1482,7 @@
     const p = d.pecas.find((x) => x.uid === selUid);
     const ref = jan.querySelector("[data-reforcar]");
     if (ref) ref.addEventListener("click", (ev) => {
-      if (ev.detail > 1) return;  // o segundo clique de um duplo clique não compra outro passo
+      if (resto(ev)) return;  // o segundo clique de um duplo clique não compra outro passo
       if (ref.getAttribute("aria-disabled")) { App.recusar(ref, ref.title); return; }
       const x = passoDe(p);
       pago = { de: p.reforco, chance: x.chance, linhas: x.linhas, ouro: x.ouro, fragmentos: x.fragmentos };
@@ -1469,13 +1497,13 @@
     });
     // a transferência: abrir o seletor de um lado, escolher a peça, pedir a confirmação, confirmar
     jan.querySelectorAll("[data-tr-abrir]").forEach((b) => b.addEventListener("click", (ev) => {
-      if (ev.detail > 1 || b.getAttribute("aria-disabled")) return;
+      if (resto(ev) || b.getAttribute("aria-disabled")) return;
       trSeletor = trSeletor === b.dataset.trAbrir ? null : b.dataset.trAbrir;
       confirmandoTransf = null;
       redesenhar(trSeletor ? `.rf-tr-seletor .rf-tr-op:not(.apagada), [data-tr-abrir="${b.dataset.trAbrir}"]` : `[data-tr-abrir="${b.dataset.trAbrir}"]`);
     }));
     jan.querySelectorAll("[data-tr-escolher]").forEach((b) => b.addEventListener("click", (ev) => {
-      if (ev.detail > 1 || b.getAttribute("aria-disabled")) { if (b.title) App.recusar(b, b.title); return; }
+      if (resto(ev) || b.getAttribute("aria-disabled")) { if (b.title) App.recusar(b, b.title); return; }
       const uid = b.dataset.trEscolher;
       trAviso = "";
       if (trSeletor === "origem") {
@@ -1498,7 +1526,7 @@
     });
     const trf = jan.querySelector("[data-transferir]");
     if (trf) trf.addEventListener("click", (ev) => {
-      if (ev.detail > 1) return;
+      if (resto(ev)) return;
       if (trf.getAttribute("aria-disabled")) { if (trf.title) App.recusar(trf, trf.title); return; }
       confirmandoTransf = { origem: trOrigem, destino: trDestino };
       redesenhar("[data-transferir-nao]");
@@ -1510,7 +1538,7 @@
       const arma = performance.now() + 400;  // o clique que abriu a pergunta não a responde
       setTimeout(() => { if (tSim.isConnected) tSim.disabled = false; }, 400);
       tSim.addEventListener("click", (ev) => {
-        if (tSim.disabled || performance.now() < arma || ev.detail > 1 || !confirmandoTransf) return;
+        if (tSim.disabled || performance.now() < arma || resto(ev) || !confirmandoTransf) return;
         const c = confirmandoTransf;
         confirmandoTransf = null;
         if (pedir({ op: "transferir", origem: c.origem, destino: c.destino, pedido: `x${Date.now()}`, confirmar: true }, tSim, "[data-tr-abrir='origem']")) {
@@ -1541,7 +1569,7 @@
     };
     const grav = jan.querySelector("[data-gravar]");
     if (grav) grav.addEventListener("click", (ev) => {
-      if (ev.detail > 1) return;
+      if (resto(ev)) return;
       if (grav.getAttribute("aria-disabled")) { if (grav.title) App.recusar(grav, grav.title); return; }
       if ((p.encantos || [])[sulcoSel]) { confirmandoGrav = { uid: p.uid }; redesenhar("[data-gravar-nao]"); return; }
       pedirGravacao(grav);
@@ -1553,7 +1581,7 @@
       const arma = performance.now() + 400;  // o clique que abriu a pergunta não a responde
       setTimeout(() => { if (gSim.isConnected) gSim.disabled = false; }, 400);
       gSim.addEventListener("click", (ev) => {
-        if (gSim.disabled || performance.now() < arma || ev.detail > 1 || !confirmandoGrav) return;
+        if (gSim.disabled || performance.now() < arma || resto(ev) || !confirmandoGrav) return;
         confirmandoGrav = null;
         pedirGravacao(gSim);
       });
@@ -1568,12 +1596,12 @@
         limpar();
         redesenhar(`[data-uid="${uid}"]`);
       };
-      ret.addEventListener("click", (ev) => { if (ev.detail <= 1) tirar(); });
+      ret.addEventListener("click", (ev) => { if (!resto(ev)) tirar(); });
       ret.addEventListener("keydown", (ev) => { if ((ev.key === "Enter" || ev.key === " ") && !ev.repeat) { ev.preventDefault(); tirar(); } });
     }
     const des = jan.querySelector("[data-desmontar]");
     if (des) des.addEventListener("click", (ev) => {
-      if (ev.detail > 1) return;
+      if (resto(ev)) return;
       if (des.getAttribute("aria-disabled")) { App.recusar(des, des.title); return; }
       confirmando = { uid: p.uid, nome: p.item.nome }; limpar(); redesenhar("[data-desmontar-nao]");
     });
@@ -1585,7 +1613,7 @@
       const arma = performance.now() + 400;
       setTimeout(() => { if (sim.isConnected) sim.disabled = false; }, 400);
       sim.addEventListener("click", (ev) => {
-        if (sim.disabled || performance.now() < arma || ev.detail > 1 || !confirmando) return;
+        if (sim.disabled || performance.now() < arma || resto(ev) || !confirmando) return;
         const c = confirmando;
         confirmando = null;
         selUid = null;  // depois de desmontar, nada fica escolhido
@@ -1626,10 +1654,16 @@
     ev.preventDefault();
     ev.stopImmediatePropagation();
     if (!ev.repeat) {
-      if (faseTransf() === "anim") adiantarTransf(); else if (faseTransf()) dispensarTransf();
-      else if (faseGrav() === "traco") adiantarGrav(); else if (faseGrav()) dispensarGrav();
-      else if (fase() === "forja") adiantar(ultimoDesenho && ultimoDesenho.ultimo); else dispensar();
+      if (faseTransf() === "anim") adiantarTransf(); else if (faseTransf()) { teclaDispensou = ev.key; dispensarTransf(); }
+      else if (faseGrav() === "traco") adiantarGrav(); else if (faseGrav()) { teclaDispensou = ev.key; dispensarGrav(); }
+      else if (fase() === "forja") adiantar(ultimoDesenho && ultimoDesenho.ultimo); else { teclaDispensou = ev.key; dispensar(); }
     }
+  }, true);
+  // a tecla que dispensou, ao ser solta, não aperta o botão que recebeu o foco (o Espaço clica no keyup)
+  document.addEventListener("keyup", (ev) => {
+    if (!teclaDispensou || ev.key !== teclaDispensou) return;
+    ev.preventDefault();
+    setTimeout(() => { teclaDispensou = null; });  // depois do clique que o keyup geraria
   }, true);
 
   // Esc com a janela aberta: revela a cena, cancela a confirmação, fecha a janela; só então o Voltar da forja.
@@ -1670,6 +1704,12 @@
       revelar();
       return !!App.acao({ forja: true }, null, { op: "essencias_teste" });
     },
+    /** O grupo 4 níveis acima, sem a festa (laboratório: os requisitos de tier II e III). Só com a forja aberta. */
+    nivelTeste() {
+      if (!document.querySelector(".forja-proto")) return false;
+      revelar();
+      return !!App.acao({ forja: true }, null, { op: "nivel_teste" });
+    },
     /** As peças de teste da transferência (laboratório). Só com a forja aberta. */
     transferenciaTeste() {
       if (!document.querySelector(".forja-proto")) return false;
@@ -1689,10 +1729,29 @@
   /* Os sulcos nas fichas e dicas de item de todas as telas (achado, Inventário, Equipado, mercado, forja). A ficha do
      Inventário chama Telas.htmlItem na hora: ela ganha a seção. As dicas guardam a função delas desde o começo: a seção
      entra na caixa da dica quando ela abre, pela peça do dono (a forja, o Equipado, a bolsa) ou pelo nome. */
+  /** A ficha de item na ordem da forja (as fichas do Diablo como referência de hierarquia, com a arte do jogo): o nome
+   *  com o reforço; o tipo e a raridade (a base sai dos parênteses do nome e vai para a linha do tipo: "Machado ·
+   *  Lendário", sem "(Machado)" no título); os atributos e afixos; os sulcos e os efeitos; o requisito de nível; depois o
+   *  resto do jogo (a comparação, o motivo de não usar, o texto de sabor). Em DOM: serve à ficha montada (htmlItem), à
+   *  dica que abre e ao achado. `detalhes`: os Detalhes por clique (não nas dicas, que somem). */
+  function arrumarFicha(raiz, it, detalhes = true) {
+    if (!raiz || !it || raiz.querySelector(":scope > .rf-encantos, :scope > .rf-req, :scope > .rf-arrumada")) return;
+    const titulo = raiz.querySelector(":scope > b"), tipo = raiz.querySelector(":scope > .tipo");
+    const base = it.base && titulo && titulo.lastChild && titulo.lastChild.nodeType === 3 && titulo.lastChild.textContent.endsWith(` (${it.base})`);
+    if (base && tipo) {
+      titulo.lastChild.textContent = titulo.lastChild.textContent.slice(0, -(it.base.length + 3));
+      tipo.textContent = tipo.textContent.replace(/^[^·]*·/, `${it.base} ·`);
+    }
+    const depois = raiz.querySelector(":scope > .efeito-item") || raiz.querySelector(":scope > .bonus") || tipo || titulo;
+    if (!depois) return;
+    depois.insertAdjacentHTML("afterend", `${secaoEncantos(it.encantos, it.efeitos, detalhes)}${reqHtml(it.requisito)}<i class="rf-arrumada" hidden></i>`);
+  }
   const htmlItemJogo = Telas.htmlItem;
   Telas.htmlItem = (it, ...resto) => {
-    const html = htmlItemJogo(it, ...resto), sec = secaoEncantos(it && it.encantos, it && it.gravacao_total);
-    return sec ? html.replace(/(<div class="bonus">[\s\S]*?<\/div>)/, `$1${sec}`) : html;
+    const t = document.createElement("div");
+    t.innerHTML = htmlItemJogo(it, ...resto);
+    arrumarFicha(t, it);
+    return t.innerHTML;
   };
   /* O achado (a janela "Você encontrou") monta a ficha em pedaços (Festa.fichaItem), sem o htmlItem: os sulcos da peça
      achada entram debaixo das linhas dela quando a janela aparece, pela peça que a mensagem trouxe. */
@@ -1720,8 +1779,8 @@
   }
   function sulcosNoAchado() {
     const alvo = achado && document.querySelector("#sobre-achado :is(.ficha-premio, .ficha-grupo) > .ficha-linhas");
-    if (!alvo || (alvo.nextElementSibling && alvo.nextElementSibling.classList.contains("rf-encantos"))) return;
-    const sec = secaoEncantos(achado.encantos, achado.gravacao_total);
+    if (!alvo || (alvo.nextElementSibling && alvo.nextElementSibling.matches(".rf-encantos, .rf-req"))) return;
+    const sec = secaoEncantos(achado.encantos, achado.efeitos) + reqHtml(achado.requisito);
     if (sec) alvo.insertAdjacentHTML("afterend", sec);
   }
   const paineis = {};  // os últimos dados de cada painel (o mercado, o espólio...): as peças que não estão no estado
@@ -1733,7 +1792,7 @@
   function pecaDoDono(dono) {
     const ds = (dono && dono.dataset) || {};
     const id = ds.uid || ds.peca;
-    if (id && ultimoDesenho) { const x = ultimoDesenho.pecas.find((q) => q.uid === id); if (x) return { ...x.item, encantos: x.encantos, gravacao_total: x.gravacao_total, reforco: x.reforco }; }
+    if (id && ultimoDesenho) { const x = ultimoDesenho.pecas.find((q) => q.uid === id); if (x) return { ...x.item, encantos: x.encantos, efeitos: x.efeitos, requisito: x.requisito, reforco: x.reforco }; }
     const heroi = App.estado && App.estado.heroi;
     if (!heroi) return null;
     if (ds.mini) return heroi.equip[ds.mini];
@@ -1771,12 +1830,65 @@
   }
   function sulcosNaDica() {
     const caixa = document.getElementById("dica-item");
-    if (!caixa || caixa.hidden || caixa.querySelector(".rf-encantos")) return;
-    const titulo = caixa.querySelector(":scope > b");
-    if (!titulo) return;
-    const it = pecaDoDono(caixa._dono);  // o achado usa a ficha do jogo (Telas.htmlItem), com a peça inteira
-    const sec = it && secaoEncantos(it.encantos, it.gravacao_total, false);
-    if (sec) (caixa.querySelector(":scope > .bonus") || titulo).insertAdjacentHTML("afterend", sec);
+    if (!caixa || caixa.hidden || caixa.querySelector(":scope > .rf-arrumada")) return;
+    if (!caixa.querySelector(":scope > b")) return;
+    // a peça pelo dono da dica (a forja, o Equipado, a bolsa, o mercado) ou pela que a dica guardou
+    const it = pecaDoDono(caixa._dono) || caixa._item;
+    if (it && (it.encantos || it.requisito > 1)) arrumarFicha(caixa, it, false);
+    dentroDaJanela(caixa);
+  }
+  /** A dica inteira na janela: acima da doca e do fim da tela; quando a ficha cresce (os sulcos entram depois de ela
+   *  abrir), ela sobe até caber; maior que o espaço, rola por dentro, sem diminuir a letra. */
+  function dentroDaJanela(caixa) {
+    caixa.style.maxHeight = "";
+    caixa.classList.remove("rf-rola");
+    const r = caixa.getBoundingClientRect(), doca = document.getElementById("doca");
+    const d = doca && doca.offsetParent ? doca.getBoundingClientRect() : null;
+    const fundo = (d && r.left < d.right && r.right > d.left ? Math.min(d.top, innerHeight) : innerHeight) - 6;
+    const alto = fundo - 6;
+    if (r.height > alto) { caixa.style.maxHeight = `${alto}px`; caixa.classList.add("rf-rola"); }
+    const h = Math.min(r.height, alto);
+    if (r.top + h > fundo || r.top < 6) caixa.style.top = `${Math.max(6, fundo - h)}px`;
+  }
+  /** O requisito à vista no Inventário: as peças da bolsa (e as opções de um espaço) acima do nível do grupo ficam
+   *  apagadas, e o Equipar da peça marcada fica bloqueado com o motivo (o motor recusa de qualquer jeito). */
+  function requisitoNoInventario() {
+    const tela = document.querySelector(".tela.inventario");
+    if (!tela) return;
+    const nv = nivelGrupo();
+    tela.querySelectorAll("[data-mochila], .peca-opcao").forEach((el) => {
+      const it = pecaDoDono(el);
+      el.classList.toggle("rf-req-falta", !!it && (it.requisito || 0) > nv);
+    });
+    const marcada = tela.querySelector(".marcado");
+    const it = marcada && pecaDoDono(marcada);
+    if (!it || (it.requisito || 0) <= nv) return;
+    tela.querySelectorAll(".detalhe-acoes .acao-peca").forEach((b) => {
+      if (!/^Equipar/.test(b.textContent) || b.classList.contains("rf-req-bloq")) return;
+      b.classList.add("bloqueada", "rf-req-bloq");
+      b.setAttribute("aria-disabled", "true");
+      b.title = `Requer nível ${it.requisito}.`;
+    });
+  }
+  // o Equipar bloqueado pelo nível diz o motivo e não pede nada
+  document.addEventListener("click", (ev) => {
+    const b = ev.target.closest && ev.target.closest(".acao-peca.rf-req-bloq");
+    if (!b) return;
+    ev.preventDefault();
+    ev.stopImmediatePropagation();
+    App.recusar(b, b.title);
+  }, true);
+  /** O tier no canto das essências achadas (o quadro do espólio mostra o símbolo e o nome). */
+  function tierNoEspolio() {
+    document.querySelectorAll(".achado-espolio:not(.rf-ess-visto)").forEach((el) => {
+      el.classList.add("rf-ess-visto");
+      const m = /Essência de \S+ (I{1,3})\b/.exec(el.textContent);
+      const ic = el.querySelector("img, canvas, svg");
+      if (!m || !ic) return;
+      const caixa = Object.assign(document.createElement("span"), { className: "rf-ess-ic" });
+      ic.replaceWith(caixa);
+      caixa.append(ic, Object.assign(document.createElement("span"), { className: "rf-tier-selo", textContent: m[1] }));
+    });
   }
 
   /* A seção "Materiais" no inventário: as pilhas do grupo, fora dos espaços da bolsa. */
@@ -1788,9 +1900,9 @@
     const slots = bolsa && bolsa.nextElementSibling;
     if (!slots) return;
     const html = `<h4>Materiais <small>não ocupam a bolsa</small></h4><div class="slots ref-mat-inv">${mats.map((m) =>
-      `<div class="slot-px" tabindex="0" ${Telas.dica(`<b>${h(m.nome)}</b><div>${h(m.desc)}</div><div class="rodape">${h(m.fontes)}</div>`)}>${iconeDe(m.icone)}<span class="qtd">${m.qtd}</span></div>`).join("")}</div>`;
+      `<div class="slot-px" tabindex="0" ${Telas.dica(`<b>${h(m.nome)}</b><div>${h(m.desc)}</div>${m.requisito > 1 ? `<div>Requer nível ${m.requisito}.</div>` : ""}<div class="rodape">${h(m.fontes)}</div>`)}>${m.numeral ? icEss(m) : iconeDe(m.icone)}<span class="qtd">${m.qtd}</span></div>`).join("")}</div>`;
     slots.insertAdjacentHTML("afterend", html);
     Telas.ligarDicas(lado.querySelector(".ref-mat-inv"));
   }
-  new MutationObserver(() => { materiaisNoInventario(); sulcosNaDica(); dicaSemRepeticao(); sulcosNoAchado(); decorar(); }).observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ["hidden"] });
+  new MutationObserver(() => { materiaisNoInventario(); sulcosNaDica(); dicaSemRepeticao(); sulcosNoAchado(); requisitoNoInventario(); tierNoEspolio(); decorar(); }).observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ["hidden"] });
 })();
