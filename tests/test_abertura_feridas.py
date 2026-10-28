@@ -190,7 +190,7 @@ class TestCurandeiraGratis(unittest.TestCase):
         self.assertEqual(paineis[-1]["fala"], '"Pronto. Por aqui, terminamos."')  # a Pita, no Vau: tratou e terminou
         self.assertEqual((g.j.ferimentos, g.j.ouro), ([], 200 - preco))
         # o resultado de cada um numa confirmação curta, com o custo à parte (o "−N ouro" de sempre)
-        self.assertEqual([e for e in efeitos if "tratado" in e], ["Corte profundo: tratado", "Costelas quebradas: tratado"])
+        self.assertEqual([e for e in efeitos if ": tratad" in e], ["Corte profundo: tratado", "Costelas quebradas: tratadas"])
         self.assertEqual(len([e for e in efeitos if e.endswith(" ouro")]), 2)
 
     def test_sem_ouro_nao_trata_nem_sai(self):

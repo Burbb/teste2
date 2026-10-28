@@ -92,7 +92,7 @@ class Servicos:
             tratou = True
             # O resultado é uma confirmação curta, como a da compra no mercado (o custo já saiu no "−N ouro"): a tela
             # continua a mesma, sem o cartão tratado, com a vida e o ouro de agora.
-            self.ui.efeito(f"{sobrevivencia.FERIMENTOS[fid]['nome']}: tratado", "cura")
+            self.ui.efeito(f"{sobrevivencia.FERIMENTOS[fid]['nome']}: {sobrevivencia.concordar(fid, 'tratado')}", "cura")
 
     def motivo_pagar(self, preco):
         """A meta de um serviço pago diante do balcão: sem ouro bastante, o motivo que a tela mostra no cartão e no

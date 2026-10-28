@@ -24,6 +24,19 @@ FOME_DESCANSO = 0.3             # com fome, descansar devolve esta parte da vida
 CHANCE_INFECCAO = 0.3
 
 
+def concordar(fid, masculino):
+    """Um adjetivo ou particípio concordando com o ferimento, pelo artigo do `curto` ("o corte", "a mordida", "as
+    costelas"): concordar("mordida", "tratado") → "tratada"; com "costelas", "tratadas"."""
+    artigo = FERIMENTOS[fid]["curto"].split()[0]
+    raiz = masculino[:-1]
+    return raiz + {"o": "o", "a": "a", "os": "os", "as": "as"}[artigo]
+
+
+def possessivo(fid):
+    """'Seu', 'Sua', 'Seus' ou 'Suas', pelo artigo do ferimento."""
+    return {"o": "Seu", "a": "Sua", "os": "Seus", "as": "Suas"}[FERIMENTOS[fid]["curto"].split()[0]]
+
+
 def penalidades(fid, recurso=None):
     """'Ataque −25%, Poder −10%': o que o ferimento tira de você, o atributo antes do valor (o negativo descreve o
     ferimento). A vida e o recurso perdem no máximo: 'Vida máxima −10%', 'Vigor máximo −15%'."""
@@ -319,7 +332,9 @@ def amanhecer(g, descanso, refeicao=False):
                                             "silêncio. A infecção te levou.")
             continue
         if d.get("aberto") and not f["tratado"] and g.rng.random() < CHANCE_INFECCAO:
-            g.relatar(f"Seu {d['nome'].lower()} está vermelho, quente e cheira mal.", "vermelho+negrito", "perigo",
+            # (só feridas abertas infeccionam: todas no singular)
+            g.relatar(f"{possessivo(f['id'])} {d['nome'].lower()} está {concordar(f['id'], 'vermelho')}, quente e cheira mal.",
+                      "vermelho+negrito", "perigo",
                       "gota", f"{d['nome']} infeccionou")
             if not tem(j, "infeccao"):
                 j.ferimentos.append({"id": "infeccao", "dias": None, "tratado": False})
@@ -328,7 +343,8 @@ def amanhecer(g, descanso, refeicao=False):
             f["dias"] -= descanso
         if f["dias"] is not None and f["dias"] <= 0:
             j.ferimentos.remove(f)
-            g.relatar(f"{d['nome']}: curado.", "verde", "bom", "bandagem", f"{d['nome']}: curado")
+            curado = concordar(f["id"], "curado")
+            g.relatar(f"{d['nome']}: {curado}.", "verde", "bom", "bandagem", f"{d['nome']}: {curado}")
     antes = j.max_hp
     j.recalcular()
     if j.max_hp > antes:
