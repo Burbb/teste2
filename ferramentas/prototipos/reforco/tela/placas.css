@@ -1,0 +1,183 @@
+/* ============================================================ Placas de metal da bancada (18ª, candidata)
+   A família de controles e painéis desenvolvida a partir das placas que já existem dentro da bancada da forja: ferro
+   escuro com a textura discreta da chapa, a espessura e os planos construídos em pixel, os cantos em degrau, rebites
+   pequenos só onde algo é fixado, latão contido (seleção, foco, o que pede atenção). Só nesta demonstração e só com
+   "Placas da bancada" escolhido no painel de testes (body[data-rf-placas="bancada"]); o jogo de produção não carrega
+   este arquivo.
+
+   A regra que separa as funções (a mesma da bancada: a chapa em relevo, o leito e os nichos afundados):
+     - o que se aperta tem ESPESSURA: a face, a aresta de cima acesa e, embaixo, a lateral da placa (o vinco, 3 px
+       escuros e a aresta de baixo pegando luz). Pressionar afunda a face e a lateral some; o lugar e o tamanho não mudam;
+     - o que só informa é FIXADO: a placa rente, com a borda de 2 px e o chanfro (luz em cima e à esquerda, sombra
+       embaixo e à direita) e,
+       quando é grande (cabeçalhos, cartões), um rebite em cada canto. Não tem lateral nem estado de mouse;
+     - o que guarda um número ou uma tecla fica num NICHO afundado (o ouro do cabeçalho, a tecla do Continuar).
+   Tamanhos: cabeçalhos e cartões grandes com rebites; botões médios (Voltar à vila, Olhar de perto, Continuar) com a
+   placa simples; os pequenos (abas, atalhos da doca, o "+") com a mesma construção em 1 px a menos e sem rebite.
+   Estados: normal; mouse (a face clareia, a aresta de cima acende inteira); pressionado (a face afunda: a sombra entra
+   por cima, a lateral some, o conteúdo desce 1 px); foco (um anel de latão de 2 px por dentro, sobre a construção);
+   selecionado (o fio de latão em cima, a face mais quente e a placa assentada, sem a lateral); indisponível (o ferro
+   frio e apagado, sem a luz nem a lateral, o texto baixo). Ícones, tipografia, hierarquia e áreas de clique ficam.
+   O peso: todas as regras começam pelo mesmo prefixo (dois ids que não existem: vence o acabamento do jogo, que tem um
+   id) e as listas comuns ficam em :where(); assim, a regra de um componente, escrita depois, vence a comum pela ordem. */
+
+body[data-rf-placas="bancada"] {
+  /* a chapa (a mesma da bancada: a textura do botão sob a cor do ferro) */
+  --pl-tex: url(/static/hud/textura-botao.png) 0 0 / 128px;
+  --pl-face: linear-gradient(rgba(42, 44, 49, 0.93), rgba(42, 44, 49, 0.93)), var(--pl-tex);
+  --pl-face-viva: linear-gradient(rgba(56, 59, 66, 0.93), rgba(56, 59, 66, 0.93)), var(--pl-tex);
+  --pl-face-funda: linear-gradient(rgba(27, 28, 32, 0.95), rgba(27, 28, 32, 0.95)), var(--pl-tex);
+  --pl-face-quente: linear-gradient(rgba(60, 54, 42, 0.93), rgba(60, 54, 42, 0.93)), var(--pl-tex);
+  --pl-face-fria: linear-gradient(rgba(30, 31, 34, 0.97), rgba(30, 31, 34, 0.97)), var(--pl-tex);
+  --pl-informa: linear-gradient(rgba(34, 36, 40, 0.94), rgba(34, 36, 40, 0.94)), var(--pl-tex);
+  --pl-contorno: #07080a; --pl-luz: #5d616a; --pl-luz-viva: #9fa4ad; --pl-sombra: #16171a; --pl-lateral: #191a1e; --pl-vinco: #050506;
+  --pl-latao: #c9a14a; --pl-latao-claro: #f2d27a;
+  /* a placa que se aperta: contorno, a lateral embaixo (3 px) com o vinco, a luz em cima e à esquerda, a sombra à direita */
+  /* (de baixo para cima: o contorno, a aresta de baixo da lateral pegando luz, a lateral, o vinco onde a face dobra) */
+  --pl-relevo: inset 0 0 0 1px var(--pl-contorno), inset 0 -2px 0 0 #34363c, inset 0 -5px 0 0 var(--pl-lateral), inset 0 -6px 0 0 var(--pl-vinco),
+    inset 0 2px 0 0 var(--pl-luz), inset 2px 0 0 0 #3c3f46, inset -2px 0 0 0 var(--pl-sombra);
+  --pl-relevo-vivo: inset 0 0 0 1px var(--pl-contorno), inset 0 -2px 0 0 #43464d, inset 0 -5px 0 0 var(--pl-lateral), inset 0 -6px 0 0 var(--pl-vinco),
+    inset 0 2px 0 0 var(--pl-luz-viva), inset 2px 0 0 0 #4c5058, inset -2px 0 0 0 var(--pl-sombra);
+  --pl-afundado: inset 0 0 0 1px var(--pl-contorno), inset 0 3px 0 0 #0c0d0f, inset 0 -2px 0 0 #2a2c31, inset 2px 0 0 0 #111214;
+  /* a placa que informa: rente, chanfrada, sem lateral */
+  --pl-chanfro: inset 0 0 0 2px var(--pl-contorno), inset 0 3px 0 0 #50545c, inset 3px 0 0 0 #3c3f46,
+    inset 0 -3px 0 0 #111215, inset -3px 0 0 0 #111215;
+  --pl-nicho: inset 0 0 0 1px #000, inset 0 2px 0 0 #050506, inset 2px 0 0 0 #050506, inset 0 -1px 0 0 #2b2d32, inset -1px 0 0 0 #2b2d32;
+  /* o anel do foco: latão por dentro, sobre a construção (o recorte dos cantos cortaria um anel por fora) */
+  --pl-foco: inset 0 0 0 1px var(--pl-contorno), inset 0 0 0 3px var(--pl-latao-claro);
+  /* o rebite: 4 × 4 pixels do desenho, em 2 px de tela (a cabeça com a luz em cima, a sombra embaixo) */
+  --pl-rebite: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 4' shape-rendering='crispEdges'%3E%3Crect x='1' y='0' width='2' height='1' fill='%23a3a7af'/%3E%3Crect x='0' y='1' width='1' height='1' fill='%23a3a7af'/%3E%3Crect x='1' y='1' width='2' height='1' fill='%235d6169'/%3E%3Crect x='3' y='1' width='1' height='2' fill='%2325272b'/%3E%3Crect x='0' y='2' width='2' height='1' fill='%235d6169'/%3E%3Crect x='2' y='2' width='1' height='1' fill='%2325272b'/%3E%3Crect x='1' y='3' width='2' height='1' fill='%23101113'/%3E%3C/svg%3E");
+  --pl-rebites: var(--pl-rebite) 7px 7px / 8px 8px no-repeat, var(--pl-rebite) calc(100% - 7px) 7px / 8px 8px no-repeat,
+    var(--pl-rebite) 7px calc(100% - 7px) / 8px 8px no-repeat, var(--pl-rebite) calc(100% - 7px) calc(100% - 7px) / 8px 8px no-repeat;
+  /* os cantos em degrau: 2 px nos botões, 3 nas placas grandes */
+  --pl-recorte: polygon(2px 0, calc(100% - 2px) 0, calc(100% - 2px) 1px, calc(100% - 1px) 1px, calc(100% - 1px) 2px, 100% 2px,
+    100% calc(100% - 2px), calc(100% - 1px) calc(100% - 2px), calc(100% - 1px) calc(100% - 1px), calc(100% - 2px) calc(100% - 1px),
+    calc(100% - 2px) 100%, 2px 100%, 2px calc(100% - 1px), 1px calc(100% - 1px), 1px calc(100% - 2px), 0 calc(100% - 2px),
+    0 2px, 1px 2px, 1px 1px, 2px 1px);
+  --pl-recorte-g: polygon(3px 0, calc(100% - 3px) 0, calc(100% - 3px) 1px, calc(100% - 2px) 1px, calc(100% - 2px) 2px, calc(100% - 1px) 2px,
+    calc(100% - 1px) 3px, 100% 3px, 100% calc(100% - 3px), calc(100% - 1px) calc(100% - 3px), calc(100% - 1px) calc(100% - 2px),
+    calc(100% - 2px) calc(100% - 2px), calc(100% - 2px) calc(100% - 1px), calc(100% - 3px) calc(100% - 1px), calc(100% - 3px) 100%,
+    3px 100%, 3px calc(100% - 1px), 2px calc(100% - 1px), 2px calc(100% - 2px), 1px calc(100% - 2px), 1px calc(100% - 3px), 0 calc(100% - 3px),
+    0 3px, 1px 3px, 1px 2px, 2px 2px, 2px 1px, 3px 1px);
+}
+
+/* ------------------------------------------------------------ o que se aperta: a placa com espessura */
+/* os cartões de navegação (Caminhos, serviços, mercadorias, Comitiva) e os botões médios e pequenos */
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) :where(#mundo .caminhos .caminho, .tela .servico, .tela.loja .mercadoria, .tela .cartas > .cartao.clicavel,
+  .balcao-predio .voltar-vila, .esp-olhar, .esp-confirmar, .festa.fb2-spec .continuar, #heroi .talento-aviso, #doca .atalho,
+  .grupo-abas .grupo-aba, .tela .botao-grupo.sugerir) {
+  border: 0; border-image: none; border-radius: 0; filter: none; translate: none; transform: none;
+  background: var(--pl-face); box-shadow: var(--pl-relevo); clip-path: var(--pl-recorte);
+}
+/* a lateral tem 4 px: o conteúdo ganha esse espaço embaixo para não encostar nela */
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) :where(#mundo .caminhos .caminho, .tela .servico, .tela.loja .mercadoria, .balcao-predio .voltar-vila,
+  .esp-olhar, .esp-confirmar, .festa.fb2-spec .continuar, #heroi .talento-aviso, .tela .botao-grupo.sugerir) { padding-bottom: calc(var(--pl-pb, 6px) + 4px); }
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) :where(#mundo .caminhos .caminho) { --pl-pb: 6px; }
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) .tela .servico { --pl-pb: 8px; }
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) :where(.balcao-predio .voltar-vila) { --pl-pb: 6px; }
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) #heroi .talento-aviso { --pl-pb: 3px; }
+/* mouse */
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) :where(#mundo .caminhos .caminho.clicavel, .tela .servico:not(.caro):not([aria-disabled="true"]),
+  .tela.loja .mercadoria:not(.caro), .tela .cartas > .cartao.clicavel, .balcao-predio .voltar-vila, .esp-olhar, .esp-confirmar,
+  .festa.fb2-spec .continuar, #heroi .talento-aviso, #doca .atalho:not(.atual), .grupo-abas .grupo-aba:not(.ativa):not(.indisponivel),
+  .tela .botao-grupo.sugerir:not(:disabled)):hover {
+  background: var(--pl-face-viva); box-shadow: var(--pl-relevo-vivo); color: #fff7e6; border-image: none; translate: none; transform: none;
+}
+/* pressionado: a face afunda (a sombra entra por cima, a lateral some); o tamanho e o lugar não mudam */
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) :where(#mundo .caminhos .caminho.clicavel, .tela .servico:not(.caro):not([aria-disabled="true"]),
+  .tela.loja .mercadoria:not(.caro), .tela .cartas > .cartao.clicavel, .balcao-predio .voltar-vila, .esp-olhar, .esp-confirmar,
+  .festa.fb2-spec .continuar, #heroi .talento-aviso, #doca .atalho, .grupo-abas .grupo-aba:not(.indisponivel),
+  .tela .botao-grupo.sugerir:not(:disabled)):active {
+  background: var(--pl-face-funda); box-shadow: var(--pl-afundado); translate: none; transform: none;
+}
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) :where(#mundo .caminhos .caminho.clicavel, .tela .servico:not(.caro), .tela.loja .mercadoria:not(.caro),
+  .tela .cartas > .cartao.clicavel, .balcao-predio .voltar-vila, .esp-olhar, .esp-confirmar, .festa.fb2-spec .continuar, #heroi .talento-aviso,
+  #doca .atalho, .grupo-abas .grupo-aba, .tela .botao-grupo.sugerir):active > * { position: relative; top: 1px; }
+/* foco do teclado: o anel de latão por dentro, com a lateral ainda à vista */
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) :where(#mundo .caminhos .caminho, .tela .servico, .tela.loja .mercadoria, .tela .cartas > .cartao,
+  .balcao-predio .voltar-vila, .esp-olhar, .esp-confirmar, .festa.fb2-spec .continuar, #heroi .talento-aviso, #doca .atalho,
+  .grupo-abas .grupo-aba, .tela .botao-grupo.sugerir):focus-visible {
+  outline: none; box-shadow: var(--pl-foco), inset 0 -5px 0 0 var(--pl-lateral), inset 0 -6px 0 0 var(--pl-vinco);
+}
+/* selecionado (a aba aberta, o atalho da tela aberta): o fio de latão em cima, a face mais quente, a placa assentada */
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) :where(.grupo-abas .grupo-aba.ativa, #doca .atalho.atual) {
+  background: linear-gradient(var(--pl-latao), var(--pl-latao)) 2px 0 / calc(100% - 4px) 2px no-repeat, var(--pl-face-quente);
+  box-shadow: inset 0 0 0 1px var(--pl-contorno), inset 0 3px 0 0 #6a5428, inset 2px 0 0 0 #4a4232, inset -2px 0 0 0 #1c1a16;
+  color: #fff1cc;
+}
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) :where(.grupo-abas .grupo-aba.ativa, #doca .atalho.atual):focus-visible { box-shadow: var(--pl-foco); }
+/* indisponível: o ferro frio e apagado, sem a luz nem a lateral (o motivo continua escrito onde estava) */
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) :where(#mundo .caminhos .caminho.bloqueado, .tela .servico.caro, .tela .servico[aria-disabled="true"],
+  .tela.loja .mercadoria.caro, .grupo-abas .grupo-aba.indisponivel, .tela .botao-grupo.sugerir:disabled, .esp-olhar:disabled) {
+  background: var(--pl-face-fria); box-shadow: inset 0 0 0 1px var(--pl-contorno), inset 0 -1px 0 0 #232428; cursor: not-allowed;
+}
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) :where(.tela .servico.caro, .tela .servico[aria-disabled="true"], .tela.loja .mercadoria.caro) .serv-nome { color: #8e897e; }
+
+/* os cartões grandes que se apertam (os serviços, a Comitiva) ganham os cantos maiores; os Caminhos, a placa simples */
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) :where(.tela .servico, .tela .cartas > .cartao.clicavel) { clip-path: var(--pl-recorte-g); }
+/* o ícone do serviço num nicho da própria placa (como os encaixes da bancada) */
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) .tela .servico > .slot-px { border: 0; border-image: none; background: #08090b; box-shadow: var(--pl-nicho); }
+
+/* ------------------------------------------------------------ o que informa: a placa fixada */
+/* os cabeçalhos dos serviços (a forja, a taverna, o templo, a curandeira, o mercado) e os cartões que só se leem */
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) :where(.loja-topo, .tela .cartas > .cartao:not(.clicavel)) {
+  border: 0; border-image: none; border-radius: 0; background: var(--pl-rebites), var(--pl-informa); box-shadow: var(--pl-chanfro);
+  clip-path: var(--pl-recorte-g);
+}
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) .loja-topo { padding: 10px 18px 10px 16px; }
+/* o ouro do cabeçalho num nicho afundado, o número em latão */
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) .loja-topo .ouro-loja { padding: 2px 8px 2px 4px; background: #08090b; box-shadow: var(--pl-nicho); }
+/* a marca do cartão (o inimigo, o feito, o mestre) continua à esquerda, como uma tira presa na placa */
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) .tela .cartas > .cartao.inimigo:not(.clicavel) { box-shadow: inset 4px 0 0 0 #6a241e, var(--pl-chanfro); }
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) .tela .cartas > .cartao.feito:not(.clicavel) { box-shadow: inset 4px 0 0 0 #35602a, var(--pl-chanfro); }
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) .tela .cartas > .cartao.mestre { background: linear-gradient(var(--pl-latao), var(--pl-latao)) 3px 0 / calc(100% - 6px) 2px no-repeat, var(--pl-rebites), var(--pl-informa); }
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) .tela .cartas > .cartao .barra-px { box-shadow: var(--pl-nicho); }
+
+/* ------------------------------------------------------------ cada componente, no que muda */
+/* o aviso de pontos de talento: a placa pequena com uma tira de latão à esquerda (o que pede atenção) */
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) #heroi .talento-aviso { padding-left: 10px;
+  background: linear-gradient(var(--pl-latao), var(--pl-latao)) 1px 1px / 3px calc(100% - 6px) no-repeat, var(--pl-face); }
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) #heroi .talento-aviso:hover {
+  background: linear-gradient(var(--pl-latao-claro), var(--pl-latao-claro)) 1px 1px / 3px calc(100% - 6px) no-repeat, var(--pl-face-viva); }
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) #heroi .talento-aviso:active { background: linear-gradient(#8a6a2a, #8a6a2a) 1px 3px / 3px calc(100% - 4px) no-repeat, var(--pl-face-funda); }
+/* Voltar à vila: o "◀" de latão */
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) .balcao-predio .voltar-vila { padding-top: 7px; padding-left: 12px; color: #e6dcc4; }
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) .balcao-predio .voltar-vila .rotulo::first-letter { color: var(--pl-latao); }
+/* a Encruzilhada: Olhar de perto (placa de ferro) e Confirmar (a ação decisiva, a face de bronze escuro da bancada) */
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) :where(.esp-olhar, .esp-confirmar) { padding: 8px 16px 11px; }
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) .esp-confirmar { color: #f6e3b0; background: linear-gradient(rgba(70, 55, 24, 0.94), rgba(70, 55, 24, 0.94)), var(--pl-tex);
+  box-shadow: inset 0 0 0 1px var(--pl-contorno), inset 0 -2px 0 0 #4a3a1a, inset 0 -5px 0 0 #2c2110, inset 0 -6px 0 0 var(--pl-vinco), inset 0 2px 0 0 #a8843a,
+    inset 2px 0 0 0 #6a5428, inset -2px 0 0 0 #2c2110; }
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) .esp-confirmar:hover { background: linear-gradient(rgba(92, 72, 32, 0.94), rgba(92, 72, 32, 0.94)), var(--pl-tex);
+  box-shadow: inset 0 0 0 1px var(--pl-contorno), inset 0 -2px 0 0 #5a4820, inset 0 -5px 0 0 #2c2110, inset 0 -6px 0 0 var(--pl-vinco), inset 0 2px 0 0 #e0b85a,
+    inset 2px 0 0 0 #7a6230, inset -2px 0 0 0 #2c2110; }
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) .esp-confirmar:active { background: linear-gradient(rgba(52, 40, 18, 0.95), rgba(52, 40, 18, 0.95)), var(--pl-tex); box-shadow: var(--pl-afundado); }
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) .esp-confirmar:focus-visible { box-shadow: var(--pl-foco), inset 0 -5px 0 0 #2c2110, inset 0 -6px 0 0 var(--pl-vinco); }
+/* o Continuar da festa da especialização: a placa média, a tecla num nicho */
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) .festa.fb2-spec .continuar { min-width: 176px; padding: 8px 18px 11px 22px; color: #f0e2bc; }
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) .festa.fb2-spec .continuar kbd { border: 0; border-radius: 0; padding: 1px 5px; color: var(--pl-latao); background: #08090b; box-shadow: var(--pl-nicho); }
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) .festa.fb2-spec .continuar:is(:hover, :focus-visible) kbd { color: var(--pl-latao-claro); }
+/* a doca: cada atalho é uma placa pequena (2 px entre elas); a lateral cabe sem mudar a altura */
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) #doca .atalhos { gap: 2px; }
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) #doca .atalho + .atalho,
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) #doca .doca-sep + .atalho { background: var(--pl-face); }
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) #doca .atalho:hover:not(.atual) { background: var(--pl-face-viva); }
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) #doca .atalho.atual { background: linear-gradient(var(--pl-latao), var(--pl-latao)) 2px 0 / calc(100% - 4px) 2px no-repeat, var(--pl-face-quente); }
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) #doca.inativa .atalho:not([data-sempre]) { opacity: 0.55; filter: none; }
+/* as abas do Inventário: a aberta assenta no painel (sem a lateral), as outras ficam em relevo */
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) .grupo-abas .grupo-aba { padding-bottom: 6px; }
+/* o "+" de atributo: a plaquinha de latão, com a mesma construção em pixel (a lateral de bronze, a luz de cima) */
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) .attr-base .attr-mais { border: 0; border-image: none; border-radius: 0; color: #1d1407; font-weight: 700;
+  clip-path: var(--pl-recorte); background: #c9a14a;
+  box-shadow: inset 0 0 0 1px #2a1e08, inset 0 -3px 0 0 #7a5c1e, inset 0 2px 0 0 #f2d890, inset -1px 0 0 0 #8a6a2a; }
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) .attr-base .attr-mais:not(:disabled):hover { background: #ddb65a; box-shadow: inset 0 0 0 1px #2a1e08, inset 0 -3px 0 0 #7a5c1e, inset 0 2px 0 0 #fff0b8, inset -1px 0 0 0 #8a6a2a; }
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) .attr-base .attr-mais:not(:disabled):active { background: #a8843a; box-shadow: inset 0 0 0 1px #2a1e08, inset 0 2px 0 0 #6a5018; }
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) .attr-base .attr-mais:focus-visible { outline: none; box-shadow: inset 0 0 0 1px #2a1e08, inset 0 0 0 3px #fff3d6, inset 0 -3px 0 0 #7a5c1e; }
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) .attr-base .attr-mais:disabled { background: #4a4234; box-shadow: inset 0 0 0 1px #1d1407; }
+/* a 1280 (até 1500 px), a mesma altura do acabamento do jogo: a lateral entra no espaço que o conteúdo já tinha embaixo
+   (no balcão da taverna, o Voltar à vila não desce mais que hoje) */
+@media (max-width: 1500px) {
+  :root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) .loja-topo { padding: 6px 14px 6px 12px; }
+  :root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) .tela .servico { --pl-pb: 3px; }
+  :root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) .balcao-predio .voltar-vila { --pl-pb: 2px; padding-top: 5px; }
+}

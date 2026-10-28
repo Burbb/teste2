@@ -14,6 +14,12 @@
   css.rel = "stylesheet";
   css.href = `${base}reforco.css`;
   document.head.appendChild(css);
+  if (versao === "atual") {  // a candidata das placas de metal (18ª): só vale com "Placas da bancada" no painel
+    const placas = document.createElement("link");
+    placas.rel = "stylesheet";
+    placas.href = "/proto/placas.css";
+    document.head.appendChild(placas);
+  }
   const js = document.createElement("script");
   js.src = `${base}reforco.js`;
   js.onload = () => faixa();
@@ -131,8 +137,16 @@
     const visuais = () => `<fieldset><legend>Comparação visual · troca na hora</legend>
       ${grupo("armadura", "Armaduras +9 a +12", [["a", "A · Alternadas"], ["b", "B · Gradual"], ["c", "C · Secundário"], ["feixe", "Feixe 17ª"], ["anterior", "Veio"]])}
       ${P.vitrineArmaduras ? `<div class="pt-linha"><span>Vitrine (as mesmas peças)</span><span class="pt-seg"><button type="button" data-vitrine-tam aria-pressed="false">Ampliar 2×</button></span></div>${P.vitrineArmaduras()}` : ""}
-      ${grupo("paleta", "Celebração +9 a +12", [["candidata", "Candidata"], ["anterior", "Anterior"], ["referencia13", "Ouro (ref. +13)"]])}</fieldset>`;
+      ${grupo("paleta", "Celebração +9 a +12", [["candidata", "Candidata"], ["anterior", "Anterior"], ["referencia13", "Ouro (ref. +13)"]])}
+      ${grupo("placas", "Botões e painéis", [["jogo", "Como no jogo"], ["bancada", "Placas da bancada"]])}
+      <div class="pt-linha"><span>Festa da especialização</span><span class="pt-seg"><button type="button" data-festa-spec>Mostrar</button></span></div>
+      <p class="pt-nota">A festa é só a tela (nada muda na partida). A escolha de verdade: Taverna → Dormir, com o herói no nível 4 sem especialização.</p></fieldset>`;
     function ligarVisuais() {
+      // a festa da especialização com dados de exemplo, para ver o Continuar dela (a tela só; o motor não participa)
+      el.querySelector("[data-festa-spec]")?.addEventListener("click", () => {
+        Telas.celebrar({ tipo: "spec", dados: { id: "paladino", nome: "Paladino", desc: "Juramento da Luz. Cura a si mesmo, fere mortos-vivos e corrompidos com poder sagrado.",
+          habilidades: [{ nome: "Golpe Sagrado", desc: "Causa 130% do Ataque + 80% do Poder em dano sagrado.", icone: "estrela" }] } }, false);
+      });
       el.querySelector("[data-vitrine-tam]")?.addEventListener("click", (ev) => {
         const b = ev.currentTarget, grande = b.getAttribute("aria-pressed") !== "true";
         b.setAttribute("aria-pressed", String(grande));
