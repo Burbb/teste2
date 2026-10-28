@@ -1,6 +1,6 @@
 # Protótipo: o interior da curandeira (candidata A)
 
-28/10/2026, terceira passada. **Só no protótipo, esperando a avaliação do Jean.** O jogo não carrega esta pasta; a cabana do jogo
+28/10/2026, quarta passada. **Só no protótipo, esperando a avaliação do Jean.** O jogo não carrega esta pasta; a cabana do jogo
 continua a tela de sempre, sem ambiente. Nada do templo nem da taverna foi começado. Feito pelo fluxo da skill
 `arte-cenas-fenda`.
 
@@ -17,7 +17,8 @@ prédio da vila**. A faixa do alto troca o estado da história e mostra a pose p
 | **Pita (a água escura)** | a noite em que a fonte corre escura (Destruir, no mesmo dia) | Pita no almofariz; a panela fervendo forte e dois baldes de água junto do fogão ("ferve água para os doentes") |
 | **Marta (de pé)** | a água limpou (Dar descanso, três dias depois) | Marta, magra, de lenço e mangas arregaçadas, no almofariz |
 | **Pose parada** | — | a pose do movimento reduzido (o mesmo que a preferência do sistema): inclinada sobre o almofariz, a mão no pilão |
-| **Passada anterior** | — | a segunda passada (os maços antigos e o giro só do braço), para comparar; a arte vem de `anterior/camadas`, que nenhum script escreve |
+| **Moagem anterior** | — | a moagem da terceira passada (a volta contínua, 12 poses de um tique), sobre o mesmo cenário; de `anterior/terceira` |
+| **Segunda passada** | — | a segunda passada inteira (os maços antigos e o giro só do braço); de `anterior/camadas`. Nenhum script escreve em `anterior/` |
 
 A troca só vale com a cabana aberta: o motor muda o estado e abre a cabana de novo. O serviço é o de produção
 (`Servicos.curandeiro`), sem mudar: os cartões, os preços, quem atende e a fala. As duas não aparecem juntas: pela
@@ -50,7 +51,7 @@ Uma rotina de trabalho, decidida pelos apoios antes dos quadros (o passo a passo
 
 | Trecho | Conduz | Acompanha | Fica |
 |---|---|---|---|
-| moer (voltas de 12 poses a 100 ms) | a mão no pilão (a ponta de cima numa elipse) | o cotovelo; os ombros 1 px à frente onde o pilão vai longe e 1 px abaixo onde a pedra aperta; a cabeça, um quadro depois | os pés, o quadril, a saia, o almofariz, a mão de longe na borda |
+| moer (voltas de 7 poses sustentadas; quarta passada) | a mão no pilão (a ponta de cima numa elipse) | o cotovelo; os ombros 1 px à frente onde o pilão vai longe e 1 px abaixo onde a pedra aperta; a cabeça, um quadro depois | os pés, o quadril, a saia, o almofariz, a mão de longe na borda |
 | desacelerar | a última meia volta, dois tiques por pose, até o pilão parar de pé | — | — |
 | olhar a mistura | o tronco: o peito à frente, depois o quadril para trás e o peito desce | o rosto vira para dentro do almofariz por último; o alto da saia vai com o quadril | a barra, os pés, a mão no pilão |
 | a pitada | a mão: solta o pilão (encostado na borda de longe), tira uma pitada, sobe até o nariz | o corpo se endireita atrás da mão; a cabeça vem encontrar a mão | a mão de longe no almofariz |
@@ -78,7 +79,8 @@ tela só a lê.
 - `exportar.py`: as camadas de `camadas/` e o `rotina.json` (a demonstração lê delas); com `--ver`, composições
   ampliadas numa pasta `conferencia/` para conferir o desenho (trabalho, não entrega, fora do repositório). Não
   escreve em `anterior/`.
-- `anterior/camadas/`: a segunda passada exportada, congelada para a comparação na faixa.
+- `anterior/camadas/`: a segunda passada exportada; `anterior/terceira/`: as figuras e a rotina da terceira. Congeladas
+  para a comparação na faixa.
 - `demo.py` e `tela/` (`cena-curandeira.js`, `curandeira.css`, `faixa.js`): a cena registrada ao lado da forja só na
   página da demonstração, a troca de estado e a faixa.
 
@@ -165,3 +167,29 @@ atividade; sem erros no console. A 1280, a faixa da demonstração cobre o alto 
 
 **Para avaliar (Jean):** as ervas no tamanho do jogo; a rotina das duas (o corpo, as pausas, a pitada, a volta); o
 banquinho da Pita; os rostos. Compare com o botão **Passada anterior**.
+
+## Quarta passada (28/10/2026): o ritmo da moagem
+
+**O que o Jean disse:** gostou do cenário, dos ingredientes, da personalidade e da rotina; preservar. Jogando, o braço
+do almofariz parecia mais contínuo que o resto do corpo e que a linguagem de animação do jogo. Pediu menos poses
+intermediárias na moagem, as mais expressivas, a pressão sustentada, os tempos redistribuídos sem acelerar, o corpo
+participando como antes e as pausas de olhar e cheirar mantidas. Nada de decoração nova nem caminhada.
+
+**A volta:** 7 poses no lugar de 12, com a mesma duração (Pita 1,2 s, Marta 1,4 s): o pilão inclinado (1 tique); a
+pressão longe do corpo, com o peito à frente e embaixo (Marta 3 tiques, Pita 2), e a mesma pressão com a cabeça
+terminando de descer (3 e 2); a ponta passando na frente (2); do lado do corpo (2); subindo (2); de pé (1). A última
+meia volta segura mais cada pose até o pilão parar. O relógio da cena continua a 100 ms; o fogo e o vapor, a 200 ms.
+
+**Os contatos conferidos:** a mão de longe parada na borda do almofariz em todas as poses; a pitada saindo da boca do
+almofariz com o pilão encostado; ao recuperar o pilão, a mão agora alcança o cabo antes de fechar nele (antes saltava
+6 px num tique). O banquinho da Pita e a roupa acompanhando o corpo, como antes.
+
+**No jogo, junto (1.217.0, fora do protótipo):** a cabana abre sem ferimento, com "Nenhum ferimento a tratar." na área
+do serviço, e tratar o último não tira o jogador dela; os cartões dizem "Vida máxima −10%" (o atributo antes do valor).
+
+**Conferido:** no jogo, a 1920×945 e a 1280×720 (a demonstração subida do zero em cada uma): os cartões, o clique duplo
+tratando um só, o último ferimento pelo teclado (Tab e Enter) com o ouro, o ferimento e a vida máxima atualizados, a
+cabana continuando com a cena e os pontos, os três estados sem ferimento, sair e voltar três vezes sem ferimento com um
+relógio só, a pose parada, a moagem anterior, o Esc, sem erros no console.
+
+**Para avaliar (Jean):** a moagem nova contra a anterior (botão **Moagem anterior**).

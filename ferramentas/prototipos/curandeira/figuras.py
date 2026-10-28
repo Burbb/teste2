@@ -176,38 +176,46 @@ def poses_rotina(quem):
                    "mao": (n[0] + 1, n[1] + 6)},
         "desce": {"ombro": (0, 0), "quadril": 0, "cabeca": (-1, 0, "frente"), "pilao": "encostado",
                   "mao": (pe[0] + 4, BOCA - 4)},
+        # a mão chega ao cabo encostado antes de fechar nele (não salta da boca do almofariz para o alto do pilão)
+        "alcanca": {"ombro": (0, 0), "quadril": 0, "cabeca": (-1, 0, "frente"), "pilao": "encostado",
+                    "mao": (pe[0], BOCA - 5)},
         "pega": {"ombro": (0, 0), "quadril": 0, "cabeca": (-1, 0, "frente"), "pilao": (-2, 0), "mao": "pilao"},
     }
 
 
+# A volta da moagem, (pose do giro, tiques de 100 ms), partindo da pose 1 (o pilão inclinado, onde a mão o pega de
+# novo) e fechando de pé. Quarta passada: poucas poses, cada uma sustentada, e o tempo indo para a pressão. Longe do
+# corpo, o peito vai à frente e desce (3) e, enquanto a pedra aperta, a cabeça termina de descer (4): o corpo assenta
+# no esforço. Depois a ponta passa na frente (6), volta para o lado do corpo (9), sobe (11) e fica de pé (0). Sete
+# poses no lugar de doze; a volta dura o mesmo (Pita 1,2 s, Marta 1,4 s). FREIO: a última meia volta, mais lenta.
+VOLTA = {"marta": [(1, 1), (3, 3), (4, 3), (6, 2), (9, 2), (11, 2), (0, 1)],
+         "pita": [(1, 1), (3, 2), (4, 2), (6, 2), (9, 2), (11, 2), (0, 1)]}
+FREIO = {"marta": [(6, 3), (9, 4), (11, 4), (0, 3)], "pita": [(6, 3), (9, 3), (11, 3), (0, 3)]}
+# A terceira passada (a volta contínua: as 12 poses, uma por tique) fica congelada em anterior/terceira.
+
 RITMO = {  # quantos tiques de 100 ms cada parte leva
-    "marta": {"voltas": 2, "aperto": 2, "inclina": 2, "abaixa": 2, "olha": 12, "solta": 2, "pitada": 4, "ergue": 2,
-              "endireita": 2, "cheira": 9, "afasta": 2, "desce": 2, "pega": 3},
-    "pita": {"voltas": 3, "aperto": 1, "inclina": 1, "abaixa": 2, "olha": 8, "solta": 2, "pitada": 3, "ergue": 1,
-             "endireita": 2, "cheira": 6, "afasta": 2, "desce": 2, "pega": 2},
+    "marta": {"voltas": 2, "inclina": 2, "abaixa": 2, "olha": 12, "solta": 2, "pitada": 4, "ergue": 2,
+              "endireita": 2, "cheira": 9, "afasta": 2, "desce": 2, "alcanca": 1, "pega": 2},
+    "pita": {"voltas": 3, "inclina": 1, "abaixa": 2, "olha": 8, "solta": 2, "pitada": 3, "ergue": 1,
+             "endireita": 2, "cheira": 6, "afasta": 2, "desce": 1, "alcanca": 1, "pega": 2},
 }
-VOLTA = list(range(1, 12)) + [0]  # a volta parte da pose 1 (o pilão inclinado, onde a mão o pega de novo) e fecha de pé
 
 
 def rotina(quem):
-    """A sequência de poses, um item por tique de 100 ms: [(nome da pose, k ou None)]. Marta aperta nas pontas da
-    volta (as poses 3 e 9 valem dois tiques); a última volta desacelera na metade (cada pose, dois tiques) e para de
-    pé; depois o olhar, a pitada e a volta ao pilão. A pega deixa o pilão onde a pose 1 o tem: a última pose emenda
-    na primeira."""
+    """A sequência de poses, um item por tique de 100 ms: [(nome da pose, k ou None)]. As voltas (VOLTA), a última
+    com a segunda metade mais lenta (FREIO) até o pilão parar de pé; depois o olhar, a pitada e a volta ao pilão. A
+    pega deixa o pilão onde a pose 1 o tem: a última pose emenda na primeira."""
     r = RITMO[quem]
     seq = []
-
-    def volta(ks, vezes=1):
-        for k in ks:
-            seq.extend([("giro", k)] * (r["aperto"] if k in (3, 9) else 1) * vezes)
-
+    volta = VOLTA[quem]
     for _ in range(r["voltas"]):
-        volta(VOLTA)
-    volta(VOLTA[:5])
-    volta(VOLTA[5:], vezes=2)                      # a desaceleração, até o pilão parar de pé
-    seq.extend([("giro", 0)] * 2)
+        for k, n in volta:
+            seq.extend([("giro", k)] * n)
+    for k, n in volta[:3] + FREIO[quem]:
+        seq.extend([("giro", k)] * n)
+    seq.extend([("giro", 0)] * 2)                  # o pilão parado de pé
     for nome in ("inclina", "abaixa", "olha", "solta", "pitada", "ergue", "endireita", "cheira", "afasta", "desce",
-                 "pega"):
+                 "alcanca", "pega"):
         seq.extend([(nome, None)] * r[nome])
     return seq
 

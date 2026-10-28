@@ -1,5 +1,5 @@
 /* A faixa da demonstração da curandeira (protótipo): troca o estado da história no save temporário (quem atende),
-   liga a pose parada do movimento reduzido e mostra a passada anterior para comparar (só a arte: o serviço é o
+   liga a pose parada do movimento reduzido e mostra as passadas anteriores para comparar (só a arte: o serviço é o
    mesmo). A troca de estado é um pedido ao motor, como um clique de cartão: só vale com a cabana aberta (o motor muda
    o estado e abre a cabana de novo). */
 "use strict";
@@ -12,7 +12,8 @@
   f.id = "faixa-cur";
   f.innerHTML = `<b>Curandeira (protótipo)</b>${ESTADOS.map(([id, nome]) => `<button type="button" data-cur="${id}">${nome}</button>`).join("")}
     <button type="button" data-reduzido aria-pressed="false">Pose parada</button>
-    <button type="button" data-anterior aria-pressed="false" title="A segunda passada: o giro do braço, antes da rotina">Passada anterior</button><span class="aviso"></span>`;
+    <button type="button" data-terceira aria-pressed="false" title="A terceira passada: a moagem contínua, 12 poses por volta">Moagem anterior</button>
+    <button type="button" data-anterior aria-pressed="false" title="A segunda passada: os maços antigos e o giro só do braço">Segunda passada</button><span class="aviso"></span>`;
   document.body.appendChild(f);
   const aviso = f.querySelector(".aviso");
   const marcar = () => {
@@ -31,5 +32,6 @@
     ev.currentTarget.setAttribute("aria-pressed", String(sim));
   });
   alternar("[data-reduzido]", "curReduzido");
+  alternar("[data-terceira]", "curTerceira");
   alternar("[data-anterior]", "curAnterior");
 })();

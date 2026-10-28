@@ -11,8 +11,8 @@ pelo prédio da vila. Só nesta execução:
   as camadas de `camadas/` (exportadas por `exportar.py`);
 - o serviço é o de produção (`Servicos.curandeiro`), sem mudar: os cartões, os preços, quem atende e o que diz;
 - a faixa do alto troca o estado da história no save temporário (Pita com Marta de cama; Pita na noite da água
-  escura; Marta de pé), liga o movimento reduzido para ver a pose parada e troca para a passada anterior
-  (`anterior/camadas`), para comparar.
+  escura; Marta de pé), liga o movimento reduzido para ver a pose parada e mostra, para comparar, a moagem da
+  terceira passada (`anterior/terceira`) ou a segunda passada inteira (`anterior/camadas`).
 
 A porta é `DEMO_PORTA` (padrão 8793: não usa a 8791 do jogo nem a da demonstração da forja)."""
 import os
@@ -133,7 +133,7 @@ def rodar(ui, pasta):
 # ------------------------------------------------------------------ o servidor
 TELA = os.path.join(AQUI, "tela")
 CAMADAS = os.path.join(AQUI, "camadas")
-ANTERIOR = os.path.join(AQUI, "anterior", "camadas")  # a segunda passada, guardada para comparar (só leitura)
+ANTERIOR = os.path.join(AQUI, "anterior")  # as passadas anteriores, guardadas para comparar (só leitura)
 
 
 def servir():

@@ -8,8 +8,8 @@ As tiras de quadros vão lado a lado, 320 px cada (como as da forja): fogo (4), 
 100 ms (`tempo`) e qual é a pose parada do movimento reduzido (`parada`): a linha do tempo sai de `figuras.py`, não é
 repetida na tela.
 
-Só escreve em `camadas/` (e em `conferencia/` com --ver). A passada anterior, guardada para comparação em
-`anterior/camadas/`, nunca é escrita por script."""
+Só escreve em `camadas/` (e em `conferencia/` com --ver). As passadas anteriores, guardadas para comparação em
+`anterior/` (a segunda em `camadas/`, a moagem da terceira em `terceira/`), nunca são escritas por script."""
 import json
 import os
 import sys

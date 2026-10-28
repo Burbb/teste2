@@ -10,8 +10,9 @@
    camadas/rotina.json: para cada uma, o quadro de cada tique (`tempo`) e a pose do movimento reduzido (`parada`).
    Movimento reduzido (ou o botão da faixa): a pose parada, o fogo e o vapor parados.
 
-   A faixa pode mostrar a passada anterior (anterior/camadas: o giro do braço, 12 poses, quatro voltas e a pausa) para
-   comparar; essa pasta não é escrita por nenhum script.
+   Para comparar, a faixa mostra a moagem da terceira passada (anterior/terceira: a volta contínua, 12 poses de um
+   tique) ou a segunda passada inteira (anterior/camadas: o giro só do braço, quatro voltas e a pausa). Nenhum script
+   escreve em anterior/.
 
    Exporta window.CenaCurandeira = { base, desenhar, pontos, poseDe, QW, QH }. */
 "use strict";
@@ -24,12 +25,16 @@
     NOMES.forEach((n) => { const i = new Image(); i.src = `/proto-cur/${pasta}/${n}.png`; im[n] = i; });
     return im;
   };
-  const IM = carregar("camadas"), ANT = carregar("anterior");
-  let ROTINA = null;
+  const IM = carregar("camadas"), ANT = carregar("anterior/camadas");
+  const TERCEIRA = {};  // a moagem contínua da terceira passada: as figuras e a rotina dela, sobre o mesmo fundo
+  ["pita", "marta"].forEach((n) => { const i = new Image(); i.src = `/proto-cur/anterior/terceira/${n}.png`; TERCEIRA[n] = i; });
+  let ROTINA = null, ROTINA3 = null;
   fetch("/proto-cur/camadas/rotina.json").then((r) => r.json()).then((j) => { ROTINA = j; }).catch(() => {});
+  fetch("/proto-cur/anterior/terceira/rotina.json").then((r) => r.json()).then((j) => { ROTINA3 = j; }).catch(() => {});
   const pronta = (i) => i.complete && i.naturalWidth > 0;
   const reduzido = () => matchMedia("(prefers-reduced-motion: reduce)").matches || document.body.dataset.curReduzido === "1";
   const anterior = () => document.body.dataset.curAnterior === "1";
+  const terceira = () => !anterior() && document.body.dataset.curTerceira === "1";
 
   /** O quadro de quem atende no tique q: o da rotina (ou, na passada anterior, o do giro com a pausa). */
   function poseDe(q, quem) {
@@ -37,12 +42,12 @@
       const D = 12 * 4 + 12, r = ((q % D) + D) % D;
       return r < 48 ? r % 12 : 0;
     }
-    const rot = ROTINA && ROTINA[quem];
+    const fonte = terceira() ? ROTINA3 : ROTINA, rot = fonte && fonte[quem];
     if (!rot) return 0;
     const n = rot.tempo.length;
     return rot.tempo[((q % n) + n) % n];
   }
-  const parada = (quem) => (anterior() || !ROTINA ? 0 : ROTINA[quem].parada);
+  const parada = (quem) => { const f = terceira() ? ROTINA3 : ROTINA; return anterior() || !f ? 0 : f[quem].parada; };
 
   function base(W, d) {
     const k = document.createElement("canvas"); k.width = QW; k.height = QH;
@@ -66,7 +71,7 @@
     tira(c, A.fogo, passo);
     if (escura && pronta(A.baldes)) c.drawImage(A.baldes, 0, 0);
     tira(c, escura ? A["vapor-forte"] : A.vapor, passo);
-    tira(c, A[quem], quieto ? parada(quem) : poseDe(quadro, quem));
+    tira(c, terceira() ? TERCEIRA[quem] : A[quem], quieto ? parada(quem) : poseDe(quadro, quem));
     if (pronta(A.frente)) c.drawImage(A.frente, 0, 0);
   }
 
