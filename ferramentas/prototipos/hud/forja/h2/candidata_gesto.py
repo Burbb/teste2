@@ -14,7 +14,11 @@ Agora:
     mão passa por cima da cabeça; no alto, o martelo fica armado atrás da cabeça (a cabeça do martelo em x 169,5, acima
     da nuca), sem crescer o quadro: a altura máxima do martelo é a de antes (y 18);
   - na descida, o braço estica para a frente na altura do ombro e o martelo vem em arco pela frente (o rastro do arco
-    passa pelos pontos que já existiam), até o mesmo contato na lâmina; o golpe, a volta e o ajuste só trocam a pegada.
+    passa pelos pontos que já existiam), até o mesmo contato na lâmina;
+  - no contato (2ª passada, pela avaliação do Jean: a subida ficou certa, o fim não), o braço continua estendido para a
+    frente (a mão a 12 px do ombro, à frente do corpo) e o cabo desce em ângulo da mão até a espada; antes, a mão
+    terminava colada ao peito com o cotovelo dobrado para trás e o cabo na horizontal, o que não dá para fazer de
+    verdade e lia como guidão. Vale para o golpe, a volta, o repouso e o ajuste (o martelo apoiado na lâmina).
 Os apoios (as botas, a luva na tenaz, a tenaz na espiga), o corpo, a cabeça, o enquadramento e o ritmo (53 quadros de
 100 ms, as mesmas poses na mesma ordem) não mudam.
 
@@ -46,14 +50,17 @@ def com_pegada(punho, cabeca_m):
 
 # o braço do martelo de cada pose: o cotovelo, o punho e a cabeça do martelo (a ponta do cabo vem da pegada)
 BRACO = {
-    "repouso": {"cotovelo": (159, 48), "punho": (154, 53.5), "cabeca_m": (141.5, 53.5)},
+    # no contato (o golpe, a volta, o repouso e o ajuste com o martelo na lâmina), o braço estendido para a frente e o
+    # cabo descendo em ângulo da mão até a espada; antes (1ª passada), a mão ficava colada ao peito (9 px do ombro) com o
+    # cotovelo dobrado para trás e o cabo na horizontal: o guidão que o Jean ainda via no fim do golpe
+    "repouso": {"cotovelo": (157.5, 48.5), "punho": (151.5, 49.5), "cabeca_m": (141.5, 53.5)},
     "sobe1": {"cotovelo": (158.5, 45.5), "punho": (152, 41), "cabeca_m": (145.5, 30.3)},
     "sobe2": {"cotovelo": (156, 37), "punho": (157, 29.5), "cabeca_m": (162.6, 18.4)},
     "alto": {"cotovelo": (155, 33), "punho": (159.5, 25.5), "cabeca_m": (169.5, 18)},
     "desce": {"cotovelo": (157, 40), "punho": (151, 38.5), "cabeca_m": (141.6, 30.3)},
-    "golpe": {"cotovelo": (158, 49), "punho": (154, 53.5), "cabeca_m": (141.5, 53.5)},
-    "volta": {"cotovelo": (158, 47), "punho": (154, 50.5), "cabeca_m": (141.6, 50)},
-    "ajuste": {"cotovelo": (159, 48), "punho": (154, 53.5), "cabeca_m": (141.5, 53.5)},
+    "golpe": {"cotovelo": (157, 48.5), "punho": (151, 49.5), "cabeca_m": (141.5, 53.5)},
+    "volta": {"cotovelo": (157, 47), "punho": (151, 46.5), "cabeca_m": (141.6, 50)},
+    "ajuste": {"cotovelo": (157.5, 48.5), "punho": (151.5, 49.5), "cabeca_m": (141.5, 53.5)},
 }
 POSES = {k: dict(F.POSES[k], **b, cabo=com_pegada(b["punho"], b["cabeca_m"])) for k, b in BRACO.items()}
 # o rastro da descida, pelo arco do alto até a frente (os pontos de antes, mais o começo atrás da cabeça)

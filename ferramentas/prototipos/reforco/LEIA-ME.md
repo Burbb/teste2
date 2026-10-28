@@ -86,7 +86,10 @@ ia para a frente na altura do ombro com o antebraço e o cabo em pé; a mão peg
 atrás do punho); a descida era quase vertical. Agora a pegada fica na ponta do cabo; na preparação, o cotovelo sobe
 na diagonal à frente do rosto e o martelo fica armado atrás da cabeça (sem passar da altura de antes); na descida, o
 braço estica para a frente e o martelo vem em arco até o mesmo contato. Os apoios, o corpo, o enquadramento e o ritmo
-não mudam. Mantém a nuca e o calcanhar da bigorna da 17ª. Nada integrado: a fonte `aseprite/forja-h2.aseprite` e o
+não mudam. **Segunda passada (avaliação do Jean: a subida ficou certa; o fim, rente ao corpo, ainda lia como guidão):**
+no contato com a espada (o golpe, a volta, o repouso e o ajuste), o braço fica estendido para a frente, com a mão à
+frente do corpo, e o cabo desce em ângulo até a lâmina; antes, a mão terminava colada ao peito, com o cotovelo dobrado
+para trás e o cabo na horizontal. Mantém a nuca e o calcanhar da bigorna da 17ª. Nada integrado: a fonte `aseprite/forja-h2.aseprite` e o
 jogo não mudaram.
 
 ### Conferido

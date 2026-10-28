@@ -8081,3 +8081,15 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   1.214.0 descia todos os filhos do botão, inclusive a tecla posicionada no canto); agora desce tudo menos a tecla.
 - **Conferido:** 1920 e 1280 (a barra 4 px mais alta que hoje), os estados das partes novas; a suíte, o gabarito, o
   pyflakes, os testes do protótipo e a fumaça.
+
+### 28/10/2026 (data do computador local) — Ferreiro: o fim do golpe; o pulo da doca
+
+- **Avaliação do Jean:** a subida do martelo na candidata ficou certa; o fim do golpe, com a mão colada ao corpo e o
+  cotovelo dobrado para trás, ainda lia como guidão (e não dá para fazer de verdade). E os atalhos da barra de baixo
+  davam uma "puladinha" ao clicar.
+- **Ferreiro (candidata, `hud/forja/h2/candidata_gesto.py`):** no contato com a espada, o braço estendido para a
+  frente, a mão à frente do corpo e o cabo descendo em ângulo até a lâmina (o golpe, a volta, o repouso e o ajuste).
+  Na demonstração, pelo painel ("Ferreiro: gesto candidato"). Nada integrado.
+- **A puladinha:** era a tecla do atalho caindo para baixo do nome com o botão pressionado, corrigida na 1.214.2
+  (antes desta avaliação). Conferido com o código atual: pressionar desce só o ícone e o nome 1 px, e um clique de
+  verdade não mexe a barra em nenhum quadro (Grimório, Inventário, Comitiva).
