@@ -125,29 +125,31 @@ legenda solta.
 A ficha de um item é lida em segundos (comparar, escolher) e consultada às vezes (como funciona). As duas coisas não
 disputam o mesmo espaço.
 
-- **Ordem:** o nome do item é o título. Tipo e raridade vêm numa linha secundária. Atributos e afixos ficam um por
-  linha, curtos. Depois vêm os sulcos e as gravações, e por fim o resto (venda, lore).
+- **Ordem:** o nome com o reforço é o título; tipo e raridade numa linha secundária; atributos e afixos um por linha,
+  curtos; os sulcos e os efeitos; o requisito de nível; por fim o resto (comparação, venda, texto de sabor). O que já
+  está numa linha não volta noutra: a base que aparece no tipo não se repete entre parênteses no título.
 - **Sulcos legíveis, vazios também:** os encaixes na quantidade real da peça, cada um com o ícone da essência e o tier
-  dentro dele. Os nomes não se repetem numa linha à parte: os efeitos embaixo já os dizem.
-- **Uma linha por efeito, não um bloco por gravação:** o nome do efeito com o nível, em negrito do corpo do texto (nada
-  de fonte de título), seguido do resumo mecânico e do limite em tom secundário. Essências repetidas somam num efeito
-  só: "Brasa 3", e não três blocos de Brasa.
-- **Contribuição × total:** numa peça vestida, o nível é o ativo de quem veste, com a parte desta peça entre
-  parênteses quando difere ("Eco 5 … (2 desta peça · teto 5)"). Na bolsa, o que a peça dá sozinha. O nível que a peça
-  fornece nunca se confunde com o nível do personagem, e um número acima do teto nunca aparece como o ativo.
+  no canto. Os nomes não se repetem numa linha à parte: os efeitos embaixo já os dizem.
+- **Nome e descrição separados:** o nome do efeito (com os tiers) numa linha pequena, na cor da essência; o gatilho, o
+  efeito e o limite embaixo. Nunca colados na mesma linha, a ponto de ler "Revide 3 Ao receber"; nunca em fonte de
+  título. Essências repetidas somam num efeito só ("Brasa III + II"), não em blocos repetidos.
+- **A peça diz o que ela fornece:** a ficha é a descrição da peça, igual na bolsa e no corpo. O total de quem veste é
+  informação de contexto: vai para a consulta do personagem ou para a prévia de uma ação que o muda, não para a ficha.
+  Um número acima de um limite nunca aparece como o ativo; o limite aparece quando corta.
 - **O que decide fica à vista:** o gatilho, o número, o limite e a condição estão no resumo ("Ao abater um inimigo,
   recupera 15% do recurso máximo. Até 2 vezes por luta."). Vai para os detalhes o que explica o termo ou a conta: o
   alvo, as interações, "não vale nos tiques".
 - **Detalhes por clique e teclado:** um "Detalhes" que abre com Enter, nunca só com o mouse em cima. Nas dicas,
   que somem, os detalhes não aparecem; a ficha do Inventário, a forja e o achado os têm.
 - **Comparação separada:** o que muda ao trocar é um bloco próprio (o jogo já faz), não misturado às linhas da peça.
-- **Números do motor:** os textos de cada nível saem da tabela implementada (`encanto.texto`). Mudou a tabela, mudou
-  o texto; nada de número copiado de uma rodada antiga.
+- **Números do motor:** os textos saem do valor implementado (`encanto.texto`, o valor de cada tier). Mudou a tabela,
+  mudou o texto; nada de número copiado de uma rodada antiga.
 
 | Antes | Depois |
 |---|---|
-| "Eco" (título grande) / "Ao abater um inimigo, recupera 25% do recurso máximo." / "Até 2 vezes por luta." (bloco de três linhas por gravação) | "Eco 1 Ao abater um inimigo, recupera 15% do recurso máximo. Até 2 vezes por luta." (uma linha; o número é o da tabela do nível 1) |
-| Duas gravações de Revide: dois blocos iguais | "Revide 5 Ao receber um golpe corpo a corpo, 35% de chance de revidar com 60% do Ataque. No máximo 2 vezes por rodada. (3 desta peça · 6 em Morel, teto 5)" |
+| "Eco" (título grande) / "Ao abater um inimigo, recupera 25% do recurso máximo." / "Até 2 vezes por luta." (bloco de três linhas por gravação) | "Eco I" (linha pequena) / "Ao abater um inimigo, recupera 10% do recurso máximo. Até 2 vezes por luta." |
+| "Revide 3 Ao receber um golpe…" (nome e descrição colados; o nível era um total) | "Revide II" (linha pequena) / "Ao receber um golpe corpo a corpo, 18% de chance de revidar com 60% do Ataque. No máximo 2 vezes por rodada." |
+| Na ficha: "Eco 5 … (2 desta peça · teto 5)" | Na ficha, o que a peça dá ("Eco II · 15%"); o total de Odette só na prévia do Encantar, quando muda alguma coisa |
 | "No máximo 1 vez por turno seu." (a regra contava a rodada) | "No máximo 1 vez por rodada." |
 
 **Referências examinadas (28/10/2026):**
@@ -197,6 +199,33 @@ Critérios gerais que saíram da revisão da forja inteira; valem para qualquer 
 a confirmação: origem, destino e resultado separados; só peças elegíveis; o destino só depois da origem; confirmação
 antes de cobrar). As regras de destruição dele não vieram junto.
 Last Epoch e Grim Dawn seguem como acima (fichas e detalhes atrás de uma tecla); desta vez não foram reexaminados.
+
+## Tier, prévia e contexto (forja, 15ª, 27/10/2026)
+
+Critérios gerais da revisão das essências; valem para qualquer sistema com versões de um mesmo efeito e com prévias.
+
+- **Tier é marca, não conta:** o tier aparece como um selo no símbolo (I, II, III), sempre no mesmo canto, em todas as
+  telas (material, seleção, sulco, ficha, recompensa). A quantidade fica noutro canto, para "III" e "×3" não se
+  confundirem. O texto diz o efeito daquele tier com o número dele, não quantos "níveis" ele soma.
+- **Prévia mostra só o que muda, com os números do motor:** a essência escolhida e o efeito dela, o requisito e o
+  custo; numa troca, os valores que mudam (antes → depois), e a consequência relevante antes de pagar (o limite que
+  corta, a peça que ficaria acima do nível de quem a veste). Nada de reescrever o modelo de regras num parágrafo de
+  contas na tela.
+- **Requisito à vista e explicado:** "Requer nível 9", curto, onde a ação está bloqueada; em vermelho quando falta. A
+  saída possível vem junto quando existe ("Na bolsa, pode gravar."), sem justificar o sistema.
+- **Resultado é sobre o que mudou:** a apresentação de um resultado destaca a mudança (o atributo antes → depois, a
+  gravação que entrou e a que saiu, os dois níveis de uma transferência); o que não mudou fica para a inspeção. A cor
+  reforça, não substitui o texto (Origem/Destino, "Após transferir").
+- **Regra fica na documentação e na ajuda, não repetida na tela de cada ação:** a tela mostra o caso da peça; a regra
+  geral ("o destino recebe o nível da origem menos 2") mora no 27 e na ajuda.
+- **Cada informação uma vez:** o saldo que já está no cabeçalho não volta ao lado do custo; uma confirmação que mantém
+  os dois cartões não repete os resultados num parágrafo.
+
+**Referências examinadas (15ª):** três fichas do Diablo IV enviadas pelo Jean (as calças Frostblitz, a varinha Bone
+Wand of Serration e a comparação de espadas "Equipped"): nome no alto, tipo e raridade logo abaixo, filetes separando
+o bloco principal, os afixos e o poder lendário, "Requires Level" à direita perto do fim e os dados comerciais por
+último; na comparação, as diferenças em verde e as perdas em vermelho num bloco próprio. Daí a ordem das fichas; a
+arte e a fonte são as do jogo.
 
 ## Vocabulário (etapa 4)
 

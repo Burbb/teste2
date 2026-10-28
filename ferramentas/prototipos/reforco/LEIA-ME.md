@@ -9,22 +9,102 @@ jogo não mudaram. Os números são hipóteses desta rodada, não balanceamento.
 Dê dois cliques em `demo.bat` (ou `python ferramentas/prototipos/reforco/demo.py` na raiz). O jogo de sempre abre no
 navegador num **save temporário** (uma pasta nova a cada vez; os saves pessoais não são lidos nem tocados): o Guerreiro
 no nível 4, no Vau, com Morel e Odette, 380 de ouro, dois baús e as peças dos exemplos. Feche a janela do terminal
-para parar. Folhas: `folha-comparacao.png` (a 13ª × a 14ª, as quatro abas e a ficha), `folha-transferir.png` (os
-estados da transferência), `folha.png` (o resultado do reforço) e `folha-acabamento.png` (o acabamento do +1 ao
+para parar. Folhas: `folha-comparacao.png` (a 14ª × a 15ª), `folha-estados.png` (os estados novos e o tremor antes ×
+depois), `folha.png` (o resultado do reforço) e `folha-acabamento.png` (o acabamento do +1 ao
 +12). A especificação do sistema inteiro: [27](../../../roadmapIDEIAS/27-FORJA-ESPECIFICACAO.md).
 
 Só nesta execução, `demo.py` troca a forja (o balcão novo), o baú (que pode dar fragmento ou essência), a seção
 "Materiais" do Inventário, a venda da peça reforçada, a ficha das peças nas telas (as gravações) e liga os efeitos das
 gravações na luta. O resto é o jogo: o Inventário do grupo, o mercado, a luta, a estrada.
 
-## 14ª versão: uma janela só, o Encantar em duas áreas, a transferência entre duas peças (candidata em avaliação)
+## 15ª versão: tiers com potência própria, requisitos de nível, fichas reorganizadas e os dois defeitos (candidata em avaliação)
+
+**O sistema inteiro está no [27](../../../roadmapIDEIAS/27-FORJA-ESPECIFICACAO.md)** (3.2 a 3.4, 4, 7, 9 e 10). Chances e
+custos do reforço, a perda de dois níveis da transferência e a compatibilidade não mudaram. A 14ª está em
+`tela/historico/v14` (`?tela=v14`; as versões guardadas desenham com os dados novos, então os números de gravação nelas
+não são os da época). Folhas:
+- `folha-comparacao.png`: a 14ª × a 15ª nos mesmos passos, nas duas resoluções (Encantar, o resultado do reforço com
+  três gravações, a dica do Peitoral, a transferência);
+- `folha-estados.png`: os estados novos (tiers, requisito atendido e não atendido, limite, bolsa, companheira,
+  substituição idêntica, Inventário) e o tremor antes × depois.
+
+### Regras novas (o modelo de soma até o nível 5 foi substituído)
+- **Tiers com potência própria:** Brasa I, II e III são o mesmo efeito com valores diferentes (20%, 28%, 36%). Repetir
+  soma só a propriedade que cresce, até o limite de cada efeito (Brasa 60%, Carrasco 50%, Eco 35%, Vigília 25%, Revide
+  e Geada 40%). Cada efeito dispara uma vez por personagem; as regras por rodada e por luta continuam. Tabelas
+  provisórias no 27, seção 4.
+- **Requisito de nível:** equipamento = nível da base − 1 (mínimo 1); Essência I, II, III = níveis 1, 5, 9 (a faixa do
+  conteúdo que dá cada tier); a peça gravada pede o maior. Bloqueado em todos os caminhos de vestir, para o herói e os
+  companheiros, com "Requer nível N.". Numa peça vestida, a gravação que passaria do nível de quem veste é recusada
+  sem cobrar; na bolsa, pode ser preparada. O reforço não muda o requisito.
+- **"Nível +4 (teste)"**, botão novo na faixa: sobe o grupo pelo caminho do jogo, sem a festa (4 → 8 → 12).
+
+### A tela
+- **Tier no símbolo:** I, II ou III num selo de latão no canto de cima à direita, nos materiais, na seleção, nos
+  sulcos, nas fichas e no espólio; a quantidade fica noutro canto.
+- **Encantar:** a prévia vem pronta do motor (`demo.previsao`): o efeito do tier escolhido, o requisito, só os valores
+  que mudam numa troca, a linha de quem veste quando outra peça dele soma e o limite antes de pagar. Saíram "+1
+  nível", "no lugar de +1", "nível em Jean" e o teto antigo.
+- **Fichas** (a ordem das três fichas do Diablo IV que o Jean mandou, com a arte do jogo): nome e reforço; tipo e
+  raridade (a base sai dos parênteses do título); atributos; sulcos e efeitos (o nome numa linha pequena, a descrição
+  embaixo: nada de "Revide 3 Ao receber"); "Requer nível N" à direita; o resto. A ficha mostra o que a peça fornece; o
+  total de quem veste fica na prévia. As dicas sobem até caber acima da doca e, maiores que o espaço, rolam por dentro.
+- **Inventário:** as peças acima do nível ficam apagadas e o Equipar delas, bloqueado com o motivo.
+- **Resultado do reforço:** nome e nível, a peça com os efeitos, atributos com a mudança, os símbolos dos sulcos (as
+  descrições ficam na inspeção), SUCESSO e OK. O SUCESSO e o OK desceram e o OK não cai mais sobre o Reforçar atrás
+  (conferido a 1920 e a 1280); "OK" é o rótulo, o Enter é uma marca discreta. Na gravação, a gravação nova em
+  destaque.
+- **Transferir:** a etiqueta do ícone mostra o reforço de agora; embaixo, "Após transferir" e só o nível previsto (a
+  origem +0 em vermelho, o destino em verde). A moeda e o preço ao lado do Transferir; o "tem N" do ouro saiu (o saldo
+  está no cabeçalho). A confirmação: os dois cartões, a pergunta, o preço, Cancelar e Transferir. O resultado num véu
+  fechado, o destino em destaque. As regras saíram da tela (ficam no 27 e na ajuda).
+
+### Os dois defeitos
+- **Reforçar não respondia depois do OK.** Reproduzido: dispensando no ponto do Reforçar e clicando de novo a cada
+  250 ms, nenhum clique comprava; só depois de uma pausa. **Causa:** o botão (e o OK) descartava todo clique com
+  `event.detail > 1`; o Windows segue contando 2, 3, 4… enquanto os cliques caem no mesmo ponto a menos de meio
+  segundo, então a proteção se renovava a cada clique; e 450 ms de "calma" depois de dispensar engoliam qualquer
+  clique. **Correção:** só o 2º clique de um clique duplo (`detail` 2) e o clique que o Espaço gera ao soltar a tecla
+  que dispensou são o resto do gesto; do 3º em diante é uma ação nova; sem pausa por tempo. Conferido: dispensar e
+  clicar compra no 3º clique; clique duplo no Reforçar compra uma vez; Enter segurado dispensa e não compra; o OK não
+  fica mais no lugar do Reforçar.
+- **A peça tremia no resultado.** Não era o defeito da Manopla. **Causa:** o veio (+5 a +12) era misturado pelo CSS
+  (`mix-blend-mode: overlay`); com isso, o navegador reamostrava a peça e ela ficava borrada no resultado, mais ou
+  menos conforme o reflexo, os brilhos e o passo do veio entravam, o que parecia tremor. A 100% a Couraça +10 também
+  borrava; a 125% e a 150% quase todas as peças com veio. **Correção:** cada passo do veio é um quadro pronto (a
+  mistura feita num canvas fora da tela) mostrado como imagem; o contorno também. Medido (blocos borrados do desenho,
+  mediana): a 125%, Couraça +10 89% → 1%, Martelo +12 83% → 0%, Machado +5 68% → 0%; a 150%, Couraça 90% → 0%; a 100%,
+  Couraça 65% → 0%. O anel e as peças sem veio já estavam nítidas e seguem iguais.
+
+### Conferido
+- **Testes do protótipo (52):** os de antes, no modelo novo, e os novos: cada tier com o seu valor, repetição igual e
+  misturada até o limite, textos por tier, a ficha com o que a peça fornece, a prévia da troca e do limite, os
+  requisitos (tabela, peça gravada, vestir bloqueado no herói e no companheiro, achado, gravação em peça vestida sem
+  cobrar e preparada na bolsa), salvar e carregar.
+- **A 1920×945 e 1280×720:** Encantar com requisito atendido e não atendido, limite, bolsa, companheira e substituição
+  idêntica; o resultado do reforço com três gravações; a transferência inteira; as dicas do Equipado nos slots de
+  baixo e do Inventário; o Inventário com as peças acima do nível.
+- **O tremor** a 100%, 125% e 150% (Couraça +10, Martelo +12, Machado +5, anel +1), antes e depois.
+
+### Roteiro (uns 5 minutos)
+1. **Ferreiro → Essências (teste) → Encantar.** A arma de Jean, 3º sulco (Carrasco I), Brasa, tier II: a prévia mostra
+   28%, "Requer nível 5" em vermelho, "Brasa nesta peça 40% → 60%" e o limite; o botão fica bloqueado. Escolha o
+   1º sulco e Brasa I: "Já gravado".
+2. **Aba Bolsa:** o Martelo de Aço (Brasa III + II): grave mais uma Brasa III. Na bolsa, pode; a prévia avisa o limite.
+3. **Nível +4 (teste)** e volte à arma de Jean: o tier II agora passa.
+4. **Reforçar** o Peitoral de Jean (três gravações): o resultado só com os símbolos dos sulcos; clique OK e, logo,
+   Reforçar de novo várias vezes: ele responde.
+5. **Níveis altos (teste) → Reforçar** a Couraça (+9 → +10) com a tela a 125%: a peça fica nítida durante o reflexo.
+6. **Transferência (teste) → Transferir:** o Machado +10 para o Martelo de Aço: "Após transferir" +0 e +8, o preço ao
+   lado do botão, a confirmação e o resultado.
+7. **Inventário:** passe o mouse nas peças dos slots de baixo do Equipado e na Martelo de Aço da bolsa (apagada,
+   "Requer nível 9").
+
+## 14ª versão: uma janela só, o Encantar em duas áreas, a transferência entre duas peças (histórico)
 
 **O sistema inteiro está no [27](../../../roadmapIDEIAS/27-FORJA-ESPECIFICACAO.md)** (seções 3.3, 8, 9 e 10). Regras,
 chances e custos não mudaram; a única regra nova é a recusa da mesma gravação. A 13ª está em `tela/historico/v13`
-(`?tela=v13`). Folhas:
-- `folha-comparacao.png`: a 13ª × a 14ª com os mesmos dados, nas duas resoluções (Reforçar, Encantar, Desmontar,
-  Transferir e a ficha do Inventário);
-- `folha-transferir.png`: os estados da transferência, da escolha ao resultado, e o movimento reduzido.
+(`?tela=v13`). As folhas desta versão (`folha-comparacao.png` e `folha-transferir.png` da 14ª) estão no git.
 
 ### Correções pedidas pelo Jean
 - **Reforçar sem cena:** depois dos botões de teste, o reforço às vezes acontecia sem animação. Os cenários de teste

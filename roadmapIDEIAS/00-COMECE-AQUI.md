@@ -7942,3 +7942,26 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **A 13ª** está em `tela/historico/v13`.
 - **Conferido:** 47 testes do protótipo; as duas resoluções; os testes do projeto.
 - **Próximo:** a avaliação do Jean. Nada integrado; som adiado; a etapa 4 continua aberta.
+
+### 27/10/2026 (data do computador local) — Forja: a 15ª versão, tiers com potência própria e requisitos de nível (protótipo)
+
+- **Pedido:**
+  - essências: I, II e III como potências do mesmo efeito, repetição somando a propriedade que cresce até um limite
+    por efeito (substitui a soma de níveis até 5);
+  - requisito de nível para equipamento e para cada tier, em todos os caminhos de vestir;
+  - o tier no ícone; o Encantar sem as contas antigas;
+  - fichas na ordem das referências do Diablo IV que o Jean mandou;
+  - o resultado do reforço enxuto; a transferência simplificada;
+  - dois defeitos: o Reforçar que não respondia depois do OK e a peça tremendo no resultado.
+- **Feito (LEIA-ME do protótipo e 27, seções 3.2 a 3.4, 4, 7, 9 e 10):**
+  - tabelas provisórias por tier e limites por efeito; requisitos (equipamento = base − 1; I/II/III = 1/5/9);
+  - o bloqueio em todos os caminhos, a gravação em peça vestida recusada sem cobrar e a preparação na bolsa;
+  - a prévia do Encantar calculada no motor; o selo do tier; as fichas e as dicas dentro da janela;
+  - o OK fora do lugar do Reforçar; a transferência com "Após transferir";
+  - **gestos:** só o 2º clique de um duplo é o resto do gesto (o `detail > 1` travava cliques seguidos);
+  - **tremor:** a mistura do veio pelo CSS fazia o navegador reamostrar a peça; agora o veio é uma sequência de
+    quadros prontos, mostrados como imagem (medido: a 125%, a Couraça +10 de 89% para 1% de blocos borrados);
+  - a skill `texto-regras-fenda` com os critérios gerais de tier, prévia e contexto.
+- **A 14ª** está em `tela/historico/v14`.
+- **Conferido:** 52 testes do protótipo; as duas resoluções; o tremor a 100%, 125% e 150%; os testes do projeto.
+- **Próximo:** a avaliação do Jean. Nada integrado; som adiado; a etapa 4 continua aberta.

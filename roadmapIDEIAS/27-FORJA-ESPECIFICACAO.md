@@ -179,17 +179,24 @@ salvar, carregar, trocar de dono ou abrir uma ficha.
 
 As outras peças (cabeça, mãos, pernas, pés, aljava, anel, amuleto) recebem reforço, mas não gravação. **[Provisório]**
 
-### 3.2 Tiers, repetição e nível total [Aprovado; Provisório: o teto]
-- **Tiers:** Essência I, II e III ocupam um sulco cada e contribuem com 1, 2 e 3 níveis do efeito.
-- **Repetição:** permitida na mesma peça e entre peças. **[Substituído]** a regra "a mesma essência não entra duas
-  vezes na mesma peça".
-- **Nível total:** cada efeito é resolvido **uma vez** pelo nível total, a soma das peças que **o próprio personagem
-  veste**. A bolsa e as peças dos outros não contam. Exemplos:
-  - duas Brasas I dão Brasa 2;
-  - Brasa II + Brasa I dão Brasa 3;
-  - Eco III + Eco II no tomo e Eco II na arma somam Eco 7, que vira 5 pelo teto.
-- **Teto de 5 níveis por efeito** (hipótese de teste). O que passa não conta.
-- **Não existe um "nível da gravação":** o nível é sempre o total de quem veste.
+### 3.2 Tiers, repetição e limite [Aprovado: o modelo; Provisório: os valores e os limites]
+- **Tiers:** Essência I, II e III são **versões de potência diferente do mesmo efeito**. Cada uma tem o seu valor (a
+  tabela da seção 4) e ocupa um sulco.
+- **Repetição:** permitida na mesma peça e entre peças. Repetir soma **só a propriedade que cresce** daquela essência
+  (a chance da Brasa, do Revide e da Geada; a magnitude do Carrasco, do Eco e da Vigília), até um **limite próprio de
+  cada efeito**. O gatilho, o alvo, a duração, o dano do golpe e a frequência não mudam com a repetição.
+- **Uma vez por personagem:** cada efeito dispara uma vez, pela soma das peças que **o próprio personagem veste**
+  (não uma vez por cópia). A bolsa e as peças dos outros não contam. Os limites de ativação continuam (por rodada, por
+  luta, sem reação em cadeia, sem recuperação sem fim).
+- **Exemplos:**
+  - Brasa I sozinha: 20% de chance; Brasa II: 28%; Brasa III: 36%;
+  - duas Brasas I: 40%; Brasa II + Brasa I: 48%;
+  - Brasa III + Brasa III: 72%, que vira 60% (o limite da Brasa);
+  - Eco II na arma e Eco III + Eco II no tomo de Odette: 15 + 20 + 15 = 50%, que vira 35% (o limite do Eco).
+- **A ficha da peça mostra o que a peça fornece** (as gravações dela somadas, até o limite). O total de quem veste
+  aparece na prévia do Encantar, quando outra peça dele também soma ou o limite corta; não substitui a descrição.
+- **[Substituído]** O modelo da 13ª e 14ª versões: tiers que contribuíam com 1, 2 e 3 níveis de um efeito único, nível
+  total de 1 a 5 por personagem e teto de 5 ("Eco 4 em Jean"). Não existe mais nível de efeito.
 
 ### 3.3 Gravar, substituir, perder [Aprovado]
 - **Gravar:** consome 1 essência do tier escolhido e 30 de ouro, com reputação. Nunca falha.
@@ -198,6 +205,9 @@ As outras peças (cabeça, mãos, pernas, pés, aljava, anel, amuleto) recebem r
 - **A mesma gravação:** a mesma essência no mesmo tier sobre ela mesma (Carrasco III sobre Carrasco III) não muda
   nada; o motor recusa sem cobrar ("Já gravado."), e a tela mostra o motivo no lugar do botão. Outro tier da mesma
   essência é uma substituição normal.
+- **Peça vestida e requisito:** se a gravação deixaria a peça acima do nível de quem a veste, o motor recusa sem cobrar
+  ("Requer nível 9 (Jean: 4). Na bolsa, pode gravar."). Na bolsa, a peça pode ser preparada para depois. Nada é
+  tirado do corpo sozinho, e ninguém fica com o benefício sem cumprir o requisito.
 - **Peça e dono:** a gravação é da peça e vai com ela quando ela troca de dono.
 - **Desmontar** perde as gravações. A confirmação lista quais ("Perde as gravações: Brasa II, Eco I.").
 - **Compatibilidade por essência:**
@@ -207,56 +217,77 @@ As outras peças (cabeça, mãos, pernas, pés, aljava, anel, amuleto) recebem r
   - Revide: peito e escudo;
   - Geada: peito.
 
-## 4. As seis essências [Provisório: as tabelas]
+### 3.4 Requisito de nível [Aprovado: as regras; Provisório: a tabela]
+- **Dois números diferentes:** o **nível da base** (`nivel` no item) é o nível em que a peça foi gerada e decide a força
+  dela (a escala, o material); o **requisito** é o nível mínimo para usá-la.
+- **Requisito do equipamento:** o nível da base menos 1, nunca menos de 1. O jogo gera o achado no nível do herói ou um
+  acima (`gerar_equip(..., g.j.nivel + 1)`), então o achado de agora serve agora; uma peça de uma região mais alta
+  espera. Exemplos do protótipo: a espada inicial (base 2) pede o 1; a substituta de base 7 pede o 6.
+- **Requisito de cada tier:** Essência I, nível 1; II, nível 5; III, nível 9. É a mesma faixa do conteúdo que dá cada
+  tier (`tier_do_nivel`: I até o 4, II do 5 ao 8, III do 9); o chefe dá um tier acima, que fica para depois.
+- **A peça gravada** pede o maior entre o requisito dela e o das gravações. O reforço sozinho não muda o requisito.
+- **Quem veste:** o nível real de quem vai vestir, o herói ou o companheiro (no jogo, os companheiros crescem com o
+  nível do herói). Abaixo do requisito, vestir é bloqueado com o motivo curto ("Requer nível 9.") em todos os caminhos:
+  o Inventário (clique duplo, menu, arrastar, troca entre personagens), o achado ("Guardar na mochila (requer nível
+  7)"), o mercado e a troca de arma na luta.
+- **Não muda:** as regras de evolução dos companheiros; quem já veste uma peça acima do nível (um save antigo) não a
+  perde sozinho.
 
-Em cada tabela, **só uma dimensão cresce** com o nível; o gatilho, o alvo, a duração e o limite ficam. "Rodada" é
-quando todos agiram (`cb.turno` no motor); "turno" é a vez de um combatente. Nenhum efeito secundário dispara outro: o
-tique de uma Queimadura, um Revide ou outra reação não aciona gravação nenhuma. Invocações não vestem peças e não
-contam como portador.
+## 4. As seis essências [Provisório: os valores e os limites]
 
-| Nível | Brasa (chance) | Carrasco (dano a mais) | Eco (recurso) | Vigília (barreira) | Revide (chance) | Geada (chance) |
-|---|---|---|---|---|---|---|
-| 1 | 25% | +20% | 15% | 10% | 15% | 15% |
-| 2 | 32% | +25% | 20% | 13% | 20% | 20% |
-| 3 | 39% | +30% | 25% | 16% | 25% | 25% |
-| 4 | 46% | +35% | 30% | 19% | 30% | 30% |
-| 5 | 53% | +40% | 35% | 22% | 35% | 35% |
+Cada essência tem um valor por tier e um limite para a soma de quem veste. Só a propriedade da tabela cresce; o
+gatilho, o alvo, a duração e a frequência ficam. "Rodada" é quando todos agiram (`cb.turno` no motor); "turno" é a vez
+de um combatente. Nenhum efeito secundário dispara outro: o tique de uma Queimadura, um Revide ou outra reação não
+aciona gravação nenhuma. Invocações não vestem peças e não contam como portador.
+
+| Essência | O que soma | I | II | III | Limite da soma |
+|---|---|---|---|---|---|
+| Brasa | chance de Queimadura | 20% | 28% | 36% | 60% |
+| Carrasco | dano a mais | 15% | 22% | 30% | 50% |
+| Eco | recurso por abate | 10% | 15% | 20% | 35% |
+| Vigília | barreira (% da vida) | 8% | 11% | 14% | 25% |
+| Revide | chance de revidar | 12% | 18% | 24% | 40% |
+| Geada | chance de congelar | 12% | 18% | 24% | 40% |
+
+Critério das tabelas: o tier maior vale mais; uma gravação sozinha nunca chega ao limite; três do tier III sempre
+passam dele (o limite corta a repetição extrema). O tier I fica perto do antigo nível 1 e o III perto do antigo nível
+3; o limite fica perto do antigo nível 5.
 
 - **Brasa** (arma):
   - **Gatilho e alvo:** um golpe do portador que acerta um inimigo; atinge esse inimigo.
-  - **Efeito:** aplica 1 camada de Queimadura, até 3. O valor é 25% do maior entre Ataque e Poder (mínimo 2), com a
-    duração da Queimadura do herói (2 turnos quando o portador é um companheiro).
+  - **Efeito:** com a chance da soma, aplica 1 camada de Queimadura, até 3. O valor é 25% do maior entre Ataque e Poder
+    (mínimo 2), com a duração da Queimadura do herói (2 turnos quando o portador é um companheiro).
   - **Limite:** 1 aplicação por rodada. Em área ou em golpes múltiplos, vale a primeira que pegar.
   - **Interações:** soma camadas com a Queimadura do Mago; o tique não dispara a Brasa; chefes recebem igual.
 - **Carrasco** (arma):
   - **Gatilho e alvo:** cada golpe do portador num inimigo abaixo de 35% da vida.
-  - **Efeito:** o dano a mais da tabela.
-  - **Limite:** nenhum; vale em cada alvo de um golpe em área.
+  - **Efeito:** o dano a mais da soma.
+  - **Limite:** nenhum por frequência; vale em cada alvo de um golpe em área.
   - **Interações:** multiplica com os outros bônus; não vale nos tiques nem nas reações; chefes recebem igual.
 - **Eco** (arma, tomo, escudo):
   - **Gatilho e alvo:** um inimigo cai pelo golpe do portador; recupera o próprio portador.
-  - **Efeito:** a porcentagem da tabela da Mana, do Vigor ou do Foco máximos.
+  - **Efeito:** a porcentagem da soma da Mana, do Vigor ou do Foco máximos.
   - **Limite:** 2 vezes por luta, fixo, para não virar recurso sem fim.
   - **Interações:** cada inimigo derrubado num golpe em área conta uma vez, dentro do limite.
 - **Vigília** (peito, escudo, tomo):
   - **Gatilho:** o começo da luta.
-  - **Efeito:** a barreira da tabela, por 3 turnos do portador.
+  - **Efeito:** a barreira da soma, por 3 turnos do portador.
   - **Limite:** 1 vez por luta.
   - **Interações:** não soma com outra barreira; vale a maior (a Aura de Proteção).
 - **Revide** (peito, escudo):
   - **Gatilho e alvo:** um golpe corpo a corpo de inimigo que acerta o portador; revida em quem bateu.
-  - **Efeito:** um golpe de 60% do Ataque.
+  - **Efeito:** com a chance da soma, um golpe de 60% do Ataque (o dano não cresce com a repetição).
   - **Limite:** 1 resposta por golpe e **2 por rodada**, para não virar um ciclo com muitos atacantes.
   - **Interações:** o revide não aciona outro revide nem a Brasa; não responde a golpes à distância nem a tiques; um
     golpe em área que pega o portador conta como um golpe.
 - **Geada** (peito):
   - **Gatilho e alvo:** um golpe corpo a corpo de inimigo que acerta o portador; congela quem bateu.
-  - **Efeito:** o atacante perde a próxima vez.
+  - **Efeito:** com a chance da soma, o atacante perde a próxima vez.
   - **Limite:** 1 vez por luta.
   - **Interações:** chefes e gigantes resistem metade das vezes (a regra do Atordoado).
 
-Os textos da ficha saem dessas tabelas (`encanto.texto`). Exemplo no nível 1: "Eco 1 Ao abater um inimigo, recupera
-15% do recurso máximo. Até 2 vezes por luta."
+Os textos saem do valor de cada tier (`encanto.texto`). Exemplo: "Revide II · Ao receber um golpe corpo a corpo, 18% de
+chance de revidar com 60% do Ataque. No máximo 2 vezes por rodada."
 
 ## 5. Transferência de reforço [Aprovado: as regras para testar; Provisório: o custo e a perda]
 
@@ -298,8 +329,10 @@ Cobrado uma vez por pedido. A confirmação mostra os dois resultados e o preço
 
 ## 7. Herói e companheiros
 - **Peças de todos:** a forja mostra as peças do herói, de cada companheiro e da bolsa, em abas por dono.
-- **Nível total:** é de cada personagem, pelas peças que ele veste.
-- **Na ficha:** uma peça vestida mostra o total de quem a veste. Uma peça na bolsa mostra só o que ela dá.
+- **A soma das essências:** é de cada personagem, pelas peças que ele veste.
+- **Na ficha:** a peça mostra o que ela fornece, igual na bolsa e no corpo. O total de quem veste fica na prévia do
+  Encantar (quando outra peça dele também soma ou o limite corta).
+- **Requisito:** o nível de quem vai vestir (seção 3.4).
 - **Companheiro fora do grupo:** não pode ter peças reforçadas (`motivo_indisponivel`).
 
 ## 8. Salvamento, identidade e persistência
@@ -320,34 +353,46 @@ Cobrado uma vez por pedido. A confirmação mostra os dois resultados e o preço
 ## 9. Fluxos da interface [Protótipo]
 - **Uma janela para as quatro operações:** Reforçar, Encantar, Transferir e Desmontar usam a mesma moldura, do mesmo
   tamanho, com o mesmo cabeçalho e o Fechar no mesmo lugar; trocar de aba não move a janela. O cabeçalho leva só as
-  abas, o ouro e o Fechar; cada material aparece junto da operação que o gasta ("tem N" ao lado do custo). As listas
+  abas, o ouro e o Fechar; cada material aparece junto da operação que o gasta ("tem N" ao lado do custo; o ouro, que
+  já está no cabeçalho, sem o "tem"). As listas
   rolam por dentro. Reforçar e o resultado em destaque são a referência das outras abas.
 - **Reforçar:**
   - o aquecimento corre na bancada;
-  - na revelação, o resultado sai da bancada para a apresentação em destaque, com o véu, o nome com o nível, a peça,
-    as propriedades antes → depois, "SUCESSO" ou "FALHOU" e o OK;
+  - na revelação, o resultado sai da bancada para a apresentação em destaque, com o véu: o nome com o nível, a peça
+    com os efeitos, as propriedades antes → depois, os símbolos dos sulcos (as descrições das gravações, que não
+    mudam, ficam para a inspeção), "SUCESSO" ou "FALHOU" e o OK;
+  - o SUCESSO e o OK ficam mais abaixo, com espaço de leitura, e o OK fora do lugar do Reforçar atrás (a 1920 e a
+    1280); "OK" é o rótulo, e o Enter, uma marca discreta;
   - o resultado fica até OK, Enter ou Esc.
 - **Encantar** (sem ficha lateral; a peça se inspeciona com o mouse e o teclado):
   - **a peça e os sulcos:** o nome, o dono, o desenho e um botão por sulco, com o ícone e o tier da essência dentro;
     vazio, ocupado e escolhido se distinguem. Retirar a peça: o molde ou a miniatura;
-  - **a essência:** primeiro a família (o ícone e o nome; a 1280, só o ícone), depois o tier I, II ou III, com o tier e
-    a quantidade separados ("III ×3");
-  - **a prévia**, com os números do motor: a contribuição da peça (antes → depois), o nível do efeito em quem veste
-    (na bolsa, só a contribuição), o valor que muda ("Chance 39% → 53%"), numa troca a essência que sai e a que
-    entra, e uma nota curta quando parte passa do teto;
+  - **a essência:** primeiro a família (o ícone e o nome; a 1280, só o ícone), depois o tier I, II ou III: o símbolo
+    com o tier no canto de cima à direita e a quantidade no canto de baixo, fora do símbolo;
+  - **a prévia**, calculada no motor (`demo.previsao`): a essência escolhida com o efeito dela (o valor do tier), o
+    requisito (em vermelho quando quem veste não chega lá), numa substituição só os valores que mudam ("Brasa nesta
+    peça 40% → 60%", "Carrasco nesta peça 15% → —"), a linha de quem veste quando outra peça dele também soma, a troca
+    ("Sai Carrasco I · entra Brasa II") e, quando o limite corta, a consequência antes de pagar ("Limite 60%: 8% desta
+    gravação não valem."). Saíram "+1 nível", "no lugar de +1", "nível em Jean" e o teto antigo;
   - o pé fixo, com o custo e Gravar ou Substituir; substituir pede confirmação; a mesma gravação aparece como
-    "Já gravado" e não cobra;
-  - a gravação concluída aparece na mesma apresentação em destaque, sem suspense.
+    "Já gravado" e não cobra; numa peça vestida, a gravação acima do nível de quem veste mostra o motivo no lugar do
+    botão;
+  - a gravação concluída aparece na mesma apresentação em destaque, sem suspense, com a gravação nova em destaque
+    (o efeito dela) e a que saiu.
 - **Transferir** (duas peças):
-  - origem e destino em dois encaixes do mesmo tamanho, ligados por um conduto, cada um com "+a → +b"; o preço e o
-    Transferir embaixo;
+  - origem e destino em dois encaixes do mesmo tamanho, ligados por um conduto; o reforço de agora na etiqueta do
+    ícone e, embaixo, "Após transferir" e só o nível previsto (a origem +0 em vermelho, o destino em verde; o rótulo
+    Origem/Destino e o texto continuam, a cor não é o único sinal); a moeda e o preço ao lado do Transferir;
   - clicar num encaixe abre a lista de escolha: ícone, nome, raridade, reforço e dono (duas peças de mesmo nome se
     distinguem por isso e pelo id). Com a origem escolhida, os destinos possíveis vêm primeiro e os outros dizem por
     quê ("Nenhum destino" na origem que não tem para onde ir);
   - trocar a origem limpa o destino que deixou de servir, com uma linha dizendo isso, e reabre a lista dos destinos;
-  - a confirmação mostra os dois resultados e o preço antes de cobrar;
+  - a confirmação mantém os dois encaixes (os dois resultados) e só acrescenta a pergunta, o preço, Cancelar e
+    Transferir; as regras ("o destino recebe o nível da origem menos 2", "afixos, sulcos e gravações ficam em cada
+    peça") saíram da tela e continuam aqui, na seção 5, e na ajuda;
   - a cena (1,4 s): a origem acende, a luz corre pelo conduto, a origem perde o acabamento e o destino recebe o nível
-    e o acabamento; depois, "Transferência concluída" com os dois resultados, até o OK. Sem suspense e sem a explosão
+    e o acabamento; depois, "Transferência concluída" num véu fechado (a bancada atrás não disputa a leitura), com o
+    destino em destaque (o novo nível em verde) e a origem com +0 em vermelho, até o OK. Sem suspense e sem a explosão
     do reforço máximo. Com movimento reduzido, o resultado parado. Adiantar não dispensa nem repete; fechar a janela
     não desfaz nem duplica; a cena só representa a transação já resolvida;
   - depois do OK, as escolhas se limpam (nenhum par novo é escolhido sozinho) e o foco volta ao encaixe da origem.
@@ -355,10 +400,14 @@ Cobrado uma vez por pedido. A confirmação mostra os dois resultados e o preço
   transformação é curta, sem celebração.
 - **Gestos:**
   - as confirmações só aceitam o clique depois de 400 ms;
-  - o segundo clique de um clique duplo não age;
+  - o segundo clique de um clique duplo (`event.detail` 2) não age; do terceiro em diante é uma ação nova. Antes,
+    todo clique com `detail` acima de 1 era tratado como o resto do gesto, e quem clicava de novo no mesmo lugar logo
+    depois do OK (o Windows segue contando 3, 4, 5…) ficava travado até parar de clicar;
+  - não há pausa por tempo depois de dispensar (saíram os 450 ms que engoliam qualquer clique): o resto do gesto é só
+    o 2º clique do duplo e o clique que o Espaço gera ao soltar a tecla que dispensou;
   - a tecla segurada não repete;
   - o gesto que adianta a cena não dispensa o resultado;
-  - o resto do gesto que dispensa não chega à bancada;
+  - cada tentativa é uma cobrança e um resultado;
   - Esc revela, cancela a confirmação e fecha, nessa ordem.
 
 ## 10. Linguagem visual [Protótipo]
@@ -371,50 +420,83 @@ Cobrado uma vez por pedido. A confirmação mostra os dois resultados e o preço
   - O +N fica no canto do encaixe e, nas dicas, colorido pelo nível.
 - **Reflexo:** passa por cima do desenho sem modo de mistura; com mistura, a 125% e 150% de escala o navegador
   amostrava o desenho de outro jeito e a peça parecia se mexer (a Manopla de Ferro +2).
+- **Veio (+5 a +12) e contorno (+4 a +12):** cada passo do veio é um quadro pronto (o desenho, as faixas misturadas
+  em "overlay" e o recorte pela peça, pintados num canvas fora da tela na resolução do desenho) mostrado como imagem
+  por cima da peça; o contorno também é uma imagem. Guardados por desenho e nível. **A causa do tremor no resultado
+  (15ª):** a mistura do veio era do CSS (`mix-blend-mode: overlay`); com ela, o navegador compunha a peça num grupo à
+  parte e a reamostrava, e no resultado em destaque o desenho ficava borrado (a 125%, quase todo) e o borrão mudava
+  quando o reflexo, os brilhos ou o passo do veio entravam, como se a peça tremesse. Com a mistura no canvas mostrado
+  na tela, a 125% o canvas ainda saía suavizado (a posição do resultado não cai num pixel inteiro, e o navegador
+  encaixa no pixel a imagem, não o canvas); como imagem, fica nítido. Medido no resultado (blocos de um pixel do
+  desenho que não são de uma cor só, mediana dos quadros): a 125%, Couraça +10 de 89% para 1%, Martelo +12 de 83% para
+  0%, Machado +5 de 68% para 0%; a 150%, Couraça de 90% para 0%; a 100%, Couraça de 65% para 0%. O que ainda mistura
+  é a passada do reflexo, que é o efeito. Depois do impacto, a silhueta e os pixels da peça ficam parados; só o
+  reflexo, os raios, as partículas e as cores do veio andam. Também corrigido: quando o resultado abria antes de o
+  desenho carregar, o veio tomava a largura na tela (80) pela do desenho (40) e as faixas saíam com meio pixel da peça.
+- **Alinhamento do resultado:** o conjunto é deslocado por `left`/`top` (layout) até a peça cair num pixel inteiro do
+  aparelho, não por `translate`.
 - **Gravação:** um rastro de luz na cor da essência percorre a borda do encaixe.
-- **Fichas:** o nome é o título; tipo e raridade numa linha secundária; os sulcos (os vazios também) com o ícone e o
-  tier dentro; um efeito por linha, com o nome pequeno, no nível ativo (nunca acima do teto) e a parte desta peça
-  entre parênteses quando difere. "Detalhes" abre por clique ou teclado: uma frase por essência (a condição ou a
-  interação que muda a decisão) e a regra do nível total. Sem rodapés "Clique para…" nas dicas; no Inventário, a
-  peça marcada não abre a dica por cima da ficha ao lado.
+- **Tier:** I, II ou III num selo de latão no canto de cima à direita do símbolo da essência, nos materiais, na
+  seleção da forja, nos sulcos, nas fichas e no espólio; a quantidade fica noutro canto.
+- **Fichas** (a hierarquia das fichas do Diablo IV, com a arte do jogo), nesta ordem:
+  1. o nome e o reforço ("Martelo de Aço +3");
+  2. o tipo e a raridade; a base sai dos parênteses do título e vai para esta linha ("Machado · Lendário", sem
+     "(Machado)" no nome);
+  3. os atributos e afixos;
+  4. os sulcos (os vazios também, com o tier no canto) e os efeitos da peça: o nome com os tiers numa linha pequena
+     ("Brasa III + II") e, embaixo, o gatilho, o efeito e o limite; acima do limite, "Limite 60%.";
+  5. "Requer nível N", à direita, em vermelho quando falta;
+  6. o resto (a comparação, o motivo de não usar, a venda, o texto de sabor).
+  "Detalhes" abre por clique ou teclado: uma frase por essência (a condição ou a interação que muda a decisão, e até
+  quanto a repetição soma). Sem rodapés "Clique para…" nas dicas; no Inventário, a peça marcada não abre a dica por
+  cima da ficha ao lado.
+- **Dicas na janela:** quando a ficha cresce depois de abrir (os sulcos entram depois), a dica sobe até caber acima da
+  doca e do fim da tela; maior que o espaço, rola por dentro, sem diminuir a letra.
 - **Seleção e foco:** os cantos de latão e o anel de foco não mudam com o acabamento.
 
 ## 11. Casos de teste e exemplos
 
-**Testes automáticos** (`ferramentas/prototipos/reforco/testes`, 45):
+**Testes automáticos** (`ferramentas/prototipos/reforco/testes`, 52):
 - reforço em todos os espaços, sem cair, com a arma sentindo cada passo até o +4;
 - forma fechada sem deriva;
 - tetos de %;
 - transferência (resultado, conservação, cobrança única, nada se cria, cadeia);
-- tiers que somam, e só o que se veste conta;
-- teto;
-- textos por nível;
-- a ficha com o total;
+- cada tier com o seu valor; repetição igual e misturada, na mesma peça e entre peças, até o limite; só o que se veste
+  conta;
+- textos pelo valor do tier; a ficha com o que a peça fornece; a prévia da troca e do limite;
+- requisitos: a tabela, a peça gravada, vestir bloqueado em todos os caminhos (herói e companheiro), o achado acima do
+  nível, a gravação em peça vestida recusada sem cobrar e a preparação na bolsa;
 - o saque real dando materiais pela criatura;
-- Carrasco pela tabela; Revide pelo nível total e no máximo 2 por rodada; Eco até 2 por luta;
+- Carrasco pela tabela; Revide pela soma até o limite e no máximo 2 por rodada; Eco até 2 por luta;
 - lutas de verdade;
 - salvar e carregar.
 
 **Cenários da faixa da demonstração** (só no save temporário):
 - **Níveis altos (teste):** peças de +4 a +12, duas com três gravações.
-- **Essências (teste):**
-  - Jean: Brasa II + Brasa I + Carrasco I (Brasa 3); Vigília III + Revide II + Geada I;
-  - Odette: Eco 7, acima do teto;
-  - Morel: Revide II;
+- **Essências (teste):** vestidas, só tier I (o grupo está no nível 4):
+  - Jean: Brasa I + Brasa I + Carrasco I na arma (Brasa 40%); Vigília I + Revide I + Geada I no peito;
+  - Odette: Eco I na arma e Eco I + Eco I no tomo (Eco 30%, entre peças);
+  - Morel: três Revides I (36%);
+  - na bolsa, preparadas: o Martelo de Aço com Brasa III + Brasa II (64%, o limite corta; requer o 9) e a Couraça com
+    Vigília II (requer o 5);
   - 3 essências de cada tier.
+- **Nível +4 (teste):** o grupo sobe 4 níveis pelo caminho do jogo (`dev.subir_ate`), sem a festa: duas vezes levam do
+  4 ao 12, para ver os requisitos de II e III atendidos.
 - **Transferência (teste):** na bolsa, uma arma comum +10, outra +2 (com Brasa, sem destino possível), um peito
   incomum +6 e outro +0; o Martelo de Ferro de Jean e o de Morel têm o mesmo nome.
 - Os demais: Sucesso e Falha (teste), Comparação e Luta de teste.
 
-**Exemplo completo:** Jean veste a arma com Brasa II + Brasa I (Brasa 3). Na bolsa, uma armadura com Vigília III não
-conta. Ao escolher Brasa III para o terceiro sulco (onde está Carrasco I), a prévia diz "Contribuição +3 níveis",
-"Brasa em Jean nível 3 → 5", a chance que muda, "Carrasco em Jean nível 1 → 0", "Sai Carrasco I · entra Brasa III" e
-"Teto 5: +1 nível sem efeito". Na luta, cada golpe que acerta tem 53% de chance de Queimadura, no máximo 1 vez por
-rodada.
+**Exemplo completo:** Jean (nível 4) veste a arma com Brasa I + Brasa I + Carrasco I (Brasa 40%). Ao escolher Brasa
+II para o terceiro sulco (onde está Carrasco I), a prévia diz o efeito da Brasa II (28% de chance), "Requer nível
+5" em vermelho, "Brasa nesta peça 40% → 60%", "Carrasco nesta peça 15% → —", "Sai Carrasco I · entra Brasa II" e
+"Limite 60%: 8% desta gravação não valem."; o botão fica bloqueado ("Requer nível 5 (Jean: 4). Na bolsa, pode
+gravar."). No nível 5, a mesma gravação passa e, na luta, cada golpe que acerta tem 60% de chance de Queimadura, no
+máximo 1 vez por rodada.
 
 ## 12. Pendências para integrar e assuntos futuros
 - **Equilíbrio em avaliação:** chances e custos do +5 ao +12 e o ouro (alto para a campanha curta); as tabelas das
-  essências e o teto 5; as fontes e as chances de material. Julgar jogando a campanha ampliada.
+  essências (os valores por tier e os limites) e os requisitos de nível; as fontes e as chances de material. Julgar
+  jogando a campanha ampliada.
 - **Integração:**
   - trocar o ferreiro de produção (seção 0);
   - levar regras, materiais e save para o motor;
@@ -426,4 +508,7 @@ rodada.
 - **Fontes futuras da campanha:** quests e contratos, e os tiers do conteúdo avançado.
 - **A conferir:** peças de muitos afixos fortes crescendo todas as linhas; gravação nos outros espaços (hoje não).
 - **Decisões substituídas** (registradas para não voltarem): o limite +4; a escolha Fio ou Runas; o reforço só da
-  base; o dobro dos apoios; "a mesma essência não repete"; um efeito por essência gravada (agora, pelo nível total).
+  base; o dobro dos apoios; "a mesma essência não repete"; um efeito por essência gravada; o nível total de 1 a 5
+  com teto (agora, cada tier com o seu valor e a soma até o limite de cada efeito).
+- **Mercado:** a peça acima do nível não se equipa ali (o motor recusa), mas o texto do jogo ainda diz "não é para a
+  sua classe" (mercado.js, produção); a corrigir na integração.
