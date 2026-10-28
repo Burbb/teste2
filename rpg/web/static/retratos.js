@@ -392,7 +392,8 @@ const Retratos = (() => {
     "dddLLLRRrrllllnn",
   ];
   // Odette: a touca branca, o véu escuro roído num ombro (o chamuscado), a pequena cruz amarela envelhecida; 40×40 a
-  // 2×, como os heróis, e a de 16×16 na carta e na fogueira.
+  // 2×, como os heróis, e a de 16×16 na carta e na fogueira. 1.215.0: o busto mais estreito, aprovado pelo Jean (os
+  // ombros caem do véu um pixel por linha, de 38 para 32 pixels, e o hábito abre devagar; o rosto não mudou).
   const CORES_ODETE = { P: "#c8a088", Q: "#58402c", U: "#18140f", V: "#4a423c", W: "#d8ccb2", Y: "#a68c48", e: "#20160f", o: "#76584a", p: "#a47e68", q: "#8a806c", u: "#26211d", v: "#352f2a", w: "#b4a890", y: "#6e5c32" };
   const ODETE = [
     "........................................",
@@ -416,25 +417,25 @@ const Retratos = (() => {
     "...........VVVWWWWppppwwqqUUU...........",
     "...........VVVWWWqqqqqqwqqUUU...........",
     "..........VVVVWWWWWwwwwwqqUUUU..........",
-    "........vvVVVVVWWWWWwwwwwuUUUUuu........",
-    "......VVvvVVVVVvWWWWwwwwuuUUUUuuuU......",
-    "....VVVVvvVVVVVvWWWWwwwwuuUUUUuuuUUU....",
-    "...VVVVVvVVVVVVvvWWWwwwuuuUUUUUuuuUUU...",
-    "..VVVVVVvVVVVVVvvvWWwwuuuuUUUUUuuUUUUU..",
-    "..VVVVVVvVVVVVVvvvvvvvuuuuUUUUUuuUUUUU..",
-    "..QVVVVVvVVVVVVvvvvYvvuuuuUUUUUuuUUUUUU.",
-    "...QVVVVVVVVVVVvvvYYyvuuuuUUUUUUuUUUUUU.",
-    "..QVVVVVVVVVVVVvvvvYvvuuuuUUUUUUuUUUUUU.",
-    ".QQVVVVVVVVVVVVvvvvyvvuuuuUUUUUUuUUUUUU.",
-    ".VVVVVVVvvvvvvvvvvvvvvuuuuuuuuuuuUUUUUU.",
-    ".VVVVVVVvvvvvvvvvvvvvvuuuuuuuuuuuUUUUUU.",
-    ".VVVVVVVvvvvvvvvvvvvvvuuuuuuuuuuuUUUUUU.",
-    ".VVVVVVVvvvvvvvvvvvvvvuuuuuuuuuuuUUUUUU.",
-    ".VVVVVVVvvvvvvvvvvvvvvuuuuuuuuuuuUUUUUU.",
-    ".VVVVVVVvvvvvvvvvvvvvvuuuuuuuuuuuUUUUUU.",
-    ".VVVVVVVvvvvvvvvvvvvvvuuuuuuuuuuuUUUUUU.",
-    ".VVVVVVVvvvvvvvvvvvvvvuuuuuuuuuuuUUUUUU.",
-    ".VVVVVVVvvvvvvvvvvvvvvuuuuuuuuuuuUUUUUU.",
+    ".........VVVVVVWWWWWwwwwwuUUUUU.........",
+    "........VVvVVVVvWWWWwwwwuuUUUUuU........",
+    ".......VVvVVVVVvWWWWwwwwuuUUUUuUU.......",
+    "......VVVvVVVVVvvWWWwwwuuuUUUUuUUU......",
+    ".....VVVVvVVVVVvvvWWwwuuuuUUUUuUUUU.....",
+    ".....VVVVvVVVVVvvvvvvvuuuuUUUUuUUUU.....",
+    "....QVVVVvVVVVVvvvvYvvuuuuUUUUuUUUUU....",
+    ".....QVVVVVVVVVvvvYYyvuuuuUUUUuUUUUU....",
+    "....QVVVVVVVVVVvvvvYvvuuuuUUUUuUUUUU....",
+    "....QQVVVVVVVVVvvvvyvvuuuuUUUUuUUUUU....",
+    "....VVVVVVVVVVvvvvvvvvuuuuuUUUuUUUUU....",
+    "....VVVVVVVVVvvvvvvvvvuuuuuuUUuUUUUU....",
+    "....VVVVVVVVvvvvvvvvvvuuuuuuuUUUUUUU....",
+    "....VVVVVVVVvvvvvvvvvvuuuuuuuUUUUUUU....",
+    "....VVVVVVVVvvvvvvvvvvuuuuuuuUUUUUUU....",
+    "....VVVVVVVVvvvvvvvvvvuuuuuuuUUUUUUU....",
+    "....VVVVVVVVvvvvvvvvvvuuuuuuuUUUUUUU....",
+    "....VVVVVVVVvvvvvvvvvvuuuuuuuUUUUUUU....",
+    ".....VVVVVVVvvvvvvvvvvuuuuuuuUUUUUU.....",
   ];
   const ODETE_CARTA = [
     "................",
