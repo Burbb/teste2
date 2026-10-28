@@ -53,7 +53,7 @@ class Loja:
             detalhe = "O mercador reabastece amanhã cedo." if estoque[k] == 0 else None
             return {"id": k, "nome": nome, "icone": icone, "desc": desc, "preco": preco, "tem": tem, "teto": teto,
                     "estoque": estoque[k], "limite": limite, "motivo": motivo, "detalhe": detalhe,
-                    "motivo_id": "esgotado" if estoque[k] == 0 else None}
+                    "motivo_id": "esgotado" if estoque[k] == 0 else None, "sem_ouro": j.ouro < preco}
         return {
             "ouro": j.ouro, "limite": LIMITE_MOCHILA, "ocupado": len(j.mochila),
             "consumiveis": [suprimento(k, CONSUMIVEIS[k]["nome"], CONSUMIVEIS[k]["icone"], itens.descricao(k, j),
@@ -67,10 +67,11 @@ class Loja:
                            min(estoque["flechas"], self.max_flechas() - j.flechas),
                            teto=self.max_flechas(), cheio="A aljava está cheia.")]
                if j.classe == "arqueiro" else []),
-            "equipamentos": [dict(item(it, self.preco(it["preco"])), motivo=self.motivo_compra_equip(it))
-                             for it in self.estoque()],
+            "equipamentos": [dict(item(it, self.preco(it["preco"])), motivo=self.motivo_compra_equip(it),
+                                  sem_ouro=j.ouro < self.preco(it["preco"])) for it in self.estoque()],
             "mochila": [dict(item(it, it["preco"] // 2), usavel=self.pode_usar(it)) for it in j.mochila],
-            "recompra": [dict(item(it, valor), motivo=self.motivo_recompra(valor)) for it, valor in self.recompra],
+            "recompra": [dict(item(it, valor), motivo=self.motivo_recompra(valor), sem_ouro=j.ouro < valor)
+                         for it, valor in self.recompra],
         }
 
     def motivo_compra_equip(self, it):
@@ -263,7 +264,7 @@ class Loja:
             opcoes.append((f"Vender {it['nome']}", ("vender", it), {"vender": i}))
         for i, (it, _) in enumerate(self.recompra):
             opcoes.append((f"Recomprar {it['nome']}", ("recomprar", i), {"recomprar": i}))
-        op = self.menu("", opcoes + [("Sair do mercado", None, {"voltar": True})])
+        op = self.menu("", opcoes + [("Sair do mercado", None, {"voltar": True, "lugar": True})])
         if op is None:
             return True
         if op[0] == "vender":

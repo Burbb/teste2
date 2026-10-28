@@ -276,6 +276,10 @@
 .mercadoria.caro { opacity: 1; }
 .mercadoria.caro > .slot-px, .mercadoria.caro > .merc-nome, .mercadoria.caro > .merc-contas, .mercadoria.caro > .merc-bonus { opacity: 0.5; }
 .mercadoria.equip .preco { grid-column: 2; }
+/* o preço fica sempre no lugar (antes, o motivo o substituía e ele sumia quando faltava ouro); faltando ouro, ele
+   fica vermelho e o motivo, embaixo, diz quanto falta (a cor não é o único sinal) */
+.mercadoria .falta, .mercadoria .falta .total { color: var(--sangue-2, #e2574c); }
+.mercadoria.caro :is(.preco, .merc-total) { opacity: 1; }
 /* A entrada: a banca se revela (mercado.js) e os produtos chegam junto, de baixo, uma vez por visita; a saída apaga
    a banca no mesmo tempo da página. */
 .tela.loja.chegando .loja-lado { animation: loja-chega 0.32s ease-out both; }

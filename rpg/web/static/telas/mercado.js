@@ -28,15 +28,16 @@
       <span class="slot-px">${Icones.consumivel(c.id) || Icones.porDesenho(c.icone) || S(c.icone || "pocao", 2)}</span>
       <span class="merc-nome">${h(c.nome)}</span>
       <span class="merc-contas"><span class="merc-bolsa${cheio ? " cheio" : ""}">Na bolsa: <b>${tem}</b></span><span class="merc-estoque${c.estoque ? "" : " esgotado"}">Estoque: <b>${c.estoque}</b></span></span>
-      ${c.motivo ? motivoHtml(c.motivo, c.motivo_id) : `<span class="merc-acao"><span class="qtd-ctrl"><button type="button" data-q="-1" aria-label="menos ${h(c.nome)}">−</button><b aria-label="quantidade">${q}</b><button type="button" data-q="1" aria-label="mais ${h(c.nome)}">+</button></span>
-        <span class="merc-total" title="Preço total">${Icones.moeda() || S("moeda", 1)}<span class="total">${c.preco * q}</span></span></span>`}</div>`;
+      <span class="merc-acao"><span class="qtd-ctrl"><button type="button" data-q="-1" aria-label="menos ${h(c.nome)}">−</button><b aria-label="quantidade">${q}</b><button type="button" data-q="1" aria-label="mais ${h(c.nome)}">+</button></span>
+        <span class="merc-total${c.sem_ouro ? " falta" : ""}" title="Preço total">${Icones.moeda() || S("moeda", 1)}<span class="total">${c.preco * q}</span></span></span>
+      ${c.motivo ? motivoHtml(c.motivo, c.motivo_id) : ""}</div>`;
   }
 
   function equipamento(it, i) {
     return `<button type="button" class="mercadoria equip${it.motivo ? " caro" : ""}" data-comprar-item="${i}" ${dicaItem(it, it.motivo ? h(it.motivo) : "Clique para comprar. Se o espaço do corpo estiver vazio, você já sai vestindo.")}>
       <span class="slot-px r-${h(it.raridade)}">${Icones.item(iconeItem(it)) || S(iconeItem(it), 2)}</span>
       <span class="merc-nome r-${h(it.raridade)}">${h(it.nome)}</span><span class="merc-bonus">${h(it.bonus)}</span>
-      ${it.motivo ? motivoHtml(it.motivo) : `<span class="preco">${Icones.moeda() || S("moeda", 1)}${it.preco}</span>`}</button>`;
+      <span class="preco${it.sem_ouro ? " falta" : ""}">${Icones.moeda() || S("moeda", 1)}${it.preco}</span>${it.motivo ? motivoHtml(it.motivo) : ""}</button>`;
   }
 
   // Vender: a mochila como no inventário, uma grade com todos os espaços (os vazios também, apagados e fora do Tab).
