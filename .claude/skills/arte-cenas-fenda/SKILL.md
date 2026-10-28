@@ -9,7 +9,8 @@ O processo que levou a forja do Vau, depois de várias candidatas, à H aprovada
 corpo, estilo e movimento (a H2 é a H com o olho ajustado), e depois ao golpe final do ferreiro ("Corpo desce", na
 fonte e no jogo em 28/10/2026). Ele ajuda a fazer e a conferir uma cena; quem aprova é o Jean, no jogo. O estudo de
 caso, com as fontes e o que cada candidata ensinou, está em [forja.md](forja.md): use-o como exemplo, não como regra (as
-medidas, o ciclo de 53 quadros, a martelada e a paleta são da forja).
+medidas, o ciclo de 53 quadros, a martelada e a paleta são da forja). A curandeira (em avaliação) está em
+[curandeira.md](curandeira.md): o caso da atuação de um trabalho delicado (seção 5b).
 
 O que se quer evitar de novo: a imagem gerada reduzida e usada sem transposição artística, o personagem fora do estilo
 do jogo, os apoios desconectados, a anatomia confusa e as correções da animação descobertas tarde.
@@ -27,10 +28,12 @@ Cada passo fecha antes do seguinte; as seções abaixo detalham.
 4. **Desenho na grade real** (seção 3): silhuetas e volumes primeiro, nos pixels do jogo; materiais e detalhes depois.
 5. **Personagem** (seção 4): identidade (só o que o jogo estabelece), proporções, perspectiva e leitura no tamanho de
    uso.
-6. **Atividade** (seção 5): as poses-chave, os contatos e a trajetória da ferramenta antes de completar o ciclo; a
-   geometria do alcance (seção 5a).
-7. **Animação** (seção 5): o corpo participando quando a ação pede, os apoios preservados, o ritmo da atividade (não o
-   de outra cena) e a passagem limpa do fim para o começo; a pose parada para o movimento reduzido.
+6. **Atividade** (seções 5 e 5b): a atividade e os apoios por escrito, quem conduz, acompanha e fica, as poses-chave
+   do corpo inteiro, os contatos e a trajetória da ferramenta antes de completar o ciclo; a geometria do alcance
+   (seção 5a).
+7. **Animação** (seções 5 e 5b): uma rotina com pausas e intenção, as passagens escalonadas, os apoios preservados, o
+   ritmo da atividade (não o de outra cena) e a passagem limpa do fim para o começo; a pose parada para o movimento
+   reduzido. Limpeza, quantidade de quadros e atuação conferidas em separado.
 8. **Conferência no contexto** (seção 3, último item): a cena junto da HUD, dos serviços e dos rótulos, nas resoluções
    suportadas.
 9. **Fonte final** (seção 6): o arquivo editável como autoridade, a exportação reproduzível, os retoques protegidos.
@@ -129,6 +132,48 @@ tamanho de uso.
 - **Confira ciclos completos:** os quadros intermediários, a passagem do fim para o começo, a repetição, o movimento
   reduzido (uma pose parada coerente), e que sair e entrar de novo não acumule relógios.
 
+## 5b. A atuação, passo a passo (a curandeira, 28/10/2026)
+
+O ferreiro aprovado não impediu o erro de reaparecer na curandeira: o braço do pilão ficou limpo, com 12 poses a
+100 ms, sobre um tronco e uma cabeça desenhados uma vez só, e o resultado foi robótico. **Braço limpo e fluido sobre um
+corpo imóvel ainda é uma animação robótica.** A correção não é "mexer tudo": é decidir, pela atividade, quem mexe e
+quanto, nesta ordem e por escrito, antes dos quadros intermediários.
+
+1. **A atividade e os apoios.** Uma frase do que a pessoa faz ("mói ervas, olha a mistura, cheira uma pitada, volta a
+   moer") e a lista do que não se mexe enquanto ela faz (os pés, a barra da saia, o almofariz no tampo, a mão que
+   segura a borda, o pé do pilão dentro da boca).
+2. **Quem conduz, quem acompanha, quem fica**, numa tabela por trecho da rotina. Na curandeira, moendo: conduz a mão no
+   pilão; acompanham o cotovelo (sai do comprimento fixo do braço), os ombros (1 px à frente quando o pilão vai longe,
+   1 px abaixo onde a pedra aperta) e a cabeça (um quadro depois dos ombros); ficam o quadril e a saia. Olhando a
+   mistura: conduz o tronco; o quadril vai para trás, a saia acompanha no alto, a barra fica. O que fica parado é uma
+   decisão, não um esquecimento.
+3. **O alcance decide o corpo.** Braço com comprimentos fixos (ombro-cotovelo, cotovelo-mão) e o cotovelo calculado;
+   se a mão não alcança o ponto, o desenho falha (um `assert`) em vez de esticar o braço. Quem não alcança leva o corpo
+   junto, e é daí que o tronco participa de verdade. Se a geometria força uma postura ruim, mude a cena, não o pixel: a
+   Pita, de pé no chão, trabalhava com o almofariz na altura do peito e o braço esticado na altura do ombro; um
+   banquinho de madeira (ela sobe nele para alcançar a bancada da Marta) e 2 px mais perto resolveram.
+4. **Poses-chave do corpo inteiro**, numa folha de trabalho com a figura completa (pés até a cabeça) em cada uma: o
+   início, as pontas do gesto, a pausa, o contato com cada objeto. A ferramenta com tamanho fixo em todas (o pilão é um
+   vetor de comprimento constante, desenhado linha a linha com a mesma espessura).
+5. **Uma rotina, não um laço.** Uma atividade tem trechos com intenção e pausas: trabalhar algumas vezes, desacelerar,
+   conferir, fazer outra coisa pequena com o mesmo material, voltar. Escolha uma ação secundária que os objetos da cena
+   já sustentam e que o alcance permite sem caminhar (na curandeira, a pitada levada ao nariz). O fim emenda no começo
+   por uma pose em que a ferramenta já está igual (a pega deixa o pilão onde a pose 1 do giro o tem). A linha do tempo
+   sai da fonte (um JSON gerado), não é repetida na tela.
+6. **As passagens:** em cada troca de trecho, uma parte vai na frente e as outras chegam depois (a mão antes do corpo,
+   o corpo antes da cabeça, a cabeça vira por último); nenhuma pose troca tronco, quadril, cabeça e mão de uma vez.
+   Meça quanto cada parte anda de um tique para o outro (≤ 1 px no corpo, a mão um pouco mais); a contagem de pixels
+   mudados serve para achar candidatos a pulo, mas engana (deslocar o tronco 1 px muda muitos pixels e lê como
+   movimento pequeno).
+7. **Personagens diferentes, a mesma lógica:** o ritmo e a postura de cada um saem do que o jogo estabelece, com
+   contenção (Marta aperta nas pontas da volta e olha com mais tempo; Pita se inclina mais perto e é um pouco mais
+   ligeira). Nada de fragilidade ou agitação inventadas.
+8. **Conferência em três camadas, separadas:** a **limpeza técnica** (pixels soltos, buracos, a manga ligada ao braço,
+   nenhum pedaço do avental virando braço, a ferramenta do mesmo tamanho) no zoom; a **quantidade de quadros e o
+   ritmo** na linha do tempo; a **atuação** (o que a pessoa está fazendo, onde ela olha, se o corpo reage ao esforço,
+   se as pausas têm intenção, se a volta ao começo some) na sequência tique a tique e no jogo, no tamanho real. Passar
+   na primeira não diz nada das outras duas.
+
 ## 5a. Ferramenta, braço e contato (o golpe do ferreiro, 28/10/2026)
 
 O que as três passadas do golpe ensinaram (o histórico em [forja.md](forja.md)). Valem para qualquer personagem com uma
@@ -187,3 +232,13 @@ ferramenta: o pilão no almofariz, a faca na tábua, a concha no caldeirão.
 | O ombro levantado no contato | braço e cabo mais longos que a distância do ombro à peça | medir o alcance; baixar o corpo ou encurtar a ferramenta (5a) |
 | A cabeça do martelo com pixels fora do lugar | a ferramenta girada em código em qualquer ângulo | desenhar à mão nas poses de contato, alinhada à grade (5a) |
 | O retoque aprovado só no protótipo | a correção feita no desenho em código, fora da fonte | consolidar na fonte e travar os scripts antigos antes de integrar (6) |
+
+## Erros que aconteceram na curandeira
+
+| Erro | O que causou | Como evitar |
+|---|---|---|
+| O trabalho robótico com o braço limpo | tronco, cabeça e saia desenhados uma vez; só o braço em 12 poses | a tabela de quem conduz, acompanha e fica; o alcance fixo levando o corpo (5b) |
+| Mais quadros sem melhorar | o mesmo gesto isolado subdividido | uma rotina com desaceleração, pausa e ação secundária (5b, passo 5) |
+| O braço da menina como uma barra no ombro | a bancada de adulto: o almofariz na altura do peito dela | mudar a cena (o banquinho), não esticar o braço (5b, passo 3) |
+| Os maços como pinhatas | o mesmo saco simétrico em cores diferentes, o nó em bloco | cada planta pela silhueta dela, à mão: o barbante e as voltas da amarração, os talos, o leque, a espiga, a cabeça redonda, o cacho de bolinhas |
+| O pescoço solto do vestido | a grade da cabeça desenhada sem olhar onde começa o tronco | o pescoço da grade cai no colo do vestido em todas as poses da cabeça |
