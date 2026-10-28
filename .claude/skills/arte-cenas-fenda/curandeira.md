@@ -7,7 +7,15 @@ ainda:** é a candidata A em avaliação pelo Jean; as medidas e o ritmo são de
 |---|---|---|---|
 | 1ª | a cabana em código na linguagem da forja; o giro do pilão em 8 poses, só o braço | — | — |
 | 2ª | a botica (potes com coisas dentro, alambique, proteções); o braço em formas cheias, 12 poses a 100 ms | gostou da composição e da botica; os maços pareciam pinhatas; o trabalho, robótico (só o braço) | limpeza e número de quadros não fazem atuação |
-| 3ª | os maços à mão; a rotina com o corpo; os rostos refeitos | (em avaliação) | 5b da skill |
+| 3ª | os maços à mão; a rotina com o corpo; os rostos refeitos | gostou do cenário, dos ingredientes e da rotina; jogando, o braço parecia mais contínuo que o resto do corpo e que o jogo | mais poses no braço não dão coerência (5b, passo 8) |
+| 4ª | a volta em 7 poses sustentadas (a pressão de 4 a 6 tiques), a mesma duração; a mão alcança o cabo antes de pegar o pilão | (em avaliação) | — |
+
+## O ritmo da 4ª passada
+
+A volta (`figuras.VOLTA`): a pose 1 (o pilão inclinado), a 3 (longe do corpo: o peito vai à frente e desce), a 4 (a
+mesma pressão, com a cabeça terminando de descer), a 6 (a ponta passa na frente), a 9 (do lado do corpo), a 11 e a 0
+(de pé). Marta: 1, 3, 3, 2, 2, 2, 1 tiques (1,4 s); Pita: 1, 2, 2, 2, 2, 2, 1 (1,2 s). A última meia volta (`FREIO`)
+segura mais cada pose. A terceira passada fica em `anterior/terceira` ("Moagem anterior" na faixa).
 
 ## O que funcionou na 3ª passada
 

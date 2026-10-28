@@ -168,7 +168,14 @@ quanto, nesta ordem e por escrito, antes dos quadros intermediários.
 7. **Personagens diferentes, a mesma lógica:** o ritmo e a postura de cada um saem do que o jogo estabelece, com
    contenção (Marta aperta nas pontas da volta e olha com mais tempo; Pita se inclina mais perto e é um pouco mais
    ligeira). Nada de fragilidade ou agitação inventadas.
-8. **Conferência em três camadas, separadas:** a **limpeza técnica** (pixels soltos, buracos, a manga ligada ao braço,
+8. **O ritmo de uma parte combina com o resto da atuação.** Mais poses no braço não deixam a animação mais coerente:
+   na terceira passada da curandeira, o braço girava em 12 poses de um tique enquanto o corpo mudava de 1 px em 1 px
+   de vez em quando, e o braço parecia de outro jogo (contínuo demais, como um vídeo sobre pixel art). O que funcionou
+   (quarta passada): poucas poses escolhidas pela expressão (7 por volta, não 12), cada uma sustentada de 2 a 3
+   tiques, e o tempo concentrado no momento de esforço (a pressão longe do corpo dura 4 a 6 tiques, e a cabeça termina
+   de descer no meio dela, como acompanhamento). Mantenha a duração da ação: redistribua, não acelere. O relógio da
+   cena continua a 100 ms (o fogo, a troca de pose); é a pose que segura mais tempo.
+9. **Conferência em três camadas, separadas:** a **limpeza técnica** (pixels soltos, buracos, a manga ligada ao braço,
    nenhum pedaço do avental virando braço, a ferramenta do mesmo tamanho) no zoom; a **quantidade de quadros e o
    ritmo** na linha do tempo; a **atuação** (o que a pessoa está fazendo, onde ela olha, se o corpo reage ao esforço,
    se as pausas têm intenção, se a volta ao começo some) na sequência tique a tique e no jogo, no tamanho real. Passar
@@ -241,4 +248,5 @@ ferramenta: o pilão no almofariz, a faca na tábua, a concha no caldeirão.
 | Mais quadros sem melhorar | o mesmo gesto isolado subdividido | uma rotina com desaceleração, pausa e ação secundária (5b, passo 5) |
 | O braço da menina como uma barra no ombro | a bancada de adulto: o almofariz na altura do peito dela | mudar a cena (o banquinho), não esticar o braço (5b, passo 3) |
 | Os maços como pinhatas | o mesmo saco simétrico em cores diferentes, o nó em bloco | cada planta pela silhueta dela, à mão: o barbante e as voltas da amarração, os talos, o leque, a espiga, a cabeça redonda, o cacho de bolinhas |
+| O braço "contínuo demais" perto do corpo | 12 poses de um tique no braço, o corpo em passos raros de 1 px | poucas poses expressivas sustentadas, o tempo na pressão (5b, passo 8) |
 | O pescoço solto do vestido | a grade da cabeça desenhada sem olhar onde começa o tronco | o pescoço da grade cai no colo do vestido em todas as poses da cabeça |
