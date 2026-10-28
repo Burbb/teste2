@@ -1520,8 +1520,10 @@ def servir():
             return self._responder(200, html.replace("</body>", extra).encode("utf-8"), "text/html; charset=utf-8")
         # 18ª: a candidata do gesto do martelo (hud/forja/h2/candidata-gesto), no lugar da tira do ferreiro do jogo, só
         # quando o painel de testes a escolheu (o cookie rf-ferreiro); sem cache, para a troca valer ao recarregar
-        if caminho == "/static/cenas/forja/ferreiro.png" and "rf-ferreiro=candidata" in (self.headers.get("Cookie") or ""):
-            arq = os.path.join(AQUI, "..", "hud", "forja", "h2", "candidata-gesto", "ferreiro.png")
+        cookie = self.headers.get("Cookie") or ""
+        if caminho == "/static/cenas/forja/ferreiro.png" and ("rf-ferreiro=candidata" in cookie or "rf-ferreiro=reto" in cookie):
+            nome = "ferreiro-reto.png" if "rf-ferreiro=reto" in cookie else "ferreiro.png"
+            arq = os.path.join(AQUI, "..", "hud", "forja", "h2", "candidata-gesto", nome)
             if os.path.isfile(arq):
                 with open(arq, "rb") as f:
                     return self._responder(200, f.read(), "image/png")

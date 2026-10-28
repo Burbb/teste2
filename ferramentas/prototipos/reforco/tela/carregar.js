@@ -90,7 +90,7 @@
      descarta a sessão temporária. Nada se aplica com uma tentativa, uma cena ou uma confirmação em andamento. As
      candidatas visuais (acabamento das armaduras, paleta da celebração) trocam na hora: são só aparência. O botão A
      está aprovado e não tem mais escolha. */
-  const ferreiro = () => (/(?:^|; )rf-ferreiro=candidata/.test(document.cookie) ? "candidata" : "jogo");
+  const ferreiro = () => ((document.cookie.match(/(?:^|; )rf-ferreiro=(candidata|reto)/) || [])[1] || "jogo");
   function painelTestes(botao, P) {
     const el = document.createElement("div");
     el.id = "painel-testes";
@@ -140,7 +140,7 @@
       ${P.vitrineArmaduras ? `<div class="pt-linha"><span>Vitrine (as mesmas peças)</span><span class="pt-seg"><button type="button" data-vitrine-tam aria-pressed="false">Ampliar 2×</button></span></div>${P.vitrineArmaduras()}` : ""}
       ${grupo("paleta", "Celebração +9 a +12", [["candidata", "Candidata"], ["anterior", "Anterior"], ["referencia13", "Ouro (ref. +13)"]])}
       ${grupo("placas", "Botões e painéis", [["jogo", "Como no jogo"], ["bancada", "Placas da bancada"]])}
-      <div class="pt-linha"><span>Ferreiro (recarrega)</span><span class="pt-seg" role="radiogroup" aria-label="Ferreiro">${[["jogo", "Como no jogo"], ["candidata", "Gesto candidato"]].map(([v, n]) =>
+      <div class="pt-linha"><span>Ferreiro (recarrega)</span><span class="pt-seg" role="radiogroup" aria-label="Ferreiro">${[["jogo", "Como no jogo"], ["candidata", "Corpo desce"], ["reto", "Braço reto"]].map(([v, n]) =>
         `<button type="button" role="radio" data-ferreiro="${v}" aria-checked="${ferreiro() === v}">${n}</button>`).join("")}</span></div>
       <div class="pt-linha"><span>Festa da especialização</span><span class="pt-seg"><button type="button" data-festa-spec>Mostrar</button></span></div>
       <p class="pt-nota">A festa é só a tela (nada muda na partida). A escolha de verdade: Taverna → Dormir, com o herói no nível 4 sem especialização.</p></fieldset>`;

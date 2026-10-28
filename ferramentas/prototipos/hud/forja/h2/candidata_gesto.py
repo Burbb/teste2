@@ -50,21 +50,40 @@ def com_pegada(punho, cabeca_m):
 
 # o braço do martelo de cada pose: o cotovelo, o punho e a cabeça do martelo (a ponta do cabo vem da pegada)
 BRACO = {
-    # no contato (o golpe, a volta, o repouso e o ajuste com o martelo na lâmina), o braço estendido para a frente e o
-    # cabo descendo em ângulo da mão até a espada; antes (1ª passada), a mão ficava colada ao peito (9 px do ombro) com o
-    # cotovelo dobrado para trás e o cabo na horizontal: o guidão que o Jean ainda via no fim do golpe
-    "repouso": {"cotovelo": (157.5, 48.5), "punho": (151.5, 49.5), "cabeca_m": (141.5, 53.5)},
-    "sobe1": {"cotovelo": (158.5, 45.5), "punho": (152, 41), "cabeca_m": (145.5, 30.3)},
-    "sobe2": {"cotovelo": (156, 37), "punho": (157, 29.5), "cabeca_m": (162.6, 18.4)},
-    "alto": {"cotovelo": (155, 33), "punho": (159.5, 25.5), "cabeca_m": (169.5, 18)},
-    "desce": {"cotovelo": (157, 40), "punho": (151, 38.5), "cabeca_m": (141.6, 30.3)},
-    "golpe": {"cotovelo": (157, 48.5), "punho": (151, 49.5), "cabeca_m": (141.5, 53.5)},
-    "volta": {"cotovelo": (157, 47), "punho": (151, 46.5), "cabeca_m": (141.6, 50)},
-    "ajuste": {"cotovelo": (157.5, 48.5), "punho": (151.5, 49.5), "cabeca_m": (141.5, 53.5)},
+    # no contato (o golpe, a volta, o repouso e o ajuste, com o martelo na lâmina), o ombro, o cotovelo, a mão e a cabeça
+    # do martelo quase numa linha: o braço termina estendido. 2ª passada: a mão à frente do corpo, mas o cabo de 12,5 px
+    # fazia braço + cabo maiores que a distância do ombro ao contato (21 px atrás, só 7 acima), e o braço não esticava:
+    # o ombro e o cotovelo ficavam levantados. 3ª passada: o cabo com 10 px (em todas as poses: o martelo é o mesmo)
+    "repouso": {"cotovelo": (158, 47.2), "punho": (150.8, 49.8), "cabeca_m": (141.5, 53.5)},
+    "sobe1": {"cotovelo": (158.5, 45.5), "punho": (152, 41), "cabeca_m": (146.8, 32.5)},
+    "sobe2": {"cotovelo": (156, 37), "punho": (157, 29.5), "cabeca_m": (161.5, 20.6)},
+    "alto": {"cotovelo": (155, 33), "punho": (159.5, 25.5), "cabeca_m": (167.5, 19.5)},
+    "desce": {"cotovelo": (157, 40), "punho": (151, 38.5), "cabeca_m": (143.5, 31.9)},
+    "golpe": {"cotovelo": (157, 48.6), "punho": (150.9, 50.2), "cabeca_m": (141.5, 53.5)},
+    "volta": {"cotovelo": (157.7, 46.6), "punho": (151.4, 47.8), "cabeca_m": (141.6, 50)},
+    "ajuste": {"cotovelo": (158, 47.2), "punho": (150.8, 49.8), "cabeca_m": (141.5, 53.5)},
 }
 POSES = {k: dict(F.POSES[k], **b, cabo=com_pegada(b["punho"], b["cabeca_m"])) for k, b in BRACO.items()}
-# o rastro da descida, pelo arco do alto até a frente (os pontos de antes, mais o começo atrás da cabeça)
-RASTRO = [(166, 17), (162, 17), (158, 17), (154, 18), (150, 20), (147, 23), (145, 26)]
+# A variante "o corpo desce" (3ª passada, a padrão): com o braço reto, ele ainda terminava na altura do ombro (o contato
+# fica só 7 px abaixo do ombro e 21 px à frente: para alcançar, o braço vai quase na horizontal, e braço na horizontal
+# é braço levantado). Aqui o corpo acompanha o golpe (o quadril e os joelhos descem mais, o ombro desce 2 px, a cabeça
+# vai junto) e o braço desce do ombro para a frente e para baixo, encurtado pela perspectiva (a bigorna fica à frente
+# dele, em profundidade); a mão termina baixa, junto da bigorna, e o cabo desce pouco até a lâmina. A variante "braço
+# reto" (POSES acima) fica para comparar.
+CORPO_DESCE = {"golpe": {"ombro": (-2, 4), "quadril": 2, "cabeca": (-1, 2)}, "volta": {"ombro": (-1, 3), "quadril": 2, "cabeca": (-1, 2)},
+               "repouso": {"ombro": (0, 1)}, "ajuste": {"ombro": (-1, 2)}}
+BRACO_DESCE = {
+    "golpe": {"cotovelo": (157.5, 51.5), "punho": (151.5, 52.5), "cabeca_m": (141.5, 53.5)},
+    "volta": {"cotovelo": (158, 50), "punho": (152, 50.5), "cabeca_m": (141.6, 50)},
+    "repouso": {"cotovelo": (158.5, 50), "punho": (152, 52), "cabeca_m": (141.5, 53.5)},
+    "ajuste": {"cotovelo": (158, 50.5), "punho": (152, 52), "cabeca_m": (141.5, 53.5)},
+}
+POSES_RETO = dict(POSES)
+POSES = dict(POSES_RETO)
+for _k, _b in BRACO_DESCE.items():
+    POSES[_k] = dict(POSES_RETO[_k], **CORPO_DESCE[_k], **_b, cabo=com_pegada(_b["punho"], _b["cabeca_m"]))
+# o rastro da descida, pelo arco do alto até a frente (com o cabo de 10 px, um pouco mais baixo)
+RASTRO = [(164, 18), (160, 18), (156, 18), (152, 19), (149, 21), (146, 24), (144, 27)]
 
 
 def rastro(f):
@@ -113,6 +132,11 @@ def tira():
 
 if __name__ == "__main__":
     SAIDA.mkdir(exist_ok=True)
-    nova = tira()
-    nova.save(SAIDA / "ferreiro.png", optimize=True)
-    print("candidata:", SAIDA / "ferreiro.png")
+    tira().save(SAIDA / "ferreiro.png", optimize=True)  # o corpo desce (a padrão)
+    padrao = dict(POSES)
+    POSES.clear()
+    POSES.update(POSES_RETO)
+    tira().save(SAIDA / "ferreiro-reto.png", optimize=True)  # o braço reto, para comparar
+    POSES.clear()
+    POSES.update(padrao)
+    print("candidatas:", SAIDA / "ferreiro.png", SAIDA / "ferreiro-reto.png")

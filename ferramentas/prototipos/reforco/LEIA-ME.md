@@ -32,7 +32,8 @@ hora (fica lembrado neste navegador).
   +8 ao +12, no tamanho de uso ou ampliadas (2×), com a alternativa escolhida. Nas telas do jogo (a esteira da forja, o
   Inventário, o Equipado), "Níveis altos (teste)" dá peças de +9 a +12.
 - **Botões e painéis:** Como no jogo × Placas da bancada (a candidata de interface).
-- **Ferreiro (recarrega):** Como no jogo × Gesto candidato (a página recarrega; a tira do ferreiro vem da candidata).
+- **Ferreiro (recarrega):** Como no jogo × Corpo desce × Braço reto (a página recarrega; a tira do ferreiro vem da
+  candidata escolhida).
 - **Festa da especialização: Mostrar:** a festa "Você agora é Paladino" com dados de exemplo, para ver o Continuar
   dela (só a tela; a partida não muda). A escolha de verdade (Olhar de perto, Confirmar e essa festa): na taverna,
   Dormir até o amanhecer, com o herói no nível 4 ainda sem especialização (o cenário inicial da demonstração; o painel
@@ -89,7 +90,12 @@ braço estica para a frente e o martelo vem em arco até o mesmo contato. Os apo
 não mudam. **Segunda passada (avaliação do Jean: a subida ficou certa; o fim, rente ao corpo, ainda lia como guidão):**
 no contato com a espada (o golpe, a volta, o repouso e o ajuste), o braço fica estendido para a frente, com a mão à
 frente do corpo, e o cabo desce em ângulo até a lâmina; antes, a mão terminava colada ao peito, com o cotovelo dobrado
-para trás e o cabo na horizontal. Mantém a nuca e o calcanhar da bigorna da 17ª. Nada integrado: a fonte `aseprite/forja-h2.aseprite` e o
+para trás e o cabo na horizontal. **Terceira passada (o ombro ainda alto no fim):** o contato fica só 7 px abaixo do
+ombro e 21 px à frente, então o braço só alcançava quase na horizontal, e braço na horizontal é braço levantado. Duas
+variantes no painel ("Ferreiro"): **Corpo desce** (a padrão: no golpe e na volta, o quadril e os joelhos descem mais,
+o ombro desce 2 px e o braço vai para a frente e para baixo, encurtado pela perspectiva, com a mão terminando junto da
+bigorna) e **Braço reto** (o cabo com 10 px e o braço esticado em linha até o contato). O cabo tem 10 px nas duas e
+em todas as poses. Mantém a nuca e o calcanhar da bigorna da 17ª. Nada integrado: a fonte `aseprite/forja-h2.aseprite` e o
 jogo não mudaram.
 
 ### Conferido

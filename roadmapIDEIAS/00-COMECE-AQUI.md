@@ -8093,3 +8093,14 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **A puladinha:** era a tecla do atalho caindo para baixo do nome com o botão pressionado, corrigida na 1.214.2
   (antes desta avaliação). Conferido com o código atual: pressionar desce só o ícone e o nome 1 px, e um clique de
   verdade não mexe a barra em nenhum quadro (Grimório, Inventário, Comitiva).
+
+### 28/10/2026 (data do computador local) — Ferreiro: o ombro no fim do golpe (candidata, 3ª passada)
+
+- **Avaliação do Jean:** o braço melhorou muito, mas no fim do golpe o ombro ainda parecia levantado, como se,
+  perto demais da bigorna, ele não conseguisse esticar o braço (o martelo grande demais ou o corpo perto demais).
+- **Causa:** a geometria. O contato fica só 7 px abaixo do ombro e 21 px à frente dele; com o cabo de 12,5 px, braço
+  e cabo passavam dessa distância e o braço dobrava; e, mesmo esticado, ele só alcança quase na horizontal.
+- **Candidatas (painel, "Ferreiro"):** **Corpo desce** (a padrão: o corpo acompanha o golpe, com o quadril e os
+  joelhos mais baixos e o ombro 2 px abaixo; o braço vai para a frente e para baixo, encurtado pela perspectiva, e a
+  mão termina junto da bigorna) e **Braço reto** (o braço esticado em linha até o contato). O cabo passa a 10 px em
+  todas as poses. A subida aprovada fica. Nada integrado.
