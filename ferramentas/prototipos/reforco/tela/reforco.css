@@ -409,11 +409,16 @@
 .rf-recebe.vazio { opacity: 0.35; }
 .rf-chapa.desmonte .rf-conduto.seta { visibility: visible; }
 /* a transformação: a peça clareia, se parte em degraus e some; o material chega ao encaixe; a seleção fica vazia */
-@keyframes rf-desfaz { 0% { filter: brightness(1.6); opacity: 1; } 30% { filter: brightness(1.2) grayscale(0.4); opacity: 1; }
+/* 18ª: sem degraus (steps(5) e steps(4) davam 11 a 13 quadros por segundo) e com o tempo já decorrido (--rf-e, negativo,
+   posto pela tela a cada desenho): um redesenho no meio continua a animação em vez de recomeçá-la */
+@keyframes rf-desfaz { 0% { filter: brightness(1.6); opacity: 1; } 35% { filter: brightness(1.2) grayscale(0.4); opacity: 0.9; }
   100% { filter: grayscale(1) brightness(0.6); opacity: 0; } }
-.rf-desfaz img, .rf-desfaz canvas { animation: rf-desfaz 0.45s steps(5) both; }
-@keyframes rf-chega { 0% { scale: 1.5; opacity: 0; } 40% { scale: 0.9; opacity: 1; } 70% { scale: 1.05; } 100% { scale: 1; opacity: 1; } }
-.transformando .rf-recebe.chegou :is(.rf-encaixe, b) { animation: rf-chega 0.3s steps(4) 0.35s both; }
+.rf-desfaz img, .rf-desfaz canvas { animation: rf-desfaz 0.26s ease-in both; animation-delay: var(--rf-e, 0ms); }
+/* o encaixe do material fica à vista (é para onde os fragmentos voam) e acende quando eles chegam; o +N aparece aí */
+@keyframes rf-chega { 0% { scale: 0.6; opacity: 0; } 60% { scale: 1.08; opacity: 1; } 100% { scale: 1; opacity: 1; } }
+@keyframes rf-acolhe { 0% { scale: 1; filter: brightness(1); } 40% { scale: 1.12; filter: brightness(1.7); } 100% { scale: 1; filter: brightness(1); } }
+.transformando .rf-recebe.chegou b { animation: rf-chega 0.24s ease-out both; animation-delay: calc(var(--rf-e, 0ms) + 440ms); }
+.transformando .rf-recebe.chegou .rf-encaixe { animation: rf-acolhe 0.3s ease-out forwards; animation-delay: calc(var(--rf-e, 0ms) + 440ms); }
 .rf-recebe.chegou .rf-encaixe { box-shadow: inset 2px 2px 0 #000, inset 0 0 0 1px var(--latao); }
 /* o botão destrutivo no eixo, com o tamanho do Reforçar */
 .rf-botao.principal.perigo { color: #ffd2c8; background: linear-gradient(rgba(70, 26, 20, 0.94), rgba(70, 26, 20, 0.94)), url(/static/hud/textura-botao.png) 0 0 / 128px;
@@ -433,8 +438,9 @@
   /* o saldo que mudou acende um instante: o que saiu em cor de cobrança, o que entrou em verde */
 @keyframes rf-saldo-desce { 0% { color: var(--rf-perigo); } 100% { color: #fff3d6; } }
 @keyframes rf-saldo-sobe { 0% { color: var(--rf-verde); text-shadow: 0 0 6px rgba(159, 224, 124, 0.6); } 100% { color: #fff3d6; } }
-.rf-rec.desce b { animation: rf-saldo-desce 0.9s steps(5) both; }
-.rf-rec.sobe b { animation: rf-saldo-sobe 0.9s steps(5) 0.4s both; }
+/* 18ª: suave e pelo tempo decorrido (--rf-e); o que entra acende quando os fragmentos chegam (a desmontagem, ~0,5 s) */
+.rf-rec.desce b { animation: rf-saldo-desce 0.9s ease-out both; animation-delay: var(--rf-e, 0ms); }
+.rf-rec.sobe b { animation: rf-saldo-sobe 0.9s ease-out both; animation-delay: calc(var(--rf-e, 0ms) + 520ms); }
 /* a peça da esteira acende o +N quando o resultado aparece (a seleção continua) */
 .revelou .rf-esteira .rf-peca.marcada .rf-canto { animation: rf-acende 1.2s steps(6) both; }
 
@@ -577,7 +583,7 @@
 /* movimento reduzido na desmontagem: o estado final direto (a peça já saiu; o material já está no encaixe) */
 @media (prefers-reduced-motion: reduce) {
   .rf-desfaz img, .rf-desfaz canvas { animation: none; opacity: 0; }
-  .transformando .rf-recebe.chegou :is(.rf-encaixe, b) { animation: none; }
+  .transformando .rf-recebe.chegou :is(.rf-encaixe, b) { animation: none !important; }
   .rf-rec.sobe b, .rf-rec.desce b, .revelou .rf-esteira .rf-peca.marcada .rf-canto { animation: none; }
 }
 
@@ -1392,7 +1398,19 @@ body[data-rf-botoes="a"] :is(.rf-janela, #rf-res) .botao-janela.rf-botao kbd { b
 .rf-recebe.recebido { flex-wrap: wrap; row-gap: 2px; }
 .rf-recebe.recebido b { color: #9fe07c; }
 .rf-recebe.recebido .rf-saldo-novo { flex-basis: 100%; font: 400 13px/1.2 var(--texto); color: var(--rf-sec, #a59f92); }
-.rf-recebe.recebido .rf-saldo-novo em { font: normal 400 16px/1 var(--num); color: #fff3d6; padding: 0 3px; animation: rf-saldo-acende 1.2s steps(6) 0.6s both; }
+/* o saldo: o de antes até os fragmentos chegarem, depois o novo, aceso e apagando devagar (18ª: o destaque só durante a
+   transformação; antes, ele recomeçava no redesenho do fim e piscava de novo) */
+.rf-recebe.recebido .rf-saldo-novo em { display: inline-grid; font: normal 400 16px/1 var(--num); color: #fff3d6; padding: 0 3px; }
+.rf-recebe.recebido .rf-saldo-novo em > span { grid-area: 1 / 1; text-align: right; }
+.transformando .rf-saldo-novo .antes { animation: rf-saldo-sai 1ms step-end both; animation-delay: calc(var(--rf-e, 0ms) + 520ms); }
+.transformando .rf-saldo-novo .depois { animation: rf-saldo-entra 1ms step-end both; animation-delay: calc(var(--rf-e, 0ms) + 520ms); }
+.transformando .rf-saldo-novo em { animation: rf-saldo-acende 0.48s ease-out forwards; animation-delay: calc(var(--rf-e, 0ms) + 520ms); }
+@keyframes rf-saldo-sai { from { visibility: visible; } to { visibility: hidden; } }
+@keyframes rf-saldo-entra { from { visibility: hidden; } to { visibility: visible; } }
 @keyframes rf-saldo-acende { 0% { background: rgba(242, 210, 122, 0.55); color: #1d1407; } 100% { background: transparent; color: #fff3d6; } }
-@media (prefers-reduced-motion: reduce) { .rf-recebe.recebido .rf-saldo-novo em { animation: none; outline: 1px solid var(--latao); } }
+@media (prefers-reduced-motion: reduce) {
+  .rf-recebe.recebido .rf-saldo-novo em { animation: none !important; outline: 1px solid var(--latao); }
+  .rf-saldo-novo .antes { display: none; }
+  .rf-saldo-novo .depois { animation: none !important; visibility: visible; }
+}
 @media (max-width: 1500px) { .rf-recebe.recebido .rf-saldo-novo { font-size: 12px; } }

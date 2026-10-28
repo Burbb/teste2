@@ -28,7 +28,9 @@
   let brilharSel = false;  // a peça acabou de ser escolhida: o reflexo passa uma vez no molde
   let desmonte = null;     // {id, t0, icone, raridade}: a transformação da última desmontagem (a peça já saiu da bolsa)
   let pedidoDesmonte = null;  // {icone, raridade}: a peça que a desmontagem pedida vai transformar
-  const DESMONTE_MS = 700;
+  /* A desmontagem (18ª): a peça se desfaz (0 a 260 ms), os fragmentos voam até o encaixe do material e chegam entre
+     DESMONTE_CHEGA e ~640 ms, o +N e o saldo novo acendem na chegada, e aos DESMONTE_MS a bancada assenta parada. */
+  const DESMONTE_MS = 1000, DESMONTE_CHEGA = 440;
   let essSel = null;          // a essência escolhida no trilho (fica entre as peças)
   let sulcoSel = 0, sulcoDe = null;  // o sulco escolhido (e de que peça: outra peça começa no primeiro vazio)
   let confirmandoGrav = null; // {uid}: a substituição pedida, esperando a confirmação
@@ -378,7 +380,7 @@
     const saldo = (d.materiais.find((m) => m.id === "fragmento") || {}).qtd;
     const resultado = chegou
       ? `<div class="rf-recebe chegou recebido" role="status" aria-label="Recebeu ${n} ${n > 1 ? "Fragmentos" : "Fragmento"} de Têmpera. Agora: ${saldo}">
-          <span class="rf-encaixe pequeno">${saco}</span><b>+${n}</b><small class="rf-saldo-novo">Fragmentos: <em>${saldo}</em></small></div>`
+          <span class="rf-encaixe pequeno">${saco}</span><b>+${n}</b><small class="rf-saldo-novo">Fragmentos: <em>${t ? `<span class="antes">${saldo - n}</span>` : ""}<span class="depois">${saldo}</span></em></small></div>`
       : `<div class="rf-recebe${n === null ? " vazio" : ""}" ${n ? Telas.dica(`<b>Fragmento de Têmpera ×${n}</b>`, true) : ""}
         aria-label="${n ? `Recebe ${n} Fragmento${n > 1 ? "s" : ""} de Têmpera` : "Nada a receber"}"><span class="rf-encaixe pequeno">${saco}</span><b>${n === null ? "" : `×${n}`}</b></div>`;
     // a peça desmontada, guardada no clique, fica no molde só durante a transformação
@@ -389,7 +391,8 @@
       : (fantasma ? molde(null, vazio, nivel).replace('<div class="rf-encaixe grande vazio"></div>', fantasma) : molde(null, vazio, nivel));
     // o título: a peça escolhida; depois de desmontar, a que virou material (o nome guardado no resultado do motor)
     const titulo = !p && chegou ? `<div class="rf-titulo"><b>${h(chegou.nome)}</b><small>Desmontado</small><div class="rf-tit-sulcos"></div></div>` : tituloPeca(p, null);
-    return `<div class="rf-chapa desmonte com-titulo${t ? " transformando" : ""}">${titulo}
+    const decorrido = t ? ` style="--rf-e:-${Math.round(performance.now() - t.t0)}ms"` : "";
+    return `<div class="rf-chapa desmonte com-titulo${t ? " transformando" : ""}"${decorrido}>${titulo}
       <div class="rf-leito"><div class="rf-lado esq"></div>${m}
         <div class="rf-lado dir">${conduto(true)}${resultado}</div></div>
       <div class="rf-pe-chapa">${pe}</div></div>`;
@@ -971,25 +974,49 @@
   }
 
   /** A desmontagem: um toque na bancada, a peça se desfaz em fragmentos de pixel que voam para o encaixe do material,
-   *  e um clarão pequeno onde ela estava. Sem raios nem celebração. Com movimento reduzido, nada se move. */
-  function fragmentar(jan) {
-    pararFx();
-    const alvo = jan.querySelector(".rf-chapa .rf-desfaz"), destino = jan.querySelector(".rf-chapa .rf-recebe .rf-encaixe");
+   *  e um clarão pequeno onde ela estava. Sem raios nem celebração. Com movimento reduzido, nada se move.
+   *  18ª: antes, o efeito corria a 15 quadros por segundo (o ritmo das celebrações), as partículas saltavam vários pixels
+   *  por quadro, e qualquer redesenho da forja (a volta do motor desenha mais de uma vez) parava o palco no meio do voo.
+   *  Agora tem o palco e o relógio próprios, fora da janela (um redesenho não o corta), um quadro a cada atualização da
+   *  tela e cada fragmento numa curva com hora de saída e de chegada; as posições vêm da tela a cada quadro. */
+  let fxDesmonte = null;  // {el, fim}: o palco da desmontagem
+  function pararDesmonte() { if (fxDesmonte) { fxDesmonte.fim = true; fxDesmonte.p.el.remove(); } fxDesmonte = null; }
+  function fragmentar() {
+    pararDesmonte();
     soar("equipar");
-    if (typeof FX === "undefined" || !alvo || !destino || reduzido()) return;
+    if (typeof FX === "undefined" || reduzido() || !desmonte) return;
+    const t0 = desmonte.t0, sel = (q) => document.querySelector(`.rf-janela .rf-chapa.desmonte ${q}`);
+    if (!sel(".rf-desfaz") || !sel(".rf-recebe .rf-encaixe")) return;
     baque(BAQUE.desmonte);
-    palco = FX.palco(jan, { z: 2, classe: "rf-fx" });
-    const enx = FX.enxame();
-    ctl = FX.animar(palco, (t, q) => {
-      const a = palco.de(alvo), d = palco.de(destino), R = Math.max(a.rx, a.ry);
-      if (t < 120) FX.claraoLocal(palco, { cx: a.x, cy: a.y, r: R + palco.t(10), t, dur: 120, espalha: 0, pal: ["W", "w", "G", "g"] });
-      if (q === 1) enx.soltar(26, (i) => {
-        const x = a.x + FX.aleatorio(-R, R), y = a.y + FX.aleatorio(-R, R), voo = FX.aleatorio(6, 9);
-        return { x, y, vx: (d.x - x) / voo + FX.aleatorio(-0.6, 0.6), vy: (d.y - y) / voo - FX.aleatorio(0.5, 1.6), g: 0.18, arrasto: 0.94,
-          vida: Math.round(voo + FX.aleatorio(1, 4)), desenho: ["caco", "lasca", "ponto", "duplo"][i % 4], pal: ["w", "G", "g", "d"] };
-      });
-      enx.passo(); enx.desenhar(palco);
-    });
+    const p = FX.palco(document.body, { z: 80, classe: "rf-fx" }), eu = { p, fim: false };
+    fxDesmonte = eu;
+    const a0 = p.de(sel(".rf-desfaz")), R = Math.max(a0.rx, a0.ry) * 0.8;
+    const pal = ["W", "w", "G", "g"], forma = ["caco", "lasca", "ponto", "duplo"];
+    const cacos = Array.from({ length: 22 }, (_, i) => ({
+      dx: FX.aleatorio(-R, R), dy: FX.aleatorio(-R, R), arco: FX.aleatorio(0.6, 1.4),
+      sai: 60 + FX.aleatorio(0, 120), dura: FX.aleatorio(320, 440), desenho: forma[i % 4], tom: i % 3 === 0 ? 0 : 1,
+    }));
+    const quadro = (agora) => {
+      if (eu.fim) return;
+      const tt = agora - t0, alvo = sel(".rf-desfaz") || null, destino = sel(".rf-recebe .rf-encaixe");
+      if (tt > DESMONTE_MS || !destino) { pararDesmonte(); return; }
+      const a = alvo ? p.de(alvo) : a0, d = p.de(destino);
+      p.limpar();
+      if (tt < 140) FX.claraoLocal(p, { cx: a.x, cy: a.y, r: R + p.t(10), t: tt, dur: 140, espalha: 0, pal });
+      for (const c of cacos) {
+        const u = (tt - c.sai) / c.dura;
+        if (u < 0 || u > 1) continue;
+        const e = u * u * (3 - 2 * u);  // sai devagar, acelera no meio e assenta no encaixe
+        const x0 = a.x + c.dx, y0 = a.y + c.dy, mx = (x0 + d.x) / 2, my = Math.min(y0, d.y) - p.t(26) * c.arco;
+        const x = (1 - e) * (1 - e) * x0 + 2 * (1 - e) * e * mx + e * e * d.x, y = (1 - e) * (1 - e) * y0 + 2 * (1 - e) * e * my + e * e * d.y;
+        const g = FX.DESENHOS[c.desenho], k = Math.min(2, c.tom + Math.floor(u * 2)), cor = { a: FX.cor(pal[k]), b: FX.cor(pal[k + 1]) };
+        const ox = Math.round(x) - (g[0].length >> 1), oy = Math.round(y) - (g.length >> 1);
+        for (let yy = 0; yy < g.length; yy++) for (let xx = 0; xx < g[yy].length; xx++) if (cor[g[yy][xx]]) p.por(ox + xx, oy + yy, cor[g[yy][xx]]);
+      }
+      p.mostrar();
+      requestAnimationFrame(quadro);
+    };
+    requestAnimationFrame(quadro);
   }
 
   /** A gravação: a luz da essência percorre a borda do molde (as quatro barras, uma a uma, como um buril), fagulhas
@@ -1581,6 +1608,7 @@
   }
 
   let ultimoDesenho = null, ultimoRaiz = null, saldoAntes = null, ultimaPos = null;
+  const saldoMudou = {};  // o recurso → {t0, sentido}: o último saldo que mudou (o destaque dura 1,4 s)
   function ligar(raiz, d) {
     enviando = false;
     // a janela nova já está montada: a antiga, guardada na troca de cena, sai no mesmo passo (requestAnimationFrame
@@ -1609,9 +1637,16 @@
     posicionar();
     // o saldo que mudou desde o último desenho acende um instante (a cobrança do reforço, o que a desmontagem rendeu)
     const saldos = { ouro: d.ouro, ...Object.fromEntries(d.materiais.map((m) => [m.id, m.qtd])) };
-    if (saldoAntes) jan.querySelectorAll(".rf-rec[data-rec]").forEach((el) => {
-      const k = el.dataset.rec;
-      if (saldoAntes[k] !== undefined && saldoAntes[k] !== saldos[k]) el.classList.add(saldos[k] < saldoAntes[k] ? "desce" : "sobe");
+    // 18ª: o destaque continua pelo tempo decorrido nos redesenhos seguintes (antes, o segundo desenho o cortava no meio)
+    const agoraS = performance.now();
+    if (saldoAntes) Object.keys(saldos).forEach((k) => {
+      if (saldoAntes[k] !== undefined && saldoAntes[k] !== saldos[k]) saldoMudou[k] = { t0: agoraS, sentido: saldos[k] < saldoAntes[k] ? "desce" : "sobe" };
+    });
+    jan.querySelectorAll(".rf-rec[data-rec]").forEach((el) => {
+      const m = saldoMudou[el.dataset.rec];
+      if (!m || agoraS - m.t0 > 1400) return;
+      el.classList.add(m.sentido);
+      el.style.setProperty("--rf-e", `-${Math.round(agoraS - m.t0)}ms`);
     });
     saldoAntes = saldos;
     const u = d.ultimo;
@@ -1666,9 +1701,9 @@
       } else requestAnimationFrame(() => apresentarTransferencia(transf));
     }
     if (desmonte && janela === "desmontar" && performance.now() - desmonte.t0 < DESMONTE_MS) {
-      if (!desmonte.fx) { desmonte.fx = true; requestAnimationFrame(() => fragmentar(jan)); }
-      relogios.push(setTimeout(() => { desmonte.t0 = -Infinity; pararFx(); redesenhar(focoDepois); }, DESMONTE_MS - (performance.now() - desmonte.t0)));
-    }
+      if (!desmonte.fx) { desmonte.fx = true; requestAnimationFrame(() => fragmentar()); }
+      relogios.push(setTimeout(() => { desmonte.t0 = -Infinity; pararDesmonte(); redesenhar(focoDepois); }, DESMONTE_MS - (performance.now() - desmonte.t0)));
+    } else if (fxDesmonte) pararDesmonte();
     ligarReflexos(jan);
     window.dispatchEvent(new Event("reforco-comparacao"));
     // durante a cena, um clique na bancada só revela: não compra, não escolhe, não desmonta (Enter e Espaço, no
