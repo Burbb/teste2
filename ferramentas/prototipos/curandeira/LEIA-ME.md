@@ -46,13 +46,15 @@ e a lamparina quentes, a porta fria, a sala escurecendo em degraus longe deles (
 ## O gesto
 
 Moer no almofariz, decidido pelos apoios antes do ciclo: o almofariz parado no tampo; a mão de longe segurando a
-borda dele; a ponta de baixo do pilão dentro da boca; só a ponta de cima gira numa elipse pequena (8 poses), e a mão
-de perto e o antebraço acompanham (o cotovelo, meio passo). Tronco, cabeça e saia parados. Ritmo próprio: 200 ms por
-pose (1,6 s por volta), três voltas e uma pausa de 1,2 s; o fogo e o vapor a 200 ms. Movimento reduzido: a primeira
+borda dele; a ponta de baixo do pilão dentro da boca; só a ponta de cima gira numa elipse (12 poses), e a mão de perto
+e o antebraço acompanham (o cotovelo, meio passo). Tronco, cabeça e saia parados. Ritmo próprio: 100 ms por pose (1,2 s
+por volta), quatro voltas e uma pausa de 1,2 s; o fogo e o vapor a 200 ms. Movimento reduzido: a primeira
 pose, parada, com o fogo e o vapor parados.
 
 ## As fontes
 
+- `botica.py`: os objetos da botica (os potes com o conteúdo, as tinturas, as velas, o alambique, os crânios, as
+  proteções da porta, a enfiada).
 - `desenho.py`: o ambiente em código (a sala, a porta, a pia, as ervas, a bancada e o almofariz, as prateleiras, a
   coifa e o fogão, a passagem, o armário, a esteira, a luz; o fogo, o vapor e os baldes; a frente).
 - `figuras.py`: Pita e Marta (o corpo pelo contorno de cada linha, a cabeça numa grade à mão, os braços por segmentos)
@@ -75,9 +77,35 @@ Ainda é desenho em código: se a candidata for aprovada, a fonte em Aseprite ve
 - O vapor em grade de pontos e os maços fechando embaixo como cebolas: fiapos que sobem ondulando; maços estreitos no
   nó e abrindo para baixo, com a ponta irregular.
 
+## Segunda passada (28/10/2026): a botica e o braço
+
+**O que o Jean disse:** o lugar estava genérico ("um mato e potes genéricos"); queria mais personalidade, uma aura de
+mandinga e de alquimia com coisas naturais (potes com coisas dentro), sem virar bruxaria. E o braço que mexe no
+almofariz tinha poucos quadros perto do ferreiro, com um pedaço do avental virando braço e "sujeira de geração".
+
+**O braço, quadro a quadro:** o antebraço era uma linha de 2 px em degraus, com buracos; o braço de cima sumia no
+vestido; a dobra da manga estava na cor do avental (por isso lia como um pedaço dele); a mão de longe era um borrão.
+Agora cada pedaço do braço é uma forma cheia (`figuras._capsula`: os pixels até o raio do segmento, luz em cima e
+sombra embaixo em cada coluna), o braço de cima e a dobra da manga no pano do vestido, o punho de 3×3 em volta do
+pilão (a ponta dele aparece acima da mão em todos os quadros) e a mão de longe como dedos por cima da borda do
+almofariz. O giro passou de 8 poses a 200 ms para **12 poses a 100 ms** (o mesmo passo de quadro da forja), maior
+(3 px para os lados), quatro voltas e a pausa.
+
+**A botica** (`botica.py`), tudo natural e do ofício:
+- na tábua de cima, a cobra enrolada no líquido âmbar, as sanguessugas na água turva (com o pano amarrado), a raiz em
+  forma de gente e as velas escorridas, uma delas acesa (com a luz dela);
+- na de baixo, os cogumelos secos, as tinturas com etiqueta (rubi, mel e turva), o crânio de passarinho e as penas num
+  copo;
+- na bancada, o alambique de vidro sobre a lamparina (o balão verde no tripé, o bico descendo até o frasco âmbar), no
+  lugar do pote com o ramo;
+- o crânio de cervo com a galhada na parede, entre a coifa e o esteio;
+- a estrela de palha de proteção sobre a porta e o amuleto de osso, pedra furada e penas no batente;
+- a enfiada de cogumelos secos na vara e um maço de bagas vermelhas entre as ervas;
+- o caldeirão bojudo com a concha no lugar da panela retangular; no armário, um sapo seco no vidro e as etiquetas.
+
 ## Conferido
 
-No navegador (Playwright), a 1920×945 e a 1280×720: a vila, a entrada pelo prédio, a cena nos três estados (quem
+No navegador (Playwright), a 1920×945 e a 1280×720 (de novo depois da segunda passada, com 14 quadros seguidos da vista para ver o giro no jogo): a vila, a entrada pelo prédio, a cena nos três estados (quem
 atende e a fala vindo do motor), a pose parada sem mudar, o ponto de quem atende levando ao cartão, um tratamento
 cobrando pelo serviço de produção, o Esc de volta à vila, sem erros no console. A 1280, o segundo cartão de tratamento
 pede rolagem, como os da forja.

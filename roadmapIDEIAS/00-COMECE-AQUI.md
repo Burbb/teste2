@@ -8167,3 +8167,13 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Conferido:** no navegador, a 1920×945 e a 1280×720 (os três estados, a pose parada, o ponto de quem atende, um
   tratamento, a volta à vila, sem erros no console). Esperando a avaliação do Jean; nada integrado; templo e taverna não
   começados.
+
+### 28/10/2026 (data do computador local) — Curandeira: a botica e o braço (protótipo, segunda passada)
+
+- **Avaliação do Jean:** gostou do cenário, mas o achou genérico ("um mato e potes genéricos"); pediu personalidade,
+  aura de mandinga e alquimia com coisas naturais, sem bruxaria. O braço do almofariz tinha poucos quadros perto do
+  ferreiro, com um pedaço do avental virando braço e sujeira de geração.
+- **Feito (só no protótipo):** o braço refeito quadro a quadro (formas cheias, a manga no pano do vestido, o punho em
+  volta do pilão, 12 poses a 100 ms); a botica (a cobra no âmbar, as sanguessugas, a raiz, os cogumelos, as tinturas,
+  as velas, o alambique sobre a lamparina, o crânio de cervo, a estrela de palha e o amuleto da porta, o caldeirão).
+  O LEIA-ME do protótipo detalha. Conferido no jogo nas duas resoluções. Esperando o Jean; nada integrado.

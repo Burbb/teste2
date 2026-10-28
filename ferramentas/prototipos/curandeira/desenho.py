@@ -21,6 +21,8 @@ AQUI = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(AQUI, "..", "hud", "forja", "h2"))
 from tela_h2 import Tela  # noqa: E402  (a mesma camada de pixels das fontes da forja)
 
+import botica  # noqa: E402
+
 QW, QH = 320, 96
 P = 73       # a linha do chão (a parede encontra o chão)
 PES = 82     # onde pisam a figura e a bancada
@@ -64,6 +66,9 @@ C = {
     "brasa": "#c8501a", "chama": "#ffcc66", "chamaFora": "#e8782a", "chamaMiolo": "#fff2c4",
     "vulto": "#09090b", "vultoLuz": "#18181c",
 }
+
+
+C.update(botica.C)  # os objetos da botica (botica.py)
 
 
 class Pincel:
@@ -214,7 +219,7 @@ def pia(px):
 
 # ---------------------------------------------------------------- as ervas secando
 MACOS = [  # (x do barbante, cor, largura, comprimento)
-    (95, "erva", 7, 17), (106, "ocre", 6, 15), (116, "lilas", 6, 16), (126, "erva", 7, 18), (136, "ocre", 5, 13),
+    (95, "erva", 7, 17), (106, "ocre", 6, 15), (116, "lilas", 6, 16), (126, "baga", 6, 15), (136, "ocre", 5, 13),
 ]
 
 
@@ -252,7 +257,7 @@ def ervas(px):
 # ---------------------------------------------------------------- a bancada
 def bancada(px):
     """A mesa de trabalho: o tampo grosso com a aresta acesa, as pernas, a travessa de baixo com o cesto de ervas, e em
-    cima o pote com o ramo, a tábua com as ervas picadas, a lamparina de barro e o almofariz (a figura trabalha nele).
+    cima o alambique sobre a lamparina (botica.py), a tábua com as ervas picadas e o almofariz (a figura trabalha nele).
     O pano dobrado cai pela frente do tampo."""
     x0, x1 = 92, 158
     # as pernas e a travessa
@@ -277,19 +282,7 @@ def bancada(px):
     px(x0, TAMPO - 1, x1 - x0, 1, "madeiraLuz")
     px(x0, TAMPO + 1, x1 - x0, 2, "madeira")
     px(x0, TAMPO + 2, x1 - x0, 1, "madeiraEsc")
-    # o pote de barro com o ramo verde
-    px(98, 47, 7, 7, "barro")
-    px(98, 47, 1, 7, "barroLuz")
-    px(104, 47, 1, 7, "barroEsc")
-    px(99, 46, 5, 1, "barroEsc")
-    for (dx, dy) in [(0, -3), (-2, -5), (2, -5), (1, -7), (-1, -8), (3, -8), (0, -10), (-3, -7)]:
-        px.p(101 + dx, 46 + dy, "erva")
-        px.p(101 + dx + 1, 46 + dy, "ervaLuz" if dy % 2 else "ervaEsc")
-    px.linha(101, 45, 101, 39, "ervaEsc")
-    # a lamparina de barro (a chama vem depois do escuro: ver fundo())
-    px(110, 51, 6, 3, "barro")
-    px(110, 51, 6, 1, "barroLuz")
-    px(115, 50, 2, 2, "barroEsc")  # o bico
+    botica.alambique(px)
     # a tábua com as ervas picadas
     px(119, 52, 15, 2, "madeiraLuz")
     px(119, 53, 15, 1, "madeiraMeio")
@@ -323,39 +316,6 @@ def almofariz(px):
 
 
 # ---------------------------------------------------------------- as prateleiras e o fogão
-def prateleiras(px):
-    """Duas tábuas em mãos-francesas, com potes de barro, frascos de vidro com rolha, uma tigela e um ramo pendurado."""
-    for y in (24, 38):
-        px(180, y, 40, 2, "madeira")
-        px(180, y, 40, 1, "madeiraLuz")
-        for xx in (183, 214):  # as mãos-francesas
-            px(xx, y + 2, 2, 4, "madeiraEsc")
-            px(xx + 1, y + 2, 1, 1, "madeira")
-    # em cima: potes de barro e um frasco
-    for x, h, w, cor in [(183, 8, 6, "barro"), (191, 10, 7, "barro"), (200, 6, 5, "barro"), (207, 9, 5, "vidroVerde"),
-                         (214, 7, 5, "barro")]:
-        y = 24 - h
-        px(x, y, w, h, cor)
-        px(x, y, 1, h, cor + "Luz")
-        px(x + w - 1, y, 1, h, "barroEsc" if cor == "barro" else "vidroEsc")
-        px(x + 1, y - 1, w - 2, 1, "rolha" if cor != "barro" else "barroEsc")
-    # embaixo: frascos de vidro escuro e verde, a tigela
-    for x, h, w, cor in [(184, 8, 5, "vidroEsc"), (190, 10, 5, "vidroVerde"), (197, 7, 4, "vidroEsc")]:
-        y = 38 - h
-        px(x + 1, y, w - 2, 2, cor)              # o gargalo
-        px(x, y + 2, w, h - 2, cor)
-        px(x, y + 2, 1, h - 2, cor + "Luz")
-        px(x + 1, y - 1, w - 2, 1, "rolha")
-    px(204, 34, 9, 4, "barro")                   # a tigela
-    px(204, 34, 9, 1, "barroLuz")
-    px(205, 37, 7, 1, "barroEsc")
-    px(215, 33, 4, 5, "palha")                   # um saquinho de pano amarrado
-    px(216, 32, 2, 1, "palhaEsc")
-    # o ramo pendurado na ponta da prateleira de baixo
-    for k in range(9):
-        px(220 + (k % 2), 40 + k, 2, 1, "erva" if k % 3 else "ervaLuz")
-
-
 def coifa(px):
     """A coifa de reboco sobre o fogão, no eixo da panela, subindo estreita até a viga (a fumaça e o vapor saem por ela)."""
     for y in range(4, 31):
@@ -390,16 +350,23 @@ def fogao(px):
         meia = 7 if y > 65 else [3, 5, 6, 7][y - 62]
         px(238 - meia, y, meia * 2, 1, "fuligem")
     px(231, 78, 14, 2, "fogaoLuz")  # a soleira da boca
-    # a panela de ferro sobre o fogão
-    px(229, 44, 18, 8, "ferro")
-    px(228, 45, 20, 5, "ferro")
-    px(229, 44, 18, 1, "ferroLuz")
-    px(228, 45, 1, 4, "ferroLuz")
-    px(247, 45, 1, 5, "ferroEsc")
-    px(230, 51, 16, 1, "ferroEsc")
-    px(230, 43, 16, 1, "ferroBrilho")   # a borda
-    px(226, 46, 2, 2, "ferroEsc")        # as alças
-    px(248, 46, 2, 2, "ferroEsc")
+    # o caldeirão de ferro sobre o fogão: o bojo redondo, a boca com a borda acesa, as alças e a concha de pau
+    cx, cy = 238, 46
+    for y in range(41, 52):
+        meia = round(10 * (1 - ((y - cy) / 6.2) ** 2) ** 0.5) if abs(y - cy) < 6.2 else 0
+        meia = max(meia, 7) if y <= 43 else meia
+        px(cx - meia, y, meia * 2, 1, "ferro")
+        px(cx - meia, y, 1, 1, "ferroLuz")
+        px(cx + meia - 2, y, 2, 1, "ferroEsc")
+    px(cx - 6, 47, 3, 2, "ferroLuz")        # o brilho do bojo
+    px(cx - 7, 41, 14, 1, "ferroBrilho")    # a borda
+    px(cx - 6, 42, 12, 1, "ferroEsc")       # a boca, por dentro
+    px(cx - 11, 44, 2, 2, "ferroEsc")       # as alças
+    px(cx + 9, 44, 2, 2, "ferroEsc")
+    px(cx - 3, 52, 2, 1, "ferroEsc")        # os pés
+    px(cx + 2, 52, 2, 1, "ferroEsc")
+    px.linha(cx + 3, 41, cx + 8, 35, "madeiraLuz")  # a concha encostada na borda
+    px.linha(cx + 4, 41, cx + 9, 35, "madeira")
     # a lenha encostada ao lado
     for i, (dx, cor) in enumerate([(0, "madeira"), (3, "madeiraMeio"), (6, "madeira")]):
         px.linha(254 + dx, PES - 1, 252 + dx + i, 64, cor)
@@ -427,26 +394,6 @@ def passagem(px):
     px(271, P - 3, 16, 1, "cortinaSombra")
 
 
-def armario(px):
-    """O armário aberto à direita: as tábuas com potes e o cesto em cima."""
-    px(298, 10, 2, PES - 10, "madeira")
-    px(298, 10, 1, PES - 10, "madeiraLuz")
-    for y in (26, 44, 62):
-        px(298, y, 22, 2, "madeira")
-        px(298, y, 22, 1, "madeiraLuz")
-    for y, potes in [(26, [(301, 7, 5), (308, 9, 6), (315, 6, 5)]), (44, [(302, 8, 5), (309, 6, 4), (314, 9, 6)]),
-                     (62, [(301, 6, 6), (309, 8, 5)])]:
-        for x, h, w in potes:
-            px(x, y - h, w, h, "barro")
-            px(x, y - h, 1, h, "barroLuz")
-            px(x + w - 1, y - h, 1, h, "barroEsc")
-            px(x + 1, y - h - 1, w - 2, 1, "barroEsc")
-    px(300, 2, 18, 8, "palha")      # o cesto no alto
-    px(300, 2, 18, 1, "palhaLuz")
-    for x in range(301, 318, 3):
-        px(x, 3, 1, 7, "palhaEsc")
-
-
 def tapete(px):
     """A esteira de palha trançada diante do fogão, no chão onde se circula."""
     for y in range(84, 90):
@@ -455,7 +402,7 @@ def tapete(px):
 
 
 # ---------------------------------------------------------------- a luz
-LUZES = [(238, 68, 30, 1.0), (116, 47, 22, 0.75)]  # o fogão, a lamparina (x, y, raio, força)
+LUZES = [(238, 68, 30, 1.0), (112, 47, 22, 0.75), (211, 16, 14, 0.55)]  # e a vela da botica  # o fogão, a lamparina (x, y, raio, força)
 
 
 def luz(t):
@@ -488,19 +435,24 @@ def fundo():
     sala(px)
     porta(px)
     ervas(px)
-    prateleiras(px)
+    botica.enfiada(px)
+    botica.prateleiras(px)
     coifa(px)
+    botica.cranio(px)
     passagem(px)
-    armario(px)
+    botica.armario(px)
+    botica.protecoes(px)
     esteios(px)
     pia(px)
     fogao(px)
     bancada(px)
     tapete(px)
     luz(t)
-    # a chama da lamparina (depois do escuro: a luz não escurece)
-    px(116, 47, 2, 3, "chamaFora")
-    px(116, 48, 1, 2, "chama")
+    # a chama da lamparina debaixo do balão (depois do escuro: a luz não escurece)
+    px(112, 49, 2, 2, "chamaFora")
+    px(112, 49, 1, 2, "chama")
+    px(211, 15, 1, 2, "chamaFora")  # a vela acesa na tábua de cima
+    px.p(211, 16, "chama")
     return t
 
 
@@ -554,8 +506,8 @@ def baldes():
         px(bx, PES - 2, 9, 1, "ferro")
         px(bx + 1, by - 1, 7, 1, "aguaEscura")
         px(bx + 2, by - 1, 2, 1, "aguaEscuraLuz")
-    px(231, 43, 14, 1, "aguaEscura")  # a água escura na boca da panela
-    px(235, 43, 2, 1, "aguaEscuraLuz")
+    px(232, 42, 12, 1, "aguaEscura")  # a água escura na boca do caldeirão
+    px(235, 42, 2, 1, "aguaEscuraLuz")
     return t
 
 

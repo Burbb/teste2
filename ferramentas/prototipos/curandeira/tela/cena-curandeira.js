@@ -6,14 +6,14 @@
    ou Marta, um quadro por pose do giro do pilão) e a frente. Quem atende e a água vêm do motor (o painel "cena":
    d.quem, d.agua); aqui só se escolhe o quadro de cada camada pelo relógio das cenas (100 ms).
 
-   O ritmo: o pilão gira devagar (2 tiques por pose, 1,6 s por volta), três voltas e uma pausa de 1,2 s com a mão
+   O ritmo: o pilão gira em 12 poses de 100 ms (1,2 s por volta, como os quadros da forja), quatro voltas e uma pausa de 1,2 s com a mão
    parada; nada da martelada da forja. Movimento reduzido (ou o botão da faixa): a pose parada, o fogo e o vapor parados.
 
    Exporta window.CenaCurandeira = { base, desenhar, pontos, poseDe, DURACAO, QW, QH }. */
 "use strict";
 
 (() => {
-  const QW = 320, QH = 96, POSES = 8, TIQUES = 2, VOLTAS = 3, PAUSA = 12;
+  const QW = 320, QH = 96, POSES = 12, TIQUES = 1, VOLTAS = 4, PAUSA = 12;
   const DURACAO = POSES * TIQUES * VOLTAS + PAUSA;
   const IM = {};
   ["fundo", "fogo", "vapor", "vapor-forte", "baldes", "pita", "marta", "frente"].forEach((n) => {
