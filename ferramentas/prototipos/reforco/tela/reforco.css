@@ -1257,3 +1257,131 @@ body.rf-res-aberto .rf-janela :is(.rf-titulo, .rf-molde, .rf-ficha, .rf-lado.dir
 .rf-prev-req.falta { color: #e2574c; }
 @media (max-width: 1500px) { .rf-prev-tit b { font-size: calc(var(--px) * 15); } .rf-prev-req { font-size: 12px; } }
 @media (max-width: 1500px) { .rf-chapa:is(.enc2, .tr2) .rf-pe-chapa { height: 82px; padding-top: 6px; padding-bottom: 8px; } }
+
+/* ======================================================================== 16ª versão */
+/* a janela antiga, guardada enquanto a nova é montada (a piscada ao reforçar): fixa no lugar, sem cliques; o resto do
+   balcão antigo não aparece */
+.rf-segura { position: fixed; inset: 0; pointer-events: none; overflow: hidden; }
+.rf-segura .tela.forja-proto > :not(.rf-janela) { visibility: hidden; }
+
+/* a etiqueta do tier (I, II, III): a mesma linguagem da etiqueta do reforço (+N), uma placa escura de aresta de latão
+   no canto de cima à direita, fora do desenho; a quantidade fica noutro canto */
+:root body .rf-tier-selo, :root body .rf-sq-tier { top: -6px; right: -7px; min-width: 13px; padding: 1px 3px 0; box-sizing: border-box;
+  font: 700 13px/12px var(--num); letter-spacing: 0.5px; color: #f6dc8c; text-align: center;
+  background: #050506; border: 1px solid #8a6a2a; box-shadow: 0 1px 0 #000; }
+@media (max-width: 1500px) { :root body .rf-tier-selo, :root body .rf-sq-tier { font-size: 12px; line-height: 11px; padding: 1px 2px 0; } }
+
+/* "Requer:" e cada material como disponível/necessário; a falta em vermelho no próprio valor */
+.rf-requer { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.rf-requer.vazio { min-height: 1px; }
+.rf-requer-rot { font: 400 13px/1 var(--texto); letter-spacing: 0.04em; color: var(--rf-sec, #a59f92); }
+.rf-req-item { display: inline-flex; align-items: center; gap: 6px; cursor: help; }
+.rf-req-item:focus-visible { outline: 2px solid var(--latao-claro); outline-offset: 2px; }
+.rf-req-item b { font: 400 21px/1 var(--num); color: #fff3d6; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.rf-req-item.nivel b { font: 400 16px/1 var(--texto); color: #d9d0bc; }
+.rf-req-item.falta b { color: #e2574c; }
+.rf-req-item.falta .rf-encaixe { box-shadow: inset 2px 2px 0 #000, inset 0 0 0 1px #8a3328; }
+.rf-req-item .rf-encaixe.pequeno { overflow: visible; }
+/* na bancada do reforço, à esquerda do molde: o rótulo em cima, os materiais embaixo */
+.rf-lado.esq > .rf-requer { flex-direction: column; align-items: flex-end; gap: 6px; }
+@media (max-width: 1500px) {
+  .rf-req-item b { font-size: 17px; }
+  .rf-req-item.nivel b { font-size: 14px; }
+  .rf-requer-rot { font-size: 12px; }
+}
+
+/* o botão com o preço: o nome na área principal, a moeda e o valor numa área reservada à direita (largura fixa: o
+   valor não empurra o nome) */
+:root body .rf-janela .botao-janela.rf-botao.com-preco { display: grid; grid-template-columns: 1fr 76px; align-items: stretch; padding: 0; }
+.rf-botao.com-preco .rf-bp-rot { display: flex; align-items: center; justify-content: center; padding: 9px 12px 10px; white-space: nowrap; }
+.rf-botao.com-preco .rf-bp-preco { display: flex; align-items: center; justify-content: flex-end; gap: 4px; padding: 0 10px 0 6px;
+  font: 400 19px/1 var(--num); color: #f0e2c0; font-variant-numeric: tabular-nums; }
+.rf-bp-preco :is(img, canvas) { width: 18px; height: 18px; image-rendering: pixelated; flex: none; }
+.rf-bp-preco.falta b { color: #ff7a6a; }
+:root body .rf-pe-chapa .rf-botao.principal.com-preco { width: 330px; }
+@media (max-width: 1500px) {
+  :root body .rf-janela .botao-janela.rf-botao.com-preco { grid-template-columns: 1fr 66px; }
+  .rf-botao.com-preco .rf-bp-rot { padding: 6px 8px 7px; }
+  .rf-botao.com-preco .rf-bp-preco { font-size: 16px; padding-right: 8px; }
+  .rf-bp-preco :is(img, canvas) { width: 16px; height: 16px; }
+  :root body .rf-pe-chapa .rf-botao.principal.com-preco { width: 268px; }
+}
+
+/* o pé de uma ação: [o que consome] [ação no eixo] [Cancelar reservado]; a pergunta e a nota com altura guardada */
+.rf-pe-fixo { display: grid; grid-template-rows: 22px auto 18px; justify-items: center; row-gap: 5px; width: 100%; }
+.rf-pe-pergunta { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 22px; font-size: 15px; color: #fff3d6; white-space: nowrap; }
+.rf-pe-pergunta b { font-weight: 700; color: #fff3d6; }
+.rf-pe-botoes { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; column-gap: 12px; width: 100%; }
+.rf-pe-esq { justify-self: end; display: flex; justify-content: flex-end; min-width: 0; }
+.rf-pe-cancelar { justify-self: start; }
+.rf-pe-fixo > .rf-nota { min-height: 18px; text-align: center; }
+.rf-pe-linha.enc { display: block; width: 100%; }
+.rf-prev-nota { margin: 2px 0 0; font-size: 13px; color: var(--rf-sec, #a59f92); }
+.rf-prev-tit .rf-ess-ic + b { margin-left: 6px; }
+:root body .rf-pe-linha.enc .rf-botao.principal.com-preco { width: 280px; }
+@media (max-width: 1500px) {
+  :root body .rf-pe-linha.enc .rf-botao.principal.com-preco { width: 214px; }
+  .rf-pe-linha.enc .rf-requer { gap: 7px; }
+  .rf-pe-fixo { grid-template-rows: 18px auto 16px; row-gap: 3px; }
+  .rf-pe-pergunta { min-height: 18px; font-size: 13px; }
+  .rf-prev-nota { font-size: 12px; }
+}
+
+/* ------------------------------------------------------------ as duas candidatas de botão (forja e Fechar)
+   A · ferro encaixado: planos chapados, cantos recortados em degrau, uma luz curta na aresta de cima, a base escura.
+   B · ferro com presilhas de latão: o mesmo ferro, com duas presilhas pequenas que abraçam as laterais.
+   Sem degradê liso, sem textura sob o texto. Pressionar afunda a face (a luz sai, a sombra entra por cima e o rótulo
+   desce 1 px dentro do botão): o tamanho e o lugar do botão não mudam. */
+body:is([data-rf-botoes="a"], [data-rf-botoes="b"]) :is(.rf-janela, #rf-res) .botao-janela.rf-botao {
+  --bf-face: #33353a; --bf-luz: #8d929b; --bf-base: #151619; --bf-aresta: #0a0b0d; --bf-tinta: #ddd3bd;
+  position: relative; border: 0; border-radius: 0; filter: none; translate: none; color: var(--bf-tinta);
+  background: linear-gradient(var(--bf-luz), var(--bf-luz)) 4px 2px / min(38%, 64px) 1px no-repeat, var(--bf-face);
+  box-shadow: inset 0 0 0 1px var(--bf-aresta), inset 0 -3px 0 var(--bf-base), inset 0 2px 0 rgba(255, 255, 255, 0.07);
+  clip-path: polygon(2px 0, calc(100% - 2px) 0, calc(100% - 2px) 1px, calc(100% - 1px) 1px, calc(100% - 1px) 2px, 100% 2px,
+    100% calc(100% - 2px), calc(100% - 1px) calc(100% - 2px), calc(100% - 1px) calc(100% - 1px), calc(100% - 2px) calc(100% - 1px),
+    calc(100% - 2px) 100%, 2px 100%, 2px calc(100% - 1px), 1px calc(100% - 1px), 1px calc(100% - 2px), 0 calc(100% - 2px),
+    0 2px, 1px 2px, 1px 1px, 2px 1px); }
+body:is([data-rf-botoes="a"], [data-rf-botoes="b"]) :is(.rf-janela, #rf-res) .botao-janela.rf-botao.principal { --bf-face: #3a3730; --bf-luz: #c9a14a; --bf-tinta: #f2e3bf; }
+body:is([data-rf-botoes="a"], [data-rf-botoes="b"]) :is(#texto, body) :is(.rf-janela, #rf-res) .botao-janela.rf-botao.perigo:not([aria-disabled="true"], :disabled) {
+  --bf-face: #3d2421; --bf-luz: #b0584a; --bf-base: #1a0d0b; --bf-tinta: #ffc9be; border: 0; color: var(--bf-tinta);
+  background: linear-gradient(var(--bf-luz), var(--bf-luz)) 4px 2px / min(38%, 64px) 1px no-repeat, var(--bf-face); }
+body:is([data-rf-botoes="a"], [data-rf-botoes="b"]) :is(.rf-janela, #rf-res) .botao-janela.rf-botao:hover:not([aria-disabled="true"], :disabled) {
+  --bf-face: #4a4e57; --bf-luz: #c9ced6; color: #fff7e6; }
+body:is([data-rf-botoes="a"], [data-rf-botoes="b"]) :is(.rf-janela, #rf-res) .botao-janela.rf-botao.principal:hover:not([aria-disabled="true"], :disabled) { --bf-face: #564c33; --bf-luz: #f2d27a; color: #fff3d6; }
+body:is([data-rf-botoes="a"], [data-rf-botoes="b"]) :is(#texto, body) :is(.rf-janela, #rf-res) .botao-janela.rf-botao.perigo:hover:not([aria-disabled="true"], :disabled) {
+  --bf-face: #5a322b; --bf-luz: #e07a68; color: #ffd8cf;
+  background: linear-gradient(var(--bf-luz), var(--bf-luz)) 4px 2px / min(38%, 64px) 1px no-repeat, var(--bf-face); }
+/* pressionado: a face afunda (a sombra por cima, sem a luz), o rótulo desce 1 px dentro do botão */
+body:is([data-rf-botoes="a"], [data-rf-botoes="b"]) :is(#texto, body) :is(.rf-janela, #rf-res) .botao-janela.rf-botao:active:not([aria-disabled="true"], :disabled) {
+  translate: none; background: color-mix(in srgb, var(--bf-face) 72%, #000);
+  box-shadow: inset 0 0 0 1px var(--bf-aresta), inset 0 3px 0 var(--bf-base), inset 0 -1px 0 rgba(255, 255, 255, 0.05); }
+body:is([data-rf-botoes="a"], [data-rf-botoes="b"]) :is(.rf-janela, #rf-res) .botao-janela.rf-botao:active:not([aria-disabled="true"], :disabled) > * { position: relative; top: 1px; }
+/* o foco: um anel de latão por dentro (o recorte dos cantos cortaria um anel por fora) */
+body:is([data-rf-botoes="a"], [data-rf-botoes="b"]) :is(.rf-janela, #rf-res) .botao-janela.rf-botao:focus-visible {
+  outline: none; box-shadow: inset 0 0 0 1px var(--bf-aresta), inset 0 0 0 3px var(--latao-claro), inset 0 -4px 0 var(--bf-base); }
+/* indisponível: o ferro apagado, sem a luz, a tinta baixa (o motivo continua no title e na nota) */
+body:is([data-rf-botoes="a"], [data-rf-botoes="b"]) :is(#texto, body) :is(.rf-janela, #rf-res) .botao-janela.rf-botao:is([aria-disabled="true"], :disabled) {
+  --bf-face: #222327; --bf-base: #17181a; border: 0; color: #857f74; cursor: not-allowed;
+  background: var(--bf-face); box-shadow: inset 0 0 0 1px #0a0b0d, inset 0 -3px 0 var(--bf-base); }
+body:is([data-rf-botoes="a"], [data-rf-botoes="b"]) :is(.rf-janela, #rf-res) .botao-janela.rf-botao:is([aria-disabled="true"], :disabled) .rf-bp-preco { color: #857f74; }
+body:is([data-rf-botoes="a"], [data-rf-botoes="b"]) :is(.rf-janela, #rf-res) .botao-janela.rf-botao:is([aria-disabled="true"], :disabled) .rf-bp-preco :is(img, canvas) { filter: grayscale(1) brightness(0.6); }
+/* a área do preço: um sulco separa o nome do valor (A: escuro; B: com o fio de latão) */
+body[data-rf-botoes="a"] .rf-janela .rf-botao.com-preco .rf-bp-preco { box-shadow: inset 1px 0 0 #0d0e10, inset 2px 0 0 rgba(255, 255, 255, 0.06); margin: 4px 0 5px; }
+body[data-rf-botoes="b"] .rf-janela .rf-botao.com-preco .rf-bp-preco { box-shadow: inset 1px 0 0 #0d0e10, inset 2px 0 0 #6b5424; margin: 4px 0 5px; }
+/* B: duas presilhas de latão que abraçam as laterais (4 px de largura, o fio claro por fora, a sombra por dentro) */
+body[data-rf-botoes="b"] :is(.rf-janela, #rf-res) .botao-janela.rf-botao::before,
+body[data-rf-botoes="b"] :is(.rf-janela, #rf-res) .botao-janela.rf-botao::after {
+  content: ""; position: absolute; top: 50%; width: 6px; height: 14px; margin-top: -8px; pointer-events: none;
+  background: linear-gradient(#f2d27a, #f2d27a) 1px 1px / 1px 12px no-repeat, linear-gradient(#3a2c10, #3a2c10) 3px 5px / 2px 4px no-repeat,
+    linear-gradient(90deg, #c9a14a 0 4px, #6b5424 4px 5px, #160f04 5px); }
+body[data-rf-botoes="b"] :is(.rf-janela, #rf-res) .botao-janela.rf-botao::before { left: 0; }
+body[data-rf-botoes="b"] :is(.rf-janela, #rf-res) .botao-janela.rf-botao::after { right: 0; transform: scaleX(-1); }
+body[data-rf-botoes="b"] :is(.rf-janela, #rf-res) .botao-janela.rf-botao.fechar::before,
+body[data-rf-botoes="b"] :is(.rf-janela, #rf-res) .botao-janela.rf-botao.fechar::after { height: 10px; margin-top: -6px; width: 5px; }
+body[data-rf-botoes="b"] :is(.rf-janela, #rf-res) .botao-janela.rf-botao:is([aria-disabled="true"], :disabled)::before,
+body[data-rf-botoes="b"] :is(.rf-janela, #rf-res) .botao-janela.rf-botao:is([aria-disabled="true"], :disabled)::after {
+  background: linear-gradient(90deg, #5e5240 0 4px, #3a3226 4px 5px, #17130d 5px); }
+body[data-rf-botoes="b"] :is(.rf-janela, #rf-res) .botao-janela.rf-botao:active:not([aria-disabled="true"], :disabled)::before,
+body[data-rf-botoes="b"] :is(.rf-janela, #rf-res) .botao-janela.rf-botao:active:not([aria-disabled="true"], :disabled)::after { margin-top: -7px; }
+/* a tecla dentro do botão (Fechar Esc, OK Enter): o nicho escuro, sem ruído */
+body:is([data-rf-botoes="a"], [data-rf-botoes="b"]) :is(.rf-janela, #rf-res) .botao-janela.rf-botao kbd { background: #0b0c0e; border: 1px solid #3c3f45; }

@@ -364,6 +364,46 @@ class TestGanhoReal(unittest.TestCase):
             D.mod_jogo_original = mod_jogo
 
 
+class TestPainelDeTestes(unittest.TestCase):
+    """16ª versão: o painel de testes valida antes de mudar e reconstrói o personagem pelo caminho do jogo."""
+
+    def test_valores_simples_validados(self):
+        g = jogo()
+        ouro = g.j.ouro
+        for ruim in ({"ouro": -1}, {"ouro": "abc"}, {"ouro": 10, "materiais": {"fragmento": 100}},
+                     {"ouro": 10, "materiais": {"pedra": 1}}):
+            ok, motivo = D.aplicar_sessao(g, ruim)
+            self.assertFalse(ok, ruim)
+            self.assertEqual(g.j.ouro, ouro)  # nada muda numa recusa
+        self.assertTrue(D.aplicar_sessao(g, {"ouro": "1500", "materiais": {"fragmento": 40, "essencia_brasa_3": 2}})[0])
+        self.assertEqual((g.j.ouro, D.materiais(g)["fragmento"], D.materiais(g)["essencia_brasa_3"]), (1500, 40, 2))
+
+    def test_cenario_recusa_combinacao_incoerente(self):
+        g = jogo()
+        for ruim in ({"nivel": 3, "classe": "mago", "spec": "piromante"}, {"nivel": 6, "classe": "mago", "spec": "paladino"},
+                     {"nivel": 6, "classe": "mago"}, {"nivel": 99, "classe": "mago"}, {"nivel": 2, "classe": "bardo"}):
+            self.assertFalse(D.reiniciar_cenario(g, {**ruim, "ouro": 100})[0], ruim)
+        self.assertEqual(g.j.classe, "guerreiro")
+
+    def test_cenario_reconstruido_coerente(self):
+        from rpg.classes import CLASSES
+        for classe in CLASSES:
+            for nivel, spec in ((2, None), (6, CLASSES[classe]["specs"][-1])):
+                g = jogo()
+                g.ui.efeito = lambda *a, **k: None
+                ok, texto = D.reiniciar_cenario(g, {"nivel": nivel, "classe": classe, "spec": spec, "ouro": 777,
+                                                    "materiais": {"fragmento": 9}})
+                self.assertTrue(ok, texto)
+                self.assertEqual((g.j.classe, g.j.nivel, g.j.spec, g.j.ouro), (classe, nivel, spec, 777))
+                self.assertEqual(D.materiais(g), {"fragmento": 9})
+                for s, it in g.j.equip.items():  # o que veste é da classe dele
+                    if it:
+                        self.assertIsNone(D.FICHA._nao_veste_classe(g, D.HEROI, it), (classe, s, it["nome"]))
+                self.assertEqual(sorted(m["id"] for m in D.comitiva.membros(g)), ["morel", "odete"])
+                self.assertTrue(all("uid" in it for it, _, _ in D.pecas(g)))
+                self.assertTrue(D.painel(g)["pecas"])
+
+
 class TestCasosDaDemonstracao(unittest.TestCase):
     def test_depois_dos_casos_de_conferencia_a_tentativa_funciona(self):
         g = jogo()

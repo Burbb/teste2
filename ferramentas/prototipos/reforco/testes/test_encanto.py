@@ -202,6 +202,20 @@ class TestSulcosDaPeca(unittest.TestCase):
         self.assertEqual(arma2["reforco"], 1)
         self.assertEqual(D.itens.ficha(arma2)["encantos"][1]["id"], "brasa")
         self.assertEqual(D.itens.ficha(arma2)["reforco"], 1)
+        # 16ª: as casas decimais do reforço (o elmo pequeno no +3) e os materiais voltam iguais do save
+        elmo = {"slot": "cabeca", "classe": "guerreiro", "nivel": 1, "nome": "Barbuta", "raridade": "comum", "preco": 5,
+                "bonus": {"defesa": 1, "max_hp": 1}}
+        g.j.equip["cabeca"] = elmo
+        D.dar_uid(g)
+        D.aplicar_nivel(elmo, 3)
+        g.j.recalcular()
+        g.salvar(silencioso=True)
+        h = J.carregar(BotUI(random.Random(1)), g.caminho_save(), pasta_saves=g.pasta_saves)
+        self.assertEqual(h.j.equip["cabeca"]["bonus"], elmo["bonus"])
+        self.assertEqual(h.j.equip["cabeca"]["bonus"]["defesa"], 2.5)
+        self.assertEqual(D.materiais(h), D.materiais(g))
+        h.j.recalcular()
+        self.assertEqual(h.j.defesa, g.j.defesa)
 
 
 class TestNaLuta(unittest.TestCase):

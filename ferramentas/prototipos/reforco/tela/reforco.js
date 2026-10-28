@@ -55,6 +55,24 @@
   let vistoId = 0;         // o último resultado já recebido
 
   const reduzido = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+  /* As candidatas visuais desta rodada, escolhidas no painel de testes (carregar.js) e lembradas neste navegador:
+     os botões (A · ferro encaixado, B · com presilhas de latão), o acabamento das armaduras do +9 ao +12 (A · brilho
+     nas bordas, B · reflexo estreito) e a paleta da celebração do +9 ao +12 (a anterior ou a candidata). Nenhuma é
+     escolhida pelo jogo: só a comparação. */
+  const PREF = { botoes: ["a", "b"], armadura: ["a", "b"], paleta: ["candidata", "anterior"] };
+  const pref = (k) => { let v = null; try { v = localStorage.getItem(`rf16-${k}`); } catch (e) { /* sem armazenamento */ } return PREF[k].includes(v) ? v : PREF[k][0]; };
+  function preferir(k, v) {
+    if (!PREF[k] || !PREF[k].includes(v)) return pref(k);
+    try { localStorage.setItem(`rf16-${k}`, v); } catch (e) { /* sem armazenamento: vale até recarregar */ }
+    aplicarPref();
+    return v;
+  }
+  function aplicarPref() {
+    document.body.dataset.rfBotoes = pref("botoes");
+    document.body.dataset.rfArmadura = pref("armadura");
+    document.body.dataset.rfPaleta = pref("paleta");
+  }
+  aplicarPref();
   const iconeDe = (nome) => Icones.porDesenho(nome) || S(nome, 2);
   /** O símbolo da essência com o tier no canto de cima à direita (I, II, III); a quantidade, quando há, fica em outro
    *  canto, fora do símbolo (o tier III e três unidades não se confundem). */
@@ -71,6 +89,44 @@
   const marcas = (p) => `<span class="rf-marcas" aria-label="Reforço +${p.reforco} de ${p.limite}">${Array.from({ length: p.limite }, (_, i) =>
     `<i class="${i < p.reforco ? "cheia" : ""}"></i>`).join("")}</span>`;
   const fragmentos = (n) => `<span class="rf-material">${iconeDe("saco")}<span>Fragmento de Têmpera <b>×${n}</b></span></span>`;
+
+  // ------------------------------------------------------------------ os formatos comuns das telas da forja (16ª)
+  /* Um formato por tipo de informação, igual nas quatro abas (a skill texto-regras-fenda, "Formatos comuns"):
+     - o que a operação consome: "Requer:" e cada material como disponível/necessário ("14/2"), a falta em vermelho no
+       próprio valor; a dica (mouse e foco) diz a ordem dos números e quanto falta. O nível, quando é requisito da
+       operação, entra no mesmo grupo ("Nível 5", vermelho quando impede);
+     - o ouro: só no botão da ação, numa área reservada à direita (o saldo fica no cabeçalho);
+     - a confirmação: a ação principal não sai do lugar; a pergunta aparece em cima e o Cancelar num espaço já
+       reservado ao lado. */
+  function requerHtml(lista) {
+    const itens = (lista || []).filter(Boolean);
+    if (!itens.length) return `<div class="rf-requer vazio" aria-hidden="true"></div>`;
+    return `<div class="rf-requer" role="group" aria-label="Requer"><span class="rf-requer-rot">Requer:</span>${itens.map((x) => {
+      const nivel = x.id === "nivel", titulo = nivel ? x.valor : x.nome;
+      const ic = nivel ? "" : `<span class="rf-encaixe pequeno">${x.numeral ? icEss(x) : iconeDe(x.icone)}</span>`;
+      return `<span class="rf-req-item${x.falta ? " falta" : ""}${nivel ? " nivel" : ""}" tabindex="0" ${Telas.dica(`<b>${h(titulo)}</b><div>${h(x.dica)}</div>`, true)}
+        aria-label="${h(titulo)}: ${h(x.dica)}">${ic}<b>${h(x.valor)}</b></span>`;
+    }).join("")}</div>`;
+  }
+  /** O botão de uma ação: o nome na área principal e, nas pagas, a moeda e o valor numa área reservada à direita (o
+   *  valor não empurra o nome nem muda a largura). `preco`: o número, "" (a área reservada vazia: sem peça) ou null
+   *  (ação sem preço). `falta`: o ouro não chega (o valor em vermelho; o motivo no title e no aria). */
+  function botaoAcao({ rotulo, preco = null, falta = false, attrs = "", classe = "principal", motivo = "" }) {
+    const pago = preco !== null;
+    const area = pago ? `<span class="rf-bp-preco${falta ? " falta" : ""}"${preco === "" ? ' aria-hidden="true"' : ""}>${preco === "" ? "" : `${moeda()}<b>${preco}</b>`}</span>` : "";
+    const aria = pago && preco !== "" ? ` aria-label="${h(rotulo.replace(/<[^>]+>/g, ""))}, ${preco} de ouro${motivo ? `. ${h(motivo)}` : ""}"` : "";
+    return `<button type="button" class="botao-janela rf-botao ${classe}${pago ? " com-preco" : ""}" ${attrs}${motivo ? ` aria-disabled="true" title="${h(motivo)}"` : ""}${aria}><span class="rf-bp-rot">${rotulo}</span>${area}</button>`;
+  }
+  /** O pé de uma ação: [o que ela consome] [ação principal, no eixo] [Cancelar reservado], a pergunta em cima e a nota
+   *  embaixo, cada um com a altura guardada. Pedir a confirmação só revela a pergunta e o Cancelar: a ação fica onde
+   *  estava (as duas laterais têm a mesma largura, então nada se recentra). */
+  function peAcao({ principal, esquerda = "", cancelar = "", pergunta = "", nota = "", neutra = true }) {
+    return `<div class="rf-pe-fixo${pergunta ? " confirmando" : ""}"${pergunta ? ` role="alertdialog" aria-label="${h(pergunta.replace(/<[^>]+>/g, ""))}"` : ""}>
+      <div class="rf-pe-pergunta">${pergunta}</div>
+      <div class="rf-pe-botoes"><span class="rf-pe-esq">${esquerda}</span>${principal}<span class="rf-pe-cancelar">${cancelar}</span></div>
+      <span class="rf-nota${neutra ? " neutra" : ""}">${nota}</span></div>`;
+  }
+  const cancelarBtn = (attr) => `<button type="button" class="botao-janela rf-botao" ${attr}><span class="rf-bp-rot">Cancelar</span></button>`;
 
   /** A fase da cena: "forja" (aquecendo), "desfecho" (o resultado em destaque) ou "" (a bancada com a próxima oferta).
    *  Com movimento reduzido, não há aquecimento: o desfecho aparece parado. */
@@ -98,7 +154,7 @@
   function balcao(d) {
     receber(d);
     const cartoes = [
-      cartaoServico({ icone: "martelo", nome: "Reforçar", efeito: "Arma, peito e apoio", attrs: 'data-servico="reforcar"' }),
+      cartaoServico({ icone: "martelo", nome: "Reforçar", efeito: "Todo equipamento, do +1 ao +12", attrs: 'data-servico="reforcar"' }),
       cartaoServico({ icone: "livro", nome: "Encantar", efeito: "Grava essências nos sulcos da peça (laboratório)", attrs: 'data-servico="encantar"' }),
       cartaoServico({ icone: "saco", nome: "Desmontar", efeito: "Peças da bolsa → Fragmentos de Têmpera", attrs: 'data-servico="desmontar"' }),
       cartaoServico({ icone: "martelo", nome: "Transferir", efeito: "O reforço de uma peça para outra do mesmo tipo", attrs: 'data-servico="transferir"' }),
@@ -119,7 +175,7 @@
     const pos = ultimaPos ? ` style="left:${ultimaPos.left};top:${ultimaPos.top};width:${ultimaPos.width};height:${ultimaPos.height}"` : "";
     return `<div class="rf-janela m-janela${janela === "encantar" ? " rf-encantar" : ""}" role="dialog" aria-modal="true" aria-label="${rotulo}"${pos}>
       <header class="rf-cab"><nav class="rf-servicos-abas" role="tablist">${abas}</nav>${recursos}
-        <button type="button" class="botao-janela rf-botao fechar" data-fechar>Fechar <kbd>Esc</kbd></button></header>${corpo(d)}</div>`;
+        <button type="button" class="botao-janela rf-botao fechar" data-fechar><span class="rf-bp-rot">Fechar <kbd>Esc</kbd></span></button></header>${corpo(d)}</div>`;
   }
 
   /** A tentativa em cena desta peça (o resultado do motor), ou null. */
@@ -163,8 +219,12 @@
    *  no corpo: o total de quem veste aparece na prévia do Encantar, não aqui. */
   function efeitosGravacao(lista, efeitos) {
     return (efeitos || []).map((f) => {
-      const tiers = (lista || []).filter((x) => x && x.essencia === f.id).sort((a, b) => b.tier - a.tier).map((x) => x.numeral).join(" + ");
-      return `<div class="rf-ef" style="--ess:${h(f.cor)}"><span class="rf-ef-nome">${h(f.nome)} ${tiers}</span>
+      // as gravações desta essência, do tier maior ao menor: iguais com ×N ("Brasa I ×2"), diferentes somadas
+      // ("Brasa II + Brasa I"); cada sulco continua inspecionável na fila de cima
+      const conta = new Map();
+      (lista || []).filter((x) => x && x.essencia === f.id).forEach((x) => conta.set(x.tier, { x, n: (conta.get(x.tier)?.n || 0) + 1 }));
+      const nome = [...conta.values()].sort((a, b) => b.x.tier - a.x.tier).map(({ x, n }) => `${h(x.titulo)}${n > 1 ? ` ×${n}` : ""}`).join(" + ");
+      return `<div class="rf-ef" style="--ess:${h(f.cor)}"><span class="rf-ef-nome">${nome || h(f.nome)}</span>
         <span class="rf-ef-txt">${h(f.efeito)}${f.limite ? ` <span class="lim">${h(f.limite)}</span>` : ""}${f.excede ? ` <small class="rf-ef-teto">Limite ${h(f.teto)}.</small>` : ""}</span></div>`;
     }).join("");
   }
@@ -222,15 +282,6 @@
   function chapaVazia() {
     return `<div class="rf-chapa vazia"><div class="rf-leito so">${molde(null)}</div><p class="rf-instrucao">Escolha uma peça</p></div>`;
   }
-  /** Um material: o ícone e a quantidade exigida. O nome e quanto o grupo tem ficam na dica (mouse e teclado); faltando,
-   *  o encaixe e o número ficam vermelhos. Sem `custo` (nada a pagar: reforço máximo, sem peça), só o encaixe apagado. */
-  function insumo(ic, nome, custo, tem) {
-    if (custo === undefined) return `<div class="rf-insumo vazio" aria-hidden="true"><span class="rf-encaixe pequeno">${ic}</span><b></b></div>`;
-    const dica = Telas.dica(`<b>${h(nome)}</b><div>Custo ${custo} · Tem ${tem}</div>`, true);
-    return `<div class="rf-insumo${tem < custo ? " falta" : ""}" tabindex="0" ${dica} aria-label="${h(nome)}: custo ${custo}, tem ${tem}">
-      <span class="rf-encaixe pequeno">${ic}</span><b>${custo}</b>${Number.isFinite(tem) && nome !== "Ouro" ? `<small class="rf-tem">tem ${tem}</small>` : ""}</div>`;
-  }
-  const insumos = (ouro, ouroTem, frag, fragTem) => `<div class="rf-insumos" aria-label="Custo">${insumo(moeda(), "Ouro", ouro, ouroTem)}${insumo(iconeDe("saco"), "Fragmento de Têmpera", frag, fragTem)}</div>`;
   const linhaGanho = (l) => `<div class="rf-ganho"><span>${h(l.nome)}</span><b>${l.antes} → <em>${l.depois}</em></b></div>`;
   const visor = (linhas) => `<div class="rf-resultado${linhas.length ? "" : " vazio"}">${linhas.map(linhaGanho).join("")}</div>`;
   /** A ajuda (ⓘ): o que a tela não mostra mas pesa na decisão, curto. Mouse e teclado. Fica ao lado da chance, fora
@@ -255,17 +306,17 @@
     const sulcos = (p.encantos || []).length ? `<span>Sulcos</span><span class="rf-sq-fila">${filaSulcos(p.encantos)}</span>` : "";
     return `<div class="rf-titulo"><b class="r-${h(p.item.raridade)}">${h(base)} ${num}${h(resto)}</b><small>${h(dono(p))}</small><div class="rf-tit-sulcos">${sulcos}</div></div>`;
   }
-  function bancada({ p, classe = "", nivel = "", marcasDe, esq, dir, dsf = "", chance = "", falha = "", ajudas = [], botao = "Reforçar", trava = "", nota = "", neutra = false, titulo = "", dicaPeca = true }) {
+  function bancada({ p, classe = "", nivel = "", marcasDe, esq, dir, dsf = "", chance = "", falha = "", ajudas = [], botao = "Reforçar", trava = "", nota = "", neutra = false, titulo = "", dicaPeca = true, preco = "", faltaOuro = false }) {
     const m = p ? marcas({ ...p, reforco: marcasDe ?? p.reforco }) : marcas({ reforco: 0, limite: 4 });
     return `<div class="rf-chapa${titulo ? " com-titulo" : ""}${classe}">${titulo || ""}
       <div class="rf-leito"><div class="rf-lado esq">${esq}${conduto(false)}</div>
         ${molde(p, m, nivel === null ? "" : `<span class="rf-nivel">${nivel}</span>`, dicaPeca)}
         <div class="rf-lado dir">${conduto(true)}${dir}${dsf}</div></div>
       <div class="rf-pe-chapa"><div class="rf-linha-chance">${chance}${ajuda(ajudas)}</div>${titulo ? `<span class="rf-falha">${falha}</span>` : ""}
-        <div class="rf-acao"><button type="button" class="botao-janela rf-botao principal" data-reforcar${trava ? ` aria-disabled="true"${trava === true ? "" : ` title="${h(trava)}"`}` : ""}>${botao}</button></div>
+        <div class="rf-acao">${botaoAcao({ rotulo: botao, preco, falta: faltaOuro, attrs: `data-reforcar${trava === true ? ' aria-disabled="true"' : ""}`, motivo: trava === true ? "" : trava })}</div>
         <span class="rf-nota${neutra ? " neutra" : ""}">${h(nota)}</span></div></div>`;
   }
-  const semCusto = () => insumos();
+  const semCusto = () => requerHtml([]);
   const chanceHtml = (c) => (c >= 100 ? `<span class="rf-chance">Sucesso garantido</span>` : `<span class="rf-chance">Sucesso <b>${c}%</b></span>`);
 
   function chapaReforco(p, u) {
@@ -277,9 +328,9 @@
       const x = cena.pago || { de: t.de, chance: 0, linhas: [] };
       // a bancada da tentativa, como a oferta estava (o resultado aparece na apresentação em destaque, por cima)
       const classe = ` forjando ${t.sucesso ? "ok" : "falhou"}${t.sucesso && t.para >= 3 ? " forte" : ""}`;
-      return bancada({ p, classe, nivel: null, titulo: tituloPeca(p, t), marcasDe: t.de, esq: insumos(x.ouro, Infinity, x.fragmentos, Infinity),
+      return bancada({ p, classe, nivel: null, titulo: tituloPeca(p, t), marcasDe: t.de, esq: requerHtml(x.requer),
         dir: visor(x.linhas), chance: chanceHtml(x.chance), falha: x.chance >= 100 ? "" : `Falha: +${t.de} → +${Math.max(0, t.de - 1)}`,
-        botao: `Reforçar +${t.de} → +${t.de + 1}`, trava: true, dicaPeca: false });
+        botao: `Reforçar +${t.de} → +${t.de + 1}`, preco: x.ouro ?? "", trava: true, dicaPeca: false });
     }
     if (p.no_limite) {
       return bancada({ ...comum, p, esq: semCusto(), dir: visor([]), botao: "Reforço máximo", trava: true });
@@ -289,10 +340,13 @@
     }
     const passo = passoDe(p);
     const ajudas = ["O equipamento não quebra.", "A tentativa custa o mesmo, dê certo ou não."];  // a falha está à vista
-    const motivo = passo.motivo;
-    return bancada({ ...comum, p, esq: insumos(passo.ouro, passo.ouro_tem, passo.fragmentos, passo.tem), dir: visor(passo.linhas),
+    // a falta já aparece no valor (o material em vermelho no Requer, o preço em vermelho no botão): o motivo por extenso
+    // fica no title e no aria do botão, sem repetir numa nota embaixo; a nota só diz o que não está marcado em outro lugar
+    const motivo = passo.motivo, marcado = (passo.falta || []).length > 0;
+    return bancada({ ...comum, p, esq: requerHtml(passo.requer), dir: visor(passo.linhas),
       chance: chanceHtml(passo.chance), falha: passo.chance >= 100 ? "" : `Falha: +${p.reforco} → +${passo.falha}`, ajudas,
-      botao: `Reforçar +${p.reforco} → +${p.reforco + 1}`, trava: motivo || "", nota: motivo || "" });
+      botao: `Reforçar +${p.reforco} → +${p.reforco + 1}`, preco: passo.ouro, faltaOuro: passo.ouro_tem < passo.ouro,
+      trava: motivo || "", nota: motivo && !marcado ? motivo : "" });
   }
   /** A desmontagem na mesma bancada do reforço: a peça no molde, no eixo do botão; à direita, o encaixe do que ela
    *  rende (ícone e quantidade). O botão vira a confirmação no próprio pé, com o nome da peça e a destruição. Depois de
@@ -307,17 +361,16 @@
       n = p.desmontar.total;
       motivo = p.desmontar.motivo || "";
       const conf = confirmando && confirmando.uid === p.uid;
-      pe = conf
-        ? `<div class="rf-confirmar" role="alertdialog" aria-label="Confirmar a desmontagem"><b>Desmontar ${h(p.item.nome)}?</b>
-            <span class="rf-aviso">O equipamento será destruído.${(p.encantos || []).some(Boolean) ? ` Perde as gravações: ${(p.encantos || []).filter(Boolean).map((e) => h(e.titulo)).join(", ")}.` : ""}</span>
-            <div class="rf-botoes"><button type="button" class="botao-janela rf-botao" data-desmontar-nao>Cancelar</button>
-            <button type="button" class="botao-janela rf-botao perigo" data-desmontar-sim disabled>Desmontar</button></div></div>`
-        : `<div class="rf-linha-chance"></div><button type="button" class="botao-janela rf-botao principal perigo" data-desmontar${motivo ? ` aria-disabled="true" title="${h(motivo)}"` : ""}>Desmontar</button>
-            <span class="rf-nota neutra">${h(motivo || (p.venda !== undefined ? `No mercado, vende por ${p.venda}.` : ""))}</span>`;
+      const perde = (p.encantos || []).filter(Boolean).map((e) => h(e.titulo)).join(", ");
+      pe = peAcao({
+        principal: botaoAcao({ rotulo: "Desmontar", classe: "principal perigo", attrs: conf ? "data-desmontar-sim" : "data-desmontar", motivo: conf ? "" : motivo }),
+        cancelar: conf ? cancelarBtn("data-desmontar-nao") : "",
+        pergunta: conf ? "<b>Destruir a peça?</b>" : "",
+        nota: conf ? (perde ? `Perde as gravações: ${perde}.` : "") : h(motivo || (p.venda !== undefined ? `No mercado, vende por ${p.venda}.` : "")),
+        neutra: !conf });
     } else {
       if (chegou) n = chegou.total;
-      pe = `<div class="rf-linha-chance"></div><button type="button" class="botao-janela rf-botao principal perigo" aria-disabled="true" title="Escolha uma peça">Desmontar</button>
-          <span class="rf-nota neutra">Escolha uma peça</span>`;
+      pe = peAcao({ principal: botaoAcao({ rotulo: "Desmontar", classe: "principal perigo", attrs: "data-desmontar", motivo: "Escolha uma peça" }), nota: "Escolha uma peça" });
     }
     const resultado = `<div class="rf-recebe${n === null ? " vazio" : ""}${chegou ? " chegou" : ""}" ${n ? Telas.dica(`<b>Fragmento de Têmpera ×${n}</b>`, true) : ""}
         aria-label="${n ? `Recebe ${n} Fragmento${n > 1 ? "s" : ""} de Têmpera` : "Nada a receber"}"><span class="rf-encaixe pequeno">${saco}</span><b>${n === null ? "" : `×${n}`}</b></div>`;
@@ -358,23 +411,23 @@
       return `<button type="button" class="rf-tr-slot ${lado}${vazio ? " vazio" : ""}${trSeletor === lado ? " aberto" : ""}" data-tr-abrir="${lado}"${desliga || t ? ' aria-disabled="true"' : ""}
           aria-label="${rot}: ${p ? h(p.item.nome) : "escolher"}" ${p && !t ? dicaItem(p.item, "", false) : ""}>
         <span class="rf-tr-rotulo">${rot}</span>
-        <span class="rf-encaixe grande${p ? ` r-${h(p.item.raridade)}` : " vazio"}" data-reforco="${t ? niveis[0] : p ? p.reforco : 0}" data-tr-peca="${lado}">${p ? iconePeca(p.item) + canto + gravura(p.encantos) : ""}</span>
+        <span class="rf-encaixe grande${p ? ` r-${h(p.item.raridade)}` : " vazio"}" data-reforco="${t ? niveis[0] : p ? p.reforco : 0}" data-tr-peca="${lado}"${p ? ` data-slot="${h(p.item.slot)}"` : ""}>${p ? iconePeca(p.item) + canto + gravura(p.encantos) : ""}</span>
         <span class="rf-tr-nome">${p ? `<b class="r-${h(p.item.raridade)}">${h(p.item.nome.replace(/ \+\d+/, ""))}</b><small>${h(dono(p))}</small>` : `<small>${desliga ? "Escolha a origem primeiro" : `Escolher ${lado === "origem" ? "a origem" : "o destino"}`}</small>`}</span>
         <span class="rf-tr-nivel">${muda}</span></button>`;
     };
     const motivo = t ? "" : !o ? "Escolha a origem" : !o.reforco ? "A origem não tem reforço." : !dsts.length ? o.transferir.motivo
       : !dest ? "Escolha o destino" : dx.motivo || (d.ouro < dx.ouro ? `Faltam ${dx.ouro - d.ouro} de ouro` : null);
-    let pe;
-    if (confirmandoTransf && o && dest && dx && confirmandoTransf.origem === o.uid && confirmandoTransf.destino === dest.uid) {
-      pe = `<div class="rf-confirmar tr" role="alertdialog" aria-label="Transferir o reforço por ${dx.ouro} de ouro?"><b>Transferir o reforço?</b>
-          <div class="rf-botoes"><span class="rf-tr-preco">${moeda()}<b>${dx.ouro}</b></span><button type="button" class="botao-janela rf-botao" data-transferir-nao>Cancelar</button>
-          <button type="button" class="botao-janela rf-botao principal" data-transferir-sim disabled>Transferir</button></div></div>`;
-    } else {
-      // o custo junto da ação: a moeda e o preço ao lado do Transferir
-      const preco = dx && !dx.motivo ? `<span class="rf-tr-preco${d.ouro < dx.ouro ? " falta" : ""}" aria-label="Custo: ${dx.ouro} de ouro">${moeda()}<b>${dx.ouro}</b></span>` : "";
-      pe = `<div class="rf-pe-linha tr"><div class="rf-pe-acao">${preco}<button type="button" class="botao-janela rf-botao principal" data-transferir${motivo || t ? ` aria-disabled="true"${motivo ? ` title="${h(motivo)}"` : ""}` : ""}>Transferir</button>
-        <span class="rf-nota${/^Falta/.test(motivo || "") || trAviso ? "" : " neutra"}">${h(trAviso || motivo || "")}</span></div></div>`;
-    }
+    // o preço dentro do botão; na confirmação, o mesmo botão no mesmo lugar (a pergunta em cima, o Cancelar ao lado)
+    const conf = !!(confirmandoTransf && o && dest && dx && confirmandoTransf.origem === o.uid && confirmandoTransf.destino === dest.uid);
+    const preco = t ? t.u.ouro : dx && !dx.motivo ? dx.ouro : "";
+    const faltaOuro = !t && dx && !dx.motivo && d.ouro < dx.ouro;
+    const pe = peAcao({
+      principal: botaoAcao({ rotulo: "Transferir", preco, falta: faltaOuro, attrs: `${conf ? "data-transferir-sim" : "data-transferir"}${t ? ' aria-disabled="true"' : ""}`,
+        motivo: conf || t ? "" : motivo || "" }),
+      cancelar: conf ? cancelarBtn("data-transferir-nao") : "",
+      pergunta: conf ? "<b>Transferir o reforço?</b>" : "",
+      // a falta de ouro já está no preço (vermelho); a nota fica para o que não aparece em outro lugar
+      nota: conf ? "" : h(trAviso || (faltaOuro ? "" : motivo) || ""), neutra: !trAviso });
     return `<div class="rf-chapa transfere tr2${t ? " transferindo" : ""}${trSeletor && !t ? " com-seletor" : ""}">
       <div class="rf-tr-par">${slot("origem", o, nivelO)}<span class="rf-tr-conduto" aria-hidden="true"><i class="rf-canal"></i></span>${slot("destino", dest, nivelD)}</div>
       ${trSeletor && !t ? seletorTransf(d, o, dsts) : ""}
@@ -444,18 +497,22 @@
         class="rf-tier-op${x.id === e.id ? " escolhido" : ""}${x.qtd < 1 ? " apagada" : ""}" data-essencia="${h(x.id)}" aria-checked="${x.id === e.id}" style="--ess:${h(x.cor)}">
         ${icEss(x)}<span class="rf-tier-qtd" aria-label="${x.qtd} ${x.qtd === 1 ? "unidade" : "unidades"}">×${x.qtd}</span></button>`).join("")}</div>` : "";
     const essArea = `<section class="rf-enc-ess">${famHtml}${tierHtml}${e && p && !motivoPeca ? previsaoGravacao(p, e, atual, prev) : `<p class="rf-nota neutra">${h(motivoPeca || "Escolha uma essência")}</p>`}</section>`;
-    // o pé: o custo e a ação (ou a confirmação da substituição)
-    const insumosHtml = e && !motivoPeca
-      ? `<div class="rf-insumos" aria-label="Custo">${insumo(iconeDe(e.icone), `Essência de ${e.titulo}`, 1, g ? Infinity : e.qtd)}${insumo(moeda(), "Ouro", custo, g ? Infinity : d.ouro)}</div>`
-      : `<div class="rf-insumos" aria-hidden="true"></div>`;
+    // o pé: o que a gravação consome (Requer: a essência e, numa peça vestida, o nível de quem veste), a ação com o
+    // preço dentro e, na substituição, a confirmação no mesmo lugar
+    // o Requer só quando a operação existe (uma gravação idêntica ou incompatível não consome nada)
+    const requer = e && !motivoPeca && !e.motivo && !(prev && prev.bloqueio && !prev.nivel) ? [e.requer, prev && prev.nivel] : [];
+    const faltaOuro = !!(e && !motivoPeca && d.ouro < custo);
+    // o que já aparece marcado (a essência e o nível no Requer, o ouro no preço) não volta numa nota
+    const marcado = !!e && ((e.qtd < 1) || faltaOuro || !!(prev && prev.bloqueio && prev.nivel));
     const conf = confirmandoGrav && p && confirmandoGrav.uid === p.uid;
-    const pe = conf
-      ? `<div class="rf-confirmar" role="alertdialog" aria-label="Confirmar a substituição"><span class="rf-troca">Sai <b style="color:${h(atual.cor)}">${h(atual.titulo)}</b> · Entra <b style="color:${h(e.cor)}">${h(e.titulo)}</b></span>
-          <span class="rf-aviso">${h(atual.titulo)} se perde.</span>
-          <div class="rf-botoes"><button type="button" class="botao-janela rf-botao" data-gravar-nao>Cancelar</button>
-          <button type="button" class="botao-janela rf-botao principal" data-gravar-sim disabled>Substituir</button></div></div>`
-      : `<div class="rf-pe-linha">${insumosHtml}<div class="rf-pe-acao"><button type="button" class="botao-janela rf-botao principal" data-gravar${motivo || g ? ` aria-disabled="true"${motivo ? ` title="${h(motivo)}"` : ""}` : ""}>${atual ? "Substituir" : "Gravar"}</button>
-          <span class="rf-nota${!motivo || /^(Falta|Requer)/.test(motivo) ? "" : " neutra"}">${h(motivo && p ? motivo : !p ? "Escolha uma peça" : "")}</span></div></div>`;
+    const pe = `<div class="rf-pe-linha enc">${peAcao({
+      esquerda: requerHtml(requer),
+      principal: botaoAcao({ rotulo: atual ? "Substituir" : "Gravar", preco: e && !motivoPeca ? custo : "", falta: faltaOuro,
+        attrs: `${conf ? "data-gravar-sim" : "data-gravar"}${g ? ' aria-disabled="true"' : ""}`, motivo: conf || g ? "" : motivo || "" }),
+      cancelar: conf ? cancelarBtn("data-gravar-nao") : "",
+      pergunta: conf ? `<span class="rf-troca">Sai <b style="color:${h(atual.cor)}">${h(atual.titulo)}</b> · Entra <b style="color:${h(e.cor)}">${h(e.titulo)}</b></span>` : "",
+      nota: conf ? `${h(atual.titulo)} se perde.` : h(!p ? "Escolha uma peça" : motivo && !marcado ? motivo : ""),
+      neutra: !conf && !/^(Falta|Requer)/.test(motivo || "") })}</div>`;
     const classe = g ? ` gravando${faseGrav() === "gravado" ? " gravado" : ""}` : "";
     return `<div class="rf-chapa encanto enc2${classe}"${g ? ` style="--ess:${h(g.para.cor)}"` : e ? ` style="--ess:${h(e.cor)}"` : ""}>
       <div class="rf-enc-corpo">${itemArea}${essArea}</div>
@@ -466,14 +523,13 @@
    *  tier); numa substituição, os valores que mudam (nesta peça e, quando outra peça de quem veste também
    *  soma ou o limite corta, em quem veste); a troca; o limite. Nada de contas na tela. */
   function previsaoGravacao(p, e, atual, prev) {
-    const falta = e.requisito > (p.encantar.nivel || nivelGrupo()) && p.encantar.dono;
-    // a quantidade já está no botão do tier: no lugar dela, o requisito
+    // o requisito de nível fica no "Requer:" do pé (quando a peça é vestida) ou na nota da consequência (na bolsa)
     const linhas = ((prev && prev.linhas) || []).map((l) => [l.rotulo, `${l.antes} → ${l.depois}`, l.melhor ? "melhor" : "pior"]);
-    return `<div class="rf-prev"><div class="rf-prev-tit">${icEss(e)}<b style="--ess:${h(e.cor)}">${h(e.titulo)}</b><span class="rf-prev-req${falta ? " falta" : ""}">Requer nível ${e.requisito}</span></div>
+    return `<div class="rf-prev"><div class="rf-prev-tit">${icEss(e)}<b style="--ess:${h(e.cor)}">${h(e.titulo)}</b></div>
       <p class="rf-prev-ef">${h(e.efeito)}${e.limite ? ` <span class="lim">${h(e.limite)}</span>` : ""}</p>
       ${linhas.length ? `<dl class="rf-prev-linhas">${linhas.map(([k, v, c]) => `<dt>${h(k)}</dt><dd${c ? ` class="${c}"` : ""}>${h(v)}</dd>`).join("")}</dl>` : ""}
       ${atual && atual.id !== e.id ? `<p class="rf-prev-troca">Sai <b style="color:${h(atual.cor)}">${h(atual.titulo)}</b> · entra <b style="color:${h(e.cor)}">${h(e.titulo)}</b></p>` : ""}
-      ${prev && prev.aviso ? `<p class="pior">${h(prev.aviso)}</p>` : ""}</div>`;
+      ${prev && prev.aviso ? `<p class="pior">${h(prev.aviso)}</p>` : ""}${prev && prev.nota ? `<p class="rf-prev-nota">${h(prev.nota)}</p>` : ""}</div>`;
   }
 
   // ------------------------------------------------------------------ a ficha
@@ -554,6 +610,17 @@
     7: ["W", "#ecd2ff", "#b064ff", "#6a2cb0", "#2c1050"], 8: ["W", "#ffd0d8", "#ff3c60", "#a8102e", "#4a0614"],
   };
   const PRISMA = ["#ff3c60", "#ffb032", "#46e2a0", "#468cff", "#aa64ff", "#ff6edc"];
+  /* A paleta candidata do +9 ao +12 (16ª; o +8 e os de baixo não mudam): uma cor dominante e uma secundária
+     subordinada, em vez das seis cores do prisma com o mesmo peso. O prisma fica só em alguns estilhaços. A grandeza
+     sobe pela forma: o +10 ganha um segundo leque de raios finos, o +11 raios mais longos e o anel a mais, o +12 a
+     estrela maior e os clarões de marfim. Cores: dom = [W, claro, médio, escuro, fundo], sec = a secundária. */
+  const CELEBRA = {
+    9: { dom: ["W", "#ecd2ff", "#b064ff", "#6a2cb0", "#2c1050"], sec: "#5a8cff", leque: 0, longo: 1 },
+    10: { dom: ["W", "#ecd2ff", "#b064ff", "#6a2cb0", "#2c1050"], sec: "#5a8cff", leque: 1, longo: 1.06 },
+    11: { dom: ["W", "#fff4c8", "#ffd060", "#d08a1c", "#5a3208"], sec: "#ffb032", leque: 1, longo: 1.05 },
+    12: { dom: ["W", "#fff4c8", "#ffd060", "#e09a20", "#6a3a08"], sec: "#ffb032", leque: 2, longo: 1.08 },
+  };
+  const celebraNova = (n) => (n >= 9 && document.body.dataset.rfPaleta !== "anterior" ? CELEBRA[Math.min(n, 12)] : null);
   const paletaNivel = (n) => (n >= 9 ? ["W", "#fff4c8", "#ffb032", "#ff3c60", "#5a1030"] : COR_NIVEL[n] || (n >= 3 ? FX.PALETAS.lendario : ["W", "Y", "O", "o", "C"]));
 
   /** As propriedades da peça, como a ficha do achado: as que mudaram com antes → depois (o novo em verde; na queda,
@@ -646,7 +713,7 @@
     el.setAttribute("aria-label", aria);
     el.innerHTML = `<div class="rf-res-conj"><header class="rf-res-tit">${titulo}</header>
       <div class="rf-res-meio"><div class="rf-res-peca">${arte}</div><div class="rf-res-ficha">${ficha}</div></div>
-      <div class="rf-res-pe">${banner}<button type="button" class="botao-janela rf-botao principal" data-res-ok>OK<kbd class="rf-tecla">Enter</kbd></button></div></div>`;
+      <div class="rf-res-pe">${banner}<button type="button" class="botao-janela rf-botao principal" data-res-ok><span class="rf-bp-rot">OK<kbd class="rf-tecla">Enter</kbd></span></button></div></div>`;
     document.body.appendChild(el);
     nitida(el);
     document.body.classList.add("rf-res-aberto");  // o nome e a peça da bancada saem do fundo (não aparecem duas vezes)
@@ -694,9 +761,12 @@
   function efeitoReforco(u, desde) {
     return (palco, el) => {
       const alvo = el.querySelector(".rf-res-arte"), ficha = el.querySelector(".rf-res-ficha"), numero = el.querySelector(".rf-res-nome .rf-n-agora");
-      const f = faixaNivel(u.para), pal = paletaNivel(u.para), enx = FX.enxame();
-      const cores = u.para >= 9 ? PRISMA.slice(0, u.para >= 12 ? 6 : u.para - 7) : null;
-      const estrelaCores = u.para >= 9 ? ["z", "#5a1030", "#ffb032", "#fff4c8"] : u.para >= 5 ? ["z", pal[4], pal[2], pal[1]] : ["z", "o", "O", "Y"];
+      const nova = u.sucesso ? celebraNova(u.para) : null;
+      const f = faixaNivel(u.para), pal = nova ? nova.dom : paletaNivel(u.para), enx = FX.enxame();
+      const cores = u.para >= 9 && !nova ? PRISMA.slice(0, u.para >= 12 ? 6 : u.para - 7) : null;
+      const estrelaCores = nova ? ["z", pal[4], pal[2], pal[1]] : u.para >= 9 ? ["z", "#5a1030", "#ffb032", "#fff4c8"] : u.para >= 5 ? ["z", pal[4], pal[2], pal[1]] : ["z", "o", "O", "Y"];
+      // na candidata: os estilhaços e as brasas na dominante, um em três na secundária, um em nove no prisma
+      const palEstilhaco = (i) => (!nova ? null : i % 9 === 0 ? ["W", PRISMA[i % 6], PRISMA[(i + 2) % 6]] : i % 3 === 0 ? ["W", nova.sec, pal[3]] : ["W", pal[1], pal[2], pal[3]]);
       if (!impactados.has(u.id) && desde < 400) {
         impactados.add(u.id);
         if (u.sucesso) { soar("predio_ferreiro", ...(f >= 1 ? ["golpe"] : [])); if (f >= 1) FX.tremer([0, 3, 4, 6, 9][f]); }
@@ -719,7 +789,7 @@
           return;
         }
         const re = R + Math.round(R * [0.71, 0.96, 1.04, 1.12, 1.22][f]);
-        const longo = [2.6, 3.4, 3.6, 3.9, 4.3][f], calmo = [1.9, 2.1, 2.2, 2.35, 2.55][f];
+        const longo = [2.6, 3.4, 3.6, 3.9, 4.3][f] * (nova ? nova.longo : 1), calmo = [1.9, 2.1, 2.2, 2.35, 2.55][f] * (nova ? nova.longo : 1);
         const n = 18 + 2 * Math.max(0, f - 1);
         const vis = parado ? 9 : t < 900 ? Math.round(FX.rampa(t, 500, 400, 16, 11)) : 10 + Math.round(Math.sin(t / 420));
         const r1 = Math.round(re * (parado ? calmo : t < 900 ? longo : FX.rampa(t, 900, 500, longo, calmo)));
@@ -730,6 +800,11 @@
           cores.forEach((c, i) => FX.raios(palco, { cx: a.x, cy: a.y, n: m, ang: ang + (i * Math.PI * 2) / (m * cores.length),
             larg: 0.32 / cores.length, r0: R, r1, pal: ["W", "#fff4c8", c, c], esbate: 0.3, achata, alterna: 0.62, vis }));
         } else FX.raios(palco, { cx: a.x, cy: a.y, n, ang, larg: 0.32, r0: R, r1, pal: pal.slice(1), esbate: 0.3, achata, alterna: 0.62, vis });
+        // a candidata: leques de raios finos na secundária, entre os da dominante (o +10 um, o +12 dois)
+        for (let k = 0; nova && k < nova.leque; k++) {
+          FX.raios(palco, { cx: a.x, cy: a.y, n: Math.round(n / 2), ang: ang + Math.PI / n + k * Math.PI / (2 * n), larg: 0.1, r0: R,
+            r1: Math.round(r1 * (0.78 + 0.1 * k)), pal: ["W", nova.sec, nova.sec], esbate: 0.4, achata, alterna: 0.7, vis: Math.max(4, vis - 3 - 2 * k) });
+        }
         FX.estrela(palco, { cx: a.x, cy: a.y, pontas: 14 + 2 * Math.max(0, f - 1), ri: R + 2, re, pal, cores: estrelaCores });
         FX.poco(palco, { cx: a.x, cy: a.y, rx: R + 2, ry: R + 2, forca: 14 });  // a peça lê sobre o selo
         if (parado) return;
@@ -738,23 +813,23 @@
         [0, 110, 220].slice(0, f >= 3 ? 3 : f >= 1 ? 2 : 1).forEach((d, i) => {
           const tt = t - d;
           if (tt >= 0 && tt < 420) FX.anel(palco, { cx: a.x, cy: a.y, r: re + Math.round(FX.rampa(tt, 0, 400) * palco.t([50, 70, 80, 96, 110][f] - i * 12)), esp: 2,
-            pal: cores ? ["W", cores[i % cores.length], cores[(i + 1) % cores.length]] : ["W", pal[1], pal[2]], achata: 0.6, rastro: 3, vis: Math.round(14 * (1 - tt / 420)) });
+            pal: cores ? ["W", cores[i % cores.length], cores[(i + 1) % cores.length]] : nova && i === 2 ? ["W", nova.sec, pal[2]] : ["W", pal[1], pal[2]], achata: 0.6, rastro: 3, vis: Math.round(14 * (1 - tt / 420)) });
         });
         if (passo && q === 1) enx.soltar([24, 42, 52, 64, 84][f], (i) => {
           const g = FX.aleatorio(0, Math.PI * 2), v = FX.aleatorio(3, 7.5) * [0.95, 1.25, 1.3, 1.4, 1.5][f];
           return { x: a.x + Math.cos(g) * re * 0.8, y: a.y + Math.sin(g) * re * 0.7, vx: Math.cos(g) * v, vy: Math.sin(g) * v - 2, g: 0.36, arrasto: 0.97,
             vida: Math.round(FX.aleatorio(18, 32)), desenho: ["lasca", "caco", "cruz", "duplo"][i % 4],
-            pal: cores ? ["W", cores[i % cores.length], cores[(i + 2) % cores.length]] : ["W", pal[1], pal[2], pal[3]], piscar: i % 5 === 0 };
+            pal: cores ? ["W", cores[i % cores.length], cores[(i + 2) % cores.length]] : palEstilhaco(i) || ["W", pal[1], pal[2], pal[3]], piscar: i % 5 === 0 };
         });
         // depois do golpe: brasas subindo e, nos níveis altos, pontos de brilho em volta (sem repetir o golpe)
         if (passo && q > 6 && q % [3, 3, 3, 2, 2][f] === 0) enx.soltar(1, () => ({ x: a.x + FX.aleatorio(-re, re), y: a.y + re * 0.6, vx: FX.aleatorio(-0.3, 0.3), vy: FX.aleatorio(-1.4, -0.7), vida: 16,
-          desenho: "brasa", pal: cores ? ["W", cores[q % cores.length], "D"] : ["Y", "O", "o", "r", "D"] }));
+          desenho: "brasa", pal: cores ? ["W", cores[q % cores.length], "D"] : nova ? ["W", q % 3 === 0 ? nova.sec : pal[2], pal[3], "D"] : ["Y", "O", "o", "r", "D"] }));
         if (passo && f >= 2 && q > 10 && q % (f >= 3 ? 5 : 8) === 0) { const g = FX.aleatorio(0, Math.PI * 2); enx.soltar(1, () => ({ x: a.x + Math.cos(g) * re * 1.3, y: a.y + Math.sin(g) * re * 0.9,
-          vx: 0, vy: 0, vida: 7, desenho: "brilho", pal: cores ? ["W", cores[q % cores.length]] : ["W", pal[1], pal[2]] })); }
+          vx: 0, vy: 0, vida: 7, desenho: "brilho", pal: cores ? ["W", cores[q % cores.length]] : nova ? ["W", u.para >= 12 && q % 2 ? "#fffbe8" : pal[1]] : ["W", pal[1], pal[2]] })); }
         // a marca quente no título: poucas fagulhas saindo do número novo
         if (passo && numero && q === 2) { const m = palco.de(numero); enx.soltar([8, 12, 14, 16, 18][f], () => ({ x: m.x + FX.aleatorio(-m.rx, m.rx), y: m.y + FX.aleatorio(-m.ry * 0.5, m.ry * 0.5),
           vx: FX.aleatorio(-1.6, 1.6), vy: FX.aleatorio(-2.6, -0.8), g: 0.2, arrasto: 0.95, vida: Math.round(FX.aleatorio(8, 16)), desenho: Math.random() < 0.5 ? "ponto" : "brasa",
-          pal: cores ? ["W", cores[0], cores[1]] : ["W", "Y", "O", "o"] })); }
+          pal: cores ? ["W", cores[0], cores[1]] : nova ? ["W", pal[1], pal[2]] : ["W", "Y", "O", "o"] })); }
         if (passo) enx.passo();
         enx.desenhar(palco);
       });
@@ -773,7 +848,7 @@
       id: `r${u.id}`, classe: `reforco ${u.sucesso ? "ok" : "mau"} f${faixaNivel(u.para)}${maximo ? " maximo" : ""}`,
       aria: `Reforço: ${u.sucesso ? "sucesso" : "falhou"}, ${p.item.nome}`,
       titulo: `${nomeRes(p, u)}${sub}`,
-      arte: `<div class="rf-res-arte r-${h(p.item.raridade)}" data-reforco="${p.reforco}">${iconePeca(p.item)}</div>`,  // sem o rastro quadrado das gravações (corta o selo); elas estão nos sulcos
+      arte: `<div class="rf-res-arte r-${h(p.item.raridade)}" data-reforco="${p.reforco}" data-slot="${h(p.item.slot)}">${iconePeca(p.item)}</div>`,  // sem o rastro quadrado das gravações (corta o selo); elas estão nos sulcos
       ficha: `${rotuloPeca(p)}<div class="rf-res-linhas">${linhasRes(p, u.linhas, !u.sucesso)}</div>${p.efeito ? `<p class="rf-res-efeito">${h(p.efeito)}</p>` : ""}${sulcosRes(p.encantos)}`,
       banner: `<span class="rf-banner ${u.sucesso ? "ok" : "mau"}">${u.sucesso ? "Sucesso" : "Falhou"}</span>`,
       nivel: p.reforco,
@@ -791,7 +866,7 @@
     abrirRes({
       id: `x${u.id}`, classe: "transferencia", aria: `Transferência concluída: ${ds.item.nome}`,
       titulo: `<b class="rf-res-nome">Transferência concluída</b>`,
-      arte: `<div class="rf-res-arte r-${h(ds.item.raridade)}" data-reforco="${ds.reforco}">${iconePeca(ds.item)}${gravura(ds.encantos)}</div>`,
+      arte: `<div class="rf-res-arte r-${h(ds.item.raridade)}" data-reforco="${ds.reforco}" data-slot="${h(ds.item.slot)}">${iconePeca(ds.item)}${gravura(ds.encantos)}</div>`,
       ficha: `<span class="rf-res-rotulo">Destino · ${h(dono(ds))}</span>
         <div class="rf-res-linhas"><div class="rf-res-linha muda"><span class="r-${h(ds.item.raridade)}">${h(ds.item.nome.replace(/ \+\d+/, ""))}</span><b>+${u.de_destino} → <em class="ganha">+${u.novo}</em></b></div></div>
         <span class="rf-res-rotulo">Origem · ${h(dono(o))}</span>
@@ -843,7 +918,7 @@
     abrirRes({
       id: `g${g.id}`, classe: "gravacao", aria: `Gravação: ${g.para.nome} em ${p.item.nome}`,
       titulo: nomeRes(p, null),
-      arte: `<div class="rf-res-arte r-${h(p.item.raridade)}" data-reforco="${p.reforco}">${iconePeca(p.item)}${gravura(p.encantos)}</div>`,
+      arte: `<div class="rf-res-arte r-${h(p.item.raridade)}" data-reforco="${p.reforco}" data-slot="${h(p.item.slot)}">${iconePeca(p.item)}${gravura(p.encantos)}</div>`,
       ficha: `${rotuloPeca(p)}${sulcosRes(p.encantos, g.sulco, g.de)}`,
       banner: `<span class="rf-banner grav" style="--ess:${h(g.para.cor)}">Gravado</span>`,
       nivel: p.reforco,
@@ -997,6 +1072,8 @@
    *  repete antes de 1,5 s. Com movimento reduzido, fica parado e discreto. */
   function reflexo(caixa, nivel, fixo = false, parado = false) {
     if (!caixa || !nivel) return;
+    // as armaduras do +9 ao +12 não recebem a passada larga: o acabamento delas (A ou B) já é o brilho (16ª)
+    if (nivel >= 9 && ARMADURAS.has(espacoDe(caixa))) { caixa.querySelector(".rf-reflexo")?.remove(); return; }
     const img = caixa.querySelector("img, canvas");
     if (!img) return;
     const ja = caixa.querySelector(".rf-reflexo");
@@ -1137,10 +1214,84 @@
     ctx.drawImage(img, 0, 0, w, hh);
     return (lista[i] = cv.toDataURL());
   }
+  /* As armaduras do +9 ao +12 (capacete, peito, luvas, pernas, botas), em duas candidatas (16ª): as faixas diagonais
+     do veio ficam aparentes demais nas superfícies largas. Cada passo também é um quadro pronto (a mesma técnica do
+     veio: sem mistura no CSS, sem ampliar). O contorno aprovado continua por cima; o +9 e o +12 se distinguem pela cor
+     da orla e pela quantidade de brilhos, não pela velocidade.
+     A · brilho nas bordas: sem faixas; uma orla de luz baixa por dentro da silhueta, na cor do nível, e pontos de luz
+         (1 no +9 a 4 no +12) que percorrem a borda devagar, cada um com um rastro curto.
+     B · reflexo estreito: uma passada só, de 1 pixel (2 no +11 e +12), menos opaca; as cores da peça continuam
+         mandando; a orla bem leve. */
+  const ARMADURAS = new Set(["armadura", "cabeca", "maos", "pernas", "pes"]);
+  const ORLA = { 9: "#ff3c60", 10: "#aa64ff", 11: "#ffb032", 12: "#fff4c8" };
+  const bordas = new Map();
+  /** Os pixels da borda de dentro da silhueta (o desenho com um vizinho de fora), na ordem da volta (pelo ângulo). */
+  function bordaDe(img) {
+    const src = img.currentSrc || img.src;
+    if (bordas.has(src)) return bordas.get(src);
+    const sil = silhueta(img);
+    if (!sil) return null;
+    const { w, hh, fora } = sil, lista = [];
+    const ehFora = (x, y) => x < 0 || y < 0 || x >= w || y >= hh || fora[y * w + x];
+    let sx = 0, sy = 0;
+    for (let y = 0; y < hh; y++) for (let x = 0; x < w; x++) {
+      if (fora[y * w + x]) continue;
+      if (ehFora(x - 1, y) || ehFora(x + 1, y) || ehFora(x, y - 1) || ehFora(x, y + 1)) { lista.push([x, y]); sx += x; sy += y; }
+    }
+    const cx = sx / lista.length, cy = sy / lista.length;
+    lista.sort((a, b) => Math.atan2(a[1] - cy, a[0] - cx) - Math.atan2(b[1] - cy, b[0] - cx));
+    bordas.set(src, lista);
+    return lista;
+  }
+  function quadroArmadura(img, nivel, fase, variante) {
+    const borda = bordaDe(img);
+    if (!borda || !borda.length) return "";
+    const w = img.naturalWidth || img.width, hh = img.naturalHeight || img.height;
+    const ciclo = variante === "a" ? borda.length : w + hh + 36;
+    const i = ((fase % ciclo) + ciclo) % ciclo;
+    const chave = `${img.currentSrc || img.src}|arm-${variante}|${nivel}`;
+    if (!quadrosVeio.has(chave)) quadrosVeio.set(chave, []);
+    const lista = quadrosVeio.get(chave);
+    if (lista[i]) return lista[i];
+    const cv = document.createElement("canvas");
+    cv.width = w; cv.height = hh;
+    const ctx = cv.getContext("2d");
+    ctx.imageSmoothingEnabled = false;
+    ctx.drawImage(img, 0, 0, w, hh);
+    const orla = ORLA[nivel] || ORLA[9];
+    ctx.globalCompositeOperation = "source-atop";  // só onde a peça tem pixel
+    ctx.fillStyle = orla;
+    ctx.globalAlpha = variante === "a" ? 0.22 + 0.03 * (nivel - 9) : 0.1;
+    borda.forEach(([x, y]) => ctx.fillRect(x, y, 1, 1));
+    if (variante === "a") {
+      const k = { 9: 1, 10: 2, 11: 3, 12: 4 }[nivel] || 1;
+      for (let g = 0; g < k; g++) {
+        const p = (i + Math.round((g * borda.length) / k)) % borda.length;
+        [[0, "#fffbe8", 0.95], [1, orla, 0.6], [2, orla, 0.3]].forEach(([atras, cor, a]) => {
+          const [x, y] = borda[(p - atras + borda.length) % borda.length];
+          ctx.globalAlpha = a; ctx.fillStyle = cor; ctx.fillRect(x, y, 1, 1);
+        });
+      }
+    } else {
+      const d = i - 18, larg = nivel >= 11 ? 2 : 1;  // a diagonal x + y = d (antes e depois da peça, nada)
+      ctx.globalCompositeOperation = "source-atop";
+      for (let s = 0; s < larg; s++) {
+        ctx.globalAlpha = s ? 0.22 : 0.38;
+        ctx.fillStyle = s ? orla : "#fffbe8";
+        for (let x = Math.max(0, d + s - hh + 1); x <= Math.min(d + s, w - 1); x++) ctx.fillRect(x, d + s - x, 1, 1);
+      }
+    }
+    return (lista[i] = cv.toDataURL());
+  }
+  /** A fase de uma peça: o relógio comum (um passo a cada PASSO_VEIO) mais um desvio fixo pelo lugar dela; um redesenho
+   *  da tela não recomeça o ciclo nem o faz saltar (antes, cada elemento novo sorteava a fase). */
+  const passoAgora = () => Math.floor(performance.now() / PASSO_VEIO);
+  const desvio = (k) => { let h = 7; for (const c of String(k)) h = (h * 31 + c.charCodeAt(0)) >>> 0; return h % 97; };
   function pintarVeio(el) {
     const img = el._img;
     if (!img || (img.tagName === "IMG" && !(img.complete && img.naturalWidth))) return;
-    const url = quadroVeio(img, el.dataset.nivel, (el._fase || 0) + (reduzido() ? 0 : el._passo || 0));
+    const fase = (el._fase || 0) + (reduzido() ? 0 : passoAgora());
+    const url = el._armadura ? quadroArmadura(img, +el.dataset.nivel, fase, el._armadura) : quadroVeio(img, el.dataset.nivel, fase);
     if (url && el.getAttribute("src") !== url) el.src = url;
   }
   // um passo a cada 70 ms (~14 por segundo): as faixas correm sobre a peça no ritmo das animações do jogo (a 250 ms,
@@ -1148,8 +1299,10 @@
   const PASSO_VEIO = 70;
   setInterval(() => {
     if (document.hidden || reduzido()) return;
-    document.querySelectorAll("img.rf-acab").forEach((el) => { el._passo = (el._passo || 0) + 1; pintarVeio(el); });
+    document.querySelectorAll("img.rf-acab").forEach(pintarVeio);
   }, PASSO_VEIO);
+  /** O espaço da peça de um encaixe (para o acabamento das armaduras): o que o elemento diz, ou a peça do dono. */
+  const espacoDe = (caixa) => caixa.dataset.slot || (pecaDoDono(caixa) || {}).slot || "";
   function acabamento(caixa, n) {
     if (!caixa) return;
     const img = caixa.querySelector(":scope > img, :scope > canvas, :scope > .icone-px > img") || caixa.querySelector("img, canvas");
@@ -1189,7 +1342,8 @@
         el.setAttribute("aria-hidden", "true");
         el.style.maskImage = el.style.webkitMaskImage = `url("${src}")`;
         el._src = src;
-        el.style.animationDelay = `-${(Math.random() * 9).toFixed(2)}s`;  // cada peça num ponto da volta
+        // cada peça num ponto da volta, pelo relógio comum (um redesenho continua de onde estava)
+        el.style.animationDelay = `-${(((performance.now() / 1000) + desvio(src) / 11) % 9).toFixed(2)}s`;
         caixa.appendChild(el);
       }
       Object.assign(el.style, pos);
@@ -1199,16 +1353,22 @@
     cv._img = img;
     cv.alt = "";
     cv.draggable = false;
-    cv._fase ??= Math.floor(Math.random() * 24);
+    // a fase fixa pelo lugar da peça (o id, o espaço, a posição na bolsa): o mesmo ponto da volta depois do redesenho
+    const ds = caixa.dataset || {};
+    cv._fase = desvio(`${ds.uid || ds.peca || ds.espaco || ds.mini || ds.mochila || ds.trPeca || ""}|${src}`);
     cv.dataset.nivel = nivel;
+    const espaco = nivel >= 9 ? espacoDe(caixa) : "";
+    cv._armadura = ARMADURAS.has(espaco) ? document.body.dataset.rfArmadura || "a" : null;
+    caixa.classList.toggle("rf-arm-a", cv._armadura === "a");
+    caixa.classList.toggle("rf-arm-b", cv._armadura === "b");
     pintarVeio(cv);
-    const k = BRILHOS[nivel] || 0;
+    const k = cv._armadura === "b" ? Math.min(1, BRILHOS[nivel] || 0) : BRILHOS[nivel] || 0;
     if (!k) { pontos?.remove(); return; }
     const b = camada(pontos, "rf-acab-brilhos");
     const px = Math.max(1, Math.round(img.offsetWidth / (img.naturalWidth || img.width || 32)));  // um pixel do desenho
     b.style.setProperty("--px-peca", `${px}px`);
     if (b.childElementCount !== k) {
-      b.innerHTML = Array.from({ length: k }, (_, i) => `<i style="animation-delay:-${(Math.random() * 1.6 + i * 0.4).toFixed(2)}s"></i>`).join("");
+      b.innerHTML = Array.from({ length: k }, (_, i) => `<i style="animation-delay:-${(((performance.now() / 1000) + i * 0.4) % 1.6).toFixed(2)}s"></i>`).join("");
       b.querySelectorAll("i").forEach((p) => {
         const mover = () => {  // um ponto novo da peça a cada volta (perto do miolo, onde o desenho tem pixel)
           p.style.left = `${Math.round(20 + Math.random() * 60)}%`;
@@ -1347,9 +1507,37 @@
   window.addEventListener("resize", posicionar);
   const primeiro = (raiz, foco) => foco && foco.split(",").map((x) => raiz.querySelector(x.trim())).find(Boolean);
 
+  /* A piscada ao reforçar (16ª): a cada pedido, o motor redesenha a forja como uma cena nova (a página se limpa) e o
+     painel chega na mensagem seguinte; se elas não caem no mesmo quadro (o motor demora a calcular o painel, a
+     mensagem chega em outro pedaço), o navegador pintava a oficina sem a janela. A janela que estava na tela fica
+     onde está, parada e sem receber cliques, até a nova estar montada (ligar). Nada espera tempo nenhum: ela sai no
+     mesmo passo em que a outra entra. */
+  let segura = null;
+  function segurarJanela() {
+    const velha = document.querySelector(".tela.forja-proto");
+    if (!velha || !velha.querySelector(".rf-janela") || segura) return;
+    segura = document.createElement("div");
+    segura.className = "rf-segura";
+    segura.setAttribute("aria-hidden", "true");
+    document.body.appendChild(segura);
+    segura.appendChild(velha);  // a janela é fixa na tela: sai do texto sem sair do lugar
+  }
+  function soltarJanela() { if (segura) { segura.remove(); segura = null; } }
+  if (typeof novaCena === "function" && !window.__rfNovaCena) {
+    window.__rfNovaCena = true;
+    const novaCenaJogo = novaCena;
+    window.novaCena = (m) => {
+      if (m && m.tipo === "menu" && janela) segurarJanela(); else soltarJanela();
+      return novaCenaJogo(m);
+    };
+  }
+
   let ultimoDesenho = null, ultimoRaiz = null, saldoAntes = null, ultimaPos = null;
   function ligar(raiz, d) {
     enviando = false;
+    // a janela nova já está montada: a antiga, guardada na troca de cena, sai no mesmo passo (requestAnimationFrame
+    // depois do anexo, para nenhum quadro ficar sem as duas)
+    if (segura) { const s = segura; segura = null; requestAnimationFrame(() => s.remove()); }
     ultimoDesenho = d;
     ultimoRaiz = raiz;
     const redesenhar = (foco) => {
@@ -1453,7 +1641,7 @@
     }, true);
     jan.querySelector("[data-fechar]").addEventListener("click", fechar);
     // as dicas dos materiais e da ajuda também abrem pelo foco do teclado (o jogo só faz isso no mercado)
-    jan.querySelectorAll(".rf-insumo, .rf-ajuda, .rf-chapa [data-retirar][data-dica]").forEach((el) => {
+    jan.querySelectorAll(".rf-req-item, .rf-ajuda, .rf-chapa [data-retirar][data-dica]").forEach((el) => {
       el.addEventListener("focus", () => {
         if (!el.matches(":focus-visible")) return;
         el.dispatchEvent(new MouseEvent("mouseenter"));
@@ -1485,7 +1673,7 @@
       if (resto(ev)) return;  // o segundo clique de um duplo clique não compra outro passo
       if (ref.getAttribute("aria-disabled")) { App.recusar(ref, ref.title); return; }
       const x = passoDe(p);
-      pago = { de: p.reforco, chance: x.chance, linhas: x.linhas, ouro: x.ouro, fragmentos: x.fragmentos };
+      pago = { de: p.reforco, chance: x.chance, linhas: x.linhas, ouro: x.ouro, fragmentos: x.fragmentos, requer: x.requer };
       const pedido = `t${Date.now()}`;
       const teste = testeProximo;
       if (pedir({ op: "reforcar", uid: p.uid, pedido, ...(teste ? { teste } : {}) }, ref,
@@ -1716,6 +1904,24 @@
       revelar();
       return !!App.acao({ forja: true }, null, { op: "transferencia_teste" });
     },
+    /** O painel de testes (16ª): os valores de agora (do motor), as candidatas visuais e o pedido de aplicar. */
+    estadoTeste: () => (ultimoDesenho && ultimoDesenho.teste) || null,
+    /** O último resultado do motor (a conferência dos gestos conta por ele: uma tentativa, um número). */
+    ultimo: () => (ultimoDesenho && ultimoDesenho.ultimo) || null,
+    pref, preferir,
+    /** Por que o painel não pode aplicar agora (uma tentativa, uma cena ou uma confirmação em andamento), ou "". */
+    ocupado() {
+      if (!document.querySelector(".forja-proto")) return "Abra a forja para aplicar.";
+      if (enviando || fase() || faseGrav() || faseTransf() || res) return "Espere o resultado atual (OK) para aplicar.";
+      if (confirmando || confirmandoGrav || confirmandoTransf) return "Responda à confirmação aberta antes de aplicar.";
+      return "";
+    },
+    aplicarTeste(op, dados) {
+      const motivo = this.ocupado();
+      if (motivo) return motivo;
+      if (op === "teste_cenario") { selUid = null; trOrigem = trDestino = null; essSel = null; }  // as peças de antes saem
+      return App.acao({ forja: true }, null, { op, ...dados }) ? "" : "Agora não dá para pedir à forja.";
+    },
     /** O acabamento de um nível num elemento qualquer (a folha de comparação da demonstração). */
     acabamento(el, n, passar = false) { acabamento(el, n); if (passar && n) reflexo(el, n, true); },
     /** Os níveis altos de teste (laboratório): peças do grupo levadas direto a níveis altos. Só com a forja aberta. */
@@ -1761,7 +1967,7 @@
   /** O acabamento do reforço no item achado (a arte grande da janela "Você encontrou"). */
   function acabamentoNoAchado() {
     const arte = achado && achado.reforco && document.querySelector("#sobre-achado .achado-cartao.novo .achado-arte");
-    if (arte) { arte.style.position ||= "relative"; acabamento(arte, achado.reforco); }
+    if (arte) { arte.style.position ||= "relative"; arte.dataset.slot = achado.slot || ""; acabamento(arte, achado.reforco); }
   }
   /** Na dica da peça, o +N do nome na cor do nível (a dica não tem o desenho; o nível se reconhece pela cor). */
   function nivelNaDica() {

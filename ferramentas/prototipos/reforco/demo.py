@@ -419,11 +419,11 @@ def previsao(g, it, quem, sulco, k):
             nivel = {"id": "nivel", "valor": f"Nível {req}", "falta": falta,
                      "dica": f"{FICHA.nome_de(g, quem)} está no nível {nivel_de(g, quem)}." if falta
                      else f"{FICHA.nome_de(g, quem)} já está no nível {nivel_de(g, quem)}."}
-    elif req > E.requisito(it):  # na bolsa, a consequência para depois (não impede a gravação)
-        aviso_req = f"A peça passa a requerer nível {req}"
-        aviso = f"{aviso} · {aviso_req}" if aviso else aviso_req
-    return {"linhas": linhas, "aviso": aviso, "requisito": E.REQUISITO[t], "requisito_peca": req, "bloqueio": bloqueio,
-            "nivel": nivel}
+    nota = None
+    if quem is None and req > E.requisito(it):  # na bolsa, a consequência para depois (não impede a gravação)
+        nota = f"A peça passa a requerer nível {req}"
+    return {"linhas": linhas, "aviso": aviso, "nota": nota, "requisito": E.REQUISITO[t], "requisito_peca": req,
+            "bloqueio": bloqueio, "nivel": nivel}
 
 
 JOGO = [None]  # a partida desta execução (as fichas das telas precisam de quem veste a peça)
@@ -470,7 +470,7 @@ def painel(g):
     return {"ouro": g.j.ouro, "limite": R.LIMITE, "abas": abas, "ultimo": getattr(g, "forja_ultimo", None),
             "proximo_id": proximo_id(g, consumir=False),
             "materiais": [{"id": k, **MATS[k], "qtd": m.get(k, 0)} for k in MATS],
-            "custo_encanto": g.preco(E.CUSTO_OURO),
+            "custo_encanto": g.preco(E.CUSTO_OURO), "teste": estado_teste(g),
             "pecas": [ficha_peca(g, it, quem, s) for it, quem, s in pecas(g)]}
 
 
@@ -636,6 +636,18 @@ def niveis_de_teste(g):
         levar(it, n)
     levar(FICHA.corpo(g, "odete").get("arma"), 5)
     levar(FICHA.corpo(g, "odete").get("secundaria"), 7)
+    # 16ª: as armaduras do +9 ao +12 para os dois acabamentos candidatos: Jean de ferro (claro) da cabeça aos pés, e
+    # Odette com um peito de tecido (escuro); vestidas só se o espaço está vazio (nada some do corpo de ninguém)
+    rng = random.Random(16)
+    for espaco, n in (("cabeca", 9), ("maos", 10), ("pernas", 11), ("pes", 12)):
+        if not g.j.equip.get(espaco):
+            g.j.equip[espaco] = com_sulcos(itens.gerar_equip(rng, g.j.classe, 4, slot=espaco, raridade="comum"))
+        levar(g.j.equip[espaco], n)
+    corpo_o = FICHA.corpo(g, "odete")
+    if not corpo_o.get("armadura"):
+        corpo_o["armadura"] = com_sulcos(itens.gerar_equip(rng, "mago", 4, slot="armadura", raridade="magico"))
+    levar(corpo_o["armadura"], 11)
+    dar_uid(g)
     g.j.ouro = max(g.j.ouro, 99999)
     materiais(g)["fragmento"] = R.PILHA_MAX
     for m in comitiva.membros(g):
@@ -759,6 +771,156 @@ def transferencia_de_teste(g):
     registrar(g, "transferencia_teste")
 
 
+# ------------------------------------------------------------------ o painel de testes (16ª versão; só na demonstração)
+def estado_teste(g):
+    """Os valores que o painel de testes edita, como estão agora: nível, classe, especialização, ouro e cada material,
+    e as escolhas possíveis (as especializações de cada classe)."""
+    from rpg.classes import SPECS
+    m = materiais(g)
+    return {"nivel": g.j.nivel, "classe": g.j.classe, "spec": g.j.spec or "", "ouro": g.j.ouro,
+            "materiais": [{"id": k, "nome": d["nome"], "qtd": m.get(k, 0), "essencia": d.get("tier") is not None,
+                           "numeral": d.get("numeral"), "cor": d.get("cor"), "icone": d["icone"]} for k, d in MATS.items()],
+            "classes": [{"id": c, "nome": CLASSES[c]["nome"], "specs": [{"id": s, "nome": SPECS[s]["nome"]}
+                                                                       for s in CLASSES[c]["specs"]]} for c in CLASSES],
+            "nivel_max": _nivel_max(), "nivel_spec": bal.NIVEL_ESPECIALIZACAO, "pilha": R.PILHA_MAX}
+
+
+def _nivel_max():
+    from rpg.regras import NIVEL_MAXIMO
+    return NIVEL_MAXIMO
+
+
+def _inteiro(v, menor, maior, nome):
+    """O valor do painel como inteiro dentro dos limites, ou o motivo de recusar."""
+    if isinstance(v, bool) or not isinstance(v, (int, float, str)):
+        return None, f"{nome}: valor inválido."
+    try:
+        n = int(str(v).strip())
+    except ValueError:
+        return None, f"{nome}: use um número inteiro."
+    if not menor <= n <= maior:
+        return None, f"{nome}: de {menor} a {maior}."
+    return n, None
+
+
+def validar_sessao(dados):
+    """Ouro e materiais do painel: ({ouro, materiais}, None) ou (None, motivo). Nada muda aqui."""
+    ouro, motivo = _inteiro(dados.get("ouro"), 0, 999999, "Ouro")
+    if motivo:
+        return None, motivo
+    mats = {}
+    for k, v in (dados.get("materiais") or {}).items():
+        if k not in MATS:
+            return None, f"Material desconhecido: {k}."
+        n, motivo = _inteiro(v, 0, R.PILHA_MAX, MATS[k]["nome"])
+        if motivo:
+            return None, motivo
+        mats[k] = n
+    return {"ouro": ouro, "materiais": mats}, None
+
+
+def validar_cenario(dados):
+    """Nível, classe e especialização do painel, que só mudam reconstruindo o personagem: ({...}, None) ou (None,
+    motivo). A especialização tem de ser da classe e só existe do nível dela em diante (no jogo, a encruzilhada é
+    obrigatória ao chegar lá)."""
+    nivel, motivo = _inteiro(dados.get("nivel"), 1, _nivel_max(), "Nível")
+    if motivo:
+        return None, motivo
+    classe = dados.get("classe")
+    if classe not in CLASSES:
+        return None, "Escolha uma classe."
+    spec = dados.get("spec") or None
+    if nivel < bal.NIVEL_ESPECIALIZACAO:
+        if spec:
+            return None, f"Especialização só a partir do nível {bal.NIVEL_ESPECIALIZACAO}."
+    elif spec not in CLASSES[classe]["specs"]:
+        return None, f"Escolha a especialização de {CLASSES[classe]['nome']}."
+    return {"nivel": nivel, "classe": classe, "spec": spec}, None
+
+
+def aplicar_sessao(g, dados):
+    """Ouro e materiais na sessão de agora (o personagem e as peças ficam)."""
+    v, motivo = validar_sessao(dados)
+    if motivo:
+        return False, motivo
+    g.j.ouro = v["ouro"]
+    for k, n in v["materiais"].items():
+        materiais(g)[k] = n
+    registrar(g, "teste_sessao", ouro=v["ouro"])
+    return True, "Valores aplicados."
+
+
+def reiniciar_cenario(g, dados):
+    """Descarta a sessão temporária e monta o cenário de novo com a classe, o nível e a especialização do painel: o
+    herói pelo caminho do jogo (Jogador novo, dev.subir_ate: atributos, habilidades, talentos e a especialização na
+    encruzilhada), a comitiva recrutada de novo no nível dele e as peças do cenário na classe escolhida. Os sulcos, os
+    reforços e as gravações de antes se perdem. O ouro e os materiais do painel entram depois, validados."""
+    from rpg import dev
+    from rpg.entidades import Jogador
+    v, motivo = validar_cenario(dados)
+    sessao, motivo_s = validar_sessao(dados) if motivo is None else (None, None)
+    if motivo or motivo_s:
+        return False, motivo or motivo_s
+    classe, nivel, spec = v["classe"], v["nivel"], v["spec"]
+    rng = random.Random(11)
+    celebrar, efeito, escolher_animal = g.ui.celebrar, g.ui.efeito, g.escolher_companheiro
+    g.ui.celebrar = lambda *a, **k: None
+    g.ui.efeito = lambda *a, **k: None
+    g.escolher_companheiro = lambda tipo=None: escolher_animal(tipo or next(iter(comitiva_animais())))
+    try:
+        g.j = Jogador(g.j.nome, classe)
+        g.j.equip["arma"] = itens.gerar_equip(rng, classe, 1, "arma", qualidade=-2)
+        g.j.recalcular()
+        dev.subir_ate(g, nivel, spec=spec if spec else False)
+        g.comitiva = []
+        for cid in ("morel", "odete"):
+            comitiva.recrutar(g, cid)
+    finally:
+        g.ui.celebrar, g.ui.efeito = celebrar, efeito
+        del g.escolher_companheiro
+    vestir_cenario(g, rng, classe)
+    g.materiais = {}
+    for k, n in sessao["materiais"].items():
+        g.materiais[k] = n
+    g.j.ouro = sessao["ouro"]
+    g.forja_ultimo = None
+    registrar(g, "teste_cenario", classe=classe, nivel=nivel, spec=spec)
+    return True, f"Cenário reiniciado: {CLASSES[classe]['nome']}, nível {nivel}."
+
+
+def comitiva_animais():
+    """Os animais da especialização que traz um (o primeiro, no cenário de teste: a escolha seria uma pergunta)."""
+    from rpg.classes import COMPANHEIROS as ANIMAIS
+    return ANIMAIS
+
+
+def vestir_cenario(g, rng, classe):
+    """As peças do cenário de teste na classe do herói (as mesmas funções de preparar): a arma e o peito vestidos, a
+    comitiva com as dela, e na bolsa uma substituta de base melhor, um único da classe, peças incomuns e, quando há
+    uma classe que ninguém do grupo usa, uma arma dela (o reforço sem portador)."""
+    def peca(c, slot, nivel, raridade="comum"):
+        return itens.gerar_equip(rng, c, nivel, slot=slot, raridade=raridade)
+    g.j.equip["arma"] = peca(classe, "arma", 2)
+    g.j.equip["armadura"] = peca(classe, "armadura", 2)
+    FICHA.corpo(g, "morel").update(arma=peca("guerreiro", "arma", 2), armadura=peca("guerreiro", "armadura", 3))
+    FICHA.corpo(g, "odete").update(arma=peca("mago", "arma", 3), secundaria=peca("mago", "secundaria", 3))
+    unico = next((u for u in itens.UNICOS_POR_ID.values() if u.get("classe") == classe), None)
+    sobra = next((c for c in CLASSES if c not in {classe, "guerreiro", "mago"}), None)
+    g.j.mochila = [x for x in (
+        peca(classe, "arma", 7), itens.fazer_unico(unico, 3) if unico else None, peca(classe, "armadura", 4, "magico"),
+        peca(classe, "secundaria", 5, "magico"), peca(sobra, "arma", 3, "magico") if sobra else None,
+        peca(classe, "anel", 3, "magico")) if x]
+    sulcos_do_grupo(g)
+    g.j.equip["arma"]["encantos"] = [None, None]
+    g.j.consumiveis["bau"] = 2
+    for m in comitiva.membros(g):
+        FICHA.atualizar(g, m["id"])
+        m["hp"] = m["max_hp"]
+    g.j.recalcular()
+    g.j.hp, g.j.rec = g.j.max_hp, g.j.max_rec
+    dar_uid(g)
+
+
 def luta_de_teste(g):
     """A luta de teste do laboratório: dois Esqueletos do nível do herói, sem fuga perdida nem saque, e o grupo volta
     como estava (vida, recurso, experiência): só para ver as gravações agindo."""
@@ -790,9 +952,12 @@ def forja(self):
     custo, a posse e a falta antes de pagar, a comparação na luta e a desmontagem com confirmação."""
     from rpg.sistemas.servicos import cena_forja
     while True:
+        # o painel é calculado antes de a cena ser anunciada: a cena nova limpa a página, e com o cálculo no meio o
+        # navegador chegava a pintar a oficina sem a janela (a piscada ao reforçar, 16ª versão)
+        dados = painel(self)
         self.ui.cena("A forja", self.loc["nome"], "menu")
         self.ui.painel("cena", cena_forja())
-        if not self.ui.painel("forja_proto", painel(self)):
+        if not self.ui.painel("forja_proto", dados):
             self.dizer("A forja do protótipo só existe na tela gráfica.", "cinza")
             return
         esc = self.menu("", [("Pedido à forja", "forja", {"forja": True}), ("Voltar", "voltar", {"voltar": True})])
@@ -824,13 +989,17 @@ def forja(self):
         elif d.get("op") == "transferencia_teste":
             transferencia_de_teste(self)
             continue
+        elif d.get("op") == "teste_sessao":
+            ok, texto = aplicar_sessao(self, d)
+        elif d.get("op") == "teste_cenario":
+            ok, texto = reiniciar_cenario(self, d)
         elif d.get("op") == "transferir" and d.get("confirmar") is True:
             ok, texto = transferir(self, d.get("origem"), d.get("destino"), d.get("pedido"))
             if texto is None:
                 continue
         else:
             continue
-        if not ok:  # o sucesso a própria janela mostra (a bancada acende; o topo conta ouro e fragmentos)
+        if not ok or d.get("op", "").startswith("teste_"):  # o sucesso a própria janela mostra; o painel, um aviso
             self.ui.efeito(texto, "info")
 
 
