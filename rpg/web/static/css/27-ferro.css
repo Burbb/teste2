@@ -87,6 +87,6 @@
   color: var(--tinta-3, #9d978b); background: #0d0e10; box-shadow: inset 0 0 0 1px #000, inset 0 2px 0 #060607; }
 .besti-bloqueado img.sprite { --s: 16; flex: none; margin-top: 1px; opacity: 0.8; }
 
-/* a entrada da forja do protótipo: os quatro serviços em duas linhas de dois (antes, três e um sozinho embaixo) */
-:root body .forja-proto .rf-servicos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
-:root body .forja-proto .rf-servicos > .servico { width: auto; max-width: none; margin: 0; }
+/* a entrada da forja: os quatro serviços em duas linhas de dois (antes, três e um sozinho embaixo) */
+:root body .forja-servicos .rf-servicos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+:root body .forja-servicos .rf-servicos > .servico { width: auto; max-width: none; margin: 0; }

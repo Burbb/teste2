@@ -30,9 +30,12 @@ PENDENTES_JS = {"talentos.js"}  # filtros de cor em animações feitas pelo JS (
 # como no protótipo aprovado; o dado em si é pixel art (canvas). A criação do personagem (24, 1.208.0) é uma janela
 # principal da HUD de ferro: a moldura, o véu, os botões da família do Continuar; o Carregar jogo (25, 1.209.0), da
 # mesma família. O acabamento A (27, 1.214.0), aprovado na forja, é o ferro da HUD nos Caminhos, nos serviços, na doca e
-# nos cartões: a mesma família, com a luz curta da aresta pintada por um degradê de uma cor só.
+# nos cartões: a mesma família, com a luz curta da aresta pintada por um degradê de uma cor só. A janela da forja (28,
+# 1.216.0) e as placas da bancada (29) são esse ferro, aprovados no protótipo: os véus sobre a chapa, a vela e o brilho
+# do reforço em volta da peça; as peças e os ícones continuam pixel art.
 FORA_DA_TRAVA = {"14-hud.css", "15-hud-luta.css", "16-hud-telas.css", "17-titulo.css", "18-seletor-habilidades.css", "19-turnos.css",
-                 "20-rolagem.css", "21-d20.css", "24-criacao.css", "25-carregar.css", "27-ferro.css"}
+                 "20-rolagem.css", "21-d20.css", "24-criacao.css", "25-carregar.css", "27-ferro.css", "28-forja.css",
+                 "29-placas.css"}
 
 FILTRO = r"\b(grayscale|sepia|hue-rotate|brightness|saturate|contrast|invert|opacity|drop-shadow)\(|filter\s*:\s*url\("
 PROIBIDO = {

@@ -78,7 +78,7 @@
   const espacoDa = (n) => (arranjo || []).find((e) => e && e.n === n);
   function paraVender(it, e) {
     const venda = `<div class="preco-venda">${Icones.moeda() || S("moeda", 1)} O mercador paga <b>${it.preco}</b></div>` +
-      (it.usavel ? "" : "Não é para a sua classe.");
+      (it.usavel ? "" : h(it.motivo_uso || ""));  // o motivo do motor: a classe ou o nível que a peça pede
     return `<div role="button" tabindex="0" class="slot-px celula r-${h(it.raridade)}${it.usavel ? "" : " inutil"}" draggable="true" data-mochila-loja="${e.i}" data-peca="${e.n}"
         aria-label="Vender ${h(it.nome)} por ${it.preco} de ouro" ${dicaItem(it, venda)}>${Icones.item(iconeItem(it)) || S(iconeItem(it), 2)}<span class="preco-canto">${it.preco}</span></div>`;
   }
@@ -659,7 +659,7 @@
       el.addEventListener("contextmenu", (ev) => {
         ev.preventDefault(); fecharMenuItem(); esconderDica();
         if (!it || vendida(n)) return;
-        if (!it.usavel) { App.som("falha"); App.avisar("Não é para a sua classe.", "equipar"); return; }
+        if (!it.usavel) { App.som("falha"); App.avisar(it.motivo_uso || "", "equipar"); return; }
         equipando = n;  // ao voltar, o espaço desta peça é o que esvazia (a que sai do corpo vai para um vazio)
         equiparDaMochila(el, it, i);
       });

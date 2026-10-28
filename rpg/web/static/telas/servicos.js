@@ -1,12 +1,12 @@
-/* Serviços da vila: a forja (reforçar) e a cabana da curandeira (tratar), em cartões com preço, tempo e o motivo
-   quando não dá. O templo e a taverna usam os mesmos cartões (vila.js). */
+/* Serviços da vila: a cabana da curandeira (tratar), em cartões com preço, tempo e o motivo quando não dá, e os
+   componentes que a forja (telas/forja.js), o templo e a taverna (vila.js) usam: o topo do balcão e o cartão. */
 "use strict";
 
 (() => {
-  const { h, S, dica, dicaItem, iconeItem } = Telas;
+  const { h, S, dica } = Telas;
 
-  /* A forja e a cabana da curandeira são telas como o mercado; o templo e a taverna usam os mesmos cartões diante do
-     prédio (vila.js monta, com as opções que o motor marca com preço e efeito). */
+  /* A cabana da curandeira é uma tela como o mercado; o templo e a taverna usam os mesmos cartões diante do prédio
+     (vila.js monta, com as opções que o motor marca com preço e efeito). */
   /** O topo de um balcão: o ícone, quem atende e o que diz, e o seu ouro. */
   function topoBalcao(icone, quem, fala, ouro) {
     return `<div class="loja-topo">${S(icone, 3)}<div><b>${h(quem)}</b><span class="lore">${h(fala)}</span></div>` +
@@ -27,17 +27,6 @@
       <span class="slot-px${r}">${Icones.porDesenho(icone) || S(icone, 2)}</span>
       <span class="serv-texto"><b class="serv-nome${r}">${h(nome)}</b>${corpo}</span>
       <span class="serv-fim">${fim}</span></button>`;
-  }
-  function ferreiro(d) {
-    const cartoes = d.pecas.map((p) => cartaoServico({
-      icone: iconeItem(p.item), raridade: p.item.raridade, nome: p.item.nome, preco: p.custo, limite: p.custo == null,
-      efeito: p.custo == null ? "No limite (+5): a forja não tira mais nada dela" : p.ganho,
-      motivo: p.motivo || "",
-      attrs: p.custo == null ? "" : `data-reforcar="${h(p.slot)}"`,
-      dicaAttr: dicaItem(p.item, p.custo == null ? "No limite do reforço." : p.motivo ? h(p.motivo) : "", false),
-    }));
-    return `<div class="tela balcao-servico forja">${topoBalcao("martelo", "O ferreiro", "Um homem sem dois dedos cospe na forja. \"Ouro primeiro.\"", d.ouro)}
-      <h4>Reforçar o que você usa</h4><div class="servicos">${cartoes.join("") || '<span class="vazio">Nada no corpo que valha a forja.</span>'}</div></div>`;
   }
   function curandeira(d) {
     const cartoes = d.ferimentos.map((f) => cartaoServico({
@@ -60,7 +49,6 @@
     }));
   }
 
-  Telas.registrar("ferreiro", ferreiro, { ligar: (raiz) => ligarServicos(raiz, "reforcar", "predio_ferreiro") });
   Telas.registrar("curandeira", curandeira, { ligar: (raiz) => ligarServicos(raiz, "tratar", "cura") });
 
   Object.assign(Telas, { cartaoServico, topoBalcao });
