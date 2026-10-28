@@ -9,15 +9,141 @@ jogo não mudaram. Os números são hipóteses desta rodada, não balanceamento.
 Dê dois cliques em `demo.bat` (ou `python ferramentas/prototipos/reforco/demo.py` na raiz). O jogo de sempre abre no
 navegador num **save temporário** (uma pasta nova a cada vez; os saves pessoais não são lidos nem tocados): o Guerreiro
 no nível 4, no Vau, com Morel e Odette, 380 de ouro, dois baús e as peças dos exemplos. Feche a janela do terminal
-para parar. Folhas: `folha-comparacao.png` (a 14ª × a 15ª), `folha-estados.png` (os estados novos e o tremor antes ×
-depois), `folha.png` (o resultado do reforço) e `folha-acabamento.png` (o acabamento do +1 ao
-+12). A especificação do sistema inteiro: [27](../../../roadmapIDEIAS/27-FORJA-ESPECIFICACAO.md).
+para parar. Folhas da 16ª: `folha-botoes.png`, `folha-acabamento-armaduras.png`, `folha-paleta.png` e
+`folha-telas.png` (seção da 16ª). Das versões anteriores: `folha-comparacao.png` e `folha-estados.png` (15ª),
+`folha.png` (o resultado do reforço) e `folha-acabamento.png` (o acabamento do +1 ao +12). A especificação do sistema
+inteiro: [27](../../../roadmapIDEIAS/27-FORJA-ESPECIFICACAO.md).
 
 Só nesta execução, `demo.py` troca a forja (o balcão novo), o baú (que pode dar fragmento ou essência), a seção
 "Materiais" do Inventário, a venda da peça reforçada, a ficha das peças nas telas (as gravações) e liga os efeitos das
 gravações na luta. O resto é o jogo: o Inventário do grupo, o mercado, a luta, a estrada.
 
-## 15ª versão: tiers com potência própria, requisitos de nível, fichas reorganizadas e os dois defeitos (candidata em avaliação)
+## 16ª versão: ganho real em todo reforço, formatos comuns, candidatas visuais e o painel de testes (em avaliação)
+
+**O sistema inteiro está no [27](../../../roadmapIDEIAS/27-FORJA-ESPECIFICACAO.md)** (1.1, 1.2, 3.3, 9, 10 e 11).
+Chances, custos, limite +12, sucesso +1 e falha −1 sem quebra, tiers, requisitos e transferência não mudaram. A 15ª
+está em `tela/historico/v15` (`?tela=v15`). Folhas desta versão: `folha-botoes.png` (A × B nos mesmos estados e o
+preço pequeno e grande), `folha-acabamento-armaduras.png` (A × B, quatro quadros seguidos de cada peça),
+`folha-paleta.png` (anterior × candidata do +9 ao +12, mesma peça e mesmos instantes) e `folha-telas.png` (as quatro
+abas a 1920×945 e 1280×720, com as confirmações).
+
+### Regra (motor)
+- **Todo sucesso melhora a peça de verdade.** A causa do "passa níveis sem ganho": o ganho de cada linha era
+  arredondado a inteiro. Varrendo o gerador (todos os espaços, níveis 1 a 13, quatro raridades, +0 a +12), nenhum passo
+  tinha ganho zero na conta; o arredondamento escondia o ganho em um quarto a um terço dos passos de acessórios,
+  elmos, luvas e botas (o Cajado de Ferro do +10 ao +11: Poder 8,6 → 9,2, os dois viravam 9). Agora cada propriedade
+  tem a precisão que o motor usa: Ataque, Poder, Defesa, Agilidade, Espinhos, Vida por turno e Vida por abate com uma
+  casa; Crítico e Roubo de vida em décimos de ponto; Vida e Mana inteiras. Continua em forma fechada da peça original,
+  arredondada uma vez (cair e subir volta ao mesmo número). Um passo que ainda não mudaria nada (só peças de Vida e Mana
+  chegam perto) adianta um degrau na linha mais perto dele; nunca mais de um degrau à frente da conta. A principal da
+  arma continua com +1 por passo até o +4.
+- **A cadeia inteira:** a casa das peças chega aos atributos do herói e dos companheiros (a ficha mostra "Defesa
+  20,8") e à luta (dano, defesa e esquiva usam o número com a casa). Espinhos, Vida por turno e Vida por abate são pontos
+  de vida inteiros: a fração se acumula a cada disparo (2,6 por turno cura 2, 3, 3, 2, 3…). Sem peça fracionária, os
+  números são os de antes.
+- **Peça toda no teto:** nenhuma do gerador chega lá (o teto é por peça, 15% de Crítico e 10% de Roubo de vida). Se
+  chegar, o reforço é recusado sem cobrar ("Sem ganho: Crítico no máximo desta peça."). Proposta, sem implementar: a
+  peça nessa situação passa a crescer pela linha fixa mais próxima da base (Ataque na arma, Defesa no resto).
+- **Reforço sem portador:** classe e nível restringem vestir, não o serviço. A peça de arqueiro na bolsa de um grupo
+  sem arqueiro recebe reforço, com a prévia vinda da própria peça; vestir continua recusado.
+
+| Peça | +0 | +4 | +8 | +12 |
+|---|---|---|---|---|
+| Barbuta de Ferro (nível 4) | Defesa/Vida 1/2 | 2/4 | 2,7/5 | 3,2/6 |
+| Cajado de Ferro do +10 ao +11 (Poder 3, nível 2) | — | — | — | Poder 9,2 → 9,8 (antes: 9 → 9, prévia vazia) |
+| Aljava Rasgada (nível 2) | Agilidade/Ataque 1/1 | 2,5/2,5 | 3,5/3,5 | 4,2/4,2 |
+| Aro do Carniceiro (nível 3) | Vida por abate 5 | 11 | 15 | 18 |
+| Brasa Faminta (nível 8, raro) | Agilidade/Crítico 4/4% | 6,4/5,5% | 8/6,5% | 9,2/7,2% |
+
+### Texto e HUD
+- **Formatos comuns** (a skill `texto-regras-fenda`, "O fluxo de toda entrega com texto novo"): "Requer:" com cada
+  material como disponível/necessário ("14/2") e o nível no mesmo grupo, vermelho quando impede; o ouro dentro do
+  botão; a confirmação sem mover a ação. Componentes `requerHtml`, `botaoAcao` e `peAcao`, usados nas quatro abas.
+- **Encantar:** "Requer: [Brasa II] 3/1 · Nível 5" no lugar de "Requer nível 5 (Jean: 4). Na bolsa, pode gravar.";
+  "Carrasco 15% → —" no lugar de "Carrasco nesta peça"; o total de quem veste só quando o limite corta; na bolsa, "A
+  peça passa a requerer nível 9" quando sobe o requisito. Saíram "tem N" e os custos espalhados.
+- **Etiqueta do tier:** I, II, III numa placa escura de aresta de latão no canto de cima à direita (a linguagem do +N),
+  maior e fora do desenho; a quantidade no canto de baixo.
+- **Fichas:** "Brasa I ×2", "Brasa II + Brasa I", a descrição com o valor somado embaixo; cada sulco segue na fila.
+- **Botões (candidatas, sem escolha):** A · ferro encaixado (planos chapados, cantos em degrau, luz curta na aresta de
+  cima, base escura) e B · ferro com presilhas de latão. Normal, hover, pressionado (a face afunda e o rótulo desce 1 px
+  dentro do botão), foco (anel de latão por dentro) e indisponível. Aplicadas no Reforçar, Gravar/Substituir,
+  Transferir, Desmontar, Cancelar, OK e Fechar da forja. Outros usos do jogo, para quando uma for escolhida: as
+  confirmações (`app/escolhas.js`, Sim/Não e perigo), a Ajuda (`app/orientacao.js`, as chaves e o dado), a
+  especialização (`telas/especializacao.js`, Confirmar e Olhar de perto), o achado (`celebracoes/festa.js`), as
+  celebrações (`estouro.js`, `relicario.js`), os Fechar das janelas grandes (Histórico, Mapa, Talentos, Grimório) e o
+  mercado (comprar e vender: o caso do preço dentro do botão).
+- **Preço dentro do botão:** "Transferir · [moeda] 335", o valor numa área de largura fixa (de 5 a 4600 o rótulo não
+  se move). Na confirmação, o Transferir fica no mesmo lugar e tamanho (medido: 330 × 47 px antes e durante a 1920,
+  268 × 38 a 1280); o Cancelar aparece num espaço reservado à direita. Desmontar e Substituir seguem o mesmo pé.
+- **Referências examinadas:** a janela do ferreiro do Grim Dawn (a captura do wiki oficial, aberta e vista): o
+  material como "9 / 3" (tem/precisa) num encaixe, o custo num nicho próprio acima do botão "Combine". Lost Ark: só a
+  descrição em texto de guias ("a interface mostra quanto a transferência vai custar" ao escolher origem e destino); as
+  páginas com capturas pediram verificação anti-robô e não foram abertas. Diablo IV, Path of Exile e Elden Ring: as
+  buscas não trouxeram captura da tela de serviço. O preço dentro do botão não foi visto numa captura desta rodada: é
+  decisão de desenho (o pedido do Jean), não cópia de referência.
+
+### Os defeitos
+- **A piscada ao reforçar.** Reproduzida com uma sonda a cada quadro e capturas contínuas, num servidor com 80 ms de
+  atraso artificial (simulando uma máquina mais lenta): em toda tentativa, de 65 a 130 ms depois do clique, a janela
+  some e a oficina aparece (6 quadros). **Causa:** a cada pedido, o motor redesenhava a forja como uma cena nova (a
+  página se limpa) e só depois calculava e mandava o painel; se as duas mensagens não caem no mesmo quadro, o
+  navegador pinta a página vazia. Aqui o cálculo leva 10 a 16 ms (um quadro), por isso "às vezes". **Correção:** o
+  motor calcula o painel antes de anunciar a cena, e a tela segura a janela antiga, parada, até a nova estar montada
+  (sem espera adicionada). Conferido com 80 ms entre a cena nova e o painel (o pior caso para a tela): a v15 perdeu a
+  janela por 4 e 5 quadros; a 16ª, por nenhum, em 4 tentativas.
+- **Gestos**, conferidos por cobrança (o ouro) e por resultado (o número): clique duplo no Reforçar compra uma vez; o
+  OK com clique duplo e triplo no mesmo ponto fecha e não compra; o Reforçar logo depois do OK compra na hora; quatro
+  cliques seguidos compram uma vez e o resultado fica até o OK; depois disso, um clique novo compra; Enter segurado
+  fecha o resultado e não compra; Enter segurado no Reforçar compra uma vez.
+
+### Celebração e acabamento (candidatas, sem escolha)
+- **Paleta do +9 ao +12** (o +8 e os de baixo não mudam): uma cor dominante e uma secundária, o prisma só em um a cada
+  nove estilhaços. +9 violeta; +10 violeta com um leque fino azul; +11 ouro quente e âmbar; +12 ouro, âmbar e brilhos de
+  marfim, com dois leques. A grandeza sobe pela forma (leques, alcance, estrela, anéis). A anterior fica no painel.
+- **Armaduras do +9 ao +12** (capacete, peito, luvas, pernas, botas; armas, joias, escudos, tomos e aljavas como
+  estavam): A · brilho nas bordas (sem faixas; uma orla baixa na cor do nível por dentro da silhueta e 1 a 4 pontos de
+  luz que percorrem a borda) e B · reflexo estreito (uma passada de 1 px, 2 no +11 e +12, menos opaca). O contorno
+  aprovado continua; a passada larga do reflexo não passa nessas peças. O +9 e o +12 se distinguem pela cor da orla e
+  pela quantidade de pontos. Cada passo é um quadro pronto (como o veio da 15ª): nítido a 100%, 125% e 150%; parado no
+  movimento reduzido; o ciclo vem de um relógio comum com um desvio fixo pelo lugar da peça, então um redesenho não o
+  recomeça (medido: a fase de cada peça igual antes e depois).
+
+### O painel de testes
+"Painel de testes" na faixa abre e fecha o painel. **Personagem** (nível, classe, especialização) só muda com
+"Aplicar e reiniciar cenário", que descarta a sessão temporária e reconstrói pelo caminho do jogo (`dev.subir_ate`, a
+comitiva recrutada no nível dele, as peças do cenário na classe). **Sessão** (ouro, fragmentos e cada essência por
+tier) aplica sem reiniciar. Mexer num campo não aplica nada (o campo editado fica marcado); o motor valida e recusa o
+que não cabe (nível fora de 1 a 12, especialização de outra classe ou abaixo do nível 4, materiais acima de 99). Com
+uma tentativa, uma cena ou uma confirmação em andamento, o painel não aplica e diz por quê. **Comparação visual**
+(botões A/B, armaduras A/B, celebração candidata/anterior) troca na hora e fica lembrada neste navegador. Nada disto
+existe no jogo nem toca os saves pessoais.
+
+### Conferido
+- **Testes do protótipo (61):** os de antes e os novos (todo passo de todo espaço melhora alguma linha, sem casa que o
+  motor não usa e sem passar um degrau da conta; o elmo pequeno e o Cajado; o teto e a peça sem ganho sem cobrar; cair
+  e subir com casas; a fração na ficha e na luta; a Vida por turno acumulando; o painel validando e reconstruindo as
+  três classes; salvar e carregar as casas e os materiais).
+- **A 1920×945 e 1280×720:** as quatro abas com o "Requer:", o preço no botão e as confirmações; os bloqueios por
+  material, nível e "Já gravado"; o resultado; a dica da ficha com "Brasa I ×2"; o painel de testes.
+- **A piscada** (servidor com atraso), **os gestos**, **os acabamentos** a 100%, 125% e 150% e no movimento reduzido.
+- **Não conferido nesta rodada:** a tela inteira do Inventário (de dentro da forja ela não abre; a ficha foi
+  conferida pelas dicas do Equipado) e a seção Materiais do Inventário com a etiqueta nova.
+
+### Roteiro (uns 6 minutos)
+1. **Ferreiro → Reforçar** o Peitoral de Jean: "Requer: 12/1", o botão "Reforçar +0 → +1 · 20", a prévia "Defesa 2 →
+   2,7". Reforce e veja os atributos da ficha com a casa.
+2. **Painel de testes → Comparação visual:** troque os botões A e B e passe o mouse, aperte sem soltar, use Tab.
+3. **Essências (teste) → Encantar** a arma de Jean, 3º sulco, Brasa II: "Requer: [II] 3/1 · Nível 5" em vermelho, o
+   botão bloqueado, "Brasa 40% → 60%", "Carrasco 15% → —" e o limite. Passe o mouse na arma no Equipado: "Brasa I ×2".
+4. **Transferência (teste) → Transferir:** escolha origem e destino, clique Transferir: o botão fica onde estava, a
+   pergunta e o Cancelar aparecem.
+5. **Níveis altos (teste) → Reforçar** as armaduras de Jean (+9 a +12): troque o acabamento A/B no painel. Reforce a
+   arma da bolsa no +8 com "Sucesso (teste)" até o +12, com a celebração candidata e depois a anterior.
+6. **Reforçar** com cliques rápidos e o OK: uma compra por tentativa, sem pausa.
+7. **Painel de testes → Personagem:** Mago, nível 6, Piromante → Aplicar e reiniciar cenário.
+
+## 15ª versão: tiers com potência própria, requisitos de nível, fichas reorganizadas e os dois defeitos (histórico)
 
 **O sistema inteiro está no [27](../../../roadmapIDEIAS/27-FORJA-ESPECIFICACAO.md)** (3.2 a 3.4, 4, 7, 9 e 10). Chances e
 custos do reforço, a perda de dois níveis da transferência e a compatibilidade não mudaram. A 14ª está em

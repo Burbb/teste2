@@ -3,6 +3,12 @@
 > **As regras vigentes da forja estão no [27 — especificação](27-FORJA-ESPECIFICACAO.md)** (reforço, materiais,
 > encantamento, transferência, venda e desmontagem, interface). Este documento guarda a pesquisa, o debate e o histórico
 > das rodadas do protótipo; números e regras daqui que divergirem do 27 estão substituídos.
+>
+> **Rodada 16 (28/10/2026), protótipo:** regra nova: todo sucesso de reforço melhora a peça de verdade (precisão por
+> propriedade, garantia de um degrau, a fração até a ficha e a luta) e o reforço vale para peças sem portador no grupo.
+> Candidatas visuais para o Jean escolher: botões A/B, acabamento das armaduras do +9 ao +12 A/B e a paleta da
+> celebração do +9 ao +12. Corrigida a piscada ao reforçar; o painel de testes. Chances e custos sem mudança. Detalhe
+> no 27 e no LEIA-ME do protótipo (16ª).
 
 Atualizado em 26/10/2026 após o debate com Jean sobre reforço e materiais. **Esta revisão altera somente documentação.** A forja H2 encerrou a etapa 3; combate e comitiva estão integrados até a 1.213.0. A etapa 4 continua aberta, agora com direção aprovada para um protótipo de reforço e materiais.
 

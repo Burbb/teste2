@@ -7965,3 +7965,28 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **A 14ª** está em `tela/historico/v14`.
 - **Conferido:** 52 testes do protótipo; as duas resoluções; o tremor a 100%, 125% e 150%; os testes do projeto.
 - **Próximo:** a avaliação do Jean. Nada integrado; som adiado; a etapa 4 continua aberta.
+
+### 28/10/2026 (data do computador local) — Forja: a 16ª versão, ganho real em todo reforço e candidatas visuais (protótipo)
+
+- **Pedido:** texto e HUD com formatos comuns e a revisão como parte do processo; etiquetas de tier legíveis;
+  disponível/necessário nos materiais e o ouro no botão; duas candidatas de botão com o preço dentro e a confirmação
+  sem mover a ação; todo reforço válido com ganho real; reforço de peças sem portador; a piscada ao reforçar e os
+  gestos; a paleta da celebração (corrigido pelo Jean: só do +9 ao +12); dois acabamentos para armaduras do +9 ao
+  +12; o painel de testes.
+- **Feito (LEIA-ME do protótipo, 16ª; 27, seções 1.1, 1.2, 3.3, 9, 10, 11 e 12):**
+  - **regra:** precisão por propriedade (uma casa em Ataque, Poder, Defesa, Agilidade, Espinhos e curas; décimos em
+    Crítico e Roubo de vida; Vida e Mana inteiras), a garantia de um degrau, a fração até a ficha e a luta (Espinhos e
+    curas acumulam a fração), a peça toda no teto recusada sem cobrar, o reforço sem portador;
+  - **causas:** o ganho zero era o arredondamento a inteiro (nenhum passo zerado na conta); a piscada era a cena nova
+    limpando a página antes de o painel chegar (reproduzida com atraso; o motor agora calcula antes e a tela segura a
+    janela antiga);
+  - **tela:** `requerHtml`, `botaoAcao` e `peAcao` nas quatro abas; a etiqueta do tier; "Brasa I ×2"; os botões A e
+    B; os acabamentos A e B; a paleta candidata; o painel de testes (só na demonstração);
+  - **skill `texto-regras-fenda`:** o fluxo de quatro passos para todo texto novo e a tabela dos formatos comuns;
+    `CLAUDE.md` aponta para ela.
+- **A 15ª** está em `tela/historico/v15`.
+- **Conferido:** 61 testes do protótipo; as duas resoluções; os gestos por cobrança; a piscada com e sem a correção;
+  os acabamentos a 100%, 125% e 150% e no movimento reduzido; os testes do projeto. A tela inteira do Inventário não
+  foi capturada (a ficha foi conferida pelas dicas).
+- **Decisões abertas (Jean):** botões A ou B; acabamento das armaduras A ou B; a paleta candidata; a proposta para a
+  peça toda no teto. **Próximo:** a avaliação do Jean. Nada integrado; som adiado; a etapa 4 continua aberta.

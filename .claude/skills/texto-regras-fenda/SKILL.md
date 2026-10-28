@@ -8,6 +8,53 @@ description: Escrever, revisar ou conferir o texto de regras de The Unquiet (Cr�
 Vale para o texto que diz **o que uma coisa faz no jogo**. A cena, a fala e o lore seguem o
 [critério editorial](../../../roadmapIDEIAS/07-ETAPAS.md#critério-editorial); esta skill não as encurta.
 
+## O fluxo de toda entrega com texto novo (16ª da forja, 28/10/2026)
+
+Quatro passos, sempre, inclusive nas mensagens pequenas (bloqueio, lista vazia, confirmação, aviso):
+
+1. **Consultar antes de escrever.** Esta skill, a seção que vale para o caso (descrição, ficha, tela de serviço) e
+   os formatos comuns abaixo. Procurar no código o componente que já desenha aquele tipo de dado antes de criar outro.
+2. **Usar os formatos comuns.** Requisito, custo, quantidade, prévia e confirmação têm um formato só (a tabela
+   abaixo). Se a tela nova precisa de algo que eles não cobrem, o formato novo entra aqui e no componente
+   compartilhado, não só naquela tela.
+3. **Revisar as mensagens novas uma a uma**, com a pergunta: o que o jogador sabe neste momento, o que a tela já
+   mostra ao lado, e qual é a ação que falta? Incluir os estados raros: sem peça, sem material, sem ouro, requisito
+   não atendido, operação idêntica, item no teto, confirmação aberta, resultado, lista vazia.
+4. **Conferir dentro da tela, nas duas resoluções** (1920×945 e 1280×720): procurar a mesma informação dita duas
+   vezes, o número sem rótulo ou com rótulo ambíguo, o texto cortado e o que mudou de lugar entre um estado e outro.
+
+Não é uma lista de palavras proibidas: a mesma palavra cabe numa frase e sobra numa legenda. A conferência é sobre a
+informação (repetida? ambígua? escondida?), não sobre a palavra.
+
+### Formatos comuns (forja; valem para todo sistema com custo e requisito)
+
+| Dado | Formato | Onde | Componente (protótipo da forja) |
+|---|---|---|---|
+| Material que a operação consome | "Requer:" e cada um como **disponível/necessário** ("14/2"), o ícone junto; o que falta em vermelho **no próprio valor**; a dica (mouse e teclado) diz a ordem dos números e quanto falta | junto da ação | `requerHtml` (o motor manda `requisito_material`) |
+| Nível como requisito da operação | "Nível 5" no mesmo grupo "Requer:", vermelho quando impede; a dica diz o nível de quem veste | junto da ação | o mesmo `requerHtml` (o motor manda `nivel`) |
+| Ouro de uma ação | dentro do botão, numa área reservada à direita: moeda e valor, sem "Custo"; em vermelho quando falta; o saldo fica só no cabeçalho | no botão | `botaoAcao` |
+| Confirmação | a ação principal **não sai do lugar**; a pergunta aparece em cima e o Cancelar num espaço já reservado ao lado; a nota diz o que se perde | no pé | `peAcao` |
+| Requisito do item (ficha) | "Requer nível 9", à direita, vermelho quando falta | na ficha | `reqHtml` |
+| Consequência para depois (peça na bolsa) | uma frase curta na prévia: "A peça passa a requerer nível 9" | na prévia | o motor manda `nota` |
+| Valor que muda | "Defesa 2 → 2,7"; casas decimais só quando existem (vírgula); "Carrasco 15% → —" quando some | na prévia e no resultado | o motor manda o texto pronto (`valor_tela`, `R.fmt`) |
+| Total de quem veste | só quando explica uma consequência (o limite que corta): "Total em Jean 52% → 60%" e "Limite 60%: 8% não valem" | na prévia | o motor decide se aparece |
+| Repetidas na ficha | iguais "Brasa I ×2"; diferentes "Brasa II + Brasa I"; a descrição com o valor somado embaixo; cada sulco continua inspecionável | na ficha | `efeitosGravacao` |
+
+- **O motivo do bloqueio aparece uma vez.** Se a falta já está marcada no valor (o material, o nível, o preço em
+  vermelho), a nota embaixo do botão fica vazia; o motivo por extenso vai no `title` e no rótulo acessível do botão. A
+  nota fica para o que não aparece em outro lugar ("Já gravado.", "Incompatível com peitorais", "Escolha uma peça").
+- **Operação que não existe não mostra o que consumiria.** Uma gravação idêntica ou incompatível não exibe o "Requer:".
+- **Nada de conta do jogador na tela.** "Requer nível 5 (Jean: 4). Na bolsa, pode gravar." virou "Requer: Nível 5" em
+  vermelho; o nível de Jean está na dica; a saída (gravar na bolsa) é a aba Bolsa, à vista.
+
+| Antes (15ª) | Depois (16ª) |
+|---|---|
+| "Requer nível 5 (Jean: 4). Na bolsa, pode gravar." ao lado do botão, e "Requer nível 5" de novo na prévia | "Requer: [Brasa II] 3/1 · Nível 5" (o nível em vermelho), uma vez, junto do botão |
+| "Carrasco nesta peça 15% → —" | "Carrasco 15% → —" |
+| "Brasa em Jean 40% → 60%" sempre que outra peça somava | só quando o limite corta: "Total em Jean …" e "Limite 60%: 8% não valem" |
+| ícone · "1" · "tem 2" · moeda · "30" espalhados no pé | "Requer: [Brasa I] 2/1" e o botão "Gravar · [moeda] 30" |
+| "Brasa I + I" (o nome do tier sem a essência) | "Brasa I ×2"; "Brasa II + Brasa I" |
+
 ## Três registros, três lugares
 
 | Registro | Onde aparece | O que leva |

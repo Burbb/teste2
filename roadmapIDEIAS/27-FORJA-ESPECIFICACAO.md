@@ -1,7 +1,7 @@
 # 27 — A forja: especificação do sistema (reforço, materiais, encantamento, transferência)
 
 Documento de referência da etapa 4. Ele descreve o sistema inteiro como está hoje, sem precisar da conversa nem dos
-históricos de protótipo. Atualizado em 28/10/2026 (14ª versão do protótipo), conferido contra o código do
+históricos de protótipo. Atualizado em 28/10/2026 (16ª versão do protótipo), conferido contra o código do
 protótipo (`ferramentas/prototipos/reforco`: `regras.py`, `encanto.py`, `demo.py`, `tela/reforco.js`) e o de
 produção (`rpg/sistemas/servicos.py`).
 
@@ -33,9 +33,11 @@ desmontagem nem transferência. **Tudo o que segue é o protótipo**, que substi
 
 ### 1.1 Elegibilidade [Aprovado]
 **Todo espaço de equipamento** recebe reforço: arma, peito, cabeça, mãos, pernas, pés, apoio (escudo, tomo e aljava),
-anel e amuleto. As peças podem ser do herói, dos companheiros ou da bolsa. Uma peça que ninguém do grupo sabe usar é
-recusada ("Ninguém do grupo usa peças de …"); a de um companheiro fora do grupo, também. **[Substituído]** Antes, só
-arma, peito, escudo e tomo.
+anel e amuleto. As peças podem ser do herói, dos companheiros ou da bolsa. **Classe e nível restringem vestir, não o
+serviço [Aprovado, 16ª]:** a peça que ninguém do grupo sabe usar (a arma de arqueiro num grupo sem arqueiro) recebe
+reforço, com a prévia calculada da própria peça; vestir continua recusado. A peça de um companheiro fora do grupo é
+recusada. **[Substituído]** Antes, só arma, peito, escudo e tomo; e, até a 15ª, a peça sem usuário era recusada
+("Ninguém do grupo usa peças de …").
 
 ### 1.2 O que cresce [Aprovado: a peça inteira; Provisório: a fórmula]
 **A peça inteira:** todas as linhas, da base e dos afixos. O reforço não mexe nas gravações. **[Substituído]** a
@@ -44,10 +46,26 @@ escolha Fio ou Runas da arma do Guerreiro e o reforço só da linha da base.
 **Correção matemática** (o que tinha de mudar, independente do equilíbrio):
 - **Forma fechada.** O ganho do +N sai sempre da peça original (`bonus_base`), sem passar pelos níveis do meio. Cair e
   subir de novo dá exatamente o número do nível, sem deriva (testado com quedas e subidas em sequência).
-- **Sem +1 imposto a toda linha.** Uma linha pequena pode passar passos sem subir. Só a linha principal da arma sobe
-  ao menos 1 por passo, e só do +1 ao +4 (a faixa aprovada, em que cada passo se sente).
-- **Meio para baixo nos valores pequenos.** O ganho é arredondado com o meio para baixo (1,5 → 1). Com o meio para
-  cima, uma aljava de Agilidade 1 ia a 3 no +4.
+- **Todo sucesso melhora a peça de verdade [Aprovado: a regra, 16ª].** Até a 15ª, o ganho de cada linha era
+  arredondado a inteiro e uma linha pequena passava passos sem subir: a conta tinha ganho em todo passo (nenhum passo
+  zerado na varredura do gerador), mas o arredondamento escondia um quarto a um terço dos passos de acessórios, elmos,
+  luvas e botas (o Cajado de Ferro do +10 ao +11: Poder 8,6 → 9,2, os dois 9). Agora:
+  - **Precisão de cada propriedade** (`regras.PRECISAO`) [Protótipo]: Ataque, Poder, Defesa, Agilidade, Espinhos,
+    Vida por turno e Vida por abate com uma casa; Crítico e Roubo de vida em décimos de ponto; Vida e Mana inteiras
+    (reservas de pontos). A tela mostra a casa só quando existe ("2,7", "5").
+  - **Garantia:** um passo em que nenhuma linha mudaria entrega o próximo degrau à linha mais perto dele; nunca mais de
+    um degrau à frente da conta (testado em todos os espaços). Só peças de Vida e Mana chegam a usá-la.
+  - **Não é +1 em toda linha:** cada linha cresce na sua proporção; uma linha pequena sobe décimos.
+  - **A cadeia:** a casa chega aos atributos do herói e dos companheiros e à luta (dano, defesa e esquiva usam o número
+    com a casa). Espinhos, Vida por turno e Vida por abate são pontos de vida inteiros: a fração se acumula a cada
+    disparo (2,6 por turno cura 2, 3, 3, 2, 3…). Sem peça fracionária, os números do jogo são os de antes. [Protótipo:
+    `demo.decimais_na_luta`; na integração, levar para `entidades` e `comitiva`.]
+  - **Peça toda no teto:** nenhuma do gerador chega (o teto é por peça). Se chegar, o reforço é recusado sem cobrar
+    ("Sem ganho: Crítico no máximo desta peça."). **[Proposta, não implementada]** a peça nessa situação passa a crescer
+    pela linha fixa mais próxima da base (Ataque na arma, Defesa no resto), sem elevar o teto de %.
+  - Só a linha principal da arma sobe ao menos 1 por passo, e só do +1 ao +4 (a faixa aprovada).
+- **Meio para baixo nos valores pequenos.** O arredondamento, na precisão da linha, é com o meio para baixo (0,25 →
+  0,2; 1,5 → 1 numa linha inteira). Com o meio para cima, uma aljava de Agilidade 1 saltava.
 - **Porcentagens com teto.** Crítico e roubo de vida crescem por soma (abaixo), sem passar do teto por peça. O teto
   de crítico do personagem (60%) continua no motor. As peças não têm resistências hoje.
 - **Sem regra especial por espaço.** Saiu o dobro que os apoios tinham do +1 ao +4: o afixo se mistura à base na
@@ -55,8 +73,8 @@ escolha Fio ou Runas da arma do Guerreiro e o reforço só da linha da base.
 
 **A fórmula** [Provisório]. Um + vale "a mesma peça alguns níveis acima". Os passos valem 1,5 nível de peça do +1 ao
 +4, 1 do +5 ao +8 e 0,75 do +9 ao +12; L(N) é a soma até +N, e o +12 soma 13.
-- Linha fixa de valor v numa peça de nível n: ganho(N) = arredonda(v ÷ escala(n) × 0,75 × L(N)), com
-  escala(n) = 1,5 + 0,75 × n, a do gerador.
+- Linha fixa de valor v numa peça de nível n: ganho(N) = arredonda(v ÷ escala(n) × 0,75 × L(N)) na precisão da
+  linha, com escala(n) = 1,5 + 0,75 × n, a do gerador.
 - Crítico e roubo de vida: + 0,25 ponto por nível de peça, como os afixos do gerador. O teto por peça é 15% de
   crítico e 10% de roubo de vida.
 
@@ -65,22 +83,25 @@ acima, no +0:
 
 | Peça | +0 | +4 | +8 | +12 | Substituta (base comum do gerador), nível +6 / +12 |
 |---|---|---|---|---|---|
-| Martelo Enferrujado (nível 1, comum) | Ataque: 2 | 6 | 9 | 11 | Machado de Aço: 7; Machado Rúnico: 14 |
-| Martelo de Aço (nível 6, comum) | Ataque: 6 | 10 | 13 | 16 | Machado Rúnico: 13; Machado Rúnico: 18 |
-| Pranto Sangrento (nível 12, raro) | Ataque/Crítico/Defesa: 12/6/5 | 17/7/7 | 21/8/9 | 23/9/10 | Machado Rúnico: 18/0/0; Machado Rúnico: 23/0/0 |
-| Grimório de Aço do Vampiro (nível 6, incomum) | Poder/Roubo de vida: 6/4 | 10/5 | 13/6 | 16/7 | Varinha Rúnica: 13/0; Varinha Rúnica: 18/0 |
-| Arco Longo de Ferro (nível 4, comum) | Ataque/Agilidade: 3/1 | 7/2 | 8/3 | 9/3 | Arco Longo Temperado: 8/2; Arco Longo Rúnico: 13/4 |
-| Cota de Malha de Ferro (nível 1, comum) | Defesa/Vida: 1/4 | 3/12 | 4/17 | 5/21 | Peitoral de Aço: 5/14; Peitoral Rúnico: 9/27 |
-| Cicatriz da Fenda (nível 6, raro) | Defesa/Vida/Crítico: 7/29/4 | 12/51/5 | 16/65/6 | 18/76/7 | Peitoral Rúnico: 9/25/0; Peitoral Rúnico: 13/36/0 |
-| Broquel de Aço (nível 3, comum) | Defesa/Vida: 1/2 | 2/4 | 3/6 | 4/7 | Escudo Temperado: 3/5; Escudo Rúnico: 5/8 |
-| Escudo Temperado da Águia (nível 8, incomum) | Defesa/Vida/Agilidade: 3/4/4 | 5/6/6 | 6/8/8 | 7/9/9 | Escudo Rúnico: 5/7/0; Escudo Rúnico: 7/10/0 |
-| Tomo da Coruja (nível 6, incomum) | Poder/Mana: 5/5 | 9/9 | 11/11 | 13/13 | Tomo: 4/12; Tomo: 5/18 |
-| Aljava Rasgada (nível 2, comum) | Agilidade/Ataque: 1/1 | 2/2 | 3/3 | 4/4 | Aljava Reforçada: 1/1; Aljava Rúnica: 3/3 |
-| Cicatriz Sangrenta (nível 7, raro) | Agilidade/Ataque/Espinhos/Regeneração/Roubo de vida: 1/1/6/2/4 | 2/2/10/3/5 | 2/2/13/4/6 | 2/2/15/5/7 | Aljava Rúnica: 3/3/0/0/0; Aljava Rúnica: 4/4/0/0/0 |
-| Barbuta de Ferro (nível 4, comum) | Defesa/Vida: 1/2 | 2/4 | 3/5 | 3/6 | Elmo Temperado: 2/5; Elmo Rúnico: 3/8 |
-| Luva de Seda de Lã Negra dos Espinhos (nível 6, incomum) | Poder/Defesa/Espinhos: 1/1/6 | 2/2/10 | 2/2/13 | 3/3/16 | Luva de Seda Rúnica: 2/1/0; Luva de Seda Rúnica: 3/1/0 |
+| Martelo Enferrujado (nível 1, comum) | Ataque: 2 | 6 | 8,7 | 10,7 | Machado de Aço: 7; Machado Rúnico: 14 |
+| Martelo de Aço (nível 6, comum) | Ataque: 6 | 10,5 | 13,5 | 15,7 | Machado Rúnico: 13; Machado Rúnico: 18 |
+| Pranto Sangrento (nível 12, raro) | Ataque/Crítico/Defesa: 12/6/5 | 17,1/7,5/7,1 | 20,6/8,5/8,6 | 23,1/9,2/9,6 | Machado Rúnico: 18/0/0; Machado Rúnico: 23/0/0 |
+| Grimório de Aço do Vampiro (nível 6, incomum) | Poder/Roubo de vida: 6/4 | 10,5/5,5 | 13,5/6,5 | 15,7/7,2 | Varinha Rúnica: 13/0; Varinha Rúnica: 18/0 |
+| Arco Longo de Ferro (nível 4, comum) | Ataque/Agilidade: 3/1 | 7/2 | 8/2,7 | 9,5/3,2 | Arco Longo Temperado: 8/2; Arco Longo Rúnico: 13/4 |
+| Cota de Malha de Ferro (nível 1, comum) | Defesa/Vida: 1/4 | 3/12 | 4,3/17 | 5,3/21 | Peitoral de Aço: 5/14; Peitoral Rúnico: 9/27 |
+| Cicatriz da Fenda (nível 6, raro) | Defesa/Vida/Crítico: 7/29/4 | 12,2/51/5,5 | 15,7/65/6,5 | 18,4/76/7,2 | Peitoral Rúnico: 9/25/0; Peitoral Rúnico: 13/36/0 |
+| Broquel de Aço (nível 3, comum) | Defesa/Vida: 1/2 | 2,2/4 | 3/6 | 3,6/7 | Escudo Temperado: 3/5; Escudo Rúnico: 5/8 |
+| Escudo Temperado da Águia (nível 8, incomum) | Defesa/Vida/Agilidade: 3/4/4 | 4,8/6/6,4 | 6/8/8 | 6,9/9/9,2 | Escudo Rúnico: 5/7/0; Escudo Rúnico: 7/10/0 |
+| Tomo da Coruja (nível 6, incomum) | Poder/Mana: 5/5 | 8,7/9 | 11,2/11 | 13,1/13 | Tomo: 4/12; Tomo: 5/18 |
+| Aljava Rasgada (nível 2, comum) | Agilidade/Ataque: 1/1 | 2,5/2,5 | 3,5/3,5 | 4,2/4,2 | Aljava Reforçada: 1/1; Aljava Rúnica: 3/3 |
+| Cicatriz Sangrenta (nível 7, raro) | Agilidade/Ataque/Espinhos/Regeneração/Roubo de vida: 1/1/6/2/4 | 1,7/1,7/10/3,3/5,5 | 2,1/2,1/12,7/4,2/6,5 | 2,4/2,4/14,7/4,9/7,2 | Aljava Rúnica: 3/3/0/0/0; Aljava Rúnica: 4/4/0/0/0 |
+| Barbuta de Ferro (nível 4, comum) | Defesa/Vida: 1/2 | 2/4 | 2,7/5 | 3,2/6 | Elmo Temperado: 2/5; Elmo Rúnico: 3/8 |
+| Luva de Seda de Lã Negra dos Espinhos (nível 6, incomum) | Poder/Defesa/Espinhos: 1/1/6 | 1,7/1,7/10,5 | 2,2/2,2/13,5 | 2,6/2,6/15,7 | Luva de Seda Rúnica: 2/1/0; Luva de Seda Rúnica: 3/1/0 |
 | Aro do Carniceiro (nível 3, incomum) | Vida por abate: 5 | 11 | 15 | 18 | Anel do Carniceiro: 9; Anel do Carniceiro: 14 |
-| Brasa Faminta (nível 8, raro) | Agilidade/Crítico: 4/4 | 6/5 | 8/6 | 9/7 | Talismã do Carniceiro: 0/0; Talismã do Carniceiro: 0/0 |
+| Brasa Faminta (nível 8, raro) | Agilidade/Crítico: 4/4 | 6,4/5,5 | 8/6,5 | 9,2/7,2 | Talismã do Carniceiro: 0/0; Talismã do Carniceiro: 0/0 |
+
+Na 15ª, os mesmos +12 eram inteiros (a Barbuta de Ferro 3/6, a Brasa Faminta 9/7): a conta não mudou, só deixou de
+esconder a fração.
 
 **Hipótese de equilíbrio** (separada da correção):
 - Uma peça do começo no +12 fica abaixo da base 12 níveis acima, que ainda pode ser reforçada: o Martelo Enferrujado
@@ -206,7 +227,8 @@ As outras peças (cabeça, mãos, pernas, pés, aljava, anel, amuleto) recebem r
   nada; o motor recusa sem cobrar ("Já gravado."), e a tela mostra o motivo no lugar do botão. Outro tier da mesma
   essência é uma substituição normal.
 - **Peça vestida e requisito:** se a gravação deixaria a peça acima do nível de quem a veste, o motor recusa sem cobrar
-  ("Requer nível 9 (Jean: 4). Na bolsa, pode gravar."). Na bolsa, a peça pode ser preparada para depois. Nada é
+  ("Requer nível 9"; a tela mostra "Nível 9" em vermelho no "Requer:" do pé, e o nível de quem veste na dica). Na
+  bolsa, a peça pode ser preparada para depois (a prévia diz "A peça passa a requerer nível 9"). Nada é
   tirado do corpo sozinho, e ninguém fica com o benefício sem cumprir o requisito.
 - **Peça e dono:** a gravação é da peça e vai com ela quando ela troca de dono.
 - **Desmontar** perde as gravações. A confirmação lista quais ("Perde as gravações: Brasa II, Eco I.").
@@ -353,9 +375,19 @@ Cobrado uma vez por pedido. A confirmação mostra os dois resultados e o preço
 ## 9. Fluxos da interface [Protótipo]
 - **Uma janela para as quatro operações:** Reforçar, Encantar, Transferir e Desmontar usam a mesma moldura, do mesmo
   tamanho, com o mesmo cabeçalho e o Fechar no mesmo lugar; trocar de aba não move a janela. O cabeçalho leva só as
-  abas, o ouro e o Fechar; cada material aparece junto da operação que o gasta ("tem N" ao lado do custo; o ouro, que
-  já está no cabeçalho, sem o "tem"). As listas
-  rolam por dentro. Reforçar e o resultado em destaque são a referência das outras abas.
+  abas, o saldo de ouro e o Fechar. As listas rolam por dentro. Reforçar e o resultado em destaque são a referência
+  das outras abas.
+- **Formatos comuns das quatro abas [Protótipo, 16ª]** (a skill `texto-regras-fenda`; componentes `requerHtml`,
+  `botaoAcao`, `peAcao`):
+  - o que a operação consome: "Requer:" e cada material como **disponível/necessário** ("14/2"), a falta em vermelho no
+    próprio valor; a dica (mouse e teclado) diz a ordem dos números e quanto falta. O nível, quando é requisito da
+    operação, entra no mesmo grupo ("Nível 5", vermelho quando impede);
+  - o ouro gasto fica **dentro do botão**, numa área reservada à direita ("Transferir · [moeda] 335", sem "Custo"); o
+    valor não muda a largura do botão nem move o nome; em vermelho quando falta;
+  - a confirmação não move a ação: a pergunta aparece em cima, o Cancelar num espaço reservado ao lado e a perda na
+    nota (Transferir, Substituir, Desmontar);
+  - o motivo do bloqueio aparece uma vez: o que já está marcado no valor não volta numa nota (o motivo por extenso fica
+    no `title` e no rótulo acessível do botão).
 - **Reforçar:**
   - o aquecimento corre na bancada;
   - na revelação, o resultado sai da bancada para a apresentação em destaque, com o véu: o nome com o nível, a peça
@@ -369,26 +401,27 @@ Cobrado uma vez por pedido. A confirmação mostra os dois resultados e o preço
     vazio, ocupado e escolhido se distinguem. Retirar a peça: o molde ou a miniatura;
   - **a essência:** primeiro a família (o ícone e o nome; a 1280, só o ícone), depois o tier I, II ou III: o símbolo
     com o tier no canto de cima à direita e a quantidade no canto de baixo, fora do símbolo;
-  - **a prévia**, calculada no motor (`demo.previsao`): a essência escolhida com o efeito dela (o valor do tier), o
-    requisito (em vermelho quando quem veste não chega lá), numa substituição só os valores que mudam ("Brasa nesta
-    peça 40% → 60%", "Carrasco nesta peça 15% → —"), a linha de quem veste quando outra peça dele também soma, a troca
-    ("Sai Carrasco I · entra Brasa II") e, quando o limite corta, a consequência antes de pagar ("Limite 60%: 8% desta
-    gravação não valem."). Saíram "+1 nível", "no lugar de +1", "nível em Jean" e o teto antigo;
-  - o pé fixo, com o custo e Gravar ou Substituir; substituir pede confirmação; a mesma gravação aparece como
-    "Já gravado" e não cobra; numa peça vestida, a gravação acima do nível de quem veste mostra o motivo no lugar do
-    botão;
+  - **a prévia**, calculada no motor (`demo.previsao`): a essência escolhida com o efeito dela (o valor do tier), numa
+    substituição só os valores que mudam, com o nome do efeito ("Brasa 40% → 60%", "Carrasco 15% → —"), o total de
+    quem veste só quando o limite corta ("Total em Jean …"), a troca ("Sai Carrasco I · entra Brasa II") e a
+    consequência antes de pagar ("Limite 60%: 8% não valem"); na bolsa, quando o requisito da peça sobe, "A peça passa
+    a requerer nível 9". **[Substituído, 16ª]** "Brasa nesta peça", a linha de quem veste sempre que outra peça somava e
+    "Requer nível 5 (Jean: 4). Na bolsa, pode gravar.";
+  - o pé fixo: "Requer: [essência] 3/1" (e "Nível 5" numa peça vestida, quando a gravação sobe o requisito), o botão
+    Gravar ou Substituir com o preço dentro; substituir pede confirmação no mesmo lugar; a mesma gravação aparece como
+    "Já gravado", sem o "Requer:", e não cobra;
   - a gravação concluída aparece na mesma apresentação em destaque, sem suspense, com a gravação nova em destaque
     (o efeito dela) e a que saiu.
 - **Transferir** (duas peças):
   - origem e destino em dois encaixes do mesmo tamanho, ligados por um conduto; o reforço de agora na etiqueta do
     ícone e, embaixo, "Após transferir" e só o nível previsto (a origem +0 em vermelho, o destino em verde; o rótulo
-    Origem/Destino e o texto continuam, a cor não é o único sinal); a moeda e o preço ao lado do Transferir;
+    Origem/Destino e o texto continuam, a cor não é o único sinal); o preço dentro do botão Transferir;
   - clicar num encaixe abre a lista de escolha: ícone, nome, raridade, reforço e dono (duas peças de mesmo nome se
     distinguem por isso e pelo id). Com a origem escolhida, os destinos possíveis vêm primeiro e os outros dizem por
     quê ("Nenhum destino" na origem que não tem para onde ir);
   - trocar a origem limpa o destino que deixou de servir, com uma linha dizendo isso, e reabre a lista dos destinos;
-  - a confirmação mantém os dois encaixes (os dois resultados) e só acrescenta a pergunta, o preço, Cancelar e
-    Transferir; as regras ("o destino recebe o nível da origem menos 2", "afixos, sulcos e gravações ficam em cada
+  - a confirmação mantém os dois encaixes (os dois resultados) e o Transferir no mesmo lugar e tamanho (medido a 1920 e
+    a 1280); só acrescenta a pergunta e o Cancelar; as regras ("o destino recebe o nível da origem menos 2", "afixos, sulcos e gravações ficam em cada
     peça") saíram da tela e continuam aqui, na seção 5, e na ajuda;
   - a cena (1,4 s): a origem acende, a luz corre pelo conduto, a origem perde o acabamento e o destino recebe o nível
     e o acabamento; depois, "Transferência concluída" num véu fechado (a bancada atrás não disputa a leitura), com o
@@ -396,8 +429,12 @@ Cobrado uma vez por pedido. A confirmação mostra os dois resultados e o preço
     do reforço máximo. Com movimento reduzido, o resultado parado. Adiantar não dispensa nem repete; fechar a janela
     não desfaz nem duplica; a cena só representa a transação já resolvida;
   - depois do OK, as escolhas se limpam (nenhum par novo é escolhido sozinho) e o foco volta ao encaixe da origem.
-- **Desmontar:** o nome da peça como título, "No mercado, vende por X." e a confirmação no pé, com as perdas; a
-  transformação é curta, sem celebração.
+- **Desmontar:** o nome da peça como título, "No mercado, vende por X." e a confirmação no pé ("Destruir a peça?",
+  as gravações perdidas na nota, o Desmontar no mesmo lugar); a transformação é curta, sem celebração.
+- **A troca de tela sem piscar [16ª]:** a cada pedido, o motor redesenha a forja como uma cena nova (a página se limpa)
+  e manda o painel em seguida. Até a 15ª, o painel era calculado entre as duas mensagens, e numa máquina lenta o
+  navegador pintava a oficina sem a janela ("às vezes", 10 a 16 ms aqui; reproduzido com 80 ms). Agora o motor calcula
+  o painel antes de anunciar a cena, e a tela segura a janela antiga, parada e sem cliques, até a nova estar montada.
 - **Gestos:**
   - as confirmações só aceitam o clique depois de 400 ms;
   - o segundo clique de um clique duplo (`event.detail` 2) não age; do terceiro em diante é uma ação nova. Antes,
@@ -408,6 +445,10 @@ Cobrado uma vez por pedido. A confirmação mostra os dois resultados e o preço
   - a tecla segurada não repete;
   - o gesto que adianta a cena não dispensa o resultado;
   - cada tentativa é uma cobrança e um resultado;
+  - conferido na 16ª por cobrança e por resultado (não só pela contagem de cliques): clique duplo no Reforçar compra
+    uma vez; OK com clique duplo e triplo no mesmo ponto fecha sem comprar; o Reforçar logo depois do OK compra na
+    hora; quatro cliques seguidos compram uma vez e o resultado fica até o OK; depois, um clique novo compra; Enter
+    segurado fecha sem comprar; Enter segurado no Reforçar compra uma vez;
   - Esc revela, cancela a confirmação e fecha, nessa ordem.
 
 ## 10. Linguagem visual [Protótipo]
@@ -436,8 +477,22 @@ Cobrado uma vez por pedido. A confirmação mostra os dois resultados e o preço
 - **Alinhamento do resultado:** o conjunto é deslocado por `left`/`top` (layout) até a peça cair num pixel inteiro do
   aparelho, não por `translate`.
 - **Gravação:** um rastro de luz na cor da essência percorre a borda do encaixe.
-- **Tier:** I, II ou III num selo de latão no canto de cima à direita do símbolo da essência, nos materiais, na
-  seleção da forja, nos sulcos, nas fichas e no espólio; a quantidade fica noutro canto.
+- **Tier:** I, II ou III numa etiqueta no canto de cima à direita do símbolo da essência, na linguagem da etiqueta do
+  reforço (+N): placa escura, aresta de latão, 13 px a 1920 e 12 px a 1280, fora do desenho; nos materiais, na seleção
+  da forja, nos sulcos, nas fichas e no espólio; a quantidade fica noutro canto. **[Substituído, 16ª]** o selo de 9 px.
+- **Botões da forja [Candidatas, sem escolha]:** A · ferro encaixado (planos chapados, cantos em degrau, luz curta na
+  aresta de cima, base escura) e B · ferro com presilhas de latão. Pressionar afunda a face sem mover o botão; o foco é
+  um anel de latão por dentro. Aplicadas só na forja (as ações, o Cancelar, o OK e o Fechar); os outros usos do jogo
+  estão listados no LEIA-ME (16ª) para a variante escolhida.
+- **Armaduras do +9 ao +12 [Candidatas, sem escolha]:** capacete, peito, luvas, pernas e botas, em vez do veio de
+  faixas diagonais: A · brilho nas bordas (uma orla baixa na cor do nível por dentro da silhueta e 1 a 4 pontos de luz
+  percorrendo a borda) e B · reflexo estreito (uma passada de 1 px, 2 no +11 e +12, menos opaca). O contorno aprovado
+  fica; a passada larga do reflexo não passa nelas. Armas, joias, escudos, tomos e aljavas continuam com o veio; até o
+  +8, nada muda. O ciclo vem de um relógio comum com um desvio fixo pelo lugar da peça (um redesenho não o recomeça).
+- **Celebração do +9 ao +12 [Candidata, sem escolha]:** uma cor dominante e uma secundária (+9 violeta; +10 violeta e
+  azul; +11 ouro quente e âmbar; +12 ouro, âmbar e brilhos de marfim), o prisma só em alguns estilhaços, a grandeza
+  pela forma (leques de raios, alcance, estrela, anéis). O +8 e os de baixo não mudam (pedido do Jean). A anterior
+  fica no painel de testes para comparar.
 - **Fichas** (a hierarquia das fichas do Diablo IV, com a arte do jogo), nesta ordem:
   1. o nome e o reforço ("Martelo de Aço +3");
   2. o tipo e a raridade; a base sai dos parênteses do título e vai para esta linha ("Machado · Lendário", sem
@@ -456,7 +511,10 @@ Cobrado uma vez por pedido. A confirmação mostra os dois resultados e o preço
 
 ## 11. Casos de teste e exemplos
 
-**Testes automáticos** (`ferramentas/prototipos/reforco/testes`, 52):
+**Testes automáticos** (`ferramentas/prototipos/reforco/testes`, 61):
+- todo passo de todo espaço, do +0 ao +12, melhora alguma linha, sem casa que o motor não usa e sem passar um degrau da
+  conta; a peça sem portador recebe reforço; a peça toda no teto não cobra; a fração na ficha e na luta; o painel de
+  testes;
 - reforço em todos os espaços, sem cair, com a arma sentindo cada passo até o +4;
 - forma fechada sem deriva;
 - tetos de %;
@@ -472,7 +530,10 @@ Cobrado uma vez por pedido. A confirmação mostra os dois resultados e o preço
 - salvar e carregar.
 
 **Cenários da faixa da demonstração** (só no save temporário):
-- **Níveis altos (teste):** peças de +4 a +12, duas com três gravações.
+- **Níveis altos (teste):** peças de +4 a +12, duas com três gravações; e (16ª) Jean com capacete, luvas, pernas e
+  botas de ferro do +9 ao +12 e Odette com um peito de tecido escuro no +11, para os acabamentos das armaduras.
+- **Painel de testes (16ª):** nível, classe e especialização (reiniciam o cenário pelo caminho do jogo); ouro,
+  fragmentos e essências por tier (aplicam na sessão, validados); as candidatas visuais (botões, armaduras, paleta).
 - **Essências (teste):** vestidas, só tier I (o grupo está no nível 4):
   - Jean: Brasa I + Brasa I + Carrasco I na arma (Brasa 40%); Vigília I + Revide I + Geada I no peito;
   - Odette: Eco I na arma e Eco I + Eco I no tomo (Eco 30%, entre peças);
@@ -487,10 +548,9 @@ Cobrado uma vez por pedido. A confirmação mostra os dois resultados e o preço
 - Os demais: Sucesso e Falha (teste), Comparação e Luta de teste.
 
 **Exemplo completo:** Jean (nível 4) veste a arma com Brasa I + Brasa I + Carrasco I (Brasa 40%). Ao escolher Brasa
-II para o terceiro sulco (onde está Carrasco I), a prévia diz o efeito da Brasa II (28% de chance), "Requer nível
-5" em vermelho, "Brasa nesta peça 40% → 60%", "Carrasco nesta peça 15% → —", "Sai Carrasco I · entra Brasa II" e
-"Limite 60%: 8% desta gravação não valem."; o botão fica bloqueado ("Requer nível 5 (Jean: 4). Na bolsa, pode
-gravar."). No nível 5, a mesma gravação passa e, na luta, cada golpe que acerta tem 60% de chance de Queimadura, no
+II para o terceiro sulco (onde está Carrasco I), a prévia diz o efeito da Brasa II (28% de chance), "Brasa 40% →
+60%", "Carrasco 15% → —", "Sai Carrasco I · entra Brasa II" e "Limite 60%: 8% não valem"; o pé diz "Requer: [Brasa
+II] 3/1 · Nível 5" com o nível em vermelho, e o botão "Substituir · [moeda] 30" fica bloqueado. No nível 5, a mesma gravação passa e, na luta, cada golpe que acerta tem 60% de chance de Queimadura, no
 máximo 1 vez por rodada.
 
 ## 12. Pendências para integrar e assuntos futuros
@@ -510,5 +570,11 @@ máximo 1 vez por rodada.
 - **Decisões substituídas** (registradas para não voltarem): o limite +4; a escolha Fio ou Runas; o reforço só da
   base; o dobro dos apoios; "a mesma essência não repete"; um efeito por essência gravada; o nível total de 1 a 5
   com teto (agora, cada tier com o seu valor e a soma até o limite de cada efeito).
+- **Candidatas da 16ª a escolher (Jean):** os botões A ou B; o acabamento das armaduras A ou B; a paleta da
+  celebração do +9 ao +12. Depois, aplicar o botão escolhido aos outros usos do jogo (lista no LEIA-ME).
+- **Integração da fração:** os atributos com casa decimal e o acúmulo de Espinhos, Vida por turno e Vida por abate
+  estão no protótipo (`demo.decimais_na_luta`); na integração, vão para `entidades`, `comitiva` e a luta, com o
+  gabarito atualizado de propósito.
+- **Peça toda no teto:** a proposta (crescer pela linha fixa mais próxima da base) espera decisão.
 - **Mercado:** a peça acima do nível não se equipa ali (o motor recusa), mas o texto do jogo ainda diz "não é para a
   sua classe" (mercado.js, produção); a corrigir na integração.
