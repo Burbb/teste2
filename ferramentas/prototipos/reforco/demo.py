@@ -136,11 +136,17 @@ def comparar(g, quem, mudar):
     (ou a Lâmina Rúnica, quando o que muda é o Poder de um Guerreiro), o golpe que ele recebe e a vida máxima."""
     alvo = _alvo(g)
     antes = numeros(g, quem)
+    # a comparação é uma hipótese: não pode deixar rastro. FICHA.atualizar faz a vida acompanhar o máximo para baixo
+    # (a regra de quem tira uma peça), e uma peça da bolsa com menos Vida cortava a vida de verdade, que não voltava
+    # quando a peça certa era recolocada (a perda de vida ao entrar na forja, 17ª versão). A vida e o recurso de agora
+    # voltam exatamente como estavam.
+    vida = _vida_de(g, quem)
     desfazer = mudar()
     FICHA.atualizar(g, quem)
     depois = numeros(g, quem)
     desfazer()
     FICHA.atualizar(g, quem)
+    _repor_vida(g, quem, vida)
     linhas = []
     usa_poder = depois["poder"] != antes["poder"] and antes["ataque"][4] == "atk"
     if usa_poder and quem == HEROI and g.j.classe == "guerreiro":
@@ -163,6 +169,26 @@ def comparar(g, quem, mudar):
         linhas.append({"rotulo": f"Vida máxima de {antes['nome']}", "antes": antes["max_hp"], "depois": depois["max_hp"],
                        "melhor": depois["max_hp"] > antes["max_hp"]})
     return {"alvo": f"{alvo.nome} nível {alvo.nivel}, defesa {R._rh(alvo.defesa)}", "linhas": linhas}
+
+
+def _vida_de(g, quem):
+    """A vida e o recurso de quem, como estão (o herói ou o companheiro)."""
+    if quem == HEROI:
+        return g.j.hp, g.j.rec
+    m = comitiva.membro(g, quem)
+    return (m["hp"], m.get("rec")) if m else None
+
+
+def _repor_vida(g, quem, vida):
+    if vida is None:
+        return
+    if quem == HEROI:
+        g.j.hp, g.j.rec = vida
+        return
+    m = comitiva.membro(g, quem)
+    m["hp"] = vida[0]
+    if vida[1] is not None:
+        m["rec"] = vida[1]
 
 
 def com_reforco(it, ganho):

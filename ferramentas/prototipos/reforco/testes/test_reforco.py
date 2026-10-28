@@ -404,6 +404,27 @@ class TestPainelDeTestes(unittest.TestCase):
                 self.assertTrue(D.painel(g)["pecas"])
 
 
+class TestEntrarNaForja(unittest.TestCase):
+    """17ª: entrar, sair e abrir um serviço não tiram vida (a comparação "e se vestisse" cortava a vida ao máximo da
+    peça mais fraca da bolsa, e ela não voltava)."""
+
+    def test_entrar_e_sair_nao_muda_vida_nem_tempo(self):
+        g = jogo()
+        fraca = {"nome": "Gibão Rasgado", "slot": "armadura", "classe": "guerreiro", "nivel": 1, "raridade": "comum",
+                 "preco": 3, "bonus": {"defesa": 1}}
+        g.j.mochila.append(fraca)
+        D.dar_uid(g)
+        g.j.hp = g.j.max_hp
+        estado = lambda: (g.j.hp, g.j.max_hp, g.j.rec, g.dia, g.periodo,  # noqa: E731
+                          [(m["id"], m["hp"], m["max_hp"]) for m in D.comitiva.membros(g)])
+        antes = estado()
+        respostas = iter(["forja", "forja", "voltar"])
+        g.menu = lambda *a, **k: next(respostas)  # entra, pede à forja duas vezes (redesenha), sai
+        g.ui.extra_resposta = {}
+        D.forja(g)
+        self.assertEqual(estado(), antes)
+
+
 class TestCasosDaDemonstracao(unittest.TestCase):
     def test_depois_dos_casos_de_conferencia_a_tentativa_funciona(self):
         g = jogo()
