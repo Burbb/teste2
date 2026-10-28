@@ -35,7 +35,9 @@
   box-shadow: inset 0 0 0 1px var(--fa-aresta), inset 0 3px 0 var(--fa-base), inset 0 -1px 0 var(--fa-fio);
 }
 :root body :is(#mundo .caminhos .caminho.clicavel, .tela .servico, .tela.loja .mercadoria, #doca .atalho, .tela .cartas > .cartao.clicavel,
-  .grupo-abas .grupo-aba, .tela .botao-grupo.sugerir):active > * { position: relative; top: 1px; }
+  .grupo-abas .grupo-aba, .tela .botao-grupo.sugerir):active > :not(kbd) { position: relative; top: 1px; }
+/* (1.214.2: a tecla do atalho da doca fica no canto, posicionada; com "> *", ela virava relativa e caía embaixo do nome
+   enquanto o botão estava pressionado) */
 /* foco do teclado: o anel de latão por dentro */
 :root body :is(#mundo .caminhos .caminho, .tela .servico, .tela.loja .mercadoria, #doca .atalho, .tela .cartas > .cartao,
   .grupo-abas .grupo-aba, .tela .botao-grupo.sugerir):focus-visible {
