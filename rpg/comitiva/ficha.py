@@ -124,7 +124,14 @@ def motivo_indisponivel(g, quem):
 
 
 def motivo_nao_veste(g, quem, item):
-    """A peça é de uma classe que esta pessoa não usa (ou None)."""
+    """A peça é de uma classe que esta pessoa não usa, ou pede um nível que ela não tem (o requisito da forja), ou None.
+    Vale em todos os caminhos de vestir do Inventário (clique duplo, menu, arrastar, troca entre personagens)."""
+    from ..forja.oficina import motivo_requisito
+    return motivo_classe(g, quem, item) or motivo_requisito(g, quem, item)
+
+
+def motivo_classe(g, quem, item):
+    """A peça é de uma classe que esta pessoa não usa (ou None): só a classe, sem o nível."""
     if not item.get("classe") or item["classe"] == classe_pecas(g, quem):
         return None
     if quem == HEROI:

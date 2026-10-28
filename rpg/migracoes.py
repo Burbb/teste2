@@ -5,13 +5,13 @@ acrescenta-se uma função `_vN_para_vN1` em MIGRACOES. Um save antigo passa por
 chegar à versão atual; assim nenhum código do jogo precisa se defender de saves velhos.
 """
 
-VERSAO_SAVE = 8
+VERSAO_SAVE = 9
 
 # Tudo o que o estado da partida guarda além do jogador, da semente e do gerador aleatório.
 CAMPOS_SAVE = ("mundo", "dia", "periodo", "clima", "passos", "flags", "historico", "contagem",
                "impulsos", "sementes", "rumores", "contratos", "ofertas", "lojas", "nemesis", "forcados",
                "proximo_id", "estatisticas", "hardcore", "bestiario", "registro",
-               "arquivo_run", "comitiva", "reserva")
+               "arquivo_run", "comitiva", "reserva", "materiais")
 
 ESPACOS_EQUIP = ("cabeca", "amuleto", "armadura", "maos", "arma", "secundaria", "pernas", "pes", "anel1", "anel2")
 
@@ -179,8 +179,59 @@ def _v7_para_v8(d):
     return d
 
 
+def _pecas_do_save(no):
+    """Toda peça de equipamento guardada no save (no herói, na bolsa, na comitiva, na reserva, nas lojas e nas ofertas):
+    um dicionário com espaço, bônus e nome."""
+    if isinstance(no, dict):
+        if "slot" in no and isinstance(no.get("bonus"), dict) and "nome" in no:
+            yield no
+        for v in no.values():
+            yield from _pecas_do_save(v)
+    elif isinstance(no, list):
+        for v in no:
+            yield from _pecas_do_save(v)
+
+
+def _passo_antigo_desfeito(valor):
+    """O valor de antes de um passo do ferreiro anterior (até a 1.214, a linha somava max(1, round(12%)) por passo)."""
+    for antes in range(int(valor) - 1, -1, -1):
+        if antes + max(1, round(antes * 0.12)) == valor:
+            return antes
+    return valor
+
+
+def _v8_para_v9(d):
+    """A forja (1.215.0, rpg/forja). O grupo ganha a pilha de materiais (vazia). As peças que podem ser gravadas ganham
+    os sulcos delas (o sorteio da própria peça, igual ao da criação). E as peças reforçadas pelo ferreiro anterior (até
+    +5, a linha principal somando 12% por passo, sem guardar a peça original) voltam à peça original, desfazendo a conta
+    antiga, e ficam no mesmo +N pelas regras da forja (a peça inteira, a partir da original). Rodar duas vezes não muda
+    nada."""
+    from .forja import encanto, oficina
+    d.setdefault("materiais", {})
+    classe = d["jogador"].get("classe")
+    linha = {"arma": "poder" if classe == "mago" else "atk", "armadura": "defesa",
+             "secundaria": {"guerreiro": "defesa", "arqueiro": "atk", "mago": "poder"}.get(classe)}
+    for it in _pecas_do_save(d):
+        n = it.get("reforco", 0)
+        if n and "bonus_base" not in it:
+            st = linha.get(it.get("slot"))
+            base = dict(it["bonus"])
+            if st and st in base:
+                v = base[st]
+                for _ in range(n):
+                    v = _passo_antigo_desfeito(v)
+                base[st] = v
+            it["bonus"] = dict(base)
+            it["bonus_base"] = base
+            it.setdefault("preco_base", it.get("preco", 0))
+            oficina.aplicar_nivel(it, n)
+        if encanto.tipo(it):
+            encanto.sortear_sulcos(it)
+    return d
+
+
 MIGRACOES = {1: _v1_para_v2, 2: _v2_para_v3, 3: _v3_para_v4, 4: _v4_para_v5, 5: _v5_para_v6, 6: _v6_para_v7,
-             7: _v7_para_v8}
+             7: _v7_para_v8, 8: _v8_para_v9}
 
 
 def migrar(dados):

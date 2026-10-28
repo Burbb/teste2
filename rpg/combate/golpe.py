@@ -7,6 +7,8 @@ from ..grimorio import chance_critico, mult_critico
 from ..modificadores import disparar, mod, mult, nomes
 from ..estados import ESTADOS, NOMES, NOMES as NOMES_EFEITOS, no_golpe
 from ..dados import CLIMAS
+from ..forja import encanto, fracao
+from ..forja.fracao import mod_pontos
 from .. import sobrevivencia, telemetria
 from .. import balanceamento as bal
 from .eficacia import mult_tracos
@@ -37,8 +39,19 @@ class Golpes:
     # ------------------------------------------------------------ dano
     def atacar(self, u, alvo, mult, tipo="fisico", alcance="corpo", stat="atk", crit_extra=0.0, bonus=0,
                rotulo=None, pode_esquivar=True, detalhar=True, reacao=False):
-        """reacao: um golpe que sai sozinho, fora da vez de quem o dá (o contra-ataque): a tela põe o nome dele na
-        cabeça de quem golpeia, como põe o das habilidades."""
+        """Um golpe, com as gravações da forja (rpg/forja/encanto.py): o Carrasco aumenta o dano contra o inimigo
+        ferido; depois de acertar, a Brasa de quem bateu, e o Revide e a Geada de quem apanhou. Uma reação (o Revide, o
+        contra-ataque) não dispara gravação nenhuma."""
+        if not reacao and not getattr(self, "_encanto_secundario", False):
+            mult *= encanto.mult_carrasco(self, u, alvo)
+        dano = self.golpear(u, alvo, mult, tipo, alcance, stat, crit_extra, bonus, rotulo, pode_esquivar, detalhar, reacao)
+        encanto.ao_golpear(self, u, alvo, dano, alcance, reacao, rotulo)
+        return dano
+
+    def golpear(self, u, alvo, mult, tipo="fisico", alcance="corpo", stat="atk", crit_extra=0.0, bonus=0,
+                rotulo=None, pode_esquivar=True, detalhar=True, reacao=False):
+        """A conta do golpe (sem as gravações). reacao: um golpe que sai sozinho, fora da vez de quem o dá (o
+        contra-ataque): a tela põe o nome dele na cabeça de quem golpeia, como põe o das habilidades."""
         if alvo is None or not alvo.vivo:
             return 0
         reage = {"reacao": True} if reacao else {}
@@ -157,7 +170,7 @@ class Golpes:
                 # arredonda (e pelo menos 1): truncar zerava o roubo dos golpes pequenos e a build parecia não funcionar
                 self.curou(u, u.curar(max(1, round(dano * roubo))), "roubo", fonte=alvo,
                            rotulo=(nomes(u, "roubo_vida") or ["Roubo de vida"])[0])
-        espinhos = (mod(alvo, "espinhos") if (alvo is self.j or veste(alvo)) and dano and alcance == "corpo"
+        espinhos = (mod_pontos(alvo, "espinhos") if (alvo is self.j or veste(alvo)) and dano and alcance == "corpo"
                     and u in self.inimigos else 0)
         if espinhos and u.vivo:
             u.hp = max(0, u.hp - espinhos)
@@ -264,6 +277,9 @@ class Golpes:
         return True
 
     def ao_morrer(self, c, por=None, tipo=None):
+        fracao.tique(por)  # a vida por abate de peças reforçadas acumula a fração (forja/fracao.py)
+        if por is not self.j:
+            fracao.tique(self.j)
         if c is self.j:
             return
         if c in self.aliados:
@@ -280,13 +296,14 @@ class Golpes:
         ]), "verde+negrito")
         j = self.j
         disparar(self, j, "morte", alvo=c, por=por, tipo=tipo)  # Colheita, Rei dos Mortos...
+        encanto.na_morte(self, c, por)  # o Eco gravado de quem derrubou
         if por is not j:
-            if veste(por) and mod(por, "vida_abate"):  # a peça de um companheiro: a vida é de quem derrubou
-                self.curou(por, por.curar(mod(por, "vida_abate")),
+            if veste(por) and mod_pontos(por, "vida_abate"):  # a peça de um companheiro: a vida é de quem derrubou
+                self.curou(por, por.curar(mod_pontos(por, "vida_abate")),
                            rotulo=(nomes(por, "vida_abate") or ["Vida por abate"])[0], conta=False)
             return
-        if mod(j, "vida_abate"):  # a tela mostra de onde veio a vida (antes, a barra só subia no redesenho)
-            self.curou(j, j.curar(mod(j, "vida_abate")), rotulo=(nomes(j, "vida_abate") or ["Vida por abate"])[0],
+        if mod_pontos(j, "vida_abate"):  # a tela mostra de onde veio a vida (antes, a barra só subia no redesenho)
+            self.curou(j, j.curar(mod_pontos(j, "vida_abate")), rotulo=(nomes(j, "vida_abate") or ["Vida por abate"])[0],
                        conta=False)
         disparar(self, j, "abate", alvo=c, tipo=tipo)  # Frenesi, Assassino, Coração Ardente...
 

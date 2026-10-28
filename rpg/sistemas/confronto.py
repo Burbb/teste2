@@ -6,6 +6,7 @@ from ..combate import Combate
 from ..dados import AFIXOS, BIOMAS, CRIATURAS_DA_FENDA, FAMILIAS, afixos_de, retrato
 from .. import inimigos
 from ..inimigos import criar
+from ..forja import oficina
 from ..itens import gerar_equip
 from ..mundo import nivel_regiao, vizinhos
 from ..regras import Derrota
@@ -191,3 +192,4 @@ class Confronto:
         if chefe or any(e.unico for e in derrotados) or self.chance(bal.BAU_ELITE * elites if elites else bal.BAU_COMUM):
             self.contar_achado("Entre os despojos, um baú pequeno, de ferro, trancado.", "amarelo")
             self.dar("bau")
+        oficina.materiais_da_luta(self, derrotados)  # a forja: fragmentos e, mais raro, a essência da criatura

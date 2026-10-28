@@ -2,19 +2,17 @@
 
 from .. import abertura, comitiva, consequencias
 from .. import eventos
-from ..entidades import nome_stat
 from ..eventos.vila import ouvir_rumor
-from .. import itens
+from ..forja import oficina
 from .. import sobrevivencia
-from ..telemetria import registrar
 
 
 def cena_forja():
     """O ambiente da forja para a interface gráfica (telas/cena-forja.js; as de texto ignoram): a oficina com o ferreiro
-    trabalhando e os dois pontos. O Ferreiro leva aos cartões de reforço (é neles que se escolhe a peça); a Saída é o
+    trabalhando e os dois pontos. O Ferreiro leva aos serviços da forja (a peça se escolhe na janela deles); a Saída é o
     Voltar do menu."""
     return {"cena": "forja", "titulo": "A forja", "pagina": True, "pontos": [
-        {"id": "ferreiro", "nome": "Ferreiro", "faz": "reforçar o que você usa", "estado": "O ferreiro, na bigorna.",
+        {"id": "ferreiro", "nome": "Ferreiro", "faz": "reforçar e encantar o equipamento", "estado": "O ferreiro, na bigorna.",
          "servicos": True},
         {"id": "saida", "nome": "Saída", "faz": "voltar à vila", "estado": "A porta para a rua do Vau.",
          "acao": {"voltar": True}},
@@ -22,67 +20,9 @@ def cena_forja():
 
 
 class Servicos:
-    def pecas_da_forja(self):
-        """O que o ferreiro pode reforçar: (espaço, item, atributo, ganho, custo), com ganho e custo nulos no limite."""
-        j = self.j
-        secundaria = {"guerreiro": "defesa", "arqueiro": "atk", "mago": "poder"}[j.classe]
-        pecas = []
-        for slot, stat in (("arma", "poder" if j.classe == "mago" else "atk"), ("armadura", "defesa"),
-                           ("secundaria", secundaria)):
-            item = j.equip[slot]
-            if not item:
-                continue
-            ref = item.get("reforco", 0)
-            if ref >= 5:
-                pecas.append((slot, item, stat, None, None))
-                continue
-            pecas.append((slot, item, stat, max(1, round(item["bonus"].get(stat, 0) * 0.12)),
-                          self.preco(int(40 * (ref + 1) ** 1.6))))
-        return pecas
-
     def ferreiro(self):
-        j = self.j
-        while True:
-            self.ui.cena("A forja", self.loc["nome"], "menu")  # a cada volta: na tela gráfica, a forja se redesenha
-            self.ui.painel("cena", cena_forja())  # a oficina no quadro de cima, antes do balcão
-            pecas = self.pecas_da_forja()
-            dados = {"ouro": j.ouro, "pecas": [
-                {"slot": slot, "item": itens.ficha(item, j.nome_recurso), "reforco": item.get("reforco", 0),
-                 "ganho": ganho and f"+{ganho} {nome_stat(stat, j.nome_recurso)}", "custo": custo,
-                 "pode": custo is not None and j.ouro >= custo,
-                 "motivo": "Ouro insuficiente." if custo is not None and j.ouro < custo else None}
-                for slot, item, stat, ganho, custo in pecas]}
-            if self.ui.painel("ferreiro", dados):
-                # Tela gráfica: cada peça é um cartão; o clique reforça. Fora isso, só sair.
-                opcoes = [(f"Reforçar {item['nome']}", (item, stat, ganho, custo), {"reforcar": slot})
-                          for slot, item, stat, ganho, custo in pecas if custo is not None]
-                esc = self.menu("", opcoes + [("Voltar", "voltar", {"voltar": True, "lugar": True})])
-            else:
-                opcoes = []
-                for slot, item, stat, ganho, custo in pecas:
-                    ref = item.get("reforco", 0)
-                    if custo is None:
-                        opcoes.append((f"{itens.rotulo(item)} — já está no limite (+5)", None))
-                        continue
-                    opcoes.append((f"{itens.rotulo(item)} +{ref} → +{ref + 1}: +{ganho} {nome_stat(stat, j.nome_recurso)} — "
-                                   f"{custo} ouro", (item, stat, ganho, custo)))
-                esc = self.menu(f"O ferreiro, um homem sem dois dedos, cospe na forja. \"Ouro primeiro.\" "
-                                f"(você tem {j.ouro})", opcoes + [("Voltar", "voltar")])
-            if esc == "voltar":
-                return
-            if esc is None:
-                continue
-            item, stat, ganho, custo = esc
-            if j.ouro < custo:
-                self.dizer("\"Volta quando tiver o dinheiro.\"", "vermelho")
-                continue
-            self.perder_ouro(custo, destino="ferreiro")
-            item["bonus"][stat] = item["bonus"].get(stat, 0) + ganho
-            item["reforco"] = item.get("reforco", 0) + 1
-            item["nome"] = item["nome"].split(" +")[0] + f" +{item['reforco']}"
-            j.recalcular()
-            registrar(self, "ferreiro", item=item["nome"], stat=stat, ganho=ganho, custo=custo)
-            self.dizer(f"Faíscas, marteladas, água fervendo. {item['nome']}: +{ganho} {nome_stat(stat, self.j.nome_recurso)}.", "verde")
+        """A forja (rpg/forja/oficina.py): reforçar, encantar, transferir e desmontar."""
+        oficina.forja(self)
 
     def fala_curandeira_sem_ferimento(self):
         """O que quem atende na cabana diz quando não há nada para tratar no herói (no prédio da vila e na cabana)."""

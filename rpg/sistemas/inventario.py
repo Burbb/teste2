@@ -5,6 +5,7 @@ from .. import atributos as atr
 from .. import grimorio, itens
 from ..itens import CONSUMIVEIS, EM_ALIADO, PENA_FENIX_AGE_SOZINHA, descrever_bonus
 from .. import comitiva
+from ..forja import encanto, oficina
 from .. import sobrevivencia
 from .. import texto as tx
 from ..telemetria import registrar
@@ -23,6 +24,8 @@ class Inventario:
             return
         rec = self.j.nome_recurso
         usa = self.pode_usar(item)
+        # a peça da classe acima do nível: guardar diz por quê ("requer nível 7"), não "para vender"
+        requer = not usa and self.da_classe(item) and oficina.motivo_requisito(self, comitiva.ficha.HEROI, item)
         cabe = len(self.j.mochila) < LIMITE_MOCHILA
         espacos = itens.espacos(item["slot"])
         equipados = [it for it in (self.j.equip[s] for s in espacos) if it]
@@ -34,7 +37,8 @@ class Inventario:
             equipar = [("Equipar agora", "equipar", {"achado": "equipar"})] if usa else []
         # Na tela gráfica, o cartão e estas opções moram numa janela própria (fora do log): {"achado": ...}.
         opcoes = equipar + [o for o in (
-            ("Guardar na mochila" + ("" if usa else " (para vender)"), "guardar", {"achado": "guardar"}) if cabe else None,
+            ("Guardar na mochila" + ("" if usa else f" ({requer.rstrip('.').lower()})" if requer else " (para vender)"),
+             "guardar", {"achado": "guardar"}) if cabe else None,
             ("Deixar para trás (mochila cheia)", "deixar", {"achado": "deixar"}) if not cabe else None,
         ) if o]
         # Os rótulos vão também com o cartão: a janela reserva desde o começo o lugar exato dos botões, que só chegam
@@ -115,8 +119,19 @@ class Inventario:
             return destino
         return next((s for s in opcoes if not self.j.equip.get(s)), opcoes[0])
 
-    def pode_usar(self, item):
+    def da_classe(self, item):
         return not item.get("classe") or item["classe"] == self.j.classe
+
+    def pode_usar(self, item):
+        """A peça é da classe do herói e ele tem o nível que ela pede (o requisito da forja: a base e as gravações). Vale
+        no achado, no mercado e na troca de arma na luta; quem já veste uma peça acima do nível não a perde."""
+        return self.da_classe(item) and not oficina.motivo_requisito(self, comitiva.ficha.HEROI, item)
+
+    def motivo_uso(self, item):
+        """Por que o herói não pode usar a peça (a classe ou o nível que ela pede); None quando pode."""
+        if not self.da_classe(item):
+            return "Não é para a sua classe."
+        return oficina.motivo_requisito(self, comitiva.ficha.HEROI, item)
 
     def desequipar(self, slot):
         j = self.j
@@ -264,6 +279,13 @@ class Inventario:
                   equip=equip and {"item": equip["nome"], "raridade": equip.get("raridade", "comum")})
         if equip:
             self.oferecer_equip(equip)
+        # a forja: o baú, metade das vezes, 1 Fragmento de Têmpera e, às vezes, uma essência qualquer, do tier do nível
+        # do herói (chances provisórias)
+        if self.chance(0.5):
+            oficina.dar_material(self, "fragmento", 1, "bau")
+        if self.chance(0.25):
+            oficina.dar_material(self, encanto.material(self.rng.choice(encanto.ORDEM), oficina.tier_do_nivel(self.j.nivel)),
+                                 1, "bau")
 
     def usar_no_animal(self, k):
         """A poção também serve no animal do patrulheiro."""

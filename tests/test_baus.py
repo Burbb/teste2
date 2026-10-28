@@ -105,6 +105,9 @@ class TestBaus(unittest.TestCase):
             for e in baus:
                 for k in e["suprimentos"]:
                     suprimentos[k] = suprimentos.get(k, 0) + 1
+            for e in g.registro:  # os materiais da forja que os baús deram entram no mesmo quadro
+                if e["t"] == "material" and e["origem"] == "bau":
+                    suprimentos[e["id"]] = suprimentos.get(e["id"], 0) + e["qtd"]
             self.assertEqual({x["id"]: x["qtd"] for x in d["itens"]}, suprimentos)
             nomes = [x["nome"] for x in d["equipamentos"]]
             self.assertEqual(len(nomes), len([e for e in baus if e["equip"]]))

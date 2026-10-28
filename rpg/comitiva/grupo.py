@@ -76,16 +76,20 @@ def atributos(g, m):
     e as peças vestidas (ficha.extras). Sem pontos gastos nem peças, os de sempre."""
     from ..balanceamento import RECURSO_COMITIVA
     from .ficha import extras
+    from ..forja.fracao import com_fracao, fracao
+    from ..forja.regras import limpo
     d = COMPANHEIROS[m["id"]]
     nv = g.j.nivel - 1
     b, c = d["base"], d["cresc"]
     ex = extras(m)
+    # a casa decimal das peças reforçadas (forja/fracao.py); sem peça fracionária, os números de antes
+    atk, poder = b["atk"] + c["atk"] * nv + ex["atk"], b["poder"] + c["poder"] * nv + ex["poder"]
     return {
         "max_hp": int(b["hp"] + c["hp"] * nv) + int(round(ex["max_hp"])),
-        "atk": b["atk"] + c["atk"] * nv + ex["atk"],
-        "poder": b["poder"] + c["poder"] * nv + ex["poder"],
-        "defesa": int(b["defesa"] + c["defesa"] * nv + ex["defesa"]),
-        "agi": b["agi"] + int(round(ex["agi"])),
+        "atk": limpo(atk) if fracao(ex["atk"]) else atk,
+        "poder": limpo(poder) if fracao(ex["poder"]) else poder,
+        "defesa": com_fracao(int, b["defesa"] + c["defesa"] * nv + ex["defesa"], fracao(ex["defesa"])),
+        "agi": b["agi"] + com_fracao(lambda x: int(round(x)), ex["agi"], fracao(ex["agi"])),
         "max_rec": RECURSO_COMITIVA + int(round(ex["max_rec"])),
     }
 

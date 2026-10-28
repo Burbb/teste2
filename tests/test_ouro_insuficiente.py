@@ -73,15 +73,21 @@ class TestMotivos(unittest.TestCase):
         g.j.ferimentos.append({"id": "corte", "dias": sobrevivencia.FERIMENTOS["corte"]["dias"], "tratado": False})
         paineis = []
         g.ui.painel = lambda tipo, dados: paineis.append((tipo, dados)) or True
+        g.materiais = {"fragmento": 99}  # a forja: o que falta é só o ouro
         for ouro, motivo in ((0, "Ouro insuficiente."), (999, None)):
             g.j.ouro = ouro
             voltar = Anotador(g, lambda opcoes: next(o[1] for o in opcoes if o[2] and o[2].get("voltar")))
             g.ferreiro()
             g.curandeiro()
             g.menu = voltar.menu
-            forja = next(d for t, d in reversed(paineis) if t == "ferreiro")
+            forja = next(d for t, d in reversed(paineis) if t == "forja")
             cabana = next(d for t, d in reversed(paineis) if t == "curandeira")
-            self.assertEqual({p["motivo"] for p in forja["pecas"] if p["custo"] is not None}, {motivo})
+            # na forja, o motivo de cada reforço diz quanto ouro falta ("Faltam 20 de ouro"), no próprio passo
+            motivos = {p["passos"][0]["motivo"] for p in forja["pecas"] if p.get("passos")}
+            if motivo:
+                self.assertTrue(motivos and all(m and m.endswith("de ouro") for m in motivos), motivos)
+            else:
+                self.assertEqual(motivos, {None})
             self.assertEqual({f["motivo"] for f in cabana["ferimentos"]}, {motivo})
 
     def test_mercado_diz_o_motivo_de_cada_um(self):

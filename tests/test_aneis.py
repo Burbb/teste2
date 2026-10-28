@@ -24,6 +24,7 @@ class Tela(InterfaceGrafica, Roteiro):
 def heroi(ui, aneis=2):
     g = Jogo(ui, seed=3, pasta_saves=tempfile.mkdtemp())
     g.iniciar("Teste", "guerreiro")
+    g.j.nivel = 4  # o nível que os anéis pedem (o requisito da forja: o nível da peça menos 1)
     g.mundo["atual"] = next(l for l in g.mundo["locais"] if l["tipo"] == "vila")["id"]
     rng = random.Random(2)
     if aneis >= 1:

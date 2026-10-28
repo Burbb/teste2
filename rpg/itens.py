@@ -50,6 +50,8 @@ def para_tela():
     d = {k: {"icone": c["icone"], "nome": c["nome"], "desc": c["desc"], "hud": c["hud"]}
          for k, c in CONSUMIVEIS.items()}
     d.update({k: dict(r) for k, r in RECURSOS.items()})
+    from .forja.oficina import MATS  # os materiais da forja (o espólio e o aviso de chegada os desenham também)
+    d.update({k: {"icone": m["icone"], "nome": m["nome"], "desc": m["desc"], "hud": None} for k, m in MATS.items()})
     return d
 
 
@@ -309,6 +311,20 @@ def _unico(rng, classe, nivel, slot):
 
 
 def fazer_unico(u, nivel):
+    """Um único do catálogo, com os sulcos dele quando pode ser gravado (_com_sulcos)."""
+    return _com_sulcos(_fazer_unico(u, nivel))
+
+
+def _com_sulcos(item):
+    """Os sulcos nascem com a peça (a forja, rpg/forja/encanto.py): a que pode ser gravada (arma, peito, escudo, foco)
+    sorteia os dela pela própria peça, sem gastar o sorteio do jogo; o resultado fica guardado nela."""
+    from .forja import encanto
+    if item and encanto.tipo(item):
+        encanto.sortear_sulcos(item)
+    return item
+
+
+def _fazer_unico(u, nivel):
     """Um único do catálogo (UNICOS) no nível dado: o que o sorteio de lendário entrega, e o que uma missão dá pelo
     nome (a Pele do Penitente, a quem destrói a guardiã do Turvo)."""
     forca = _escala(nivel) * bal.ITEM_UNICO_FORCA
@@ -332,6 +348,11 @@ def _preco(bonus, raridade):
 
 
 def gerar_equip(rng, classe, nivel, slot=None, qualidade=0, raridade=None):
+    """Uma peça nova do gerador (o drop, o mercado, as recompensas), com os sulcos dela quando pode ser gravada."""
+    return _com_sulcos(_gerar_equip(rng, classe, nivel, slot, qualidade, raridade))
+
+
+def _gerar_equip(rng, classe, nivel, slot=None, qualidade=0, raridade=None):
     raridade = raridade or rolar_raridade(rng, qualidade)
     if raridade == "lendario":
         item = _unico(rng, classe, nivel, slot)
@@ -420,11 +441,18 @@ def rotulo(item):
 
 
 def ficha(it, recurso=None, **extra):
-    """O item como as telas gráficas o desenham (mercado, mochila, saque). `recurso`: Mana, Vigor ou Foco."""
+    """O item como as telas gráficas o desenham (mercado, mochila, saque, forja). `recurso`: Mana, Vigor ou Foco. Com o
+    estado da peça (a forja): o nível de reforço, o requisito de nível e, na que pode ser gravada, os sulcos
+    (`encantos`: uma entrada por sulco, None no vazio) e o que as gravações fornecem; a tela desenha disso, nunca do
+    nome."""
     if not it:
         return None
+    from .forja import encanto, oficina
     u = unico_de(it)
-    return dict({"nome": rotulo(it), "raridade": it.get("raridade", "comum"), "bonus": descrever_bonus(it["bonus"], recurso),
+    forja = {"reforco": it.get("reforco", 0), "requisito": encanto.requisito(it)}
+    if it.get("encantos") is not None:
+        forja.update(encantos=[oficina.encanto_tela(k) for k in it["encantos"]], efeitos=oficina.efeitos_peca(it))
+    return dict({**forja, "nome": rotulo(it), "raridade": it.get("raridade", "comum"), "bonus": descrever_bonus(it["bonus"], recurso),
                  # a regra do único (o nome dela vem antes dos dois-pontos: a comparação diz "▲ Revide")
                  **({"efeito": u["efeito"], "efeito_nome": u["efeito"].split(":")[0]} if u and u.get("efeito") else {}),
                  "nivel": it.get("nivel"), "icone": icone_de(it), "slot": it.get("slot"), "base": it.get("base"), "bonus_bruto": it["bonus"],
@@ -436,12 +464,9 @@ def cor(item):
 
 
 def descrever_bonus(bonus, recurso=None):
-    """'+3 Defesa, +10 Mana'. `recurso`: o nome do recurso do herói (Mana, Vigor, Foco); sem ele, os três."""
+    """'+3 Defesa, +10 Mana, +4,5% Crítico'. `recurso`: o nome do recurso do herói (Mana, Vigor, Foco); sem ele, os
+    três. A casa decimal (que o reforço traz) aparece em vírgula, só quando existe."""
     from .entidades import nome_stat
-    partes = []
-    for k, v in bonus.items():
-        if k in PERCENTUAIS:
-            partes.append(f"+{v}% {nome_stat(k, recurso)}")
-        else:
-            partes.append(f"{'+' if v >= 0 else ''}{v} {nome_stat(k, recurso)}")
-    return ", ".join(partes)
+    from .forja.regras import fmt
+    return ", ".join(f"{'+' if v >= 0 else ''}{fmt(v)}{'%' if k in PERCENTUAIS else ''} {nome_stat(k, recurso)}"
+                     for k, v in bonus.items())

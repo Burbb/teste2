@@ -1,5 +1,7 @@
 """Fotografia do estado do jogo em JSON, para a interface web desenhar painéis, mapa e combate."""
 
+import re
+
 from .. import atributos as atr
 from .. import balanceamento as bal
 from .. import abertura, capitulo, comitiva, consequencias, grimorio, mapa, missoes, sobrevivencia
@@ -10,6 +12,9 @@ from .. import estados
 from ..estados import NOMES as NOMES_EFEITOS, para_tela
 from ..dados import BIOMAS, CLIMAS, PERIODOS, retrato
 from .. import itens
+from ..forja import oficina
+from ..forja.fracao import fracao
+from ..forja.regras import fmt
 from ..itens import CONSUMIVEIS, EM_ALIADO, ficha
 from ..mundo import nivel_regiao
 from ..jogo import NOMES_TESTE
@@ -259,6 +264,14 @@ def _soma(lista, total):
             ).replace("+ -", "− ") + f" = {_num(round(total, 1))}"
 
 
+STAT_DO_NOME = {"Ataque": "atk", "Defesa": "defesa", "Agilidade": "agi", "Poder": "poder"}
+
+
+def _virgula(t):
+    """"12.4" → "12,4" num texto (as dicas dos atributos com a casa decimal das peças reforçadas)."""
+    return re.sub(r"(\d)\.(\d)", r"\1,\2", t) if isinstance(t, str) else t
+
+
 def ficha_companheiro(g, m):
     """A ficha de um companheiro na janela do grupo (1.213.0), no formato da do herói: os números que valem na luta
     (com a lealdade), de onde vêm, os atributos com o "+" dos pontos livres, o crítico, a Tenacidade e as peças."""
@@ -324,7 +337,9 @@ def ficha_companheiro(g, m):
             "pecas": f"Usa peças de {f.NOME_CLASSE[f.CLASSE_PECAS[cid]]} e as sem classe.",
             "nivel": j.nivel, "hp": m["hp"], "max_hp": m["max_hp"], "max_rec": at["max_rec"], "recurso": rec,
             "ferido": m["ferido"], "indisponivel": f.motivo_indisponivel(g, cid) if not g.combate_ativo else None,
-            "atributos": {k: int(round(v)) for k, v in valores.items()}, "atributos_info": info,
+            # a casa decimal das peças reforçadas (forja/fracao.py) aparece em vírgula, só quando existe
+            "atributos": {k: fmt(v) if fracao(f.extras(m)[STAT_DO_NOME[k]]) else int(round(v)) for k, v in valores.items()},
+            "atributos_info": info,
             "atributos_penal": {}, "atributos_base": base, "pontos_atributo": m["pontos_atributo"],
             "sugestao": sugestao, "conceitos": conceitos,
             "equip": {slot: _item(it, rec) for slot, it in f.corpo(g, cid).items()}}
@@ -345,8 +360,12 @@ def heroi(g):
         # a vida máxima que ferimentos e fome bloqueiam agora (None sem bloqueio): a barra mede a vida saudável
         "vida_bloqueio": sobrevivencia.vida_bloqueio(j),
         "vida_por_um_fio": bal.VIDA_POR_UM_FIO,
-        "atributos": {"Ataque": j.atk, "Defesa": j.defesa, "Agilidade": j.agi, "Poder": j.poder},
-        "atributos_info": explicar_atributos(g), "atributos_penal": penalidades_atributos(j),
+        # a casa decimal das peças reforçadas (forja/fracao.py), em vírgula, nos números e nas dicas deles
+        "atributos": {k: fmt(v) if isinstance(v, float) else v
+                      for k, v in {"Ataque": j.atk, "Defesa": j.defesa, "Agilidade": j.agi, "Poder": j.poder}.items()},
+        "atributos_info": {k: [_virgula(x) for x in v] for k, v in explicar_atributos(g).items()},
+        "atributos_penal": penalidades_atributos(j),
+        "materiais": oficina.materiais_tela(g),  # a seção Materiais do Inventário
         "atributos_base": explicar_atributos_base(g), "pontos_atributo": j.pontos_atributo,
         "conceitos": explicar_conceitos(g),
         "reputacao_info": explicar_reputacao(g),

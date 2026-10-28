@@ -3,7 +3,9 @@
 from .. import texto as tx
 from ..classes import CLASSES
 from ..habilidades import custo_flechas, descricao_habilidade, efetiva, versao
-from ..modificadores import disparar, mod, nomes
+from ..modificadores import disparar, nomes
+from ..forja import fracao
+from ..forja.fracao import mod_pontos
 from ..dados import TRACOS
 from ..inimigos import NOMES_HABS_INIMIGO
 from ..itens import CONSUMIVEIS, EM_ALIADO, PENA_FENIX_AGE_SOZINHA, USAVEIS_NA_LUTA, descricao, ficha
@@ -25,9 +27,10 @@ class AcoesDoHeroi:
     # ------------------------------------------------------------ jogador
     def fase_jogador(self):
         j = self.j
+        fracao.tique(j)  # a cura por turno de peças reforçadas acumula a fração (forja/fracao.py)
         self.mostrar_estado()
-        if mod(j, "regen_vida") and j.hp < j.max_hp:  # discreta na tela: o número e a barra, sem pausa
-            self.curou(j, j.curar(mod(j, "regen_vida")), tipo="discreto", conta=False,
+        if mod_pontos(j, "regen_vida") and j.hp < j.max_hp:  # discreta na tela: o número e a barra, sem pausa
+            self.curou(j, j.curar(mod_pontos(j, "regen_vida")), tipo="discreto", conta=False,
                        rotulo=(nomes(j, "regen_vida") or ["Regeneração"])[0])
         if self.processar_efeitos(j) or not j.vivo:
             return None

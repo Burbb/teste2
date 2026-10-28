@@ -189,11 +189,18 @@ class Jogador(Combatente):
         return totais, extras
 
     def recalcular(self):
+        from .forja.fracao import com_fracao, nas_pecas
         from .sobrevivencia import multiplicadores
         totais, extras = self.totais()
         penal = multiplicadores(self)
         for stat in STATS:
             setattr(self, stat, max(1, int(round(totais[stat] * penal.get(stat, 1.0)))))
+        # a casa decimal das peças reforçadas (forja/fracao.py): Ataque, Poder, Defesa e Agilidade a levam para a luta;
+        # sem peça fracionária, o número é o de antes
+        for stat in ("atk", "poder", "defesa", "agi"):
+            f, p = nas_pecas(self.equip, stat), penal.get(stat, 1.0)
+            if f:
+                setattr(self, stat, max(1, com_fracao(lambda x: int(round(x)), totais[stat] * p, f * p)))
         self.regen = CLASSES[self.classe]["base"]["regen"] + extras.get("regen", 0)
         self.hp = min(self.hp, self.max_hp)
         self.rec = min(self.rec, self.max_rec)
@@ -205,6 +212,8 @@ class Jogador(Combatente):
     def para_dict(self):
         d = dict(vars(self))
         d["efeitos"] = {}
+        for k in ("_tique", "_fracao"):  # os contadores da fração por disparo (forja/fracao.py) são da luta
+            d.pop(k, None)
         return d
 
     @classmethod

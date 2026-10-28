@@ -69,7 +69,8 @@ class Loja:
                if j.classe == "arqueiro" else []),
             "equipamentos": [dict(item(it, self.preco(it["preco"])), motivo=self.motivo_compra_equip(it),
                                   sem_ouro=j.ouro < self.preco(it["preco"])) for it in self.estoque()],
-            "mochila": [dict(item(it, it["preco"] // 2), usavel=self.pode_usar(it)) for it in j.mochila],
+            "mochila": [dict(item(it, it["preco"] // 2), usavel=self.pode_usar(it), motivo_uso=self.motivo_uso(it))
+                        for it in j.mochila],
             "recompra": [dict(item(it, valor), motivo=self.motivo_recompra(valor), sem_ouro=j.ouro < valor)
                          for it, valor in self.recompra],
         }

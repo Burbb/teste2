@@ -5,6 +5,7 @@ from contextlib import contextmanager
 from .. import texto as tx
 from ..modificadores import disparar, mod, nomes
 from ..estados import ESTADOS, NOMES, NOMES as NOMES_EFEITOS, dano_do_tique
+from ..forja import encanto
 from ..entidades import Combatente
 from .. import abertura, comitiva, telemetria
 from .. import balanceamento as bal
@@ -246,6 +247,7 @@ class Combate(Golpes, AcoesDoHeroi, TurnosDosOutros):
             self.j.aplicar("iniciativa", 2, bal.INICIATIVA_BONUS)
             self.lance("surpresa", de="j", alvos=[self.uid(e) for e in self.inimigos_vivos()])
         disparar(self, self.j, "inicio_combate")  # Aura de Proteção, Armadilheiro...
+        encanto.no_inicio(self)  # a Vigília gravada
         abertura.dica_texto(self.g, "combate")  # na interface de texto, a orientação da luta numa linha
 
         # A ordem (etapa 4, roadmapIDEIAS/26): calculada uma vez, pela Agilidade, e fixa a luta inteira. Cada um tem a

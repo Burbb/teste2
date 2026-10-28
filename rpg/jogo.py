@@ -91,6 +91,7 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
         self.registro = []
         self.arquivo_run = None
         self.bestiario = {}
+        self.materiais = {}  # os materiais da forja (fragmentos e essências): pilhas do grupo, fora da bolsa
         self.estatisticas = {"abates": 0, "eventos": 0, "ouro_ganho": 0, "chefes": 0, "quedas": 0}
 
     # ================================================================ atalhos
@@ -572,8 +573,8 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
             *self.opcoes_templo(),
             ("Curandeira: tratar ferimentos e infecções", "curandeiro", {"predio": "curandeiro"}) if j.ferimentos else None,
             # A oferta única do broquel (saves de antes da E7) divide o balcão da forja com o reforço: dois cartões.
-            ("Ferreiro: reforçar arma ou armadura", "ferreiro",
-             {"predio": "ferreiro", **({"curto": "Reforçar arma ou armadura", "efeito": "Arma, peito e apoio, até +5"}
+            ("Ferreiro: a forja", "ferreiro",
+             {"predio": "ferreiro", **({"curto": "A forja", "efeito": "Reforçar, encantar, transferir e desmontar"}
                                        if broquel else {})}),
             ("Ferreiro: o broquel que trouxeram da capela", "broquel",
              {"predio": "ferreiro", "servico": "broquel", "curto": "O broquel que trouxeram da capela",
