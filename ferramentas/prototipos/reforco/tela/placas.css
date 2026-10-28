@@ -92,7 +92,9 @@ body[data-rf-placas="bancada"] {
 }
 :root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) :where(#mundo .caminhos .caminho.clicavel, .tela .servico:not(.caro), .tela.loja .mercadoria:not(.caro),
   .tela .cartas > .cartao.clicavel, .balcao-predio .voltar-vila, .esp-olhar, .esp-confirmar, .festa.fb2-spec .continuar, #heroi .talento-aviso,
-  #doca .atalho, .grupo-abas .grupo-aba, .tela .botao-grupo.sugerir):active > * { position: relative; top: 1px; }
+  .grupo-abas .grupo-aba, .tela .botao-grupo.sugerir):active > :not(kbd) { position: relative; top: 1px; }
+/* na doca, só o ícone e o nome descem (a tecla mora no canto, posicionada; antes ela caía embaixo do nome) */
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) #doca .atalho:active > :is(.atalho-icone, .atalho-nome) { position: relative; top: 1px; }
 /* foco do teclado: o anel de latão por dentro, com a lateral ainda à vista */
 :root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) :where(#mundo .caminhos .caminho, .tela .servico, .tela.loja .mercadoria, .tela .cartas > .cartao,
   .balcao-predio .voltar-vila, .esp-olhar, .esp-confirmar, .festa.fb2-spec .continuar, #heroi .talento-aviso, #doca .atalho,
@@ -180,4 +182,62 @@ body[data-rf-placas="bancada"] {
   :root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) .loja-topo { padding: 6px 14px 6px 12px; }
   :root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) .tela .servico { --pl-pb: 3px; }
   :root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) .balcao-predio .voltar-vila { --pl-pb: 2px; padding-top: 5px; }
+}
+
+/* ------------------------------------------------------------ 18ª, segunda passada: a referência de composição do Jean
+   (a forja com os quatro serviços em 2 × 2, as placas como família comum, a barra de baixo contínua). Só a composição e
+   a família vêm dela; o acabamento continua o da bancada, em pixel. */
+/* os rebites pela escala: os cartões grandes de serviço com um em cada canto; os médios (Caminhos, os cartões da
+   Comitiva) com um pino simples de 2 × 2 pixels; os pequenos (botões, abas, a doca), nada. Numa camada por cima, presa à
+   placa: o mouse, a pressão e a seleção não os apagam */
+body[data-rf-placas="bancada"] {
+  --pl-pino: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2 2' shape-rendering='crispEdges'%3E%3Crect width='1' height='1' fill='%23969aa2'/%3E%3Crect x='1' width='1' height='1' fill='%23585c64'/%3E%3Crect y='1' width='1' height='1' fill='%23585c64'/%3E%3Crect x='1' y='1' width='1' height='1' fill='%2316171a'/%3E%3C/svg%3E");
+  --pl-pinos: var(--pl-pino) 5px 5px / 4px 4px no-repeat, var(--pl-pino) calc(100% - 5px) 5px / 4px 4px no-repeat,
+    var(--pl-pino) 5px calc(100% - 9px) / 4px 4px no-repeat, var(--pl-pino) calc(100% - 5px) calc(100% - 9px) / 4px 4px no-repeat;
+}
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) :where(.tela .servico, #mundo .caminhos .caminho, .tela .cartas > .cartao.clicavel) { position: relative; }
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) :where(.tela .servico, #mundo .caminhos .caminho, .tela .cartas > .cartao.clicavel)::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 1; }
+/* (os rebites dos grandes ficam acima da lateral: 4 px mais alto embaixo) */
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) .tela .servico::before {
+  background: var(--pl-rebite) 6px 6px / 8px 8px no-repeat, var(--pl-rebite) calc(100% - 6px) 6px / 8px 8px no-repeat,
+    var(--pl-rebite) 6px calc(100% - 10px) / 8px 8px no-repeat, var(--pl-rebite) calc(100% - 6px) calc(100% - 10px) / 8px 8px no-repeat; }
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) :where(#mundo .caminhos .caminho, .tela .cartas > .cartao.clicavel)::before { background: var(--pl-pinos); }
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) :where(.tela .servico.caro, .tela .servico[aria-disabled="true"], #mundo .caminhos .caminho.bloqueado)::before { opacity: 0.45; }
+/* o "›" de latão da Comitiva sai do canto, onde agora mora o pino */
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) .tela .cartas > .cartao.clicavel::after { right: 14px; top: 10px; }
+/* a hierarquia do serviço: o ícone num nicho, o nome, a informação secundária; os rebites não encostam no texto */
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) .tela .servico { padding-left: 14px; padding-right: 18px; }
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) .forja-proto .rf-servicos { gap: 10px; }
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) .forja-proto .rf-servicos > .servico { min-height: 84px; }
+
+/* a barra de baixo: um suporte contínuo (uma placa só, com a espessura embaixo) e os atalhos rentes sobre ela, separados
+   por um vinco (a linha escura e a luz ao lado); o atalho não é mais uma placa solta */
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) #doca .atalhos { gap: 0; padding: 0 2px 4px; background: var(--pl-face);
+  box-shadow: var(--pl-relevo); clip-path: var(--pl-recorte); }
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) #doca :is(.atalho, .atalho + .atalho, .doca-sep + .atalho) {
+  background: transparent; clip-path: none; box-shadow: none; }
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) #doca .atalho + .atalho { box-shadow: inset 1px 0 0 0 var(--pl-vinco), inset 2px 0 0 0 #3c3f46; }
+/* entre os grupos, um vão mais largo: o fundo da barra à mostra, como uma junta entre duas chapas */
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) #doca .doca-sep { width: 6px; margin: 0 0 -4px; border: 0; background: #0b0c0e;
+  box-shadow: inset 1px 0 0 #000, inset -1px 0 0 #000, inset 2px 0 0 #2a2c31, inset -2px 0 0 #2a2c31; }
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) #doca .atalho:hover:not(.atual) { background: rgba(255, 255, 255, 0.07); box-shadow: inset 0 1px 0 0 var(--pl-luz-viva); }
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) #doca .atalho:active { background: rgba(0, 0, 0, 0.38); box-shadow: inset 0 2px 0 0 #050506; }
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) #doca .atalho:focus-visible { outline: none; box-shadow: inset 0 0 0 2px var(--pl-latao-claro); }
+/* a tela aberta: o atalho afundado e quente, o fio de latão embaixo (forma, não só cor) */
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) #doca .atalho.atual {
+  background: linear-gradient(var(--pl-latao), var(--pl-latao)) 4px calc(100% - 2px) / calc(100% - 8px) 2px no-repeat, rgba(70, 58, 30, 0.55);
+  box-shadow: inset 0 2px 0 0 #050506, inset 1px 0 0 0 var(--pl-vinco); color: #fff1cc; }
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) #doca .atalho.atual::after { display: none; }
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) #doca .atalho.atual:focus-visible { box-shadow: inset 0 0 0 2px var(--pl-latao-claro); }
+
+/* o aviso de talento: o "▸" num fim separado por um vinco, a placa pequena sem rebite */
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) #heroi .talento-aviso { padding-right: 0; }
+:root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) #heroi .talento-aviso .talento-abrir { align-self: stretch; display: grid; place-items: center;
+  margin: -3px 0 -7px; padding: 0 9px 4px 10px; box-shadow: -1px 0 0 0 var(--pl-vinco), -2px 0 0 0 #3c3f46; }
+/* a 1280: os cartões da forja na altura do conteúdo e a barra de baixo na altura de hoje (a espessura entra no espaço
+   que o atalho já tinha embaixo) */
+@media (max-width: 1500px) {
+  :root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) .forja-proto .rf-servicos > .servico { min-height: 0; }
+  :root body[data-rf-placas="bancada"]:not(#pl-a):not(#pl-b) .forja-proto .rf-servicos { gap: 6px; }
 }

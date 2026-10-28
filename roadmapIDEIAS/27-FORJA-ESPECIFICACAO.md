@@ -453,6 +453,9 @@ Cobrado uma vez por pedido. A confirmação mostra os dois resultados e o preço
     decorrido (um redesenho continua de onde estava). O +N e o saldo novo acendem quando os fragmentos chegam (antes,
     o saldo de antes). Duração: 1 s (antes, 0,7). Sem OK e sem celebração; uma cobrança só (conferido com clique duplo).
 - **Entrada da forja [17ª]:** os quatro serviços numa grade 2 × 2 (antes, três numa linha e um sozinho embaixo).
+  **[Corrigido, 18ª]** a regra da forja do jogo (`#cena.com-ambiente .forja .servicos`, com um id) vencia a de duas
+  colunas, e a entrada continuava três e um; agora vale o 2 × 2. Os textos dos cartões ficam os de antes, sem a marca
+  "(laboratório)" no Encantar (observação de protótipo não vai para a tela do jogador).
 - **Remover a gravação [Candidata, 18ª]** (regra na seção 3.3): no Encantar, embaixo dos sulcos, "Remover gravação"
   (só com um sulco ocupado escolhido; o lugar fica reservado). A confirmação no pé, como a da substituição: a pergunta
   numa frase ("Remover? Brasa I se perde."), o Remover no lugar da ação e o Cancelar ao lado; Esc cancela. A prévia
@@ -539,6 +542,14 @@ Cobrado uma vez por pedido. A confirmação mostra os dois resultados e o preço
   aviso de pontos de talento (com uma tira de latão), a doca, as abas e os botões do Inventário, os cartões da
   Comitiva (em relevo) e do Bestiário (fixados), o Olhar de perto e o Confirmar da Encruzilhada, e o Continuar da festa
   da especialização (só esse: `.festa.fb2-spec .continuar`). A 1280, a mesma altura do acabamento de hoje.
+  **Segunda passada (18ª), pela referência de composição do Jean** (uma imagem gerada: vale a composição e a família,
+  não o acabamento, os ícones nem os textos): os rebites pela escala (os cartões grandes de serviço com um em cada
+  canto, numa camada que o mouse e a pressão não apagam; os Caminhos e os cartões da Comitiva com um pino de 2 × 2
+  pixels; os botões, as abas e a doca sem nada); a barra de baixo como um suporte contínuo (uma placa só com a
+  espessura, os atalhos rentes sobre ela separados por um vinco, um vão escuro entre os grupos; a tela aberta afundada
+  e quente com o fio de latão embaixo); o aviso de talento com o "▸" num fim separado por um vinco; a hierarquia do
+  serviço (o ícone no nicho, o nome, a linha secundária). A barra fica 4 px mais alta que hoje; os cartões da forja, 1
+  px.
 - **Armaduras do +9 ao +12 [Candidatas A, B e C, 18ª]** (painel de testes, "Armaduras +9 a +12", e a vitrine: as
   cinco peças do herói do +8 ao +12): o feixe da 17ª ficou discreto demais (do +8 para o +9 parecia perder força). As
   três partem da faixa do +8, que fica exatamente como está: a mesma força da mistura, a mesma largura (3 pixels e o

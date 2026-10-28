@@ -70,6 +70,15 @@ Testes: `TestRemover` (3).
 fixado com rebites; número e tecla em nicho), os estados e os componentes: 27, seção 10. O botão A de produção
 continua no jogo como está; esta candidata não é aplicada lá.
 
+**Segunda passada (a referência de composição do Jean):** a entrada da forja em 2 × 2 de verdade (a regra da forja do
+jogo vencia a de duas colunas; agora não), os rebites pela escala (quatro nos cartões grandes de serviço, um pino
+simples nos Caminhos e na Comitiva, nada nos pequenos), a barra de baixo como um suporte contínuo com os atalhos
+separados por vincos e o aviso de talento com o "▸" num fim separado. Da imagem vieram a composição e a família; o
+acabamento continua o da bancada, e os ícones, os números e os textos são os do jogo. Conferido a 1920 e a 1280 (a
+barra 4 px mais alta que hoje; os cartões da forja, 1 px) e os estados do atalho, do atalho da tela aberta, do aviso,
+do Caminho e do serviço. Achado no caminho e corrigido no jogo (1.214.2): a tecla do atalho da doca caía embaixo do
+nome enquanto o botão estava pressionado (a regra do acabamento A descia todos os filhos, inclusive a tecla).
+
 ### Ferreiro: o gesto do martelo (candidata)
 `ferramentas/prototipos/hud/forja/h2/candidata_gesto.py` grava `candidata-gesto/ferreiro.png` (a candidata da 17ª
 continua em `candidata/`). A leitura de guidão vinha da cadeia ombro → cotovelo → punho → cabo: na preparação, o braço

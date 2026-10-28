@@ -161,7 +161,7 @@
     receber(d);
     const cartoes = [
       cartaoServico({ icone: "martelo", nome: "Reforçar", efeito: "Todo equipamento, do +1 ao +12", attrs: 'data-servico="reforcar"' }),
-      cartaoServico({ icone: "livro", nome: "Encantar", efeito: "Grava essências nos sulcos da peça (laboratório)", attrs: 'data-servico="encantar"' }),
+      cartaoServico({ icone: "livro", nome: "Encantar", efeito: "Grava essências nos sulcos da peça", attrs: 'data-servico="encantar"' }),
       cartaoServico({ icone: "saco", nome: "Desmontar", efeito: "Peças da bolsa → Fragmentos de Têmpera", attrs: 'data-servico="desmontar"' }),
       cartaoServico({ icone: "martelo", nome: "Transferir", efeito: "O reforço de uma peça para outra do mesmo tipo", attrs: 'data-servico="transferir"' }),
     ];

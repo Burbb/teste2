@@ -8067,3 +8067,17 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   em azul marcam a raridade. Reproduzido no jogo (cenário "vila", o achado já sai incomum): antes, o fio e o losango
   embaixo da couraça; depois, só a peça, no Estouro e no Relicário.
 - **Conferido:** a suíte, o gabarito, o pyflakes e a fumaça.
+
+### 28/10/2026 (data do computador local) — Placas da bancada, segunda passada; a tecla da doca pressionada (1.214.2)
+
+- **Pedido:** uma referência de composição (imagem gerada) para a candidata de interface: os quatro serviços da forja
+  em 2 × 2, as placas como família comum, a barra de baixo contínua com divisões claras, a hierarquia ícone, nome e
+  linha secundária. Não vale como acabamento: em pixel, arestas retas ou em degrau, poucos tons, rebites pela escala;
+  os ícones, os números e os textos são os do jogo.
+- **Protótipo:** a entrada da forja em 2 × 2 de verdade (a regra `#cena.com-ambiente .forja .servicos` do jogo vencia
+  a de duas colunas desde a 17ª), sem "(laboratório)" no Encantar; os rebites pela escala; a doca como suporte
+  contínuo; o aviso de talento com o fim separado (27, seção 10; LEIA-ME do protótipo, 18ª).
+- **Produção (1.214.2):** a tecla do atalho da doca caía embaixo do nome com o botão pressionado (o acabamento A da
+  1.214.0 descia todos os filhos do botão, inclusive a tecla posicionada no canto); agora desce tudo menos a tecla.
+- **Conferido:** 1920 e 1280 (a barra 4 px mais alta que hoje), os estados das partes novas; a suíte, o gabarito, o
+  pyflakes, os testes do protótipo e a fumaça.
