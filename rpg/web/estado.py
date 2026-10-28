@@ -454,6 +454,9 @@ def combate(g):
                 if getattr(c, "tipo", None) == "comitiva" and getattr(c, "max_rec", 0) else {}),
              # o desenho da sala que é este inimigo (a sacristia: os dois de capa escura), para a tela seguir a carta
              **({"figura": c.figura} if getattr(c, "figura", None) else {})}
+        if getattr(c, "tipo", None) == "comitiva":
+            # o nível de um companheiro é o do herói: os números do catálogo crescem por ele (comitiva.grupo.atributos)
+            d["nivel"] = g.j.nivel
         if lado == "inimigo":
             d.update(nivel=c.nivel, chefe=c.chefe, unico=getattr(c, "unico", False), afixo=c.afixo,
                      invocado=getattr(c, "invocado", False),
