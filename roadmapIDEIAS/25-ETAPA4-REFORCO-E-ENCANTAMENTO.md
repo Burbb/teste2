@@ -9,6 +9,13 @@
 > Candidatas visuais para o Jean escolher: botões A/B, acabamento das armaduras do +9 ao +12 A/B e a paleta da
 > celebração do +9 ao +12. Corrigida a piscada ao reforçar; o painel de testes. Chances e custos sem mudança. Detalhe
 > no 27 e no LEIA-ME do protótipo (16ª).
+>
+> **Rodada 17 (28/10/2026), protótipo:** o botão A aprovado (o B saiu) e aplicado também na produção (1.214.0); os
+> acabamentos A e B das armaduras rejeitados, o feixe estreito como nova candidata (o +8 intacto); a celebração do +9
+> ao +12 com as cores ligadas ao acabamento (candidata; o ouro da 16ª guardado como referência de um eventual +13, sem
+> criá-lo); o recebimento na desmontagem; corrigida a perda de vida ao entrar no ferreiro do protótipo. A proposta de um
+> atributo adicional para a peça toda no teto não foi aprovada (registrada). Chances, custos, limite, essências e
+> transferência sem mudança. Detalhe no 27 e no LEIA-ME do protótipo (17ª).
 
 Atualizado em 26/10/2026 após o debate com Jean sobre reforço e materiais. **Esta revisão altera somente documentação.** A forja H2 encerrou a etapa 3; combate e comitiva estão integrados até a 1.213.0. A etapa 4 continua aberta, agora com direção aprovada para um protótipo de reforço e materiais.
 

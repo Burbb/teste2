@@ -9,8 +9,8 @@ jogo não mudaram. Os números são hipóteses desta rodada, não balanceamento.
 Dê dois cliques em `demo.bat` (ou `python ferramentas/prototipos/reforco/demo.py` na raiz). O jogo de sempre abre no
 navegador num **save temporário** (uma pasta nova a cada vez; os saves pessoais não são lidos nem tocados): o Guerreiro
 no nível 4, no Vau, com Morel e Odette, 380 de ouro, dois baús e as peças dos exemplos. Feche a janela do terminal
-para parar. Folhas da 16ª: `folha-botoes.png`, `folha-acabamento-armaduras.png`, `folha-paleta.png` e
-`folha-telas.png` (seção da 16ª). Das versões anteriores: `folha-comparacao.png` e `folha-estados.png` (15ª),
+para parar. Folhas da 17ª: `folha-acabamento-armaduras.png`, `folha-paleta.png` e `folha-telas.png` (seção da
+17ª). Das versões anteriores: `folha-botoes.png` (16ª, A × B), `folha-comparacao.png` e `folha-estados.png` (15ª),
 `folha.png` (o resultado do reforço) e `folha-acabamento.png` (o acabamento do +1 ao +12). A especificação do sistema
 inteiro: [27](../../../roadmapIDEIAS/27-FORJA-ESPECIFICACAO.md).
 
@@ -18,7 +18,77 @@ Só nesta execução, `demo.py` troca a forja (o balcão novo), o baú (que pode
 "Materiais" do Inventário, a venda da peça reforçada, a ficha das peças nas telas (as gravações) e liga os efeitos das
 gravações na luta. O resto é o jogo: o Inventário do grupo, o mercado, a luta, a estrada.
 
-## 16ª versão: ganho real em todo reforço, formatos comuns, candidatas visuais e o painel de testes (em avaliação)
+## 17ª versão: a vida na entrada, o feixe nas armaduras, a celebração ligada ao acabamento, o recebimento e o botão A (em avaliação)
+
+**O sistema inteiro está no [27](../../../roadmapIDEIAS/27-FORJA-ESPECIFICACAO.md)** (6, 9, 10, 11 e 12). Chances,
+custos, limite +12, distribuição de essências e regras de transferência não mudaram. A 16ª está em
+`tela/historico/v16` (`?tela=v16`). Folhas desta versão: `folha-acabamento-armaduras.png` (o veio anterior × o feixe
+candidato, três quadros, com o +8 de referência na primeira coluna), `folha-paleta.png` (a celebração anterior × a
+candidata do +9 ao +12, a 1,25 s e a 2,3 s) e `folha-telas.png` (a entrada com os quatro serviços, o atalho do
+Inventário dentro da forja e a desmontagem: a prévia e o recebido).
+
+### O defeito: vinte de vida ao entrar no ferreiro
+Entrar no ferreiro do protótipo tirava vida (Jean 65 → 60, Morel 85 → 79). **Causa:** a ficha das peças compara com o
+que se veste (`comparar`, que veste e desveste a peça para medir a diferença); sem a peça, o máximo de vida caía e a
+vida era cortada nele, e ao vestir de volta o máximo voltava, mas a vida não. **Correção na origem:** a comparação
+hipotética guarda a vida de quem veste antes de mudar e a repõe depois de desfazer. **Teste pelo caminho real**
+(`TestEntrarNaForja`): entra pelo ferreiro da demonstração e sai; falha sem a correção (65 → 60 e 85 → 79). A forja de
+produção não tem o defeito (três entradas e saídas sem mudar vida, máximo, dia nem período).
+
+### Visual (candidatas e aprovado)
+- **Botão A [aprovado]:** o B saiu do protótipo; a forja usa o A também nas abas, nos donos, nas famílias, nos tiers e
+  nos sulcos. Na produção (1.214.0) ele foi aplicado em separado (`rpg/web/static/css/27-ferro.css`), sem depender
+  desta pasta: os Caminhos, os serviços dos lugares, a doca, o Bestiário, a Comitiva, as abas e os botões do
+  Inventário.
+- **Armaduras do +9 ao +12 [candidata]:** o feixe: linhas diagonais de 1 px na força do veio do +8, estreito, com as
+  cores do nível (+9 rubi e âmbar, uma cor a mais por nível até as seis do +12). O A e o B da 16ª foram rejeitados; o
+  +8 não mudou. O veio anterior fica no painel ("Feixe" × "Veio anterior").
+- **Celebração do +9 ao +12 [candidata]:** as cores ligadas ao acabamento da peça (+9 rubi e âmbar; +10 laranja e
+  azul; +11 âmbar e esmeralda; +12 âmbar e violeta). A paleta da 16ª (violeta e ouro) foi rejeitada. O ouro do +12 da
+  16ª fica no painel ("Ouro ref. +13") como referência, caso um dia exista o +13; nenhum +13 foi criado.
+- **Desmontar:** depois da transformação, o encaixe fica vazio, o título diz "Desmontado" e, ao lado do material, o
+  que chegou ("+10") e o saldo novo ("Fragmentos: 30"), parados no movimento reduzido. A prévia ("×10") e o recebido
+  se distinguem pelo sinal, pelo encaixe vazio e pelo título.
+- **Entrada:** os quatro serviços numa grade 2 × 2.
+
+### Texto
+- **Encantar:** o limite aparece no valor ("Brasa 40% → 60% · limite"); "Limite 60%: 8% não valem" saiu. Só quando
+  nada muda porque já estava no limite, a nota curta "Brasa já está no limite (60%)".
+- **Substituir:** a confirmação numa frase ("Substituir? Carrasco I se perde."), sem repetir a perda na nota.
+- **Materiais:** o título é só "Materiais" (a explicação saiu); a dica do material vale também no "Requer:".
+- **Recompensa:** o texto em cima do "Ir para a vila" saiu.
+
+### Fora do protótipo (produção 1.214.0, em commits separados)
+A doca dentro das telas de serviço (o pedido do Jean: o Inventário dentro da forja), o preço do Mercado à vista sem
+ouro, o nível dos companheiros na luta, o achado nítido a 125%, os textos (sem "brejo", sem "Curas param em N", sem os
+rodapés que explicam o clique) e o acabamento A. Registro no [00](../../../roadmapIDEIAS/00-COMECE-AQUI.md).
+
+### Não reproduzido: o pixel azul
+O pixel azul que ficava perto do item depois do achado não apareceu: os dois caminhos (equipar e guardar) a 100% e
+125%, a varredura dos pixels da página e a do DOM depois de fechar a janela (o canvas da festa sai com ela).
+Hipóteses: um estilhaço da festa desenhado no último quadro antes de o canvas sair, numa máquina mais lenta; o
+contorno do +N (azul no +6) de uma dica que ficou para trás. Se voltar, uma captura com a escala do Windows ajuda.
+
+### Conferido
+- **Testes do protótipo (62).** Suíte do jogo (728), gabarito, pyflakes e a fumaça do navegador na versão final.
+- **A 1920×945:** o atalho Inventário da doca dentro da forja abre o "Inventário do grupo"; a tira das armaduras (o
+  anterior, o feixe e o +8 na mesma peça e no mesmo fundo); a celebração candidata × anterior; a desmontagem com o
+  recebido. O acabamento A na produção a 1920 e a 1280 (antes e depois com os mesmos dados).
+- **Não conferido nesta rodada:** a bateria de resoluções e escalas inteira (só os componentes afetados), e os estados
+  de mouse, pressionado e foco de cada componente A da produção um a um (vistos no Caminho e nos atalhos).
+
+### Roteiro (uns 5 minutos)
+1. **Ferreiro:** veja a vida no topo antes e depois de entrar e sair (não muda). A entrada tem os quatro serviços 2 × 2.
+2. **Dentro da forja, doca → Inventário:** volta ao lugar e abre o Inventário do grupo.
+3. **Níveis altos (teste) → Reforçar** as armaduras de Jean (+9 a +12): o feixe; troque no painel para o veio
+   anterior e compare com o +8.
+4. **Sucesso (teste):** reforce a arma da bolsa do +8 ao +12 com a celebração candidata, depois a anterior e o
+   "Ouro ref. +13".
+5. **Essências (teste) → Encantar** a arma de Jean, 3º sulco, Brasa II: "Brasa 40% → 60% · limite"; Substituir: a
+   pergunta numa frase.
+6. **Desmontar** uma peça da bolsa: a prévia "×N" e, depois, "+N" com o saldo novo.
+
+## 16ª versão: ganho real em todo reforço, formatos comuns, candidatas visuais e o painel de testes (histórico)
 
 **O sistema inteiro está no [27](../../../roadmapIDEIAS/27-FORJA-ESPECIFICACAO.md)** (1.1, 1.2, 3.3, 9, 10 e 11).
 Chances, custos, limite +12, sucesso +1 e falha −1 sem quebra, tiers, requisitos e transferência não mudaram. A 15ª

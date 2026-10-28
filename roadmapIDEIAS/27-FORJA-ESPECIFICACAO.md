@@ -1,7 +1,7 @@
 # 27 — A forja: especificação do sistema (reforço, materiais, encantamento, transferência)
 
 Documento de referência da etapa 4. Ele descreve o sistema inteiro como está hoje, sem precisar da conversa nem dos
-históricos de protótipo. Atualizado em 28/10/2026 (16ª versão do protótipo), conferido contra o código do
+históricos de protótipo. Atualizado em 28/10/2026 (17ª versão do protótipo), conferido contra o código do
 protótipo (`ferramentas/prototipos/reforco`: `regras.py`, `encanto.py`, `demo.py`, `tela/reforco.js`) e o de
 produção (`rpg/sistemas/servicos.py`).
 
@@ -347,7 +347,7 @@ Cobrado uma vez por pedido. A confirmação mostra os dois resultados e o preço
   conserva. As gravações não mudam a venda.
 - **Desmontagem:** só peças da bolsa. Rende metade dos fragmentos nominais dos níveis conservados, arredondada para
   cima, mais o material da peça. A confirmação diz que o equipamento será destruído e lista as gravações perdidas. A
-  pilha cheia (99) recusa.
+  pilha cheia (99) recusa. Depois de desmontar, a tela mostra o que chegou (seção 9).
 
 ## 7. Herói e companheiros
 - **Peças de todos:** a forja mostra as peças do herói, de cada companheiro e da bolsa, em abas por dono.
@@ -402,13 +402,15 @@ Cobrado uma vez por pedido. A confirmação mostra os dois resultados e o preço
   - **a essência:** primeiro a família (o ícone e o nome; a 1280, só o ícone), depois o tier I, II ou III: o símbolo
     com o tier no canto de cima à direita e a quantidade no canto de baixo, fora do símbolo;
   - **a prévia**, calculada no motor (`demo.previsao`): a essência escolhida com o efeito dela (o valor do tier), numa
-    substituição só os valores que mudam, com o nome do efeito ("Brasa 40% → 60%", "Carrasco 15% → —"), o total de
-    quem veste só quando o limite corta ("Total em Jean …"), a troca ("Sai Carrasco I · entra Brasa II") e a
-    consequência antes de pagar ("Limite 60%: 8% não valem"); na bolsa, quando o requisito da peça sobe, "A peça passa
-    a requerer nível 9". **[Substituído, 16ª]** "Brasa nesta peça", a linha de quem veste sempre que outra peça somava e
-    "Requer nível 5 (Jean: 4). Na bolsa, pode gravar.";
+    substituição só os valores que mudam, com o nome do efeito ("Brasa 40% → 60% · limite", "Carrasco 15% → —"), o
+    total de quem veste só quando o limite corta ("Total em Jean …") e a troca ("Sai Carrasco I · entra Brasa II"); o
+    limite aparece no próprio valor final ("60% · limite") e, só quando nada muda porque já estava no limite, uma nota
+    curta ("Brasa já está no limite (60%)"); na bolsa, quando o requisito da peça sobe, "A peça passa a requerer nível
+    9". **[Substituído, 16ª]** "Brasa nesta peça", a linha de quem veste sempre que outra peça somava e "Requer nível 5
+    (Jean: 4). Na bolsa, pode gravar."; **[Substituído, 17ª]** "Limite 60%: 8% não valem" (a conta do que sobra);
   - o pé fixo: "Requer: [essência] 3/1" (e "Nível 5" numa peça vestida, quando a gravação sobe o requisito), o botão
-    Gravar ou Substituir com o preço dentro; substituir pede confirmação no mesmo lugar; a mesma gravação aparece como
+    Gravar ou Substituir com o preço dentro; substituir pede confirmação no mesmo lugar, numa frase só ("Substituir?
+    Carrasco I se perde.", sem repetir a perda na nota); a mesma gravação aparece como
     "Já gravado", sem o "Requer:", e não cobra;
   - a gravação concluída aparece na mesma apresentação em destaque, sem suspense, com a gravação nova em destaque
     (o efeito dela) e a que saiu.
@@ -431,6 +433,21 @@ Cobrado uma vez por pedido. A confirmação mostra os dois resultados e o preço
   - depois do OK, as escolhas se limpam (nenhum par novo é escolhido sozinho) e o foco volta ao encaixe da origem.
 - **Desmontar:** o nome da peça como título, "No mercado, vende por X." e a confirmação no pé ("Destruir a peça?",
   as gravações perdidas na nota, o Desmontar no mesmo lugar); a transformação é curta, sem celebração.
+  - **O recebimento [Protótipo, 17ª]:** a prévia mostra a peça e o que vai sair ("×10" ao lado do material); depois da
+    transformação, o encaixe da peça fica vazio, o título diz o nome com o reforço e "Desmontado", e, ao lado do
+    material, o que chegou ("+10", em verde) e o saldo novo ("Fragmentos: 30"), que acende uma vez. A prévia e o
+    recebido se distinguem pelo sinal (× do que vai sair, + do que entrou), pelo encaixe vazio e pelo título. Com
+    movimento reduzido, o recebido aparece parado, no mesmo lugar. Fica até a próxima escolha de peça.
+- **Entrada da forja [17ª]:** os quatro serviços numa grade 2 × 2 (antes, três numa linha e um sozinho embaixo).
+- **A doca dentro da forja [Produção, 1.214.0]:** os atalhos da barra de baixo (Inventário, Comitiva, Grimório…)
+  funcionam também nas telas de serviço (a forja, o mercado, a taverna, o templo): o atalho volta ao lugar e abre a
+  tela pedida. Antes, eram recusados fora do menu do lugar, o que não fazia sentido para o jogador (pedido do Jean).
+  O motor marca o Voltar dessas telas com `lugar: True`.
+- **A vida ao entrar na forja [Corrigido, 17ª]:** entrar na forja do protótipo tirava vida (Jean 65 → 60, Morel
+  85 → 79). A causa: a comparação hipotética da ficha (`demo.comparar`, que veste e desveste a peça para medir a
+  diferença) cortava a vida no máximo sem a peça e não a devolvia. Agora a comparação guarda a vida antes e a repõe
+  depois. A forja de produção não tinha o defeito (conferido: três entradas e saídas sem mudar vida, máximo, dia nem
+  período). Teste pelo caminho real (`TestEntrarNaForja`).
 - **A troca de tela sem piscar [16ª]:** a cada pedido, o motor redesenha a forja como uma cena nova (a página se limpa)
   e manda o painel em seguida. Até a 15ª, o painel era calculado entre as duas mensagens, e numa máquina lenta o
   navegador pintava a oficina sem a janela ("às vezes", 10 a 16 ms aqui; reproduzido com 80 ms). Agora o motor calcula
@@ -480,19 +497,26 @@ Cobrado uma vez por pedido. A confirmação mostra os dois resultados e o preço
 - **Tier:** I, II ou III numa etiqueta no canto de cima à direita do símbolo da essência, na linguagem da etiqueta do
   reforço (+N): placa escura, aresta de latão, 13 px a 1920 e 12 px a 1280, fora do desenho; nos materiais, na seleção
   da forja, nos sulcos, nas fichas e no espólio; a quantidade fica noutro canto. **[Substituído, 16ª]** o selo de 9 px.
-- **Botões da forja [Candidatas, sem escolha]:** A · ferro encaixado (planos chapados, cantos em degrau, luz curta na
-  aresta de cima, base escura) e B · ferro com presilhas de latão. Pressionar afunda a face sem mover o botão; o foco é
-  um anel de latão por dentro. Aplicadas só na forja (as ações, o Cancelar, o OK e o Fechar); os outros usos do jogo
-  estão listados no LEIA-ME (16ª) para a variante escolhida.
-- **Armaduras do +9 ao +12 [Candidatas, sem escolha]:** capacete, peito, luvas, pernas e botas, em vez do veio de
-  faixas diagonais: A · brilho nas bordas (uma orla baixa na cor do nível por dentro da silhueta e 1 a 4 pontos de luz
-  percorrendo a borda) e B · reflexo estreito (uma passada de 1 px, 2 no +11 e +12, menos opaca). O contorno aprovado
-  fica; a passada larga do reflexo não passa nelas. Armas, joias, escudos, tomos e aljavas continuam com o veio; até o
-  +8, nada muda. O ciclo vem de um relógio comum com um desvio fixo pelo lugar da peça (um redesenho não o recomeça).
-- **Celebração do +9 ao +12 [Candidata, sem escolha]:** uma cor dominante e uma secundária (+9 violeta; +10 violeta e
-  azul; +11 ouro quente e âmbar; +12 ouro, âmbar e brilhos de marfim), o prisma só em alguns estilhaços, a grandeza
-  pela forma (leques de raios, alcance, estrela, anéis). O +8 e os de baixo não mudam (pedido do Jean). A anterior
-  fica no painel de testes para comparar.
+- **Botões: o acabamento A [Aprovado, 17ª]:** ferro encaixado (planos chapados, cantos em degrau, luz curta na
+  aresta de cima, base escura). Pressionar afunda a face sem mover o botão; o foco é um anel de latão por dentro. Na
+  forja: as ações, o Cancelar, o OK, o Fechar, as abas, os donos, as famílias, os tiers e os sulcos. Na produção
+  (1.214.0, `css/27-ferro.css`): os Caminhos, os serviços dos lugares (Mercado, a entrada do ferreiro, a taverna), a
+  doca, os cartões do Bestiário e da Comitiva (com a barra), as abas do Inventário, "Distribuir pela sugestão" e os
+  "+" dos atributos (uma plaquinha de latão). **[Rejeitado, 17ª]** o B (presilhas de latão), retirado do protótipo.
+- **Armaduras do +9 ao +12 [Candidata, 17ª]:** capacete, peito, luvas, pernas e botas, em vez do veio de faixas
+  largas: o **feixe**, linhas diagonais de 1 px na mesma força do veio do +8 (a sutileza dele), estreito, com as cores
+  ligadas ao nível (+9 rubi e âmbar; +10 mais o azul; +11 mais o esmeralda; +12 marfim, rubi, âmbar, esmeralda, azul e
+  violeta), passando pela peça. O contorno aprovado fica; a passada larga do reflexo não passa nelas. Armas, joias,
+  escudos, tomos e aljavas continuam com o veio. O +8 fica exatamente como estava. O ciclo vem de um relógio comum
+  com um desvio fixo pelo lugar da peça. O veio anterior fica no painel de testes para comparar. **[Rejeitados,
+  17ª]** o A (brilho nas bordas) e o B (reflexo estreito) da 16ª.
+- **Celebração do +9 ao +12 [Candidata, 17ª]:** as cores ligadas ao acabamento da peça, uma dominante e uma
+  secundária (+9 rubi e âmbar; +10 laranja e azul; +11 âmbar e esmeralda; +12 âmbar e violeta), o prisma só em alguns
+  estilhaços, a grandeza pela forma (leques de raios, alcance, estrela, anéis). O +8 e os de baixo não mudam (pedido
+  do Jean). A anterior fica no painel de testes. **[Rejeitada, 17ª]** a paleta da 16ª (violeta e ouro sem ligação com
+  a peça), que incomodava a partir do +9. **Referência para um +13 [Guardado]:** o ouro da candidata da 16ª no +12
+  (ouro, âmbar e marfim) fica no painel ("Ouro ref. +13") como referência, caso o limite um dia passe do +12; nenhum
+  +13 foi criado.
 - **Fichas** (a hierarquia das fichas do Diablo IV, com a arte do jogo), nesta ordem:
   1. o nome e o reforço ("Martelo de Aço +3");
   2. o tipo e a raridade; a base sai dos parênteses do título e vai para esta linha ("Machado · Lendário", sem
@@ -511,7 +535,7 @@ Cobrado uma vez por pedido. A confirmação mostra os dois resultados e o preço
 
 ## 11. Casos de teste e exemplos
 
-**Testes automáticos** (`ferramentas/prototipos/reforco/testes`, 61):
+**Testes automáticos** (`ferramentas/prototipos/reforco/testes`, 62):
 - todo passo de todo espaço, do +0 ao +12, melhora alguma linha, sem casa que o motor não usa e sem passar um degrau da
   conta; a peça sem portador recebe reforço; a peça toda no teto não cobra; a fração na ficha e na luta; o painel de
   testes;
@@ -527,7 +551,8 @@ Cobrado uma vez por pedido. A confirmação mostra os dois resultados e o preço
 - o saque real dando materiais pela criatura;
 - Carrasco pela tabela; Revide pela soma até o limite e no máximo 2 por rodada; Eco até 2 por luta;
 - lutas de verdade;
-- salvar e carregar.
+- salvar e carregar;
+- entrar e sair da forja pelo caminho real sem mudar a vida (17ª).
 
 **Cenários da faixa da demonstração** (só no save temporário):
 - **Níveis altos (teste):** peças de +4 a +12, duas com três gravações; e (16ª) Jean com capacete, luvas, pernas e
@@ -549,7 +574,7 @@ Cobrado uma vez por pedido. A confirmação mostra os dois resultados e o preço
 
 **Exemplo completo:** Jean (nível 4) veste a arma com Brasa I + Brasa I + Carrasco I (Brasa 40%). Ao escolher Brasa
 II para o terceiro sulco (onde está Carrasco I), a prévia diz o efeito da Brasa II (28% de chance), "Brasa 40% →
-60%", "Carrasco 15% → —", "Sai Carrasco I · entra Brasa II" e "Limite 60%: 8% não valem"; o pé diz "Requer: [Brasa
+60% · limite", "Carrasco 15% → —" e "Sai Carrasco I · entra Brasa II"; o pé diz "Requer: [Brasa
 II] 3/1 · Nível 5" com o nível em vermelho, e o botão "Substituir · [moeda] 30" fica bloqueado. No nível 5, a mesma gravação passa e, na luta, cada golpe que acerta tem 60% de chance de Queimadura, no
 máximo 1 vez por rodada.
 
@@ -570,11 +595,12 @@ máximo 1 vez por rodada.
 - **Decisões substituídas** (registradas para não voltarem): o limite +4; a escolha Fio ou Runas; o reforço só da
   base; o dobro dos apoios; "a mesma essência não repete"; um efeito por essência gravada; o nível total de 1 a 5
   com teto (agora, cada tier com o seu valor e a soma até o limite de cada efeito).
-- **Candidatas da 16ª a escolher (Jean):** os botões A ou B; o acabamento das armaduras A ou B; a paleta da
-  celebração do +9 ao +12. Depois, aplicar o botão escolhido aos outros usos do jogo (lista no LEIA-ME).
+- **Candidatas da 17ª a avaliar (Jean):** o feixe das armaduras do +9 ao +12 e a paleta da celebração ligada ao
+  acabamento. O botão A está aprovado e aplicado (seção 10).
 - **Integração da fração:** os atributos com casa decimal e o acúmulo de Espinhos, Vida por turno e Vida por abate
   estão no protótipo (`demo.decimais_na_luta`); na integração, vão para `entidades`, `comitiva` e a luta, com o
   gabarito atualizado de propósito.
-- **Peça toda no teto:** a proposta (crescer pela linha fixa mais próxima da base) espera decisão.
+- **Peça toda no teto:** a proposta (crescer pela linha fixa mais próxima da base) espera decisão. **[Não aprovada,
+  17ª; registrada, sem implementar]** dar um atributo adicional quando todas as propriedades da peça atingem o teto.
 - **Mercado:** a peça acima do nível não se equipa ali (o motor recusa), mas o texto do jogo ainda diz "não é para a
   sua classe" (mercado.js, produção); a corrigir na integração.

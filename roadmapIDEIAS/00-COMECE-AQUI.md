@@ -7990,3 +7990,42 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   foi capturada (a ficha foi conferida pelas dicas).
 - **Decisões abertas (Jean):** botões A ou B; acabamento das armaduras A ou B; a paleta candidata; a proposta para a
   peça toda no teto. **Próximo:** a avaliação do Jean. Nada integrado; som adiado; a etapa 4 continua aberta.
+
+### 28/10/2026 (data do computador local) — Forja: a 17ª versão; o acabamento A, a doca e os defeitos na produção (1.214.0)
+
+- **Pedido:** a perda de vida ao entrar no ferreiro (prioridade); um acabamento novo e sutil para as armaduras do +9 ao
+  +12 (o +8 intacto); a celebração do +9 ao +12 ligada ao acabamento (o ouro do +12 guardado para um eventual +13);
+  o recebimento na desmontagem; o botão A (aprovado) nos outros componentes do jogo; textos; o preço do Mercado sem
+  ouro; o pixel azul e o item borrado no achado; candidatas de arte do ferreiro e do busto da Odette; o nível dos
+  companheiros na luta. E a pergunta do Jean: os atalhos da barra de baixo recusados em lugares sem sentido (dentro
+  da forja). Sim, fazia sentido revisar: agora funcionam.
+- **Protótipo (LEIA-ME, 17ª; 27, seções 6, 9, 10, 11 e 12):**
+  - **a vida:** a comparação hipotética da ficha cortava a vida no máximo sem a peça e não a devolvia; agora guarda e
+    repõe (teste pelo caminho real). A produção não tinha o defeito;
+  - **visual:** o B saiu; o feixe nas armaduras (candidata); a celebração ligada ao acabamento (candidata); o
+    recebimento na desmontagem; a entrada 2 × 2. O A e o B das armaduras e a paleta da 16ª foram rejeitados;
+  - **texto:** o limite no valor ("60% · limite"), a substituição numa frase, "Materiais" sem a explicação.
+- **Produção (1.214.0, um commit por assunto):**
+  - **a doca nas telas de serviço:** o motor marca o Voltar da forja, do mercado, da taverna e do templo
+    (`lugar: True`) e a doca aceita o atalho ali (volta ao lugar e abre a tela);
+  - **Mercado:** o preço fica à vista (em vermelho) quando falta ouro, com o motivo embaixo;
+  - **luta:** o nível dos companheiros no cartão ("Nv.6");
+  - **achado:** a peça ficava borrada a 125% (posição fracionária numa camada composta); agora assenta no pixel do
+    aparelho depois da cerimônia (349 → 0 pixels diferentes do arquivo a 125%);
+  - **textos:** "Brejo" virou "Alagado" e a Hidra, "do Pântano" (os ids ficaram; o replay traduz os nomes antigos);
+    sem "Curas param em N" e sem os rodapés que explicam o clique (Inventário, Mercado, serviços, painéis, Comitiva,
+    fogueira, talentos);
+  - **acabamento A** (`css/27-ferro.css`): Caminhos, serviços, Mercado, doca, cartões da Comitiva (sem o rodapé) e do
+    Bestiário (o que falta descobrir como estado bloqueado, com o cadeado), abas do Inventário, "Distribuir pela
+    sugestão" e os "+";
+  - **gabarito atualizado de propósito:** as diferenças são o `lugar` no Voltar, o `sem_ouro` no Mercado, o `nivel`
+    dos companheiros, o `falta` do Bestiário e a dica sem "Curas param em N".
+- **Candidatas de arte (não aplicadas):** o ferreiro (`hud/forja/h2/candidata_ferreiro.py`: o cabo atravessando a mão
+  no sobe2, a nuca, o calcanhar da bigorna à frente da barriga; a perspectiva da bigorna vista de cima e o ferreiro
+  atrás dela são intencionais) e o busto da Odette (`hud/odette-busto/`: ombros de 38 para 32 pixels, o hábito abrindo
+  devagar; o rosto igual), com as folhas.
+- **Não reproduzido:** o pixel azul depois do achado (LEIA-ME da forja, 17ª: o que foi testado e as hipóteses).
+- **Conferido:** 62 testes do protótipo; 728 do projeto, gabarito, pyflakes e a fumaça; capturas a 1920×945 e
+  1280×720 nas telas afetadas. Não foi feita a bateria inteira de resoluções.
+- **Decisões abertas (Jean):** o feixe das armaduras; a paleta da celebração; as candidatas do ferreiro e da Odette;
+  o estado bloqueado do Bestiário. Som adiado; a etapa 4 continua aberta.
