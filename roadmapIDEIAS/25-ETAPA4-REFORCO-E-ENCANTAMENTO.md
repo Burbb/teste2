@@ -16,6 +16,13 @@
 > criá-lo); o recebimento na desmontagem; corrigida a perda de vida ao entrar no ferreiro do protótipo. A proposta de um
 > atributo adicional para a peça toda no teto não foi aprovada (registrada). Chances, custos, limite, essências e
 > transferência sem mudança. Detalhe no 27 e no LEIA-ME do protótipo (17ª).
+>
+> **Rodada 18 (28/10/2026), protótipo:** três alternativas jogáveis para as armaduras do +9 ao +12 (A passadas
+> alternadas, B cor gradual, C reflexo principal e secundário; o +8 intacto; a vitrine no painel); a desmontagem fluida
+> (as causas medidas e corrigidas, sem acelerar); remover a gravação sem substituir (candidata gratuita, a essência se
+> perde); a candidata de interface "placas de metal da bancada" (o botão A de produção em revisão); o gesto do martelo
+> do ferreiro (candidata). Tudo no painel de testes. Chances, custos, limite, essências e transferência sem mudança;
+> a celebração aceita por enquanto. Detalhe no 27 e no LEIA-ME do protótipo (18ª).
 
 Atualizado em 26/10/2026 após o debate com Jean sobre reforço e materiais. **Esta revisão altera somente documentação.** A forja H2 encerrou a etapa 3; combate e comitiva estão integrados até a 1.213.0. A etapa 4 continua aberta, agora com direção aprovada para um protótipo de reforço e materiais.
 

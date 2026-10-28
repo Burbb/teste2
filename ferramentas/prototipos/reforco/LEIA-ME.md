@@ -9,8 +9,9 @@ jogo não mudaram. Os números são hipóteses desta rodada, não balanceamento.
 Dê dois cliques em `demo.bat` (ou `python ferramentas/prototipos/reforco/demo.py` na raiz). O jogo de sempre abre no
 navegador num **save temporário** (uma pasta nova a cada vez; os saves pessoais não são lidos nem tocados): o Guerreiro
 no nível 4, no Vau, com Morel e Odette, 380 de ouro, dois baús e as peças dos exemplos. Feche a janela do terminal
-para parar. Folhas da 17ª: `folha-acabamento-armaduras.png`, `folha-paleta.png` e `folha-telas.png` (seção da
-17ª). Das versões anteriores: `folha-botoes.png` (16ª, A × B), `folha-comparacao.png` e `folha-estados.png` (15ª),
+para parar. A 18ª não tem folhas: tudo se compara na própria demonstração, pelo **Painel de testes** da faixa do
+alto (seção da 18ª). Folhas da 17ª: `folha-acabamento-armaduras.png`, `folha-paleta.png` e `folha-telas.png`. Das
+versões anteriores: `folha-botoes.png` (16ª, A × B), `folha-comparacao.png` e `folha-estados.png` (15ª),
 `folha.png` (o resultado do reforço) e `folha-acabamento.png` (o acabamento do +1 ao +12). A especificação do sistema
 inteiro: [27](../../../roadmapIDEIAS/27-FORJA-ESPECIFICACAO.md).
 
@@ -18,7 +19,83 @@ Só nesta execução, `demo.py` troca a forja (o balcão novo), o baú (que pode
 "Materiais" do Inventário, a venda da peça reforçada, a ficha das peças nas telas (as gravações) e liga os efeitos das
 gravações na luta. O resto é o jogo: o Inventário do grupo, o mercado, a luta, a estrada.
 
-## 17ª versão: a vida na entrada, o feixe nas armaduras, a celebração ligada ao acabamento, o recebimento e o botão A (em avaliação)
+## 18ª versão: as armaduras A, B e C, a desmontagem fluida, remover a gravação, as placas da bancada e o gesto do ferreiro (em avaliação)
+
+**O sistema inteiro está no [27](../../../roadmapIDEIAS/27-FORJA-ESPECIFICACAO.md)** (3.3, 9, 10, 11 e 12). Chances,
+custos, limite +12, distribuição de essências e regras de transferência não mudaram. A nova forja continua só aqui.
+Som adiado. Sem vídeos nem folhas: as candidatas estão na demonstração, e o **Painel de testes** troca cada uma na
+hora (fica lembrado neste navegador).
+
+### No Painel de testes ("Comparação visual")
+- **Armaduras +9 a +12:** A · Alternadas, B · Gradual, C · Secundário (as candidatas), Feixe 17ª e Veio (para
+  comparar). Embaixo, a **vitrine**: as cinco peças que o herói veste (cabeça, peito, mãos, pernas, pés), cada uma do
+  +8 ao +12, no tamanho de uso ou ampliadas (2×), com a alternativa escolhida. Nas telas do jogo (a esteira da forja, o
+  Inventário, o Equipado), "Níveis altos (teste)" dá peças de +9 a +12.
+- **Botões e painéis:** Como no jogo × Placas da bancada (a candidata de interface).
+- **Ferreiro (recarrega):** Como no jogo × Gesto candidato (a página recarrega; a tira do ferreiro vem da candidata).
+- **Festa da especialização: Mostrar:** a festa "Você agora é Paladino" com dados de exemplo, para ver o Continuar
+  dela (só a tela; a partida não muda). A escolha de verdade (Olhar de perto, Confirmar e essa festa): na taverna,
+  Dormir até o amanhecer, com o herói no nível 4 ainda sem especialização (o cenário inicial da demonstração; o painel
+  "Aplicar e reiniciar cenário" volta a ele).
+
+### Armaduras do +9 ao +12: três alternativas
+O feixe da 17ª ficou discreto demais. As três partem da faixa do +8, que **fica exatamente como está** (a mesma força,
+3 pixels e o pixel claro atrás, uma faixa a cada 18 diagonais, o passo de 70 ms), e a passada periódica do reflexo
+volta, na cor da alternativa (A: uma cor por passada; B: a cor do momento; C: a principal com o fio na secundária):
+- **A · passadas alternadas:** uma cor por faixa, na ordem do nível (+9 rubi, âmbar; +10 mais o azul; +11 mais a
+  esmeralda; +12 mais o violeta);
+- **B · cor gradual:** todas as faixas na mesma cor, que passa devagar para a seguinte (três faixas por cor, ~3,8 s);
+- **C · reflexo principal e secundário:** a faixa na cor principal e, logo atrás, um fio de 1 px (2 no +11 e +12) na
+  secundária: as duas cores da celebração do nível.
+O nível cresce pelas cores, pela força (+11, +12) e pelos pontos de brilho (1 a 4, como nas armas); o +12 tem o pixel
+claro em marfim. Armas e joias não mudam; a celebração (aceita por enquanto) também não. Com movimento reduzido,
+paradas (conferido: dois quadros iguais). Cada passo é um quadro pronto, como o veio (sem mistura no CSS): a 125%, as
+camadas caem nos mesmos pixels da peça.
+
+### Desmontagem: a fluidez
+As causas (o efeito a 15 quadros por segundo; as animações do CSS em degraus; os redesenhos da volta do motor parando
+o efeito no meio e recomeçando as animações) e a correção estão no 27, seção 9. Medido no navegador: 56 quadros com
+efeito, 16 ms entre eles (no máximo 30); o +N aparece quando os fragmentos chegam (~0,5 s), o saldo troca logo depois e
+acende uma vez; a cobrança é uma só (o resultado 1, fragmentos 20 → 30, com clique duplo na confirmação). Com movimento
+reduzido, o recebido aparece parado: "+14" e "Fragmentos: 34" com o contorno de latão.
+
+### Remover a gravação (candidata)
+No Encantar, escolha um sulco ocupado: "Remover gravação" embaixo dos sulcos. A confirmação no pé ("Remover? Brasa I
+se perde."), a prévia do que cai e, ao confirmar, o sulco vazio. A essência se perde, nada volta, não custa nada; um
+pedido só (o motor recusa o repetido e o de uma gravação que mudou). A regra e o que se recalcula: 27, seção 3.3.
+Testes: `TestRemover` (3).
+
+### Placas de metal da bancada (candidata de interface)
+`tela/placas.css`, só com "Placas da bancada" no painel. A regra (o que se aperta tem espessura; o que informa é
+fixado com rebites; número e tecla em nicho), os estados e os componentes: 27, seção 10. O botão A de produção
+continua no jogo como está; esta candidata não é aplicada lá.
+
+### Ferreiro: o gesto do martelo (candidata)
+`ferramentas/prototipos/hud/forja/h2/candidata_gesto.py` grava `candidata-gesto/ferreiro.png` (a candidata da 17ª
+continua em `candidata/`). A leitura de guidão vinha da cadeia ombro → cotovelo → punho → cabo: na preparação, o braço
+ia para a frente na altura do ombro com o antebraço e o cabo em pé; a mão pegava o cabo pelo meio (um toco de 5 a 7 px
+atrás do punho); a descida era quase vertical. Agora a pegada fica na ponta do cabo; na preparação, o cotovelo sobe
+na diagonal à frente do rosto e o martelo fica armado atrás da cabeça (sem passar da altura de antes); na descida, o
+braço estica para a frente e o martelo vem em arco até o mesmo contato. Os apoios, o corpo, o enquadramento e o ritmo
+não mudam. Mantém a nuca e o calcanhar da bigorna da 17ª. Nada integrado: a fonte `aseprite/forja-h2.aseprite` e o
+jogo não mudaram.
+
+### Conferido
+- 1920×945 e 1280×720: a vitrine, a remoção (o fluxo inteiro, com teclado: Enter abre a confirmação com o foco no
+  Cancelar, Esc fecha, o foco volta ao Remover), as placas (a taverna, a entrada da forja, os Caminhos, o aviso de
+  talento, a doca, o Inventário, a Comitiva; a Encruzilhada e a festa no cenário "encruzilhada" com a candidata
+  injetada). A 1280, o balcão da taverna com as placas fica 7 px menor que hoje (o Voltar à vila não
+  desce).
+- Estados das placas um a um: normal, mouse, pressionado e foco (Voltar à vila, aviso de talento, abas, Caminho, Olhar
+  de perto, Confirmar, Continuar), selecionado (a aba, o atalho da tela aberta) e indisponível (o serviço sem ouro).
+- Movimento reduzido: as armaduras paradas, o recebimento parado. 125%: a vitrine das armaduras (as camadas alinhadas
+  à peça).
+- O ferreiro candidato no tamanho de uso, na forja da demonstração (a cena inteira, 30 quadros seguidos).
+- **Não conferido:** o Bestiário com criaturas (a demonstração começa sem nenhuma; o cartão fixado segue a regra dos
+  cabeçalhos) e o Caminho fechado (o painel do mundo se redesenha e desfez a marca posta à mão para a captura).
+- **O pixel azul** continua registrado como não reproduzido (17ª), sem declarar resolvido.
+
+## 17ª versão: a vida na entrada, o feixe nas armaduras, a celebração ligada ao acabamento, o recebimento e o botão A (histórico)
 
 **O sistema inteiro está no [27](../../../roadmapIDEIAS/27-FORJA-ESPECIFICACAO.md)** (6, 9, 10, 11 e 12). Chances,
 custos, limite +12, distribuição de essências e regras de transferência não mudaram. A 16ª está em

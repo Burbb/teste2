@@ -393,3 +393,15 @@ copiadas para `rpg/web/static/cenas/forja/` por `python ferramentas/prototipos/h
 se editam as cópias), desenhadas por `rpg/web/static/telas/cena-forja.js`. O resto da integração (o motor, a vista, os
 pontos, o CSS) está em `docs/ARQUITETURA.md`. O cenário desta pasta (`cenario_forja.py`) continua servindo as candidatas
 antigas para comparação; sem proposta, ele mostra a forja do jogo (o roteiro de fotos chama de "atual").
+
+## Candidatas de retoque do ferreiro (depois da integração; nada integrado)
+
+- **17ª (`h2/candidata_ferreiro.py`, em `h2/candidata/`):** o cabo atravessando a mão no sobe2, a nuca e o calcanhar da
+  bigorna à frente da barriga. O Jean avaliou que o ajuste do cabo e da nuca não resolveu a leitura do braço (ainda
+  parecia segurar um guidão).
+- **18ª (`h2/candidata_gesto.py`, em `h2/candidata-gesto/`):** o gesto do martelo refeito pela cadeia ombro → cotovelo
+  → punho → cabo → cabeça → contato (a pegada na ponta do cabo, o cotovelo subindo à frente do rosto com o martelo
+  armado atrás da cabeça, a descida em arco), mais a nuca e o calcanhar da 17ª. O diagnóstico e o que não mudou estão
+  no próprio script e no LEIA-ME do reforço (18ª). Na demonstração da forja (`reforco/demo.bat`), o Painel de testes
+  troca a tira ("Ferreiro: gesto candidato"; a página recarrega). A fonte `h2/aseprite/forja-h2.aseprite` e o jogo não
+  mudaram: integrar é refazer as poses na fonte e exportar com `exportar_h2.py --jogo`, depois da aprovação.

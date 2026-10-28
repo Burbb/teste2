@@ -8029,3 +8029,29 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   1280×720 nas telas afetadas. Não foi feita a bateria inteira de resoluções.
 - **Decisões abertas (Jean):** o feixe das armaduras; a paleta da celebração; as candidatas do ferreiro e da Odette;
   o estado bloqueado do Bestiário. Som adiado; a etapa 4 continua aberta.
+
+### 28/10/2026 (data do computador local) — Forja: a 18ª versão; armaduras A, B e C, desmontagem fluida, remover gravação, placas da bancada e o gesto do ferreiro (protótipo)
+
+- **Pedido:** revisar a direção visual dos botões e painéis (a aplicação do botão A no jogo não agradou), a partir das
+  placas de metal da bancada, como candidata no protótipo; três alternativas jogáveis para as armaduras do +9 ao +12
+  (o +8 intacto); a fluidez da desmontagem; remover a gravação sem substituir; o gesto do martelo do ferreiro. Sem
+  vídeos nem folhas: as candidatas ficam na demonstração.
+- **Decisões (Jean, neste pedido):** a celebração do +9 ao +12 aceita por enquanto (sem mudar as cores); a remoção
+  gratuita nesta candidata, a essência perdida, nada devolvido; o pixel azul continua não reproduzido.
+- **Candidatas (protótipo; o painel de testes troca cada uma):**
+  - **armaduras A · passadas alternadas, B · cor gradual, C · reflexo principal e secundário**, com a vitrine das
+    cinco peças do +8 ao +12; o feixe da 17ª substituído (fica para comparar);
+  - **placas de metal da bancada** (`tela/placas.css`): o que se aperta tem espessura, o que informa é fixado com
+    rebites, número e tecla em nicho; os Caminhos, os serviços e cabeçalhos, o Voltar à vila, o aviso de talento, a
+    doca, o Inventário, a Comitiva, o Bestiário, a Encruzilhada e o Continuar da festa da especialização. O botão A de
+    produção fica como está até a escolha (em revisão);
+  - **remover a gravação** (27, 3.3 e 9);
+  - **o gesto do ferreiro** (`hud/forja/h2/candidata_gesto.py`): a pegada na ponta do cabo, o martelo armado atrás da
+    cabeça, a descida em arco; sem integrar.
+- **Corrigido (protótipo):** a desmontagem (o efeito a 15 quadros por segundo, as animações em degraus e os
+  redesenhos que paravam o efeito; agora ~60 quadros por segundo e contínua nos redesenhos).
+- **Conferido:** 65 testes do protótipo; a suíte do projeto, o gabarito, o pyflakes e a fumaça; no navegador, a
+  1920×945 e a 1280×720, com teclado e movimento reduzido, os estados das placas um a um e a escala de 125% nas
+  armaduras. Não conferido: o Bestiário com criaturas e o Caminho fechado (LEIA-ME do protótipo, 18ª).
+- **Pendências (Jean):** A, B ou C; as placas (antes de outra aplicação ampla na produção); a remoção (e se deve
+  custar); o gesto do ferreiro; a Odette. Nada integrado; som adiado; a etapa 4 continua aberta.

@@ -1,7 +1,7 @@
 # 27 — A forja: especificação do sistema (reforço, materiais, encantamento, transferência)
 
 Documento de referência da etapa 4. Ele descreve o sistema inteiro como está hoje, sem precisar da conversa nem dos
-históricos de protótipo. Atualizado em 28/10/2026 (17ª versão do protótipo), conferido contra o código do
+históricos de protótipo. Atualizado em 28/10/2026 (18ª versão do protótipo), conferido contra o código do
 protótipo (`ferramentas/prototipos/reforco`: `regras.py`, `encanto.py`, `demo.py`, `tela/reforco.js`) e o de
 produção (`rpg/sistemas/servicos.py`).
 
@@ -230,6 +230,13 @@ As outras peças (cabeça, mãos, pernas, pés, aljava, anel, amuleto) recebem r
   ("Requer nível 9"; a tela mostra "Nível 9" em vermelho no "Requer:" do pé, e o nível de quem veste na dica). Na
   bolsa, a peça pode ser preparada para depois (a prévia diz "A peça passa a requerer nível 9"). Nada é
   tirado do corpo sozinho, e ninguém fica com o benefício sem cumprir o requisito.
+- **Remover sem substituir [Candidata, 18ª]:** escolher um sulco ocupado e remover a gravação; o sulco fica vazio.
+  A essência se perde e nada volta (nem a essência, nem material). Nesta candidata, não custa nada. A confirmação
+  identifica a essência e a perda ("Remover? Brasa I se perde."). Um pedido só remove uma vez (o clique duplo e a
+  tecla segurada não repetem; o motor recusa o pedido repetido e a gravação que mudou desde que a tela a mostrou).
+  Depois, tudo segue as gravações que ficaram: o efeito somado em quem veste, os limites da soma, o requisito de nível
+  da peça (que pode cair), a ficha, as prévias, os sulcos e as bordas de luz das gravações. Não mudam o reforço, os
+  atributos da peça nem as outras gravações.
 - **Peça e dono:** a gravação é da peça e vai com ela quando ela troca de dono.
 - **Desmontar** perde as gravações. A confirmação lista quais ("Perde as gravações: Brasa II, Eco I.").
 - **Compatibilidade por essência:**
@@ -438,7 +445,19 @@ Cobrado uma vez por pedido. A confirmação mostra os dois resultados e o preço
     material, o que chegou ("+10", em verde) e o saldo novo ("Fragmentos: 30"), que acende uma vez. A prévia e o
     recebido se distinguem pelo sinal (× do que vai sair, + do que entrou), pelo encaixe vazio e pelo título. Com
     movimento reduzido, o recebido aparece parado, no mesmo lugar. Fica até a próxima escolha de peça.
+  - **A fluidez [Corrigido, 18ª]:** a transformação parecia ter poucos quadros. As causas: o efeito corria a 15 quadros
+    por segundo (o ritmo das celebrações); as animações do CSS andavam em degraus (11 a 13 quadros por segundo); e a
+    volta do motor desenha a forja mais de uma vez, e cada redesenho parava o efeito no meio do voo e recomeçava as
+    animações. Agora o efeito tem palco e relógio próprios (um quadro a cada atualização da tela; medido: 16 ms entre
+    quadros), os fragmentos voam numa curva até o saco do material, que fica à vista, e as animações seguem o tempo já
+    decorrido (um redesenho continua de onde estava). O +N e o saldo novo acendem quando os fragmentos chegam (antes,
+    o saldo de antes). Duração: 1 s (antes, 0,7). Sem OK e sem celebração; uma cobrança só (conferido com clique duplo).
 - **Entrada da forja [17ª]:** os quatro serviços numa grade 2 × 2 (antes, três numa linha e um sozinho embaixo).
+- **Remover a gravação [Candidata, 18ª]** (regra na seção 3.3): no Encantar, embaixo dos sulcos, "Remover gravação"
+  (só com um sulco ocupado escolhido; o lugar fica reservado). A confirmação no pé, como a da substituição: a pergunta
+  numa frase ("Remover? Brasa I se perde."), o Remover no lugar da ação e o Cancelar ao lado; Esc cancela. A prévia
+  mostra o que cai ("Brasa 20% → —"; o total de quem veste quando outra peça dele também soma; "A peça passa a
+  requerer nível 4" quando o requisito cai). Depois, o sulco vazio apaga a cor da essência uma vez.
 - **A doca dentro da forja [Produção, 1.214.0]:** os atalhos da barra de baixo (Inventário, Comitiva, Grimório…)
   funcionam também nas telas de serviço (a forja, o mercado, a taverna, o templo): o atalho volta ao lugar e abre a
   tela pedida. Antes, eram recusados fora do menu do lugar, o que não fazia sentido para o jogador (pedido do Jean).
@@ -503,7 +522,35 @@ Cobrado uma vez por pedido. A confirmação mostra os dois resultados e o preço
   (1.214.0, `css/27-ferro.css`): os Caminhos, os serviços dos lugares (Mercado, a entrada do ferreiro, a taverna), a
   doca, os cartões do Bestiário e da Comitiva (com a barra), as abas do Inventário, "Distribuir pela sugestão" e os
   "+" dos atributos (uma plaquinha de latão). **[Rejeitado, 17ª]** o B (presilhas de latão), retirado do protótipo.
-- **Armaduras do +9 ao +12 [Candidata, 17ª]:** capacete, peito, luvas, pernas e botas, em vez do veio de faixas
+  **[Em revisão, 18ª]** a aplicação no conjunto do jogo não agradou ao Jean (o aviso de talento, os cabeçalhos da
+  forja e da taverna, o Voltar à vila, o Olhar de perto): superfícies lisas, degradês genéricos e bordas finas. A
+  aprovação do botão A não fecha a aplicação; a candidata abaixo desenvolve a direção.
+- **Placas de metal da bancada [Candidata, 18ª]** (só na demonstração: `tela/placas.css`, "Botões e painéis" no
+  painel de testes): a família de controles a partir das placas que já existem na bancada. Ferro escuro com a textura
+  discreta da chapa, a construção em pixel, latão contido. A regra que separa as funções: **o que se aperta tem
+  espessura** (a face, a aresta de cima acesa e, embaixo, a lateral da placa: o vinco, 3 px escuros e a aresta de
+  baixo pegando luz; pressionar afunda a face e a lateral some); **o que só informa é fixado** (a placa rente, borda de
+  2 px com chanfro e, quando é grande, um rebite de 4 × 4 pixels em cada canto); **o que guarda número ou tecla fica
+  num nicho** (o ouro do cabeçalho, a tecla do Continuar). Tamanhos: cabeçalhos e cartões grandes com rebites e cantos
+  de 3 degraus; botões médios com a placa simples; pequenos (abas, doca, o "+") sem rebite. Estados: mouse (a face
+  clareia, a aresta acende), pressionado, foco (anel de latão de 2 px por dentro), selecionado (o fio de latão em cima,
+  a face quente, a placa assentada) e indisponível (o ferro frio, sem luz nem lateral). Componentes: os Caminhos, os
+  serviços e os cabeçalhos dos lugares (a forja, a taverna, o templo, a curandeira, o mercado), o Voltar à vila, o
+  aviso de pontos de talento (com uma tira de latão), a doca, as abas e os botões do Inventário, os cartões da
+  Comitiva (em relevo) e do Bestiário (fixados), o Olhar de perto e o Confirmar da Encruzilhada, e o Continuar da festa
+  da especialização (só esse: `.festa.fb2-spec .continuar`). A 1280, a mesma altura do acabamento de hoje.
+- **Armaduras do +9 ao +12 [Candidatas A, B e C, 18ª]** (painel de testes, "Armaduras +9 a +12", e a vitrine: as
+  cinco peças do herói do +8 ao +12): o feixe da 17ª ficou discreto demais (do +8 para o +9 parecia perder força). As
+  três partem da faixa do +8, que fica exatamente como está: a mesma força da mistura, a mesma largura (3 pixels e o
+  pixel claro atrás) e a mesma frequência (uma faixa a cada 18 diagonais, um passo a cada 70 ms), e a passada
+  periódica do reflexo volta, na cor da alternativa. **A · passadas alternadas:** uma cor por faixa, na ordem do nível
+  (+9 rubi e âmbar; +10 mais o azul; +11 mais a esmeralda; +12 mais o violeta), nunca várias cores numa faixa.
+  **B · cor gradual:** todas as faixas na mesma cor, que passa devagar para a seguinte (três faixas por cor). **C ·
+  reflexo principal e secundário:** a faixa na cor principal e, logo atrás, um reflexo de 1 px (2 no +11 e +12) na
+  secundária: as cores da celebração do nível (+9 rubi e âmbar; +10 laranja e azul; +11 âmbar e esmeralda; +12 âmbar
+  e violeta). Nas três, o nível cresce pelas cores, pela força (+11 e +12) e pelos pontos de brilho (1 a 4, como nas
+  armas); o +12 tem o pixel claro em marfim. Armas e joias não mudam. Com movimento reduzido, paradas.
+- **Armaduras do +9 ao +12: o feixe [Substituído, 18ª; fica no painel para comparar]:** capacete, peito, luvas, pernas e botas, em vez do veio de faixas
   largas: o **feixe**, linhas diagonais de 1 px na mesma força do veio do +8 (a sutileza dele), estreito, com as cores
   ligadas ao nível (+9 rubi e âmbar; +10 mais o azul; +11 mais o esmeralda; +12 marfim, rubi, âmbar, esmeralda, azul e
   violeta), passando pela peça. O contorno aprovado fica; a passada larga do reflexo não passa nelas. Armas, joias,
@@ -535,7 +582,7 @@ Cobrado uma vez por pedido. A confirmação mostra os dois resultados e o preço
 
 ## 11. Casos de teste e exemplos
 
-**Testes automáticos** (`ferramentas/prototipos/reforco/testes`, 62):
+**Testes automáticos** (`ferramentas/prototipos/reforco/testes`, 65):
 - todo passo de todo espaço, do +0 ao +12, melhora alguma linha, sem casa que o motor não usa e sem passar um degrau da
   conta; a peça sem portador recebe reforço; a peça toda no teto não cobra; a fração na ficha e na luta; o painel de
   testes;
@@ -552,7 +599,9 @@ Cobrado uma vez por pedido. A confirmação mostra os dois resultados e o preço
 - Carrasco pela tabela; Revide pela soma até o limite e no máximo 2 por rodada; Eco até 2 por luta;
 - lutas de verdade;
 - salvar e carregar;
-- entrar e sair da forja pelo caminho real sem mudar a vida (17ª).
+- entrar e sair da forja pelo caminho real sem mudar a vida (17ª);
+- remover a gravação: sem custo, sem devolver, uma vez por pedido, com a soma, o requisito, a ficha e a prévia
+  recalculados (18ª, `TestRemover`).
 
 **Cenários da faixa da demonstração** (só no save temporário):
 - **Níveis altos (teste):** peças de +4 a +12, duas com três gravações; e (16ª) Jean com capacete, luvas, pernas e
@@ -595,8 +644,10 @@ máximo 1 vez por rodada.
 - **Decisões substituídas** (registradas para não voltarem): o limite +4; a escolha Fio ou Runas; o reforço só da
   base; o dobro dos apoios; "a mesma essência não repete"; um efeito por essência gravada; o nível total de 1 a 5
   com teto (agora, cada tier com o seu valor e a soma até o limite de cada efeito).
-- **Candidatas da 17ª a avaliar (Jean):** o feixe das armaduras do +9 ao +12 e a paleta da celebração ligada ao
-  acabamento. O botão A está aprovado e aplicado (seção 10).
+- **Candidatas da 18ª a avaliar (Jean), todas no painel de testes da demonstração:** as armaduras do +9 ao +12 (A,
+  B ou C); as placas de metal da bancada (antes de outra aplicação ampla na produção); remover a gravação sem
+  substituir (e se a remoção deve custar algo); o gesto do martelo do ferreiro (`hud/forja/h2/candidata_gesto.py`,
+  "Ferreiro: gesto candidato"). A celebração do +9 ao +12 está aceita por enquanto; a Odette continua pendente.
 - **Integração da fração:** os atributos com casa decimal e o acúmulo de Espinhos, Vida por turno e Vida por abate
   estão no protótipo (`demo.decimais_na_luta`); na integração, vão para `entidades`, `comitiva` e a luta, com o
   gabarito atualizado de propósito.
