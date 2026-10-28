@@ -347,21 +347,22 @@ class TestGanhoReal(unittest.TestCase):
         self.assertIsInstance(g.j.atk, int)  # sem peça fracionária, o número do jogo de sempre
 
     def test_vida_por_turno_fracionada_acumula(self):
-        from rpg.combate import heroi as mh
+        # 1.215.0: a conta está no jogo (rpg/forja/fracao.py, mod_pontos); o laboratório não a troca mais
+        from rpg.forja import fracao
         u = type("U", (), {})()
         u.equip = {}
-        mod_jogo = D.mod_jogo_original
+        mod_jogo = fracao.mod
         try:
-            D.mod_jogo_original = lambda x, k: 2.6 if k == "regen_vida" else 0
+            fracao.mod = lambda x, k: 2.6 if k == "regen_vida" else 0
             curas = []
             for _ in range(5):
                 u._tique = getattr(u, "_tique", 0) + 1
-                mh.mod(u, "regen_vida")  # a pergunta "há?" e o "quanto" no mesmo tique dão o mesmo número
-                curas.append(mh.mod(u, "regen_vida"))
+                fracao.mod_pontos(u, "regen_vida")  # a pergunta "há?" e o "quanto" no mesmo tique dão o mesmo número
+                curas.append(fracao.mod_pontos(u, "regen_vida"))
             self.assertEqual(sum(curas), 13)  # 2,6 × 5
             self.assertEqual(sorted(set(curas)), [2, 3])
         finally:
-            D.mod_jogo_original = mod_jogo
+            fracao.mod = mod_jogo
 
 
 class TestPainelDeTestes(unittest.TestCase):

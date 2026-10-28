@@ -7,6 +7,7 @@ no Vau, com o herói e a comitiva, e troca só nesta execução (`ativar`) a for
 reforçada e a ficha do inventário pelas regras de regras.py. O jogo de produção não importa esta pasta.
 """
 
+import importlib.util
 import os
 import random
 import re
@@ -1243,6 +1244,9 @@ def decimais_na_luta():
     web_estado.ficha_companheiro = ficha_companheiro_com_fracao
 
 
+INTEGRADO = importlib.util.find_spec("rpg.forja") is not None  # a forja no jogo (1.215.0)
+
+
 def ativar():
     from rpg.sistemas import persistencia
     from rpg.sistemas.inventario import Inventario
@@ -1251,9 +1255,15 @@ def ativar():
     if "materiais" not in persistencia.CAMPOS_SAVE:
         persistencia.CAMPOS_SAVE = persistencia.CAMPOS_SAVE + ("materiais",)
     Servicos.ferreiro = forja
-    E.ativar()
-    decimais_na_luta()
-    requisitos_de_nivel(Inventario)
+    # 1.215.0: a forja aprovada está no jogo (rpg/forja): as gravações na luta, a fração, os requisitos, os sulcos na
+    # criação das peças e os materiais do baú e do saque já valem sem o laboratório; ligá-los de novo aqui dobraria os
+    # efeitos e os sorteios. O laboratório continua com a forja dele (o painel "forja_proto" e tela/reforco.js).
+    if not INTEGRADO:
+        E.ativar()
+        decimais_na_luta()
+        requisitos_de_nivel(Inventario)
+    else:
+        FICHA._nao_veste_classe = FICHA.motivo_classe  # só a classe (no jogo, ficha.motivo_classe)
     carregar = persistencia.Persistencia.carregar.__func__ if hasattr(persistencia, "Persistencia") else None
     if carregar:
         def carregar_com_sulcos(cls, *a, **k):
@@ -1279,7 +1289,8 @@ def ativar():
             d["gravacao_total"] = []  # só para as versões guardadas da tela
         return d
     itens.ficha = ficha_com_gravacao
-    criar_peca()
+    if not INTEGRADO:
+        criar_peca()
     web_estado._item = ficha_com_gravacao
     para_tela = itens.para_tela
 
@@ -1304,6 +1315,8 @@ def ativar():
                            "requisito": d.get("requisito", 1)} for k, d in MATS.items() if k in R.MATERIAIS or m.get(k)]
         return h
     web_estado.heroi = heroi_com_materiais
+    if INTEGRADO:
+        return
     sortear = Inventario.sortear_bau
 
     def sortear_bau(self):  # a exploração também dá material: o baú, metade das vezes, 1 fragmento (hipótese)
@@ -1517,6 +1530,11 @@ def servir():
             with open(os.path.join(mod_srv.PASTA, "index.html"), encoding="utf-8") as f:
                 html = f.read()
             extra = '<script src="/proto/carregar.js"></script></body>'  # a faixa da demonstração e a tela escolhida
+            # a forja do jogo (1.215.0) sai da página: a do laboratório desenha a dela, e as duas juntas decorariam as
+            # peças duas vezes
+            for tag in ('<script src="/static/telas/forja.js"></script>', '<link rel="stylesheet" href="/static/css/28-forja.css">',
+                        '<link rel="stylesheet" href="/static/css/29-placas.css">'):
+                html = html.replace(tag, "")
             return self._responder(200, html.replace("</body>", extra).encode("utf-8"), "text/html; charset=utf-8")
         # 18ª: a candidata do gesto do martelo (hud/forja/h2/candidata-gesto), no lugar da tira do ferreiro do jogo, só
         # quando o painel de testes a escolheu (o cookie rf-ferreiro); sem cache, para a troca valer ao recarregar

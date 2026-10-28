@@ -1,8 +1,15 @@
 # Protótipo: reforço, materiais, desmontagem e encantamento (laboratório)
 
 A demonstração jogável da seção 5 do [25](../../../roadmapIDEIAS/25-ETAPA4-REFORCO-E-ENCANTAMENTO.md) (26/10/2026).
-**Não é integração.** O jogo de produção não carrega esta pasta (um teste confere); a forja, o mercado e os saves do
-jogo não mudaram. Os números são hipóteses desta rodada, não balanceamento.
+O jogo de produção não carrega esta pasta (um teste confere). Os números são hipóteses para avaliar jogando, não
+balanceamento.
+
+**Integrado no jogo na 1.216.0** (o aprovado da 18ª: [27](../../../roadmapIDEIAS/27-FORJA-ESPECIFICACAO.md), "Estado da
+etapa 4"). O motor está em `rpg/forja` e a tela em `rpg/web/static/telas/forja.js`. Esta pasta continua como o
+**laboratório**: as alternativas (as armaduras A · Alternadas, guardada para uma troca futura, e C; o feixe da 17ª e o
+veio anterior; as paletas e celebrações antigas), o painel de testes, os casos forçados e os cenários. Com o motor de
+produção presente, `demo.py` não troca mais as regras (usa as do jogo): só liga o laboratório por cima, e a página que
+ele serve tira a tela e o CSS da forja de produção para usar os daqui.
 
 ## Abrir
 
