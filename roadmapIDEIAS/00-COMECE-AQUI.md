@@ -8112,3 +8112,41 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Causa e correção:** a cabeça vinha de um desenho em código que a gira em qualquer ângulo; com o cabo quase deitado,
   saíam degraus. Nas quatro poses com o martelo na lâmina, a cabeça agora é desenhada à mão, alinhada à grade, e o
   cabo entra reto no olho. O martelo no ar não mudou. Nada integrado: falta a aprovação para levar à fonte em Aseprite.
+
+### 28/10/2026 (data do computador local) — A forja integrada no jogo (1.216.0)
+
+- **Pedido do Jean:** fechar e integrar o lote aprovado da forja e da interface. Aprovados: Reforçar, Encantar, remover
+  gravação, Transferir e Desmontar com as regras atuais; as placas da bancada nos usos revisados; armaduras +9 a +12
+  em **B · Gradual**; o ferreiro "Corpo desce" com o martelo corrigido; a Odette com o busto mais estreito; as
+  celebrações atuais; o Bestiário e o Caminho fechado (conferidos por ele).
+- **Dois retoques antes (protótipo, `db7ef6fe`):** o rótulo da prévia não encosta mais no número ("Ataque 12,2 →
+  12,7"; no componente compartilhado); o encaixe do ícone dos serviços virou um rebaixo da chapa, longe dos rebites,
+  com o ícone do mesmo tamanho.
+- **Fontes consolidadas:** o gesto do ferreiro na fonte Aseprite (`ba1c4727`; a fonte é a autoridade, os scripts
+  antigos recusam sobrescrever), a Odette na grade de `retratos.js` (`df16b1f4`, 1.215.0).
+- **Integrado (1.216.0):**
+  - motor em `rpg/forja` (`regras`, `encanto`, `oficina`, `fracao`); o ferreiro do Vau é a forja ("Ferreiro: a
+    forja"); sem a tela gráfica, só o reforço por lista;
+  - materiais no save e nas fontes reais (lutas, chefes, baús, desmontagem); nada de recompensa de teste na campanha;
+  - save no formato 9: materiais, sulcos e a peça do ferreiro anterior refeita no mesmo +N pelas regras novas (a
+    decisão está no 27, seção 8);
+  - a fração nos atributos e na luta; o requisito de nível em todos os caminhos de vestir; o mercado com o motivo do
+    motor ("Requer nível 9." ou a classe);
+  - a tela (`telas/forja.js`, `css/28-forja.css`, `css/29-placas.css`) sem a faixa, o painel de testes, os casos
+    forçados nem os seletores; armaduras B, celebrações atuais e placas sempre ligadas.
+- **Ficou no protótipo:** as alternativas (armaduras A · Alternadas, preservada para uma troca futura sem opção para
+  o jogador, e C; o feixe e o veio anteriores; paletas e celebrações antigas), o painel de testes e os cenários. A
+  demonstração tira os arquivos de produção da página e liga o laboratório por cima.
+- **Equilíbrio:** sem recalibrar; a economia, as chances e os requisitos ficam para o Jean avaliar jogando. **Som:**
+  adiado.
+- **Gabarito:** atualizado de propósito. As 18 partidas do herói são iguais até a primeira ida ao ferreiro (o
+  ferreiro anterior dava lugar à forja); as 6 da comitiva, iguais sem o sorteio de materiais. O resto vem do sorteio
+  dos materiais no saque e nos baús (desloca o `rng`), dos campos novos (materiais, reforço, requisito, gravações,
+  efeitos), do nome da opção e do motivo no painel do mercado.
+- **Conferido:** a suíte (com os testes novos da forja e do save), o gabarito, o pyflakes, os testes do protótipo e a
+  fumaça; no navegador, pelo cenário `forja` (`python -m tests.navegador.cenarios forja`), em 1920 × 945 e 1280 × 720 e
+  com movimento reduzido: a entrada, o reforço (ganho fracionário), a gravação, a remoção, a transferência, a
+  desmontagem, os materiais no Inventário, o duplo clique e o Enter segurado cobrando uma vez, sem perder vida ao
+  entrar e sem erros no console.
+- **Aberto:** a arte própria dos materiais; as fontes de essência III e de fragmentos para o reforço alto dependem da
+  campanha ampliada; a 1280 × 720 a segunda fileira da entrada pede rolagem (para a consolidação da HUD).

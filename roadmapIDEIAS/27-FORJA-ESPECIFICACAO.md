@@ -1,9 +1,10 @@
 # 27 — A forja: especificação do sistema (reforço, materiais, encantamento, transferência)
 
 Documento de referência da etapa 4. Ele descreve o sistema inteiro como está hoje, sem precisar da conversa nem dos
-históricos de protótipo. Atualizado em 28/10/2026 (18ª versão do protótipo), conferido contra o código do
-protótipo (`ferramentas/prototipos/reforco`: `regras.py`, `encanto.py`, `demo.py`, `tela/reforco.js`) e o de
-produção (`rpg/sistemas/servicos.py`).
+históricos de protótipo. Atualizado em 28/10/2026 (a integração no jogo, 1.216.0), conferido contra o código de
+produção (`rpg/forja`: `regras.py`, `encanto.py`, `oficina.py`, `fracao.py`; a tela `rpg/web/static/telas/forja.js`,
+`css/28-forja.css` e `css/29-placas.css`) e o protótipo (`ferramentas/prototipos/reforco`), que continua com o
+laboratório.
 
 **Fonte única.** As regras vigentes estão aqui. O [25](25-ETAPA4-REFORCO-E-ENCANTAMENTO.md) guarda a pesquisa, o
 debate e as rodadas, e aponta para cá. O [LEIA-ME do protótipo](../ferramentas/prototipos/reforco/LEIA-ME.md) guarda o
@@ -17,17 +18,33 @@ que mudou em cada versão. Se algum dos dois divergir deste documento, vale este
 - **[Adiado]**: fica para depois.
 - **[Substituído]**: decisão antiga que não vale mais.
 
-**Estado da etapa 4:** aberta. Nada do protótipo foi integrado. O equilíbrio está em avaliação: o Jean quer julgar a
-dificuldade jogando uma campanha mais completa.
+**Estado da etapa 4 (1.216.0):**
+- **Integrado no jogo:** a forja inteira (Reforçar, Encantar com a remoção da gravação, Transferir e Desmontar) com as
+  regras desta especificação; os materiais e as fontes reais (seção 2.2); o save novo com a migração (seção 8); a
+  fração nos atributos e na luta; o acabamento do reforço em todas as telas, com as armaduras do +9 ao +12 em **B ·
+  cor gradual**; as placas da bancada nos controles do jogo; o ferreiro com o gesto "Corpo desce". Aprovados pelo
+  Jean na 18ª rodada.
+- **Equilíbrio para avaliar jogando:** a economia (ouro, fragmentos, essências), as chances e os requisitos ficam
+  como estão; o Jean julga jogando com o conjunto integrado. Nada foi recalibrado na integração.
+- **Som:** adiado.
+- **Alternativas preservadas, fora do jogo:** as armaduras A · Alternadas e C, o feixe da 17ª e o veio anterior, as
+  celebrações e as paletas antigas, os seletores de candidatas, o painel de testes e os cenários ficam só na
+  demonstração do protótipo (`ferramentas/prototipos/reforco`). O jogo não carrega nada disso; a demonstração tira os
+  arquivos da forja de produção da página que ela serve e liga o laboratório por cima.
+- **Dependências abertas:** seção 12.
 
 ---
 
 ## 0. O que existe em produção [Produção]
 
-O ferreiro do jogo (`Servicos.ferreiro`, `rpg/sistemas/servicos.py`) reforça só a arma, o peito e o apoio do herói.
-Cada passo melhora uma linha: Ataque (Poder no mago), Defesa no peito, e no apoio a linha da classe. O passo soma 12% do
-valor (no mínimo 1), vai até +5, é garantido e custa 40 × (nível + 1)^1,6 de ouro. Não há materiais, gravação,
-desmontagem nem transferência. **Tudo o que segue é o protótipo**, que substituirá esse ferreiro quando integrado.
+Desde a 1.216.0, o ferreiro do Vau é a forja (`Servicos.ferreiro` → `rpg/forja/oficina.forja`). A opção da vila é
+"Ferreiro: a forja"; a cena é a oficina aprovada (`telas/cena-forja.js`), e no balcão ficam os quatro serviços em 2 × 2
+e a janela deles (`telas/forja.js`, o painel "forja"). Sem a tela gráfica (o jogo em texto), a forja só reforça, por
+uma lista (`forja_em_texto`).
+
+**O ferreiro anterior** (até a 1.215): reforçava só a arma, o peito e o apoio do herói, uma linha por passo (12% do
+valor, no mínimo 1), até +5, garantido, por 40 × (nível + 1)^1,6 de ouro. **[Substituído]** pela forja. As peças que
+ele reforçou num save antigo são refeitas na migração (seção 8).
 
 ## 1. Reforço
 
@@ -147,20 +164,28 @@ Testado: qualquer sequência de tentativas seguida de desmontar ou vender deixa 
 
 ## 2. Materiais
 
-### 2.1 Armazenamento [Protótipo]
+### 2.1 Armazenamento [Produção]
 Os materiais são pilhas do grupo, fora dos 12 espaços da bolsa, de até 99 cada. Ficam no save (`materiais`) e
 aparecem na seção "Materiais" do Inventário. São dois tipos: **Fragmento de Têmpera** (reforço) e **Essência de
 <efeito> I, II ou III** (gravação), 18 essências no total.
 
-### 2.2 Fontes no protótipo [Protótipo; Provisório: as chances]
+### 2.2 Fontes no jogo [Produção; Provisório: as chances]
 
 | Fonte | Fragmentos | Essências |
 |---|---|---|
-| Luta comum (o saque real, `saque_de_combate`) | 25% de chance de 1 (+15% por elite) | 6% (+20% por elite): a da criatura, no tier do nível dela |
+| Luta comum (o saque real, `saque_de_combate` → `oficina.materiais_da_luta`) | 25% de chance de 1 (+15% por elite) | 6% (+20% por elite): a da criatura, no tier do nível dela |
 | Chefe | 2 sempre (3 do nível 6 em diante) | 1 sempre, da criatura, **um tier acima** |
-| Baú | 50% de chance de 1 | 25%: uma qualquer, no tier do nível do herói |
+| Baú (`inventario.sortear_bau`) | 50% de chance de 1 | 25%: uma qualquer, no tier do nível do herói |
 | Desmontagem | metade dos fragmentos nominais e o material da peça (1.4) | as gravações se perdem |
-| Recompensa de teste (início da demonstração) | 12 (1 com os casos) | 2 de cada essência I |
+
+**Sem recompensa artificial na campanha.** A recompensa de teste (12 fragmentos e 2 de cada essência I no começo) e os
+botões de material do painel ficam só na demonstração do protótipo. O cenário de navegador `forja`
+(`tests/navegador/cenarios.py`) dá materiais para conferir a tela; é ferramenta de teste, não conteúdo.
+
+**O que a campanha de hoje rende (1.216.0):** os lugares vão do nível 1 ao 3, então as lutas dão essências I e os
+chefes, II; os baús seguem o nível do herói (II do nível 5). **Nenhuma fonte dá essências III** antes do conteúdo de
+nível 9 (ou de um herói no 9 abrindo baús); o reforço alto (+9 a +12) pede mais fragmentos do que a campanha curta
+rende. Isso depende da campanha ampliada (2.3) e entra na avaliação jogando.
 
 **Tier pelo nível do conteúdo:** I até o nível 4, II do 5 ao 8, III do 9 em diante.
 
@@ -175,8 +200,8 @@ aparecem na seção "Materiais" do Inventário. São dois tipos: **Fragmento de 
 | Revide | javali, grifo, abominação, rato, aranha |
 | Geada | lobo gélido, afogado, sapo, sanguessuga, lobo |
 
-O registro de cada material (`registrar`, evento "material") guarda a origem: luta, chefe, baú, teste. Os botões de
-teste da faixa são separados.
+O registro de cada material (`registrar`, evento "material") guarda a origem: luta, chefe, baú (e, só na
+demonstração, teste); a desmontagem tem o registro dela ("desmontar").
 
 ### 2.3 Planejado [Adiado]
 - Quests e contratos como fonte de essências e fragmentos, sem expansão narrativa neste lote.
@@ -374,12 +399,24 @@ Cobrado uma vez por pedido. A confirmação mostra os dois resultados e o preço
 - **Gravações antigas** (só "brasa") continuam válidas como tier I.
 - **No save:** os materiais entram no save.
 - **Peças sem sulcos** (um save antigo) ganham os delas ao carregar, uma vez.
+- **Save antigo (formato 8, até a 1.215) → formato 9** (`migracoes._v8_para_v9`, uma vez, idempotente) [Produção]:
+  - os materiais começam vazios (`materiais: {}`);
+  - toda peça gravável ganha os sulcos pela semente dela;
+  - **decisão de compatibilidade:** a peça reforçada pelo ferreiro anterior (seção 0) volta à peça original (cada
+    passo antigo desfeito: a linha da classe menos max(1, round(12%)), do último para o primeiro; `bonus_base` e
+    `preco_base` guardados) e recebe o mesmo +N pelas regras da forja (`aplicar_nivel`). O jogador não perde o nível
+    que pagou, e a peça passa a crescer inteira, como as novas. Os números mudam um pouco (a forja dá mais que o
+    ferreiro anterior; ex.: Ataque 9 → 12 no +3 antigo vira 9 de base com o +3 da forja).
 - **Pedidos repetidos:** reforço, gravação e transferência carregam um id de pedido; o mesmo id não age duas vezes.
 - **Numeração dos resultados:** cada resultado da forja tem um número que só cresce (`forja_seq`), também depois dos
   cenários de teste que limpam o último resultado; a tela espera o número que o motor anuncia (`proximo_id`). Antes,
   os cenários reiniciavam a contagem e o reforço seguinte acontecia sem a cena.
 
-## 9. Fluxos da interface [Protótipo]
+## 9. Fluxos da interface [Produção; aprovado no protótipo]
+
+No jogo, sem a faixa da demonstração, o painel de testes, os casos forçados (Sucesso e Falha de teste), a comparação de
+teste e os seletores de candidatas; tudo isso fica no protótipo.
+
 - **Uma janela para as quatro operações:** Reforçar, Encantar, Transferir e Desmontar usam a mesma moldura, do mesmo
   tamanho, com o mesmo cabeçalho e o Fechar no mesmo lugar; trocar de aba não move a janela. O cabeçalho leva só as
   abas, o saldo de ouro e o Fechar. As listas rolam por dentro. Reforçar e o resultado em destaque são a referência
@@ -490,7 +527,11 @@ Cobrado uma vez por pedido. A confirmação mostra os dois resultados e o preço
     segurado fecha sem comprar; Enter segurado no Reforçar compra uma vez;
   - Esc revela, cancela a confirmação e fecha, nessa ordem.
 
-## 10. Linguagem visual [Protótipo]
+## 10. Linguagem visual [Produção; aprovado no protótipo]
+
+No jogo: as armaduras do +9 ao +12 em **B · cor gradual**, as celebrações atuais (a faixa do +9 ao +12) e as placas da
+bancada sempre ligadas. As outras candidatas abaixo ficam na demonstração.
+
 - **Raridade:** a cor da borda do encaixe e do nome.
 - **Reforço:** o acabamento sobre o desenho da peça.
   - +1 a +4: o reflexo; o +4 com contorno dourado. O contorno segue só a silhueta de fora da peça (o furo do anel não
@@ -528,8 +569,8 @@ Cobrado uma vez por pedido. A confirmação mostra os dois resultados e o preço
   **[Em revisão, 18ª]** a aplicação no conjunto do jogo não agradou ao Jean (o aviso de talento, os cabeçalhos da
   forja e da taverna, o Voltar à vila, o Olhar de perto): superfícies lisas, degradês genéricos e bordas finas. A
   aprovação do botão A não fecha a aplicação; a candidata abaixo desenvolve a direção.
-- **Placas de metal da bancada [Candidata, 18ª]** (só na demonstração: `tela/placas.css`, "Botões e painéis" no
-  painel de testes): a família de controles a partir das placas que já existem na bancada. Ferro escuro com a textura
+- **Placas de metal da bancada [Aprovado, 18ª; no jogo desde a 1.216.0: `css/29-placas.css`]** (na demonstração,
+  `tela/placas.css`, "Botões e painéis" no painel de testes): a família de controles a partir das placas que já existem na bancada. Ferro escuro com a textura
   discreta da chapa, a construção em pixel, latão contido. A regra que separa as funções: **o que se aperta tem
   espessura** (a face, a aresta de cima acesa e, embaixo, a lateral da placa: o vinco, 3 px escuros e a aresta de
   baixo pegando luz; pressionar afunda a face e a lateral some); **o que só informa é fixado** (a placa rente, borda de
@@ -550,7 +591,7 @@ Cobrado uma vez por pedido. A confirmação mostra os dois resultados e o preço
   e quente com o fio de latão embaixo); o aviso de talento com o "▸" num fim separado por um vinco; a hierarquia do
   serviço (o ícone no nicho, o nome, a linha secundária). A barra fica 4 px mais alta que hoje; os cartões da forja, 1
   px.
-- **Armaduras do +9 ao +12 [Candidatas A, B e C, 18ª]** (painel de testes, "Armaduras +9 a +12", e a vitrine: as
+- **Armaduras do +9 ao +12 [B aprovada, 18ª, no jogo; A e C preservadas no protótipo]** (painel de testes, "Armaduras +9 a +12", e a vitrine: as
   cinco peças do herói do +8 ao +12): o feixe da 17ª ficou discreto demais (do +8 para o +9 parecia perder força). As
   três partem da faixa do +8, que fica exatamente como está: a mesma força da mistura, a mesma largura (3 pixels e o
   pixel claro atrás) e a mesma frequência (uma faixa a cada 18 diagonais, um passo a cada 70 ms), e a passada
@@ -593,7 +634,15 @@ Cobrado uma vez por pedido. A confirmação mostra os dois resultados e o preço
 
 ## 11. Casos de teste e exemplos
 
-**Testes automáticos** (`ferramentas/prototipos/reforco/testes`, 65):
+**Testes automáticos do jogo** (`tests/`): `test_forja_reforco.py` e `test_forja_encanto.py` (os do protótipo
+levados para o motor de produção: reforço, fração, transferência, desmontagem, gravação, repetição, remoção,
+requisitos, o saque real, as essências na luta), `test_forja_save.py` (salvar e carregar, o formato 9, a migração da
+peça do ferreiro anterior, rodar a migração de novo, o jogo em texto, os sulcos das peças novas) e `forja_apoio.py` (o
+cenário dos exemplos; o resultado forçado pelo sorteio, sem caso de teste no motor). A conferência no navegador usa o
+cenário `forja`.
+
+**Testes automáticos do protótipo** (`ferramentas/prototipos/reforco/testes`, 65; rodam sobre o motor de produção
+quando ele existe):
 - todo passo de todo espaço, do +0 ao +12, melhora alguma linha, sem casa que o motor não usa e sem passar um degrau da
   conta; a peça sem portador recebe reforço; a peça toda no teto não cobra; a fração na ficha e na luta; o painel de
   testes;
@@ -642,12 +691,11 @@ máximo 1 vez por rodada.
 - **Equilíbrio em avaliação:** chances e custos do +5 ao +12 e o ouro (alto para a campanha curta); as tabelas das
   essências (os valores por tier e os limites) e os requisitos de nível; as fontes e as chances de material. Julgar
   jogando a campanha ampliada.
-- **Integração:**
-  - trocar o ferreiro de produção (seção 0);
-  - levar regras, materiais e save para o motor;
-  - os textos para `rpg/` e a skill;
-  - a arte própria dos materiais e das essências por tier (os ícones são provisórios, e os de 16 e 24 px são
-    reduzidos).
+- **Integração [Feita, 1.216.0]:** o ferreiro trocado (seção 0); regras, materiais e save no motor (`rpg/forja`);
+  os textos no motor e na skill `texto-regras-fenda`. **Fica:** a arte própria dos materiais e das essências por tier
+  (os ícones são provisórios, e os de 16 e 24 px são reduzidos).
+- **Entrada da forja a 1280 × 720:** a segunda fileira dos quatro serviços fica atrás da doca e pede rolagem (como no
+  protótipo aprovado); registrado para a consolidação da HUD, sem mudar agora.
 - **Sons:** adiados até a interface estar satisfatória como 1.0.
 - **Elevação da base de peças excepcionais:** pendente (subir o nível base de uma peça única), fora deste lote.
 - **Fontes futuras da campanha:** quests e contratos, e os tiers do conteúdo avançado.
@@ -655,14 +703,14 @@ máximo 1 vez por rodada.
 - **Decisões substituídas** (registradas para não voltarem): o limite +4; a escolha Fio ou Runas; o reforço só da
   base; o dobro dos apoios; "a mesma essência não repete"; um efeito por essência gravada; o nível total de 1 a 5
   com teto (agora, cada tier com o seu valor e a soma até o limite de cada efeito).
-- **Candidatas da 18ª a avaliar (Jean), todas no painel de testes da demonstração:** as armaduras do +9 ao +12 (A,
-  B ou C); as placas de metal da bancada (antes de outra aplicação ampla na produção); remover a gravação sem
-  substituir (e se a remoção deve custar algo); o gesto do martelo do ferreiro (`hud/forja/h2/candidata_gesto.py`,
-  "Ferreiro: gesto candidato"). A celebração do +9 ao +12 está aceita por enquanto; a Odette continua pendente.
-- **Integração da fração:** os atributos com casa decimal e o acúmulo de Espinhos, Vida por turno e Vida por abate
-  estão no protótipo (`demo.decimais_na_luta`); na integração, vão para `entidades`, `comitiva` e a luta, com o
-  gabarito atualizado de propósito.
+- **Candidatas da 18ª [Decididas]:** armaduras B · gradual (A · Alternadas preservada no protótipo para uma troca
+  futura, sem opção para o jogador; o +8 e os níveis anteriores como estão); as placas da bancada; remover a gravação
+  sem custo; o ferreiro "Corpo desce" (na fonte Aseprite e no jogo); a Odette com o busto mais estreito; as
+  celebrações atuais.
+- **Integração da fração [Feita, 1.216.0]:** os atributos com casa decimal (`entidades.recalcular`,
+  `comitiva.grupo`) e o acúmulo de Espinhos, Vida por turno e Vida por abate na luta (`forja/fracao.py`, um tique por
+  vez de agir), com o gabarito atualizado de propósito.
 - **Peça toda no teto:** a proposta (crescer pela linha fixa mais próxima da base) espera decisão. **[Não aprovada,
   17ª; registrada, sem implementar]** dar um atributo adicional quando todas as propriedades da peça atingem o teto.
-- **Mercado:** a peça acima do nível não se equipa ali (o motor recusa), mas o texto do jogo ainda diz "não é para a
-  sua classe" (mercado.js, produção); a corrigir na integração.
+- **Mercado [Corrigido, 1.216.0]:** a peça que o herói não pode usar diz o motivo do motor (`motivo_uso`: "Não é
+  para a sua classe." ou "Requer nível 9.").
