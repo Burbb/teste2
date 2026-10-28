@@ -91,18 +91,67 @@ def rastro(f):
         f.p(x, y, "ferro" if i < 4 else "ferroLuz")
 
 
+# A cabeça do martelo na lâmina, à mão (4ª passada). O desenho em código gira a cabeça em qualquer ângulo e, com o cabo
+# quase deitado, saíam degraus na face que bate (embaixo), o chanfro de cima torto, a luz dividida na diagonal e o cabo
+# entrando fora do meio. Nas poses com o martelo na lâmina, a cabeça fica em pé, alinhada à grade: a face de baixo reta
+# na lâmina, o chanfro de cima simétrico, a luz do lado da fornalha (esquerda) e a sombra do outro; o cabo é uma linha
+# de 1 px que entra no olho (a linha do meio).
+CABECA_M = [
+    ".LLf.",
+    "BLLfS",
+    "BLffS",
+    "BLffS",
+    "BLffS",  # o olho: o cabo entra aqui, pela direita
+    "BLffS",
+    "BLffS",
+    "LLffS",
+    "LffSS",  # a face que bate, reta
+]
+PAL_M = {"B": "ferroBrilho", "L": "ferroLuz", "f": "ferro", "S": "ferroSombra"}
+OLHO = 4
+
+
+def martelo_deitado(f, cabo, cabeca):
+    """O cabo quase deitado: a cabeça em pé (CABECA_M), centrada na cabeça do martelo, e o cabo reto até o olho."""
+    (bx, by), (hx, hy) = cabo, cabeca
+    x0, y0 = round(hx - 2.5), round(hy - 4.5)
+    for dy, linha in enumerate(CABECA_M):
+        for dx, ch in enumerate(linha):
+            if ch in PAL_M:
+                f.p(x0 + dx, y0 + dy, PAL_M[ch])
+    # o cabo, da borda da cabeça até a ponta (atrás da mão), em linha de 1 px (Bresenham)
+    xa, ya, xb, yb = x0 + 5, y0 + OLHO, round(bx), round(by)
+    n = max(abs(xb - xa), abs(yb - ya)) or 1
+    for i in range(n + 1):
+        x, y = round(xa + (xb - xa) * i / n), round(ya + (yb - ya) * i / n)
+        f.p(x, y, "madeira" if i and i % 5 == 0 else "madeiraLuz")
+
+
+def desenhar_martelo(f, cabo, cabeca):
+    """O cabo quase deitado (até 25°) com a cabeça à mão; nos outros ângulos (no ar), o desenho de antes."""
+    (bx, by), (hx, hy) = cabo, cabeca
+    if bx > hx and abs(by - hy) <= 0.47 * abs(bx - hx):
+        return martelo_deitado(f, cabo, cabeca)
+    return DESENHAR_MARTELO(f, cabo, cabeca)
+
+
+DESENHAR_MARTELO = F.desenhar_martelo
+
+
 def figura(estado):
     """O quadro do ferreiro com o braço novo e os retoques da 17ª que não são do braço (a nuca)."""
     pose = "ajuste" if estado == "ajuste_virada" else estado
     guardadas, rastro_antes = dict(F.POSES), F.rastro
     F.POSES.update(POSES)
     F.rastro = rastro
+    F.desenhar_martelo = desenhar_martelo
     try:
         t = F.figura(pose, virada=estado == "ajuste_virada")
     finally:
         F.POSES.clear()
         F.POSES.update(guardadas)
         F.rastro = rastro_antes
+        F.desenhar_martelo = DESENHAR_MARTELO
     p = POSES[pose]
     sx, sy = p["ombro"]
     cx_, cy_ = p["cabeca"]

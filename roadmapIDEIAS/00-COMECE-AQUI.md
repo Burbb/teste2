@@ -8104,3 +8104,11 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   joelhos mais baixos e o ombro 2 px abaixo; o braço vai para a frente e para baixo, encurtado pela perspectiva, e a
   mão termina junto da bigorna) e **Braço reto** (o braço esticado em linha até o contato). O cabo passa a 10 px em
   todas as poses. A subida aprovada fica. Nada integrado.
+
+### 28/10/2026 (data do computador local) — Ferreiro: o martelo limpo no golpe (candidata, 4ª passada)
+
+- **Avaliação do Jean:** o gesto está bom (a direção "Corpo desce"); no golpe, os pixels da cabeça do martelo estavam
+  fora do lugar (a face que bate e a parte de cima) e o cabo desalinhado com a cabeça.
+- **Causa e correção:** a cabeça vinha de um desenho em código que a gira em qualquer ângulo; com o cabo quase deitado,
+  saíam degraus. Nas quatro poses com o martelo na lâmina, a cabeça agora é desenhada à mão, alinhada à grade, e o
+  cabo entra reto no olho. O martelo no ar não mudou. Nada integrado: falta a aprovação para levar à fonte em Aseprite.

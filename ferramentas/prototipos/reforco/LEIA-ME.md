@@ -95,7 +95,11 @@ ombro e 21 px à frente, então o braço só alcançava quase na horizontal, e b
 variantes no painel ("Ferreiro"): **Corpo desce** (a padrão: no golpe e na volta, o quadril e os joelhos descem mais,
 o ombro desce 2 px e o braço vai para a frente e para baixo, encurtado pela perspectiva, com a mão terminando junto da
 bigorna) e **Braço reto** (o cabo com 10 px e o braço esticado em linha até o contato). O cabo tem 10 px nas duas e
-em todas as poses. Mantém a nuca e o calcanhar da bigorna da 17ª. Nada integrado: a fonte `aseprite/forja-h2.aseprite` e o
+em todas as poses. **Quarta passada (o Jean aprovou a direção; faltava o martelo no golpe):** com o martelo na
+lâmina (o golpe, a volta, o repouso e o ajuste), a cabeça é desenhada à mão e alinhada à grade (a face de baixo reta,
+o chanfro de cima simétrico, a luz e a sombra em colunas) e o cabo é uma linha limpa que entra no olho. O desenho em
+código, que gira a cabeça em qualquer ângulo, deixava degraus na face, o chanfro torto, a luz dividida na diagonal e
+o cabo fora do meio; ele continua só para o martelo no ar. Mantém a nuca e o calcanhar da bigorna da 17ª. Nada integrado: a fonte `aseprite/forja-h2.aseprite` e o
 jogo não mudaram.
 
 ### Conferido
