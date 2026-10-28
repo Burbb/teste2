@@ -1192,8 +1192,8 @@ def grupo(ui):
     do Vau, de manhã, com a COMITIVA (padrão "morel,odete"), cada um com os pontos livres dos níveis que passaram. Na
     bolsa: peças de mago (para Odette), de guerreiro (para Morel), um arco (ninguém da comitiva usa), um anel e um
     amuleto. Morel veste uma arma e um peito; Odette, um anel em cada dedo (a escolha do anel). CHEIA=1: a bolsa cheia
-    (12). FERIDO=<id>: ferido (pode ser equipado). LONGE=<id>: não está aqui (a aba apagada, nada muda nele). Abre no
-    Inventário com "i"."""
+    (12). FERIDO=<id>: ferido (pode ser equipado). LONGE=<id>: não está aqui (a aba apagada, nada muda nele).
+    BESTIARIO=lobo:1,afogado:5: as criaturas já abatidas (o Bestiário com fichas). Abre no Inventário com "i"."""
     from rpg import itens
     from rpg.ui import BotUI
     classe = os.environ.get("CLASSE", "guerreiro")
@@ -1221,6 +1221,9 @@ def grupo(ui):
     for cid in os.environ.get("FERIDO", "").split(","):
         if cm.membro(g, cid):
             cm.membro(g, cid)["ferido"] = True
+    for par in [x for x in os.environ.get("BESTIARIO", "").split(",") if x]:  # BESTIARIO=lobo:1,afogado:5: abates
+        fam, n = par.split(":")
+        g.bestiario[fam] = {"vistos": int(n), "abates": int(n)}
     longe = os.environ.get("LONGE")
     if longe:
         cm.AUSENCIAS.append(lambda g, m: {"curto": "espera do lado de fora", "texto": "Espera do lado de fora."}

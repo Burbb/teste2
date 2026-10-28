@@ -64,7 +64,9 @@ class Bestiario:
                            "retrato": retrato(f["tracos"], fam),
                            "tracos_nomes": [TRACOS_FICHA[t]["nome"] for t in f["tracos"]] if conhece else [],
                            "fraquezas": fracos if conhece else [],
-                           "resiste": resiste if self.conhece_resistencias(fam) else []})
+                           "resiste": resiste if self.conhece_resistencias(fam) else [],
+                           # o que ainda falta para conhecer (a ficha mostra como conteúdo bloqueado, com o número real)
+                           "falta": None if conhece else self.progresso_bestiario(fam)})
         if self.ui.painel("bestiario", {"fichas": fichas, "total": len(LORE)}):
             self.pausar()
             return

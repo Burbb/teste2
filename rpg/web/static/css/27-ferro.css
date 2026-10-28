@@ -1,0 +1,90 @@
+/* ============================================================ O acabamento A (1.214.0)
+   O botão A da forja, aprovado pelo Jean: ferro em planos chapados, cantos recortados em degrau, uma luz curta na
+   aresta de cima e a base escura; sem degradê liso e sem textura por baixo do texto. Aqui ele entra só nos componentes
+   conferidos: os Caminhos, os serviços (a forja, a curandeira, o templo, a taverna) e o Mercado, a doca, os cartões da
+   Comitiva e do Bestiário, as abas e os botões de atributo do Inventário. Cada um guarda a composição e a informação
+   dele; muda o material. Telas não conferidas ficam como estavam.
+   Estados: normal, mouse (a face clareia, a luz alonga), pressionado (a face afunda, o conteúdo desce 1 px dentro),
+   foco (um anel de latão por dentro: o recorte dos cantos cortaria um anel por fora), selecionado (o fio de latão em
+   cima e a face mais quente) e indisponível (o ferro apagado, sem a luz). */
+:root {
+  --fa-face: #2e3035; --fa-face-viva: #3b3e45; --fa-luz: #868b94; --fa-base: #141518; --fa-aresta: #0a0b0d;
+  --fa-latao: #c9a14a; --fa-latao-claro: #f2d27a; --fa-face-funda: #202125; --fa-fio: #3a3c41;
+  --fa-recorte: polygon(2px 0, calc(100% - 2px) 0, calc(100% - 2px) 1px, calc(100% - 1px) 1px, calc(100% - 1px) 2px, 100% 2px,
+    100% calc(100% - 2px), calc(100% - 1px) calc(100% - 2px), calc(100% - 1px) calc(100% - 1px), calc(100% - 2px) calc(100% - 1px),
+    calc(100% - 2px) 100%, 2px 100%, 2px calc(100% - 1px), 1px calc(100% - 1px), 1px calc(100% - 2px), 0 calc(100% - 2px),
+    0 2px, 1px 2px, 1px 1px, 2px 1px);
+}
+:root body :is(#mundo .caminhos .caminho, .tela .servico, .tela.loja .mercadoria, #doca .atalho,
+  .tela .cartas > .cartao, .grupo-abas .grupo-aba, .tela .botao-grupo.sugerir) {
+  border: 0; border-image: none; border-radius: 0; filter: none;
+  background: linear-gradient(var(--fa-luz), var(--fa-luz)) 4px 2px / min(30%, 56px) 1px no-repeat, var(--fa-face);
+  box-shadow: inset 0 0 0 1px var(--fa-aresta), inset 0 -3px 0 var(--fa-base), inset 0 2px 0 var(--fa-fio);
+  clip-path: var(--fa-recorte);
+}
+/* o mouse: a face clareia e a luz alonga (só no que se clica) */
+:root body :is(#mundo .caminhos .caminho.clicavel, .tela .servico:not(.caro):not([aria-disabled="true"]), .tela.loja .mercadoria:not(.caro),
+  #doca .atalho, .tela .cartas > .cartao.clicavel, .grupo-abas .grupo-aba, .tela .botao-grupo.sugerir:not(:disabled)):hover {
+  background: linear-gradient(#b9bec6, #b9bec6) 4px 2px / min(42%, 80px) 1px no-repeat, var(--fa-face-viva);
+  border-image: none; transform: none; color: #fff7e6;
+}
+/* pressionado: a face afunda (a sombra entra por cima, a luz sai); o tamanho e o lugar não mudam */
+:root body :is(#mundo .caminhos .caminho.clicavel, .tela .servico:not(.caro):not([aria-disabled="true"]), .tela.loja .mercadoria:not(.caro),
+  #doca .atalho, .tela .cartas > .cartao.clicavel, .grupo-abas .grupo-aba, .tela .botao-grupo.sugerir:not(:disabled)):active {
+  translate: none; transform: none; background: var(--fa-face-funda);
+  box-shadow: inset 0 0 0 1px var(--fa-aresta), inset 0 3px 0 var(--fa-base), inset 0 -1px 0 var(--fa-fio);
+}
+:root body :is(#mundo .caminhos .caminho.clicavel, .tela .servico, .tela.loja .mercadoria, #doca .atalho, .tela .cartas > .cartao.clicavel,
+  .grupo-abas .grupo-aba, .tela .botao-grupo.sugerir):active > * { position: relative; top: 1px; }
+/* foco do teclado: o anel de latão por dentro */
+:root body :is(#mundo .caminhos .caminho, .tela .servico, .tela.loja .mercadoria, #doca .atalho, .tela .cartas > .cartao,
+  .grupo-abas .grupo-aba, .tela .botao-grupo.sugerir):focus-visible {
+  outline: none; box-shadow: inset 0 0 0 1px var(--fa-aresta), inset 0 0 0 3px var(--fa-latao-claro), inset 0 -4px 0 var(--fa-base);
+}
+/* selecionado: o fio de latão em cima (forma, não só cor) e a face mais quente */
+:root body :is(.grupo-abas .grupo-aba.ativa, #doca .atalho.atual) {
+  background: linear-gradient(var(--fa-latao), var(--fa-latao)) 0 0 / 100% 2px no-repeat, #3a3730; color: #fff1cc;
+  box-shadow: inset 0 0 0 1px var(--fa-aresta), inset 0 -3px 0 var(--fa-base);
+}
+/* indisponível: o ferro apagado, sem a luz (o motivo continua escrito onde já estava) */
+:root body :is(#mundo .caminhos .caminho.bloqueado, .tela .servico.caro, .tela .servico[aria-disabled="true"], .tela.loja .mercadoria.caro,
+  .grupo-abas .grupo-aba.indisponivel, .tela .botao-grupo.sugerir:disabled) {
+  background: #222327; box-shadow: inset 0 0 0 1px var(--fa-aresta), inset 0 -3px 0 #17181a; cursor: not-allowed;
+}
+/* a doca continua compacta: as divisórias entre os atalhos saem (cada atalho é uma placa), um vão de 2 px as separa */
+:root body #doca .atalhos { gap: 2px; }
+:root body #doca .atalho + .atalho, :root body #doca .doca-sep + .atalho { background: linear-gradient(var(--fa-luz), var(--fa-luz)) 4px 2px / min(30%, 56px) 1px no-repeat, var(--fa-face); }
+:root body #doca .atalho.atual { background: linear-gradient(var(--fa-latao), var(--fa-latao)) 0 0 / 100% 2px no-repeat, #3a3730; }
+:root body #doca.inativa .atalho:not([data-sempre]) { opacity: 0.55; filter: none; }
+
+/* as barras dos cartões (vida, aprovação, criaturas conhecidas): um trilho de ferro afundado, o enchimento em pixel */
+:root body :is(.tela .cartas > .cartao, .tela > .meter) .barra-px {
+  border: 0; border-image: none; border-radius: 0; background: #0b0c0e;
+  box-shadow: inset 0 0 0 1px #000, inset 0 2px 0 #050506, 0 1px 0 #2a2b2f;
+}
+/* o cartão da Comitiva continua dizendo que se clica: o "›" de latão no canto, que acende com o mouse e o foco */
+:root body .tela .cartas > .cartao.clicavel { cursor: pointer; }
+:root body .tela .cartas > .cartao.clicavel::after { content: "›"; position: absolute; right: 10px; top: 8px; font: 700 20px/1 var(--texto);
+  color: var(--fa-latao); opacity: 0.6; }
+:root body .tela .cartas > .cartao.clicavel:is(:hover, :focus-visible)::after { opacity: 1; color: var(--fa-latao-claro); }
+/* o mestre caçador do Bestiário mantém a marca dourada: a aresta de latão em volta e o fio de cima */
+:root body :is(#fa, .tela .cartas > .cartao.mestre) {
+  background: linear-gradient(var(--fa-latao), var(--fa-latao)) 0 0 / 100% 2px no-repeat, var(--fa-face);
+  box-shadow: inset 0 0 0 1px #8a6a2a, inset 0 -3px 0 var(--fa-base); }
+/* (`:is(#fa, …)`: um id que nunca existe dá a estas exceções o peso da regra geral, que tem #mundo e #doca)
+   o "+" de atributo é uma plaquinha de latão (chama a atenção para o ponto livre), com o mesmo recorte e os estados */
+:root body :is(#fa, .attr-base .attr-mais) { color: #1d1407; font-weight: 700; border: 0; border-image: none; clip-path: var(--fa-recorte);
+  background: linear-gradient(#fff0b0, #fff0b0) 2px 1px / 50% 1px no-repeat, #c9a14a;
+  box-shadow: inset 0 0 0 1px #3a2c10, inset 0 -2px 0 #7a5c1e; }
+:root body :is(#fa, .attr-base .attr-mais:not(:disabled):hover) { background: linear-gradient(#fff6d0, #fff6d0) 2px 1px / 70% 1px no-repeat, #e0b85a; color: #120c04; }
+:root body :is(#fa, .attr-base .attr-mais:not(:disabled):active) { background: #a8843a; box-shadow: inset 0 0 0 1px #3a2c10, inset 0 2px 0 #7a5c1e; }
+:root body :is(#fa, .attr-base .attr-mais:disabled) { background: #4a4234; color: #1d1407; box-shadow: inset 0 0 0 1px #1d1407; }
+:root body :is(#fa, .attr-base .attr-mais:focus-visible) { outline: none; box-shadow: inset 0 0 0 2px #fff3d6, inset 0 -2px 0 #7a5c1e; }
+/* o Bestiário: o que ainda não se conhece é conteúdo bloqueado (um nicho escuro com o cadeado e o que falta) */
+.besti-bloqueado { display: flex; align-items: flex-start; gap: 6px; margin-top: 2px; padding: 5px 8px; font-size: 13px; line-height: 1.35;
+  color: var(--tinta-3, #9d978b); background: #0d0e10; box-shadow: inset 0 0 0 1px #000, inset 0 2px 0 #060607; }
+.besti-bloqueado img.sprite { --s: 16; flex: none; margin-top: 1px; opacity: 0.8; }
+
+/* a entrada da forja do protótipo: os quatro serviços em duas linhas de dois (antes, três e um sozinho embaixo) */
+:root body .forja-proto .rf-servicos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+:root body .forja-proto .rf-servicos > .servico { width: auto; max-width: none; margin: 0; }
