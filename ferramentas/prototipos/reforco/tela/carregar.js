@@ -90,6 +90,7 @@
      descarta a sessão temporária. Nada se aplica com uma tentativa, uma cena ou uma confirmação em andamento. As
      candidatas visuais (acabamento das armaduras, paleta da celebração) trocam na hora: são só aparência. O botão A
      está aprovado e não tem mais escolha. */
+  const ferreiro = () => (/(?:^|; )rf-ferreiro=candidata/.test(document.cookie) ? "candidata" : "jogo");
   function painelTestes(botao, P) {
     const el = document.createElement("div");
     el.id = "painel-testes";
@@ -139,9 +140,17 @@
       ${P.vitrineArmaduras ? `<div class="pt-linha"><span>Vitrine (as mesmas peças)</span><span class="pt-seg"><button type="button" data-vitrine-tam aria-pressed="false">Ampliar 2×</button></span></div>${P.vitrineArmaduras()}` : ""}
       ${grupo("paleta", "Celebração +9 a +12", [["candidata", "Candidata"], ["anterior", "Anterior"], ["referencia13", "Ouro (ref. +13)"]])}
       ${grupo("placas", "Botões e painéis", [["jogo", "Como no jogo"], ["bancada", "Placas da bancada"]])}
+      <div class="pt-linha"><span>Ferreiro (recarrega)</span><span class="pt-seg" role="radiogroup" aria-label="Ferreiro">${[["jogo", "Como no jogo"], ["candidata", "Gesto candidato"]].map(([v, n]) =>
+        `<button type="button" role="radio" data-ferreiro="${v}" aria-checked="${ferreiro() === v}">${n}</button>`).join("")}</span></div>
       <div class="pt-linha"><span>Festa da especialização</span><span class="pt-seg"><button type="button" data-festa-spec>Mostrar</button></span></div>
       <p class="pt-nota">A festa é só a tela (nada muda na partida). A escolha de verdade: Taverna → Dormir, com o herói no nível 4 sem especialização.</p></fieldset>`;
     function ligarVisuais() {
+      // o gesto candidato do ferreiro: o servidor da demonstração troca a tira pelo cookie; a cena lê a tira ao carregar
+      el.querySelectorAll("[data-ferreiro]").forEach((b) => b.addEventListener("click", () => {
+        if (ferreiro() === b.dataset.ferreiro) return;
+        document.cookie = `rf-ferreiro=${b.dataset.ferreiro}; path=/; SameSite=Strict`;
+        location.reload();
+      }));
       // a festa da especialização com dados de exemplo, para ver o Continuar dela (a tela só; o motor não participa)
       el.querySelector("[data-festa-spec]")?.addEventListener("click", () => {
         Telas.celebrar({ tipo: "spec", dados: { id: "paladino", nome: "Paladino", desc: "Juramento da Luz. Cura a si mesmo, fere mortos-vivos e corrompidos com poder sagrado.",

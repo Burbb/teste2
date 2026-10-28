@@ -1518,6 +1518,13 @@ def servir():
                 html = f.read()
             extra = '<script src="/proto/carregar.js"></script></body>'  # a faixa da demonstração e a tela escolhida
             return self._responder(200, html.replace("</body>", extra).encode("utf-8"), "text/html; charset=utf-8")
+        # 18ª: a candidata do gesto do martelo (hud/forja/h2/candidata-gesto), no lugar da tira do ferreiro do jogo, só
+        # quando o painel de testes a escolheu (o cookie rf-ferreiro); sem cache, para a troca valer ao recarregar
+        if caminho == "/static/cenas/forja/ferreiro.png" and "rf-ferreiro=candidata" in (self.headers.get("Cookie") or ""):
+            arq = os.path.join(AQUI, "..", "hud", "forja", "h2", "candidata-gesto", "ferreiro.png")
+            if os.path.isfile(arq):
+                with open(arq, "rb") as f:
+                    return self._responder(200, f.read(), "image/png")
         if caminho.startswith("/proto/"):
             arq = os.path.normpath(os.path.join(tela, caminho[len("/proto/"):]))
             if not arq.startswith(tela + os.sep) or not os.path.isfile(arq):
