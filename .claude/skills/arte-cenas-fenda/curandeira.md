@@ -1,14 +1,16 @@
-# Estudo de caso: a curandeira do Vau (28/10/2026, em avaliação)
+# Estudo de caso: a curandeira do Vau (28/10/2026, integrada na 1.218.0)
 
-O histórico está em `ferramentas/prototipos/curandeira/LEIA-ME.md`. Aqui, o que cada passada ensinou. **Nada aprovado
-ainda:** é a candidata A em avaliação pelo Jean; as medidas e o ritmo são desta cena.
+O histórico está em `ferramentas/prototipos/curandeira/LEIA-ME.md`. Aqui, o que cada passada ensinou. **Aprovada na
+quarta passada e integrada na 1.218.0**; as medidas e o ritmo são desta cena.
 
 | Passada | O que era | O que o Jean disse | O que ficou de lição |
 |---|---|---|---|
 | 1ª | a cabana em código na linguagem da forja; o giro do pilão em 8 poses, só o braço | — | — |
 | 2ª | a botica (potes com coisas dentro, alambique, proteções); o braço em formas cheias, 12 poses a 100 ms | gostou da composição e da botica; os maços pareciam pinhatas; o trabalho, robótico (só o braço) | limpeza e número de quadros não fazem atuação |
 | 3ª | os maços à mão; a rotina com o corpo; os rostos refeitos | gostou do cenário, dos ingredientes e da rotina; jogando, o braço parecia mais contínuo que o resto do corpo e que o jogo | mais poses no braço não dão coerência (5b, passo 8) |
-| 4ª | a volta em 7 poses sustentadas (a pressão de 4 a 6 tiques), a mesma duração; a mão alcança o cabo antes de pegar o pilão | (em avaliação) | — |
+| 4ª | a volta em 7 poses sustentadas (a pressão de 4 a 6 tiques), a mesma duração; a mão alcança o cabo antes de pegar o pilão | aprovada, com a integração | — |
+
+**A integração (1.218.0):** a fonte em Aseprite gerada do código (`fonte.py --criar`, que não sobrescreve), a exportação conferida contra a candidata (8 de 8 camadas e a rotina) e a cena do jogo desenhada tique a tique contra o composto da candidata (igual pixel a pixel nos três estados). O teste que compara a cena de produção com a candidata nos mesmos estados é o que prova a integração fiel; o roteiro de fotos só prova que funciona.
 
 ## O ritmo da 4ª passada
 

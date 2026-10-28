@@ -8223,3 +8223,31 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   cartões, o clique duplo, o último pelo teclado, ouro, ferimento e vida máxima, os três estados sem ferimento, sair e
   voltar sem acumular relógio, a pose parada, sem erros no console). A curandeira continua candidata; templo e taverna
   não começados.
+
+### 28/10/2026 (data do computador local) — A curandeira no jogo (1.218.0) e o templo em protótipo (duas candidatas)
+
+- **Pedido do Jean:** integrar fielmente a curandeira aprovada (cenário, ingredientes, Pita com o banquinho e Marta, a
+  rotina, a moagem da quarta passada, os estados, a pose parada, os cartões), sem revisão nova; corrigir a concordância
+  de "Mordida dilacerada: tratado" no componente; e começar o templo (Curandeira → Templo → Taverna). Durante a rodada:
+  uma segunda candidata do templo a partir da referência que ele adicionou (`Interior do Templo da Vila.png`).
+- **No jogo:**
+  - **concordância** (commit próprio): as mensagens de ferimento concordam pelo artigo do `curto` de cada um
+    (`sobrevivencia.concordar`, `possessivo`): "Mordida dilacerada: tratada", "Costelas quebradas: tratadas",
+    "Concussão: curada", "Sua mordida dilacerada está vermelha";
+  - **a cabana (1.218.0):** a arte em `static/cenas/curandeira` exportada da fonte nova
+    (`ferramentas/prototipos/curandeira/aseprite/curandeira.aseprite`, `fonte.py`), `telas/cena-curandeira.js`,
+    `css/30-curandeira.css` e `servicos.cena_curandeira` (o motor diz quem atende e a água; só no Vau da campanha). A
+    1.217.0 ficou: entrar sem ferimento, continuar depois do último, o tutorial, os preços e os efeitos.
+  - **Gabarito** atualizado de propósito nos dois commits: as mensagens de ferimento; o painel da cena nas partidas da
+    tela gráfica.
+- **Conferido:** a suíte, o gabarito, o pyflakes e a fumaça (385, com a cena da cabana); no jogo real (cenários
+  `tutorial` e `retorno`), a 1920×945 e a 1280×720: os três estados, cartões, clique duplo, teclado, atalho M, Esc,
+  sair e voltar com um relógio só, movimento reduzido, só arquivos de produção, sem erros; a cena de produção igual à
+  candidata pixel a pixel em todos os tiques dos três estados. Limites: fora do Vau da campanha, a curandeira segue
+  sem ambiente; a tela da curandeira não tem atalho de número (nunca teve).
+- **Templo (`ferramentas/prototipos/templo`, só no protótipo):** o levantamento (o clérigo cansado, de mãos firmes;
+  unguentos e orações; o herói e a comitiva; o primeiro atendimento grátis; o templo em silêncio quando ninguém
+  precisa; as janelas da fachada acesas em amarelo quente) e duas candidatas jogáveis: **A**, a nave de lado (o clérigo
+  enrola ataduras na mesa dos unguentos, ~42 px), e **B**, da referência do Jean (a nave de frente para o altar sob o
+  arco; o clérigo dobra panos, ~31 px; sem os símbolos gerados). O interior entra no lugar da vila aproximada; o balcão
+  e os cartões são os de sempre. Conferido na demonstração nas duas resoluções. A taverna não foi começada.

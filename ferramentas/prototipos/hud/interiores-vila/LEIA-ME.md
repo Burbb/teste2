@@ -1,5 +1,7 @@
 # Etapa 5: interiores da Curandeira, do Templo e da Taverna (levantamento e esboço inicial)
 
+> **Histórico.** O estado atual está no código e nos registros recentes: a curandeira foi integrada na 1.218.0 (`ferramentas/prototipos/curandeira`); o templo tem duas candidatas em `ferramentas/prototipos/templo`. Os trechos abaixo sobre a curandeira e a forja descrevem o ponto de partida, já superado.
+
 28/10/2026, sobre a 1.214.0. **Nada desenhado e nada mudado no jogo.** É o ponto de partida da seção 5 do
 [23](../../../../roadmapIDEIAS/23-PLANO-DE-ARTE-INTERFACE-E-COMBATE.md) ("Templo/igreja, Curandeira e Taverna, cada
 interior com composição e identidade próprias; não fazer três cópias da capela"), feito pela skill `arte-cenas-fenda`.
