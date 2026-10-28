@@ -25,6 +25,7 @@
     python -m tests.navegador.cenarios muralha       # Guerreiro nv 6, Muralha + Contra-ataque (CONTRA) e o Broquel, contra bandidos e um cultista
     python -m tests.navegador.cenarios integracao    # TESTE da etapa 4: herói com a comitiva em lutas seguidas (CLASSE, ESPEC, NIVEL, COMITIVA, LUTA, CAIDO, PENAS, PONTOS)
     python -m tests.navegador.cenarios grupo         # a janela do grupo: equipamento e atributos da comitiva (CLASSE, NIVEL, COMITIVA, CHEIA, FERIDO, LONGE)
+    python -m tests.navegador.cenarios forja         # a forja do Vau com peças, fragmentos e essências (FRAGMENTOS, ESSENCIAS, OURO)
 
 Imprime o endereço do servidor na primeira linha e fica no ar até ser encerrado.
 """
@@ -1090,6 +1091,7 @@ def aneis(ui):
     g.mundo["atual"] = next(l for l in g.mundo["locais"] if l["tipo"] == "vila")["id"]
     g.periodo, g.clima = 1, "limpo"
     g.j.ouro = int(os.environ.get("OURO", "300"))
+    g.j.nivel = 3  # o anel achado é de nível 4: pede o 3 para vestir (o requisito da forja, 1.216.0)
     rng = random.Random(11)
     n = int(os.environ.get("ANEIS", "2"))
     if n >= 1:
@@ -1243,7 +1245,32 @@ def grupo(ui):
         pass
 
 
-CENARIOS = {"integracao": integracao, "grupo": grupo, "aneis": aneis, "mercado": mercado, "relatorio": relatorio, "combate": combate, "titulo": titulo, "vila": vila, "campanha": campanha, "baus": baus, "missao": missao,
+def forja(ui):
+    """A forja do Vau (etapa 4, rpg/forja): o Guerreiro no nível 4 com Morel e Odette, as peças dos exemplos da
+    especificação (tests/forja_apoio.preparar), FRAGMENTOS (padrão 14) e as essências de nível 1 e 2 (ESSENCIAS,
+    padrão 3 de cada), e OURO (padrão 380). Ferramenta de teste: na campanha, os materiais vêm das lutas e dos baús.
+    Abre na vila; a forja é a opção "Ferreiro: a forja"."""
+    from rpg.forja import encanto, oficina
+    from rpg.ui import BotUI
+    from tests import forja_apoio
+    g = Jogo(BotUI(random.Random(1)), seed=int(os.environ.get("SEMENTE", "11")), pasta_saves=tempfile.mkdtemp(),
+             hardcore=False)
+    g.iniciar("Jean", "guerreiro", "turvo")
+    forja_apoio.preparar(g)  # já marca a campanha como começada
+    mats = oficina.materiais(g)
+    mats["fragmento"] = int(os.environ.get("FRAGMENTOS", "14"))
+    for essencia in encanto.ORDEM:
+        for tier in (1, 2):
+            mats[encanto.material(essencia, tier)] = int(os.environ.get("ESSENCIAS", "3"))
+    g.j.ouro = int(os.environ.get("OURO", "380"))
+    g.ui, ui.jogo = ui, g
+    try:
+        g.rodar()
+    except FimDeJogo:
+        pass
+
+
+CENARIOS = {"integracao": integracao, "grupo": grupo, "forja": forja, "aneis": aneis, "mercado": mercado, "relatorio": relatorio, "combate": combate, "titulo": titulo, "vila": vila, "campanha": campanha, "baus": baus, "missao": missao,
             "recarga": recarga, "capela": capela, "retorno": retorno, "praca": praca, "encruzilhada": encruzilhada,
             "tiro_duplo": tiro_duplo, "covil": covil, "broquel": broquel, "muralha": muralha, "reacoes": reacoes, "resgate": resgate,
             "gelo": gelo, "abertura": abertura, "fogueira": fogueira,

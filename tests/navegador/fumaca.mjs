@@ -1951,7 +1951,35 @@ async function cenarioOuroInsuficiente(browser) {
   try {
     await page.waitForSelector("#predios .predio", { timeout: 20000 });
     await page.waitForTimeout(600);
-    for (const predio of ["ferreiro", "taverna"]) {
+    // a forja (1.216.0): o Reforçar sem ouro e sem fragmento fica bloqueado; o clique diz o motivo do motor (o title
+    // do botão), um aviso só, e não cobra nada
+    await page.click('#predios .predio[data-predio="ferreiro"]');
+    await page.click('.forja-servicos [data-servico="reforcar"]', { timeout: 10000 });
+    await page.waitForSelector(".rf-janela .rf-esteira .rf-peca", { timeout: 10000 });
+    await page.click(".rf-janela .rf-esteira .rf-peca");
+    await page.waitForTimeout(500);
+    const ref = await page.waitForSelector("[data-reforcar][aria-disabled]", { timeout: 10000 });
+    const motivo = await ref.getAttribute("title");
+    const antesF = await page.evaluate(() => ({ ouro: estado.heroi.ouro, dia: estado.dia }));
+    for (let k = 0; k < 3; k++) await ref.click({ force: true });
+    await page.waitForTimeout(150);
+    const listaF = await avisos();
+    conferir(!!motivo && listaF.length === 1 && listaF[0] === motivo,
+      `forja: três cliques no Reforçar sem ouro nem fragmento, um aviso só, com o motivo (${motivo})`);
+    await page.waitForTimeout(1900);
+    await ref.focus();
+    await page.keyboard.press("Enter");
+    await page.waitForTimeout(150);
+    const depoisF = await page.evaluate(() => ({ ouro: estado.heroi.ouro, dia: estado.dia }));
+    conferir((await avisos()).length === 1 && JSON.stringify(antesF) === JSON.stringify(depoisF),
+      "forja: pelo teclado também, e a tentativa não gasta ouro");
+    await page.waitForTimeout(1800);
+    await page.keyboard.press("Escape");
+    await page.waitForTimeout(600);
+    await page.keyboard.press("Escape");
+    await page.waitForSelector("#predios .predio", { timeout: 10000 });
+    await page.waitForTimeout(900);
+    for (const predio of ["taverna"]) {
       await page.click(`#predios .predio[data-predio="${predio}"]`);
       const caro = await page.waitForSelector(".servico.caro", { timeout: 10000 });
       const antes = await page.evaluate(() => ({ ouro: estado.heroi.ouro, texto: document.getElementById("texto").innerText, dia: estado.dia }));
