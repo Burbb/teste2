@@ -152,6 +152,72 @@ class TestGravar(unittest.TestCase):
             self.assertEqual(D.materiais(g).get("essencia_eco", 0), antes)
 
 
+class TestRemover(unittest.TestCase):
+    """Remover a gravação sem substituir (18ª, candidata): o sulco fica vazio, a essência se perde, nada volta, não
+    custa nada e um pedido só remove uma vez."""
+
+    def test_remove_sem_cobrar_nem_devolver_e_so_uma_vez(self):
+        g = jogo()
+        arma = g.j.equip["arma"]
+        g.j.nivel = 5  # o requisito do tier II (vestida)
+        D.materiais(g)["essencia_brasa_2"] = 1
+        self.assertTrue(D.encantar(g, arma["uid"], "brasa:2", 0, pedido="a")[0])
+        self.assertTrue(D.encantar(g, arma["uid"], "carrasco", 1, pedido="b")[0])
+        ouro, mats = g.j.ouro, dict(D.materiais(g))
+        ok, texto = D.remover_encanto(g, arma["uid"], 0, pedido="r1", remove="brasa:2")
+        self.assertTrue(ok, texto)
+        self.assertEqual(arma["encantos"], [None, "carrasco"])  # só o sulco escolhido; o outro fica
+        self.assertEqual(g.j.ouro, ouro)  # gratuita
+        self.assertEqual(dict(D.materiais(g)), mats)  # a essência não volta, nenhum material entra
+        self.assertEqual(g.forja_ultimo["tipo"], "remove")
+        self.assertEqual(g.forja_ultimo["de"]["id"], "brasa:2")
+        # o mesmo pedido de novo (clique duplo, tecla segurada): nada
+        self.assertEqual(D.remover_encanto(g, arma["uid"], 0, pedido="r1", remove="brasa:2"), (False, None))
+        # um pedido novo com a gravação que a tela mostrava antes: o sulco já está vazio
+        self.assertFalse(D.remover_encanto(g, arma["uid"], 0, pedido="r2", remove="brasa:2")[0])
+        # a gravação mudou desde que a tela mostrou: nada
+        self.assertFalse(D.remover_encanto(g, arma["uid"], 1, pedido="r3", remove="brasa")[0])
+        self.assertEqual(arma["encantos"], [None, "carrasco"])
+        # o reforço e os atributos da peça não mudam
+        self.assertEqual(arma.get("reforco", 0), 0)
+
+    def test_soma_requisito_ficha_e_previa_depois_de_remover(self):
+        g = jogo()
+        g.j.nivel = 9
+        arma = g.j.equip["arma"]
+        D.materiais(g)["essencia_brasa_3"] = 2
+        bonus = dict(arma["bonus"])
+        self.assertTrue(D.encantar(g, arma["uid"], "brasa:3", 0, pedido="a")[0])
+        self.assertTrue(D.encantar(g, arma["uid"], "brasa", 1, pedido="b")[0])
+        self.assertEqual(E.soma_equip(FICHA.corpo(g, D.HEROI))["brasa"], 36 + 20)
+        self.assertEqual(E.requisito(arma), 9)
+        # a prévia, pronta do motor: o valor que cai e o requisito novo
+        pr = D.previsao_remocao(g, arma, D.HEROI, 0)
+        self.assertEqual([(l["rotulo"], l["antes"], l["depois"]) for l in pr["linhas"]], [("Brasa", "56%", "20%")])
+        self.assertEqual(pr["nota"], f"A peça passa a requerer nível {E.requisito_base(arma)}")
+        ficha = next(x for x in D.painel(g)["pecas"] if x["uid"] == arma["uid"])
+        self.assertEqual(set(ficha["encantar"]["remocao"]), {"0", "1"})
+        self.assertTrue(D.remover_encanto(g, arma["uid"], 0, pedido="r", remove="brasa:3")[0])
+        # o efeito agregado em quem veste, o requisito da peça e a ficha
+        self.assertEqual(E.soma_equip(FICHA.corpo(g, D.HEROI))["brasa"], 20)
+        self.assertEqual(E.requisito(arma), E.requisito_base(arma))
+        ficha = next(x for x in D.painel(g)["pecas"] if x["uid"] == arma["uid"])
+        self.assertEqual([x and x["id"] for x in ficha["encantos"]], [None, "brasa"])
+        self.assertEqual([(x["nome"], x["valor"]) for x in ficha["efeitos"]], [("Brasa", "20%")])
+        self.assertEqual(set(ficha["encantar"]["remocao"]), {"1"})
+        self.assertEqual(arma["bonus"], bonus)  # os atributos originais ficam
+
+    def test_remover_a_ultima_some_o_efeito(self):
+        g = jogo()
+        arma = g.j.equip["arma"]
+        self.assertTrue(D.encantar(g, arma["uid"], "carrasco", 0, pedido="a")[0])
+        pr = D.previsao_remocao(g, arma, D.HEROI, 0)
+        self.assertEqual([(l["antes"], l["depois"]) for l in pr["linhas"]], [("15%", "—")])
+        self.assertTrue(D.remover_encanto(g, arma["uid"], 0, pedido="r", remove="carrasco")[0])
+        self.assertNotIn("carrasco", E.soma_equip(FICHA.corpo(g, D.HEROI)))
+        self.assertEqual(D.efeitos_peca(arma), [])
+
+
 class TestSulcosDaPeca(unittest.TestCase):
     def test_nascem_com_a_peca_e_a_ficha_so_le(self):
         g = jogo()

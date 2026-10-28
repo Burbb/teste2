@@ -34,6 +34,8 @@
   let essSel = null;          // a essência escolhida no trilho (fica entre as peças)
   let sulcoSel = 0, sulcoDe = null;  // o sulco escolhido (e de que peça: outra peça começa no primeiro vazio)
   let confirmandoGrav = null; // {uid}: a substituição pedida, esperando a confirmação
+  let confirmandoRem = null;  // {uid, sulco}: a remoção pedida (18ª), esperando a confirmação
+  let removido = null;        // {id, uid, sulco, t0, cor}: a gravação que acabou de sair (o sulco apaga uma vez)
   let trOrigem = null, trDestino = null;  // a transferência: as duas peças escolhidas (pelos seletores)
   let trSeletor = null;        // "origem" ou "destino": o seletor aberto
   let trAviso = "";            // o destino limpo quando a origem nova não o aceita (dito uma vez)
@@ -151,6 +153,7 @@
       if (d.ultimo.tipo === "reforco") cena = { id: d.ultimo.id, t0: performance.now(), fim: false, pago };
       if (d.ultimo.tipo === "desmonte" && pedidoDesmonte) desmonte = { id: d.ultimo.id, t0: performance.now(), ...pedidoDesmonte };
       if (d.ultimo.tipo === "transfere") transf = { id: d.ultimo.id, t0: performance.now(), fim: false, u: d.ultimo };
+      if (d.ultimo.tipo === "remove") removido = { id: d.ultimo.id, uid: d.ultimo.uid, sulco: d.ultimo.sulco, t0: performance.now(), cor: d.ultimo.de && d.ultimo.de.cor };
       if (d.ultimo.tipo === "encanto") gravando = { id: d.ultimo.id, t0: performance.now(), uid: d.ultimo.uid, sulco: d.ultimo.sulco, de: d.ultimo.de, para: d.ultimo.para };
     }
   }
@@ -493,10 +496,18 @@
       || (d.ouro < custo ? `Faltam ${custo - d.ouro} de ouro` : null));
     // à esquerda: a peça e os sulcos
     const tituloEnc = p ? `<div class="rf-titulo"><b class="r-${h(p.item.raridade)}">${h(p.item.nome)}</b><small>${h(dono(p))}</small></div>` : `<div class="rf-titulo vazio"><b>&nbsp;</b><small>Escolha uma peça</small></div>`;
-    const sulcoBtns = sulcos.map((x, i) => `<button type="button" role="radio" class="rf-sulco-op${x ? "" : " vazio"}${i === sulcoSel ? " escolhido" : ""}" data-sulco="${i}" aria-checked="${i === sulcoSel}"
+    // 18ª: o sulco que acabou de ser esvaziado apaga a cor da essência uma vez (pelo tempo decorrido: um redesenho continua)
+    const esvaziou = (i) => removido && p && removido.uid === p.uid && removido.sulco === i && performance.now() - removido.t0 < 600;
+    const sulcoBtns = sulcos.map((x, i) => `<button type="button" role="radio" class="rf-sulco-op${x ? "" : " vazio"}${i === sulcoSel ? " escolhido" : ""}${!x && esvaziou(i) ? " esvaziou" : ""}" data-sulco="${i}" aria-checked="${i === sulcoSel}"
+        ${!x && esvaziou(i) ? `style="--ess:${h(removido.cor || "#888")};--rf-e:-${Math.round(performance.now() - removido.t0)}ms"` : ""}
         aria-label="Sulco ${i + 1}: ${x ? h(x.titulo) : "vazio"}"${x ? ` style="--ess:${h(x.cor)}"` : ""} ${Telas.dica(x ? `<b>${h(x.titulo)}</b><div>${h(x.efeito)}</div>${x.limite ? `<div class="rodape">${h(x.limite)}</div>` : ""}` : "<b>Sulco vazio</b>", true)}>
         <span class="rf-sulco-ic">${x ? icEss(x) : ""}</span><span class="rf-sulco-nome">${x ? h(x.titulo) : "Vazio"}</span></button>`).join("");
-    const itemArea = `<section class="rf-enc-item">${tituloEnc}${molde(p, "", "")}${p ? `<div class="rf-sulcos-op" role="radiogroup" aria-label="Sulcos">${sulcoBtns}</div>` : ""}</section>`;
+    // 18ª: remover a gravação do sulco escolhido (o sulco fica vazio; a essência se perde; sem custo). O lugar fica
+    // reservado mesmo sem gravação, para nada pular ao trocar de sulco.
+    const confRem = !!(confirmandoRem && p && atual && confirmandoRem.uid === p.uid && confirmandoRem.sulco === sulcoSel);
+    const remBtn = p ? `<button type="button" class="rf-remover" data-remover${!atual || g ? ' aria-disabled="true" tabindex="-1"' : ""}${confRem ? ' aria-pressed="true"' : ""}
+        aria-label="${atual ? `Remover ${h(atual.titulo)} do sulco ${sulcoSel + 1}` : "Sulco vazio"}">Remover gravação</button>` : "";
+    const itemArea = `<section class="rf-enc-item">${tituloEnc}${molde(p, "", "")}${p ? `<div class="rf-sulcos-op" role="radiogroup" aria-label="Sulcos">${sulcoBtns}</div>${remBtn}` : ""}</section>`;
     // à direita: a família, o tier, a previsão
     const familias = [...new Set(ess.map((x) => x.essencia))].map((k) => ess.filter((x) => x.essencia === k));
     const famHtml = `<div class="rf-familias" role="radiogroup" aria-label="Essência">${familias.map((ts) => {
@@ -508,7 +519,8 @@
     const tierHtml = e ? `<div class="rf-tiers" role="radiogroup" aria-label="Tier">${ess.filter((x) => x.essencia === e.essencia).map((x) => `<button type="button" role="radio"
         class="rf-tier-op${x.id === e.id ? " escolhido" : ""}${x.qtd < 1 ? " apagada" : ""}" data-essencia="${h(x.id)}" aria-checked="${x.id === e.id}" style="--ess:${h(x.cor)}">
         ${icEss(x)}<span class="rf-tier-qtd" aria-label="${x.qtd} ${x.qtd === 1 ? "unidade" : "unidades"}">×${x.qtd}</span></button>`).join("")}</div>` : "";
-    const essArea = `<section class="rf-enc-ess">${famHtml}${tierHtml}${e && p && !motivoPeca ? previsaoGravacao(p, e, atual, prev) : `<p class="rf-nota neutra">${h(motivoPeca || "Escolha uma essência")}</p>`}</section>`;
+    const rem = confRem ? (p.encantar.remocao || {})[sulcoSel] : null;
+    const essArea = `<section class="rf-enc-ess">${famHtml}${tierHtml}${rem ? previsaoRemocao(rem) : e && p && !motivoPeca ? previsaoGravacao(p, e, atual, prev) : `<p class="rf-nota neutra">${h(motivoPeca || "Escolha uma essência")}</p>`}</section>`;
     // o pé: o que a gravação consome (Requer: a essência e, numa peça vestida, o nível de quem veste), a ação com o
     // preço dentro e, na substituição, a confirmação no mesmo lugar
     // o Requer só quando a operação existe (uma gravação idêntica ou incompatível não consome nada)
@@ -517,7 +529,12 @@
     // o que já aparece marcado (a essência e o nível no Requer, o ouro no preço) não volta numa nota
     const marcado = !!e && ((e.qtd < 1) || faltaOuro || !!(prev && prev.bloqueio && prev.nivel));
     const conf = confirmandoGrav && p && confirmandoGrav.uid === p.uid;
-    const pe = `<div class="rf-pe-linha enc">${peAcao({
+    // a confirmação da remoção: no mesmo pé, a pergunta numa frase (a essência e a perda) e o Remover no lugar da ação
+    const pe = confRem ? `<div class="rf-pe-linha enc">${peAcao({
+      principal: botaoAcao({ rotulo: "Remover", classe: "principal perigo", attrs: "data-remover-sim" }),
+      cancelar: cancelarBtn("data-remover-nao"),
+      pergunta: `<span class="rf-troca">Remover? <b style="color:${h(atual.cor)}">${h(atual.titulo)}</b> se perde.</span>`,
+      neutra: false })}</div>` : `<div class="rf-pe-linha enc">${peAcao({
       esquerda: requerHtml(requer),
       principal: botaoAcao({ rotulo: atual ? "Substituir" : "Gravar", preco: e && !motivoPeca ? custo : "", falta: faltaOuro,
         attrs: `${conf ? "data-gravar-sim" : "data-gravar"}${g ? ' aria-disabled="true"' : ""}`, motivo: conf || g ? "" : motivo || "" }),
@@ -543,6 +560,14 @@
       ${linhas.length ? `<dl class="rf-prev-linhas">${linhas.map(([k, v, c]) => `<dt>${h(k)}</dt><dd${c ? ` class="${c}"` : ""}>${h(v)}</dd>`).join("")}</dl>` : ""}
       ${atual && atual.id !== e.id ? `<p class="rf-prev-troca">Sai <b style="color:${h(atual.cor)}">${h(atual.titulo)}</b> · entra <b style="color:${h(e.cor)}">${h(e.titulo)}</b></p>` : ""}
       ${prev && prev.aviso ? `<p class="pior">${h(prev.aviso)}</p>` : ""}${prev && prev.nota ? `<p class="rf-prev-nota">${h(prev.nota)}</p>` : ""}</div>`;
+  }
+
+  /** A prévia da remoção (18ª), pronta do motor: a gravação que sai e o que muda (o efeito na peça, o total de quem
+   *  veste quando outra peça dele também soma, o requisito novo da peça quando cai). A perda fica na pergunta do pé. */
+  function previsaoRemocao(r) {
+    const x = r.sai, linhas = (r.linhas || []).map((l) => `<dt>${h(l.rotulo)}</dt><dd class="pior">${h(l.antes)} → ${h(l.depois)}</dd>`).join("");
+    return `<div class="rf-prev rf-prev-rem"><div class="rf-prev-tit">${icEss(x)}<b style="--ess:${h(x.cor)}">${h(x.titulo)}</b></div>
+      ${linhas ? `<dl class="rf-prev-linhas">${linhas}</dl>` : ""}${r.nota ? `<p class="rf-prev-nota">${h(r.nota)}</p>` : ""}</div>`;
   }
 
   // ------------------------------------------------------------------ a ficha
@@ -1741,7 +1766,7 @@
     }));
     jan.querySelectorAll("[data-uid]").forEach((b) => b.addEventListener("click", (ev) => {
       if (selUid !== b.dataset.uid) { selUid = b.dataset.uid; confirmando = null; confirmandoTransf = null; brilharSel = true; limpar(); redesenhar(`[data-uid="${b.dataset.uid}"]`); }
-      else if (!resto(ev)) { selUid = null; confirmando = null; confirmandoGrav = null; limpar(); redesenhar(`[data-uid="${b.dataset.uid}"]`); }  // de novo: retira
+      else if (!resto(ev)) { selUid = null; confirmando = null; confirmandoGrav = null; confirmandoRem = null; limpar(); redesenhar(`[data-uid="${b.dataset.uid}"]`); }  // de novo: retira
     }));
     jan.addEventListener("keydown", (ev) => {
       if (!["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(ev.key) || !ev.target.matches("[data-uid]")) return;
@@ -1819,11 +1844,35 @@
     }
     // o encantamento: escolher a essência, gravar (ou pedir a confirmação da substituição), confirmar
     jan.querySelectorAll("[data-essencia]").forEach((b) => b.addEventListener("click", () => {
-      if (essSel !== b.dataset.essencia) { essSel = b.dataset.essencia; confirmandoGrav = null; limpar(); redesenhar(`[data-essencia="${b.dataset.essencia}"]`); }
+      if (essSel !== b.dataset.essencia) { essSel = b.dataset.essencia; confirmandoGrav = null; confirmandoRem = null; limpar(); redesenhar(`[data-essencia="${b.dataset.essencia}"]`); }
     }));
     jan.querySelectorAll("[data-sulco]").forEach((b) => b.addEventListener("click", () => {
-      if (sulcoSel !== +b.dataset.sulco) { sulcoSel = +b.dataset.sulco; confirmandoGrav = null; limpar(); redesenhar(`[data-sulco="${b.dataset.sulco}"]`); }
+      if (sulcoSel !== +b.dataset.sulco) { sulcoSel = +b.dataset.sulco; confirmandoGrav = null; confirmandoRem = null; limpar(); redesenhar(`[data-sulco="${b.dataset.sulco}"]`); }
     }));
+    // a remoção (18ª): pedir a confirmação, cancelar, confirmar (uma vez: o pedido leva um número e a gravação que a tela
+    // mostrava; o motor recusa o repetido e a gravação que já mudou)
+    const remB = jan.querySelector("[data-remover]");
+    if (remB) remB.addEventListener("click", (ev) => {
+      if (resto(ev) || remB.getAttribute("aria-disabled")) return;
+      if (confirmandoRem) { confirmandoRem = null; redesenhar("[data-remover]"); return; }
+      confirmandoRem = { uid: p.uid, sulco: sulcoSel }; confirmandoGrav = null; redesenhar("[data-remover-nao]");
+    });
+    const rNao = jan.querySelector("[data-remover-nao]");
+    if (rNao) rNao.addEventListener("click", () => { confirmandoRem = null; redesenhar("[data-remover]"); });
+    const rSim = jan.querySelector("[data-remover-sim]");
+    if (rSim) {
+      const arma = performance.now() + 400;  // o clique que abriu a pergunta não a responde
+      setTimeout(() => { if (rSim.isConnected) rSim.disabled = false; }, 400);
+      rSim.addEventListener("click", (ev) => {
+        if (rSim.disabled || performance.now() < arma || resto(ev) || !confirmandoRem) return;
+        const c = confirmandoRem, atual = (p.encantos || [])[c.sulco];
+        confirmandoRem = null;
+        if (!atual) return;
+        if (pedir({ op: "remover_encanto", uid: p.uid, sulco: c.sulco, pedido: `r${Date.now()}`, remove: atual.id }, rSim, `[data-sulco="${c.sulco}"]`)) {
+          esperandoId = d.proximo_id;
+        }
+      });
+    }
     jan.querySelectorAll(".rf-essencias").forEach((grupo) => grupo.addEventListener("keydown", (ev) => {
       if (!["ArrowLeft", "ArrowRight"].includes(ev.key)) return;
       const todas = [...grupo.querySelectorAll("[data-essencia]")], i = todas.indexOf(document.activeElement);
@@ -1842,7 +1891,7 @@
     if (grav) grav.addEventListener("click", (ev) => {
       if (resto(ev)) return;
       if (grav.getAttribute("aria-disabled")) { if (grav.title) App.recusar(grav, grav.title); return; }
-      if ((p.encantos || [])[sulcoSel]) { confirmandoGrav = { uid: p.uid }; redesenhar("[data-gravar-nao]"); return; }
+      if ((p.encantos || [])[sulcoSel]) { confirmandoGrav = { uid: p.uid }; confirmandoRem = null; redesenhar("[data-gravar-nao]"); return; }
       pedirGravacao(grav);
     });
     const gNao = jan.querySelector("[data-gravar-nao]");
@@ -1863,7 +1912,7 @@
     if (ret) {
       const tirar = () => {
         const uid = selUid;
-        selUid = null; confirmando = null; confirmandoGrav = null;
+        selUid = null; confirmando = null; confirmandoGrav = null; confirmandoRem = null;
         limpar();
         redesenhar(`[data-uid="${uid}"]`);
       };
@@ -1951,11 +2000,12 @@
     if (faseGrav()) { dispensarGrav(); return; }
     if (confirmando) { document.querySelector("[data-desmontar-nao]")?.click(); return; }
     if (confirmandoGrav) { document.querySelector("[data-gravar-nao]")?.click(); return; }
+    if (confirmandoRem) { document.querySelector("[data-remover-nao]")?.click(); return; }
     if (confirmandoTransf) { document.querySelector("[data-transferir-nao]")?.click(); return; }
     document.querySelector(".rf-janela [data-fechar]")?.click();
   }, true);
 
-  Telas.registrar("forja_proto", balcao, { ligar, esquecer: () => { janela = null; selUid = null; confirmando = null; confirmandoGrav = null; trOrigem = trDestino = trSeletor = null; confirmandoTransf = null; if (transf) transf.fim = true; revelar(); assentarGrav(); mostrarId = 0; aba = "heroi"; } });
+  Telas.registrar("forja_proto", balcao, { ligar, esquecer: () => { janela = null; selUid = null; confirmando = null; confirmandoGrav = null; confirmandoRem = null; trOrigem = trDestino = trSeletor = null; confirmandoTransf = null; if (transf) transf.fim = true; revelar(); assentarGrav(); mostrarId = 0; aba = "heroi"; } });
 
   // a faixa da demonstração escolhe o caso de teste da próxima tentativa (carregar.js); vale uma vez
   // e mostra a comparação de teste da peça escolhida (um controle de laboratório, fora da tela do jogador)
@@ -1996,7 +2046,7 @@
     ocupado() {
       if (!document.querySelector(".forja-proto")) return "Abra a forja para aplicar.";
       if (enviando || fase() || faseGrav() || faseTransf() || res) return "Espere o resultado atual (OK) para aplicar.";
-      if (confirmando || confirmandoGrav || confirmandoTransf) return "Responda à confirmação aberta antes de aplicar.";
+      if (confirmando || confirmandoGrav || confirmandoRem || confirmandoTransf) return "Responda à confirmação aberta antes de aplicar.";
       return "";
     },
     aplicarTeste(op, dados) {

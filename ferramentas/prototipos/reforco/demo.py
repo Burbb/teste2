@@ -345,8 +345,10 @@ def ficha_peca(g, it, quem, s):
     # a prévia de cada essência compatível em cada sulco ("1|brasa:2"), calculada aqui (a tela só desenha)
     prev = {f"{s_}|{x['id']}": previsao(g, it, quem, s_, x["id"]) for s_ in range(len(it.get("encantos") or []))
             for x in essencias if not x["motivo"]} if E.tipo(it) else {}
+    # 18ª: a prévia da remoção de cada sulco ocupado ("2": o que muda ao deixá-lo vazio)
+    rem = {str(s_): previsao_remocao(g, it, quem, s_) for s_, k in enumerate(it.get("encantos") or []) if k} if E.tipo(it) else {}
     d["encantar"] = {"motivo": E.motivo(it), "dono": FICHA.nome_de(g, quem) if quem else None,
-                     "nivel": nivel_de(g, quem) if quem else None, "essencias": essencias, "previsao": prev,
+                     "nivel": nivel_de(g, quem) if quem else None, "essencias": essencias, "previsao": prev, "remocao": rem,
                      "teto": 5, "totais": {}}  # teto e totais: só para as versões guardadas da tela
     d["gravacao_total"] = []
     return d
@@ -454,6 +456,56 @@ def previsao(g, it, quem, sulco, k):
         nota = f"A peça passa a requerer nível {req}"
     return {"linhas": linhas, "aviso": aviso, "nota": nota, "requisito": E.REQUISITO[t], "requisito_peca": req,
             "bloqueio": bloqueio, "nivel": nivel}
+
+
+def previsao_remocao(g, it, quem, sulco):
+    """O que muda ao remover a gravação do `sulco` (18ª), pronto para a tela: o valor do efeito na peça e, quando outra
+    peça de quem veste também soma e o limite cortava, o total dele; o requisito novo da peça, quando cai."""
+    k = it["encantos"][sulco]
+    e, _ = E.ler(k)
+    if not e:
+        return None
+    novos = list(it["encantos"])
+    novos[sulco] = None
+    a, b = E.limitado(e, E.soma_peca(it).get(e, 0)), E.limitado(e, E.soma_peca({"encantos": novos}).get(e, 0))
+    linhas = [{"rotulo": E.ESSENCIAS[e]["nome"], "antes": _fmt(e, a), "depois": _fmt(e, b), "melhor": False}] if a != b else []
+    if quem is not None:
+        corpo = FICHA.corpo(g, quem)
+        depois = {s_: ({**x, "encantos": novos} if x is it else x) for s_, x in corpo.items()}
+        q_antes, q_depois = E.soma_equip(corpo).get(e, 0), E.soma_equip(depois).get(e, 0)
+        qa, qb = E.limitado(e, q_antes), E.limitado(e, q_depois)
+        if q_antes != E.soma_peca(it).get(e, 0) and qa != qb:  # outra peça dele também soma: o total que ele fica
+            linhas.append({"rotulo": f"Total em {FICHA.nome_de(g, quem)}", "antes": _fmt(e, qa), "depois": _fmt(e, qb), "melhor": False})
+        elif q_antes != E.soma_peca(it).get(e, 0) and qa == qb:  # o limite cortava: quem veste não perde nada
+            linhas.append({"rotulo": f"Total em {FICHA.nome_de(g, quem)}", "antes": _fmt(e, qa), "depois": f"{_fmt(e, qb)} · limite", "melhor": False})
+    req_antes, req = E.requisito(it), E.requisito(it, novos)
+    return {"linhas": linhas, "nota": f"A peça passa a requerer nível {req}" if req < req_antes else None,
+            "requisito_peca": req, "sai": encanto_tela(k)}
+
+
+def remover_encanto(g, uid, sulco, pedido=None, remove=None):
+    """Remove a gravação do `sulco` (18ª, candidata): o sulco fica vazio, a essência se perde, nada volta e não custa
+    nada. `remove`: a gravação que a tela mostrou naquele sulco; se ela mudou desde então (outra remoção, uma gravação),
+    nada acontece. Um pedido repetido (clique duplo, tecla segurada) não remove de novo."""
+    if pedido is not None and pedido == getattr(g, "forja_pedido", None):
+        return False, None
+    it, quem, _ = achar(g, uid)
+    if it is None:
+        return False, "Essa peça não está mais com o grupo."
+    if not isinstance(sulco, int) or not 0 <= sulco < len(it.get("encantos") or []):
+        return False, "Esse sulco não existe nesta peça."
+    antes = it["encantos"][sulco]
+    if not antes:
+        return False, "O sulco já está vazio."
+    if antes != remove:
+        return False, "A gravação da peça mudou. Escolha de novo."
+    g.forja_pedido = pedido
+    E.gravar(it, None, sulco)
+    if quem:
+        FICHA.atualizar(g, quem)
+    g.forja_ultimo = {"id": proximo_id(g), "tipo": "remove", "uid": uid, "sulco": sulco, "de": encanto_tela(antes)}
+    registrar(g, "remover_encanto", item=it["nome"], essencia=antes, sulco=sulco, em=quem or "bolsa", prototipo="encanto")
+    return True, f"Removido: {E.nome(*E.ler(antes))} · {it['nome']}"
 
 
 JOGO = [None]  # a partida desta execução (as fichas das telas precisam de quem veste a peça)
@@ -1002,6 +1054,10 @@ def forja(self):
             ok, texto = desmontar(self, d.get("uid"), d.get("nome"))
         elif d.get("op") == "encantar":
             ok, texto = encantar(self, d.get("uid"), d.get("essencia"), d.get("sulco"), d.get("pedido"), d.get("substitui"))
+            if texto is None:
+                continue
+        elif d.get("op") == "remover_encanto":
+            ok, texto = remover_encanto(self, d.get("uid"), d.get("sulco"), d.get("pedido"), d.get("remove"))
             if texto is None:
                 continue
         elif d.get("op") == "luta_teste":
