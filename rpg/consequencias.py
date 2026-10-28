@@ -64,7 +64,8 @@ def no_vau(g):
 
 def atendente(g):
     """{"quem", "fala", "fechado"} da curandeira do Vau, ou None (fora do Vau da campanha: a curandeira de sempre). A
-    Pita tem também "concluido", o que ela diz depois do último tratamento (o "fechado" é para quem chega sem nada)."""
+    Pita tem também "concluido", o que ela diz depois do último tratamento (o "fechado" é para quem chega sem nada: a
+    cabana continua aberta, e o serviço diz à parte que não há o que tratar)."""
     if not no_vau(g):
         return None
     m = _missao(g)
@@ -73,7 +74,7 @@ def atendente(g):
                 if m.get("desfecho") == "descansada" else
                 "Marta, ainda magra da febre, arregaça as mangas. \"Aquela noite quase me levou. Senta, deixa eu ver.\"")
         return {"quem": "Marta, a curandeira", "fala": fala,
-                "fechado": "Marta ergue os olhos das ervas e sorri, cansada. \"Nada para tratar em você hoje.\""}
+                "fechado": "Marta ergue os olhos das ervas e sorri, cansada."}
     piora = estado_fonte(g) == "escura"
     return {"quem": "Pita, a aprendiz de Marta",
             "fala": ("Pita, uma menina de uns catorze anos, ferve água para os doentes. \"A Marta piorou quando a água "

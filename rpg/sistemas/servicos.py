@@ -19,25 +19,30 @@ def cena_forja():
     ]}
 
 
+VAZIO_CURANDEIRA = "Nenhum ferimento a tratar."  # o serviço sem nada a fazer (a cabana continua aberta)
+
+
 class Servicos:
     def ferreiro(self):
         """A forja (rpg/forja/oficina.py): reforçar, encantar, transferir e desmontar."""
         oficina.forja(self)
 
     def fala_curandeira_sem_ferimento(self):
-        """O que quem atende na cabana diz quando não há nada para tratar no herói (no prédio da vila e na cabana)."""
+        """O que quem atende na cabana diz quando não há nada para tratar no herói. O serviço diz "Nenhum ferimento a
+        tratar." à parte (VAZIO_CURANDEIRA): a fala não repete a regra."""
         quem = consequencias.atendente(self)  # no Vau da campanha: Pita, ou Marta de pé
-        return quem["fechado"] if quem else "A curandeira ergue os olhos e volta às ervas. \"Nada para tratar em você.\""
+        return quem["fechado"] if quem else "A curandeira ergue os olhos e volta às ervas."
 
     def curandeiro(self):
         """A cabana da curandeira: um cartão por ferimento, com o preço de cada um. O primeiro tratamento do herói na
         campanha é grátis (abertura.curandeira_gratis): todos os cartões dizem isso enquanto ele vale, e só um é de
         graça; tratado esse, os outros voltam ao preço de sempre na mesma tela. Depois de tratar, a cabana continua
-        aberta, já com a vida, o ouro e os ferimentos de agora; sem nada para tratar, quem atende diz isso e fica só o
-        Voltar: quem joga decide quando sair."""
+        aberta, já com a vida, o ouro e os ferimentos de agora. A cabana abre também sem ferimento (entrar no lugar não
+        depende do serviço): o serviço diz "Nenhum ferimento a tratar." e fica o Voltar; quem joga decide quando sair."""
         j = self.j
         quem = consequencias.atendente(self)  # no Vau da campanha: Pita, ou Marta depois que a água limpa
-        abertura.visto(self, "F3")  # a cabana aberta: o quadro que apontava o prédio não volta
+        if j.ferimentos:  # a cabana aberta com o que tratar: o quadro que apontava o prédio não volta
+            abertura.visto(self, "F3")
         tratou = False
         while True:
             self.ui.cena("A curandeira", self.loc["nome"], "menu")  # a cada volta: na tela gráfica, a cabana se redesenha
@@ -48,9 +53,10 @@ class Servicos:
             if not j.ferimentos:  # depois do último tratamento, quem tem fala para isso (a Pita) diz que terminou
                 fala = (quem.get("concluido") if quem and tratou else None) or self.fala_curandeira_sem_ferimento()
             dados = {"ouro": j.ouro, **({"quem": quem["quem"]} if quem else {}), **({"fala": fala} if fala else {}),
-                     "ferimentos": [
+                     "vazio": VAZIO_CURANDEIRA, "ferimentos": [
                 {"id": f["id"], "nome": sobrevivencia.FERIMENTOS[f["id"]]["nome"], "custo": custo, "pode": not motivo,
                  "motivo": motivo, **({"gratis": "Primeiro tratamento — grátis"} if gratis else {}),
+                 "penalidade": sobrevivencia.penalidades(f["id"], j.nome_recurso),
                  "explica": sobrevivencia.explicar(f, j.nome_recurso, j)} for f, custo, motivo in tratamentos]}
             abertura.contexto(self, "curandeira")  # o cartão do ferimento que o tutorial mostrou (F4)
             f4 = abertura.proxima(self)  # o quadro, se há um tratamento que dá para pagar agora (senão, fica pendente)
@@ -64,8 +70,9 @@ class Servicos:
                     opcoes = [(f"{sobrevivencia.FERIMENTOS[f['id']]['nome']} — "
                                + ("primeiro tratamento, grátis" if gratis else f"{custo} ouro"), (f["id"], custo))
                               for f, custo in zip(j.ferimentos, custos)]
-                    esc = self.menu(fala or "A curandeira, uma velha de mãos manchadas de sangue seco, "
-                                    "examina você. \"O que vai ser?\"", opcoes + [("Voltar", None)])
+                    pergunta = fala or ("A curandeira, uma velha de mãos manchadas de sangue seco, examina você. "
+                                        "\"O que vai ser?\"")
+                    esc = self.menu(pergunta if opcoes else f"{pergunta}\n{VAZIO_CURANDEIRA}", opcoes + [("Voltar", None)])
             finally:
                 abertura.contexto(self, None)
             if f4:

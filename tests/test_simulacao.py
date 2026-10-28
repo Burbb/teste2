@@ -543,7 +543,7 @@ class TestSistemas(unittest.TestCase):
         self.assertEqual(j.ferimentos, antes)
 
         linhas = sobrevivencia.explicar({"id": "infeccao", "dias": None}, j.nome_recurso, j)
-        self.assertEqual(linhas[0], "−15% Ataque, −15% Poder, −15% Agilidade.")
+        self.assertEqual(linhas[0], "Ataque −15%, Poder −15%, Agilidade −15%.")
         totais, _ = j.totais()
         atk, poder, agi = (int(round(totais[s])) for s in ("atk", "poder", "agi"))
         self.assertEqual((poder, agi), (2, 3))  # o guerreiro novo: pouco Poder (Intelecto 2) e pouca Agilidade

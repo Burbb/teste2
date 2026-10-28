@@ -144,7 +144,8 @@ class TestFonteEMarta(unittest.TestCase):
         self.assertTrue(consequencias.atendente(g)["quem"].startswith("Pita"))
         self.assertIsNone(consequencias.frase_da_vila(g))
         self.assertEqual(estado(g)["local"]["atendentes"], {"curandeiro": "Pita, a aprendiz de Marta"})
-        self.assertIn("Pita", estado(g)["local"]["predios_fechados"]["curandeiro"])
+        # a cabana não fecha sem ferimento: entrar no lugar não depende do serviço
+        self.assertNotIn("curandeiro", estado(g)["local"]["predios_fechados"])
 
     def test_curandeira_com_as_regras_de_sempre(self):
         """Quem atende muda (Pita, depois Marta); o preço e o tratamento são os de sempre."""
@@ -162,11 +163,14 @@ class TestFonteEMarta(unittest.TestCase):
             self.assertTrue(ui.perguntas[0].startswith(quem), ui.perguntas[0])
             # depois do último tratamento, a fala dela (a Pita diz que terminou; a Marta, a de sempre sem ferimento)
             fim = consequencias.atendente(g).get("concluido") or g.fala_curandeira_sem_ferimento()
-            self.assertEqual(ui.perguntas[1], fim)
+            self.assertEqual(ui.perguntas[1], f"{fim}\nNenhum ferimento a tratar.")
             if quem == "Pita":
                 self.assertEqual(fim, '"Pronto. Por aqui, terminamos."')
-            # quem chega já saudável vê a fala de chegada, no prédio fechado
-            self.assertEqual(estado(g)["local"]["predios_fechados"]["curandeiro"], consequencias.atendente(g)["fechado"])
+            # quem chega já saudável entra do mesmo jeito: a fala de chegada e o serviço dizendo que não há o que tratar
+            self.assertNotIn("curandeiro", estado(g)["local"]["predios_fechados"])
+            ui.roteiro = ["Voltar"]
+            g.curandeiro()
+            self.assertEqual(ui.perguntas[-1], f"{consequencias.atendente(g)['fechado']}\nNenhum ferimento a tratar.")
 
 class TestSaves(unittest.TestCase):
     def test_save_preserva_conclusao_fonte_e_heranca_pendente(self):

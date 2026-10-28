@@ -530,15 +530,14 @@ def modificadores(g):
 
 
 def predios_fechados(g):
-    """Na vila, os prédios sem serviço agora (o templo com a vida cheia, a curandeira sem ferimento para tratar) e o
-    que eles dizem a quem chega: a tela gráfica deixa o prédio clicável mesmo assim."""
+    """Na vila, os prédios sem serviço agora (o templo com a vida cheia) e o que eles dizem a quem chega: a tela
+    gráfica deixa o prédio clicável mesmo assim, e o balcão mostra a frase. A curandeira não entra aqui: a cabana abre
+    sempre, e sem ferimento o próprio serviço diz que não há o que tratar."""
     if g.loc["tipo"] != "vila":
         return {}
     fechados = {}
     if not g.opcoes_templo():
         fechados["templo"] = "O templo está em silêncio. Ninguém aqui precisa de cuidados agora."
-    if not g.j.ferimentos:
-        fechados["curandeiro"] = g.fala_curandeira_sem_ferimento()
     return fechados
 
 

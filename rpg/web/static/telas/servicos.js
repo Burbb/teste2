@@ -31,14 +31,14 @@
   function curandeira(d) {
     const cartoes = d.ferimentos.map((f) => cartaoServico({
       // O primeiro tratamento grátis (o motor diz): no lugar do efeito, até ser usado; a explicação fica na dica.
-      icone: f.id === "infeccao" ? "gota_verde" : "gota", nome: f.nome, efeito: f.gratis || (f.explica || [])[0] || "", preco: f.gratis ? null : f.custo,
+      icone: f.id === "infeccao" ? "gota_verde" : "gota", nome: f.nome, efeito: f.gratis || f.penalidade || "", preco: f.gratis ? null : f.custo,
       motivo: f.motivo || "", attrs: `data-tratar="${h(f.id)}"`,
       dicaAttr: dica(`<b>${h(f.nome)}</b>${(f.explica || []).map((l, i) => `<div class="${i ? "" : "bonus pior"}">${h(l)}</div>`).join("")}${f.motivo ? `<div class="rodape">${h(f.motivo)}</div>` : ""}`),
     }));
-    // Quem atende e o que diz vêm do motor quando não é a curandeira de sempre (no Vau da campanha: Pita ou Marta) e
-    // quando não há mais nada para tratar (a fala diz isso; fica só o Voltar).
+    // Quem atende e o que diz vêm do motor quando não é a curandeira de sempre (no Vau da campanha: Pita ou Marta).
+    // Sem nada para tratar, a área do serviço diz isso numa linha (d.vazio, do motor); a cabana continua aberta.
     return `<div class="tela balcao-servico curandeira">${topoBalcao("unguento", d.quem || "A curandeira", d.fala || "Uma velha de mãos manchadas de sangue seco examina você. \"O que vai ser?\"", d.ouro)}
-      ${cartoes.length ? `<h4>Tratar</h4><div class="servicos">${cartoes.join("")}</div>` : ""}</div>`;
+      <h4>Tratar</h4>${cartoes.length ? `<div class="servicos">${cartoes.join("")}</div>` : `<p class="vazio">${h(d.vazio || "")}</p>`}</div>`;
   }
   /** Clique (ou Enter) num cartão: a ação, ou o "não" com o motivo do motor, no próprio cartão. */
   function ligarServicos(raiz, chave, som) {

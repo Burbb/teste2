@@ -549,7 +549,6 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
             self.executar_comum(op)
 
     def menu_vila(self):
-        j = self.j
         preco_dormir = abertura.preco_dormir(self)
         broquel = missoes.broquel_no_ferreiro(self)
         # Cada serviço diz a que prédio da vila pertence (na tela gráfica, a vila é um lugar com prédios clicáveis).
@@ -571,7 +570,8 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
             ("Mercado", "loja", {"predio": "mercado"}),
             ("Mural de contratos", "mural", {"predio": "mural"}),
             *self.opcoes_templo(),
-            ("Curandeira: tratar ferimentos e infecções", "curandeiro", {"predio": "curandeiro"}) if j.ferimentos else None,
+            # A cabana abre sempre: sem ferimento, o serviço diz que não há o que tratar (o lugar não fecha por isso)
+            ("Curandeira: tratar ferimentos e infecções", "curandeiro", {"predio": "curandeiro"}),
             # A oferta única do broquel (saves de antes da E7) divide o balcão da forja com o reforço: dois cartões.
             ("Ferreiro: a forja", "ferreiro",
              {"predio": "ferreiro", **({"curto": "A forja", "efeito": "Reforçar, encantar, transferir e desmontar"}

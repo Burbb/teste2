@@ -25,9 +25,18 @@ CHANCE_INFECCAO = 0.3
 
 
 def penalidades(fid, recurso=None):
-    """'−25% Ataque, −10% Poder': o que o ferimento tira de você."""
+    """'Ataque −25%, Poder −10%': o que o ferimento tira de você, o atributo antes do valor (o negativo descreve o
+    ferimento). A vida e o recurso perdem no máximo: 'Vida máxima −10%', 'Vigor máximo −15%'."""
     from .entidades import nome_stat
-    return ", ".join(f"−{round((1 - v) * 100)}% {nome_stat(stat, recurso)}" for stat, v in FERIMENTOS[fid]["mult"].items())
+
+    def nome(stat):
+        if stat == "max_hp":
+            return "Vida máxima"
+        if stat == "max_rec":
+            r = nome_stat(stat, recurso)
+            return f"{r} {'máxima' if r == 'Mana' else 'máximo'}"
+        return nome_stat(stat, recurso)
+    return ", ".join(f"{nome(stat)} −{round((1 - v) * 100)}%" for stat, v in FERIMENTOS[fid]["mult"].items())
 
 
 def efeito_no_heroi(jogador, fid):

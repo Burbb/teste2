@@ -2386,14 +2386,16 @@ async function cenarioFeridas(browser) {
   }
   {
     // Tratar não tira da cabana (1.178.0): o clique triplo trata um só (o cartão seguinte sobe para debaixo do mouse);
-    // tratado o último, a tela fica com a fala de quem atende e o Voltar, e é quem joga que sai.
+    // tratado o último, a tela fica com a fala de quem atende, "Nenhum ferimento a tratar." e o Voltar, e é quem joga
+    // que sai. Sem ferimento, a cabana abre de novo (1.217.0: o acesso ao lugar não depende do serviço).
     const { proc, url } = await subir("tutorial", { VISTAS: "A1,A0,F1,F2,F3,F4,V2,N1,D1", FERIMENTOS: "corte,costelas,perna", OURO: "100", GRATIS_USADO: "templo,curandeira" });
     const { page, erros } = await abrir(browser, url);
     const pronto = () => page.waitForFunction(() => pergunta && pergunta.tipo === "opcoes" && !processando, null, { timeout: 15000 }).catch(() => {});
     const cabana = () => page.evaluate(() => ({ feridas: estado.heroi.ferimentos.length, ouro: estado.heroi.ouro,
       cartoes: document.querySelectorAll("#texto .curandeira [data-tratar]").length, tela: !!document.querySelector("#texto .curandeira"),
       fala: (document.querySelector("#texto .curandeira .lore") || {}).textContent, voltar: !!document.querySelector("#barra-tela .voltar-seta"),
-      fechado: estado.local.predios_fechados.curandeiro }));
+      vazio: (document.querySelector("#texto .curandeira .vazio") || {}).textContent, vida: estado.heroi.max_hp,
+      cartao: ((document.querySelector("#texto .curandeira [data-tratar] .serv-efeito") || {}).textContent || "") }));
     try {
       await page.waitForSelector('#predios .predio[data-predio="curandeiro"]', { timeout: 20000 });
       await pronto();
@@ -2408,6 +2410,7 @@ async function cenarioFeridas(browser) {
       await pronto();
       const um = await cabana();
       conferir(um.feridas === 2 && um.ouro === 85 && um.cartoes === 2 && um.tela, `o clique triplo trata um ferimento só, e a cabana fica (${JSON.stringify(um)})`);
+      conferir(/^(Defesa −25%, Vigor máximo −15%|Agilidade −30%)$/.test(um.cartao), `o cartão diz o que o ferimento tira, o atributo antes do valor (${um.cartao})`);
       for (let k = 0; k < 2; k++) {
         await page.waitForTimeout(700);  // outro gesto: vale
         await page.click("#texto .curandeira [data-tratar] >> nth=0");
@@ -2416,10 +2419,19 @@ async function cenarioFeridas(browser) {
       }
       const fim = await cabana();
       conferir(fim.feridas === 0 && fim.cartoes === 0 && fim.tela && fim.voltar && fim.fala === '"Pronto. Por aqui, terminamos."'
-        && /Pita/.test(fim.fechado), `tratado o último, a cabana continua: a Pita diz que terminou (a de chegada fica no prédio), e o Voltar (${JSON.stringify(fim)})`);
+        && fim.vazio === "Nenhum ferimento a tratar.", `tratado o último, a cabana continua: a Pita diz que terminou, o serviço diz que não há o que tratar, e o Voltar (${JSON.stringify(fim)})`);
       await page.keyboard.press("Escape");
       await page.waitForSelector('#predios .predio[data-predio="curandeiro"]', { timeout: 10000 });
       conferir(!(await cabana()).tela, "Esc sai da cabana para a vila");
+      await pronto();
+      await page.waitForTimeout(600);
+      await page.click('#predios .predio[data-predio="curandeiro"]');
+      await page.waitForSelector("#texto .curandeira .vazio", { timeout: 10000 });
+      const sem = await cabana();
+      conferir(sem.tela && sem.cartoes === 0 && sem.vazio === "Nenhum ferimento a tratar." && /Pita/.test(sem.fala),
+        `sem ferimento, a cabana abre de novo, com a fala de chegada e o estado vazio (${JSON.stringify(sem)})`);
+      await page.keyboard.press("Escape");
+      await page.waitForSelector('#predios .predio[data-predio="curandeiro"]', { timeout: 10000 });
     } finally {
       conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
       await page.close();
