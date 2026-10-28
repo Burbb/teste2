@@ -1,5 +1,5 @@
 /* A demonstração do reforço: a faixa no alto (o que é protótipo fica aqui, fora da tela do jogador) e a tela da forja
-   escolhida pelo endereço (?tela=v15, v14, v13, v12, v11, v10, v9, v8, v7, v6, v5, v4, v3, v2 ou v1: as versões antigas, guardadas como histórico;
+   escolhida pelo endereço (?tela=v16, v15, v14, v13, v12, v11, v10, v9, v8, v7, v6, v5, v4, v3, v2 ou v1: as versões antigas, guardadas como histórico;
    sem ele, a atual, a 16ª, com o ganho real em todo reforço, os formatos comuns e o painel de testes). A v3 tem a A anterior e a B, trocadas aqui. Na atual, a faixa também escolhe o caso de teste da próxima
    tentativa (sucesso ou falha forçados, uma vez), separado do sorteio normal, e abre a comparação de teste da peça
    escolhida (o dano contra um alvo fixo: medição do laboratório, fora da tela do jogador). Trocar de versão
@@ -8,7 +8,7 @@
 
 (() => {
   const params = new URLSearchParams(location.search);
-  const versao = ["v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v11", "v12", "v13", "v14", "v15"].includes(params.get("tela")) ? params.get("tela") : "atual";
+  const versao = ["v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v11", "v12", "v13", "v14", "v15", "v16"].includes(params.get("tela")) ? params.get("tela") : "atual";
   const base = versao === "atual" ? "/proto/" : `/proto/historico/${versao}/`;
   const css = document.createElement("link");
   css.rel = "stylesheet";
@@ -39,7 +39,7 @@
       if (P.transferenciaTeste) extra += `<button type="button" data-trfteste>Transferência (teste)</button>`;
     }
     if (versao === "atual" && P && P.estadoTeste) extra += `<button type="button" data-painel-testes aria-expanded="false" aria-controls="painel-testes">Painel de testes</button>`;
-    const versoes = [["atual", "atual"], ["v15", "v15"], ["v14", "v14"], ["v13", "v13"], ["v12", "v12"], ["v11", "v11"], ["v10", "v10"], ["v9", "v9"], ["v8", "v8"], ["v7", "v7"], ["v6", "v6"], ["v5", "v5"], ["v4", "v4"], ["v3", "v3 (A e B)"], ["v2", "v2"], ["v1", "v1"]].map(([id, nome]) =>
+    const versoes = [["atual", "atual"], ["v16", "v16"], ["v15", "v15"], ["v14", "v14"], ["v13", "v13"], ["v12", "v12"], ["v11", "v11"], ["v10", "v10"], ["v9", "v9"], ["v8", "v8"], ["v7", "v7"], ["v6", "v6"], ["v5", "v5"], ["v4", "v4"], ["v3", "v3 (A e B)"], ["v2", "v2"], ["v1", "v1"]].map(([id, nome]) =>
       id === versao ? `<b>${nome}</b>` : `<a href="${para(id)}">${nome}</a>`).join(" · ");
     f.innerHTML = `<strong>Protótipo do reforço</strong>${extra}<span class="faixa-hist">versões: ${versoes}</span>`;
     document.body.appendChild(f);
@@ -82,7 +82,8 @@
      campo não muda nada; "Aplicar na sessão" leva o ouro e os materiais (validados pelo motor); "Aplicar e reiniciar
      cenário" reconstrói o personagem pelo caminho do jogo com o nível, a classe e a especialização escolhidos e
      descarta a sessão temporária. Nada se aplica com uma tentativa, uma cena ou uma confirmação em andamento. As
-     candidatas visuais (botões, acabamento das armaduras, paleta da celebração) trocam na hora: são só aparência. */
+     candidatas visuais (acabamento das armaduras, paleta da celebração) trocam na hora: são só aparência. O botão A
+     está aprovado e não tem mais escolha. */
   function painelTestes(botao, P) {
     const el = document.createElement("div");
     el.id = "painel-testes";
@@ -128,9 +129,8 @@
       ligar();
     }
     const visuais = () => `<fieldset><legend>Comparação visual · troca na hora</legend>
-      ${grupo("botoes", "Botões", [["a", "A · ferro encaixado"], ["b", "B · presilhas de latão"]])}
-      ${grupo("armadura", "Armaduras +9 a +12", [["a", "A · brilho nas bordas"], ["b", "B · reflexo estreito"]])}
-      ${grupo("paleta", "Celebração +9 a +12", [["candidata", "Candidata"], ["anterior", "Anterior"]])}</fieldset>`;
+      ${grupo("armadura", "Armaduras +9 a +12", [["candidata", "Feixe (candidato)"], ["anterior", "Veio anterior"]])}
+      ${grupo("paleta", "Celebração +9 a +12", [["candidata", "Candidata"], ["anterior", "Anterior"], ["referencia13", "Ouro (ref. +13)"]])}</fieldset>`;
     function ligarVisuais() {
       el.querySelectorAll("[data-pref]").forEach((b) => b.addEventListener("click", () => {
         P.preferir(b.dataset.pref, b.dataset.valor);

@@ -414,11 +414,16 @@ def previsao(g, it, quem, sulco, k):
     p_antes, p_depois = E.soma_peca(it), E.soma_peca({"encantos": novos})
     linhas, aviso = [], None
     # 16ª versão: na prévia da peça escolhida, o nome do efeito basta ("Carrasco", não "Carrasco nesta peça"); o total de
-    # quem veste só aparece quando explica uma consequência (o limite que corta a soma)
+    # quem veste só aparece quando explica uma consequência (o limite que corta a soma). 17ª: o limite aparece no próprio
+    # valor final ("60% · limite"), não numa conta do que sobra ("Limite 60%: 8% não valem"); só quando nada muda (já
+    # estava no limite) uma nota curta diz isso.
+    def valor(x, v, cortou):
+        return f"{_fmt(x, v)} · limite" if cortou else _fmt(x, v)
     for x in afetadas:
         a, b = E.limitado(x, p_antes.get(x, 0)), E.limitado(x, p_depois.get(x, 0))
         if a != b:
-            linhas.append({"rotulo": E.ESSENCIAS[x]["nome"], "antes": _fmt(x, a), "depois": _fmt(x, b), "melhor": b > a})
+            linhas.append({"rotulo": E.ESSENCIAS[x]["nome"], "antes": _fmt(x, a),
+                           "depois": valor(x, b, p_depois.get(x, 0) > E.ESSENCIAS[x]["limite"]), "melhor": b > a})
     if quem is not None:
         corpo = FICHA.corpo(g, quem)
         depois = {s: ({**x, "encantos": novos} if x is it else x) for s, x in corpo.items()}
@@ -428,14 +433,13 @@ def previsao(g, it, quem, sulco, k):
             if q_depois.get(x, 0) <= lim:
                 continue
             a, b = E.limitado(x, q_antes.get(x, 0)), E.limitado(x, q_depois.get(x, 0))
-            if q_antes.get(x, 0) != p_antes.get(x, 0):  # outra peça dele também soma: o total é o que esbarra no limite
-                linhas.append({"rotulo": f"Total em {FICHA.nome_de(g, quem)}", "antes": _fmt(x, a), "depois": _fmt(x, b),
+            if q_antes.get(x, 0) != p_antes.get(x, 0) and a != b:  # outra peça dele também soma: o total esbarra no limite
+                linhas.append({"rotulo": f"Total em {FICHA.nome_de(g, quem)}", "antes": _fmt(x, a), "depois": valor(x, b, True),
                                "melhor": b > a})
-            sobra = q_depois[x] - max(lim, q_antes.get(x, 0))
-            aviso = (f"Limite {E.com_unidade(x, lim)}: {E.com_unidade(x, sobra)} não valem" if sobra > 0 and a < lim
-                     else f"Já no limite ({E.com_unidade(x, lim)}): não muda o efeito")
-    elif p_depois.get(e, 0) > E.ESSENCIAS[e]["limite"]:
-        aviso = f"Limite {E.com_unidade(e, E.ESSENCIAS[e]['limite'])}: o excedente não vale"
+            if a == b:
+                aviso = f"{E.ESSENCIAS[x]['nome']} já está no limite ({E.com_unidade(x, lim)})"
+    elif p_depois.get(e, 0) > E.ESSENCIAS[e]["limite"] and not linhas:
+        aviso = f"{E.ESSENCIAS[e]['nome']} já está no limite ({E.com_unidade(e, E.ESSENCIAS[e]['limite'])})"
     req = E.requisito(it, novos)
     bloqueio, nivel = None, None
     if quem is not None:  # vestida: o nível de quem veste é requisito da operação
@@ -986,7 +990,7 @@ def forja(self):
         if not self.ui.painel("forja_proto", dados):
             self.dizer("A forja do protótipo só existe na tela gráfica.", "cinza")
             return
-        esc = self.menu("", [("Pedido à forja", "forja", {"forja": True}), ("Voltar", "voltar", {"voltar": True})])
+        esc = self.menu("", [("Pedido à forja", "forja", {"forja": True}), ("Voltar", "voltar", {"voltar": True, "lugar": True})])
         if esc == "voltar":
             return
         d = getattr(self.ui, "extra_resposta", None) or {}
@@ -1400,8 +1404,7 @@ def recompensa_de_teste(g):
         dar_material(g, E.material(k, 1), 2, "teste")
     g.fechar_espolio()
     # a página espera quem joga (o navegador abre depois do jogo começar: a cena atual é a desta recompensa)
-    g.menu("Os fragmentos ficam na seção Materiais do Inventário, fora dos 12 espaços da bolsa.",
-           [("Ir para a vila", None)])
+    g.menu("", [("Ir para a vila", None)])
 
 
 CONECTOU = threading.Event()  # a página abriu: só então a recompensa de teste (o quadro não se repete depois)

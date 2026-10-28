@@ -391,8 +391,8 @@ class TestTiers(unittest.TestCase):
         arma["encantos"] = ["brasa:3", "carrasco"]
         p = D.previsao(g, arma, D.HEROI, 1, "brasa:2")  # Carrasco I sai, Brasa II entra
         self.assertEqual([(x["rotulo"], x["antes"], x["depois"]) for x in p["linhas"]],
-                         [("Brasa", "36%", "60%"), ("Carrasco", "15%", "—")])  # o nome basta na peça escolhida
-        self.assertIn("Limite 60%", p["aviso"])  # 36 + 28 = 64: 4% não valem
+                         [("Brasa", "36%", "60% · limite"), ("Carrasco", "15%", "—")])  # 36 + 28 = 64: o limite no valor
+        self.assertIsNone(p["aviso"])  # sem a conta do que sobra ("Limite 60%: 4% não valem")
         self.assertEqual(D.previsao(g, arma, D.HEROI, 0, "brasa:3")["bloqueio"], "Já gravado.")
 
 

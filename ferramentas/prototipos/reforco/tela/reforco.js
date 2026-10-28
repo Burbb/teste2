@@ -59,7 +59,7 @@
      os botões (A · ferro encaixado, B · com presilhas de latão), o acabamento das armaduras do +9 ao +12 (A · brilho
      nas bordas, B · reflexo estreito) e a paleta da celebração do +9 ao +12 (a anterior ou a candidata). Nenhuma é
      escolhida pelo jogo: só a comparação. */
-  const PREF = { botoes: ["a", "b"], armadura: ["a", "b"], paleta: ["candidata", "anterior"] };
+  const PREF = { botoes: ["a"], armadura: ["candidata", "anterior"], paleta: ["candidata", "anterior", "referencia13"] };
   const pref = (k) => { let v = null; try { v = localStorage.getItem(`rf16-${k}`); } catch (e) { /* sem armazenamento */ } return PREF[k].includes(v) ? v : PREF[k][0]; };
   function preferir(k, v) {
     if (!PREF[k] || !PREF[k].includes(v)) return pref(k);
@@ -260,7 +260,7 @@
     if (janela === "transferir") {
       return `<div class="rf-corpo sem-ficha so-mesa"><section class="rf-centro"><div class="rf-mesa">${chapaTransfere(d, u)}</div></section></div>`;
     }
-    const chapa = janela === "reforcar" ? chapaReforco(p, u) : janela === "encantar" ? chapaEncanto(p, u, d) : chapaDesmonte(p, u);
+    const chapa = janela === "reforcar" ? chapaReforco(p, u) : janela === "encantar" ? chapaEncanto(p, u, d) : chapaDesmonte(p, u, d);
     // a ficha completa da peça fica na inspeção (a dica do molde e da esteira, por mouse e teclado), não numa coluna
     return `<div class="rf-corpo sem-ficha">${donos}<section class="rf-centro"><div class="rf-mesa">${chapa}</div>
         <div class="rf-esteira" role="listbox" aria-label="Peças">${esteira}</div></section></div>`;
@@ -352,7 +352,7 @@
    *  rende (ícone e quantidade). O botão vira a confirmação no próprio pé, com o nome da peça e a destruição. Depois de
    *  desmontar, a transformação (DESMONTE_MS): a peça se desfaz em fragmentos de pixel e o material chega ao encaixe; a
    *  seleção fica vazia (nada é escolhido sozinho) e o encaixe do resultado mostra o que chegou até a próxima ação. */
-  function chapaDesmonte(p, u) {
+  function chapaDesmonte(p, u, d) {
     const chegou = !p && u && u.tipo === "desmonte" ? u : null;
     const t = chegou && desmonte && desmonte.id === u.id && performance.now() - desmonte.t0 < DESMONTE_MS ? desmonte : null;
     const saco = iconeDe("saco");
@@ -372,7 +372,13 @@
       if (chegou) n = chegou.total;
       pe = peAcao({ principal: botaoAcao({ rotulo: "Desmontar", classe: "principal perigo", attrs: "data-desmontar", motivo: "Escolha uma peça" }), nota: "Escolha uma peça" });
     }
-    const resultado = `<div class="rf-recebe${n === null ? " vazio" : ""}${chegou ? " chegou" : ""}" ${n ? Telas.dica(`<b>Fragmento de Têmpera ×${n}</b>`, true) : ""}
+    // antes de confirmar: a previsão (×N, neutra); depois: o recebimento (+N em verde, o saldo novo aceso embaixo e
+    // o nome da peça desmontada no título), até a próxima ação (17ª)
+    const saldo = (d.materiais.find((m) => m.id === "fragmento") || {}).qtd;
+    const resultado = chegou
+      ? `<div class="rf-recebe chegou recebido" role="status" aria-label="Recebeu ${n} ${n > 1 ? "Fragmentos" : "Fragmento"} de Têmpera. Agora: ${saldo}">
+          <span class="rf-encaixe pequeno">${saco}</span><b>+${n}</b><small class="rf-saldo-novo">Fragmentos: <em>${saldo}</em></small></div>`
+      : `<div class="rf-recebe${n === null ? " vazio" : ""}" ${n ? Telas.dica(`<b>Fragmento de Têmpera ×${n}</b>`, true) : ""}
         aria-label="${n ? `Recebe ${n} Fragmento${n > 1 ? "s" : ""} de Têmpera` : "Nada a receber"}"><span class="rf-encaixe pequeno">${saco}</span><b>${n === null ? "" : `×${n}`}</b></div>`;
     // a peça desmontada, guardada no clique, fica no molde só durante a transformação
     const fantasma = t ? `<div class="rf-encaixe grande r-${h(t.raridade)} rf-desfaz">${t.icone}</div>` : "";
@@ -380,7 +386,9 @@
     const vazio = marcas({ reforco: 0, limite: 4 }).replace('class="rf-marcas"', 'class="rf-marcas" style="visibility:hidden"');
     const m = p ? molde(p, marcas(p), nivel)
       : (fantasma ? molde(null, vazio, nivel).replace('<div class="rf-encaixe grande vazio"></div>', fantasma) : molde(null, vazio, nivel));
-    return `<div class="rf-chapa desmonte com-titulo${t ? " transformando" : ""}">${tituloPeca(p, null)}
+    // o título: a peça escolhida; depois de desmontar, a que virou material (o nome guardado no resultado do motor)
+    const titulo = !p && chegou ? `<div class="rf-titulo"><b>${h(chegou.nome)}</b><small>Desmontado</small><div class="rf-tit-sulcos"></div></div>` : tituloPeca(p, null);
+    return `<div class="rf-chapa desmonte com-titulo${t ? " transformando" : ""}">${titulo}
       <div class="rf-leito"><div class="rf-lado esq"></div>${m}
         <div class="rf-lado dir">${conduto(true)}${resultado}</div></div>
       <div class="rf-pe-chapa">${pe}</div></div>`;
@@ -510,8 +518,9 @@
       principal: botaoAcao({ rotulo: atual ? "Substituir" : "Gravar", preco: e && !motivoPeca ? custo : "", falta: faltaOuro,
         attrs: `${conf ? "data-gravar-sim" : "data-gravar"}${g ? ' aria-disabled="true"' : ""}`, motivo: conf || g ? "" : motivo || "" }),
       cancelar: conf ? cancelarBtn("data-gravar-nao") : "",
-      pergunta: conf ? `<span class="rf-troca">Sai <b style="color:${h(atual.cor)}">${h(atual.titulo)}</b> · Entra <b style="color:${h(e.cor)}">${h(e.titulo)}</b></span>` : "",
-      nota: conf ? `${h(atual.titulo)} se perde.` : h(!p ? "Escolha uma peça" : motivo && !marcado ? motivo : ""),
+      // a troca já está na prévia ("Sai Carrasco I · entra Brasa II"): a pergunta diz só o que é irreversível
+      pergunta: conf ? `<span class="rf-troca">Substituir? <b style="color:${h(atual.cor)}">${h(atual.titulo)}</b> se perde.</span>` : "",
+      nota: conf ? "" : h(!p ? "Escolha uma peça" : motivo && !marcado ? motivo : ""),
       neutra: !conf && !/^(Falta|Requer)/.test(motivo || "") })}</div>`;
     const classe = g ? ` gravando${faseGrav() === "gravado" ? " gravado" : ""}` : "";
     return `<div class="rf-chapa encanto enc2${classe}"${g ? ` style="--ess:${h(g.para.cor)}"` : e ? ` style="--ess:${h(e.cor)}"` : ""}>
@@ -610,17 +619,26 @@
     7: ["W", "#ecd2ff", "#b064ff", "#6a2cb0", "#2c1050"], 8: ["W", "#ffd0d8", "#ff3c60", "#a8102e", "#4a0614"],
   };
   const PRISMA = ["#ff3c60", "#ffb032", "#46e2a0", "#468cff", "#aa64ff", "#ff6edc"];
-  /* A paleta candidata do +9 ao +12 (16ª; o +8 e os de baixo não mudam): uma cor dominante e uma secundária
-     subordinada, em vez das seis cores do prisma com o mesmo peso. O prisma fica só em alguns estilhaços. A grandeza
-     sobe pela forma: o +10 ganha um segundo leque de raios finos, o +11 raios mais longos e o anel a mais, o +12 a
-     estrela maior e os clarões de marfim. Cores: dom = [W, claro, médio, escuro, fundo], sec = a secundária. */
+  /* A paleta da celebração do +9 ao +12 (17ª; o +8 e os de baixo não mudam). A da 16ª (violeta, depois ouro) ficou
+     desligada do acabamento da peça; agora a celebração sai das mesmas cores do veio e do feixe daquele nível: o rubi
+     e o âmbar sempre na frente (a direção quente que o contorno do +9 já tem), e a cor fria que o nível acrescenta ao
+     veio como secundária (o azul no +10, a esmeralda no +11, o violeta e o marfim no +12). O prisma inteiro só em
+     alguns estilhaços. A grandeza sobe pela forma: o +10 ganha um leque de raios finos, o +11 raios mais longos, o
+     +12 dois leques. dom = [W, claro, médio, escuro, fundo], sec = a secundária. */
   const CELEBRA = {
-    9: { dom: ["W", "#ecd2ff", "#b064ff", "#6a2cb0", "#2c1050"], sec: "#5a8cff", leque: 0, longo: 1 },
-    10: { dom: ["W", "#ecd2ff", "#b064ff", "#6a2cb0", "#2c1050"], sec: "#5a8cff", leque: 1, longo: 1.06 },
-    11: { dom: ["W", "#fff4c8", "#ffd060", "#d08a1c", "#5a3208"], sec: "#ffb032", leque: 1, longo: 1.05 },
-    12: { dom: ["W", "#fff4c8", "#ffd060", "#e09a20", "#6a3a08"], sec: "#ffb032", leque: 2, longo: 1.08 },
+    9: { dom: ["W", "#ffd0d8", "#ff3c60", "#a8102e", "#4a0614"], sec: "#ffb032", leque: 0, longo: 1 },
+    10: { dom: ["W", "#ffe0b0", "#ff7a3c", "#a8102e", "#4a0614"], sec: "#468cff", leque: 1, longo: 1.03 },
+    11: { dom: ["W", "#fff0c0", "#ffb032", "#c0441c", "#4a1408"], sec: "#46e2a0", leque: 1, longo: 1.06 },
+    12: { dom: ["W", "#fff4c8", "#ffb032", "#d0402a", "#4a1408"], sec: "#aa64ff", leque: 2, longo: 1.08 },
   };
-  const celebraNova = (n) => (n >= 9 && document.body.dataset.rfPaleta !== "anterior" ? CELEBRA[Math.min(n, 12)] : null);
+  /* A celebração dourada que a 16ª mostrava no +12 (o Jean gostou): guardada como referência de um possível +13, que
+     não existe (sem custo, chance nem marco). O painel de testes a mostra no +12 só para comparar. */
+  const CELEBRA_REF13 = { dom: ["W", "#fff4c8", "#ffd060", "#e09a20", "#6a3a08"], sec: "#ffb032", leque: 2, longo: 1.08 };
+  const celebraNova = (n) => {
+    const pal = document.body.dataset.rfPaleta;
+    if (n < 9 || pal === "anterior") return null;
+    return pal === "referencia13" && n >= 12 ? CELEBRA_REF13 : CELEBRA[Math.min(n, 12)];
+  };
   const paletaNivel = (n) => (n >= 9 ? ["W", "#fff4c8", "#ffb032", "#ff3c60", "#5a1030"] : COR_NIVEL[n] || (n >= 3 ? FX.PALETAS.lendario : ["W", "Y", "O", "o", "C"]));
 
   /** As propriedades da peça, como a ficha do achado: as que mudaram com antes → depois (o novo em verde; na queda,
@@ -1073,7 +1091,7 @@
   function reflexo(caixa, nivel, fixo = false, parado = false) {
     if (!caixa || !nivel) return;
     // as armaduras do +9 ao +12 não recebem a passada larga: o acabamento delas (A ou B) já é o brilho (16ª)
-    if (nivel >= 9 && ARMADURAS.has(espacoDe(caixa))) { caixa.querySelector(".rf-reflexo")?.remove(); return; }
+    if (nivel >= 9 && ARMADURAS.has(espacoDe(caixa)) && document.body.dataset.rfArmadura !== "anterior") { caixa.querySelector(".rf-reflexo")?.remove(); return; }
     const img = caixa.querySelector("img, canvas");
     if (!img) return;
     const ja = caixa.querySelector(".rf-reflexo");
@@ -1214,42 +1232,22 @@
     ctx.drawImage(img, 0, 0, w, hh);
     return (lista[i] = cv.toDataURL());
   }
-  /* As armaduras do +9 ao +12 (capacete, peito, luvas, pernas, botas), em duas candidatas (16ª): as faixas diagonais
-     do veio ficam aparentes demais nas superfícies largas. Cada passo também é um quadro pronto (a mesma técnica do
-     veio: sem mistura no CSS, sem ampliar). O contorno aprovado continua por cima; o +9 e o +12 se distinguem pela cor
-     da orla e pela quantidade de brilhos, não pela velocidade.
-     A · brilho nas bordas: sem faixas; uma orla de luz baixa por dentro da silhueta, na cor do nível, e pontos de luz
-         (1 no +9 a 4 no +12) que percorrem a borda devagar, cada um com um rastro curto.
-     B · reflexo estreito: uma passada só, de 1 pixel (2 no +11 e +12), menos opaca; as cores da peça continuam
-         mandando; a orla bem leve. */
+  /* As armaduras do +9 ao +12 (capacete, peito, luvas, pernas, botas), 17ª: o feixe estreito. O veio das armas cruza a
+     peça em faixas largas e repetidas, que nas superfícies largas da armadura viram listras; as candidatas A e B da 16ª
+     (a orla com pontos de luz, o reflexo de 1 pixel) não foram aprovadas. Agora, um feixe só por volta, estreito (2 a
+     4 pixels do desenho) e multicolorido, nas cores do veio daquele nível, misturado com a força do +8 (o material e as
+     sombras continuam aparecendo); um feixe por vez atravessa a peça, nunca várias faixas juntas. O nível cresce pelas cores
+     do feixe e por um brilho de marfim no +12, não pela velocidade. Cada passo é um quadro pronto (como o veio: sem
+     mistura no CSS, sem ampliar); o contorno aprovado continua por cima. O +8 e as outras peças não mudam. */
   const ARMADURAS = new Set(["armadura", "cabeca", "maos", "pernas", "pes"]);
-  const ORLA = { 9: "#ff3c60", 10: "#aa64ff", 11: "#ffb032", 12: "#fff4c8" };
-  const bordas = new Map();
-  /** Os pixels da borda de dentro da silhueta (o desenho com um vizinho de fora), na ordem da volta (pelo ângulo). */
-  function bordaDe(img) {
-    const src = img.currentSrc || img.src;
-    if (bordas.has(src)) return bordas.get(src);
-    const sil = silhueta(img);
-    if (!sil) return null;
-    const { w, hh, fora } = sil, lista = [];
-    const ehFora = (x, y) => x < 0 || y < 0 || x >= w || y >= hh || fora[y * w + x];
-    let sx = 0, sy = 0;
-    for (let y = 0; y < hh; y++) for (let x = 0; x < w; x++) {
-      if (fora[y * w + x]) continue;
-      if (ehFora(x - 1, y) || ehFora(x + 1, y) || ehFora(x, y - 1) || ehFora(x, y + 1)) { lista.push([x, y]); sx += x; sy += y; }
-    }
-    const cx = sx / lista.length, cy = sy / lista.length;
-    lista.sort((a, b) => Math.atan2(a[1] - cy, a[0] - cx) - Math.atan2(b[1] - cy, b[0] - cx));
-    bordas.set(src, lista);
-    return lista;
-  }
-  function quadroArmadura(img, nivel, fase, variante) {
-    const borda = bordaDe(img);
-    if (!borda || !borda.length) return "";
-    const w = img.naturalWidth || img.width, hh = img.naturalHeight || img.height;
-    const ciclo = variante === "a" ? borda.length : w + hh + 36;
+  const FEIXE = {  // as faixas do feixe, de um pixel cada, da frente para trás (as cores do veio do nível)
+    9: [R_, O_], 10: [R_, O_, A_], 11: [R_, O_, E_, A_], 12: [W_, R_, O_, E_, A_, V_],
+  };
+  function quadroArmadura(img, nivel, fase) {
+    const w = img.naturalWidth || img.width, hh = img.naturalHeight || img.height, faixas = FEIXE[nivel] || FEIXE[9];
+    const ciclo = w + hh;  // uma passada por volta: quando um feixe sai por um canto, o próximo entra pelo outro
     const i = ((fase % ciclo) + ciclo) % ciclo;
-    const chave = `${img.currentSrc || img.src}|arm-${variante}|${nivel}`;
+    const chave = `${img.currentSrc || img.src}|feixe|${nivel}`;
     if (!quadrosVeio.has(chave)) quadrosVeio.set(chave, []);
     const lista = quadrosVeio.get(chave);
     if (lista[i]) return lista[i];
@@ -1258,29 +1256,16 @@
     const ctx = cv.getContext("2d");
     ctx.imageSmoothingEnabled = false;
     ctx.drawImage(img, 0, 0, w, hh);
-    const orla = ORLA[nivel] || ORLA[9];
-    ctx.globalCompositeOperation = "source-atop";  // só onde a peça tem pixel
-    ctx.fillStyle = orla;
-    ctx.globalAlpha = variante === "a" ? 0.22 + 0.03 * (nivel - 9) : 0.1;
-    borda.forEach(([x, y]) => ctx.fillRect(x, y, 1, 1));
-    if (variante === "a") {
-      const k = { 9: 1, 10: 2, 11: 3, 12: 4 }[nivel] || 1;
-      for (let g = 0; g < k; g++) {
-        const p = (i + Math.round((g * borda.length) / k)) % borda.length;
-        [[0, "#fffbe8", 0.95], [1, orla, 0.6], [2, orla, 0.3]].forEach(([atras, cor, a]) => {
-          const [x, y] = borda[(p - atras + borda.length) % borda.length];
-          ctx.globalAlpha = a; ctx.fillStyle = cor; ctx.fillRect(x, y, 1, 1);
-        });
-      }
-    } else {
-      const d = i - 18, larg = nivel >= 11 ? 2 : 1;  // a diagonal x + y = d (antes e depois da peça, nada)
-      ctx.globalCompositeOperation = "source-atop";
-      for (let s = 0; s < larg; s++) {
-        ctx.globalAlpha = s ? 0.22 : 0.38;
-        ctx.fillStyle = s ? orla : "#fffbe8";
-        for (let x = Math.max(0, d + s - hh + 1); x <= Math.min(d + s, w - 1); x++) ctx.fillRect(x, d + s - x, 1, 1);
-      }
-    }
+    ctx.globalCompositeOperation = "overlay";  // a mesma mistura do veio, com a força do +8
+    ctx.globalAlpha = VEIO_FORCA[8] || 0.55;
+    faixas.forEach((cor, k) => {
+      const d = i - k;  // a diagonal x + y = d
+      ctx.fillStyle = cor;
+      for (let x = Math.max(0, d - hh + 1); x <= Math.min(d, w - 1); x++) ctx.fillRect(x, d - x, 1, 1);
+    });
+    ctx.globalCompositeOperation = "destination-in";  // só onde a peça tem pixel
+    ctx.globalAlpha = 1;
+    ctx.drawImage(img, 0, 0, w, hh);
     return (lista[i] = cv.toDataURL());
   }
   /** A fase de uma peça: o relógio comum (um passo a cada PASSO_VEIO) mais um desvio fixo pelo lugar dela; um redesenho
@@ -1291,7 +1276,7 @@
     const img = el._img;
     if (!img || (img.tagName === "IMG" && !(img.complete && img.naturalWidth))) return;
     const fase = (el._fase || 0) + (reduzido() ? 0 : passoAgora());
-    const url = el._armadura ? quadroArmadura(img, +el.dataset.nivel, fase, el._armadura) : quadroVeio(img, el.dataset.nivel, fase);
+    const url = el._armadura ? quadroArmadura(img, +el.dataset.nivel, fase) : quadroVeio(img, el.dataset.nivel, fase);
     if (url && el.getAttribute("src") !== url) el.src = url;
   }
   // um passo a cada 70 ms (~14 por segundo): as faixas correm sobre a peça no ritmo das animações do jogo (a 250 ms,
@@ -1358,11 +1343,11 @@
     cv._fase = desvio(`${ds.uid || ds.peca || ds.espaco || ds.mini || ds.mochila || ds.trPeca || ""}|${src}`);
     cv.dataset.nivel = nivel;
     const espaco = nivel >= 9 ? espacoDe(caixa) : "";
-    cv._armadura = ARMADURAS.has(espaco) ? document.body.dataset.rfArmadura || "a" : null;
-    caixa.classList.toggle("rf-arm-a", cv._armadura === "a");
-    caixa.classList.toggle("rf-arm-b", cv._armadura === "b");
+    // a armadura do +9 ao +12 com o feixe (a comparação do painel pode mostrar o veio de antes nela)
+    cv._armadura = ARMADURAS.has(espaco) && document.body.dataset.rfArmadura !== "anterior";
+    caixa.classList.toggle("rf-arm-feixe", cv._armadura);
     pintarVeio(cv);
-    const k = cv._armadura === "b" ? Math.min(1, BRILHOS[nivel] || 0) : BRILHOS[nivel] || 0;
+    const k = cv._armadura ? (nivel >= 12 ? 1 : 0) : BRILHOS[nivel] || 0;  // no feixe, só o brilho de marfim do +12
     if (!k) { pontos?.remove(); return; }
     const b = camada(pontos, "rf-acab-brilhos");
     const px = Math.max(1, Math.round(img.offsetWidth / (img.naturalWidth || img.width || 32)));  // um pixel do desenho
@@ -2105,7 +2090,7 @@
     const bolsa = [...lado.querySelectorAll("h4")].find((x) => /^Bolsa$/.test(x.textContent.trim()));
     const slots = bolsa && bolsa.nextElementSibling;
     if (!slots) return;
-    const html = `<h4>Materiais <small>não ocupam a bolsa</small></h4><div class="slots ref-mat-inv">${mats.map((m) =>
+    const html = `<h4>Materiais</h4><div class="slots ref-mat-inv">${mats.map((m) =>
       `<div class="slot-px" tabindex="0" ${Telas.dica(`<b>${h(m.nome)}</b><div>${h(m.desc)}</div>${m.requisito > 1 ? `<div>Requer nível ${m.requisito}.</div>` : ""}<div class="rodape">${h(m.fontes)}</div>`)}>${m.numeral ? icEss(m) : iconeDe(m.icone)}<span class="qtd">${m.qtd}</span></div>`).join("")}</div>`;
     slots.insertAdjacentHTML("afterend", html);
     Telas.ligarDicas(lado.querySelector(".ref-mat-inv"));
