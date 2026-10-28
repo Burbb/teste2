@@ -55,6 +55,15 @@ C = {
     "ocre": "#7a6228", "ocreLuz": "#9e8236", "ocreEsc": "#4e3e1a",
     "lilas": "#4e4058", "lilasLuz": "#6a5876", "lilasEsc": "#33293a",
     "palha": "#6e5a34", "palhaLuz": "#8e7646", "palhaEsc": "#45381f",
+    # os maços secando (as cores de planta seca: o verde acinzentado, o roxo apagado, o branco do alho, o vermelho da
+    # baga, o creme da flor)
+    "salvia": "#56604a", "salviaLuz": "#76825e", "salviaEsc": "#373d2e", "salviaTalo": "#4c4630",
+    "lavanda": "#5a4868", "lavandaLuz": "#7a6690", "lavandaEsc": "#3a2e46",
+    "lavandaHaste": "#55553a", "lavandaHasteEsc": "#3a3a26",
+    "alho": "#a89e88", "alhoLuz": "#cec6ae", "alhoEsc": "#6e6656",
+    "galho": "#4a3626", "folha": "#3a4628", "folhaLuz": "#566238",
+    "camomilaTalo": "#5e5c38", "flor": "#b4aa84", "florLuz": "#d4caa4", "florMiolo": "#b08a2e",
+    "barbanteLuz": "#8e826a",
     # o barro, o vidro e a pedra do almofariz
     "barro": "#6a4230", "barroLuz": "#8a5a3c", "barroEsc": "#43281c",
     "vidroVerde": "#2c4030", "vidroVerdeLuz": "#4a6a4e", "vidroEsc": "#1e2832", "vidroEscLuz": "#3a4e5e",
@@ -218,40 +227,120 @@ def pia(px):
 
 
 # ---------------------------------------------------------------- as ervas secando
-MACOS = [  # (x do barbante, cor, largura, comprimento)
-    (95, "erva", 7, 17), (106, "ocre", 6, 15), (116, "lilas", 6, 16), (126, "baga", 6, 15), (136, "ocre", 5, 13),
+# Cada maço desenhado à mão (um caractere por pixel), de cabeça para baixo como se seca: o barbante descendo da vara,
+# as voltas da amarração em volta dos talos juntos e, embaixo, o que se reconhece da planta. A leitura vem da
+# silhueta, não da cor: a sálvia em leque de folhas pontudas, a lavanda em hastes finas com a espiga na ponta, a
+# réstia de alho em cabeças redondas presas na trança de palha, o raminho de bagas em cachos de bolinhas com duas
+# folhas, a camomila em talos curtos com as flores miúdas embaixo. Comprimentos e espaços diferentes de propósito.
+# Comuns a todos: "=" o barbante, "+" a volta acesa da amarração.
+MACOS = [
+    (90, 12, {"t": "salviaTalo", "G": "salviaLuz", "g": "salvia", "d": "salviaEsc"}, [  # a sálvia
+        "....=....",
+        "....=....",
+        "...=+=...",
+        "...tdt...",
+        "...=+=...",
+        "..t.d.t..",
+        ".tG.d.gt.",
+        "GGg.dGgd.",
+        "Gg.Ggdgdd",
+        ".gGg.gGd.",
+        "GgG.Ggdd.",
+        "G.gGg.Gd.",
+        ".Gg.gGgdd",
+        "..G.Gg.d.",
+        "..g.g..d.",
+        "....g....",
+    ]),
+    (101, 12, {"t": "lavandaHaste", "T": "lavandaHasteEsc", "L": "lavandaLuz", "l": "lavanda", "k": "lavandaEsc"}, [
+        "...=...",  # a lavanda
+        "...=...",
+        "..=+=..",
+        "..tTt..",
+        "..=+=..",
+        "..tTt..",
+        ".t.T.t.",
+        ".t.t.t.",
+        "t..t.t.",
+        "t..t..t",
+        "L..t..t",
+        "l.Lt..L",
+        "k.lt..l",
+        "l.kL..k",
+        "k.ll..l",
+        "..kk..k",
+        "...l...",
+        "...k...",
+    ]),
+    (110, 12, {"p": "palha", "P": "palhaEsc", "A": "alhoLuz", "a": "alho", "d": "alhoEsc"}, [  # a réstia de alho
+        "....=....",
+        "....=....",
+        "...=+=...",
+        "....pP...",
+        "...pPp...",
+        "..aAp....",
+        ".aAAad...",
+        ".aAadd...",
+        "..ddpPp..",
+        "....pAa..",
+        "...pAAad.",
+        "....aadd.",
+        "...PpddP.",
+        "..aAPp...",
+        ".aAAad...",
+        "..add....",
+    ]),
+    (121, 12, {"w": "galho", "R": "bagaLuz", "r": "baga", "q": "bagaEsc", "F": "folhaLuz", "f": "folha"}, [
+        "...=....",  # o raminho de bagas
+        "...=....",
+        "..=+=...",
+        "..wqw...",
+        "...w....",
+        "..w.w...",
+        ".w..wF..",
+        ".w.f.wf.",
+        "RrfF.w..",
+        "rqf.Rrw.",
+        ".w..rqRr",
+        ".Rr..qrq",
+        "Rrq...q.",
+        ".qr.....",
+        "..q.....",
+    ]),
+    (131, 12, {"h": "camomilaTalo", "F": "florLuz", "f": "flor", "m": "florMiolo"}, [  # a camomila
+        "....=...",
+        "...=+=..",
+        "...hhh..",
+        "...=+=..",
+        "..h.h.h.",
+        ".h.h.h.h",
+        "fFh.hFf.",
+        "fmf.fmff",
+        ".f.fFh.m",
+        "...fmf.f",
+        "....f...",
+    ]),
 ]
 
 
 def ervas(px):
-    """A vara presa em dois ganchos na parede, e os maços de cabeça para baixo, amarrados num barbante: o talo junto, a
-    folhagem abrindo para baixo e a ponta solta. Verde, ocre e um lilás apagado."""
+    """A vara presa em dois ganchos na parede e os maços pendurados nela (MACOS)."""
     px(88, 9, 58, 3, "madeira")
     px(88, 9, 58, 1, "madeiraLuz")
     px(88, 11, 58, 1, "madeiraEsc")
     for xx in (90, 142):  # os ganchos
         px(xx, 6, 1, 4, "ferro")
         px(xx, 6, 2, 1, "ferro")
-    for x, cor, w, comp in MACOS:
-        px(x, 12, 1, 3, "linhoSombra")           # o barbante
-        px(x - 1, 15, 3, 3, cor + "Esc")         # o talo amarrado
-        px(x - 1, 15, 3, 1, "linhoSombra")       # a volta do barbante
-        fim = 18 + comp - 3
-        for k in range(comp - 3):
-            y = 18 + k
-            meia = min(w / 2, 0.5 + k * 0.5)     # estreito no nó, abrindo para baixo
-            a, b = round(x - meia), round(x + meia)
-            px(a, y, b - a + 1, 1, cor)
-            px(a, y, 1, 1, cor + "Luz")
-            px(b, y, 1, 1, cor + "Esc")
-            if k % 3 == 1 and k > 2:             # as folhas soltas na borda
-                px.p(a - 1, y, cor + "Luz")
-            if k % 4 == 2 and b - a > 2:          # os talos por dentro
-                px.p(x + (1 if k % 8 == 2 else -1), y, cor + "Esc")
-        a, b = round(x - w / 2), round(x + w / 2)
-        for xx in range(a, b + 1):               # a ponta irregular: as pontas das folhas em comprimentos diferentes
-            for d in range((xx * 7 + x) % 3):
-                px.p(xx, fim + d, cor if d == 0 else cor + "Esc")
+    for x0, y0, pal, linhas in MACOS:
+        pal = dict(pal, **{"=": "barbante", "+": "barbanteLuz"})
+        for dy, linha in enumerate(linhas):
+            for dx, ch in enumerate(linha):
+                if ch in pal:
+                    px.p(x0 + dx, y0 + dy, pal[ch])
+        # a laçada do barbante por cima da vara
+        xb = x0 + linhas[0].index("=")
+        px.p(xb, 10, "barbanteLuz")
+        px.p(xb, 11, "barbante")
 
 
 # ---------------------------------------------------------------- a bancada
