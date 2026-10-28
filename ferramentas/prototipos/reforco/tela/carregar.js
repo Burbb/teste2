@@ -129,9 +129,17 @@
       ligar();
     }
     const visuais = () => `<fieldset><legend>Comparação visual · troca na hora</legend>
-      ${grupo("armadura", "Armaduras +9 a +12", [["candidata", "Feixe (candidato)"], ["anterior", "Veio anterior"]])}
+      ${grupo("armadura", "Armaduras +9 a +12", [["a", "A · Alternadas"], ["b", "B · Gradual"], ["c", "C · Secundário"], ["feixe", "Feixe 17ª"], ["anterior", "Veio"]])}
+      ${P.vitrineArmaduras ? `<div class="pt-linha"><span>Vitrine (as mesmas peças)</span><span class="pt-seg"><button type="button" data-vitrine-tam aria-pressed="false">Ampliar 2×</button></span></div>${P.vitrineArmaduras()}` : ""}
       ${grupo("paleta", "Celebração +9 a +12", [["candidata", "Candidata"], ["anterior", "Anterior"], ["referencia13", "Ouro (ref. +13)"]])}</fieldset>`;
     function ligarVisuais() {
+      el.querySelector("[data-vitrine-tam]")?.addEventListener("click", (ev) => {
+        const b = ev.currentTarget, grande = b.getAttribute("aria-pressed") !== "true";
+        b.setAttribute("aria-pressed", String(grande));
+        el.classList.toggle("pt-vitrine-2x", grande);
+        // o acabamento se refaz no próximo ciclo da página, no tamanho novo
+        el.querySelectorAll(".rf-vitrine-peca > :not(img:first-child)").forEach((x) => x.remove());
+      });
       el.querySelectorAll("[data-pref]").forEach((b) => b.addEventListener("click", () => {
         P.preferir(b.dataset.pref, b.dataset.valor);
         el.querySelectorAll(`[data-pref="${b.dataset.pref}"]`).forEach((x) => x.setAttribute("aria-checked", String(x === b)));
@@ -216,10 +224,20 @@
   #painel-testes button { font: inherit; color: #cfc6b2; background: #2a2116; border: 1px solid #5a4632; padding: 2px 8px; cursor: pointer; margin-top: 4px; }
   #painel-testes button.pt-perigo { border-color: #8a3328; color: #ffc9be; }
   #painel-testes button:focus-visible, #painel-testes input:focus-visible, #painel-testes select:focus-visible { outline: 2px solid #f2d27a; outline-offset: 1px; }
-  #painel-testes .pt-seg { display: inline-flex; gap: 2px; } #painel-testes .pt-seg button { margin: 0; }
+  #painel-testes .pt-seg { display: inline-flex; flex-wrap: wrap; justify-content: flex-end; gap: 2px; } #painel-testes .pt-seg button { margin: 0; }
   #painel-testes .pt-seg button[aria-checked="true"] { color: #1d1407; background: #f2d27a; border-color: #f2d27a; }
   #painel-testes .pt-nota { margin: 4px 0 0; color: #9d978b; font-size: 12px; }
   #painel-testes .pt-estado { min-height: 18px; margin: 4px 0 0; color: #9fe07c; } #painel-testes .pt-estado.ruim { color: #ff8c78; }
-  #painel-testes .pt-aviso { color: #9d978b; }`;
+  #painel-testes .pt-aviso { color: #9d978b; }
+  #painel-testes .pt-seg button[aria-pressed="true"] { color: #1d1407; background: #f2d27a; border-color: #f2d27a; }
+  #painel-testes .rf-vitrine { margin: 4px 0 2px; padding: 6px; background: #0e0b08; border: 1px solid #3a2c1c; }
+  #painel-testes .rf-vitrine-linha { display: grid; grid-template-columns: 48px repeat(5, 48px); align-items: center; justify-items: center; }
+  #painel-testes .rf-vitrine-linha > span:first-child { justify-self: start; color: #9d978b; font-size: 12px; }
+  #painel-testes .rf-vitrine-linha b { color: #f2d27a; font-size: 12px; font-weight: 400; }
+  #painel-testes .rf-vitrine-peca { position: relative; display: block; width: 40px; height: 40px; }
+  #painel-testes .rf-vitrine-peca > img:first-child { display: block; width: 40px; height: 40px; image-rendering: pixelated; }
+  #painel-testes.pt-vitrine-2x { width: 560px; }
+  #painel-testes.pt-vitrine-2x .rf-vitrine-linha { grid-template-columns: 48px repeat(5, 88px); }
+  #painel-testes.pt-vitrine-2x .rf-vitrine-peca, #painel-testes.pt-vitrine-2x .rf-vitrine-peca > img:first-child { width: 80px; height: 80px; }`;
   document.head.appendChild(estilo);
 })();

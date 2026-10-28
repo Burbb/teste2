@@ -444,7 +444,7 @@
    normal dá o mesmo brilho */
 .rf-reflexo {
   background: linear-gradient(45deg, transparent 0 42%, var(--borda) 42% 44.5%, var(--miolo) 44.5% 46.5%, var(--borda) 46.5% 49%,
-    transparent 49% 50.5%, var(--borda) 50.5% 51.5%, transparent 51.5%) 0 0 / 300% 300% no-repeat; }
+    transparent 49% 50.5%, var(--seg, var(--borda)) 50.5% 51.5%, transparent 51.5%) 0 0 / 300% 300% no-repeat; }
 .rf-reflexo[data-nivel="1"] { --borda: rgba(255, 244, 214, 0.28); --miolo: rgba(255, 252, 240, 0.6); }
 .rf-reflexo[data-nivel="2"] { --borda: rgba(96, 224, 120, 0.55); --miolo: rgba(226, 255, 226, 0.9); }
 .rf-reflexo[data-nivel="3"] { --borda: rgba(70, 140, 255, 0.75); --miolo: rgba(214, 232, 255, 0.95); }

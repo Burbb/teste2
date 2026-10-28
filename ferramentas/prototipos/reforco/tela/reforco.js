@@ -56,10 +56,10 @@
 
   const reduzido = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
   /* As candidatas visuais desta rodada, escolhidas no painel de testes (carregar.js) e lembradas neste navegador:
-     os botões (A · ferro encaixado, B · com presilhas de latão), o acabamento das armaduras do +9 ao +12 (A · brilho
-     nas bordas, B · reflexo estreito) e a paleta da celebração do +9 ao +12 (a anterior ou a candidata). Nenhuma é
-     escolhida pelo jogo: só a comparação. */
-  const PREF = { botoes: ["a"], armadura: ["candidata", "anterior"], paleta: ["candidata", "anterior", "referencia13"] };
+     o acabamento das armaduras do +9 ao +12 (18ª: A · passadas alternadas, B · cor gradual, C · reflexo principal e
+     secundário; o feixe da 17ª e o veio anterior para comparar), a paleta da celebração do +9 ao +12 e a interface de
+     metal da bancada (18ª; "jogo" é a de agora). Nenhuma é escolhida pelo jogo: só a comparação. */
+  const PREF = { botoes: ["a"], armadura: ["a", "b", "c", "feixe", "anterior"], paleta: ["candidata", "anterior", "referencia13"], placas: ["jogo", "bancada"] };
   const pref = (k) => { let v = null; try { v = localStorage.getItem(`rf16-${k}`); } catch (e) { /* sem armazenamento */ } return PREF[k].includes(v) ? v : PREF[k][0]; };
   function preferir(k, v) {
     if (!PREF[k] || !PREF[k].includes(v)) return pref(k);
@@ -71,6 +71,7 @@
     document.body.dataset.rfBotoes = pref("botoes");
     document.body.dataset.rfArmadura = pref("armadura");
     document.body.dataset.rfPaleta = pref("paleta");
+    document.body.dataset.rfPlacas = pref("placas");
   }
   aplicarPref();
   const iconeDe = (nome) => Icones.porDesenho(nome) || S(nome, 2);
@@ -1090,8 +1091,8 @@
    *  repete antes de 1,5 s. Com movimento reduzido, fica parado e discreto. */
   function reflexo(caixa, nivel, fixo = false, parado = false) {
     if (!caixa || !nivel) return;
-    // as armaduras do +9 ao +12 não recebem a passada larga: o acabamento delas (A ou B) já é o brilho (16ª)
-    if (nivel >= 9 && ARMADURAS.has(espacoDe(caixa)) && document.body.dataset.rfArmadura !== "anterior") { caixa.querySelector(".rf-reflexo")?.remove(); return; }
+    // o feixe da 17ª nas armaduras do +9 ao +12 não tinha a passada larga; as alternativas da 18ª têm, como o +8
+    if (nivel >= 9 && ARMADURAS.has(espacoDe(caixa)) && document.body.dataset.rfArmadura === "feixe") { caixa.querySelector(".rf-reflexo")?.remove(); return; }
     const img = caixa.querySelector("img, canvas");
     if (!img) return;
     const ja = caixa.querySelector(".rf-reflexo");
@@ -1110,9 +1111,29 @@
     }
     Object.assign(r.style, { left: `${img.offsetLeft}px`, top: `${img.offsetTop}px`, width: `${img.offsetWidth}px`, height: `${img.offsetHeight}px` });
     r.dataset.nivel = Math.min(nivel, 12);
+    corDaPassada(caixa, r, nivel);
     r.classList.remove("passa");
     void r.offsetWidth;  // recomeça a passada
     r.classList.add("passa");
+  }
+  /** A passada nas armaduras do +9 ao +12 (18ª) na cor da alternativa escolhida, com a mesma forma da do +8 (a faixa
+   *  com o miolo claro e o fio atrás): A, uma cor por passada, na ordem do nível; B, a cor do momento (a mesma das
+   *  faixas); C, a principal na faixa e a secundária no fio. Nas outras peças e níveis, a cor do CSS. */
+  function corDaPassada(caixa, r, nivel) {
+    const v = document.body.dataset.rfArmadura, n = Math.min(nivel, 12);
+    const tem = n >= 9 && ["a", "b", "c"].includes(v) && ARMADURAS.has(espacoDe(caixa));
+    if (!tem) { ["--borda", "--miolo", "--seg"].forEach((k) => r.style.removeProperty(k)); return; }
+    const rgba = (c, a) => `rgba(${hexRgb(c).join(",")},${a})`;
+    let cor = ARM_PAR[n][0], seg = null;
+    if (v === "a") { caixa._passada = (caixa._passada || 0) + 1; cor = ARM_CORES[n][(caixa._passada - 1) % ARM_CORES[n].length]; }
+    else if (v === "b") {
+      const lista = ARM_CORES[n], por = PERIODO_8 * ARM_GRADUAL, i = passoAgora() % (por * lista.length);
+      const k = Math.floor(i / por), tt = (i % por) / por;
+      cor = misturar(lista[k], lista[(k + 1) % lista.length], tt * tt * (3 - 2 * tt));
+    } else seg = ARM_PAR[n][1];
+    r.style.setProperty("--borda", rgba(cor, 0.8));
+    r.style.setProperty("--miolo", rgba(n >= 12 ? W_ : clarear(cor), 0.95));
+    if (seg) r.style.setProperty("--seg", rgba(seg, 0.95)); else r.style.removeProperty("--seg");
   }
   function apagarReflexo() {}  // parado (movimento reduzido), o reflexo fica: é o acabamento da peça reforçada
 
@@ -1232,22 +1253,53 @@
     ctx.drawImage(img, 0, 0, w, hh);
     return (lista[i] = cv.toDataURL());
   }
-  /* As armaduras do +9 ao +12 (capacete, peito, luvas, pernas, botas), 17ª: o feixe estreito. O veio das armas cruza a
-     peça em faixas largas e repetidas, que nas superfícies largas da armadura viram listras; as candidatas A e B da 16ª
-     (a orla com pontos de luz, o reflexo de 1 pixel) não foram aprovadas. Agora, um feixe só por volta, estreito (2 a
-     4 pixels do desenho) e multicolorido, nas cores do veio daquele nível, misturado com a força do +8 (o material e as
-     sombras continuam aparecendo); um feixe por vez atravessa a peça, nunca várias faixas juntas. O nível cresce pelas cores
-     do feixe e por um brilho de marfim no +12, não pela velocidade. Cada passo é um quadro pronto (como o veio: sem
-     mistura no CSS, sem ampliar); o contorno aprovado continua por cima. O +8 e as outras peças não mudam. */
+  /* As armaduras do +9 ao +12 (capacete, peito, luvas, pernas, botas), 18ª: três alternativas jogáveis, escolhidas no
+     painel de testes. O feixe da 17ª (uma passada estreita por volta) ficou discreto demais: do +8 para o +9 parecia
+     perder força. As três partem da faixa do +8, que fica exatamente como está: a mesma presença (a força da mistura),
+     a mesma largura (3 pixels do desenho e um pixel claro atrás) e a mesma frequência (uma faixa a cada 18 diagonais, o
+     mesmo passo de 70 ms), sem intervalo longo. O nível cresce pelas cores, pela força (do +11) e pelos pontos de
+     brilho, como nas armas; a passada periódica do reflexo também volta, como no +8. Cada passo é um quadro pronto
+     (como o veio: sem mistura no CSS, sem ampliar); o contorno aprovado continua por cima.
+       A · passadas alternadas: uma cor por faixa, na ordem do nível (o +9 rubi e depois âmbar; o +10 acrescenta o
+           azul; o +11, a esmeralda; o +12, o violeta), nunca várias cores na mesma faixa;
+       B · cor gradual: todas as faixas da peça na mesma cor, que passa devagar de uma cor do nível para a seguinte (três
+           faixas por cor, ~3,8 s), sem faixas de cores diferentes ao mesmo tempo;
+       C · reflexo principal e secundário: a faixa na cor principal do nível e, logo atrás, um reflexo de 1 pixel (2 no
+           +11 e +12) na cor secundária: as duas cores da celebração daquele nível (+9 rubi e âmbar, +10 laranja e azul,
+           +11 âmbar e esmeralda, +12 âmbar e violeta).
+     No +12, o pixel claro de trás é marfim nas três. O feixe da 17ª e o veio anterior ficam no painel para comparar. */
   const ARMADURAS = new Set(["armadura", "cabeca", "maos", "pernas", "pes"]);
-  const FEIXE = {  // as faixas do feixe, de um pixel cada, da frente para trás (as cores do veio do nível)
+  const FEIXE = {  // a 17ª: as faixas do feixe, de um pixel cada, da frente para trás
     9: [R_, O_], 10: [R_, O_, A_], 11: [R_, O_, E_, A_], 12: [W_, R_, O_, E_, A_, V_],
   };
-  function quadroArmadura(img, nivel, fase) {
-    const w = img.naturalWidth || img.width, hh = img.naturalHeight || img.height, faixas = FEIXE[nivel] || FEIXE[9];
-    const ciclo = w + hh;  // uma passada por volta: quando um feixe sai por um canto, o próximo entra pelo outro
+  const PERIODO_8 = 18;  // a faixa do +8 (VEIOS[8]): 3 pixels, 3 vazios, o pixel claro e 11 vazios
+  const ARM_CORES = { 9: [R_, O_], 10: [R_, O_, A_], 11: [R_, O_, E_, A_], 12: [R_, O_, E_, A_, V_] };
+  const ARM_PAR = { 9: [R_, O_], 10: ["#ff7a3c", A_], 11: [O_, E_], 12: [O_, V_] };  // C: as cores da celebração
+  const ARM_GRADUAL = 3;  // B: faixas por cor
+  const hexRgb = (c) => [1, 3, 5].map((k) => parseInt(c.slice(k, k + 2), 16));
+  const rgbHex = (v) => `#${v.map((n) => Math.round(n).toString(16).padStart(2, "0")).join("")}`;
+  const misturar = (a, b, t) => { const p = hexRgb(a), q = hexRgb(b); return rgbHex(p.map((v, k) => v + (q[k] - v) * t)); };
+  const clarear = (c) => misturar(c, "#ffffff", 0.45);
+  /** A faixa de uma alternativa no passo `i`: a cor de cada diagonal `d` (ou 0). O ciclo inteiro da alternativa. */
+  function faixaArmadura(variante, nivel) {
+    const n = Math.min(Math.max(nivel, 9), 12), luz = (c) => (n >= 12 ? W_ : clarear(c));
+    // uma faixa de 18 diagonais, como a do +8: 3 pixels, 3 vazios, o pixel claro e o resto vazio
+    const faixa = (c) => [...x(c, 3), ...z(3), luz(c), ...z(PERIODO_8 - 7)];
+    if (variante === "a") return { seq: ARM_CORES[n].flatMap(faixa), ciclo: PERIODO_8 * ARM_CORES[n].length };
+    if (variante === "c") {
+      // C: a principal, um vazio e o secundário no lugar do pixel claro (no +12, o marfim ainda atrás dele)
+      const [c1, c2] = ARM_PAR[n], larg = n >= 11 ? 2 : 1;
+      const seq = [...x(c1, 3), 0, ...x(c2, larg), ...(n >= 12 ? [W_] : []), ...z(PERIODO_8 - 4 - larg - (n >= 12 ? 1 : 0))];
+      return { seq, ciclo: PERIODO_8 };
+    }
+    return { gradual: ARM_CORES[n], ciclo: PERIODO_8 * ARM_GRADUAL * ARM_CORES[n].length };
+  }
+  function quadroArmadura(img, nivel, fase, variante) {
+    const w = img.naturalWidth || img.width, hh = img.naturalHeight || img.height;
+    const feixe17 = variante === "feixe", f = feixe17 ? null : faixaArmadura(variante, nivel);
+    const ciclo = feixe17 ? w + hh : f.ciclo;  // a 17ª: uma passada por volta
     const i = ((fase % ciclo) + ciclo) % ciclo;
-    const chave = `${img.currentSrc || img.src}|feixe|${nivel}`;
+    const chave = `${img.currentSrc || img.src}|arm-${variante}|${nivel}`;
     if (!quadrosVeio.has(chave)) quadrosVeio.set(chave, []);
     const lista = quadrosVeio.get(chave);
     if (lista[i]) return lista[i];
@@ -1256,13 +1308,21 @@
     const ctx = cv.getContext("2d");
     ctx.imageSmoothingEnabled = false;
     ctx.drawImage(img, 0, 0, w, hh);
-    ctx.globalCompositeOperation = "overlay";  // a mesma mistura do veio, com a força do +8
-    ctx.globalAlpha = VEIO_FORCA[8] || 0.55;
-    faixas.forEach((cor, k) => {
-      const d = i - k;  // a diagonal x + y = d
+    ctx.globalCompositeOperation = "overlay";  // a mesma mistura do veio
+    ctx.globalAlpha = feixe17 ? VEIO_FORCA[8] || 0.55 : VEIO_FORCA[Math.min(nivel, 12)] || 0.55;
+    const diagonal = (d, cor) => {
       ctx.fillStyle = cor;
       for (let x = Math.max(0, d - hh + 1); x <= Math.min(d, w - 1); x++) ctx.fillRect(x, d - x, 1, 1);
-    });
+    };
+    if (feixe17) (FEIXE[nivel] || FEIXE[9]).forEach((cor, k) => diagonal(i - k, cor));
+    else if (f.gradual) {
+      // B: a cor de agora entre duas do nível (suave na troca); as faixas andam como as do +8
+      const por = PERIODO_8 * ARM_GRADUAL, k = Math.floor(i / por), t = (i % por) / por;
+      const a = f.gradual[k % f.gradual.length], b = f.gradual[(k + 1) % f.gradual.length];
+      const cor = misturar(a, b, t * t * (3 - 2 * t));
+      const seq = [...x(cor, 3), ...z(3), nivel >= 12 ? W_ : clarear(cor), ...z(PERIODO_8 - 7)];
+      for (let d = 0; d < w + hh; d++) { const c = seq[(d + i) % PERIODO_8]; if (c) diagonal(d, c); }
+    } else for (let d = 0; d < w + hh; d++) { const c = f.seq[(d + i) % f.seq.length]; if (c) diagonal(d, c); }
     ctx.globalCompositeOperation = "destination-in";  // só onde a peça tem pixel
     ctx.globalAlpha = 1;
     ctx.drawImage(img, 0, 0, w, hh);
@@ -1276,7 +1336,7 @@
     const img = el._img;
     if (!img || (img.tagName === "IMG" && !(img.complete && img.naturalWidth))) return;
     const fase = (el._fase || 0) + (reduzido() ? 0 : passoAgora());
-    const url = el._armadura ? quadroArmadura(img, +el.dataset.nivel, fase) : quadroVeio(img, el.dataset.nivel, fase);
+    const url = el._armadura ? quadroArmadura(img, +el.dataset.nivel, fase, el._armadura) : quadroVeio(img, el.dataset.nivel, fase);
     if (url && el.getAttribute("src") !== url) el.src = url;
   }
   // um passo a cada 70 ms (~14 por segundo): as faixas correm sobre a peça no ritmo das animações do jogo (a 250 ms,
@@ -1343,11 +1403,12 @@
     cv._fase = desvio(`${ds.uid || ds.peca || ds.espaco || ds.mini || ds.mochila || ds.trPeca || ""}|${src}`);
     cv.dataset.nivel = nivel;
     const espaco = nivel >= 9 ? espacoDe(caixa) : "";
-    // a armadura do +9 ao +12 com o feixe (a comparação do painel pode mostrar o veio de antes nela)
-    cv._armadura = ARMADURAS.has(espaco) && document.body.dataset.rfArmadura !== "anterior";
-    caixa.classList.toggle("rf-arm-feixe", cv._armadura);
+    // a armadura do +9 ao +12 com a alternativa escolhida no painel (A, B, C, o feixe da 17ª ou o veio anterior)
+    const variante = document.body.dataset.rfArmadura;
+    cv._armadura = ARMADURAS.has(espaco) && variante !== "anterior" ? variante : "";
+    caixa.classList.toggle("rf-arm-feixe", !!cv._armadura);
     pintarVeio(cv);
-    const k = cv._armadura ? (nivel >= 12 ? 1 : 0) : BRILHOS[nivel] || 0;  // no feixe, só o brilho de marfim do +12
+    const k = cv._armadura === "feixe" ? (nivel >= 12 ? 1 : 0) : BRILHOS[nivel] || 0;  // o feixe da 17ª: só o marfim do +12
     if (!k) { pontos?.remove(); return; }
     const b = camada(pontos, "rf-acab-brilhos");
     const px = Math.max(1, Math.round(img.offsetWidth / (img.naturalWidth || img.width || 32)));  // um pixel do desenho
@@ -1396,6 +1457,8 @@
       const it = pecaDoDono(el);
       lista.push([el, `inv:${el.dataset.espaco || el.dataset.mochila || "o" + i}:${it ? it.nome : ""}`, nivel(it)]);
     });
+    // a vitrine das armaduras do painel de testes (18ª)
+    document.querySelectorAll("#painel-testes .rf-vitrine-peca[data-reforco]").forEach((el) => lista.push([el, `vitrine:${el.dataset.vitrine}`, +el.dataset.reforco]));
     // a peça da apresentação do resultado também (o reflexo continua passando enquanto ela está na tela)
     document.querySelectorAll(".rf-janela .rf-esteira .rf-peca, .rf-janela .rf-chapa .rf-encaixe.grande[data-reforco], #rf-res .rf-res-arte[data-reforco]").forEach((el) => {
       lista.push([el, el.closest("#rf-res") ? `resultado:${el.dataset.reforco}` : `forja:${el.dataset.uid || "molde"}:${el.getAttribute("aria-label") || ""}:${el.dataset.reforco}`, +el.dataset.reforco || 0]);
@@ -1906,6 +1969,20 @@
       if (motivo) return motivo;
       if (op === "teste_cenario") { selUid = null; trOrigem = trDestino = null; essSel = null; }  // as peças de antes saem
       return App.acao({ forja: true }, null, { op, ...dados }) ? "" : "Agora não dá para pedir à forja.";
+    },
+    /** A vitrine das armaduras (18ª, painel de testes): as cinco peças que o herói veste (ou as do jogo, se faltar uma),
+     *  cada uma do +8 ao +12, com a alternativa escolhida; o ciclo da página anima e passa o reflexo como nas outras. */
+    vitrineArmaduras() {
+      const eq = (App.estado && App.estado.heroi && App.estado.heroi.equip) || {};
+      const padrao = { cabeca: "elmo", armadura: "armadura", maos: "manopla", pernas: "calca", pes: "bota_ferro" };
+      const nomes = { cabeca: "Cabeça", armadura: "Peito", maos: "Mãos", pernas: "Pernas", pes: "Pés" };
+      return `<div class="rf-vitrine" role="img" aria-label="Armaduras do +8 ao +12 com o acabamento escolhido">
+        <div class="rf-vitrine-linha"><span></span>${[8, 9, 10, 11, 12].map((n) => `<b>+${n}</b>`).join("")}</div>
+        ${Object.keys(padrao).map((slot) => {
+          const ic = (eq[slot] && eq[slot].icone) || padrao[slot];
+          return `<div class="rf-vitrine-linha"><span>${nomes[slot]}</span>${[8, 9, 10, 11, 12].map((n) =>
+            `<span class="rf-vitrine-peca" data-slot="${slot}" data-reforco="${n}" data-vitrine="${slot}-${n}">${Icones.equipamento(ic, 40)}</span>`).join("")}</div>`;
+        }).join("")}</div>`;
     },
     /** O acabamento de um nível num elemento qualquer (a folha de comparação da demonstração). */
     acabamento(el, n, passar = false) { acabamento(el, n); if (passar && n) reflexo(el, n, true); },
