@@ -154,7 +154,7 @@ iguais). Na bancada (`auxiliares/bancada-r.html`), o ciclo inteiro e as poses.
 
 O Jean gostou da fluidez, do ritmo e da sensação de trabalho da R, mas não do desenho do ferreiro (a anatomia e as
 proporções estranhas, a barba como um saco no rosto, o corpo caricato) e mandou uma imagem gerada como a referência
-principal da aparência (`ferramentas/arte/referencias/forja/`, com a origem e o hash). A F transpõe essa imagem: a
+principal da aparência (`ferramentas/arte/referencias/cenarios internos/` (antes, `referencias/forja/`), com a origem e o hash). A F transpõe essa imagem: a
 mesma oficina, o mesmo ferreiro (careca, gordo e forte, a barba trançada com a presilha) e o **ritmo da R sem mudança**
 (a mesma linha do tempo: 53 quadros de 100 ms). A R, a A e a B ficam como histórico. Folhas: `folha-forja-f.png` (a
 referência × a F, a sobreposição das duas, a R × a F no jogo nas duas janelas, a F em tamanho real) e
