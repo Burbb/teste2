@@ -8177,3 +8177,23 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   volta do pilão, 12 poses a 100 ms); a botica (a cobra no âmbar, as sanguessugas, a raiz, os cogumelos, as tinturas,
   as velas, o alambique sobre a lamparina, o crânio de cervo, a estrela de palha e o amuleto da porta, o caldeirão).
   O LEIA-ME do protótipo detalha. Conferido no jogo nas duas resoluções. Esperando o Jean; nada integrado.
+
+### 28/10/2026 (data do computador local) — Curandeira: as ervas, a rotina e os rostos (protótipo, terceira passada)
+
+- **Avaliação do Jean:** manter a composição, a personalidade e os objetos de alquimia natural. Os maços pendurados
+  pareciam pinhatas; Pita e Marta mexiam só o braço (robótico, e mais quadros do mesmo gesto não bastam). Pediu uma
+  pequena rotina de trabalho com pausas e intenção, o corpo participando pela atividade (sem balanço constante), e a
+  skill corrigida para o erro não voltar. Durante a rodada: rosto e cabelo mais bonitinhos, com traços simples como os
+  do ferreiro.
+- **Feito (só no protótipo, `ferramentas/prototipos/curandeira`):** os maços à mão por planta (sálvia, lavanda, réstia
+  de alho, bagas, camomila, com barbante e amarração); a rotina (moer, desacelerar, olhar a mistura, a pitada levada ao
+  nariz, pegar o pilão de novo) com o braço de comprimento fixo levando o corpo, as passagens escalonadas e a volta ao
+  começo sem salto; Marta e Pita no ritmo de cada uma; Pita num banquinho (a bancada é a de Marta); os rostos e o
+  cabelo refeitos, o pescoço ligado ao vestido. A segunda passada fica em `anterior/camadas` (botão "Passada anterior"
+  na faixa). O LEIA-ME do protótipo detalha.
+- **Skill `arte-cenas-fenda`:** a seção 5b (a atuação passo a passo: atividade e apoios, quem conduz, acompanha e fica,
+  o alcance decidindo o corpo, poses-chave do corpo inteiro, rotina, passagens, conferência em três camadas), os erros
+  da curandeira e o estudo de caso `curandeira.md`.
+- **Conferido:** no jogo, a 1920×945 e a 1280×720 (os três estados, a vista quadro a quadro, a pose parada, um
+  tratamento, sair e voltar sem acumular relógio, sem erros no console). Esperando o Jean; nada integrado; templo e
+  taverna não começados.
