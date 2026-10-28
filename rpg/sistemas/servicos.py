@@ -19,6 +19,22 @@ def cena_forja():
     ]}
 
 
+def cena_curandeira(g):
+    """A cabana para a interface gráfica (telas/cena-curandeira.js; as de texto ignoram), no Vau da campanha: quem
+    atende pela história (Pita enquanto Marta está de cama; Marta depois que a água limpa), a água da fonte (na noite
+    escura, os baldes e a fervura forte) e os dois pontos. Quem atende leva aos cartões do tratamento; a Saída é o
+    Voltar do menu."""
+    marta = consequencias.marta_de_pe(g)
+    nome = "Marta" if marta else "Pita"
+    return {"cena": "curandeira", "titulo": "A curandeira", "pagina": True, "quem": "marta" if marta else "pita",
+            "agua": "escura" if consequencias.estado_fonte(g) == "escura" else None, "pontos": [
+                {"id": "curandeira", "nome": nome, "faz": "tratar os ferimentos", "estado": f"{nome}, no almofariz.",
+                 "servicos": True},
+                {"id": "saida", "nome": "Saída", "faz": "voltar à vila", "estado": "A porta para a rua do Vau.",
+                 "acao": {"voltar": True}},
+            ]}
+
+
 VAZIO_CURANDEIRA = "Nenhum ferimento a tratar."  # o serviço sem nada a fazer (a cabana continua aberta)
 
 
@@ -46,6 +62,8 @@ class Servicos:
         tratou = False
         while True:
             self.ui.cena("A curandeira", self.loc["nome"], "menu")  # a cada volta: na tela gráfica, a cabana se redesenha
+            if quem:  # no Vau da campanha, a cabana com quem atende (fora dele, a curandeira de sempre, sem ambiente)
+                self.ui.painel("cena", cena_curandeira(self))
             gratis = abertura.curandeira_gratis(self)
             tratamentos = self.tratamentos()
             custos = [custo for _, custo, _ in tratamentos]

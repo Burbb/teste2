@@ -1,0 +1,15 @@
+/* A cabana da curandeira com o ambiente (1.218.0): a arte no quadro de cima (telas/cena-curandeira.js, 320×96 como a
+   forja: a vista mais alta vem de 26-forja.css) e o balcão do tratamento embaixo. */
+/* Os nomes de quem atende e da Saída ficam sempre à vista (são os dois pontos do lugar). */
+#pontos-cena[data-cena="curandeira"] .ci-ponto:not(.parado) .ci-balao { visibility: visible; }
+/* O cartão para onde o ponto de quem atende leva: um aceno curto na aresta. */
+.curandeira .servico.chamado { border-color: var(--latao-claro); }
+/* Com o ambiente, a cena já mostra quem atende (com o nome): o topo do balcão fica numa linha (a fala e o ouro, sem o
+   ícone e o nome repetidos). */
+#cena.com-ambiente .curandeira .loja-topo { padding: 4px 12px; }
+#cena.com-ambiente .curandeira .loja-topo > img, #cena.com-ambiente .curandeira .loja-topo > canvas,
+#cena.com-ambiente .curandeira .loja-topo > div > b { display: none; }
+#cena.com-ambiente .curandeira .loja-topo .lore { font-size: 16px; }
+#cena.com-ambiente .curandeira h4 { margin-top: 0.6em; }
+/* Sem o respiro de baixo da folha (como a forja): com o quadro alto, ele deixava página vazia para rolar a 1280. */
+#cena.com-ambiente #folha:has(.curandeira) { padding-bottom: 0; }

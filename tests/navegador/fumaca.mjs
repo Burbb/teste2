@@ -2395,6 +2395,7 @@ async function cenarioFeridas(browser) {
       cartoes: document.querySelectorAll("#texto .curandeira [data-tratar]").length, tela: !!document.querySelector("#texto .curandeira"),
       fala: (document.querySelector("#texto .curandeira .lore") || {}).textContent, voltar: !!document.querySelector("#barra-tela .voltar-seta"),
       vazio: (document.querySelector("#texto .curandeira .vazio") || {}).textContent, vida: estado.heroi.max_hp,
+      cena: !!(Cenas.atual() && Cenas.atual().d && Cenas.atual().d.cena === "curandeira" && Cenas.atual().d.quem === "pita"),
       cartao: ((document.querySelector("#texto .curandeira [data-tratar] .serv-efeito") || {}).textContent || "") }));
     try {
       await page.waitForSelector('#predios .predio[data-predio="curandeiro"]', { timeout: 20000 });
@@ -2419,7 +2420,7 @@ async function cenarioFeridas(browser) {
       }
       const fim = await cabana();
       conferir(fim.feridas === 0 && fim.cartoes === 0 && fim.tela && fim.voltar && fim.fala === '"Pronto. Por aqui, terminamos."'
-        && fim.vazio === "Nenhum ferimento a tratar.", `tratado o último, a cabana continua: a Pita diz que terminou, o serviço diz que não há o que tratar, e o Voltar (${JSON.stringify(fim)})`);
+        && fim.vazio === "Nenhum ferimento a tratar." && fim.cena, `tratado o último, a cabana continua (com a Pita no quadro de cima, 1.218.0): ela diz que terminou, o serviço diz que não há o que tratar, e o Voltar (${JSON.stringify(fim)})`);
       await page.keyboard.press("Escape");
       await page.waitForSelector('#predios .predio[data-predio="curandeiro"]', { timeout: 10000 });
       conferir(!(await cabana()).tela, "Esc sai da cabana para a vila");

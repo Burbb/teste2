@@ -1098,6 +1098,8 @@
                 lodo: { area: [66, 46, 38, 14], balao: [85, 47], foco: [96, 52] } } },
     // a forja do Vau (telas/cena-forja.js): a oficina em camadas prontas, o ferreiro trabalhando
     forja: window.CenaForja,
+    // a cabana da curandeira do Vau (telas/cena-curandeira.js): Pita ou Marta no almofariz
+    curandeira: window.CenaCurandeira,
   };
 
   /** O contorno de um ponto aceso, no estilo da arte: quatro cantos dourados com a sombra por fora, em volta da área. */

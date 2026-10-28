@@ -174,7 +174,8 @@ class TestCurandeiraGratis(unittest.TestCase):
         g.j.ouro = 200
         preco = sum(ab.custo_tratamento(g, {"id": f}) for f in ("corte", "costelas"))
         paineis, efeitos = [], []
-        g.ui.painel = lambda tipo, dados: paineis.append(dados) or True
+        cenas = []  # no Vau da campanha, a cabana com quem atende vem junto (painel "cena", 1.218.0)
+        g.ui.painel = lambda tipo, dados: (cenas if tipo == "cena" else paineis).append(dados) or True
         g.ui.efeito = lambda texto, tipo="info", item=None: efeitos.append(texto)
         ofertas = []
 
@@ -188,6 +189,7 @@ class TestCurandeiraGratis(unittest.TestCase):
         self.assertEqual([len(d["ferimentos"]) for d in paineis], [2, 1, 0])
         self.assertEqual([d["ouro"] for d in paineis][1:], [200 - ab.custo_tratamento(g, {"id": "corte"}), 200 - preco])
         self.assertEqual(paineis[-1]["fala"], '"Pronto. Por aqui, terminamos."')  # a Pita, no Vau: tratou e terminou
+        self.assertEqual([(c["cena"], c["quem"]) for c in cenas], [("curandeira", "pita")] * 3)
         self.assertEqual((g.j.ferimentos, g.j.ouro), ([], 200 - preco))
         # o resultado de cada um numa confirmação curta, com o custo à parte (o "−N ouro" de sempre)
         self.assertEqual([e for e in efeitos if ": tratad" in e], ["Corte profundo: tratado", "Costelas quebradas: tratadas"])
