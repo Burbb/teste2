@@ -86,12 +86,19 @@ A migração das artes e seus usos específicos consta no plano 23; não contar 
 | **2** | Menu de carregar e fichas dos saves, criação, livro da capela, dado, subida de nível, celebrações e raridade | Pendente; Grimório e árvore passam ao mesmo ciclo dos sistemas na etapa 8 |
 | **3** | Interior da forja e ferreiro | **Concluída**: a oficina H2 no jogo (1.210.0); o gesto aprovado do ferreiro, "Corpo desce", na fonte Aseprite e no jogo (28/10) |
 | **4** | Reforço, encantamento e a forja | **Integrada na 1.216.0** (especificação em roadmapIDEIAS/27): Reforçar, Encantar (com remover gravação), Transferir e Desmontar; materiais nas fontes reais; save no formato 9 com migração; armaduras +9 a +12 em B · Gradual; placas da bancada nos controles. **Equilíbrio** (economia, chances, requisitos) a avaliar jogando, sem recalibrar; **som** adiado; alternativas (armaduras A e C, candidatas antigas, painel de testes) preservadas só no protótipo `ferramentas/prototipos/reforco`; fontes de essência III e do reforço alto dependem da campanha ampliada; elevação de base para depois |
-| **5** | Interiores do Templo, Curandeira e Taverna | Curandeira: candidata no protótipo `ferramentas/prototipos/curandeira`, esperando a avaliação do Jean (28/10), sem integrar; Templo e Taverna pendentes |
+| **5** | Interiores do Templo, Curandeira e Taverna | Curandeira: candidata no protótipo `ferramentas/prototipos/curandeira` (quarta passada: a moagem com poses sustentadas), esperando a avaliação do Jean (28/10), sem integrar; a cabana já abre sem ferimento no jogo (1.217.0); Templo e Taverna pendentes |
 | **6** | Cenários dos lugares, entornos de acampamentos e cenas principais | Pendente; conferir a permanência dos acontecimentos |
 | **7** | Cenas dos eventos recorrentes da estrada | Pendente |
 | **8** | Habilidades/build, Grimório, árvore de talentos, ícones e animações | Pendente; definir/validar sistemas e produzir os ícones no mesmo ciclo, evitando arte para conceitos prestes a mudar |
 | **9** | Expansão e reescrita da campanha, Ilse e a água | Rascunho em [22](../roadmapIDEIAS/22-HISTORIA-ILSE-E-A-AGUA-RASCUNHO.md), não cânone |
 | **Depois** | Avaliação de refatoração/manutenção | Retomar por diagnóstico do código então existente; não interromper os lotes com limpeza geral |
+
+**Os interiores (decisão de 28/10, roadmapIDEIAS/10):** entrar num estabelecimento não depende de usar o serviço; o
+serviço sem uso mostra um estado discreto, e fechamentos só com razão na história ou nas regras do lugar. Além dos
+serviços, os interiores vão servir para conversar com personagens, diálogos liberados por acontecimentos, começar ou
+continuar quests e objetos e interações que aparecem conforme a história, pelos mecanismos de estado e de pontos de
+cena que já existem (sem um sistema genérico de quests ou diálogos agora). A curandeira poderá ganhar uma mesa de
+alquimia (fabricar poções) com interface própria quando esse sistema for desenhado; nada implementado.
 
 **Prioridades novas de 19/10 (histórico; resolvidas: o contador de flechas na 1.155.0, o Firme e os outros 16 estados
 até a 1.161.0):** o ícone da contagem de flechas na carta do Arqueiro ainda usa o sprite antigo

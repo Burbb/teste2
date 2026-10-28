@@ -8197,3 +8197,29 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Conferido:** no jogo, a 1920×945 e a 1280×720 (os três estados, a vista quadro a quadro, a pose parada, um
   tratamento, sair e voltar sem acumular relógio, sem erros no console). Esperando o Jean; nada integrado; templo e
   taverna não começados.
+
+### 28/10/2026 (data do computador local) — A cabana aberta sem ferimento (1.217.0) e a moagem pausada (protótipo)
+
+- **Pedido do Jean:** o refinamento final da candidata da curandeira (preservar cenário, ingredientes, personalidade e
+  rotina; sem decoração nova nem caminhada) e a separação entre acesso ao lugar e disponibilidade dos serviços, como
+  decisão geral do projeto. Também registrar o papel futuro dos interiores e a alquimia.
+- **No jogo (1.217.0):**
+  - a curandeira entra no menu da vila também sem ferimento: a cabana abre, a área do serviço diz "Nenhum ferimento a
+    tratar." e a cena, os pontos e o Voltar continuam; tratar o último não tira o jogador dela. A fala de quem atende
+    sem ferimento ficou sem a regra repetida (Marta e a curandeira de sempre só erguem os olhos; Pita mantém a dela).
+    O quadro F3 do tutorial só se marca ao entrar com o que tratar;
+  - os ferimentos dizem o atributo antes do valor, em todo lugar (cartão, dica e aviso): "Vida máxima −10%",
+    "Defesa −25%, Vigor máximo −15%";
+  - levantamento dos outros: mercado, forja e taverna já abriam sempre; o templo sem ninguém a cuidar já mostrava o
+    balcão com a frase; nenhum fechamento narrativo nesses lugares. Só a curandeira mudou;
+  - o clique duplo num cartão trata um só (a guarda do `Gesto` já cobria; conferido de novo).
+  - **Gabarito** atualizado de propósito: a opção da curandeira aparece no menu da vila sem ferimento (o robô escolhe
+    por posição e segue outro caminho dali) e o texto novo dos ferimentos.
+- **No protótipo:** a moagem em 7 poses sustentadas, com a pressão longe do corpo de 4 a 6 tiques, na mesma duração; a
+  mão alcançando o cabo antes de pegar o pilão. A terceira passada fica em `anterior/terceira` ("Moagem anterior").
+- **Registros:** a decisão do acesso, o papel futuro dos interiores e a alquimia guardada em
+  [10](10-DECISOES.md) e em [docs/ROADMAP.md](../docs/ROADMAP.md); a skill de cenas com o passo do ritmo (5b, 8).
+- **Conferido:** a suíte, o gabarito, o pyflakes e a fumaça; no jogo, pela demonstração, a 1920×945 e a 1280×720 (os
+  cartões, o clique duplo, o último pelo teclado, ouro, ferimento e vida máxima, os três estados sem ferimento, sair e
+  voltar sem acumular relógio, a pose parada, sem erros no console). A curandeira continua candidata; templo e taverna
+  não começados.

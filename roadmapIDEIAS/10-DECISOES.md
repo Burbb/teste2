@@ -126,4 +126,23 @@ Data / tema / decisão de Jean / motivo / documentos afetados / etapa dependente
   - **Documentos:** [18](18-E9-ABERTURA-GUIADA.md) (seção 22), [17](17-E9-VALIDACAO-DO-VALE.md) (seção 30), este, [00](00-COMECE-AQUI.md).
   - **Como avaliar:** jogando, se a falta da cura pequena aperta demais o começo (sobretudo o arqueiro).
 
+- **28/10/2026 — o acesso a um estabelecimento não depende do serviço (1.217.0).**
+  - **Decisão de Jean (geral do projeto):** o jogador entra em estabelecimentos acessíveis mesmo quando não pode ou
+    não precisa usar os serviços deles. Não ter ferimento não fecha a curandeira; tratar o último não expulsa. O
+    serviço sem uso mostra um estado discreto na área dele ("Nenhum ferimento a tratar."), com a cena e as interações
+    disponíveis. Fechamentos com justificativa na história ou nas regras do lugar continuam.
+  - **Cinco coisas diferentes, que não se confundem:** o acesso ao estabelecimento; a presença da personagem; a
+    disponibilidade de um serviço; a de um diálogo; a de uma interação no cenário.
+  - **Levantamento (1.217.0):** a curandeira era o único bloqueio só por falta de necessidade (corrigido). Mercado,
+    forja e taverna já abriam sempre (sem ouro, os cartões ficam apagados com o motivo). O templo sem ninguém a cuidar
+    continua clicável na vila e mostra o balcão com a frase; ele ainda não tem interior, e a frase é o estado vazio do
+    serviço. Nenhum fechamento narrativo existia nesses cinco.
+  - **Os interiores, daqui em diante:** além dos serviços, servem para conversar com personagens, abrir diálogos
+    liberados por acontecimentos, começar ou continuar quests e encontrar objetos e interações que aparecem conforme a
+    história. Usar os mecanismos de estado e interação que já existem (as flags e registros de missão, os pontos da
+    cena, os atendentes do motor); nada de um sistema genérico de quests ou diálogos antes de a história pedir.
+  - **Alquimia (ideia guardada):** a curandeira poderá ter uma mesa ou serviço de fabricação de poções, com interface
+    própria quando esse sistema existir. Nada implementado: sem receitas, materiais, botão apagado nem fabricação.
+  - **Documentos:** este, [docs/ROADMAP.md](../docs/ROADMAP.md) (etapa 5), [00](00-COMECE-AQUI.md).
+
 Se uma hipótese falhar jogando, registrar revisão. Nunca marcar proposta como implementada ou teste como aprovado sem evidência.
