@@ -1,12 +1,25 @@
 # Protótipo: o interior da curandeira (candidata A)
 
-28/10/2026, quarta passada. **Só no protótipo, esperando a avaliação do Jean.** O jogo não carrega esta pasta; a cabana do jogo
-continua a tela de sempre, sem ambiente. Nada do templo nem da taverna foi começado. Feito pelo fluxo da skill
-`arte-cenas-fenda`.
+**Aprovada e integrada no jogo na 1.218.0 (28/10/2026)**, na quarta passada (a moagem em sete poses sustentadas). Esta
+pasta continua como o laboratório: a fonte, o código que a gerou, as passadas anteriores e a demonstração com as
+comparações. Feito pelo fluxo da skill `arte-cenas-fenda`.
+
+## A fonte e o jogo
+
+- **A fonte** é `aseprite/curandeira.aseprite` (320×96; as camadas fundo, fogo, baldes, vapor, vapor-forte, pita,
+  marta e frente), criada a partir do código por `fonte.py --criar`, que não a sobrescreve sem `--refazer`. Depois de
+  criada, os retoques se fazem nela.
+- **A exportação** é `fonte.py [--conferir] [--jogo]`: lê a fonte (com os retoques), monta as tiras em `final/`, com o
+  `rotina.json` (a linha do tempo, de `figuras.py`), confere contra `camadas/` (a candidata aprovada exportada do código)
+  e copia para `rpg/web/static/cenas/curandeira/`. Na integração: 8 de 8 camadas e a rotina iguais à candidata.
+- **No jogo:** `servicos.cena_curandeira` (o motor diz quem atende e a água, só no Vau da campanha; fora dele, a
+  curandeira de sempre, sem ambiente), `telas/cena-curandeira.js` (só arquivos de produção), `css/30-curandeira.css`.
+- `exportar.py` continua desenhando a candidata do código em `camadas/` (só o protótipo lê); não toca a fonte nem o jogo.
 
 ## Abrir
 
-Dê dois cliques em `demo.bat` (ou `python ferramentas/prototipos/curandeira/demo.py` na raiz). O jogo abre no navegador
+A demonstração mostra a candidata do protótipo (com as comparações) sobre o jogo de hoje, onde a cabana já é a
+integrada. Dê dois cliques em `demo.bat` (ou `python ferramentas/prototipos/curandeira/demo.py` na raiz). O jogo abre no navegador
 num **save temporário** (uma pasta nova a cada vez; os saves do Jean não são lidos nem tocados), na porta 8793: o
 Guerreiro no Vau, com a campanha começada, um corte e uma mordida para tratar e 120 de ouro. Entre na **curandeira pelo
 prédio da vila**. A faixa do alto troca o estado da história e mostra a pose parada:
@@ -193,3 +206,21 @@ cabana continuando com a cena e os pontos, os três estados sem ferimento, sair 
 relógio só, a pose parada, a moagem anterior, o Esc, sem erros no console.
 
 **Para avaliar (Jean):** a moagem nova contra a anterior (botão **Moagem anterior**).
+
+## A integração (1.218.0)
+
+**O que o Jean aprovou:** o cenário e os objetos, os ingredientes pendurados, Pita (com o banquinho) e Marta, a rotina
+de moer, olhar, cheirar e retomar, a moagem da quarta passada (não a "Moagem anterior"), os estados da história, a pose
+parada e os cartões do tratamento. Nada de decoração, atividade ou revisão da animação na integração.
+
+**Conferido no jogo real** (os cenários `tutorial` e `retorno` dos testes de navegador), a 1920×945 e a 1280×720: Pita
+com Marta de cama, Pita na noite da água escura e Marta de pé; os cartões; o clique duplo tratando um só; o atalho M; o
+último ferimento pelo teclado com o ouro, os ferimentos e a vida máxima atualizados, a cabana e a cena continuando;
+"Mordida dilacerada: tratada"; entrar sem ferimento; sair e voltar três vezes com um relógio só; o Tab nos pontos da
+cena; o Esc; o movimento reduzido; só arquivos de produção (nenhum pedido ao protótipo); sem erros no console. A cena
+de produção, desenhada tique a tique no jogo, saiu igual à candidata pixel a pixel nos três estados (90, 95 e 95
+tiques).
+
+**Limites:** fora do Vau da campanha (o mundo gerado), a curandeira continua sem ambiente: Pita e Marta são do Vau. A
+tela da curandeira não tem atalho de número para os cartões (nunca teve; os números valem nos balcões da vila e na
+luta). A 1280×720, o segundo cartão pede rolagem, como antes.

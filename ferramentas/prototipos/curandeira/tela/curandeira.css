@@ -1,13 +1,5 @@
-/* A cabana com o ambiente (protótipo): o mesmo arranjo da forja. O nome de quem atende e o da Saída sempre à vista; com
-   a cena mostrando quem atende, o topo do balcão fica numa linha (a fala e o ouro, sem o ícone e o nome repetidos). */
-#pontos-cena[data-cena="curandeira"] .ci-ponto:not(.parado) .ci-balao { visibility: visible; }
-.curandeira .servico.chamado { border-color: var(--latao-claro); }
-#cena.com-ambiente .curandeira .loja-topo { padding: 4px 12px; }
-#cena.com-ambiente .curandeira .loja-topo > img, #cena.com-ambiente .curandeira .loja-topo > canvas,
-#cena.com-ambiente .curandeira .loja-topo > div > b { display: none; }
-#cena.com-ambiente .curandeira .loja-topo .lore { font-size: 16px; }
-#cena.com-ambiente .curandeira h4 { margin-top: 0.6em; }
-#cena.com-ambiente #folha:has(.curandeira) { padding-bottom: 0; }
+/* A demonstração da curandeira (protótipo). As regras da cabana com o ambiente estão no jogo desde a 1.218.0
+   (rpg/web/static/css/30-curandeira.css). */
 
 /* A faixa da demonstração: os estados da história e a pose parada. */
 #faixa-cur { position: fixed; left: 50%; top: 4px; transform: translateX(-50%); z-index: 60; display: flex; gap: 6px;
