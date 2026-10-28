@@ -67,7 +67,7 @@
         info.innerHTML = `<b>${h(n.nome)}</b><div class="r">Grau ${n.rank} de ${n.max}${n.spec ? " · " + h(n.spec) : ""}</div><div>${Realce.texto(n.desc)}</div>` +
           (n.motivo ? `<div class="req">${h(n.motivo[0].toUpperCase() + n.motivo.slice(1))}</div>` : "") +
           (n.estado === "comprado" ? '<div class="acao">Aprendido por completo.</div>' :
-            n.estado === "disponivel" ? (a.pontos ? '<div class="acao">Clique para aprender (1 ponto).</div>' : '<div class="req">Sem pontos de talento.</div>') : "");
+            n.estado === "disponivel" ? (a.pontos ? '<div class="acao">Custa 1 ponto.</div>' : '<div class="req">Sem pontos de talento.</div>') : "");
         info.hidden = false;
         const r = el.getBoundingClientRect();
         info.style.left = Math.min(window.innerWidth - 320, r.right + 12) + "px";

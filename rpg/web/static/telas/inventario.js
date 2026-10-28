@@ -50,7 +50,7 @@
       // o equipamento em 40 px (o desenho que tem arquivo de 40; os outros em 32, centrados); a silhueta vazia em 32
       const conteudo = it ? Icones.equipamento(iconeItem(it)) || S(iconeItem(it), 2) : Icones.vazio(s) || S(VAZIO[s], 2, "fantasma");
       const nome = Telas.nomeEspaco(s, p.classe);
-      const extra = it ? `draggable="true" ${dicaItem(it, "Clique para ver as ações. Dois cliques ou arrastar para a bolsa guardam.", false, p)}`
+      const extra = it ? `draggable="true" ${dicaItem(it, "", false, p)}`
         : `title="${h(nome)} (vazio): clique para ver as peças que servem"`;
       const sel = marcado && marcado.de === "espaco" && marcado.s === s ? " marcado" : "";
       return `<div class="espaco slot-px ${it ? "r-" + h(it.raridade) : "vazio"}${sel}" data-espaco="${s}" style="grid-area:${AREA[s]}" tabindex="0" role="button" aria-label="${h(nome)}: ${it ? h(it.nome) : "vazio"}" ${extra}>${conteudo}<span class="espaco-nome">${h(nome)}</span></div>`;
@@ -79,7 +79,6 @@
         <h4>${grupo ? "Bolsa do grupo" : "Mochila"} <small>${heroi.mochila.length}/${limite}</small></h4>
         <div class="mochila-grade">${celulas.join("")}<div class="slot-px lixeira" title="Arraste um item aqui para largar">${S("caveira", 2, "fantasma")}<span class="espaco-nome">Largar</span></div></div>
         <h4>Bolsa</h4><div class="slots">${bolsa || '<span class="vazio">vazia</span>'}</div>
-        <div class="dica-uso">Clique numa peça para ver a ficha e as ações. Dois cliques equipam${grupo ? " em quem está selecionado" : ""}; o botão direito abre o menu; também dá para arrastar.</div>
       </div></div>`;
   }
 
@@ -161,7 +160,7 @@
     if (marcado.de === "espaco") {
       const lista = pecasPara(p, marcado.s);
       html += `<h5>Peças para ${h(Telas.nomeEspaco(marcado.s, p.classe))}</h5>` + (lista.length
-        ? `<div class="pecas-espaco">${lista.map((x, k) => `<button type="button" class="peca-opcao" data-opcao="${k}" ${dicaItem(x.it, "Clique para equipar neste espaço.", true, p)}>${Icones.equipamento(iconeItem(x.it)) || S(iconeItem(x.it), 2)}<span>${h(x.it.nome)}<small>${x.dono ? `com ${h(quemTexto(x.dono))}` : "na bolsa"}</small></span></button>`).join("")}</div>`
+        ? `<div class="pecas-espaco">${lista.map((x, k) => `<button type="button" class="peca-opcao" data-opcao="${k}" ${dicaItem(x.it, "", true, p)}>${Icones.equipamento(iconeItem(x.it)) || S(iconeItem(x.it), 2)}<span>${h(x.it.nome)}<small>${x.dono ? `com ${h(quemTexto(x.dono))}` : "na bolsa"}</small></span></button>`).join("")}</div>`
         : `<div class="detalhe-vazio">Nenhuma peça do grupo serve aqui.</div>`);
     }
     return html;

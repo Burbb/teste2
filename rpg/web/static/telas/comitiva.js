@@ -9,14 +9,13 @@
     return `<div class="cartao clicavel${reserva ? " na-reserva" : ""}" data-cid="${h(m.id)}"><div class="cab">${Icones.cabeca(m.id, 48) || S(m.id, 3)}<div><b>${h(m.nome)}</b><span class="sub">${h(m.titulo)}${m.ferido ? " · ferido, fora de combate" : ""}${m.fora ? " · " + h(m.fora.curto) : ""}${reserva ? " · no acampamento" : ""}</span></div></div>
       <span class="lore">${h(m.desc)}</span>
       <div class="meter" style="margin-top:6px">Vida ${barra("vida", m.hp, m.max_hp)} ${m.hp}/${m.max_hp}</div>
-      ${aprovacao(m)}${m.conversa && !reserva ? '<button type="button" class="tag aviso-conversa">✉ quer conversar · clique aqui</button>' : ""}</div>`;
+      ${aprovacao(m)}${m.conversa && !reserva ? '<button type="button" class="tag aviso-conversa">✉ quer conversar</button>' : ""}</div>`;
   }
   function comitiva(d) {
     const cartas = d.membros.map((m) => cartaoMembro(m, false)).join("");
     const reserva = (d.reserva || []).map((m) => cartaoMembro(m, true)).join("");
     return `<div class="tela"><div class="cartas">${cartas}</div>
-      ${reserva ? `<h4>No acampamento <small>chame de volta quando montar a fogueira</small></h4><div class="cartas">${reserva}</div>` : ""}
-      <div class="dica-uso">Clique num companheiro para conversar ou mandar para o acampamento.</div></div>`;
+      ${reserva ? `<h4>No acampamento <small>chame de volta quando montar a fogueira</small></h4><div class="cartas">${reserva}</div>` : ""}</div>`;
   }
 
   function aprovacao(m) {

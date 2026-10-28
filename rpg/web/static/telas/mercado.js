@@ -24,7 +24,7 @@
     const cheio = c.teto && c.tem >= c.teto;
     const motivo = c.motivo ? h(c.motivo) + (c.detalhe ? `. ${h(c.detalhe)}` : "") : "";
     return `<div role="button" tabindex="0" class="mercadoria suprimento${c.motivo ? " caro" : ""}" data-comprar="${h(c.id)}" data-preco="${c.preco}" data-max="${max}"
-        ${dica(`<b>${h(c.nome)}</b><div>${Realce.texto(c.desc)}</div><div class="rodape">${motivo || "Clique para comprar a quantidade escolhida. Shift+clique compra 5."}</div>`)}>
+        ${dica(`<b>${h(c.nome)}</b><div>${Realce.texto(c.desc)}</div>${motivo ? `<div class="rodape">${motivo}</div>` : ""}`)}>
       <span class="slot-px">${Icones.consumivel(c.id) || Icones.porDesenho(c.icone) || S(c.icone || "pocao", 2)}</span>
       <span class="merc-nome">${h(c.nome)}</span>
       <span class="merc-contas"><span class="merc-bolsa${cheio ? " cheio" : ""}">Na bolsa: <b>${tem}</b></span><span class="merc-estoque${c.estoque ? "" : " esgotado"}">Estoque: <b>${c.estoque}</b></span></span>
@@ -34,7 +34,7 @@
   }
 
   function equipamento(it, i) {
-    return `<button type="button" class="mercadoria equip${it.motivo ? " caro" : ""}" data-comprar-item="${i}" ${dicaItem(it, it.motivo ? h(it.motivo) : "Clique para comprar. Se o espaço do corpo estiver vazio, você já sai vestindo.")}>
+    return `<button type="button" class="mercadoria equip${it.motivo ? " caro" : ""}" data-comprar-item="${i}" ${dicaItem(it, it.motivo ? h(it.motivo) : "Se o espaço do corpo estiver vazio, você já sai vestindo.")}>
       <span class="slot-px r-${h(it.raridade)}">${Icones.item(iconeItem(it)) || S(iconeItem(it), 2)}</span>
       <span class="merc-nome r-${h(it.raridade)}">${h(it.nome)}</span><span class="merc-bonus">${h(it.bonus)}</span>
       <span class="preco${it.sem_ouro ? " falta" : ""}">${Icones.moeda() || S("moeda", 1)}${it.preco}</span>${it.motivo ? motivoHtml(it.motivo) : ""}</button>`;
@@ -78,7 +78,7 @@
   const espacoDa = (n) => (arranjo || []).find((e) => e && e.n === n);
   function paraVender(it, e) {
     const venda = `<div class="preco-venda">${Icones.moeda() || S("moeda", 1)} O mercador paga <b>${it.preco}</b></div>` +
-      `Clique: vender${it.usavel ? " · botão direito: equipar" : " · não é para a sua classe"}`;
+      (it.usavel ? "" : "Não é para a sua classe.");
     return `<div role="button" tabindex="0" class="slot-px celula r-${h(it.raridade)}${it.usavel ? "" : " inutil"}" draggable="true" data-mochila-loja="${e.i}" data-peca="${e.n}"
         aria-label="Vender ${h(it.nome)} por ${it.preco} de ouro" ${dicaItem(it, venda)}>${Icones.item(iconeItem(it)) || S(iconeItem(it), 2)}<span class="preco-canto">${it.preco}</span></div>`;
   }
@@ -110,7 +110,7 @@
     const sub = {
       suprimentos: "",
       equipamentos: mochila,
-      vender: `${mochila}<span class="loja-dica">${d.mochila.length ? "Clique num item para vender." : "Nada para vender."}</span>`,
+      vender: `${mochila}<span class="loja-dica">${d.mochila.length ? "" : "Nada para vender."}</span>`,
     };
     const abas = ABAS.map(([id, nome]) => `<button type="button" role="tab" id="aba-${id}" class="loja-aba" data-aba="${id}" aria-controls="lista-${id}"
         aria-selected="${id === aba}" tabindex="${id === aba ? 0 : -1}">${nome}${conta[id] !== undefined ? ` <small>${conta[id]}</small>` : ""}</button>`).join("");

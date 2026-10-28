@@ -203,7 +203,7 @@ function dicaKit(k, h) {
   return `<b>${esc(k.nome)}</b>${k.ultimate ? ' <span class="tag-ultimate">Ultimate · 1 vez por luta</span>' : ""}` +
     `<div class="tipo">${k.custo ? `${k.custo} de ${esc(h.recurso)}` : "Sem custo"}</div><div class="bonus">${Realce.texto(k.desc)}</div>` +
     (k.usada ? '<div class="pior">Já usada nesta luta.</div>' : "") +
-    `<div class="rodape">${emLuta ? "Na sua vez, pela ação Habilidades." : "Clique para ver no Grimório. O kit se troca na vila ou na fogueira."}</div>`;
+    `<div class="rodape">${emLuta ? "Na sua vez, pela ação Habilidades." : "O kit se troca na vila ou na fogueira."}</div>`;
 }
 function botaoKit(k, h, lista) {
   return `<button type="button" class="kit-hab${k.ultimate ? " ultimate" : ""}${k.usada ? " usada" : ""} el-${esc(k.familia || "arcano")}" data-kit-hab="${esc(k.id)}" aria-label="${esc(k.nome)}" ${Telas.dica(dicaKit(k, h))}>` +
@@ -340,7 +340,7 @@ function desenharHeroi(h, antes) {
     // O que ele trata agora (o motor diz): a dica abre com isso, e o espaço pulsa até ser usado. Sem nada a tratar
     // (a bandagem sem ferida aberta), o espaço fica apagado e o rodapé diz por quê.
     const trata = !b.motivo && b.trata;
-    const dica = `<b>${esc(b.nome)}</b>${trata ? `<div class="bonus melhor">${esc(b.trata)}</div>` : ""}<div>${Realce.texto(b.desc)}</div><div class="rodape">${b.motivo ? esc(b.motivo) : bau ? (b.qtd > 1 ? `Clique para abrir os ${b.qtd} de uma vez.` : "Clique para abrir.") : estado && estado.combate ? "Clique para usar (gasta o turno)." : "Clique para usar."}</div>`;
+    const dica = `<b>${esc(b.nome)}</b>${trata ? `<div class="bonus melhor">${esc(b.trata)}</div>` : ""}<div>${Realce.texto(b.desc)}</div>${(() => { const r = b.motivo ? esc(b.motivo) : bau ? (b.qtd > 1 ? `Abre os ${b.qtd} de uma vez.` : "") : estado && estado.combate ? "Gasta o turno." : ""; return r ? `<div class="rodape">${r}</div>` : ""; })()}`;
     return `<div role="button" tabindex="0" class="slot-px usavel${b.motivo && !(b.alvos || []).some((a) => !a.motivo) ? " inutil" : ""}${bau && !b.motivo ? " pronto" : ""}${trata ? " trata" : ""}" data-bolsa="${esc(b.id)}" ${Telas.dica(dica)}>${Icones.consumivel(b.id) || spr(Telas.iconeConsumivel(b.id), 2)}<span class="qtd">${b.qtd}</span></div>`;
   }).join("");
   // Comitiva e animal no mesmo molde: retrato e nome com a ficha no hover, a vida em números no canto (como os
@@ -469,7 +469,7 @@ function dicaDoLugar(e, clic) {
     (n.distancia ? ` · ${Texto.plural(n.distancia, "trecho")}` : n.atual ? " · você está aqui" : "") + "</div>" +
     (porLugar[n.id] || []).map((c) => `<div class="dica-contrato">${spr("pergaminho", 1)}<span>${esc(c.desc)}</span></div>`).join("") +
     (e.missoes || []).filter((m) => m.lugar_id === n.id).map((m) => `<div class="dica-contrato">${spr("pergaminho", 1)}<span>${esc(m.nome)}: ${esc(m.objetivo)}</span></div>`).join("") +
-    (clic.has(n.id) ? '<div class="rodape">Clique para viajar</div>' : "");
+    "";
 }
 
 function desenharMundo(e) {

@@ -290,7 +290,7 @@ Você não precisa caminhar sozinho, e talvez não deva. Três companheiros pode
 |---|---|---|---|---|
 | **Sister Odette** | Clériga que fugiu da catedral na noite em que a Fenda se abriu | Cura quem estiver morrendo | misericórdia, fé, honestidade | crueldade, sacrilégio, magia proibida |
 | **Bastian Morel** | Ex-capitão mercenário dos Iron Hounds | Atrai os golpes para si e atordoa | coragem, pragmatismo, honra | fuga, autoridade, caridade "inútil" |
-| **Yara** | Bruxa do brejo, quase queimada; a Fenda fala com ela | Amaldiçoa e ataca com magia | magia proibida, curiosidade, rebeldia | fé, autoridade, fanatismo, purificar |
+| **Yara** | Bruxa do pântano, quase queimada; a Fenda fala com ela | Amaldiçoa e ataca com magia | magia proibida, curiosidade, rebeldia | fé, autoridade, fanatismo, purificar |
 
 - **Aprovação.** 117 escolhas, em 49 eventos, têm peso moral. Quando você escolhe,
   cada companheiro reage (um selo `▼ Odette desaprova muito` salta do retrato) e às vezes diz o

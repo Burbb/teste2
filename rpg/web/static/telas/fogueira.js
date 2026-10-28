@@ -21,7 +21,7 @@
     const quem = (m) => `<span class="fr-nome">${h(m.nome.split(" ").pop())}${m.conversa ? ' <i class="fr-carta" title="Quer conversar">✉</i>' : ""}${m.ferido_txt ? ` <small>(${h(m.ferido_txt)})</small>` : ""}${m.fora ? ` <small>(${h(m.fora.curto)})</small>` : ""}</span>`;
     const lista = (ms) => ms.length ? ms.map(quem).join(", ") : '<span class="fr-ninguem">ninguém</span>';
     return `<div class="fogueira-rodape">
-        <div class="fr-cab"><span class="fr-instrucao">Clique num companheiro para conversar ou ajustar a comitiva.</span><span class="fr-contador">${h(d.contador)}</span></div>
+        <div class="fr-cab"><span class="fr-contador">${h(d.contador)}</span></div>
         <div class="fr-linha vai"><b>Vai com você:</b> ${lista(d.ativos)}</div>
         ${d.reserva.length ? `<div class="fr-linha fica"><b>No acampamento:</b> ${lista(d.reserva)}</div>` : ""}
       </div>`;

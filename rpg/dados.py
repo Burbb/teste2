@@ -20,7 +20,7 @@ BIOMAS = {
     },
     "pantano": {
         "nome": "Pântano",
-        "lugares": [("Brejo", "m"), ("Lamaçal", "m"), ("Charco", "m"), ("Lodaçal", "m"), ("Pântano", "m")],
+        "lugares": [("Alagado", "m"), ("Lamaçal", "m"), ("Charco", "m"), ("Lodaçal", "m"), ("Pântano", "m")],
         "familias": ["afogado", "sapo", "bruxa_brejo", "sanguessuga", "bandido", "carnical"],
         "noite": ["espectro"],  # só à noite, além das de sempre
         "ambiente": [
@@ -163,7 +163,7 @@ RETRATO_GUARDIAO = {"rei_troll": "rei_troll", "rainha_aracnidea": "rainha_aracni
                     "golem_primordial": "golem_primordial",  # 1.191.0: o Golem Primordial
                     "dragao_de_gelo": "dragao_de_gelo",  # 1.193.0: o Dragão de Gelo (o N16, construído a partir do estudo de 32)
                     "senhor_da_guerra": "senhor_da_guerra",  # 1.194.0: o Senhor da Guerra (o N16, o mesmo caminho)
-                    "hidra_do_brejo": "hidra_do_brejo",  # 1.197.0: a Hidra do Brejo (o N16D2, o mesmo caminho)
+                    "hidra_do_brejo": "hidra_do_brejo",  # 1.197.0: a Hidra do Pântano (o N16D2, o mesmo caminho)
                     "profeta_das_cinzas": "profeta_das_cinzas",  # 1.198.0: o Profeta das Cinzas (a profeta-t)
                     "lich_menor": "lich_menor"}  # 1.199.0: o Lich Menor (o N16), também na fase etérea
 RETRATO_ORIGEM = {"mimico": "mimico",  # 1.192.0: o Mímico (os números do golem), pela origem que o evento marca
@@ -380,7 +380,7 @@ GUARDIOES = {
     ],
     "pantano": [
         dict(id="hidra_do_brejo",
-             base="Hidra do Brejo", g="f", hp=140, atk=10, defesa=4, agi=4, poder=4, tracos=["fera"],
+             base="Hidra do Pântano", g="f", hp=140, atk=10, defesa=4, agi=4, poder=4, tracos=["fera"],
              habs=["regenerar", "veneno", "mordida_sangrenta", "varredura"],
              intro="A água ferve. Uma, duas, três cabeças de serpente emergem, sibilando em uníssono.",
              fases=[dict(limiar=0.5, texto="Onde uma cabeça foi cortada, duas novas brotam!", atk=1.35)]),

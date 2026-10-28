@@ -26,7 +26,7 @@ class TestRetratos(unittest.TestCase):
 
     def test_sapo_e_sanguessuga_pela_familia(self):
         # 1.171.0: o sapo-touro gigante e a sanguessuga gigante pela família; as outras feras continuam pelos traços (a
-        # Hidra do Brejo, guardiã, tem o dela pelo id desde a 1.197.0)
+        # Hidra do Pântano, guardiã, tem o dela pelo id desde a 1.197.0)
         self.assertEqual(retrato(FAMILIAS["sapo"]["tracos"], "sapo"), "sapo")
         self.assertEqual(retrato(FAMILIAS["sanguessuga"]["tracos"], "sanguessuga"), "sanguessuga")
         self.assertEqual(retrato(["fera"], "guardiao", "guardiao:3", "hidra_do_brejo"), "hidra_do_brejo")
@@ -455,11 +455,11 @@ class TestRetratos(unittest.TestCase):
                 self.assertTrue((ESTATICO / f"hud/icones/retrato-urso-{lado}{sufixo}.png").exists(), (lado, sufixo))
 
     def test_hidra_do_brejo_pelo_guardiao(self):
-        # 1.197.0: a Hidra do Brejo pelo id da guardiã, em qualquer nome próprio; o sapo e a sanguessuga (os outros do
+        # 1.197.0: a Hidra do Pântano pelo id da guardiã, em qualquer nome próprio; o sapo e a sanguessuga (os outros do
         # pântano) continuam com os deles, e a fera sem retrato próprio no sprite do traço
         from rpg.dados import GUARDIOES
         from rpg.inimigos import instanciar_guardiao
-        spec = next(dict(s, nome="Nhaga, a Hidra do Brejo", bioma=b) for b, ls in GUARDIOES.items() for s in ls
+        spec = next(dict(s, nome="Nhaga, a Hidra do Pântano", bioma=b) for b, ls in GUARDIOES.items() for s in ls
                     if s["id"] == "hidra_do_brejo")
         g = instanciar_guardiao(spec, 6)
         self.assertEqual(retrato(g.tracos, g.familia, g.chave, g.guardiao, g.origem), "hidra_do_brejo")
@@ -534,7 +534,7 @@ class TestRetratos(unittest.TestCase):
                 e = instanciar_guardiao({"bioma": bioma, "id": t["id"], "idx": 0, "nome": t["base"], "g": t["g"]}, 3)
                 ret = retrato(e.tracos, e.familia, e.chave, e.guardiao)
                 # o Rei, a Rainha Aracnídea, a Árvore Anciã (1.190.0), o Golem Primordial (1.191.0), o Dragão de Gelo (1.193.0)
-                # o Senhor da Guerra (1.194.0), a Hidra do Brejo (1.197.0), o Profeta das Cinzas (1.198.0) e o Lich Menor
+                # o Senhor da Guerra (1.194.0), a Hidra do Pântano (1.197.0), o Profeta das Cinzas (1.198.0) e o Lich Menor
                 # (1.199.0) têm o retrato deles,
                 # pelo id; os outros guardiões
                 # continuam pelos traços

@@ -34,7 +34,7 @@
       efeito: p.custo == null ? "No limite (+5): a forja não tira mais nada dela" : p.ganho,
       motivo: p.motivo || "",
       attrs: p.custo == null ? "" : `data-reforcar="${h(p.slot)}"`,
-      dicaAttr: dicaItem(p.item, p.custo == null ? "No limite do reforço." : p.motivo ? h(p.motivo) : "Clique para reforçar.", false),
+      dicaAttr: dicaItem(p.item, p.custo == null ? "No limite do reforço." : p.motivo ? h(p.motivo) : "", false),
     }));
     return `<div class="tela balcao-servico forja">${topoBalcao("martelo", "O ferreiro", "Um homem sem dois dedos cospe na forja. \"Ouro primeiro.\"", d.ouro)}
       <h4>Reforçar o que você usa</h4><div class="servicos">${cartoes.join("") || '<span class="vazio">Nada no corpo que valha a forja.</span>'}</div></div>`;
@@ -44,7 +44,7 @@
       // O primeiro tratamento grátis (o motor diz): no lugar do efeito, até ser usado; a explicação fica na dica.
       icone: f.id === "infeccao" ? "gota_verde" : "gota", nome: f.nome, efeito: f.gratis || (f.explica || [])[0] || "", preco: f.gratis ? null : f.custo,
       motivo: f.motivo || "", attrs: `data-tratar="${h(f.id)}"`,
-      dicaAttr: dica(`<b>${h(f.nome)}</b>${(f.explica || []).map((l, i) => `<div class="${i ? "" : "bonus pior"}">${h(l)}</div>`).join("")}<div class="rodape">${f.motivo ? h(f.motivo) : "Clique para tratar na hora."}</div>`),
+      dicaAttr: dica(`<b>${h(f.nome)}</b>${(f.explica || []).map((l, i) => `<div class="${i ? "" : "bonus pior"}">${h(l)}</div>`).join("")}${f.motivo ? `<div class="rodape">${h(f.motivo)}</div>` : ""}`),
     }));
     // Quem atende e o que diz vêm do motor quando não é a curandeira de sempre (no Vau da campanha: Pita ou Marta) e
     // quando não há mais nada para tratar (a fala diz isso; fica só o Voltar).

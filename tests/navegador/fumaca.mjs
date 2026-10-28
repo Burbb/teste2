@@ -1647,9 +1647,9 @@ async function cenarioFogueira(browser) {
     await page.click('#prompt .escolha:has-text("Acampar")');
     await esperar(".fogueira-rodape", 20000);
     const rod = await page.textContent(".fogueira-rodape");
-    conferir(/Clique num companheiro para conversar ou ajustar a comitiva\./.test(rod) && /Comitiva 1\/2/.test(rod)
+    conferir(!/Clique/.test(rod) && /Comitiva 1\/2/.test(rod)
       && /Vai com você:\s*Morel/.test(rod) && /No acampamento:\s*Odette/.test(rod) && !/Descansa/.test(rod),
-      "embaixo da fogueira: a instrução, o contador, quem vai e quem fica (a nota do acampamento fica no menu)");
+      "embaixo da fogueira: o contador, quem vai e quem fica, sem instrução de clique (a nota do acampamento fica no menu)");
     // A cena no topo (telas/acampamento.js): a arte à vista, sem a barra de título, os pontos de quem está presente
     // sobre ela e nenhuma imagem dentro do texto.
     const cena = () => page.evaluate(() => {

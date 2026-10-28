@@ -52,12 +52,12 @@ const Acampamento = (() => {
   // ---------------------------------------------------------------- longe: o entorno de cada lugar
   // A Capela Afogada tem o entorno desenhado à mão; os outros lugares, a paisagem deles (vista.js). Um lugar novo com
   // fundo próprio entra aqui, pela chave do lugar que o motor manda (dados.lugar).
-  const AGUA = 44;    // o brejo da capela, atrás do teso
+  const AGUA = 44;    // o charco da capela, atrás do teso
   const CAPELA = 52;  // o canto esquerdo da nave da capela, longe
   const ENTORNOS = {
     capela_afogada: {
       fundo: fundoCapela,
-      // as nuvens andam devagar; à noite, as estrelas piscam (as mesmas da capela de fora); a água do brejo treme
+      // as nuvens andam devagar; à noite, as estrelas piscam (as mesmas da capela de fora); a água do charco treme
       vivo(c, q, k) {
         const px = pincel(c), corNuvem = misturar(k.bandas[1], k.bandas[3], 0.35);
         [[30, 9, 70], [150, 6, 50], [250, 14, 90], [90, 22, 44]].forEach(([x0, y, w], i) => {
@@ -85,7 +85,7 @@ const Acampamento = (() => {
         else if (!noite && d < raio + 5 && pontilha(x, y, Math.round(9 - (d - raio) * 1.6))) px(x, y, 1, 1, halo);
       }
     }
-    // a outra margem, baixa, com as árvores mortas; a névoa rasteira; a água do brejo
+    // a outra margem, baixa, com as árvores mortas; a névoa rasteira; a água do charco
     let y = 41, v = 0;
     for (let x = 0; x < QW; x++) { v += (r() - 0.5) * 0.5; v = Math.max(-1.5, Math.min(1.5, v * 0.92)); y = Math.max(39, Math.min(42, y + v)); px(x, Math.round(y), 1, QH - Math.round(y), longe); }
     [[14, 7], [118, 6], [214, 8], [246, 6], [308, 9]].forEach(([x, hh], i) => arvoreSeca(px, x, 42, hh, misturar(longe, meio, 0.4), i % 2 ? 1 : -1));

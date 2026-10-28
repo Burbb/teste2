@@ -1,5 +1,5 @@
 /* Som sintetizado com Web Audio: nada de arquivos, tudo gerado na hora.
-   Ambiente (vento/brejo/fogo) por bioma, dado, golpes, virar de página. */
+   Ambiente (vento/pântano/fogo) por bioma, dado, golpes, virar de página. */
 "use strict";
 
 const Som = (() => {

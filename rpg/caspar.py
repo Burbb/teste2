@@ -100,7 +100,7 @@ cm.AUSENCIAS.append(_fora_do_vau)
 
 
 def fogueira_possivel(g):
-    """O evento da fogueira (eventos/comitiva.py: o pregador queima a moça no brejo) só cabe enquanto Caspar tem a
+    """O evento da fogueira (eventos/comitiva.py: o pregador queima a moça no charco) só cabe enquanto Caspar tem a
     praça: depois de denunciado (aceito ou não, a vigília acabou), ele não acontece mais."""
     m = registro(g)
     return not (m and m.get("desfecho") in ("denunciado", "denuncia_falhou"))
@@ -375,7 +375,7 @@ def _recolher_lodo(g, mid):
 
 
 def _yara_no_charco(g, mid):
-    """Denunciada a perseguição (aceita ou não, a vigília acabou), a fogueira do brejo não acontece mais: quem ainda não
+    """Denunciada a perseguição (aceita ou não, a vigília acabou), a fogueira do charco não acontece mais: quem ainda não
     conhece a Yara a encontra livre no Charco, uma vez, na primeira chegada lá. Mesma apresentação e mesma oferta de
     vaga da fogueira (eventos/comitiva.py: yara_na_fogueira), sem a execução."""
     postura = registro(g)["desfecho"]

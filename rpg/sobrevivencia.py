@@ -124,8 +124,8 @@ def vida_bloqueio(jogador):
         devolve.append("A parte da fome volta quando você come.")
     return {"saudavel": saudavel, "limite": jogador.max_hp, "bloqueado": bloqueado, "fontes": fontes,
             "causas": tx.lista_natural([f["nome"] if f["nome"] != "Fome" else "a fome" for f in fontes]),
-            "dica": [f"{' e '.join(quem)} {reduz} sua vida máxima de {saudavel} para {jogador.max_hp}. Curas param "
-                     f"em {jogador.max_hp}.",
+            # a redução e como o limite volta; "Curas param em N" saiu (1.214.0): repetia o número da frase de cima
+            "dica": [f"{' e '.join(quem)} {reduz} sua vida máxima de {saudavel} para {jogador.max_hp}.",
                      " ".join(devolve)]}
 
 

@@ -208,7 +208,7 @@
     const agua = misturar(hz, "#0a1a18", 0.6), brilho = misturar(hz, "#5a7a78", 0.4);
     const frio = misturar("#7aa4c4", meio, noite ? 0.35 : 0.5), negro = "#07080a";
     const lama = misturar(chao, "#4a3a24", 0.35), bruma = misturar(longe, hz, 0.5);
-    const margemCima = (x) => lerp(61, AGUA, Math.max(0, (x - ox) / 156));  // o dique do canal, do lado do brejo
+    const margemCima = (x) => lerp(61, AGUA, Math.max(0, (x - ox) / 156));  // o dique do canal, do lado do charco
     const margemBaixo = (x) => lerp(67, AGUA, Math.max(0, (x - ox) / 165)); // o outro dique, onde os sapos esperam
     // o céu e o astro
     for (let y = 0; y < QH; y++) for (let x = 0; x < W; x++) px(x, y, 1, 1, corDoCeu(bandas, x, y));
@@ -224,7 +224,7 @@
         else if (!noite && d < raio + 5 && pontilha(x, y, Math.round(9 - (d - raio) * 1.6))) px(x, y, 1, 1, halo);
       }
     }
-    // a outra margem, árvores mortas longe, a névoa rasteira e a água do brejo
+    // a outra margem, árvores mortas longe, a névoa rasteira e a água do charco
     let y = 45, v = 0;
     for (let x = 0; x < W; x++) { v += (r() - 0.5) * 0.5; v = Math.max(-1.5, Math.min(1.5, v * 0.92)); y = Math.max(42, Math.min(46, y + v)); px(x, Math.round(y), 1, QH - Math.round(y), longe); }
     [[12, 10], [44, 8], [78, 11], [236, 9], [274, 12], [306, 8], [-14, 9], [340, 10]].forEach(([x, hh], i) => arvoreSeca(px, ox + x, 47, hh, misturar(longe, meio, 0.5), i % 2 ? 1 : -1));
@@ -337,7 +337,7 @@
       px(x, y, w, 1, corNuvem); px(x + 6, y - 1, w - 18, 1, corNuvem);
     });
     if (b.noite) for (let i = 0; i < 24; i++) { const x = (i * 97 + 13) % W, y = (i * 53) % 30; if ((q + i * 3) % 23 > 2 && !(x > ox + 112 && x < ox + 218 && y > 3)) px(x, y, 1, 1, "#9aa4c0"); }
-    // a água do brejo treme e a correnteza do canal anda até o buraco e some nele
+    // a água do charco treme e a correnteza do canal anda até o buraco e some nele
     for (let k = 0; k < 10; k++) { const y = AGUA + 2 + ((k * 7) % 18), x = (k * 61 + Math.floor(q / 3) * 13) % W; if (y > b.margemCima(x) + 2 || x > ox + 170) px(x, y, 2, 1, b.cor.brilho); }
     for (let i = 0; i < 10; i++) {
       const t = (q * 0.01 + i / 10) % 1, x = Math.round(lerp(2, ox + 158, t));
@@ -410,7 +410,7 @@
         for (let x = jx + desv; x < jx + jw + desv + 2; x++) if (pontilha(x, y, 2)) px(x, y, 1, 1, misturar(luz, parede, noite ? 0.75 : 0.55));
       }
     });
-    // o buraco no muro da esquerda: lá fora, o céu e o brejo; por ele entra a água do canal
+    // o buraco no muro da esquerda: lá fora, o céu e o charco; por ele entra a água do canal
     for (let y = 26; y < AGUA_D; y++) for (let x = 2; x < 30; x++) {
       const bb = (x - 15) ** 2 / 150 + (y - AGUA_D) ** 2 / 500 + ((x * 7 + y * 3) % 5) * 0.04;
       if (bb > 1) continue;

@@ -1,6 +1,6 @@
 """O segundo eixo do Vale do Turvo (E4): Irmão Caspar e a perseguição à Yara. A acusação na investigação, a praça
 depois da guardiã, a prova (geral e forte), as três posturas em combinação com os dois desfechos de Ilse, a situação da
-Yara (desconhecida, no grupo, na reserva, morta), a comitiva, os saves e a fogueira do brejo. E a coerência do "mesmo
+Yara (desconhecida, no grupo, na reserva, morta), a comitiva, os saves e a fogueira do charco. E a coerência do "mesmo
 dia" nos textos da volta ao Vau."""
 
 import tempfile

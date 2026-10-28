@@ -91,7 +91,7 @@ class TestCharco(unittest.TestCase):
             g = decidida(postura)
             ir(g, CHARCO)
             self.assertFalse(missoes.cena_pendente(g), postura)
-            self.assertTrue(caspar.fogueira_possivel(g))  # a fogueira do brejo continua possível
+            self.assertTrue(caspar.fogueira_possivel(g))  # a fogueira do charco continua possível
         g = resolvida("descansada")
         ir(g, CHARCO)
         self.assertFalse(missoes.cena_pendente(g))
