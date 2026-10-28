@@ -1,14 +1,40 @@
 ---
 name: arte-cenas-fenda
-description: Construir, revisar ou avaliar um interior (ou outro ambiente de cena) e os personagens animados dentro dele em The Unquiet (Crônicas da Fenda), no quadro de cima das cenas (o sistema da capela, telas/cenas.js), do levantamento à candidata no protótipo. Use quando o Jean pedir um interior novo ou refeito (a forja, a taverna, o templo), um personagem de cena com animação (o ferreiro trabalhando, o taverneiro, os fregueses) ou a comparação de candidatas de ambiente. Não serve para ícones e itens (arte-itens-fenda e as skills de cada objeto), retratos de carta nem regras de serviço.
+description: Construir, revisar, avaliar ou integrar um interior (cenário interno de um lugar: a forja, a curandeira, o templo, a taverna, uma casa, uma loja) ou outro ambiente de cena, e os personagens animados dentro dele, em The Unquiet (Crônicas da Fenda), no quadro de cima das cenas (telas/cenas.js, telas/cena-forja.js), do levantamento do lugar à candidata no protótipo e à integração. Use sempre que a tarefa for um interior novo ou refeito, um personagem de cena trabalhando (o ferreiro, a curandeira, o taverneiro, os fregueses), a animação de uma atividade, a comparação de candidatas de ambiente ou a consolidação da fonte em Aseprite de uma cena, mesmo que o Jean não cite a skill. Não serve para ícones e itens (arte-itens-fenda e as skills de cada objeto), retratos de carta nem regras de serviço.
 ---
 
 # Interiores e personagens animados de cena
 
 O processo que levou a forja do Vau, depois de várias candidatas, à H aprovada pelo Jean em oficina, enquadramento,
-corpo, estilo e movimento (a H2 é a H com o olho ajustado). Ele ajuda a fazer e a conferir uma cena; quem aprova é o
-Jean, no jogo. O estudo de caso, com as fontes e o que cada candidata ensinou, está em [forja.md](forja.md): use-o como
-exemplo, não como regra (as medidas, o ciclo de 53 quadros e a martelada são da forja).
+corpo, estilo e movimento (a H2 é a H com o olho ajustado), e depois ao golpe final do ferreiro ("Corpo desce", na
+fonte e no jogo em 28/10/2026). Ele ajuda a fazer e a conferir uma cena; quem aprova é o Jean, no jogo. O estudo de
+caso, com as fontes e o que cada candidata ensinou, está em [forja.md](forja.md): use-o como exemplo, não como regra (as
+medidas, o ciclo de 53 quadros, a martelada e a paleta são da forja).
+
+O que se quer evitar de novo: a imagem gerada reduzida e usada sem transposição artística, o personagem fora do estilo
+do jogo, os apoios desconectados, a anatomia confusa e as correções da animação descobertas tarde.
+
+## O fluxo de um interior (10 passos)
+
+Cada passo fecha antes do seguinte; as seções abaixo detalham.
+
+1. **Levantamento do lugar** (seção 1): o que o jogo estabelece, quem trabalha ali e quando (os estados da história:
+   quem atende em cada momento), os serviços, os objetos que o ofício precisa, a circulação.
+2. **Composição** (seção 1): a câmera pela atividade, a escala do personagem, as áreas de trabalho e os pontos de
+   interação (os rótulos fora do personagem e da ação).
+3. **Referências separadas** (seção 2): a imagem de composição de um lado; as cenas aprovadas do jogo, de outro, como a
+   referência canônica do acabamento.
+4. **Desenho na grade real** (seção 3): silhuetas e volumes primeiro, nos pixels do jogo; materiais e detalhes depois.
+5. **Personagem** (seção 4): identidade (só o que o jogo estabelece), proporções, perspectiva e leitura no tamanho de
+   uso.
+6. **Atividade** (seção 5): as poses-chave, os contatos e a trajetória da ferramenta antes de completar o ciclo; a
+   geometria do alcance (seção 5a).
+7. **Animação** (seção 5): o corpo participando quando a ação pede, os apoios preservados, o ritmo da atividade (não o
+   de outra cena) e a passagem limpa do fim para o começo; a pose parada para o movimento reduzido.
+8. **Conferência no contexto** (seção 3, último item): a cena junto da HUD, dos serviços e dos rótulos, nas resoluções
+   suportadas.
+9. **Fonte final** (seção 6): o arquivo editável como autoridade, a exportação reproduzível, os retoques protegidos.
+10. **Integração**: só a candidata aprovada, conferida no jogo real (seção "Três aprovações").
 
 Caminhos relativos à raiz do repositório. O que já está documentado em outro lugar não se repete aqui:
 - as fontes em Aseprite, o `pintar.lua`, a montagem e a exportação em lote: `ferramentas/arte/aseprite/LEIA-ME.md`;
@@ -103,11 +129,39 @@ tamanho de uso.
 - **Confira ciclos completos:** os quadros intermediários, a passagem do fim para o começo, a repetição, o movimento
   reduzido (uma pose parada coerente), e que sair e entrar de novo não acumule relógios.
 
+## 5a. Ferramenta, braço e contato (o golpe do ferreiro, 28/10/2026)
+
+O que as três passadas do golpe ensinaram (o histórico em [forja.md](forja.md)). Valem para qualquer personagem com uma
+ferramenta: o pilão no almofariz, a faca na tábua, a concha no caldeirão.
+
+- **Comprimento, distância e alcance:** antes de desenhar, meça na grade a distância do ombro ao ponto de contato e
+  compare com o braço mais a ferramenta. Se braço e ferramenta passam dessa distância, o braço dobra e o ombro sobe
+  (lia como "ombro levantado"); se não alcançam, a mão estica num ângulo impossível. A saída é geométrica: encurtar a
+  ferramenta, aproximar ou baixar o corpo (o quadril e os joelhos), mover o objeto. Retocar o pixel não resolve.
+- **Punho, cotovelo e ferramenta:** o cotovelo dobra para um lado só, o punho continua o antebraço, e a ferramenta sai
+  da mão na direção do golpe. Mão colada ao corpo com o cotovelo para trás e o cabo de pé leu como "guidão de moto" e
+  não dá para fazer de verdade.
+- **Não esconda o contato nas conferências:** a pose em que a ferramenta toca o objeto é a que decide; nada de recorte,
+  rótulo, faísca ou primeiro plano por cima dela na folha ou na foto de conferência.
+- **Não confie em rotação automática:** girar em código o desenho de uma ferramenta em pixel art dá degraus e pixels
+  soltos nos ângulos fora de 0°, 45° e 90° (a cabeça do martelo "fora do lugar", o cabo desalinhado). Nas poses que
+  aparecem (o contato, o alto), desenhe a ferramenta à mão, alinhada à grade, com o cabo entrando reto no olho.
+- **Movimento e leitura, não só igualdade técnica:** "a exportação saiu igual à candidata" prova a cópia, não o gesto.
+  Veja o ciclo correndo no tamanho do jogo e pergunte o que a pessoa está fazendo.
+- **O ciclo inteiro, não a pose mais bonita:** confira os quadros intermediários, o fim do golpe, a volta e a passagem
+  para o começo; o defeito do ferreiro estava no fim do golpe, não na subida aprovada.
+
 ## 6. As fontes e a validação
 
 - **Fontes editáveis e organizadas** (o ambiente, o personagem e as poses, as ferramentas, o fogo e a luz, o primeiro
   plano em camadas separadas) e **exportações reproduzíveis**. Depois que a fonte existe, ela é a autoridade: o script
   que a gerou não pode sobrescrevê-la sem um pedido explícito (`--refazer`), e a exportação lê dela.
+- **Retoque aprovado vai para a fonte antes da integração:** uma correção feita no desenho do protótipo (em código)
+  entra na fonte por um script que troca só a camada certa e confere o que salvou (na forja, `consolidar_gesto.py` e
+  `aseprite/trocar_camada.lua`); depois, o script antigo que geraria a fonte recusa rodar sem a opção que descarta os
+  retoques (`desenhar_h2.py --refazer` pede `--sem-os-retoques`), e o de consolidar não sobrescreve um retoque à mão
+  sem `--forcar`. Confira o ciclo exportado contra a candidata aprovada, quadro a quadro, e veja as outras camadas
+  saírem iguais.
 - **Conferência técnica separada da avaliação artística:** "53 de 53 quadros iguais" ou "tudo certo" no roteiro de
   fotos prova que funciona, não que está bonito. A avaliação é no tamanho de uso, ao lado das cenas aprovadas.
 - **Cada candidata nova numa pasta própria**, preservando a anterior, com folhas de comparação (antes × depois na
@@ -129,3 +183,7 @@ tamanho de uso.
 | Objetos no ar, mãos-francesas sem sentido, a coifa torta | desenho sem pensar em apoio e construção | conferir cada objeto: onde se apoia, onde se prende, em que eixo |
 | O ferreiro fora do estilo do jogo | contorno escuro, muitos tons, textura miúda | comparar com as figuras aprovadas nos pixels da tela antes de polir |
 | O olho grudado no nariz | o escuro do olho cercado de pele clara junto da ponte | órbita entre a ponte e o olho, decidir no tamanho real |
+| O fim do golpe como "guidão" | a mão colada ao corpo, o cotovelo para trás, o cabo de pé | punho e cotovelo na direção do golpe; o braço vai à frente (5a) |
+| O ombro levantado no contato | braço e cabo mais longos que a distância do ombro à peça | medir o alcance; baixar o corpo ou encurtar a ferramenta (5a) |
+| A cabeça do martelo com pixels fora do lugar | a ferramenta girada em código em qualquer ângulo | desenhar à mão nas poses de contato, alinhada à grade (5a) |
+| O retoque aprovado só no protótipo | a correção feita no desenho em código, fora da fonte | consolidar na fonte e travar os scripts antigos antes de integrar (6) |
