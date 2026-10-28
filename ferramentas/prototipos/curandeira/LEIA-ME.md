@@ -1,6 +1,6 @@
 # Protótipo: o interior da curandeira (candidata A)
 
-28/10/2026. **Só no protótipo, esperando a avaliação do Jean.** O jogo não carrega esta pasta; a cabana do jogo
+28/10/2026, terceira passada. **Só no protótipo, esperando a avaliação do Jean.** O jogo não carrega esta pasta; a cabana do jogo
 continua a tela de sempre, sem ambiente. Nada do templo nem da taverna foi começado. Feito pelo fluxo da skill
 `arte-cenas-fenda`.
 
@@ -16,7 +16,8 @@ prédio da vila**. A faixa do alto troca o estado da história e mostra a pose p
 | **Pita (Marta de cama)** | a chegada: a missão sem desfecho | Pita no almofariz ("mói ervas no lugar de Marta, que está de cama"); a cortina dos fundos fechada, sem mostrar Marta |
 | **Pita (a água escura)** | a noite em que a fonte corre escura (Destruir, no mesmo dia) | Pita no almofariz; a panela fervendo forte e dois baldes de água junto do fogão ("ferve água para os doentes") |
 | **Marta (de pé)** | a água limpou (Dar descanso, três dias depois) | Marta, magra, de lenço e mangas arregaçadas, no almofariz |
-| **Pose parada** | — | a pose do movimento reduzido (o mesmo que a preferência do sistema) |
+| **Pose parada** | — | a pose do movimento reduzido (o mesmo que a preferência do sistema): inclinada sobre o almofariz, a mão no pilão |
+| **Passada anterior** | — | a segunda passada (os maços antigos e o giro só do braço), para comparar; a arte vem de `anterior/camadas`, que nenhum script escreve |
 
 A troca só vale com a cabana aberta: o motor muda o estado e abre a cabana de novo. O serviço é o de produção
 (`Servicos.curandeiro`), sem mudar: os cartões, os preços, quem atende e a fala. As duas não aparecem juntas: pela
@@ -43,13 +44,28 @@ porta e para o almofariz. Escala pela figura: Marta tem 52 px dos pés ao alto d
 tampo a 27 px do chão (~85 cm); o almofariz, 5 px. Pita é menor (46 px) e pega o pilão mais embaixo. A luz: o fogão
 e a lamparina quentes, a porta fria, a sala escurecendo em degraus longe deles (a mesma luz feita por cima da forja).
 
-## O gesto
+## A atividade (terceira passada)
 
-Moer no almofariz, decidido pelos apoios antes do ciclo: o almofariz parado no tampo; a mão de longe segurando a
-borda dele; a ponta de baixo do pilão dentro da boca; só a ponta de cima gira numa elipse (12 poses), e a mão de perto
-e o antebraço acompanham (o cotovelo, meio passo). Tronco, cabeça e saia parados. Ritmo próprio: 100 ms por pose (1,2 s
-por volta), quatro voltas e uma pausa de 1,2 s; o fogo e o vapor a 200 ms. Movimento reduzido: a primeira
-pose, parada, com o fogo e o vapor parados.
+Uma rotina de trabalho, decidida pelos apoios antes dos quadros (o passo a passo está na skill, seção 5b):
+
+| Trecho | Conduz | Acompanha | Fica |
+|---|---|---|---|
+| moer (voltas de 12 poses a 100 ms) | a mão no pilão (a ponta de cima numa elipse) | o cotovelo; os ombros 1 px à frente onde o pilão vai longe e 1 px abaixo onde a pedra aperta; a cabeça, um quadro depois | os pés, o quadril, a saia, o almofariz, a mão de longe na borda |
+| desacelerar | a última meia volta, dois tiques por pose, até o pilão parar de pé | — | — |
+| olhar a mistura | o tronco: o peito à frente, depois o quadril para trás e o peito desce | o rosto vira para dentro do almofariz por último; o alto da saia vai com o quadril | a barra, os pés, a mão no pilão |
+| a pitada | a mão: solta o pilão (encostado na borda de longe), tira uma pitada, sobe até o nariz | o corpo se endireita atrás da mão; a cabeça vem encontrar a mão | a mão de longe no almofariz |
+| voltar | a mão afasta do rosto, desce e pega o pilão inclinado, que é a pose 1 do giro | a cabeça volta | — |
+
+A volta ao começo não salta: a pega deixa o pilão onde a primeira pose da volta o tem. O braço tem comprimentos fixos
+(o cotovelo é calculado; a mão fora do alcance é um erro do desenho), e o pilão tem o mesmo comprimento em todas as
+poses. Marta e Pita fazem a mesma rotina no ritmo de cada uma: **Marta** (9,4 s) aperta nas pontas da volta, faz três
+voltas (a última desacelera na metade), olha a mistura por 1,2 s e cheira com calma; **Pita** (8,8 s) faz quatro
+voltas sem apertar, se inclina mais perto do almofariz e olha menos tempo. Pita trabalha **de pé num banquinho**: a bancada é a de Marta, e
+no chão o almofariz ficava na altura do peito dela, com o braço esticado na altura do ombro.
+
+O fogo e o vapor a 200 ms, como antes. Movimento reduzido: a pose de olhar a mistura, parada, com o fogo e o vapor
+parados. A linha do tempo sai de `figuras.py` para `camadas/rotina.json` (o quadro de cada tique e a pose parada); a
+tela só a lê.
 
 ## As fontes
 
@@ -57,10 +73,12 @@ pose, parada, com o fogo e o vapor parados.
   proteções da porta, a enfiada).
 - `desenho.py`: o ambiente em código (a sala, a porta, a pia, as ervas, a bancada e o almofariz, as prateleiras, a
   coifa e o fogão, a passagem, o armário, a esteira, a luz; o fogo, o vapor e os baldes; a frente).
-- `figuras.py`: Pita e Marta (o corpo pelo contorno de cada linha, a cabeça numa grade à mão, os braços por segmentos)
-  e as poses do giro.
-- `exportar.py`: as camadas de `camadas/` (a demonstração lê delas); com `--ver`, composições ampliadas numa pasta
-  `conferencia/` para conferir o desenho (trabalho, não entrega).
+- `figuras.py`: Pita e Marta (o corpo pelo contorno de cada linha, deslocado entre os ombros e o quadril; a cabeça em
+  duas grades à mão por personagem; o braço por segmentos de comprimento fixo), as poses e a rotina.
+- `exportar.py`: as camadas de `camadas/` e o `rotina.json` (a demonstração lê delas); com `--ver`, composições
+  ampliadas numa pasta `conferencia/` para conferir o desenho (trabalho, não entrega, fora do repositório). Não
+  escreve em `anterior/`.
+- `anterior/camadas/`: a segunda passada exportada, congelada para a comparação na faixa.
 - `demo.py` e `tela/` (`cena-curandeira.js`, `curandeira.css`, `faixa.js`): a cena registrada ao lado da forja só na
   página da demonstração, a troca de estado e a faixa.
 
@@ -114,3 +132,36 @@ pede rolagem, como os da forja.
 
 A composição e a identidade do lugar; Pita e Marta (aparência, proporção, leitura no tamanho do jogo); o gesto e o
 ritmo; a noite da água escura (os baldes e a fervura); se a cabana deve trocar a tela de hoje quando for integrada.
+
+## Terceira passada (28/10/2026): as ervas, o corpo e os rostos
+
+**O que o Jean disse:** gostou da composição, da personalidade nova e dos objetos de alquimia natural. Os maços
+pareciam pinhatas (volumes iguais, alinhados, diferenciados pela cor) e Pita e Marta mexiam só o braço, com o resto
+parado: um trabalho robótico, que mais quadros do mesmo gesto não resolveram. Durante a rodada: o rosto e o cabelo
+podiam ficar mais bonitinhos, com traços simples como os do ferreiro.
+
+**As ervas** (`desenho.MACOS`): cada maço desenhado à mão por planta, com o barbante descendo da vara, a laçada por
+cima e as duas voltas da amarração: a sálvia em leque (folhas de pontas para baixo, buracos entre elas, o verde
+acinzentado de folha seca), a lavanda (hastes finas e a espiga roxa na ponta, em alturas diferentes), a réstia de alho
+(cabeças brancas redondas na trança de palha), o raminho de bagas vermelhas (cachos de bolinhas com o brilho de um
+pixel e duas folhas) e a camomila (talos curtos, as flores creme com o miolo amarelo). Comprimentos e espaços
+diferentes; a enfiada de cogumelos continua na ponta da vara.
+
+**O corpo:** a rotina descrita em "A atividade". O que a conferência pegou e mudou durante o trabalho: o braço da Pita
+virava uma barra horizontal na altura do ombro (veio o banquinho e 2 px mais perto da bancada); as passagens trocavam
+tronco, quadril, cabeça e mão no mesmo quadro (vieram as poses de passagem: o peito antes do quadril e do rosto; a mão
+antes do corpo); a pega voltava o pilão para trás antes de começar a volta (o giro passou a começar na pose em que a
+pega o deixa).
+
+**Os rostos:** Marta com o lenço justo e o nó na nuca, o cabelo escuro na testa, a sobrancelha de 1 px, o olho atrás
+da ponte do nariz, a face um pouco funda (magra da febre, sem exagero), a boca e o queixo; Pita com o brilho no alto do
+cabelo, a franja de lado, a orelha, a bochecha corada de um pixel e o queixo curto. Nas duas, o pescoço agora cai no
+colo do vestido (antes havia uma cunha escura sob o queixo). A aparência e a idade não mudaram.
+
+**Conferido:** no jogo, a 1920×945 e a 1280×720: as ervas e as figuras no tamanho real; a vista quadro a quadro em
+três estados (Pita, Marta, a água escura), um relógio só, a 100 ms, depois de sair e voltar três vezes; a pose parada
+sem mudar; um tratamento em cada janela cobrando pelo serviço de produção; os nomes de quem atende e da Saída fora da
+atividade; sem erros no console. A 1280, a faixa da demonstração cobre o alto da HUD (só na demonstração).
+
+**Para avaliar (Jean):** as ervas no tamanho do jogo; a rotina das duas (o corpo, as pausas, a pitada, a volta); o
+banquinho da Pita; os rostos. Compare com o botão **Passada anterior**.

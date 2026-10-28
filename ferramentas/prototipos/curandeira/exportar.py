@@ -4,7 +4,13 @@ para conferir o desenho (`conferencia/`, fora do que se entrega).
     python ferramentas/prototipos/curandeira/exportar.py [--ver]
 
 As tiras de quadros vão lado a lado, 320 px cada (como as da forja): fogo (4), vapor e vapor-forte (4), pita e marta
-(um quadro por pose do GIRO)."""
+(um quadro por desenho diferente da rotina). `rotina.json` diz, para cada uma, qual quadro vale em cada tique de
+100 ms (`tempo`) e qual é a pose parada do movimento reduzido (`parada`): a linha do tempo sai de `figuras.py`, não é
+repetida na tela.
+
+Só escreve em `camadas/` (e em `conferencia/` com --ver). A passada anterior, guardada para comparação em
+`anterior/camadas/`, nunca é escrita por script."""
+import json
 import os
 import sys
 
@@ -32,13 +38,19 @@ def exportar():
     tira([D.fogo(i) for i in range(4)]).save(os.path.join(CAMADAS, "fogo.png"))
     tira([D.vapor(i) for i in range(4)]).save(os.path.join(CAMADAS, "vapor.png"))
     tira([D.vapor(i, forte=True) for i in range(4)]).save(os.path.join(CAMADAS, "vapor-forte.png"))
+    rotina = {}
     for quem in F.FIG:
-        tira([F.figura(quem, i) for i in range(F.QUADROS)]).save(os.path.join(CAMADAS, f"{quem}.png"))
+        tira(F.todas(quem)).save(os.path.join(CAMADAS, f"{quem}.png"))
+        _, tempo, parada = F.quadros(quem)
+        rotina[quem] = {"tempo": tempo, "parada": parada}
+    with open(os.path.join(CAMADAS, "rotina.json"), "w", encoding="utf-8") as f:
+        json.dump(rotina, f, separators=(",", ":"))
 
 
-def composicao(quem, i=F.REPOUSO, escura=False, f=0):
+def composicao(quem, item=F.PARADA, escura=False, f=0):
     im = D.fundo().imagem()
-    for camada in ([D.baldes()] if escura else []) + [D.fogo(f), D.vapor(f, escura), F.figura(quem, i), D.frente()]:
+    fig = F.figura(quem, F.pose_de(quem, item))
+    for camada in ([D.baldes()] if escura else []) + [D.fogo(f), D.vapor(f, escura), fig, D.frente()]:
         im.alpha_composite(camada.imagem())
     return im
 
@@ -50,13 +62,15 @@ def ver():
         im = composicao(quem, escura=escura)
         im.resize((D.QW * 4, D.QH * 4), Image.NEAREST).save(os.path.join(pasta, f"{nome}-4x.png"))
         im.crop((120, 20, 200, 90)).resize((80 * 8, 70 * 8), Image.NEAREST).save(os.path.join(pasta, f"{nome}-figura-8x.png"))
-    # as poses do giro lado a lado, recortadas na figura (8×)
+    # os desenhos da rotina lado a lado, recortados na figura (4×), na ordem em que aparecem
     for quem in F.FIG:
-        quadros = [composicao(quem, i).crop((134, 26, 178, 62)) for i in range(F.QUADROS)]
-        folha = Image.new("RGBA", (44 * 8 * 4, 36 * 8 * 2))
+        unicos, _, _ = F.quadros(quem)
+        quadros = [composicao(quem, it).crop((134, 24, 178, 84)) for it in unicos]
+        col = 8
+        folha = Image.new("RGBA", (44 * 4 * col, 60 * 4 * ((len(quadros) + col - 1) // col)))
         for i, q in enumerate(quadros):
-            folha.paste(q.resize((44 * 8, 36 * 8), Image.NEAREST), ((i % 4) * 44 * 8, (i // 4) * 36 * 8))
-        folha.save(os.path.join(pasta, f"{quem}-giro-8x.png"))
+            folha.paste(q.resize((44 * 4, 60 * 4), Image.NEAREST), ((i % col) * 44 * 4, (i // col) * 60 * 4))
+        folha.save(os.path.join(pasta, f"{quem}-rotina-4x.png"))
 
 
 if __name__ == "__main__":

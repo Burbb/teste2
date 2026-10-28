@@ -3,30 +3,46 @@
 
    A arte vem pronta em camadas (ferramentas/prototipos/curandeira/camadas, exportadas por exportar.py): o fundo, o
    fogo (4 quadros), o vapor (4 quadros, o forte na noite da água escura), os baldes (a mesma noite), quem atende (Pita
-   ou Marta, um quadro por pose do giro do pilão) e a frente. Quem atende e a água vêm do motor (o painel "cena":
+   ou Marta, um quadro por desenho diferente da rotina) e a frente. Quem atende e a água vêm do motor (o painel "cena":
    d.quem, d.agua); aqui só se escolhe o quadro de cada camada pelo relógio das cenas (100 ms).
 
-   O ritmo: o pilão gira em 12 poses de 100 ms (1,2 s por volta, como os quadros da forja), quatro voltas e uma pausa de 1,2 s com a mão
-   parada; nada da martelada da forja. Movimento reduzido (ou o botão da faixa): a pose parada, o fogo e o vapor parados.
+   A rotina (moer, desacelerar, olhar a mistura, a pitada no nariz, pegar o pilão de novo) vem de figuras.py, em
+   camadas/rotina.json: para cada uma, o quadro de cada tique (`tempo`) e a pose do movimento reduzido (`parada`).
+   Movimento reduzido (ou o botão da faixa): a pose parada, o fogo e o vapor parados.
 
-   Exporta window.CenaCurandeira = { base, desenhar, pontos, poseDe, DURACAO, QW, QH }. */
+   A faixa pode mostrar a passada anterior (anterior/camadas: o giro do braço, 12 poses, quatro voltas e a pausa) para
+   comparar; essa pasta não é escrita por nenhum script.
+
+   Exporta window.CenaCurandeira = { base, desenhar, pontos, poseDe, QW, QH }. */
 "use strict";
 
 (() => {
-  const QW = 320, QH = 96, POSES = 12, TIQUES = 1, VOLTAS = 4, PAUSA = 12;
-  const DURACAO = POSES * TIQUES * VOLTAS + PAUSA;
-  const IM = {};
-  ["fundo", "fogo", "vapor", "vapor-forte", "baldes", "pita", "marta", "frente"].forEach((n) => {
-    const i = new Image(); i.src = `/proto-cur/camadas/${n}.png`; IM[n] = i;
-  });
+  const QW = 320, QH = 96;
+  const NOMES = ["fundo", "fogo", "vapor", "vapor-forte", "baldes", "pita", "marta", "frente"];
+  const carregar = (pasta) => {
+    const im = {};
+    NOMES.forEach((n) => { const i = new Image(); i.src = `/proto-cur/${pasta}/${n}.png`; im[n] = i; });
+    return im;
+  };
+  const IM = carregar("camadas"), ANT = carregar("anterior");
+  let ROTINA = null;
+  fetch("/proto-cur/camadas/rotina.json").then((r) => r.json()).then((j) => { ROTINA = j; }).catch(() => {});
   const pronta = (i) => i.complete && i.naturalWidth > 0;
   const reduzido = () => matchMedia("(prefers-reduced-motion: reduce)").matches || document.body.dataset.curReduzido === "1";
+  const anterior = () => document.body.dataset.curAnterior === "1";
 
-  /** A pose do quadro: a do giro, ou a parada (0) na pausa. */
-  function poseDe(q) {
-    const r = ((q % DURACAO) + DURACAO) % DURACAO;
-    return r < POSES * TIQUES * VOLTAS ? Math.floor(r / TIQUES) % POSES : 0;
+  /** O quadro de quem atende no tique q: o da rotina (ou, na passada anterior, o do giro com a pausa). */
+  function poseDe(q, quem) {
+    if (anterior()) {
+      const D = 12 * 4 + 12, r = ((q % D) + D) % D;
+      return r < 48 ? r % 12 : 0;
+    }
+    const rot = ROTINA && ROTINA[quem];
+    if (!rot) return 0;
+    const n = rot.tempo.length;
+    return rot.tempo[((q % n) + n) % n];
   }
+  const parada = (quem) => (anterior() || !ROTINA ? 0 : ROTINA[quem].parada);
 
   function base(W, d) {
     const k = document.createElement("canvas"); k.width = QW; k.height = QH;
@@ -34,23 +50,24 @@
     encher(b);
     return b;
   }
-  function encher(b) {
+  function encher(b) {  // o fundo também na base (a troca de cena parte dela)
     if (b.cheia || !pronta(IM.fundo)) return;
     b.canvas.getContext("2d").drawImage(IM.fundo, 0, 0); b.cheia = true;
   }
   const tira = (c, im, i) => { if (pronta(im)) c.drawImage(im, i * QW, 0, QW, QH, 0, 0, QW, QH); };
   function desenhar(c, W, b, est, quadro) {
     encher(b);
-    const quieto = reduzido(), d = b.d || {}, escura = d.agua === "escura";
+    const quieto = reduzido(), d = b.d || {}, escura = d.agua === "escura", A = anterior() ? ANT : IM;
+    const quem = d.quem === "marta" ? "marta" : "pita";
     c.imageSmoothingEnabled = false;
     c.clearRect(0, 0, QW, QH);
-    if (pronta(IM.fundo)) c.drawImage(IM.fundo, 0, 0);
+    if (pronta(A.fundo)) c.drawImage(A.fundo, 0, 0);
     const passo = quieto ? 1 : Math.floor(quadro / 2) % 4;
-    tira(c, IM.fogo, passo);
-    if (escura && pronta(IM.baldes)) c.drawImage(IM.baldes, 0, 0);
-    tira(c, escura ? IM["vapor-forte"] : IM.vapor, passo);
-    tira(c, d.quem === "marta" ? IM.marta : IM.pita, quieto ? 0 : poseDe(quadro));
-    if (pronta(IM.frente)) c.drawImage(IM.frente, 0, 0);
+    tira(c, A.fogo, passo);
+    if (escura && pronta(A.baldes)) c.drawImage(A.baldes, 0, 0);
+    tira(c, escura ? A["vapor-forte"] : A.vapor, passo);
+    tira(c, A[quem], quieto ? parada(quem) : poseDe(quadro, quem));
+    if (pronta(A.frente)) c.drawImage(A.frente, 0, 0);
   }
 
   // O nome de quem atende na parede à direita dela (embaixo das prateleiras: não cobre a cabeça, as mãos nem o
@@ -60,5 +77,5 @@
     saida: { area: [10, 10, 30, 64], balao: [25, 30], foco: [25, 44] },
   };
 
-  window.CenaCurandeira = { base, desenhar, pontos: PONTOS, poseDe, DURACAO, QW, QH };
+  window.CenaCurandeira = { base, desenhar, pontos: PONTOS, poseDe, QW, QH };
 })();
