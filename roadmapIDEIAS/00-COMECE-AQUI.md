@@ -8150,3 +8150,20 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   entrar e sem erros no console.
 - **Aberto:** a arte própria dos materiais; as fontes de essência III e de fragmentos para o reforço alto dependem da
   campanha ampliada; a 1280 × 720 a segunda fileira da entrada pede rolagem (para a consolidação da HUD).
+
+### 28/10/2026 (data do computador local) — O interior da curandeira: candidata A (protótipo)
+
+- **Pedido do Jean:** começar a etapa dos interiores pela curandeira, com a câmera próxima da forja e a identidade de
+  um lugar de tratamento com ervas (bancada, almofariz, ervas secando, panos e água, um fogo modesto, espaço de
+  circulação), sem laboratório de mago; Pita e Marta conforme a história, sem as duas trabalhando juntas nem Marta
+  acamada; a referência `A herbalista e o almofariz.png` só como composição. Só no protótipo.
+- **Feito:** `ferramentas/prototipos/curandeira` (o LEIA-ME tem o levantamento, a escala, o gesto e o que a conferência
+  corrigiu). O ambiente e as figuras desenhados em código na grade de 320×96, na linguagem da forja; o gesto de moer no
+  almofariz pelos apoios, contido, com a pose parada; a cena no sistema de ambientes só na página da demonstração, com o
+  serviço de produção sem mudar. A referência guardada em `ferramentas/arte/referencias/cenarios internos/` (a pasta
+  que o Jean renomeou; o LEIA-ME com a origem e o hash).
+- **Estados (a faixa da demonstração, num save temporário):** Pita com Marta de cama; Pita na noite da água escura (os
+  baldes e a fervura forte); Marta de pé. E a pose parada.
+- **Conferido:** no navegador, a 1920×945 e a 1280×720 (os três estados, a pose parada, o ponto de quem atende, um
+  tratamento, a volta à vila, sem erros no console). Esperando a avaliação do Jean; nada integrado; templo e taverna não
+  começados.
