@@ -75,12 +75,13 @@ class TestGravar(unittest.TestCase):
     def test_substituicao_identica_e_recusada_sem_cobrar(self):
         g = jogo()
         arma = g.j.equip["arma"]
+        g.j.nivel = 9  # o requisito do tier III (vestida)
         D.materiais(g)["essencia_carrasco_3"] = 3
         self.assertTrue(D.encantar(g, arma["uid"], "carrasco:3", 0, pedido="a")[0])
         ouro, qtd = g.j.ouro, D.materiais(g)["essencia_carrasco_3"]
         self.assertEqual(D.encantar(g, arma["uid"], "carrasco:3", 0, pedido="b", substitui="carrasco:3"), (False, "Já gravado."))
         self.assertEqual((g.j.ouro, D.materiais(g)["essencia_carrasco_3"], arma["encantos"][0]), (ouro, qtd, "carrasco:3"))
-        # outro tier da mesma essência muda o nível: é uma substituição de verdade
+        # outro tier da mesma essência muda o valor: é uma substituição de verdade
         self.assertTrue(D.encantar(g, arma["uid"], "carrasco", 0, pedido="c", substitui="carrasco:3")[0])
 
     def test_substituir_pede_a_gravacao_vista_e_apaga_a_anterior(self):
@@ -99,10 +100,11 @@ class TestGravar(unittest.TestCase):
         self.assertEqual(g.forja_ultimo["de"]["id"], "brasa")
         # repetir é permitido (28/10): a mesma essência no outro sulco; substituir por ela mesma num tier maior também
         self.assertTrue(D.encantar(g, arma["uid"], "carrasco", 1, pedido="d")[0])
+        g.j.nivel = 5  # o requisito do tier II (vestida)
         D.materiais(g)["essencia_carrasco_2"] = 1
         self.assertTrue(D.encantar(g, arma["uid"], "carrasco:2", 0, pedido="e", substitui="carrasco")[0])
         self.assertEqual(arma["encantos"], ["carrasco:2", "carrasco"])
-        self.assertEqual(E.niveis_peca(arma), {"carrasco": 3})
+        self.assertEqual(E.soma_peca(arma), {"carrasco": 22 + 15})  # Carrasco II + Carrasco I: os valores somam
 
     def test_sulcos_sorteados_e_o_segundo_sulco(self):
         g = jogo()
@@ -115,8 +117,8 @@ class TestGravar(unittest.TestCase):
         self.assertTrue(D.encantar(g, arma["uid"], "eco", 1, pedido="b")[0])
         self.assertEqual(arma["encantos"], ["brasa", "eco"])
         self.assertFalse(D.encantar(g, arma["uid"], "carrasco", 2, pedido="c")[0])  # não há terceiro sulco
-        # as duas valem na luta, cada uma no nível dela
-        self.assertEqual((E.nivel(g.j, "brasa"), E.nivel(g.j, "eco"), E.nivel(g.j, "carrasco")), (1, 1, 0))
+        # as duas valem na luta, cada uma com o valor do tier dela
+        self.assertEqual((E.valor(g.j, "brasa"), E.valor(g.j, "eco"), E.valor(g.j, "carrasco")), (20, 10, 0))
 
     def test_elegibilidade_e_falta(self):
         g = jogo()
@@ -235,7 +237,7 @@ class TestNaLuta(unittest.TestCase):
     def test_carrasco_pela_tabela_abaixo_de_35(self):
         g = jogo()
         cb, alvo = self._luta_montada(g)
-        for gravado, esperado in ((["carrasco", None], 1.20), (["carrasco:2", "carrasco"], 1.30)):  # nível 1: +20%; 3: +30%
+        for gravado, esperado in ((["carrasco", None], 1.15), (["carrasco:2", "carrasco"], 1.37)):  # I: +15%; II + I: +37%
             danos = []
             for lista in ([None, None], gravado):
                 g.j.equip["arma"]["encantos"] = lista
@@ -267,7 +269,7 @@ class TestNaLuta(unittest.TestCase):
             e.hp = 0
             cb.ao_morrer(e, por=cb.j)
             ganhos.append(g.j.rec)
-        self.assertEqual(ganhos[:2], [round(g.j.max_rec * 0.15)] * 2)  # Eco 1: 15% (a tabela)
+        self.assertEqual(ganhos[:2], [round(g.j.max_rec * 0.10)] * 2)  # Eco I: 10% (a tabela)
         self.assertEqual(ganhos[2], 0)
 
     def test_limites_e_nada_acumula_entre_lutas(self):
@@ -279,16 +281,16 @@ class TestNaLuta(unittest.TestCase):
             self.assertEqual(sum(1 for k, q, _ in log if k == "vigilia"), 1)  # uma barreira por luta
             self.assertLessEqual(sum(1 for k, q, _ in log if k == "eco" and q == g.j.nome), 2)  # até 2 por luta
 
-    def test_revide_pelo_nivel_total_e_no_maximo_2_por_rodada(self):
+    def test_revide_pela_soma_ate_o_limite_e_no_maximo_2_por_rodada(self):
         g = jogo()
         corpo = FICHA.corpo(g, "morel")
-        corpo["armadura"]["encantos"] = ["revide:3", "revide:2", "revide"]  # 6 níveis: o teto (5) vale
+        corpo["armadura"]["encantos"] = ["revide:3", "revide:2", "revide"]  # 24 + 18 + 12 = 54%: o limite (40%) vale
         u = type("U", (), {"equip": corpo})()
-        self.assertEqual((E.niveis_equip(corpo)["revide"], E.nivel(u, "revide")), (6, 5))
+        self.assertEqual((E.soma_equip(corpo)["revide"], E.valor(u, "revide")), (54, 40))
         for _ in range(3):
             log = lutar(g, n=3)
-            # um efeito só (não uma instância por essência), sempre no nível 5
-            self.assertTrue(all(n == 5 for k, _, n in log if k == "revide"))
+            # um efeito só (não uma instância por essência), sempre com 40%
+            self.assertTrue(all(n == 40 for k, _, n in log if k == "revide"))
         # 30 golpes corpo a corpo na mesma rodada: no máximo 2 respostas
         g.j.equip["armadura"]["encantos"] = ["revide:3", "revide:2"]
         cb, e = self._luta_montada(g)
@@ -312,27 +314,30 @@ class TestNaLuta(unittest.TestCase):
 
 
 class TestTiers(unittest.TestCase):
-    def test_tiers_somam_e_so_conta_o_que_o_personagem_veste(self):
+    def test_cada_tier_tem_o_seu_valor_e_a_repeticao_soma_ate_o_limite(self):
         g = jogo()
         arma, peito = g.j.equip["arma"], g.j.equip["armadura"]
-        arma["encantos"] = ["brasa", "brasa"]  # duas Brasas I: Brasa 2
-        self.assertEqual(E.nivel(g.j, "brasa"), 2)
-        arma["encantos"] = ["brasa:2", "brasa"]  # Brasa II + Brasa I: Brasa 3
-        self.assertEqual(E.nivel(g.j, "brasa"), 3)
+        for lista, esperado in ((["brasa", None], 20), (["brasa:2", None], 28), (["brasa:3", None], 36),  # um de cada
+                                (["brasa", "brasa"], 40), (["brasa:2", "brasa"], 48),  # iguais e misturados
+                                (["brasa:3", "brasa:3"], 60)):  # 72%: o limite da Brasa (60%) corta
+            arma["encantos"] = lista
+            self.assertEqual(E.valor(g.j, "brasa"), esperado, lista)
         odete = FICHA.corpo(g, "odete")  # entre peças: o Eco na arma e no tomo de quem veste os dois
         odete["arma"]["encantos"] = ["eco:2"]
         odete["secundaria"]["encantos"] = ["eco:3", "eco:2"]
-        self.assertEqual(E.niveis_equip(odete)["eco"], 7)
-        self.assertEqual(E.nivel(type("U", (), {"equip": odete})(), "eco"), E.TETO)
+        self.assertEqual(E.soma_equip(odete)["eco"], 15 + 20 + 15)
+        self.assertEqual(E.valor(type("U", (), {"equip": odete})(), "eco"), 35)  # o limite do Eco
         bolsa = next(it for it in g.j.mochila if E.tipo(it))  # a bolsa e as peças dos outros não contam
         bolsa["encantos"] = ["vigilia:3"] + [None] * (len(bolsa["encantos"]) - 1)
-        self.assertEqual(E.nivel(g.j, "vigilia"), 0)
+        self.assertEqual(E.valor(g.j, "vigilia"), 0)
         peito["encantos"] = ["vigilia"] + [None] * (len(peito["encantos"]) - 1)
-        self.assertEqual(E.nivel(g.j, "vigilia"), 1)
+        self.assertEqual(E.valor(g.j, "vigilia"), 8)
+        for k, e in E.ESSENCIAS.items():  # o tier maior vale mais; três do maior passam do limite
+            self.assertTrue(e["valores"][0] < e["valores"][1] < e["valores"][2] < e["limite"] <= 3 * e["valores"][2], k)
 
     def test_brasa_em_area_aplica_uma_vez_por_rodada(self):
         g = jogo()
-        g.j.equip["arma"]["encantos"] = ["brasa:3", "brasa:2"]  # Brasa 5: 53%
+        g.j.equip["arma"]["encantos"] = ["brasa:3", "brasa:2"]  # 64%: o limite, 60%
         from rpg.combate import Combate
         alvos = [criar(random.Random(20 + i), "esqueleto", g.j.nivel) for i in range(4)]
         cb = Combate(g, alvos)
@@ -346,23 +351,92 @@ class TestTiers(unittest.TestCase):
                     E.ao_golpear(cb, cb.j, a, 5, "corpo", False, None)
             self.assertEqual(sum(1 for k, *_ in g.encanto_log if k == "brasa"), 1)
 
-    def test_os_textos_saem_da_tabela_de_cada_nivel(self):
+    def test_os_textos_saem_do_valor_de_cada_tier(self):
         for k in E.ORDEM:
-            textos = [E.texto(k, n)[0] for n in range(1, E.TETO + 1)]
-            self.assertEqual(len(set(textos)), E.TETO, k)  # cada nível diz o seu número
-        self.assertEqual(E.texto("eco", 1), ("Ao abater um inimigo, recupera 15% do recurso máximo.", "Até 2 vezes por luta."))
-        self.assertEqual(E.texto("brasa", 9), E.texto("brasa", E.TETO))  # acima do teto, o do teto
+            textos = [D.encanto_tela(E.chave(k, t))["efeito"] for t in E.TIERS]
+            self.assertEqual(len(set(textos)), 3, k)  # cada tier diz o seu número
+        self.assertEqual(E.texto("eco", 10), ("Ao abater um inimigo, recupera 10% do recurso máximo.", "Até 2 vezes por luta."))
+        self.assertEqual(D.encanto_tela("revide:3")["efeito"],
+                         "Ao receber um golpe corpo a corpo, 24% de chance de revidar com 60% do Ataque.")
 
-    def test_a_ficha_mostra_o_total_de_quem_veste(self):
+    def test_a_ficha_mostra_o_que_a_peca_fornece(self):
         g = jogo()
         g.j.equip["arma"]["encantos"] = ["brasa:2", "brasa"]
         D.JOGO[0] = g
         f = D.itens.ficha(g.j.equip["arma"])
-        tot = {x["id"]: x for x in f["gravacao_total"]}
-        self.assertEqual((tot["brasa"]["total"], tot["brasa"]["efetivo"]), (3, 3))
         self.assertEqual([x["titulo"] for x in f["encantos"]], ["Brasa II", "Brasa I"])
-        bolsa = next(it for it in g.j.mochila if E.tipo(it))
-        self.assertEqual(D.itens.ficha(bolsa)["gravacao_total"], [])  # na bolsa: ninguém veste
+        self.assertEqual([(x["id"], x["valor"]) for x in f["efeitos"]], [("brasa", "48%")])  # a peça, sem totais
+        self.assertEqual(f["gravacao_total"], [])  # nenhum total de quem veste na ficha (o campo é das versões guardadas)
+        g.j.equip["arma"]["encantos"] = ["brasa:3", "brasa:3"]
+        ef = D.itens.ficha(g.j.equip["arma"])["efeitos"][0]
+        self.assertEqual((ef["valor"], ef["excede"]), ("60%", True))  # nunca um número acima do limite como o ativo
+
+    def test_previa_da_troca_e_do_limite(self):
+        g = jogo()
+        arma = g.j.equip["arma"]
+        arma["encantos"] = ["brasa:3", "carrasco"]
+        p = D.previsao(g, arma, D.HEROI, 1, "brasa:2")  # Carrasco I sai, Brasa II entra
+        self.assertEqual([(x["rotulo"], x["antes"], x["depois"]) for x in p["linhas"]],
+                         [("Brasa nesta peça", "36%", "60%"), ("Carrasco nesta peça", "15%", "—")])
+        self.assertIn("Limite 60%", p["aviso"])  # 36 + 28 = 64: 4% não valem
+        self.assertEqual(D.previsao(g, arma, D.HEROI, 0, "brasa:3")["bloqueio"], "Já gravado.")
+
+
+class TestRequisitos(unittest.TestCase):
+    def test_a_tabela_e_o_requisito_da_peca_gravada(self):
+        self.assertEqual((E.REQUISITO[1], E.REQUISITO[2], E.REQUISITO[3]), (1, 5, 9))
+        it = {"nivel": 5, "encantos": [None, None]}
+        self.assertEqual(E.requisito(it), 4)  # um abaixo do nível em que a peça nasceu
+        self.assertEqual(E.requisito({"nivel": 1}), 1)
+        self.assertEqual(E.requisito(it, ["brasa:2", None]), 5)  # o maior entre a peça e as gravações
+        self.assertEqual(E.requisito(it, ["brasa", "eco:3"]), 9)
+        it["reforco"] = 12
+        self.assertEqual(E.requisito(it), 4)  # o reforço não muda o requisito
+
+    def test_bloqueia_vestir_abaixo_do_nivel_em_todos_os_caminhos(self):
+        g = jogo()
+        alta = next(it for it in g.j.mochila if it["slot"] == "arma" and E.requisito(it) > g.j.nivel)  # a substituta
+        motivo = f"Requer nível {E.requisito(alta)}."
+        self.assertEqual(FICHA.motivo_nao_veste(g, D.HEROI, alta), motivo)
+        self.assertEqual(FICHA.vestir(g, D.HEROI, alta), (False, motivo))  # Inventário: duplo clique, menu, arrastar
+        self.assertEqual(FICHA.vestir(g, "morel", alta), (False, motivo))  # o companheiro, pelo nível dele
+        self.assertFalse(g.pode_usar(alta))  # o achado, o mercado e a troca de arma na luta
+        self.assertIn(alta, g.j.mochila)
+        baixa = next(it for it in g.j.mochila if it["slot"] == "arma" and it is not alta and not D.ninguem_usa(g, it)
+                     and E.requisito(it) <= g.j.nivel)
+        self.assertTrue(FICHA.vestir(g, D.HEROI, baixa)[0])
+
+    def test_achado_acima_do_nivel_diz_o_requisito(self):
+        g = jogo()
+        alta = next(it for it in g.j.mochila if it["slot"] == "arma" and E.requisito(it) > g.j.nivel)
+        g.j.mochila.remove(alta)
+        vistos = []
+        menu = g.menu
+        g.menu = lambda titulo, opcoes, *a, **k: (vistos.extend(o[0] for o in opcoes), "guardar")[1]
+        try:
+            g.oferecer_equip(alta)
+        finally:
+            g.menu = menu
+        self.assertIn(f"Guardar na mochila (requer nível {E.requisito(alta)})", vistos)
+        self.assertNotIn("Equipar agora", vistos)
+
+    def test_gravar_em_peca_vestida_respeita_o_nivel_e_na_bolsa_prepara(self):
+        g = jogo()
+        arma = g.j.equip["arma"]
+        ouro, mat = g.j.ouro, D.materiais(g)["essencia_brasa_3"]
+        ok, texto = D.encantar(g, arma["uid"], "brasa:3", 0, pedido="a")
+        self.assertFalse(ok)
+        self.assertTrue(texto.startswith("Requer nível 9"), texto)
+        self.assertEqual((g.j.ouro, D.materiais(g)["essencia_brasa_3"], arma["encantos"][0]), (ouro, mat, None))  # nada cobrado
+        self.assertTrue(D.encantar(g, arma["uid"], "brasa", 0, pedido="b")[0])  # o tier I serve no nível 4
+        bolsa = next(it for it in g.j.mochila if it["slot"] == "arma" and E.tipo(it) and not D.ninguem_usa(g, it))
+        self.assertTrue(D.encantar(g, bolsa["uid"], "brasa:3", 0, pedido="c")[0])  # na bolsa: preparar para depois
+        self.assertEqual(FICHA.motivo_nao_veste(g, D.HEROI, bolsa), "Requer nível 9.")
+        D.nivel_de_teste(g)
+        D.nivel_de_teste(g)  # 4 → 8 → 12
+        self.assertIsNone(FICHA.motivo_nao_veste(g, D.HEROI, bolsa))
+        self.assertTrue(FICHA.vestir(g, D.HEROI, bolsa)[0])
+
 
     def test_o_saque_de_verdade_da_materiais_pela_criatura(self):
         g = jogo()
