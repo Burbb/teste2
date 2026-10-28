@@ -38,6 +38,11 @@ def camadas_do_estado(i, estado, paradas):
 def main():
     if FONTE.exists() and "--refazer" not in sys.argv:
         sys.exit(f"{FONTE.name} já existe: os retoques dela se perderiam. Use --refazer para gerar de novo.")
+    # 28/10/2026: a camada ferreiro da fonte tem o gesto aprovado (consolidar_gesto.py), que o código daqui não desenha:
+    # refazer a fonte apagaria o gesto. Só com a confirmação explícita de que os retoques se perdem.
+    if FONTE.exists() and "--sem-os-retoques" not in sys.argv:
+        sys.exit(f"{FONTE.name} tem o gesto aprovado do ferreiro (consolidar_gesto.py), que este código não desenha: "
+                 "refazer o apagaria. Para refazer mesmo assim: --refazer --sem-os-retoques (e depois consolidar_gesto.py).")
     fundo = A.desenhar_fundo()
     paradas = {"fundo": fundo, "bigorna": A.bigorna(), "frente": A.frente()}
     with tempfile.TemporaryDirectory() as tmp:
