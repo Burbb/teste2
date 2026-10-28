@@ -377,7 +377,7 @@ class TestTiers(unittest.TestCase):
         arma["encantos"] = ["brasa:3", "carrasco"]
         p = D.previsao(g, arma, D.HEROI, 1, "brasa:2")  # Carrasco I sai, Brasa II entra
         self.assertEqual([(x["rotulo"], x["antes"], x["depois"]) for x in p["linhas"]],
-                         [("Brasa nesta peça", "36%", "60%"), ("Carrasco nesta peça", "15%", "—")])
+                         [("Brasa", "36%", "60%"), ("Carrasco", "15%", "—")])  # o nome basta na peça escolhida
         self.assertIn("Limite 60%", p["aviso"])  # 36 + 28 = 64: 4% não valem
         self.assertEqual(D.previsao(g, arma, D.HEROI, 0, "brasa:3")["bloqueio"], "Já gravado.")
 
@@ -402,7 +402,7 @@ class TestRequisitos(unittest.TestCase):
         self.assertEqual(FICHA.vestir(g, "morel", alta), (False, motivo))  # o companheiro, pelo nível dele
         self.assertFalse(g.pode_usar(alta))  # o achado, o mercado e a troca de arma na luta
         self.assertIn(alta, g.j.mochila)
-        baixa = next(it for it in g.j.mochila if it["slot"] == "arma" and it is not alta and not D.ninguem_usa(g, it)
+        baixa = next(it for it in g.j.mochila if it["slot"] == "arma" and it is not alta and not D.FICHA._nao_veste_classe(g, D.HEROI, it)
                      and E.requisito(it) <= g.j.nivel)
         self.assertTrue(FICHA.vestir(g, D.HEROI, baixa)[0])
 
@@ -429,7 +429,7 @@ class TestRequisitos(unittest.TestCase):
         self.assertTrue(texto.startswith("Requer nível 9"), texto)
         self.assertEqual((g.j.ouro, D.materiais(g)["essencia_brasa_3"], arma["encantos"][0]), (ouro, mat, None))  # nada cobrado
         self.assertTrue(D.encantar(g, arma["uid"], "brasa", 0, pedido="b")[0])  # o tier I serve no nível 4
-        bolsa = next(it for it in g.j.mochila if it["slot"] == "arma" and E.tipo(it) and not D.ninguem_usa(g, it))
+        bolsa = next(it for it in g.j.mochila if it["slot"] == "arma" and E.tipo(it) and not D.FICHA._nao_veste_classe(g, D.HEROI, it))
         self.assertTrue(D.encantar(g, bolsa["uid"], "brasa:3", 0, pedido="c")[0])  # na bolsa: preparar para depois
         self.assertEqual(FICHA.motivo_nao_veste(g, D.HEROI, bolsa), "Requer nível 9.")
         D.nivel_de_teste(g)

@@ -90,7 +90,7 @@ class TestFormula(unittest.TestCase):
         it["bonus"].update(poder=3, critico=4)  # os afixos também crescem (12ª versão)
         g12 = R.ganho_total(it, R.LIMITE)
         self.assertEqual(set(g12), {"defesa", "max_hp", "poder", "critico"})
-        self.assertEqual(g12["critico"], 3)  # em %: 0,25 ponto por nível de peça (13 níveis no +12), como no gerador
+        self.assertEqual(g12["critico"], 3.2)  # em %: 0,25 ponto por nível de peça (13 no +12: 3,25), em décimos de ponto
         self.assertGreater(g12["max_hp"], g12["defesa"])  # cada linha na proporção do próprio valor
 
     def test_sem_caminho_na_arma(self):
@@ -141,7 +141,8 @@ class TestReforcar(unittest.TestCase):
         self.assertTrue(ok, texto)
         self.assertEqual(g.j.ouro, ouro - g.preco(R.OURO[0]))
         self.assertEqual(D.materiais(g)["fragmento"], 8 - R.FRAGMENTOS[0])
-        self.assertEqual((arma["reforco"], arma["bonus"]["atk"]), (1, atk + 1))
+        self.assertEqual(arma["reforco"], 1)
+        self.assertGreaterEqual(arma["bonus"]["atk"] - atk, 1)  # a principal da arma: ao menos 1 por passo até o +4
         self.assertTrue(g.forja_ultimo["sucesso"])
 
     def test_oferta_e_resultado_com_os_mesmos_nomes(self):
@@ -269,8 +270,98 @@ class TestReforcar(unittest.TestCase):
         poder = D.comitiva.atributos(g, D.comitiva.membro(g, "odete"))["poder"]
         self.assertTrue(D.reforcar(g, cajado["uid"])[0])
         self.assertGreater(D.comitiva.atributos(g, D.comitiva.membro(g, "odete"))["poder"], poder)
+        # 16ª versão: classe e nível restringem vestir, não o serviço; a prévia vem da peça, sem portador
         arco = next(it for it in g.j.mochila if it.get("classe") == "arqueiro")
-        self.assertIn("Ninguém do grupo", D.reforcar(g, arco["uid"])[1])
+        ficha = next(p for p in D.painel(g)["pecas"] if p["uid"] == arco["uid"])
+        self.assertNotIn("sem_reforco", ficha)
+        self.assertTrue(ficha["passos"][0]["linhas"])
+        self.assertTrue(D.reforcar(g, arco["uid"])[0])
+        self.assertEqual(arco["reforco"], 1)
+        self.assertTrue(D.FICHA.motivo_nao_veste(g, D.HEROI, arco))  # vestir continua recusado
+
+
+class TestGanhoReal(unittest.TestCase):
+    """16ª versão: todo sucesso melhora a peça de verdade (o arredondamento a inteiro escondia o ganho de passos
+    inteiros nos acessórios, elmos, luvas e botas)."""
+
+    def test_todo_passo_de_todo_espaco_melhora_alguma_linha(self):
+        rng = random.Random(5)
+        pecas = [itens.gerar_equip(rng, c, n, slot=s, raridade=r)
+                 for c in ("guerreiro", "arqueiro", "mago")
+                 for s in ("arma", "armadura", "cabeca", "maos", "pernas", "pes", "secundaria", "anel", "amuleto")
+                 for n in (1, 3, 6, 9, 12) for r in ("comum", "magico", "raro")]
+        pecas += [itens.fazer_unico(u, 4) for u in itens.UNICOS_POR_ID.values()]
+        for it in pecas:
+            for n in range(R.LIMITE):
+                a, b = R.ganho_total(it, n), R.ganho_total(it, n + 1)
+                self.assertTrue(any(b[s] > a[s] for s in b), (it["nome"], it["bonus"], n))
+                piso = {s for s, _, p in R.linhas(it) if p}  # a principal da arma: +1 por passo até o +4 (aprovado)
+                for s, v in b.items():  # nunca uma casa que o motor não usa; nunca mais de um degrau à frente da conta
+                    q = R.PRECISAO.get(s, 1)
+                    self.assertAlmostEqual(round(v / q), v / q, places=6)
+                    if s not in piso:
+                            self.assertLessEqual(v - R.exato(it, n + 1)[s], q + 1e-9, (it["nome"], s, n))
+
+    def test_elmo_pequeno_e_o_cajado_do_10_ao_11(self):
+        elmo = {"slot": "cabeca", "classe": "guerreiro", "nivel": 1, "nome": "Barbuta Enferrujada",
+                "bonus": {"defesa": 1, "max_hp": 1}}
+        self.assertEqual([R.ganho_total(elmo, n)["defesa"] for n in range(5)], [0, 0.5, 1, 1.5, 2])
+        cajado = {"slot": "arma", "classe": "mago", "nivel": 2, "nome": "Cajado de Ferro", "bonus": {"poder": 3}}
+        self.assertEqual(R.proximo({**cajado, "reforco": 10}), {"poder": 0.6})  # antes: vazio (9 → 9)
+
+    def test_teto_preservado_e_peca_toda_no_teto_nao_cobra(self):
+        anel = {"slot": "anel", "nivel": 40, "nome": "Anel da Precisão", "bonus": {"critico": 14.9}}
+        self.assertEqual(R.ganho_total(anel, 12)["critico"], 0.1)  # o teto da peça (15%) fica
+        g = jogo()
+        anel = {"slot": "anel", "nivel": 40, "nome": "Anel da Precisão", "raridade": "comum", "preco": 50,
+                "bonus": {"critico": 15}}
+        g.j.mochila.append(anel)
+        D.dar_uid(g)
+        ouro, frag = g.j.ouro, D.materiais(g).get("fragmento", 0)
+        ok, texto = D.reforcar(g, anel["uid"])
+        self.assertFalse(ok)
+        self.assertIn("Sem ganho", texto)
+        self.assertEqual((g.j.ouro, D.materiais(g).get("fragmento", 0), anel.get("reforco", 0)), (ouro, frag, 0))
+        ficha = next(p for p in D.painel(g)["pecas"] if p["uid"] == anel["uid"])
+        self.assertIn("Sem ganho", ficha["sem_reforco"])
+
+    def test_cair_e_subir_volta_ao_mesmo_numero_com_casas(self):
+        it = peca("guerreiro", "cabeca", 3)
+        it["bonus_base"] = dict(it["bonus"])
+        D.aplicar_nivel(it, 7)
+        sete = dict(it["bonus"])
+        for n in (6, 5, 6, 7):
+            D.aplicar_nivel(it, n)
+        self.assertEqual(it["bonus"], sete)
+
+    def test_a_fracao_chega_a_ficha_e_a_luta(self):
+        g = jogo()
+        arma = g.j.equip["arma"]
+        arma["bonus"]["atk"] = arma["bonus"]["atk"] + 0.6
+        g.j.recalcular()
+        self.assertAlmostEqual(g.j.atk % 1, 0.6, places=6)  # o Ataque do herói leva a casa da peça
+        from rpg.web import estado
+        self.assertIn(",6", estado.heroi(g)["atributos"]["Ataque"])  # na tela, com vírgula
+        arma["bonus"]["atk"] = round(arma["bonus"]["atk"] - 0.6)
+        g.j.recalcular()
+        self.assertIsInstance(g.j.atk, int)  # sem peça fracionária, o número do jogo de sempre
+
+    def test_vida_por_turno_fracionada_acumula(self):
+        from rpg.combate import heroi as mh
+        u = type("U", (), {})()
+        u.equip = {}
+        mod_jogo = D.mod_jogo_original
+        try:
+            D.mod_jogo_original = lambda x, k: 2.6 if k == "regen_vida" else 0
+            curas = []
+            for _ in range(5):
+                u._tique = getattr(u, "_tique", 0) + 1
+                mh.mod(u, "regen_vida")  # a pergunta "há?" e o "quanto" no mesmo tique dão o mesmo número
+                curas.append(mh.mod(u, "regen_vida"))
+            self.assertEqual(sum(curas), 13)  # 2,6 × 5
+            self.assertEqual(sorted(set(curas)), [2, 3])
+        finally:
+            D.mod_jogo_original = mod_jogo
 
 
 class TestCasosDaDemonstracao(unittest.TestCase):

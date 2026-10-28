@@ -24,6 +24,17 @@ de novo dá exatamente o mesmo número do nível. Cada passo vale um tanto de n�
   depois, só a proporção.
 12ª versão (27/10/2026): o limite candidato passa de +4 a +12, com as mesmas regras (o +1 garantido, a falha volta um
 nível, sem quebrar). Os números do +1 ao +4 ficam; os do +5 ao +12 são uma curva provisória (simular.py e o LEIA-ME).
+
+16ª versão: todo sucesso melhora a peça de verdade. Antes, o ganho de cada linha era arredondado a inteiro, e uma linha
+pequena (a Defesa 1 de um elmo, a Regeneração 2 de um anel) passava vários passos sem mudar: o ganho existia na conta e
+sumia no arredondamento (um quarto a um terço dos passos de acessórios, elmos, luvas e botas; nenhum passo tinha ganho
+zero de fato). Agora cada propriedade tem a menor fração que o motor usa de verdade (PRECISAO): Ataque, Poder, Defesa e
+Agilidade com uma casa (a luta usa o número com a casa), Crítico e Roubo de vida em décimos de ponto, Espinhos, Vida por
+turno e Vida por abate com uma casa (a luta acumula a fração entre os disparos: demo.ativar); Vida e Mana inteiras (são
+reservas de pontos). O valor de cada nível continua em forma fechada, da peça original, arredondado uma vez. Se um passo
+ainda não mudaria nada (uma peça só de Vida ou Mana com o ganho por passo perto de 1), a linha mais perto do próximo
+inteiro o recebe nesse passo (GARANTIA). Uma peça com todas as linhas no teto não tem o que ganhar: o reforço é recusado
+sem cobrar (motivo_sem_ganho).
 """
 
 import math
@@ -68,14 +79,31 @@ def _rh(x):
     return int(math.floor(x + 0.5))
 
 
-def _ganho(x):
-    """O ganho arredondado com o meio para baixo (1,5 → 1; 1,51 → 2): em linhas pequenas, o meio ponto virava um salto
-    (uma aljava de Agilidade 1 ia a 3 no +4)."""
-    return max(0, math.ceil(x - 0.5))
-
-
 def _escala(nivel):
     return bal.ITEM_FORCA_BASE + bal.ITEM_FORCA_POR_NIVEL * nivel
+
+
+# 16ª versão: a menor fração de cada propriedade que o motor usa (o resto, Vida e Mana, é inteiro)
+PRECISAO = {"atk": 0.1, "poder": 0.1, "defesa": 0.1, "agi": 0.1, "critico": 0.1, "roubo_vida": 0.1,
+            "espinhos": 0.1, "regen_vida": 0.1, "vida_abate": 0.1}
+
+
+def _quantizar(x, q):
+    """x no múltiplo de q, com o meio para baixo (0,25 → 0,2; 1,5 → 1), sem ruído de ponto flutuante."""
+    n = max(0, math.ceil(x / q - 0.5 - 1e-9))
+    return n if q == 1 else round(n * q, 1)
+
+
+def limpo(v):
+    """O número como a peça guarda: inteiro quando não tem casa (5, não 5.0); senão, uma casa (4.5)."""
+    v = round(v, 1)
+    return int(v) if v == int(v) else v
+
+
+def fmt(v):
+    """O número para a tela: "5", "4,5" (a casa só quando existe)."""
+    v = limpo(v)
+    return str(v).replace(".", ",")
 
 
 TIPOS = {"arma": "arma", "armadura": "peito", "cabeca": "cabeca", "maos": "maos", "pernas": "pernas", "pes": "pes",
@@ -114,29 +142,67 @@ def niveis_de_peca(n):
     return sum(PASSO_NIVEIS[:n])
 
 
-def ganho_total(item, n):
-    """O que N reforços somam a cada linha: {stat: valor}, em forma fechada (sem depender dos níveis do meio)."""
+def _teto(item, stat):
+    """O ganho máximo de uma linha de % (o teto por peça menos o que a peça já tinha); None nas outras."""
+    if stat not in TETO_PCT:
+        return None
     base = item.get("bonus_base") or item["bonus"]
+    return max(0, TETO_PCT[stat] - base.get(stat, 0))
+
+
+def exato(item, n):
+    """O ganho de N reforços sem arredondar, {stat: x}: a proporção da escala do gerador (as linhas fixas) ou a soma por
+    nível de peça (as de %), até o teto. É a conta; a peça guarda o arredondado (ganho_total)."""
     total = {}
-    for stat, q, piso in linhas(item):
-        if q is None:
-            g = _ganho(PCT_POR_NIVEL * niveis_de_peca(n))
-            g = max(0, min(g, TETO_PCT.get(stat, 99) - base.get(stat, 0)))
-        else:
-            g = _ganho(q * bal.ITEM_FORCA_POR_NIVEL * niveis_de_peca(n))
-        if piso:
-            g = max(g, min(n, 4))
-        total[stat] = g
+    for stat, q, _ in linhas(item):
+        x = PCT_POR_NIVEL * niveis_de_peca(n) if q is None else q * bal.ITEM_FORCA_POR_NIVEL * niveis_de_peca(n)
+        teto = _teto(item, stat)
+        total[stat] = x if teto is None else min(x, teto)
     return total
 
 
+def ganho_total(item, n):
+    """O que N reforços somam a cada linha: {stat: valor}, em forma fechada, sempre da peça original (nada se acumula de
+    um nível para o outro). Cada linha é a conta exata arredondada uma vez na precisão dela (PRECISAO); a principal da
+    arma sobe ao menos 1 por passo até o +4. GARANTIA: um passo em que nenhuma linha mudaria entrega o próximo degrau à
+    linha mais perto dele (a que não está no teto); a sequência é refeita do +0 a cada pedido, igual para a mesma peça."""
+    piso = {st for st, _, p in linhas(item) if p}
+    antes = None
+    for k in range(n + 1):
+        ex = exato(item, k)
+        g = {}
+        for st, x in ex.items():
+            v = _quantizar(x, PRECISAO.get(st, 1))
+            if st in piso:
+                v = max(v, min(k, 4))
+            g[st] = max(v, antes[st]) if antes else v
+        if antes is not None and g == antes:
+            sobe = [st for st in g if _teto(item, st) is None or g[st] + PRECISAO.get(st, 1) <= _teto(item, st) + 1e-9]
+            if sobe:
+                st = max(sobe, key=lambda s: ((ex[s] - g[s]) / PRECISAO.get(s, 1), -list(g).index(s)))
+                g[st] = limpo(g[st] + PRECISAO.get(st, 1))
+        antes = g
+    return {st: limpo(v) for st, v in antes.items()}
+
+
 def proximo(item):
-    """O ganho do próximo passo, {stat: +x}, ou None no limite / sem reforço."""
+    """O ganho do próximo passo, {stat: +x}, ou None no limite / sem reforço. Vazio ({}) só quando toda linha está no
+    teto: aí o reforço não tem o que dar (motivo_sem_ganho)."""
     n = item.get("reforco", 0)
     if not tipo(item) or n >= LIMITE:
         return None
     a, b = ganho_total(item, n), ganho_total(item, n + 1)
-    return {s: b[s] - a.get(s, 0) for s in b if b[s] - a.get(s, 0)}
+    return {s: limpo(b[s] - a.get(s, 0)) for s in b if limpo(b[s] - a.get(s, 0))}
+
+
+def motivo_sem_ganho(item):
+    """Por que o próximo reforço não daria nada (toda linha no teto da peça), ou None. A tentativa é recusada sem cobrar:
+    não existe sucesso sem melhora."""
+    g = proximo(item)
+    if g is None or g:
+        return None
+    nomes = [NOMES.get(st, st) for st, _, _ in linhas(item)]
+    return f"Sem ganho: {' e '.join(nomes) if nomes else 'nada'} no máximo desta peça."
 
 
 def custo(n):
@@ -145,7 +211,7 @@ def custo(n):
 
 
 def texto_ganho(g):
-    return ", ".join(f"+{v} {NOMES.get(s, s)}" for s, v in g.items() if v)
+    return ", ".join(f"+{fmt(v)}{'%' if s in itens.PERCENTUAIS else ''} {NOMES.get(s, s)}" for s, v in g.items() if v)
 
 
 def chance(item, alvo):

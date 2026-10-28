@@ -9,6 +9,7 @@ reforçada e a ficha do inventário pelas regras de regras.py. O jogo de produç
 
 import os
 import random
+import re
 import sys
 import tempfile
 import threading
@@ -57,6 +58,17 @@ def dar_material(g, chave, n, origem):
         g.ui.efeito(f"+{entra} {d['nome'] if entra == 1 else d['plural']}", "ganho")
     registrar(g, "material", id=chave, qtd=entra, origem=origem)
     return entra
+
+
+def requisito_material(chave, tem, precisa):
+    """Um material que a operação consome, no formato comum das telas da forja (16ª versão): disponível/necessário
+    ("14/2"), a falta marcada no valor e a dica que diz a ordem dos números. O ouro não entra: o preço fica no botão."""
+    d = MATS[chave]
+    falta = tem < precisa
+    return {"id": chave, "nome": d["nome"], "icone": d["icone"], "cor": d.get("cor"), "numeral": d.get("numeral"),
+            "tem": tem, "precisa": precisa, "falta": falta, "valor": f"{tem}/{precisa}",
+            "dica": f"Disponível {tem} · necessário {precisa}" + (f" · faltam {precisa - tem}" if falta and precisa - tem > 1
+                                                                   else " · falta 1" if falta else "")}
 
 
 # ------------------------------------------------------------------ as peças do grupo
@@ -203,15 +215,6 @@ def custo_passo(g, n):
     return g.preco(ouro), frag
 
 
-def ninguem_usa(g, it):
-    """Por que reforçar esta peça não serve a ninguém do grupo (ou None): a classe dela não é de ninguém aqui. O nível
-    não entra: uma peça acima do nível de todos pode ser preparada para depois."""
-    so_classe = getattr(FICHA, "_nao_veste_classe", FICHA.motivo_nao_veste)
-    if any(not so_classe(g, q, it) for q in FICHA.personagens(g)):
-        return None
-    return f"Ninguém do grupo usa peças de {FICHA.NOME_CLASSE.get(it.get('classe'), it.get('classe'))}."
-
-
 def nome_linha(st, rec):
     """O nome de uma linha como a ficha escreve ("Crítico", "Roubo de vida", e o recurso de quem leva: Vigor, Mana, Foco)."""
     from rpg.entidades import nome_stat
@@ -219,11 +222,16 @@ def nome_linha(st, rec):
     return n[:1].upper() + n[1:]
 
 
+def valor_tela(st, v):
+    """O valor de uma propriedade como a tela escreve: "4,5%", "12", "3,4" (a casa só quando existe)."""
+    return f"{R.fmt(v)}{'%' if st in itens.PERCENTUAIS else ''}"
+
+
 def linhas_ganho(it, ganho, rec):
-    """As linhas que mudam, antes → depois, na ordem da peça (a de %, com o %)."""
-    pct = lambda st, v: f"{v}%" if st in itens.PERCENTUAIS else v  # noqa: E731
-    return [{"nome": nome_linha(st, rec), "antes": pct(st, it["bonus"].get(st, 0)), "depois": pct(st, it["bonus"].get(st, 0) + v)}
-            for st, v in ganho.items() if v]
+    """As linhas que mudam, antes → depois, na ordem da peça, prontas para a tela."""
+    return [{"nome": nome_linha(st, rec), "antes": valor_tela(st, it["bonus"].get(st, 0)),
+             "depois": valor_tela(st, it["bonus"].get(st, 0) + v)}
+            for st, v in ganho.items() if R.limpo(v)]
 
 
 def ficha_peca(g, it, quem, s):
@@ -236,16 +244,18 @@ def ficha_peca(g, it, quem, s):
          "acumulado": R.texto_ganho(R.ganho_total(it, n)) if n else ""}
     # todas as propriedades da peça, na ordem dela; as que o reforço faz crescer vêm marcadas (a ficha não esconde nada)
     cresce = {st for st, _, _ in R.linhas(it)}
-    d["propriedades"] = [{"stat": st, "nome": nome_linha(st, rec), "valor": v,
+    d["propriedades"] = [{"stat": st, "nome": nome_linha(st, rec), "valor": v, "texto": valor_tela(st, v),
                           "pct": st in itens.PERCENTUAIS, "cresce": st in cresce}
                          for st, v in it["bonus"].items() if v]
     d["efeito"] = (itens.unico_de(it) or {}).get("efeito")
+    # o reforço é um serviço sobre a peça: classe e nível restringem vestir, não reforçar (16ª versão). A prévia vem da
+    # própria peça, com ou sem alguém do grupo que a use.
     if not t:
         d["sem_reforco"] = R.motivo_sem_reforco(it)
-    elif ninguem_usa(g, it):
-        d["sem_reforco"] = ninguem_usa(g, it)
     elif n >= R.LIMITE:
         d["no_limite"] = True
+    elif R.motivo_sem_ganho(it):
+        d["sem_reforco"] = R.motivo_sem_ganho(it)
     else:
         ouro, frag = custo_passo(g, n)
         longe = FICHA.motivo_indisponivel(g, quem) if quem not in (None, HEROI) else None
@@ -266,7 +276,9 @@ def ficha_peca(g, it, quem, s):
             d["passos"].append({"veio": v, "rotulo": None, "chance": ch,
                                 "falha": None if ch >= 100 else max(0, n - 1),
                                 "ganho": R.texto_ganho(ganho), "linhas": linhas, "ouro": ouro, "fragmentos": frag,
-                                "tem": tem, "ouro_tem": g.j.ouro, "falta": falta, "motivo": motivo, "luta": luta})
+                                "tem": tem, "ouro_tem": g.j.ouro, "falta": falta, "motivo": motivo, "luta": luta,
+                                # o que a tentativa consome além do ouro (que fica no botão): disponível/necessário
+                                "requer": [requisito_material("fragmento", tem, frag)]})
     if quem is None:
         investido, propria = R.desmontar_rende(it)
         total = investido + propria
@@ -301,7 +313,8 @@ def ficha_peca(g, it, quem, s):
     d["requisito"] = E.requisito(it)
     d["transferir"] = transferencias(g, it)
     essencias = [{**encanto_tela(E.chave(k, t)), "compativel": E.compativel(k),
-                  "qtd": materiais(g).get(E.material(k, t), 0), "motivo": E.motivo(it, E.chave(k, t))}
+                  "qtd": materiais(g).get(E.material(k, t), 0), "motivo": E.motivo(it, E.chave(k, t)),
+                  "requer": requisito_material(E.material(k, t), materiais(g).get(E.material(k, t), 0), 1)}
                  for k in E.ORDEM for t in E.TIERS]
     # a prévia de cada essência compatível em cada sulco ("1|brasa:2"), calculada aqui (a tela só desenha)
     prev = {f"{s_}|{x['id']}": previsao(g, it, quem, s_, x["id"]) for s_ in range(len(it.get("encantos") or []))
@@ -374,33 +387,43 @@ def previsao(g, it, quem, sulco, k):
     afetadas = [e] + ([ea] if ea and ea != e else [])
     p_antes, p_depois = E.soma_peca(it), E.soma_peca({"encantos": novos})
     linhas, aviso = [], None
+    # 16ª versão: na prévia da peça escolhida, o nome do efeito basta ("Carrasco", não "Carrasco nesta peça"); o total de
+    # quem veste só aparece quando explica uma consequência (o limite que corta a soma)
     for x in afetadas:
         a, b = E.limitado(x, p_antes.get(x, 0)), E.limitado(x, p_depois.get(x, 0))
         if a != b:
-            linhas.append({"rotulo": f"{E.ESSENCIAS[x]['nome']} nesta peça", "antes": _fmt(x, a), "depois": _fmt(x, b),
-                           "melhor": b > a})
+            linhas.append({"rotulo": E.ESSENCIAS[x]["nome"], "antes": _fmt(x, a), "depois": _fmt(x, b), "melhor": b > a})
     if quem is not None:
         corpo = FICHA.corpo(g, quem)
         depois = {s: ({**x, "encantos": novos} if x is it else x) for s, x in corpo.items()}
         q_antes, q_depois = E.soma_equip(corpo), E.soma_equip(depois)
         for x in afetadas:
             lim = E.ESSENCIAS[x]["limite"]
+            if q_depois.get(x, 0) <= lim:
+                continue
             a, b = E.limitado(x, q_antes.get(x, 0)), E.limitado(x, q_depois.get(x, 0))
-            outra = q_antes.get(x, 0) != p_antes.get(x, 0)  # outra peça de quem veste também soma esta essência
-            if outra and (a != b or q_depois.get(x, 0) > lim):
-                linhas.append({"rotulo": f"{E.ESSENCIAS[x]['nome']} em {FICHA.nome_de(g, quem)}", "antes": _fmt(x, a),
-                               "depois": _fmt(x, b), "melhor": b > a})
-            if q_depois.get(x, 0) > lim:
-                sobra = q_depois[x] - max(lim, q_antes.get(x, 0))
-                aviso = (f"Limite {E.com_unidade(x, lim)}: " + (f"{E.com_unidade(x, sobra)} desta gravação não valem."
-                                                                if sobra > 0 and a < lim else "esta gravação não muda o efeito."))
+            if q_antes.get(x, 0) != p_antes.get(x, 0):  # outra peça dele também soma: o total é o que esbarra no limite
+                linhas.append({"rotulo": f"Total em {FICHA.nome_de(g, quem)}", "antes": _fmt(x, a), "depois": _fmt(x, b),
+                               "melhor": b > a})
+            sobra = q_depois[x] - max(lim, q_antes.get(x, 0))
+            aviso = (f"Limite {E.com_unidade(x, lim)}: {E.com_unidade(x, sobra)} não valem" if sobra > 0 and a < lim
+                     else f"Já no limite ({E.com_unidade(x, lim)}): não muda o efeito")
     elif p_depois.get(e, 0) > E.ESSENCIAS[e]["limite"]:
-        aviso = f"Limite {E.com_unidade(e, E.ESSENCIAS[e]['limite'])}: o que passar não vale."
+        aviso = f"Limite {E.com_unidade(e, E.ESSENCIAS[e]['limite'])}: o excedente não vale"
     req = E.requisito(it, novos)
-    bloqueio = None
-    if quem is not None and nivel_de(g, quem) < req:
-        bloqueio = f"Requer nível {req} ({FICHA.nome_de(g, quem)}: {nivel_de(g, quem)}). Na bolsa, pode gravar."
-    return {"linhas": linhas, "aviso": aviso, "requisito": E.REQUISITO[t], "requisito_peca": req, "bloqueio": bloqueio}
+    bloqueio, nivel = None, None
+    if quem is not None:  # vestida: o nível de quem veste é requisito da operação
+        falta = nivel_de(g, quem) < req
+        bloqueio = f"Requer nível {req}" if falta else None
+        if req > E.requisito(it):
+            nivel = {"id": "nivel", "valor": f"Nível {req}", "falta": falta,
+                     "dica": f"{FICHA.nome_de(g, quem)} está no nível {nivel_de(g, quem)}." if falta
+                     else f"{FICHA.nome_de(g, quem)} já está no nível {nivel_de(g, quem)}."}
+    elif req > E.requisito(it):  # na bolsa, a consequência para depois (não impede a gravação)
+        aviso_req = f"A peça passa a requerer nível {req}"
+        aviso = f"{aviso} · {aviso_req}" if aviso else aviso_req
+    return {"linhas": linhas, "aviso": aviso, "requisito": E.REQUISITO[t], "requisito_peca": req, "bloqueio": bloqueio,
+            "nivel": nivel}
 
 
 JOGO = [None]  # a partida desta execução (as fichas das telas precisam de quem veste a peça)
@@ -458,7 +481,7 @@ def aplicar_nivel(it, n):
     também para a peça que já tinha níveis."""
     base, ganho = it.setdefault("bonus_base", dict(it["bonus"])), R.ganho_total(it, n)
     for st in set(base) | set(ganho) | set(it["bonus"]):
-        v = base.get(st, 0) + ganho.get(st, 0)
+        v = R.limpo(base.get(st, 0) + ganho.get(st, 0))
         if v:
             it["bonus"][st] = v
         else:
@@ -482,8 +505,8 @@ def reforcar(g, uid, veio=None, pedido=None, teste=None):
         return False, R.motivo_sem_reforco(it)
     if n >= R.LIMITE:
         return False, f"{it['nome']} já está no limite (+{R.LIMITE})."
-    if ninguem_usa(g, it):
-        return False, ninguem_usa(g, it)
+    if R.motivo_sem_ganho(it):  # um sucesso que não melhora nada não é oferecido nem cobrado
+        return False, R.motivo_sem_ganho(it)
     if quem not in (None, HEROI) and FICHA.motivo_indisponivel(g, quem):
         return False, FICHA.motivo_indisponivel(g, quem)
     ouro, frag = custo_passo(g, n)
@@ -852,6 +875,119 @@ def sulcos_do_grupo(g):
         com_sulcos(it)
 
 
+def descrever_bonus(bonus, recurso=None):
+    """'+3 Defesa, +4,5% Crítico': o descrever_bonus do jogo, com a casa decimal em vírgula (16ª versão)."""
+    from rpg.entidades import nome_stat
+    return ", ".join(f"{'+' if v >= 0 else ''}{R.fmt(v)}{'%' if k in itens.PERCENTUAIS else ''} {nome_stat(k, recurso)}"
+                     for k, v in bonus.items())
+
+
+def _com_fracao(inteiro_jogo, total, fracao):
+    """O número do jogo (inteiro) mais a fração que só o equipamento reforçado traz: sem fração, exatamente o de antes."""
+    return R.limpo(inteiro_jogo(total - fracao) + fracao) if fracao else inteiro_jogo(total)
+
+
+def _fracao(v):
+    return round(v - int(v), 1) if v > 0 else 0
+
+
+FRACIONADOS = ("espinhos", "regen_vida", "vida_abate")  # pontos de vida: a luta usa inteiros e acumula a fração
+mod_jogo_original = None  # o mod do jogo (modificadores.mod), que mod_com_fracao consulta
+
+
+def decimais_na_luta():
+    """A cadeia da fração do reforço, só nesta execução (16ª versão): a casa decimal das peças chega à ficha e à luta.
+    - Ataque, Poder, Defesa e Agilidade do herói e dos companheiros levam a fração das peças (o resto continua como o
+      jogo conta: sem peça fracionária, o número é o mesmo de antes). A luta usa o número com a casa (dano, defesa,
+      esquiva).
+    - Espinhos, Vida por turno e Vida por abate são pontos de vida (inteiros): a fração se acumula a cada disparo, na
+      pessoa (2,6 por turno cura 2, 3, 3, 2, 3…, em média 2,6). O teste e a nota do 27 conferem."""
+    from rpg import entidades, sobrevivencia
+    from rpg.comitiva import ficha as cficha, grupo as cgrupo, luta as cluta
+    import rpg.comitiva as pkg_comitiva
+    from rpg.combate import golpe as mg, heroi as mh, turnos as mt
+    from rpg import modificadores
+    global mod_jogo_original
+    J = entidades.Jogador
+    if getattr(J, "_decimais", False):
+        return
+    J._decimais = True
+    mod_jogo_original = modificadores.mod
+    recalcular = J.recalcular
+
+    def recalcular_com_fracao(self):
+        recalcular(self)
+        totais, _ = self.totais()
+        penal = sobrevivencia.multiplicadores(self)
+        for st in ("atk", "poder", "defesa", "agi"):
+            f = _fracao(sum(it["bonus"].get(st, 0) for it in self.equip.values() if it))
+            p = penal.get(st, 1.0)
+            setattr(self, st, max(1, _com_fracao(lambda x: int(round(x)), totais[st] * p, f * p)))
+    J.recalcular = recalcular_com_fracao
+    atributos = cgrupo.atributos
+
+    def atributos_com_fracao(g, m):
+        r = atributos(g, m)
+        d, nv, ex = cgrupo.COMPANHEIROS[m["id"]], g.j.nivel - 1, cficha.extras(m)
+        b, c = d["base"], d["cresc"]
+        r["defesa"] = _com_fracao(int, b["defesa"] + c["defesa"] * nv + ex["defesa"], _fracao(ex["defesa"]))
+        r["agi"] = b["agi"] + _com_fracao(lambda x: int(round(x)), ex["agi"], _fracao(ex["agi"]))
+        for st in ("atk", "poder"):
+            r[st] = R.limpo(r[st]) if _fracao(ex[st]) else r[st]
+        return r
+    cgrupo.atributos = cluta.atributos = pkg_comitiva.atributos = atributos_com_fracao
+
+    def mod_com_fracao(u, chave):
+        v = mod_jogo_original(u, chave)
+        if chave not in FRACIONADOS or not v or float(v).is_integer():
+            return v
+        conta = u.__dict__.setdefault("_fracao", {})
+        # a cura por turno e por abate é consultada duas vezes no mesmo disparo (se há, quanto): o tique da vez guarda
+        # o número; os espinhos, uma vez por golpe
+        tique = None if chave == "espinhos" else getattr(u, "_tique", 0)
+        e = conta.get(chave)
+        if e and tique is not None and e[0] == tique:
+            return e[1]
+        resto = (e[2] if e else 0.0) + v
+        inteiro = int(resto + 1e-9)
+        conta[chave] = (tique, inteiro, resto - inteiro)
+        return inteiro
+    mg.mod = mh.mod = mt.mod = mod_com_fracao
+
+    def tique(u):
+        if u is not None:
+            u._tique = getattr(u, "_tique", 0) + 1
+    fase, vez, morte = mh.AcoesDoHeroi.fase_jogador, mt.TurnosDosOutros.vez_aliado, mg.Golpes.ao_morrer
+
+    def fase_jogador(self, *a, **k):
+        tique(self.j)
+        return fase(self, *a, **k)
+
+    def vez_aliado(self, aliado, *a, **k):
+        tique(aliado)
+        return vez(self, aliado, *a, **k)
+
+    def ao_morrer(self, c, por=None, *a, **k):
+        tique(por)
+        if por is not self.j:
+            tique(self.j)
+        return morte(self, c, por, *a, **k)
+    mh.AcoesDoHeroi.fase_jogador, mt.TurnosDosOutros.vez_aliado, mg.Golpes.ao_morrer = fase_jogador, vez_aliado, ao_morrer
+    from rpg.web import estado as web_estado
+    companheiro = web_estado.ficha_companheiro
+
+    def ficha_companheiro_com_fracao(g, m):
+        d = companheiro(g, m)
+        at, leal, ex = cgrupo.atributos(g, m), pkg_comitiva.lealdade(m), cficha.extras(m)
+        brutos = {"Ataque": ("atk", at["atk"] * leal), "Defesa": ("defesa", at["defesa"]), "Agilidade": ("agi", at["agi"]),
+                  "Poder": ("poder", at["poder"] * leal)}
+        for nome, (st, v) in brutos.items():
+            if _fracao(ex[st]) and nome in d.get("atributos", {}):
+                d["atributos"][nome] = R.fmt(v)
+        return d
+    web_estado.ficha_companheiro = ficha_companheiro_com_fracao
+
+
 def ativar():
     from rpg.sistemas import persistencia
     from rpg.sistemas.inventario import Inventario
@@ -861,6 +997,7 @@ def ativar():
         persistencia.CAMPOS_SAVE = persistencia.CAMPOS_SAVE + ("materiais",)
     Servicos.ferreiro = forja
     E.ativar()
+    decimais_na_luta()
     requisitos_de_nivel(Inventario)
     carregar = persistencia.Persistencia.carregar.__func__ if hasattr(persistencia, "Persistencia") else None
     if carregar:
@@ -878,6 +1015,7 @@ def ativar():
         d = ficha_item(it, recurso, **extra)
         if not d:
             return d
+        d["bonus"] = descrever_bonus(it["bonus"], recurso)  # "+9,6 Poder" (a casa com vírgula, só quando existe)
         d["reforco"] = it.get("reforco", 0)
         d["requisito"] = E.requisito(it)
         if it.get("encantos") is not None:
@@ -901,6 +1039,10 @@ def ativar():
     def heroi_com_materiais(g):
         JOGO[0] = g
         h = heroi(g)
+        # a casa decimal que o reforço traz, com vírgula, nos atributos e nas dicas deles ("Defesa 12,4")
+        h["atributos"] = {k: R.fmt(v) if isinstance(v, float) else v for k, v in h.get("atributos", {}).items()}
+        virgula = lambda t: re.sub(r"(\d)\.(\d)", r"\1,\2", t) if isinstance(t, str) else t  # noqa: E731
+        h["atributos_info"] = {k: [virgula(x) for x in v] for k, v in (h.get("atributos_info") or {}).items()}
         m = materiais(g)
         h["materiais"] = [{"id": k, "nome": d["nome"], "plural": d["plural"], "icone": d["icone"], "qtd": m.get(k, 0),
                            "desc": d["desc"], "fontes": d["fontes"], "numeral": d.get("numeral"), "cor": d.get("cor"),
