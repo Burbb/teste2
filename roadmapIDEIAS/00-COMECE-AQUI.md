@@ -8055,3 +8055,15 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   armaduras. Não conferido: o Bestiário com criaturas e o Caminho fechado (LEIA-ME do protótipo, 18ª).
 - **Pendências (Jean):** A, B ou C; as placas (antes de outra aplicação ampla na produção); a remoção (e se deve
   custar); o gesto do ferreiro; a Odette. Nada integrado; som adiado; a etapa 4 continua aberta.
+
+### 28/10/2026 (data do computador local) — O pixel azul do achado (1.214.1)
+
+- **Pedido:** o Jean mostrou com uma captura o pixel azul que via depois do achado de uma peça incomum (antes,
+  registrado como não reproduzido: a procura tinha sido por uma sobra do efeito animado).
+- **Causa:** o enfeite parado do incomum no achado, desde a 1.201.0 (`celebracoes/estouro.js` e `relicario.js`, o
+  acento azul do mágico da etapa 2): um fio azul de 64 × 3 px e um losango de pixels embaixo do desenho. Não era sobra
+  de animação: era desenho de propósito, mas se lia como sobra do efeito.
+- **Correção:** o enfeite saiu nas duas apresentações; o brilho breve da cerimônia fica, e o selo "Incomum" e o nome
+  em azul marcam a raridade. Reproduzido no jogo (cenário "vila", o achado já sai incomum): antes, o fio e o losango
+  embaixo da couraça; depois, só a peça, no Estouro e no Relicário.
+- **Conferido:** a suíte, o gabarito, o pyflakes e a fumaça.

@@ -93,7 +93,10 @@ jogo não mudaram.
 - O ferreiro candidato no tamanho de uso, na forja da demonstração (a cena inteira, 30 quadros seguidos).
 - **Não conferido:** o Bestiário com criaturas (a demonstração começa sem nenhuma; o cartão fixado segue a regra dos
   cabeçalhos) e o Caminho fechado (o painel do mundo se redesenha e desfez a marca posta à mão para a captura).
-- **O pixel azul** continua registrado como não reproduzido (17ª), sem declarar resolvido.
+- **O pixel azul [Resolvido no jogo, 1.214.1]:** com a captura do Jean (o achado de uma peça incomum), a causa
+  apareceu: era o enfeite parado do incomum no achado, desde a 1.201.0 (um fio azul de 64 × 3 px e um losango de
+  pixels embaixo do desenho, no Estouro e no Relicário), que se lia como sobra do efeito. Saiu nas duas apresentações;
+  o selo "Incomum" e o nome em azul marcam a raridade.
 
 ## 17ª versão: a vida na entrada, o feixe nas armaduras, a celebração ligada ao acabamento, o recebimento e o botão A (histórico)
 
@@ -140,7 +143,7 @@ A doca dentro das telas de serviço (o pedido do Jean: o Inventário dentro da f
 ouro, o nível dos companheiros na luta, o achado nítido a 125%, os textos (sem "brejo", sem "Curas param em N", sem os
 rodapés que explicam o clique) e o acabamento A. Registro no [00](../../../roadmapIDEIAS/00-COMECE-AQUI.md).
 
-### Não reproduzido: o pixel azul
+### Não reproduzido: o pixel azul (resolvido na 1.214.1; ver a seção da 18ª)
 O pixel azul que ficava perto do item depois do achado não apareceu: os dois caminhos (equipar e guardar) a 100% e
 125%, a varredura dos pixels da página e a do DOM depois de fechar a janela (o canvas da festa sai com ela).
 Hipóteses: um estilhaço da festa desenhado no último quadro antes de o canvas sair, numa máquina mais lenta; o

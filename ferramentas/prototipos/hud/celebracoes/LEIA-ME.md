@@ -256,6 +256,8 @@ o id vem do motor.
 - **Botões** (só nestas apresentações): ferro escuro com aresta de latão, sem o cinza em degradê; a tecla em destaque;
   mouse por cima, a aresta acende; o foco do teclado num anel claro; a área, os estados e os atalhos iguais.
 - **Mágico:** um acento azul parado junto do item (o fio com o losango, em azul) além do brilho breve, sem aura.
+  **[Removido do jogo, 1.214.1]** o fio com o losango, parado embaixo do desenho, se lia como um pixel que sobrou do
+  efeito (o Jean o apontou como defeito); o brilho breve fica.
 - **Estouro, o título do nível:** a faixa de linhas douradas virou uma base preta irregular (o mesmo poço em
   pontilhado do Relicário); a estrela e o impacto ficam.
 - **Estouro, o item no selo:** o miolo do selo é quase preto e maior, com um escuro em volta do sprite; as pontas e a

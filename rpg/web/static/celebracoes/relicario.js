@@ -247,12 +247,8 @@
   :root body :is(#celebracao, #sobre-achado).dir-relicario :is(.continuar, .botao-janela:not(.reserva)):focus-visible { border-color: #f2d27a; color: #fff3d6; outline: 2px solid #f2d27a; outline-offset: 3px; }
   :root body :is(#celebracao, #sobre-achado).dir-relicario :is(.continuar, .botao-janela:not(.reserva)):active { translate: 0 1px; box-shadow: inset 0 1px 0 #2b2219, 0 0 0 1px #000, 0 2px 0 #000; }
   :root body :is(#celebracao, #sobre-achado).dir-relicario :is(.continuar, .botao-janela) kbd { font: 13px/1 var(--num); color: #f2d27a; border: 1px solid #6b5426; background: #070504; padding: 2px 5px; margin: 0 2px; }
-  /* o incomum: um acento azul parado junto do item (o fio com o losango, em azul), sem aura */
-  #sobre-achado.dir-relicario.rar-magico .achado-cartao.novo .achado-arte { position: relative; }
-  #sobre-achado.dir-relicario.rar-magico .achado-cartao.novo .achado-arte::after { content: ""; position: absolute; left: 50%; bottom: -10px; width: 64px; height: 3px;
-    translate: -50% 0; background: #3d63c9; box-shadow: 0 1px 0 #000; }
-  #sobre-achado.dir-relicario.rar-magico .achado-cartao.novo .achado-arte::before { content: ""; position: absolute; left: 50%; bottom: -14px; width: 4px; height: 4px; z-index: 1;
-    translate: -2px 0; background: #c8e0ff; box-shadow: -2px 2px 0 #7fb0ff, 2px 2px 0 #7fb0ff, 0 4px 0 #c8e0ff, 0 2px 0 #3d63c9; }
+  /* o incomum sem enfeite embaixo do item (1.214.1): o fio azul com o losango, parado sob o desenho, se lia como um
+     pixel que sobrou do efeito; o selo "Incomum" e o nome em azul já marcam a raridade */
   @media (max-height: 760px) {
     .fa2-coroa { gap: 14px; margin-bottom: 14px; } .fa2-medalha { width: 128px; height: 128px; } .fa2-numero { font-size: 64px; }
     .fa2-titulo { font-size: 70px; } .fa2-info { gap: 10px; } .fa2-hab b { font-size: 24px; } .fa2-hab p { font-size: 15px; }
