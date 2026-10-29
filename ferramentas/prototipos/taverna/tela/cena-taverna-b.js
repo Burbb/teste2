@@ -6,7 +6,8 @@
    /proto-tav/camadas/<b|c|d|e|f>/. Movimento reduzido: o fogo e as velas parados. As pessoas ainda não se mexem: a animação
    vem depois de a construção ser aprovada.
 
-   Também exporta window.CenaTaverna, que escolhe entre a F (o padrão) e as anteriores (histórico) pela faixa da
+   Também exporta window.CenaTaverna, que escolhe entre a prova de qualidade (cena-taverna-prova.js, o padrão) e as
+   candidatas (histórico) pela faixa da
    demonstração (body.dataset.tavCand). */
 "use strict";
 
@@ -98,10 +99,11 @@
     saida: { area: [54, 12, 21, 43], balao: [64, 11], foco: [64, 36] },
   }, ["taverneiro", "freguesa", "cabeceira", "freguês de costas", "jogador de verde", "jogador de ocre", "junto do fogo"]);
 
-  // A cena que o jogo registra (telas/cenas.js): a candidata da faixa (F por padrão; da E à A como histórico)
+  // A cena que o jogo registra (telas/cenas.js): a da faixa (a prova de qualidade por padrão; da F à A, o histórico)
   const CANDS = { a: () => window.CenaTavernaA, b: () => window.CenaTavernaB, c: () => window.CenaTavernaC,
-    d: () => window.CenaTavernaD, e: () => window.CenaTavernaE, f: () => window.CenaTavernaF };
-  const cand = () => (CANDS[document.body.dataset.tavCand] || CANDS.f)();
+    d: () => window.CenaTavernaD, e: () => window.CenaTavernaE, f: () => window.CenaTavernaF,
+    prova: () => window.CenaTavernaProva };
+  const cand = () => (CANDS[document.body.dataset.tavCand] || CANDS.prova)();
   window.CenaTaverna = {
     base: (W, d) => cand().base(W, d),
     desenhar: (...a) => cand().desenhar(...a),

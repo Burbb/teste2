@@ -1,8 +1,9 @@
 /* A demonstração da taverna (protótipo): um botão "Protótipo" na barra do alto, entre os sigilos e o menu (no fluxo
-   da barra: o clima, a hora e os sigilos não ficam embaixo dele), abre o painel que troca a candidata (a F, o estudo
-   estático em avaliação; da E à A, o histórico), o estado do save temporário (a despensa esperando, o homem do canto, Morel já
-   conhecido, Morel recrutado, sem ouro) e liga a pose parada. Escolhido, o painel fecha. O interior entra pelo caminho
-   do templo (vila.js, estado.local.interiores, com a taverna acrescentada pelo demo.py). */
+   da barra: o clima, a hora e os sigilos não ficam embaixo dele), abre o painel: a prova de qualidade (os jogadores
+   nas grades A e B, com a vista isolada) ou as candidatas (da F à A, o histórico), o estado do save temporário (a
+   despensa esperando, o homem do canto, Morel já conhecido, Morel recrutado, sem ouro) e a pose parada. Escolhido, o
+   painel fecha. O interior entra pelo caminho do templo (vila.js, estado.local.interiores, com a taverna acrescentada
+   pelo demo.py). */
 "use strict";
 
 (() => {
@@ -12,12 +13,17 @@
     ["recrutado", "Morel recrutado"], ["sem_ouro", "Sem ouro"]];
   const f = document.createElement("div");
   f.id = "faixa-tav";
-  document.body.dataset.tavCand = document.body.dataset.tavCand || "f";  // a F, o estudo em avaliação (as outras, histórico)
-  const CANDS = [["f", "Candidata F (estudo estático)"], ["e", "Candidata E (histórico)"], ["d", "Candidata D (histórico)"],
-    ["c", "Candidata C (histórico)"], ["b", "Candidata B (histórico)"], ["a", "Candidata A (histórico)"]];
-  f.innerHTML = `<button type="button" class="abre" aria-expanded="false" aria-controls="faixa-tav-painel">Protótipo: F · Homem do canto</button>
+  document.body.dataset.tavCand = document.body.dataset.tavCand || "prova";  // a prova de qualidade (as candidatas: histórico)
+  document.body.dataset.tavProva = document.body.dataset.tavProva || "a";
+  const CANDS = [["prova", "Prova: os jogadores (F em volta)"], ["f", "Candidata F (histórico)"], ["e", "Candidata E (histórico)"],
+    ["d", "Candidata D (histórico)"], ["c", "Candidata C (histórico)"], ["b", "Candidata B (histórico)"], ["a", "Candidata A (histórico)"]];
+  const GRADES = [["a", "Grade A: a atual (66×42)"], ["b", "Grade B: o dobro (132×84)"]];
+  f.innerHTML = `<button type="button" class="abre" aria-expanded="false" aria-controls="faixa-tav-painel">Protótipo: prova A · Homem do canto</button>
     <div id="faixa-tav-painel" hidden><b>Taverna (protótipo): a candidata</b>
-    ${CANDS.map(([id, nome]) => `<button type="button" data-cand="${id}" aria-pressed="${id === "f"}">${nome}</button>`).join("")}
+    ${CANDS.map(([id, nome]) => `<button type="button" data-cand="${id}" aria-pressed="${id === "prova"}">${nome}</button>`).join("")}
+    <b>A prova de qualidade (os jogadores)</b>
+    ${GRADES.map(([id, nome]) => `<button type="button" data-grade="${id}" aria-pressed="${id === "a"}">${nome}</button>`).join("")}
+    <button type="button" data-isolado aria-pressed="false">Isolado (fundo neutro, mesmo tamanho)</button>
     <b>O estado do save temporário</b>
     ${ESTADOS.map(([id, nome]) => `<button type="button" data-tav="${id}" aria-pressed="${id === "homem_do_canto"}">${nome}</button>`).join("")}
     <button type="button" data-reduzido aria-pressed="false">Pose parada</button></div><span class="aviso"></span>`;
@@ -33,7 +39,9 @@
   abre.addEventListener("click", () => abrir(painel.hidden));
   const rotulo = () => {
     const e = painel.querySelector('[data-tav][aria-pressed="true"]');
-    abre.textContent = `Protótipo: ${document.body.dataset.tavCand.toUpperCase()} · ${e ? e.textContent : ""}`;
+    const c = document.body.dataset.tavCand;
+    const qual = c === "prova" ? `prova ${document.body.dataset.tavProva.toUpperCase()}` : c.toUpperCase();
+    abre.textContent = `Protótipo: ${qual} · ${e ? e.textContent : ""}`;
   };
   painel.querySelectorAll("[data-cand]").forEach((b) => b.addEventListener("click", () => {
     abrir(false);
@@ -56,6 +64,18 @@
       if (volta) predioPedido = "taverna";  // a vila se remonta e entra de novo na taverna
     }, volta ? 60 : 0);
   }));
+  painel.querySelectorAll("[data-grade]").forEach((b) => b.addEventListener("click", () => {
+    abrir(false);
+    document.body.dataset.tavProva = b.dataset.grade;            // a troca é imediata, no mesmo lugar (a camada lê a cada quadro)
+    painel.querySelectorAll("[data-grade]").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+    rotulo();
+  }));
+  painel.querySelector("[data-isolado]").addEventListener("click", (ev) => {
+    abrir(false);
+    const sim = document.body.dataset.tavIsolado !== "1";
+    document.body.dataset.tavIsolado = sim ? "1" : "";
+    ev.currentTarget.setAttribute("aria-pressed", String(sim));
+  });
   painel.querySelector("[data-reduzido]").addEventListener("click", (ev) => {
     const sim = document.body.dataset.tavReduzido !== "1";
     document.body.dataset.tavReduzido = sim ? "1" : "";

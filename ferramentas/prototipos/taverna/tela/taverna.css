@@ -38,3 +38,10 @@ body:has(#pontos-cena[data-cena="taverna"]) #folha:has(.balcao-predio) { padding
 /* Dentro da taverna, a narração da vila (a tábua no poço da praça) e o cabeçalho dela saem da página: o contexto é o
    do balcão, com a frase da taverna (tela/balcao.js põe a classe). */
 body.tav-interior #cena-cab, body.tav-interior #texto { display: none; }
+/* A prova de qualidade: o conjunto em resolução nativa por cima da vista, sem suavização; o fundo neutro (isolado)
+   cobre a vista inteira. Nada recebe o mouse: os pontos da cena continuam por cima. */
+#tav-prova { position: absolute; inset: 0; pointer-events: none; z-index: 1; }
+#tav-prova[hidden] { display: none; }
+#tav-prova > * { position: absolute; image-rendering: pixelated; image-rendering: crisp-edges; }
+#tav-prova .neutro { background: #2e2c2a; }
+#tav-prova [hidden] { display: none; }

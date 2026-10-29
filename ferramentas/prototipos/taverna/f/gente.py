@@ -321,11 +321,12 @@ def desenhar(px, r, morel=True):
     figura(px, TAVERNEIRO, "taverneiro")
     D.balcao(px)
     D.mesas(px, parte="balcao_banquinhos")
-    figura(px, VERDE, "jogador de verde")
-    figura(px, OCRE, "jogador de ocre")
-    D.mesas(px, parte="roda_mesa")
-    maos(px, VERDE, dict(x=181, y=60, grade=["..........ZZs..."]), "verde (mão)")
-    maos(px, OCRE, dict(x=213, y=59, grade=["..sXX..........."]), "ocre (mão)")
+    if not D.SEM_RODA:                                       # a prova de qualidade desenha os jogadores à parte
+        figura(px, VERDE, "jogador de verde")
+        figura(px, OCRE, "jogador de ocre")
+        D.mesas(px, parte="roda_mesa")
+        maos(px, VERDE, dict(x=181, y=60, grade=["..........ZZs..."]), "verde (mão)")
+        maos(px, OCRE, dict(x=213, y=59, grade=["..sXX..........."]), "ocre (mão)")
     if morel:
         figura(px, MOREL, "Morel")
         maos(px, MOREL, dict(x=270, y=61, grade=["....................lPw.", ".....................P.."]),

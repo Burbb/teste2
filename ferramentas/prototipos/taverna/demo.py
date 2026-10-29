@@ -1,5 +1,5 @@
-"""Demonstração do interior da taverna (protótipo: a candidata F, estudo estático em avaliação, e da E à A como
-histórico; nada disto entra no jogo).
+"""Demonstração do interior da taverna (protótipo: a prova de qualidade dos jogadores, nas grades A e B, sobre a F,
+e as candidatas da F à A como histórico; nada disto entra no jogo).
 
     python ferramentas/prototipos/taverna/demo.py      (ou dois cliques em demo.bat)
 
@@ -14,7 +14,8 @@ o Guerreiro no Vau, com a campanha começada. Entre na taverna pelo prédio da v
   Para um ponto levar a um cartão certo, a demonstração serve o telas/cenas.js com `servicos: "<serviço>"` aceito
   (no jogo, `servicos: true` leva ao primeiro cartão); é a única mudança que a integração pediria fora da cena;
 - Morel aparece no canto só quando `morel_no_canto` diz (abaixo); recrutado, não está lá;
-- o botão Protótipo, na barra do alto, troca a candidata (F, o padrão; da E à A, o histórico), o estado do save temporário e
+- o botão Protótipo, na barra do alto, troca entre a prova de qualidade (o padrão: as grades A e B, a vista isolada) e as
+  candidatas (da F à A, o histórico), o estado do save temporário e
   liga a pose parada.
 
 A porta é `DEMO_PORTA` (padrão 8795: não usa a 8791 do jogo, a 8793 da curandeira nem a 8794 do templo)."""
@@ -190,6 +191,7 @@ def servir():
             assert a in html
             html = html.replace(a, '<script src="/proto-tav/cena-taverna.js"></script>\n'
                                    '<script src="/proto-tav/cena-taverna-b.js"></script>\n'
+                                   '<script src="/proto-tav/cena-taverna-prova.js"></script>\n'
                                    '<script src="/proto-tav/cenas.js"></script>')
             html = html.replace("</head>", '<link rel="stylesheet" href="/proto-tav/taverna.css">\n</head>')
             html = html.replace("</body>", '<script src="/proto-tav/faixa.js"></script>\n'

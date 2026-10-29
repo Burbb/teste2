@@ -462,6 +462,7 @@ BANCO_PERTO = (-5.4, -2.7, 5.5, 5.85)    # o banco da frente (o do freguês de c
 CADEIRA_PONTA = (-2.05, -1.6, 4.5, 4.95)  # a cadeira de espaldar da cabeceira (a da direita)
 BANQUINHOS_BALCAO = ((-5.0, 2.95), (-3.6, 2.95))   # os banquinhos altos vazios, na frente do balcão
 REDONDA = (2.0, 3.3)                     # a mesa redonda dos jogadores: o centro
+SEM_RODA = False                         # a prova de qualidade (../prova) liga: a sala sem a mesa redonda e os jogadores
 BANCO_RODA_ESQ = (1.05, 1.45, 3.1, 3.5)  # o banquinho do jogador de verde
 BANCO_RODA_DIR = (2.55, 2.95, 3.1, 3.5)  # o do jogador de ocre
 MESA_MOREL = (5.85, 6.5, 3.3, 3.95)       # a mesa individual de Morel, inteira, com margem à direita
@@ -502,10 +503,13 @@ def mesas(px, parte=None):
             banco(px, X - 0.2, X + 0.2, Z - 0.2, Z + 0.2, H=0.75)
     if parte in (None, "fogo"):
         banco(px, *BANQUINHO_FOGO, H=0.4)
-    if parte in (None, "roda"):
+    if SEM_RODA:                                             # a prova de qualidade desenha o conjunto à parte
+        x, y = [round(v) for v in P(REDONDA[0] + 0.05, REDONDA[1] - 0.3, 0.75)]
+        feito["vela_roda"] = (x, y - 6)
+    if parte in (None, "roda") and not SEM_RODA:
         for b in (BANCO_RODA_ESQ, BANCO_RODA_DIR):
             banco(px, *b)
-    if parte in (None, "roda", "roda_mesa"):
+    if parte in (None, "roda", "roda_mesa") and not SEM_RODA:
         mesa_redonda(px, *REDONDA, raio=0.45)
         x, y = [round(v) for v in P(REDONDA[0], REDONDA[1], 0.75)]
         px(x - 4, y - 1, 9, 3, "linhoSombra")                # o tabuleiro e as peças
