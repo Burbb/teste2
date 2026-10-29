@@ -307,3 +307,13 @@ Uma cena com muita gente: as mesmas regras de uma figura, multiplicadas, e o que
 | Tábuas radiando de um ponto de fuga dentro do quadro viram tracejado nas laterais | as tábuas paralelas ao fundo, mais juntas longe, e as emendas correndo para o ponto de fuga |
 | Um alçapão aberto (e barris deitados com o tampo para a sala) lendo como caixote e rodas | a entrada como porta (baixa, entreaberta, com o escuro na fresta); os barris em pé, de lado |
 | O cenário mais alto empurrando os cartões para trás da doca | o balcão compacto com o interior (a fala numa linha, os cartões em duas colunas, o Voltar na célula livre) e a rolagem refeita quando a página muda; conferir que cada cartão e o Voltar ficam acima da doca sem rolar |
+
+**A candidata C (estudo estático, 29/10/2026)**, depois da B não aprovada:
+
+| Erro da B | Como a C resolveu |
+|---|---|
+| Profundidade exagerada: a frente três vezes maior que o fundo, Morel com 3 a 4 px de cabeça | a profundidade não é uma meta: a régua contida (13 a 30 px/m) e as pessoas importantes na faixa do meio (cabeça de 6); o balcão e o canto vêm para a frente junto com quem está neles, não só o sprite |
+| A escada como uma diagonal de riscos; a galeria sem piso | a estrutura inteira: o pilar do pé no chão, os degraus (o piso claro, o espelho escuro), o banzo grosso, o corrimão; o pilar do patamar como esteio da galeria; o piso da galeria visto de cima entre as portas e o guarda-corpo (pode ser um pouco forçado para ler), a testeira com as pontas das vigas, as mãos-francesas |
+| A lareira como um bloco cinza | os planos: a laje no piso, a boca com as faces de dentro e o fundo, a verga com a prateleira, a coifa que só abre embaixo, a chaminé estreita; o caldeirão pequeno e alto, para o fogo aparecer |
+| A cabeça alta demais, o corpo afundando atrás do balcão | medir a altura dos ombros pela régua (1,45 m em pé) e caber a cabeça com a barba em 0,25 a 0,3 m; o pescoço em pele entre a barba e a gola |
+| O pontilhado da luz fazendo anéis no reboco | faixas lisas de escuro; o pontilhado só onde ele ajuda |

@@ -1,6 +1,6 @@
 /* A demonstração da taverna (protótipo): um botão "Protótipo" na barra do alto, entre os sigilos e o menu (no fluxo
-   da barra: o clima, a hora e os sigilos não ficam embaixo dele), abre o painel que troca a candidata (a B, o estudo
-   estático; a A, o histórico), o estado do save temporário (a despensa esperando, o homem do canto, Morel já
+   da barra: o clima, a hora e os sigilos não ficam embaixo dele), abre o painel que troca a candidata (a C, o estudo
+   estático em avaliação; a B e a A, o histórico), o estado do save temporário (a despensa esperando, o homem do canto, Morel já
    conhecido, Morel recrutado, sem ouro) e liga a pose parada. Escolhido, o painel fecha. O interior entra pelo caminho
    do templo (vila.js, estado.local.interiores, com a taverna acrescentada pelo demo.py). */
 "use strict";
@@ -12,11 +12,11 @@
     ["recrutado", "Morel recrutado"], ["sem_ouro", "Sem ouro"]];
   const f = document.createElement("div");
   f.id = "faixa-tav";
-  document.body.dataset.tavCand = document.body.dataset.tavCand || "b";  // a B, o estudo estático (a A fica como histórico)
-  const CANDS = [["b", "Candidata B (estudo estático)"], ["a", "Candidata A (histórico)"]];
-  f.innerHTML = `<button type="button" class="abre" aria-expanded="false" aria-controls="faixa-tav-painel">Protótipo: B · Homem do canto</button>
+  document.body.dataset.tavCand = document.body.dataset.tavCand || "c";  // a C, o estudo em avaliação (A e B, histórico)
+  const CANDS = [["c", "Candidata C (estudo estático)"], ["b", "Candidata B (histórico)"], ["a", "Candidata A (histórico)"]];
+  f.innerHTML = `<button type="button" class="abre" aria-expanded="false" aria-controls="faixa-tav-painel">Protótipo: C · Homem do canto</button>
     <div id="faixa-tav-painel" hidden><b>Taverna (protótipo): a candidata</b>
-    ${CANDS.map(([id, nome]) => `<button type="button" data-cand="${id}" aria-pressed="${id === "b"}">${nome}</button>`).join("")}
+    ${CANDS.map(([id, nome]) => `<button type="button" data-cand="${id}" aria-pressed="${id === "c"}">${nome}</button>`).join("")}
     <b>O estado do save temporário</b>
     ${ESTADOS.map(([id, nome]) => `<button type="button" data-tav="${id}" aria-pressed="${id === "homem_do_canto"}">${nome}</button>`).join("")}
     <button type="button" data-reduzido aria-pressed="false">Pose parada</button></div><span class="aviso"></span>`;

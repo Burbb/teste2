@@ -1,68 +1,75 @@
-/* O interior da taverna, candidata B (protótipo, estudo estático; nada disto entra no jogo). O salão em
-   profundidade: a parede do balcão mais perto, à esquerda (a porta da rua, as prateleiras, o taverneiro sob o
-   lampião, a porta da despensa); o salão fundo à direita (a lareira, a escada até a galeria dos quartos, o canto de
-   Morel debaixo dela); as mesas em três distâncias, com gente de frente, de três quartos, de costas e de perfil.
+/* Os estudos estáticos do interior da taverna (protótipo; nada disto entra no jogo): a candidata B (o salão fundo, a
+   avaliação: profundidade demais, o fundo pequeno, a escada um esboço) e a C (a profundidade contida, a escada e a
+   galeria como estrutura, os grupos redistribuídos). Cada uma é um fundo com as pessoas paradas (com Morel ou,
+   recrutado, sem ele), o fogo e as velas (4 quadros cada, a 200 ms), exportados por
+   ferramentas/prototipos/taverna/exportar.py (exportar_estatica) em /proto-tav/camadas/<b|c>/. Movimento reduzido: o
+   fogo e as velas parados. As pessoas ainda não se mexem: a animação vem depois de a construção ser aprovada.
 
-   As camadas vêm de ferramentas/prototipos/taverna/exportar.py (exportar_b, em /proto-tav/camadas/b/): o fundo com as
-   pessoas paradas (com Morel ou, recrutado, sem ele), o fogo e as velas (4 quadros cada, a 200 ms). Movimento
-   reduzido: o fogo e as velas parados. As pessoas ainda não se mexem: a animação vem depois de a construção ser
-   aprovada.
-
-   Também exporta window.CenaTaverna, que escolhe entre esta e a A (histórico) pela faixa da demonstração
-   (body.dataset.tavCand). */
+   Também exporta window.CenaTaverna, que escolhe entre a C (o padrão), a B e a A (histórico) pela faixa da
+   demonstração (body.dataset.tavCand). */
 "use strict";
 
 (() => {
   const QW = 320, QH = 96;
-  const RAIZ = "/proto-tav/camadas/b/";
-  const im = (n) => { const i = new Image(); i.src = RAIZ + n + ".png"; return i; };
-  const IM = { fundo: im("fundo"), semMorel: im("fundo-sem-morel"), fogo: im("fogo"), velas: im("velas") };
   const pronta = (i) => i && i.complete && i.naturalWidth > 0;
   const reduzido = () => matchMedia("(prefers-reduced-motion: reduce)").matches
     || document.body.dataset.tavReduzido === "1";
-  // quem está na sala (para a conferência): as sete pessoas do estudo e Morel, quando o motor diz que ele está no canto
-  const GENTE = ["taverneiro", "freguês do balcão", "freguesa", "freguês de costas", "meio, atrás", "meio, de lado",
-    "junto do fogo"];
-  const presentes = (d) => (d && d.morel ? [...GENTE, "morel"] : GENTE);
-  const fundoDe = (d) => (d && d.morel ? IM.fundo : IM.semMorel);
 
-  function base(W, d) {
-    const k = document.createElement("canvas"); k.width = QW; k.height = QH;
-    const b = { canvas: k, ox: 0, d, cheia: false };
-    encher(b);
-    return b;
-  }
-  function encher(b) {
-    const f = fundoDe(b.d);
-    if (b.cheia || !pronta(f)) return;
-    b.canvas.getContext("2d").drawImage(f, 0, 0); b.cheia = true;
-  }
-  const tira = (c, i, n) => { if (pronta(i)) c.drawImage(i, n * QW, 0, QW, QH, 0, 0, QW, QH); };
-  function desenhar(c, W, b, est, quadro) {
-    encher(b);
-    const quieto = reduzido(), f = fundoDe(b.d);
-    c.imageSmoothingEnabled = false;
-    c.clearRect(0, 0, QW, QH);
-    if (pronta(f)) c.drawImage(f, 0, 0);
-    tira(c, IM.fogo, quieto ? 1 : Math.floor(quadro / 2) % 4);
-    tira(c, IM.velas, quieto ? 1 : Math.floor(quadro / 2) % 4);
+  /** Uma cena estática: o fundo (com ou sem Morel), o fogo e as velas; `gente` só para a conferência. */
+  function estatica(cand, pontos, gente) {
+    const raiz = `/proto-tav/camadas/${cand}/`;
+    const im = (n) => { const i = new Image(); i.src = raiz + n + ".png"; return i; };
+    const IM = { fundo: im("fundo"), semMorel: im("fundo-sem-morel"), fogo: im("fogo"), velas: im("velas") };
+    const presentes = (d) => (d && d.morel ? [...gente, "morel"] : gente);
+    const fundoDe = (d) => (d && d.morel ? IM.fundo : IM.semMorel);
+    function encher(b) {
+      const f = fundoDe(b.d);
+      if (b.cheia || !pronta(f)) return;
+      b.canvas.getContext("2d").drawImage(f, 0, 0); b.cheia = true;
+    }
+    function base(W, d) {
+      const k = document.createElement("canvas"); k.width = QW; k.height = QH;
+      const b = { canvas: k, ox: 0, d, cheia: false };
+      encher(b);
+      return b;
+    }
+    const tira = (c, i, n) => { if (pronta(i)) c.drawImage(i, n * QW, 0, QW, QH, 0, 0, QW, QH); };
+    function desenhar(c, W, b, est, quadro) {
+      encher(b);
+      const quieto = reduzido(), f = fundoDe(b.d);
+      c.imageSmoothingEnabled = false;
+      c.clearRect(0, 0, QW, QH);
+      if (pronta(f)) c.drawImage(f, 0, 0);
+      tira(c, IM.fogo, quieto ? 1 : Math.floor(quadro / 2) % 4);
+      tira(c, IM.velas, quieto ? 1 : Math.floor(quadro / 2) % 4);
+    }
+    return { base, desenhar, pontos, presentes, QW, QH };
   }
 
-  // Os pontos em cima do que representam, e os nomes onde não há rosto nem mão: o do Taverneiro nas prateleiras, acima
-  // da cabeça dele; o da Escada na parede, acima dos degraus de cima (a galeria e as portas dos quartos ficam na área);
-  // o da Despensa acima da porta baixa; o do Homem do canto na parede, acima de Morel; o da Saída acima da porta da rua.
-  const PONTOS = {
+  // B. Os nomes onde não há rosto nem mão: o do Taverneiro nas prateleiras, acima da cabeça; o da Escada na parede,
+  // acima dos degraus de cima; o da Despensa acima da porta baixa; o do Homem do canto acima de Morel; o da Saída acima
+  // da porta da rua.
+  window.CenaTavernaB = estatica("b", {
     taverneiro: { area: [72, 30, 18, 13], balao: [80, 29], foco: [80, 38] },
     escada: { area: [200, 4, 78, 44], balao: [236, 13], foco: [240, 30] },
     despensa: { area: [109, 29, 18, 29], balao: [118, 28], foco: [118, 44] },
     morel: { area: [281, 33, 18, 13], balao: [290, 31], foco: [290, 40] },
     saida: { area: [4, 16, 24, 42], balao: [16, 14], foco: [16, 40] },
-  };
+  }, ["taverneiro", "freguês do balcão", "freguesa", "freguês de costas", "meio, atrás", "meio, de lado", "junto do fogo"]);
 
-  window.CenaTavernaB = { base, desenhar, pontos: PONTOS, presentes, QW, QH };
+  // C. O da Escada na parte de cima dela e na galeria (o nome em cima da primeira porta dos quartos); o do Homem do
+  // canto acima da cabeça de Morel, dentro do quadro; os outros como na B.
+  window.CenaTavernaC = estatica("c", {
+    taverneiro: { area: [69, 36, 14, 14], balao: [76, 35], foco: [76, 44] },
+    escada: { area: [196, 3, 92, 40], balao: [261, 12], foco: [250, 30] },
+    despensa: { area: [113, 34, 18, 30], balao: [121, 33], foco: [121, 50] },
+    morel: { area: [290, 43, 26, 30], balao: [298, 42], foco: [300, 56] },
+    saida: { area: [4, 22, 26, 42], balao: [16, 21], foco: [16, 44] },
+  }, ["taverneiro", "freguesa", "ponta", "freguês de costas", "roda, atrás", "roda, de lado", "junto do fogo"]);
 
-  // A cena que o jogo registra (telas/cenas.js): a candidata da faixa (B por padrão; a A como histórico)
-  const cand = () => (document.body.dataset.tavCand === "a" ? window.CenaTavernaA : window.CenaTavernaB);
+  // A cena que o jogo registra (telas/cenas.js): a candidata da faixa (C por padrão; B e A como histórico)
+  const CANDS = { a: () => window.CenaTavernaA, b: () => window.CenaTavernaB, c: () => window.CenaTavernaC };
+  const cand = () => (CANDS[document.body.dataset.tavCand] || CANDS.c)();
   window.CenaTaverna = {
     base: (W, d) => cand().base(W, d),
     desenhar: (...a) => cand().desenhar(...a),

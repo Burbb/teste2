@@ -10,9 +10,9 @@
 
     python ferramentas/prototipos/taverna/exportar.py
 
-Também a candidata B (o estudo estático, `b/`) em `camadas/b/`: `fundo.png` (a sala com as pessoas e a luz, com
+Também as candidatas B e C (os estudos estáticos, `b/` e `c/`) em `camadas/b/` e `camadas/c/`: `fundo.png` (a sala com as pessoas e a luz, com
 Morel no canto), `fundo-sem-morel.png` (o canto vazio, quando ele foi recrutado), `fogo.png` e `velas.png` (4 quadros
-cada, lado a lado). As pessoas da B ainda não têm ciclos: ficam no fundo.
+cada, lado a lado). As pessoas da B e da C ainda não têm ciclos: ficam no fundo.
 
 Só escreve em `camadas/`."""
 import json
@@ -68,9 +68,12 @@ def exportar():
         json.dump({"gente": dados}, f, separators=(",", ":"))
 
 
-def exportar_b():
-    from b import desenho as DB, gente as GB
-    pasta = os.path.join(CAMADAS, "b")
+def exportar_estatica(cand):
+    """As camadas de um estudo estático (a B, a C) em camadas/<cand>/."""
+    import importlib
+    DB = importlib.import_module(f"{cand}.desenho")
+    GB = importlib.import_module(f"{cand}.gente")
+    pasta = os.path.join(CAMADAS, cand)
     os.makedirs(pasta, exist_ok=True)
     for nome, morel in (("fundo", True), ("fundo-sem-morel", False)):
         t = DB.Tela(DB.QW, DB.QH)
@@ -85,5 +88,6 @@ def exportar_b():
 
 if __name__ == "__main__":
     exportar()
-    exportar_b()
+    exportar_estatica("b")
+    exportar_estatica("c")
     print("ok")
