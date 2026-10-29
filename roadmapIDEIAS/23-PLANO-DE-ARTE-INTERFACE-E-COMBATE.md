@@ -20,9 +20,9 @@ Não iniciar todo o plano numa única tarefa. As etapas técnicas A–I e a vali
   desmontagem na 1.216.0, com a [especificação 27](27-FORJA-ESPECIFICACAO.md) como a referência atual (o
   [25](25-ETAPA4-REFORCO-E-ENCANTAMENTO.md) é a pesquisa que a antecedeu).
 - **Etapa 5 aberta:** a curandeira integrada (1.218.0), o templo integrado (1.219.0), a taverna em protótipo
-  (`ferramentas/prototipos/taverna`: a prova de qualidade dos dois jogadores, nas grades A, B, B2 (a B refinada pela
-  referência) B3 (a B2 com os braços legíveis) B4 (a B3 com o
-  ombro do de verde suavizado, a base visual) e o M1 (Morel com a cadeira e a mesa dele), em avaliação, sem integração; da F à A como histórico). Som, equilíbrio e expansão narrativa adiados.
+  (`ferramentas/prototipos/taverna`: a candidata G, o balcão de perto, em avaliação, sem integração; o salão
+  panorâmico, com as candidatas A a F, a prova de qualidade dos jogadores e o M1 de Morel, suspenso e guardado como
+  histórico). Som, equilíbrio e expansão narrativa adiados.
 
 ## Histórico: o estado de referência de 21/10/2026 em diante (superado pelo de 29/10/2026, acima)
 

@@ -8564,3 +8564,33 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Aberto:** o couro escuro sobre a madeira (a ombreira, o vermelho e o braço claro separam as partes); a 1280, o
   antebraço de lá e a mão junto da tigela ficam pequenos; o rosto simples; o grão mais fino que a sala, como a B4.
 - **Parado aqui:** a avaliação é do Jean; nada animado, integrado ou reconstruído no resto da taverna.
+
+### 29/10/2026 (data do computador local) — A taverna: a candidata G, o balcão de perto (protótipo, nada no jogo)
+
+- **Mudança de direção pedida pelo Jean:** o salão panorâmico com vários grupos (as candidatas A a F, a prova de
+  qualidade com a B4 e o M1 de Morel) fica suspenso e guardado como histórico, sem mais correções. **A B4 e o M1 não
+  são mais o próximo trabalho.** A direção atual é uma câmera perto do balcão, de frente, como a forja: uma atividade
+  principal legível, o personagem com presença, objetos reconhecíveis.
+- **A referência:** "Taverneiro desconfiado atrás do balcão-1" (`ferramentas/arte/referencias/cenarios internos`,
+  registrada no LEIA-ME com o hash e o papel): o enquadramento, a composição do balcão, o porte, a expressão e a
+  atividade do taverneiro, os produtos, as silhuetas da frente. Não é a referência de textura: o acabamento vem da
+  forja, da curandeira e do templo. A "-2", de três quartos, fica registrada como secundária.
+- **Feito** (`ferramentas/prototipos/taverna/g`; a seção "A candidata G" do LEIA-ME do protótipo):
+  - a grade 320×96, a das cenas aprovadas (a câmera de perto dá ao taverneiro a cabeça de ~23 px);
+  - o espaço e o balcão primeiro (a parede, os esteios, a prateleira, a bancada, o balcão grosso de um lado a outro);
+  - o taverneiro da pose inteira: o balcão na barriga, a cabeça ligada ao tronco, os braços dos ombros às mãos, o pano
+    e a caneca nas mãos, o rosto desconfiado olhando de lado;
+  - os objetos por função (o canto de preparo com o caldeirão, o barril com a torneira, a louça, as garrafas, o pão e o
+    queijo, as linguiças e o alho, o lampião, a porta da despensa) e os fregueses recortados nos cantos;
+  - a fonte `g/aseprite/taverna-g.aseprite` (`--criar` protegido; a exportação lê dela e confere com o código);
+  - os pontos só do que está desenhado: o Taverneiro (a bebida) e a Despensa (só enquanto ela espera); sem escada,
+    porta da rua nem Morel nesta vista, o Dormir, o Homem do canto e o Voltar ficam nos cartões; a demonstração
+    filtra os pontos pela cena;
+  - `demo.bat` abre na G; a prova, o M1 e as candidatas da F à A seguem no botão Protótipo, como histórico.
+- **Conferido no jogo** a 1920×945 e 1280×720 (`g/conferir.mjs`): os cinco estados do save, os pontos, os nomes sem
+  cobrir rosto nem mãos, os cartões acima da doca, o Tab, o Esc, o Voltar, a pose parada e o console limpo. O código do
+  jogo não mudou.
+- **Aberto:** os fregueses da frente são silhuetas que pesam nos cantos de baixo (o da esquerda cobre a ponta do fogo);
+  o rosto tem mais detalhe que as figuras aprovadas, pela câmera; a camisa clara é a maior mancha (o foco), com poucas
+  dobras; a fonte ainda sem retoques à mão.
+- **Parado aqui:** a avaliação é do Jean; nada animado nem integrado, nenhuma outra frente começada.
