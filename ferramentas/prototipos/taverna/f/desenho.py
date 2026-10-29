@@ -463,6 +463,8 @@ CADEIRA_PONTA = (-2.05, -1.6, 4.5, 4.95)  # a cadeira de espaldar da cabeceira (
 BANQUINHOS_BALCAO = ((-5.0, 2.95), (-3.6, 2.95))   # os banquinhos altos vazios, na frente do balcão
 REDONDA = (2.0, 3.3)                     # a mesa redonda dos jogadores: o centro
 SEM_RODA = False                         # a prova de qualidade (../prova) liga: a sala sem a mesa redonda e os jogadores
+SEM_CANTO = False                        # a prova (../prova/m1) liga: a sala sem a cadeira, a mesa e Morel do canto
+VELA_MOREL = None                        # com SEM_CANTO, onde fica a chama da vela da mesa de Morel (x, y da sala)
 BANCO_RODA_ESQ = (1.05, 1.45, 3.1, 3.5)  # o banquinho do jogador de verde
 BANCO_RODA_DIR = (2.55, 2.95, 3.1, 3.5)  # o do jogador de ocre
 MESA_MOREL = (5.85, 6.5, 3.3, 3.95)       # a mesa individual de Morel, inteira, com margem à direita
@@ -520,9 +522,11 @@ def mesas(px, parte=None):
             xx, yy = [round(v) for v in P(X, REDONDA[1] - 0.1, 0.75)]
             px(xx, yy - 3, 2, 3, "estanho"); px(xx, yy - 3, 1, 3, "estanhoLuz")
         feito["vela_roda"] = castical(px, REDONDA[0] + 0.05, REDONDA[1] - 0.3)
-    if parte in (None, "morel"):
+    if SEM_CANTO:                                            # a prova desenha o canto de Morel à parte
+        feito["vela_morel"] = VELA_MOREL
+    if parte in (None, "morel") and not SEM_CANTO:
         cadeira(px, *CADEIRA_MOREL)
-    if parte in (None, "morel", "morel_mesa"):
+    if parte in (None, "morel", "morel_mesa") and not SEM_CANTO:
         mesa(px, *MESA_MOREL)
         x, y = [round(v) for v in P(5.95, 3.55, 0.75)]       # a tigela do ensopado, perto dele, e o pão
         px(x, y - 1, 7, 1, "ensopado"); px(x, y, 7, 1, "tigela"); px(x + 1, y + 1, 5, 1, "tigela")

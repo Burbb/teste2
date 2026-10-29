@@ -5,8 +5,9 @@ os banquinhos em duas grades nativas (A, a atual; B, o dobro), no mesmo lugar da
 conjunto refinado na grade da B pela referência "Jogo de tabuleiro na taverna", com a fonte em Aseprite
 (`prova/b2`); e a **B3**, a B2 com os ombros e os braços redesenhados para lerem sem ambiguidade (`prova/b3`); e a
 **B4**, a B3 com o ombro de cá do de verde suavizado (`prova/b4`). O método, as medidas e as conclusões estão em
-[prova/LEIA-ME.md](prova/LEIA-ME.md). `demo.bat` abre na B4, com a A, a B, a B2 e a B3 para comparar (o botão
-Protótipo diz a versão à vista); a F e as anteriores seguem no botão Protótipo, como histórico.
+[prova/LEIA-ME.md](prova/LEIA-ME.md). Depois, o **M1**: Morel, a cadeira e a mesa dele na densidade da B4
+(`prova/m1`). `demo.bat` abre na cena completa com a B4 e o M1, com a A, a B, a B2, a B3 e o canto da F para comparar (o
+botão Protótipo diz as versões à vista); a F e as anteriores seguem no botão Protótipo, como histórico.
 
 **A candidata F é um estudo estático** (29/10/2026), agora histórico, sem aprovação e sem integração: a composição, as poses e a relação
 entre pessoas e móveis da **nova referência aprovada pelo Jean** ("Taverna medieval entre brasas e sombras", em

@@ -327,7 +327,7 @@ def desenhar(px, r, morel=True):
         D.mesas(px, parte="roda_mesa")
         maos(px, VERDE, dict(x=181, y=60, grade=["..........ZZs..."]), "verde (mão)")
         maos(px, OCRE, dict(x=213, y=59, grade=["..sXX..........."]), "ocre (mão)")
-    if morel:
+    if morel and not D.SEM_CANTO:                            # a prova (../prova/m1) desenha Morel à parte
         figura(px, MOREL, "Morel")
         maos(px, MOREL, dict(x=270, y=61, grade=["....................lPw.", ".....................P.."]),
              "Morel (mão)")

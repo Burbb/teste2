@@ -1,10 +1,11 @@
 /* A demonstração da taverna (protótipo): um botão "Protótipo" na barra do alto, entre os sigilos e o menu (no fluxo
    da barra: o clima, a hora e os sigilos não ficam embaixo dele), abre o painel: a prova de qualidade (os jogadores
    nas grades A e B; na B2, a B refinada pela referência; na B3, a B2 com os braços legíveis; e na B4, a B3 com o
-   ombro do de verde suavizado; com a vista isolada) ou as candidatas (da F à A, o histórico), o estado do save
-   temporário (a despensa esperando, o homem do canto, Morel já conhecido, Morel recrutado, sem ouro) e a pose parada.
-   Escolhido, o painel fecha; o botão diz a versão à vista ("Protótipo: prova B4 · ..."). O interior entra pelo
-   caminho do templo (vila.js, estado.local.interiores, com a taverna acrescentada pelo demo.py). */
+   ombro do de verde suavizado; com a vista isolada), o canto de Morel (o M1, o novo, ou o da F), as candidatas (da F
+   à A, o histórico), o estado do save temporário (a despensa esperando, o homem do canto, Morel já conhecido, Morel
+   recrutado, sem ouro) e a pose parada. Escolhido, o painel fecha; o botão diz as versões à vista ("Protótipo: prova
+   B4 · Morel M1 · ..."). O interior entra pelo caminho do templo (vila.js, estado.local.interiores, com a taverna
+   acrescentada pelo demo.py). */
 "use strict";
 
 (() => {
@@ -16,18 +17,22 @@
   f.id = "faixa-tav";
   document.body.dataset.tavCand = document.body.dataset.tavCand || "prova";  // a prova de qualidade (as candidatas: histórico)
   document.body.dataset.tavProva = document.body.dataset.tavProva || "b4";
+  document.body.dataset.tavMorel = document.body.dataset.tavMorel || "m1";
   const CANDS = [["prova", "Prova: os jogadores (F em volta)"], ["f", "Candidata F (histórico)"], ["e", "Candidata E (histórico)"],
     ["d", "Candidata D (histórico)"], ["c", "Candidata C (histórico)"], ["b", "Candidata B (histórico)"], ["a", "Candidata A (histórico)"]];
   const GRADES = [["a", "Grade A: a atual (66×42)"], ["b", "Grade B: o dobro (132×84)"],
                   ["b2", "Grade B2: a B refinada pela referência (132×84)"],
                   ["b3", "Grade B3: a B2 com ombros e braços legíveis (132×84)"],
                   ["b4", "Grade B4: a B3 com o ombro de cá do de verde suavizado (132×84)"]];
+  const MORELS = [["m1", "Morel M1: Morel, a cadeira e a mesa novos"], ["f", "Morel F: o canto anterior"]];
   f.innerHTML = `<button type="button" class="abre" aria-expanded="false" aria-controls="faixa-tav-painel"></button>
     <div id="faixa-tav-painel" hidden><b>Taverna (protótipo): a candidata</b>
     ${CANDS.map(([id, nome]) => `<button type="button" data-cand="${id}" aria-pressed="${id === "prova"}">${nome}</button>`).join("")}
     <b>A prova de qualidade (os jogadores)</b>
     ${GRADES.map(([id, nome]) => `<button type="button" data-grade="${id}" aria-pressed="${id === document.body.dataset.tavProva}">${nome}</button>`).join("")}
     <button type="button" data-isolado aria-pressed="false">Isolado (fundo neutro, mesmo tamanho)</button>
+    <b>O canto de Morel</b>
+    ${MORELS.map(([id, nome]) => `<button type="button" data-morel="${id}" aria-pressed="${id === document.body.dataset.tavMorel}">${nome}</button>`).join("")}
     <b>O estado do save temporário</b>
     ${ESTADOS.map(([id, nome]) => `<button type="button" data-tav="${id}" aria-pressed="${id === "homem_do_canto"}">${nome}</button>`).join("")}
     <button type="button" data-reduzido aria-pressed="false">Pose parada</button></div><span class="aviso"></span>`;
@@ -44,7 +49,8 @@
   const rotulo = () => {
     const e = painel.querySelector('[data-tav][aria-pressed="true"]');
     const c = document.body.dataset.tavCand;
-    const qual = c === "prova" ? `prova ${document.body.dataset.tavProva.toUpperCase()}` : c.toUpperCase();
+    const qual = c === "prova"
+      ? `prova ${document.body.dataset.tavProva.toUpperCase()} · Morel ${document.body.dataset.tavMorel.toUpperCase()}` : c.toUpperCase();
     abre.textContent = `Protótipo: ${qual} · ${e ? e.textContent : ""}`;
   };
   rotulo();                                                     // a versão à vista desde a entrada
@@ -74,6 +80,13 @@
     document.body.dataset.tavProva = b.dataset.grade;            // a troca é imediata, no mesmo lugar (a camada lê a cada quadro)
     painel.querySelectorAll("[data-grade]").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
     rotulo();
+  }));
+  painel.querySelectorAll("[data-morel]").forEach((b) => b.addEventListener("click", () => {
+    abrir(false);
+    document.body.dataset.tavMorel = b.dataset.morel;            // o fundo, as velas e a camada trocam no quadro seguinte
+    painel.querySelectorAll("[data-morel]").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+    rotulo();
+    if (naTaverna()) Cenas.mostrar(Cenas.atual().d);              // o ponto do Homem do canto segue a versão
   }));
   painel.querySelector("[data-isolado]").addEventListener("click", (ev) => {
     abrir(false);

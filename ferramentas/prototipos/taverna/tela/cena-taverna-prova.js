@@ -10,24 +10,34 @@
    suavização (image-rendering: pixelated) com a mesma escala da vista (Vista.caixaDaArte). Com "Isolado", um fundo
    neutro cobre a sala e o conjunto aparece sozinho, no mesmo tamanho, com o trecho de piso.
 
-   As camadas vêm de ferramentas/prototipos/taverna/prova/conjunto.py (em /proto-tav/camadas/prova/). Exporta
-   window.CenaTavernaProva; a escolha entre as candidatas fica em cena-taverna-b.js. */
+   O canto de Morel: no M1 (o padrão), Morel, a cadeira e a mesa dele desenhados juntos na densidade da B4 (144×112, no
+   recorte M da sala: x 248, y 36, 72×56), numa segunda imagem por cima da vista; a sala por baixo é a F sem o canto
+   (fundo-m1) e a chama da vela dele fica no castiçal novo (velas-m1). Com Morel recrutado, a imagem sem ele (m1-sem: a
+   cadeira e a mesa). Na versão anterior ("f"), o canto da F, como estava. O ponto do Homem do canto segue a versão.
+
+   As camadas vêm de ferramentas/prototipos/taverna/prova (conjunto.py e o fonte.py de cada versão), servidas em
+   /proto-tav/camadas/prova/. Exporta window.CenaTavernaProva; a escolha entre as candidatas fica em cena-taverna-b.js. */
 "use strict";
 
 (() => {
-  const QW = 320, QH = 96, R = [174, 42, 66, 42];
+  const QW = 320, QH = 96, R = [174, 42, 66, 42], M = [248, 36, 72, 56];
   const RAIZ = "/proto-tav/camadas/";
   const im = (n) => { const i = new Image(); i.src = RAIZ + n + ".png"; return i; };
-  const IM = { fundo: im("prova/fundo"), semMorel: im("prova/fundo-sem-morel"), fogo: im("f/fogo"), velas: im("f/velas") };
+  const IM = { fundo: im("prova/fundo"), semMorel: im("prova/fundo-sem-morel"), fogo: im("f/fogo"), velas: im("f/velas"),
+    fundoM1: im("prova/fundo-m1"), velasM1: im("prova/velas-m1") };
+  const canto = () => (document.body.dataset.tavMorel === "f" ? "f" : "m1");
+  // o ponto de Morel no M1: a área no tronco e nas coxas, o balão acima da cabeça, o foco no peito (longe das mãos)
+  const MOREL_M1 = { area: [270, 56, 18, 26], balao: [280, 45], foco: [276, 64] };
   const pronta = (i) => i && i.complete && i.naturalWidth > 0;
   const reduzido = () => matchMedia("(prefers-reduced-motion: reduce)").matches || document.body.dataset.tavReduzido === "1";
-  const fundoDe = (d) => (d && d.morel ? IM.fundo : IM.semMorel);
+  const fundoDe = (d) => (canto() === "m1" ? IM.fundoM1 : d && d.morel ? IM.fundo : IM.semMorel);
 
   // a camada por cima da vista: o fundo neutro (isolado), o piso e o conjunto, em resolução nativa
   const capa = document.createElement("div");
   capa.id = "tav-prova";
-  capa.innerHTML = `<div class="neutro"></div><img class="chao" alt=""><img class="grupo" alt="">`;
+  capa.innerHTML = `<div class="neutro"></div><img class="chao" alt=""><img class="grupo" alt=""><img class="morel" alt="">`;
   const neutro = capa.querySelector(".neutro"), chao = capa.querySelector(".chao"), grupo = capa.querySelector(".grupo");
+  const morel = capa.querySelector(".morel");
   const grade = () => (["b", "b2", "b3", "b4"].includes(document.body.dataset.tavProva) ? document.body.dataset.tavProva : "a");
   let ativa = false;
 
@@ -49,6 +59,13 @@
     neutro.hidden = !iso;
     chao.hidden = !iso;
     capa.dataset.grade = g;
+    const d = window.Cenas && Cenas.atual() && Cenas.atual().d, m1 = canto() === "m1";
+    const arq = `prova/${d && d.morel ? "m1" : "m1-sem"}.png`;
+    if (m1 && !morel.src.endsWith(arq)) morel.src = RAIZ + arq;
+    morel.hidden = !m1;
+    Object.assign(morel.style, { left: q.esq + q.dx + M[0] * q.ex + "px", top: q.topo + q.dy + M[1] * q.ey + "px",
+      width: M[2] * q.ex + "px", height: M[3] * q.ey + "px" });
+    capa.dataset.canto = m1 ? `m1-${d && d.morel ? "presente" : "ausente"}` : "f";
   }
   if (typeof Vista !== "undefined" && Vista.aoRedimensionar) Vista.aoRedimensionar(posicionar);
   // a camada só existe com a taverna e a prova à vista; sai quando a cena ou a candidata muda
@@ -76,14 +93,17 @@
     c.clearRect(0, 0, QW, QH);
     if (pronta(f)) c.drawImage(f, 0, 0);
     tira(c, IM.fogo, quieto ? 1 : Math.floor(quadro / 2) % 4);
-    tira(c, IM.velas, quieto ? 1 : Math.floor(quadro / 2) % 4);
+    tira(c, canto() === "m1" ? IM.velasM1 : IM.velas, quieto ? 1 : Math.floor(quadro / 2) % 4);
     posicionar();
   }
 
   window.CenaTavernaProva = {
     base, desenhar, QW, QH,
-    get pontos() { return window.CenaTavernaF.pontos; },                // os pontos da F (o entorno é o dela)
+    get pontos() {                                                      // os pontos da F (o entorno é o dela)
+      const p = window.CenaTavernaF.pontos;
+      return canto() === "m1" ? { ...p, morel: MOREL_M1 } : p;
+    },
     presentes: (d) => window.CenaTavernaF.presentes(d),
-    R,
+    R, M,
   };
 })();

@@ -202,3 +202,88 @@ acompanhando até os ombros, com o cotovelo no tampo e a mão na coxa.
   mão na coxa).
 - O punho junto da barba, a escala fracionada a 1920 e os rostos simples, como antes.
 
+## O M1: Morel, a cadeira e a mesa dele (29/10/2026)
+
+A B4 fica como a base visual dos jogadores, sem mudança. O próximo conjunto é o canto de Morel, estático e só no
+protótipo: Morel, a cadeira e a mesa desenhados juntos, na densidade da B4 (2×2 pixels por pixel da sala), com a
+composição e a atividade da referência geral ("entre brasas e sombras": a cadeira de espaldar, a mesa individual, o
+ensopado) e a aparência de Morel no jogo (`retratos.js`: o cabelo e a barba castanhos, a cicatriz clara em diagonal, a
+ombreira cinza no ombro direito, a pele no outro, o couro e a faixa vermelha no peito). Ficaram de fora a capa, as armas
+e as placas da imagem gerada, e também a espada do retrato.
+
+**Abrir:** `demo.bat` abre na cena completa, com a B4 e o M1. No botão **Protótipo**, "O canto de Morel": **Morel M1**
+(o novo) ou **Morel F** (o canto anterior), no mesmo estado; o botão mostra as duas versões à vista ("Protótipo: prova
+B4 · Morel M1 · ...").
+
+### O recorte e a escala
+
+- **O recorte não é o dos jogadores:** o canto da direita da sala, de x 248 a 320 e de y 36 a 92 (72×56 da sala, 144×112
+  na grade do conjunto). As medidas saem da composição do canto.
+- **A escala sai da mesma câmera** (a projeção da F) na profundidade de cada grupo. Os jogadores ficam em Z 3,3 (44,5
+  pixels da grade por metro); Morel em Z 3,6 (46 por metro), um pouco mais perto, por isso pisa mais baixo na tela (as
+  botas em y 82 a 83 da sala, contra 79 dos jogadores).
+- **Maior pelo porte, na mesma escala:**
+  - a cabeça a ~1,5 m do piso (a dos jogadores, a 1,44 m), com 16 pixels de altura contra 14 a 15;
+  - os ombros com ~0,7 m (32 pixels) contra ~0,6 m (28 pixels): a ombreira e a pele alargam a silhueta;
+  - o tronco mais fundo, a barriga para a mesa, as coxas e as botas maiores.
+  Os jogadores não mudaram, e as figuras antigas da F em volta continuam provisórias.
+- **A posição:** o conjunto foi aproximado do meio da sala, para a mesa ficar inteira com ~14 pixels de margem à direita.
+  A cadeira ocupa X 4,6 a 5,15 (a da F ia de 4,95 a 5,55) e a mesa X 5,5 a 6,1 (era de 5,85 a 6,5); a profundidade é a
+  do canto da F. O encosto fica diante do pé da escada.
+
+### O conjunto
+
+- **A cadeira de espaldar robusta:** as quatro pernas grossas, o assento com espessura, a travessa baixa, o espaldar à
+  esquerda com os dois montantes, os pomos e três travessas. O montante da frente passa **na frente** das costas de Morel
+  (uma camada própria, `frente`), o que o põe dentro da cadeira.
+- **Morel:**
+  - o quadril no assento, as coxas para a frente debaixo da borda da mesa e as botas no piso;
+  - a canela de lá recuada e mais escura, a de cá acesa pela vela;
+  - o tronco afastado do espaldar no alto, inclinado para a tigela, com a cabeça adiante e baixa;
+  - o peito em três quartos, com a faixa vermelha no meio;
+  - o braço de cá desce da ombreira, na frente do tronco, num couro mais claro que o do peito, e o antebraço vai à
+    tigela com a colher;
+  - o braço de lá sai à direita do peito, abaixo da pele do ombro, mais escuro, e o antebraço pousa no tampo, com a mão
+    junto da tigela.
+- **As mãos são bolinhas**, como nas outras cenas (pedido do Jean).
+- **A mesa individual:** as quatro pernas, a travessa, o tampo com a espessura e a aresta da frente, e o castiçal. A
+  chama vem da camada de velas da sala, recalculada no castiçal novo (`velas-m1.png`). A tigela com o ensopado e a colher
+  são de Morel.
+- **Recrutado:** a cadeira e a mesa ficam, com a vela; nada dele, nem a tigela.
+- **O ponto "Homem do canto"** (o nome e a regra de presença continuam os da demonstração): a área no tronco e nas
+  coxas, o balão acima da cabeça e o foco no peito, longe da cabeça e das mãos.
+
+### A fonte
+
+- `m1/aseprite/m1.aseprite` (144×112) tem as camadas guia, cadeira, mesa, morel e frente.
+- A guia é o canto da referência geral posto na grade (a cabeça de Morel no lugar da dele), oculta e fora da
+  exportação.
+- `m1/fonte.py --criar` semeou a fonte a partir de `m1/desenho.py` e recusa sobrescrevê-la sem `--refazer`.
+- `m1/fonte.py` exporta da fonte `m1.png` (presente) e `m1-sem.png` (recrutado), e do código da F `fundo-m1.png` (a sala
+  sem a roda e sem o canto) e `velas-m1.png`. `--conferir` dá 0 pixels de diferença do desenho: nenhum retoque feito na
+  fonte ainda.
+- A F ganhou duas chaves desligadas por padrão (`SEM_CANTO` e `VELA_MOREL` em `f/desenho.py`); as camadas dela não
+  mudaram.
+
+### Conferido no jogo (1920×945 e 1280×720, no tamanho real, na cena e isolado)
+
+- A camada fica no recorte certo, sem suavização.
+- Postura e atividade compreensíveis: sentado, debruçado, comendo.
+- Maior que os jogadores pelo porte, sem parecer de outra escala.
+- Corpo, cadeira e mesa separados: o montante na frente das costas, as botas antes do pé da mesa.
+- O balão acima da cabeça.
+- Presente e recrutado; o ponto leva ao cartão de sentar com ele; a troca com o canto da F; Esc e Saída; console limpo.
+- A demonstração inteira passa.
+
+### O que ainda fica
+
+- **O acabamento ao lado da sala:** como a B4, o M1 é mais fino que a sala em volta e que as figuras da F; a 1920, a
+  escala fracionada deixa as linhas de 1 pixel com 1 ou 2 px.
+- **O couro no escuro:** o couro de Morel sobre a cadeira e a mesa de madeira tem pouco contraste; o que separa as
+  partes é a ombreira, a faixa vermelha e o couro mais claro do braço de cá. A 1280, o antebraço de lá e a mão junto da
+  tigela ficam pequenos.
+- **O rosto** é simples: a cicatriz e o olho em poucos pixels.
+- **A vista isolada** não mostra a chama da vela, como nos jogadores.
+- **A perspectiva:** a câmera da F, na beira da direita, mostra o lado esquerdo da mesa e da cadeira bem inclinado; é a
+  mesma projeção do resto da sala.
+
