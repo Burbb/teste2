@@ -8501,3 +8501,20 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   que a sala; a 1920, a escala fracionada (1,66 px por pixel) deixa linhas de 1 pixel com 1 ou 2 px; a 1280, o punho e
   o rosto do de verde ficam no limite; rostos, mãos e roupas simples.
 - **Parado aqui:** a avaliação é do Jean; nada animado, integrado ou aplicado ao resto da sala.
+
+### 29/10/2026 (data do computador local) — A taverna: a B3, os ombros e os braços da B2 (protótipo, nada no jogo)
+
+- **Pedido do Jean:** a B2 é a base; um ajuste localizado nos braços e ombros dos dois, que liam ambíguos na cena e
+  isolados (pareciam sair do ombro oposto). Esclarecer a orientação do peito e dos ombros, o braço de cá à frente do
+  tronco, a sobreposição do de lá; no de ocre, o percurso ombro, manga, cotovelo e mão. Sem contorno pesado, textura ou
+  dedos; mesa, bancos, escala e composição mantidos; a B2 preservada; o retoque na fonte.
+- **Feito** (`ferramentas/prototipos/taverna/prova/b3`; a seção "A B3" de `prova/LEIA-ME.md`): o de verde com o peito
+  em três quartos (o decote no meio), o ombro de cá numa calota acesa com o braço caindo na frente das costas, e o braço
+  da mesa saindo de trás do peito, mais escuro, até o cotovelo no tampo; o de ocre com a manga num tom próprio do ombro
+  ao punho, sobre a túnica na sombra do braço. A fonte `b3.aseprite` é a da B2 com só as camadas verde e ocre retocadas
+  (conferido o que salvou; `--criar` não sobrescreve); a B2 exporta igual. `demo.bat` abre na B3; Grade B2, B, A e
+  Isolado no botão Protótipo.
+- **Conferido no jogo** a 1920×945 e 1280×720, na cena e isolado: cada braço se acompanha até o ombro sem procurar a
+  outra mão. Aberto: a 1280, o antebraço e o punho do de verde junto da barba ainda pequenos; a calota acesa do ombro de
+  cá é luz de cima; o resto da B2 (o tamanho em relação à sala, o grão, a escala fracionada).
+- **Parado aqui:** a avaliação é do Jean; nada animado, integrado ou aplicado ao resto da sala.
