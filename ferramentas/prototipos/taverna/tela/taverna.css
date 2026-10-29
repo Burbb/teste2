@@ -1,0 +1,20 @@
+/* A demonstração da taverna (protótipo). As regras gerais do interior de um balcão já estão no jogo
+   (css/31-templo.css: o cartão chamado, os prédios escondidos com o interior à vista). */
+/* Os nomes dos pontos da taverna ficam sempre à vista, como os do templo. */
+#pontos-cena[data-cena="taverna"] .ci-ponto:not(.parado) .ci-balao { visibility: visible; }
+
+/* A demonstração: o botão "Protótipo" na barra do alto, no fluxo dela (entre os sigilos e o menu), e o painel que ele
+   abre embaixo, com os estados do save temporário e a pose parada. */
+#faixa-tav { position: relative; flex: none; margin-left: 12px; font: 12px/1.2 serif; color: #c8bea6; }
+#faixa-tav button, #faixa-tav-painel button { font: 12px/1.2 serif; color: #c8bea6; background: #2a241c;
+  border: 1px solid #4a3e2a; padding: 3px 8px; cursor: pointer; white-space: nowrap; }
+#faixa-tav .abre { border-color: #8a6a30; color: #e0c070; }
+#faixa-tav-painel { position: fixed; z-index: 60; display: flex; flex-direction: column; gap: 4px; padding: 6px;
+  background: #15120f; border: 1px solid #5a4a30; font: 12px/1.2 serif; }
+#faixa-tav-painel[hidden] { display: none; }
+#faixa-tav-painel b { color: #e0c070; font-weight: normal; margin-bottom: 2px; white-space: nowrap; }
+#faixa-tav-painel button { text-align: left; }
+#faixa-tav-painel button[aria-pressed="true"] { background: #4a3c24; border-color: #c8a050; color: #f0e2b8; }
+#faixa-tav .aviso { position: absolute; top: 100%; left: 0; margin-top: 3px; padding: 3px 6px; background: #15120f;
+  border: 1px solid #5a4a30; color: #9a907c; font-style: italic; white-space: nowrap; }
+#faixa-tav .aviso:empty { display: none; }

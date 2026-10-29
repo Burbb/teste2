@@ -278,3 +278,20 @@ ferramenta: o pilão no almofariz, a faca na tábua, a concha no caldeirão.
 | Móveis e pessoas grudados na parede (o templo B) | tudo pisando na linha onde o piso começava; o piso em fiadas de parede | o espaço sozinho primeiro; a parede encontrando o piso atrás de tudo, chão à vista entre as coisas (3a) |
 | A roupa misturada ao pé da mesa | a barra do hábito encostada na perna, o hábito no mesmo marrom da madeira | 2 px de chão entre eles; o hábito noutro valor; a conta das sobreposições em todo o ciclo (3a) |
 | O pescoço solto do vestido | a grade da cabeça desenhada sem olhar onde começa o tronco | o pescoço da grade cai no colo do vestido em todas as poses da cabeça |
+
+## Erros que apareceram na taverna (candidata A, 29/10/2026)
+
+Uma cena com muita gente: as mesmas regras de uma figura, multiplicadas, e o que só aparece com várias. O caso está em
+`ferramentas/prototipos/taverna/LEIA-ME.md`.
+
+| Erro | O que causou | Como evitar |
+|---|---|---|
+| Alguém atravessando o tampo ou o balcão | o corpo e as mãos numa camada só | duas camadas por figura: o corpo atrás do móvel, as mãos e o que seguram na frente; entre as duas, uma camada só com os móveis da frente (tirada do fundo já iluminado) |
+| A mão "alcançando" com o braço esticado além do possível | os alvos postos onde a pose pedia, sem medir | o braço com comprimento fixo pela régua do lugar e o `assert` do alcance; a correção é aproximar a pessoa ou recuar o alvo, não esticar o braço |
+| A figura espelhada inclinando para trás | a inclinação somada em coordenadas do mundo numa figura desenhada no espaço dela | a pose no espaço da figura: +x é sempre para a frente, para onde ela olha |
+| Duas pessoas da mesma mesa gesticulando juntas | as fases espalhadas ao acaso | quem conversa ou joga tem rotinas do mesmo comprimento e a mesma fase, desenhadas para se revezar; conferir por conta (nenhum passo com os dois falando ou mexendo) |
+| A vela na frente do rosto de quem está atrás da mesa | o castiçal sempre no meio do tampo | o objeto do móvel sai da frente do rosto: a vela na ponta da mesa |
+| Uma figura sumindo contra a parede escura | cabelo, roupa e parede no mesmo valor | o que se lê de longe (a cabeça, o avental) num valor diferente do fundo atrás dele |
+| O fogo como um gráfico de barras | retângulos de alturas diferentes | línguas que afinam para cima, a ponta pendendo, a lenha e as brasas embaixo e o caldeirão na frente das chamas |
+| A porta aberta contradizendo a vila | a rua de dia, com neve, da referência | uma vista de fora só se o interior acompanhar a hora e o tempo; senão, a porta fechada |
+| O nome de um ponto cobrindo uma cabeça | o balão posto em cima do objeto pequeno no piso | conferir os balões com as pessoas no lugar, nas duas resoluções; o balão vai onde não há rosto nem mão |

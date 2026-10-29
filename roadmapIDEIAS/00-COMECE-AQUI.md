@@ -8338,3 +8338,21 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   movimento reduzido, a entrada e a saída, o teclado, o clique duplo, só arquivos de produção, nas duas janelas.
   `unittest`, gabarito (só entrou `estado.local.interiores`, conferido linha a linha), pyflakes e fumaça (388).
 
+### 29/10/2026 (data do computador local) — A taverna: a primeira candidata (protótipo, nada no jogo)
+
+- **Pedido do Jean:** a primeira candidata jogável da taverna, pela referência "Taverna medieval entre fogo e sombras"
+  (`ferramentas/arte/referencias/cenarios internos`): a câmera um pouco mais longe que a do templo, muitas mesas
+  ocupadas, atividades reconhecíveis e circulação; a organização da referência corrigida; os serviços e eventos que
+  existem; Morel no canto só quando o estado permite; nada de sistema novo.
+- **Feito, só no protótipo** (`ferramentas/prototipos/taverna`, LEIA-ME com o roteiro; `demo.bat`, porta 8795, save
+  temporário): a sala de frente (a porta da rua fechada à esquerda, o balcão com o barril e as prateleiras, três mesas
+  ocupadas, a lareira com o caldeirão, a escada com a galeria dos quartos, o canto de Morel debaixo dela, o alçapão da
+  despensa); nove pessoas em atividades com pausas e fases próprias (os jogadores e a conversa se revezam); Morel pela
+  figura do jogo, só enquanto pode ser encontrado ali; os pontos levando aos cartões que existem (Taverneiro à bebida,
+  Escada ao Dormir, Despensa e Homem do canto só com o cartão deles, Saída à vila). O botão Protótipo na barra do alto
+  troca o estado (despensa, homem do canto, Morel conhecido, recrutado, sem ouro) e liga a pose parada.
+- **Conferido no jogo** nas duas janelas: os pontos e os cartões em cada estado, o Tab e o Enter, a Saída e o Esc, um
+  relógio só ao entrar de novo, o movimento reduzido parado com os pontos valendo, a barra do alto sem nada coberto,
+  sem erros no console. As lições foram para a tabela de erros da skill de cenas.
+- **Para integrar (se aprovada):** a cena e a regra de Morel no motor, `servicos: "<serviço>"` aceito pelo
+  `telas/cenas.js` e a fonte em Aseprite. **A etapa 5 continua aberta;** som, equilíbrio e expansão narrativa adiados.
