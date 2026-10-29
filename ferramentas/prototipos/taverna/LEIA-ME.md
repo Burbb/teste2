@@ -1,10 +1,9 @@
-# Protótipo: o interior da taverna (candidatas A a E)
+# Protótipo: o interior da taverna (candidatas A a F)
 
-**A candidata E é um estudo estático em avaliação** (29/10/2026), sem integração: o salão reconstruído numa projeção
-só, com a câmera, a profundidade e a distribuição dos grupos revistas (a composição da C e da D deixou de ser uma
-restrição: os ajustes locais não resolviam a coerência espacial). As pessoas ficam paradas; a animação vem só depois de
-a construção ser aprovada. **Da D à A, histórico.** A referência de composição continua sendo
-`ferramentas/arte/referencias/cenarios internos/Taverna medieval entre fogo e sombras.png`.
+**A candidata F é um estudo estático em avaliação** (29/10/2026), sem integração: a composição, as poses e a relação
+entre pessoas e móveis da **nova referência aprovada pelo Jean** ("Taverna medieval entre brasas e sombras", em
+`ferramentas/arte/referencias/cenarios internos`), transpostas para a grade e o acabamento do jogo. As pessoas ficam
+paradas; a animação vem só depois de a construção ser aprovada. **Da E à A, histórico.**
 
 ## Abrir
 
@@ -13,23 +12,80 @@ num **save temporário** (os saves do Jean não são lidos nem tocados), na port
 campanha começada e 60 de ouro. Clique na **Taverna** na vila. Se uma demonstração antiga estiver aberta, feche a
 janela dela antes (a porta é a mesma).
 
-O botão **Protótipo** na barra do alto abre o painel: a candidata (**E**, o padrão; **D** a **A**, o histórico), o
+O botão **Protótipo** na barra do alto abre o painel: a candidata (**F**, o padrão; da **E** à **A**, o histórico), o
 estado do save (**Despensa esperando**, **Homem do canto**, **Morel conhecido**, **Morel recrutado**, **Sem ouro**) e
 a **Pose parada**.
 
-## Roteiro curto para avaliar a E
+## Roteiro curto para avaliar a F
 
-1. Entre na Taverna e olhe no tamanho do jogo antes de ampliar: as paredes do lado encontrando o piso, o fundo com a
-   porta da despensa, a porta da rua, a lareira e a escada até a galeria; o balcão à esquerda; a mesa comprida e a
-   redonda na mesma faixa da sala; Morel no banco contra a parede da direita; a passagem livre no meio.
-2. A escala: as pessoas, as mesas, os bancos, as portas e os degraus na mesma régua (ninguém de outro tamanho).
-3. Os conjuntos: a freguesa com a caneca, o freguês de costas no banco, o homem da cabeceira com as coxas debaixo da
-   ponta do tampo; os dois jogadores nos banquinhos (as canelas do de trás embaixo do tampo); o velho com as mãos para
-   o fogo; Morel com as costas no espaldar e a colher na tigela; o taverneiro atrás do balcão.
-4. Compare com a **D** no mesmo estado e troque para **Morel recrutado**.
+1. Entre na Taverna e olhe no tamanho do jogo, ao lado da referência: o balcão à esquerda, com o taverneiro e as
+   prateleiras atrás, a porta da rua e a da despensa no fundo; a mesa da frente com três; a lareira com o velho; os
+   jogadores à direita; a escada até a galeria; Morel na beira direita.
+2. Os conjuntos: a freguesa com o cotovelo na mesa; o freguês de costas com a cabeça, o pescoço e os ombros acima da
+   mesa; o homem da cabeceira erguendo a caneca, na cadeira de espaldar; os jogadores nos banquinhos (o de verde
+   pensa, o de ocre mexe a peça); o velho com as mãos para o fogo; Morel na cadeira robusta, a colher na tigela.
+3. A escada (sobe da direita para a esquerda até o patamar), o patamar (no esteio) e a galeria (o piso, a testeira,
+   os esteios, o guarda-corpo, as portas inteiras).
+4. Compare com a **E** no mesmo estado e troque para **Morel recrutado** (a cadeira e a mesa vazias).
 5. Os nomes pelo mouse ou pelo Tab (Taverneiro, Escada, Homem do canto, Despensa, Saída); Esc.
 
-## A candidata E
+## A candidata F
+
+**Como foi construída:**
+- **A referência medida, não reduzida:** a imagem foi lida na grade do jogo (320 de largura, com uma grade de 10 px)
+  para as posições e os tamanhos; nada dela vira arte.
+- **A projeção da E, com a câmera da referência** (`f/desenho.py`, `P`): mais perto e mais alta (14 px por metro no
+  fundo, 28 na borda de baixo, o olho a 3 m, de onde se veem os tampos, os assentos, os degraus e o piso da galeria).
+  As pessoas da frente têm a cabeça de ~7 a 8 px, as do meio de 6, as do fundo de 5.
+- **Primeiro a construção:** as paredes, o piso de lajes, os móveis como caixas projetadas e a figura de referência em
+  pé e sentada em cada lugar; depois as pessoas, à mão, no ponto que a projeção dá a cada assento.
+- **A planta, pela referência:** no fundo, a porta da rua (fechada), as prateleiras com poucos objetos e a porta da
+  despensa atrás da ponta do balcão, a lareira grande com o caldeirão e a laje, e à direita a galeria com as portas de
+  dois quartos; a escada sobe da direita (o pé, no chão) para a esquerda (o patamar, num esteio, ligado à galeria);
+  o balcão a 2 m do fundo, o taverneiro atrás, dois banquinhos vazios na frente; a mesa da frente com três; a mesa
+  redonda dos jogadores; Morel na beira direita, na cadeira robusta de espaldar, com a mesa individual inteira.
+- **As pessoas junto dos móveis:** o quadril no assento, o tronco e as pernas para a mesma atividade, as coxas debaixo
+  do tampo, as mãos nos objetos, os pés no piso quando aparecem.
+
+**As diferenças em relação à referência:**
+- a galeria tem a altura que a projeção dá (2,1 m) e as portas inteiras; na imagem ela é baixa demais para a
+  profundidade em que fica;
+- a mesa de Morel aparece inteira, com margem à direita (na imagem, a borda a corta);
+- Morel segue a aparência do jogo, sem a capa, as armas e as placas da imagem; o banco comprido das candidatas
+  anteriores virou a cadeira de espaldar da referência;
+- sem os estandartes, a cabeça de cervo, o tapete e as ervas penduradas; a porta da rua fechada (a hora e o clima);
+- a arandela na parede da esquerda e o lampião sobre o balcão são as fontes de luz da esquerda.
+
+**Os compromissos que ficam:**
+- as pessoas da frente ficam um pouco menores que as da imagem (a cabeça do freguês de costas tem 8 px; na referência
+  medida, ~9);
+- a mão da freguesa no queixo é um gesto pequeno nessa escala (o cotovelo na mesa lê melhor que a mão);
+- o velho junto do fogo e o taverneiro, no fundo, têm 5 px de cabeça;
+- o corrimão da escada passa na frente da galeria, como numa escada real nesse lugar.
+
+## Para integrar (se aprovada)
+
+- O motor mandaria `cena_taverna` em `estado.local.interiores` (como `servicos.cena_templo`), com a regra de Morel no
+  motor (hoje uma hipótese registrada em `demo.morel_no_canto`).
+- `telas/cenas.js` passaria a aceitar `servicos: "<serviço>"` (o ponto leva ao cartão daquele serviço; hoje,
+  `servicos: true` leva ao primeiro). A demonstração serve o cenas.js com essa mudança (`demo.cenas_js`).
+- O balcão compacto com o interior (`tela/taverna.css`) e a rolagem repetida (`tela/balcao.js`) iriam para o jogo,
+  valendo para todo balcão com interior (o templo também).
+- A animação do elenco novo, a fonte em Aseprite pelo fluxo da skill `arte-cenas-fenda` e a cena de produção lendo de
+  `static/cenas/taverna/`.
+
+## Os arquivos
+
+- `f/desenho.py` e `f/gente.py`: a F (a projeção, o espaço, os móveis, a figura de referência, a luz, o fogo, as
+  velas; as pessoas, à mão); de `e/` a `b/`: as anteriores, do mesmo jeito.
+- `exportar.py`: as camadas da A em `camadas/` e as dos estudos estáticos em `camadas/b/` a `camadas/f/` (o fundo com e sem
+  Morel, o fogo, as velas).
+- `tela/cena-taverna-b.js`: as cenas estáticas da B à F e a escolha entre as seis (`window.CenaTaverna`);
+  `tela/cena-taverna.js`: a A;
+  `tela/faixa.js`: o botão Protótipo; `tela/taverna.css` e `tela/balcao.js`: os nomes e o balcão.
+- `demo.py` e `demo.bat`: a demonstração.
+
+# Histórico: a candidata E
 
 **Por que mudou a direção:** a D melhorou os apoios, mas a escala e a perspectiva não convenciam, sobretudo entre
 Morel e a mesa dos jogadores: o piso seguia uma perspectiva verdadeira com o olho baixo, e os tampos, os assentos, o
@@ -65,28 +121,6 @@ as portas dos quartos têm o alto debaixo da viga do teto.
 
 **Para o futuro, sem compromisso:** um salão geral com aproximações para conversas ou atividades específicas (a mesa de
 Morel, o balcão) fica anotado como possibilidade; nada implementado.
-
-## Para integrar (se aprovada)
-
-- O motor mandaria `cena_taverna` em `estado.local.interiores` (como `servicos.cena_templo`), com a regra de Morel no
-  motor (hoje uma hipótese registrada em `demo.morel_no_canto`).
-- `telas/cenas.js` passaria a aceitar `servicos: "<serviço>"` (o ponto leva ao cartão daquele serviço; hoje,
-  `servicos: true` leva ao primeiro). A demonstração serve o cenas.js com essa mudança (`demo.cenas_js`).
-- O balcão compacto com o interior (`tela/taverna.css`) e a rolagem repetida (`tela/balcao.js`) iriam para o jogo,
-  valendo para todo balcão com interior (o templo também).
-- A animação do elenco novo, a fonte em Aseprite pelo fluxo da skill `arte-cenas-fenda` e a cena de produção lendo de
-  `static/cenas/taverna/`.
-
-## Os arquivos
-
-- `e/desenho.py` e `e/gente.py`: a E (a projeção, o espaço, os móveis, a figura de referência, a luz, o fogo, as
-  velas; as pessoas, à mão); `d/`, `c/` e `b/`: as anteriores, do mesmo jeito.
-- `exportar.py`: as camadas da A em `camadas/` e as dos estudos estáticos em `camadas/b/` a `camadas/e/` (o fundo com e sem
-  Morel, o fogo, as velas).
-- `tela/cena-taverna-b.js`: as cenas estáticas da B à E e a escolha entre as cinco (`window.CenaTaverna`);
-  `tela/cena-taverna.js`: a A;
-  `tela/faixa.js`: o botão Protótipo; `tela/taverna.css` e `tela/balcao.js`: os nomes e o balcão.
-- `demo.py` e `demo.bat`: a demonstração.
 
 # Histórico: a candidata D
 

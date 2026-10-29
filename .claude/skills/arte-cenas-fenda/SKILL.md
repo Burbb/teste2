@@ -351,3 +351,9 @@ diferentes; a parede frontal e os tampos, cada um num grau). O que resolveu:
    maior, num banco robusto) vêm depois, sobre a mesma régua.
 5. **A composição anterior não é sagrada:** quando os ajustes locais não resolvem a coerência, mude a câmera e a
    distribuição.
+
+**A candidata F (29/10/2026): transpor uma referência aprovada para uma construção coerente.** Quando o Jean aprova uma
+imagem gerada para a composição e as poses, ela orienta, mas não prova a construção: meça-a na grade do jogo (as
+posições, os tamanhos, as cabeças), escolha a câmera da projeção que reproduz essas medidas, e construa a sala nessa
+projeção. Onde a imagem não fecha (uma galeria baixa demais para a profundidade, uma mesa cortada pela borda, um
+personagem com acessórios que não são dele), a construção e o jogo vencem, e a diferença é registrada.

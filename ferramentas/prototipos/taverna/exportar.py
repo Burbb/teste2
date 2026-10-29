@@ -10,7 +10,7 @@
 
     python ferramentas/prototipos/taverna/exportar.py
 
-Também as candidatas B a E (os estudos estáticos, `b/` a `e/`) em `camadas/<b|c|d|e>/`: `fundo.png` (a sala com as pessoas e a luz, com
+Também as candidatas B a F (os estudos estáticos, `b/` a `f/`) em `camadas/<b|c|d|e|f>/`: `fundo.png` (a sala com as pessoas e a luz, com
 Morel no canto), `fundo-sem-morel.png` (o canto vazio, quando ele foi recrutado), `fogo.png` e `velas.png` (4 quadros
 cada, lado a lado). As pessoas dos estudos estáticos ainda não têm ciclos: ficam no fundo.
 
@@ -80,7 +80,7 @@ def exportar_estatica(cand):
         px = DB.Pincel(t)
         r = DB.sala(px)
         GB.desenhar(px, r, morel=morel)
-        if cand == "e":                                      # a E devolve as chamas e a boca da lareira com a sala
+        if cand in ("e", "f"):                               # a E e a F devolvem as chamas e a boca da lareira com a sala
             DB.luz(t, r["chamas"], r["boca"])
         else:
             DB.luz(t, DB.chamas_velas())
@@ -95,4 +95,5 @@ if __name__ == "__main__":
     exportar_estatica("c")
     exportar_estatica("d")
     exportar_estatica("e")
+    exportar_estatica("f")
     print("ok")
