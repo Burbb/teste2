@@ -8536,3 +8536,31 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   maiores e mais finos que as figuras da F à mesma distância (a escala ficou, por pedido); a 1280 o braço de cá ficou
   um pouco menos marcado que na B3, ainda legível.
 - **Parado aqui:** a avaliação é do Jean; nada animado, integrado ou aplicado ao resto da sala.
+
+### 29/10/2026 (data do computador local) — A taverna: o M1, Morel com a cadeira e a mesa (protótipo, nada no jogo)
+
+- **Pedido do Jean:** a B4 fica como a base visual dos jogadores, sem mudança. O próximo conjunto é Morel com a cadeira
+  e a mesa, estático:
+  - a densidade e o acabamento da B4; a identidade do jogo (homem grande, cicatriz, couro, vermelho no peito, ombreira
+    cinza); a composição e o ensopado da referência geral;
+  - a cadeira de espaldar robusta; o quadril, as coxas e as botas apoiados; inclinado sobre a refeição, a colher numa
+    mão e a outra junto da tigela; os braços ligados aos ombros;
+  - inteiro com margem à direita; maior pelo porte, na mesma escala; sem diminuir os jogadores;
+  - recrutado, a cadeira e a mesa ficam, sem nada dele; a versão anterior para comparar, identificada no painel;
+  - as mãos em bolinhas, como nos outros cenários.
+- **Feito** (`ferramentas/prototipos/taverna/prova/m1`; a seção "O M1" de `prova/LEIA-ME.md`):
+  - o recorte do canto (x 248 a 320, y 36 a 92 da sala; 144×112 na grade), não o 132×84 dos jogadores;
+  - a escala pela câmera da sala na profundidade de cada grupo: Morel em Z 3,6, a cabeça a ~1,5 m e os ombros com
+    ~0,7 m, contra 1,44 m e ~0,6 m dos jogadores;
+  - o conjunto aproximado do meio para a mesa ficar inteira, com ~14 px de margem;
+  - a fonte `m1.aseprite` (guia oculta; `--criar` protegido; exportação fiel, 0 pixels de diferença);
+  - a F com `SEM_CANTO` e `VELA_MOREL`, desligadas por padrão (as camadas dela não mudaram);
+  - o painel com "Morel M1" e "Morel F", e o botão com as duas versões; `demo.bat` abre na B4 com o M1.
+- **Conferido no jogo** a 1920×945 e 1280×720, na cena e isolado:
+  - a camada no lugar, sem suavização; presente e recrutado (só a cadeira e a mesa);
+  - o balão acima da cabeça; o ponto leva ao cartão; a troca com a F; Esc, Saída e console limpo;
+  - a demonstração inteira e o gabarito passando. O código do jogo não muda desde a 1.219.1, cuja bateria completa
+    vale.
+- **Aberto:** o couro escuro sobre a madeira (a ombreira, o vermelho e o braço claro separam as partes); a 1280, o
+  antebraço de lá e a mão junto da tigela ficam pequenos; o rosto simples; o grão mais fino que a sala, como a B4.
+- **Parado aqui:** a avaliação é do Jean; nada animado, integrado ou reconstruído no resto da taverna.
