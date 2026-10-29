@@ -1301,6 +1301,15 @@ async function cenarioBroquel(browser) {
     const texto = await achado.evaluate((x) => x.textContent);
     conferir(/Revide: com o escudo erguido/.test(texto) && /▲ Revide/.test(texto),
       "o cartão diz a regra (Revide) e a comparação mostra o ganho dela");
+    // A diferença na precisão das peças (uma casa): 4 contra 7,6 saía "−3,5999999999999996 Poder" (1.219.1)
+    const trocas = await page.evaluate(() => {
+      const peca = (bonus_bruto) => ({ bonus_bruto });
+      const t = (a, b) => Telas.linhasTroca(peca(a), peca(b)).replace(/<[^>]+>/g, "|").replace(/\|+/g, "|");
+      return [t({ poder: 4 }, { poder: 7.6 }), t({ poder: 7.6 }, { poder: 4 }), t({ atk: 5 }, { atk: 3 }),
+        t({ critico: 4.5 }, { critico: 1.2 }), t({ defesa: 0.3 }, { defesa: 0.1 + 0.2 }), t({ agi: 2.2 }, { agi: 2.3 })];
+    });
+    conferir(trocas.join() === "|▼ −3,6 Poder|,|▲ +3,6 Poder|,|▲ +2 Ataque|,|▲ +3,3% crítico|,|igual|,|▼ −0,1 Agilidade|",
+      `a comparação escreve a diferença na casa das peças, sem sobras nem "−0" (${trocas.join(" ")})`);
     await (await esperar('#sobre-achado:not(.saindo) .botao-janela:not(.reserva):has-text("Guardar")', 8000)).click();
     await (await esperar('#predios .predio[data-predio="ferreiro"]')).click();
     conferir(!!(await page.waitForSelector(".forja", { timeout: 10000 }).catch(() => null)),

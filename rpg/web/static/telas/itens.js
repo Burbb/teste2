@@ -32,14 +32,22 @@
     return (it && it.icone) || "saco";
   }
 
+  /** A diferença entre dois atributos de peça na precisão deles (uma casa, a de forja/regras.limpo): a subtração em
+   *  ponto flutuante deixava sobras ("7,6 − 4" saía −3,5999999999999996); o que sobra abaixo da casa é zero. */
+  const diferenca = (a, b) => Math.round((a - b) * 10) / 10;
+  /** O número como as fichas escrevem (forja/regras.fmt): "3", "3,6", a casa só quando existe. */
+  const numeroTela = (v) => String(v).replace(".", ",");
+
   /** A troca de `alvo` (o que você usa) por `it`: a diferença de cada atributo e a regra de um único (ganha a dele, ou
    *  perde a do que você usa). */
   function linhasTroca(it, alvo, quem = heroi()) {
     const chaves = new Set([...Object.keys(it.bonus_bruto), ...Object.keys(alvo.bonus_bruto)]);
     const linhas = [...chaves].map((k) => {
-      const d = (it.bonus_bruto[k] || 0) - (alvo.bonus_bruto[k] || 0);
+      const d = diferenca(it.bonus_bruto[k] || 0, alvo.bonus_bruto[k] || 0);
       const nome = k === "max_rec" && quem && quem.recurso ? quem.recurso : NOMES_STAT[k] || k;
-      return d ? `<span class="${d > 0 ? "melhor" : "pior"}">${d > 0 ? "▲ +" : "▼ "}${d} ${nome}</span>` : "";
+      // o percentual fica colado ao número ("+4,5% crítico"), como na linha da peça
+      const valor = `${numeroTela(Math.abs(d))}${nome.startsWith("%") ? "" : " "}${nome}`;
+      return d ? `<span class="${d > 0 ? "melhor" : "pior"}">${d > 0 ? "▲ +" : "▼ −"}${valor}</span>` : "";
     }).filter(Boolean);
     if (it.efeito_nome !== alvo.efeito_nome) {
       if (it.efeito_nome) linhas.push(`<span class="melhor">▲ ${h(it.efeito_nome)}</span>`);
