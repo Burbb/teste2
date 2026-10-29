@@ -541,6 +541,16 @@ def predios_fechados(g):
     return fechados
 
 
+def interiores(g):
+    """Na vila, o interior de cada prédio cujo balcão a tela monta (o templo, desde a 1.219.0): a tela mostra a cena no
+    lugar da vila aproximada enquanto o jogador está diante do prédio. A forja e a curandeira mandam a cena pela tela
+    delas (servicos.cena_forja, cena_curandeira)."""
+    if g.loc["tipo"] != "vila":
+        return {}
+    from ..sistemas.servicos import cena_templo
+    return {"templo": cena_templo()}
+
+
 def atendentes(g):
     """Quem atende em cada prédio, quando não é o de sempre (o nome no balcão): só a curandeira do Vau, por ora."""
     quem = consequencias.atendente(g)
@@ -566,7 +576,7 @@ def estado(g):
                   "escuro": bool(g.sem_luz), "modificadores": modificadores(g)},
         "local": {"id": loc["id"], "nome": loc["nome"], "tipo": loc["tipo"], "bioma": loc["bioma"],
                   "bioma_nome": BIOMAS[loc["bioma"]]["nome"], "descricao": mapa.descricao(g, loc),
-                  "nivel": g.nivel_local(), "predios_fechados": predios_fechados(g),
+                  "nivel": g.nivel_local(), "predios_fechados": predios_fechados(g), "interiores": interiores(g),
                   "riscos": sobrevivencia.riscos_do_lugar(g, missoes.tem_salas(g)),
                   **({"atendentes": atendentes(g)} if atendentes(g) else {}),  # só no Vau da campanha
                   "estrada": g.na_estrada},  # viajando: a paisagem é a da região, sem a vila

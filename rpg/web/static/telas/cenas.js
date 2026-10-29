@@ -1100,6 +1100,8 @@
     forja: window.CenaForja,
     // a cabana da curandeira do Vau (telas/cena-curandeira.js): Pita ou Marta no almofariz
     curandeira: window.CenaCurandeira,
+    // o interior do templo (telas/cena-templo.js): a nave e o clérigo dobrando os panos
+    templo: window.CenaTemplo,
   };
 
   /** O contorno de um ponto aceso, no estilo da arte: quatro cantos dourados com a sombra por fora, em volta da área. */
@@ -1319,6 +1321,8 @@
         return;
       }
       if (!p.acao) { App.som("falha"); App.avisar(p.estado, "ponto"); return; }
+      // a Saída de um interior de balcão (o templo): o mesmo Voltar à vila do balcão, sem passar pelo motor
+      if (p.acao.local === "voltar") { if (pergunta && pergunta.voltarLocal) pergunta.voltarLocal(); return; }
       const pode = (App.opcoes() || []).some((o) => o.meta && Object.entries(p.acao).every(([k, v]) => o.meta[k] === v));
       if (!pode) { App.som("falha"); App.avisar("Agora não: termine o que está fazendo primeiro.", "ponto"); return; }
       App.som("escolha");

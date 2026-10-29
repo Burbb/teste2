@@ -17,7 +17,19 @@ function ehMenuDaVila(m) {
     && m.opcoes.some((o) => o.meta && (o.meta.predio || o.meta.balcao)) && Vista.predios().length);
 }
 
+/** O interior do prédio (o templo, desde a 1.219.0: estado.local.interiores, do motor) no lugar da vila aproximada,
+ *  enquanto o jogador está diante dele; ao sair, a vila volta. */
+function mostrarInterior(id) {
+  const d = estado && estado.local.interiores && estado.local.interiores[id];
+  if (d && window.Cenas) Cenas.mostrar(d);
+}
+function tirarInterior() {
+  const d = window.Cenas && Cenas.atual() && Cenas.atual().d;
+  if (d && estado && estado.local.interiores && estado.local.interiores[d.cena]) Cenas.limpar();
+}
+
 function fecharVila() {
+  tirarInterior();
   vilaAberta = null;
   predioPedido = null;
   predioEl.innerHTML = "";
@@ -60,6 +72,7 @@ function predioNoPonto(x, y) {
 /** Monta a vila: os prédios com opção (ou com um porquê de estarem sem serviço) viram botões com balão; os outros
  *  ficam só de cenário. */
 function montarVila(m, grupos) {
+  tirarInterior();  // a vila de novo (a volta de um prédio, ou o balcão mantido pelo motor, que entra de novo nele)
   // O motor manteve um balcão aberto (o templo, depois de cuidar de alguém): a pergunta traz o Voltar dele, com a meta
   // `balcao`. A vila se remonta já diante do prédio, sem afastar e reaproximar a câmera.
   const bi = m.opcoes.findIndex((o) => o.meta && o.meta.balcao);
@@ -127,6 +140,7 @@ function entrarNoPredio(id, pedido = false, continua = false) {
   Vista.destacar(null);
   if (g.length === 1 && !g[0].o.meta.curto) { responder(v.m.id, g[0].i); return; }
   v.predio = id;
+  mostrarInterior(id);
   const nome = (Vista.predios().find((p) => p.id === id) || {}).nome || "";
   const [icone, quemPadrao, fala] = BALCOES[id] || ["estrela", nome, ""];
   const quem = (estado && estado.local.atendentes && estado.local.atendentes[id]) || quemPadrao;  // o motor diz quem atende
@@ -164,6 +178,7 @@ function entrarNoPredio(id, pedido = false, continua = false) {
 function sairDoPredio() {
   const v = vilaAberta;
   if (!v) return;
+  tirarInterior();
   Som.tocar("escolha");
   mostrarOpcoes(v.m);
 }

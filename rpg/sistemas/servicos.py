@@ -19,6 +19,19 @@ def cena_forja():
     ]}
 
 
+def cena_templo():
+    """O interior do templo para a interface gráfica (telas/cena-templo.js; as de texto ignoram): a nave com o altar
+    e o clérigo dobrando os panos na mesa do atendimento, e os dois pontos. O templo é um balcão da vila (vila.js monta
+    os cartões que o menu da vila marca); a tela mostra este interior no lugar da vila aproximada enquanto o jogador
+    está diante dele, com ou sem alguém para cuidar. O Clérigo leva aos cartões; a Saída é o Voltar à vila do balcão."""
+    return {"cena": "templo", "titulo": "O templo", "pagina": True, "pontos": [
+        {"id": "clerigo", "nome": "Clérigo", "faz": "cuidar da vida", "estado": "O clérigo, na mesa dos panos.",
+         "servicos": True},
+        {"id": "saida", "nome": "Saída", "faz": "voltar à vila", "estado": "A porta para a rua.",
+         "acao": {"local": "voltar"}},
+    ]}
+
+
 def cena_curandeira(g):
     """A cabana para a interface gráfica (telas/cena-curandeira.js; as de texto ignoram), no Vau da campanha: quem
     atende pela história (Pita enquanto Marta está de cama; Marta depois que a água limpa), a água da fonte (na noite

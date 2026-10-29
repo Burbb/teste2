@@ -390,6 +390,8 @@ async function cenarioVila(browser) {
     const templo = await esperar('#predios .predio[data-predio="templo"]', 8000);
     if (templo) await templo.click();
     const naFila = (await esperar("#prompt .balcao-predio .servico", 8000)) ? await servicos() : 0;
+    const noTemplo = () => page.evaluate(() => !!(Cenas.atual() && Cenas.atual().d.cena === "templo"));
+    conferir(await noTemplo(), "diante do templo, a vista mostra o interior (1.219.0)");
     const ouroAntes = await ouro();
     if (naFila) await (await page.$("#prompt .balcao-predio .servico:not(.caro)")).click();
     let restam = naFila;
@@ -397,10 +399,12 @@ async function cenarioVila(browser) {
     for (let k = 0; k < 50 && (restam === naFila || restam < 0); k++) { await page.waitForTimeout(100); restam = (await page.$("#prompt .balcao-predio")) ? await servicos() : -1; }
     conferir(naFila >= 1 && restam === naFila - 1 && (await ouro()) < ouroAntes,
       `depois de cuidar de alguém, o templo continua no balcão, com menos gente e menos ouro (${naFila} → ${restam})`);
+    conferir(await noTemplo(), "depois de cuidar de alguém, o interior continua");
     const volta = await page.$("#prompt .balcao-predio .voltar-vila");
     if (volta) await volta.click();
     conferir(!!(await esperar('#predios .predio[data-predio="mercado"]', 5000)) && !(await page.$("#prompt .balcao-predio")),
       "Voltar à vila sai do balcão do templo");
+    conferir(!(await noTemplo()), "fora do templo, a vila volta à vista");
   } finally {
     conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
     await page.close();
