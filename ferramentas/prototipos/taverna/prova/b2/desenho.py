@@ -71,7 +71,8 @@ PAL_VERDE = {
 }
 
 
-def _verde():
+def verde_partes():
+    """As partes do de verde, na ordem de pintura ({nome: trechos}); a B3 troca algumas."""
     # as pernas primeiro (a túnica vem por cima no quadril): a coxa de lá e o joelho dela, a canela em pé, a bota
     coxa_la = {44: (38, "pPPPPPqq"), 45: (33, "pPPPPPPPPPPPqqq"), 46: (28, "p" + "P" * 18 + "qq"),
                47: [(24, "p" * 18), (42, "PPPPPqq")], 48: (43, "pPPPqq"), 49: (45, "Pqp"), 50: (46, "Pp")}
@@ -142,8 +143,9 @@ def _verde():
             32: faixa(43, 46, "S", "s", "l"), 33: faixa(44, 47, "S", "s", "l"), 34: faixa(44, 47, "Z", "W", "W"),
             35: faixa(45, 48, "Z", "W", "W"), 36: faixa(45, 48, "N", "Z", "Z"), 37: faixa(46, 48, "N", "Z", "Z")}
     punho = {24: (41, "slll"), 25: (40, "sllllsS"), 26: (40, "SsSlllS"), 27: (40, "sSsllsS"), 28: (41, "SsllsS")}
-    return partes(coxa_la, canela_la, bota_la, coxa_ca, canela_ca, bota_ca, tronco, braco_tras, mao_coxa, cabeca, braco,
-                  ante, punho)
+    return dict(coxa_la=coxa_la, canela_la=canela_la, bota_la=bota_la, coxa_ca=coxa_ca, canela_ca=canela_ca,
+                bota_ca=bota_ca, tronco=tronco, braco_tras=braco_tras, mao_coxa=mao_coxa, cabeca=cabeca, braco=braco,
+                ante=ante, punho=punho)
 
 
 # ---------------------------------------------------------------- o de ocre
@@ -157,7 +159,8 @@ PAL_OCRE = {
 }
 
 
-def _ocre():
+def ocre_partes():
+    """As partes do de ocre, na ordem de pintura ({nome: trechos}); a B3 troca algumas."""
     # o espelho do de verde, mais magro: a coxa de lá com o joelho à frente, a canela em pé, a bota
     coxa_la = {44: (76, "qqPPPPPPPPp"), 45: (74, "qqq" + "P" * 13 + "p"), 46: (73, "qq" + "P" * 20 + "p"),
                47: [(73, "qqPPPPP"), (80, "p" * 20)], 48: (73, "qqPPPp"), 49: (74, "qPp"), 50: (74, "pP")}
@@ -225,11 +228,12 @@ def _ocre():
     ante = {32: faixa(66, 68, "l", "s", "s"), 33: faixa(64, 68, "l", "s", "S"), 34: faixa(63, 69, "l", "s", "S"),
             35: faixa(62, 66, "l", "s", "S")}
     mao = {36: (61, "lssS"), 37: [(61, "rsSr")], 38: (61, "RRR")}
-    return partes(coxa_la, canela_la, bota_la, coxa_ca, canela_ca, bota_ca, tronco, braco_tras, mao_coxa, cabeca, braco,
-                  punho_manga, ante, mao)
+    return dict(coxa_la=coxa_la, canela_la=canela_la, bota_la=bota_la, coxa_ca=coxa_ca, canela_ca=canela_ca,
+                bota_ca=bota_ca, tronco=tronco, braco_tras=braco_tras, mao_coxa=mao_coxa, cabeca=cabeca, braco=braco,
+                punho_manga=punho_manga, ante=ante, mao=mao)
 
 
-VERDE, OCRE = _verde(), _ocre()
+VERDE, OCRE = partes(*verde_partes().values()), partes(*ocre_partes().values())
 
 
 # ---------------------------------------------------------------- os móveis

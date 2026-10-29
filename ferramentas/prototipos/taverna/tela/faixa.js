@@ -1,9 +1,9 @@
 /* A demonstração da taverna (protótipo): um botão "Protótipo" na barra do alto, entre os sigilos e o menu (no fluxo
    da barra: o clima, a hora e os sigilos não ficam embaixo dele), abre o painel: a prova de qualidade (os jogadores
-   nas grades A e B e na B2, a B refinada pela referência, com a vista isolada) ou as candidatas (da F à A, o
-   histórico), o estado do save temporário (a despensa esperando, o homem do canto, Morel já conhecido, Morel
-   recrutado, sem ouro) e a pose parada. Escolhido, o painel fecha. O interior entra pelo caminho do templo (vila.js,
-   estado.local.interiores, com a taverna acrescentada pelo demo.py). */
+   nas grades A e B, na B2, a B refinada pela referência, e na B3, a B2 com os braços legíveis, com a vista isolada)
+   ou as candidatas (da F à A, o histórico), o estado do save temporário (a despensa esperando, o homem do canto,
+   Morel já conhecido, Morel recrutado, sem ouro) e a pose parada. Escolhido, o painel fecha. O interior entra pelo
+   caminho do templo (vila.js, estado.local.interiores, com a taverna acrescentada pelo demo.py). */
 "use strict";
 
 (() => {
@@ -14,11 +14,12 @@
   const f = document.createElement("div");
   f.id = "faixa-tav";
   document.body.dataset.tavCand = document.body.dataset.tavCand || "prova";  // a prova de qualidade (as candidatas: histórico)
-  document.body.dataset.tavProva = document.body.dataset.tavProva || "b2";
+  document.body.dataset.tavProva = document.body.dataset.tavProva || "b3";
   const CANDS = [["prova", "Prova: os jogadores (F em volta)"], ["f", "Candidata F (histórico)"], ["e", "Candidata E (histórico)"],
     ["d", "Candidata D (histórico)"], ["c", "Candidata C (histórico)"], ["b", "Candidata B (histórico)"], ["a", "Candidata A (histórico)"]];
   const GRADES = [["a", "Grade A: a atual (66×42)"], ["b", "Grade B: o dobro (132×84)"],
-                  ["b2", "Grade B2: a B refinada pela referência (132×84)"]];
+                  ["b2", "Grade B2: a B refinada pela referência (132×84)"],
+                  ["b3", "Grade B3: a B2 com ombros e braços legíveis (132×84)"]];
   f.innerHTML = `<button type="button" class="abre" aria-expanded="false" aria-controls="faixa-tav-painel">Protótipo: prova A · Homem do canto</button>
     <div id="faixa-tav-painel" hidden><b>Taverna (protótipo): a candidata</b>
     ${CANDS.map(([id, nome]) => `<button type="button" data-cand="${id}" aria-pressed="${id === "prova"}">${nome}</button>`).join("")}

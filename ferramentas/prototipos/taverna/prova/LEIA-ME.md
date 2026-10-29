@@ -114,3 +114,54 @@ no mesmo lugar) e **Isolado** (o fundo neutro, o mesmo tamanho).
 - **Rostos, mãos e roupas** continuam simples (as poucas dobras, os dedos não separados).
 - **A vista isolada** não mostra a chama da vela (ela vem da camada da sala, coberta pelo fundo neutro), como na A e na B.
 
+## A B3: os ombros e os braços da B2 (29/10/2026)
+
+O Jean viu, na cena e na vista isolada, que os braços da B2 liam ambíguos: pareciam sair do ombro oposto, e era preciso
+achar a outra mão para entender a pose. A B3 é um **ajuste localizado** dos ombros e dos braços dos dois; a mesa, os
+banquinhos, a escala, as pernas, as cabeças, os apoios e a composição continuam os da B2, que fica como estava para
+comparar. **Abrir:** `demo.bat` abre na B3; Grade B2 e as outras no botão **Protótipo**, no mesmo lugar.
+
+### O diagnóstico na B2
+
+- **O de verde:** a manga do braço da mesa tinha o mesmo tom do peito, separada só por uma linha escura (lia como uma
+  dobra, sem ombro); o braço que desce à coxa formava o contorno das costas (nascia atrás do corpo); os dois ombros
+  não diziam quanto o peito estava girado.
+- **O de ocre:** o alto da manga estendida tinha o mesmo tom aceso da frente da túnica; ombro, manga e cotovelo se
+  misturavam.
+
+### O que mudou
+
+- **O de verde:** o peito em três quartos, virado para a câmera e para a mesa, com o decote no meio dele.
+  - O **ombro de cá** é uma calota redonda acesa por cima. O braço desce **à frente do tronco**, com uma faixa escura
+    das costas à vista atrás dele e a sombra dele no peito. O cotovelo dobra e o antebraço atravessa a barriga até a mão
+    na coxa.
+  - O **braço da mesa** é o de lá: o peito passa na frente da raiz dele. O braço sai à direita do tronco, mais escuro,
+    com a aresta acesa pela vela, e desce estreito até o cotovelo no tampo; o antebraço sobe à direita dele até o punho
+    no queixo. A frente do peito ao lado desse braço ficou no tom médio, para a aresta acesa ser só a do braço.
+- **O de ocre:** o ombro de cá é uma calota acesa no alto da frente do tronco; a manga sai dela num tom próprio (o alto
+  aceso, o meio claro, a dobra de baixo escura) sobre a túnica de tom médio, que fica na sombra do braço logo abaixo
+  dele. O percurso ombro, manga, cotovelo, punho dobrado, antebraço e mão na peça segue sem interrupção. A outra mão
+  continua na coxa.
+- Sem contorno novo, sem textura, sem dedos: só silhueta, sobreposição e poucos planos de luz e sombra.
+
+### A fonte
+
+`b3/fonte.py --criar` copiou a fonte da B2 (com os retoques dela: as sombras do cotovelo e das botas) para
+`b3/aseprite/b3.aseprite` e trocou, só nas camadas verde e ocre, os pixels em que `b3/desenho.py` difere do desenho da
+B2 (356 no de verde, 116 no de ocre), pela troca de camada da forja (`trocar_camada.lua`), conferindo o que salvou. A
+guia continua oculta e fora da exportação. A fonte é a autoridade: `--criar` não a sobrescreve sem `--refazer`, e
+`b3/fonte.py` exporta dela para `camadas/prova/b3.png`; `--conferir` compara a exportação com a B2 mais o retoque (hoje,
+0 pixels de diferença: nenhum retoque feito depois na fonte da B3). A B2 exporta igual a antes.
+
+### Conferido no jogo (1920×945 e 1280×720, no tamanho real, na cena e isolado)
+
+No mesmo lugar e no mesmo tamanho da A, da B e da B2, sem suavização, console limpo, a demonstração inteira passando.
+Nos dois tamanhos, os dois braços de cada um se acompanham até o ombro: no de verde, o ombro de cá aceso com o braço
+caindo na frente das costas e o braço da mesa saindo de trás do peito; no de ocre, a manga clara do ombro à mão.
+
+**Ainda aberto:**
+- a 1280, o antebraço e o punho do de verde junto da barba ainda formam uma massa pequena (o gesto se lê pela pose);
+- a calota acesa do ombro de cá do de verde é luz de cima, não da vela (que está do outro lado);
+- o que já estava aberto na B2: o tamanho em relação à sala, o grão mais fino, a escala fracionada a 1920, os rostos e
+  as mãos simples.
+
