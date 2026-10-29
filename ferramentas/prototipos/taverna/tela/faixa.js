@@ -1,11 +1,11 @@
 /* A demonstração da taverna (protótipo): um botão "Protótipo" na barra do alto, entre os sigilos e o menu (no fluxo
-   da barra: o clima, a hora e os sigilos não ficam embaixo dele), abre o painel: a G refinada (G2, o padrão) e a G
-   original (a composição escolhida; a troca é imediata, no mesmo estado do jogo), a H e a prova de qualidade
-   (histórico) (os jogadores
+   da barra: o clima, a hora e os sigilos não ficam embaixo dele), abre o painel: a G3 (o padrão: a G2 aprovada com as
+   correções locais), a G2 e a G original (a troca é imediata, no mesmo estado do jogo), a H e a prova de qualidade
+   (histórico), e o estudo livre "Diante de Morel", numa vista à parte (fora da HUD) (os jogadores
    nas grades A e B; na B2, a B refinada pela referência; na B3, a B2 com os braços legíveis; e na B4, a B3 com o
    ombro do de verde suavizado; com a vista isolada), o canto de Morel (o M1, o novo, ou o da F), as candidatas (da F
    à A, o histórico), o estado do save temporário (a despensa esperando, o homem do canto, Morel já conhecido, Morel
-   recrutado, sem ouro) e a pose parada. Escolhido, o painel fecha; o botão diz as versões à vista ("Protótipo: G2 ·
+   recrutado, sem ouro) e a pose parada. Escolhido, o painel fecha; o botão diz as versões à vista ("Protótipo: G3 ·
    Homem do canto", "Protótipo: prova B4 · Morel M1 · ..."). O interior entra pelo caminho do templo (vila.js, estado.local.interiores, com a taverna
    acrescentada pelo demo.py). */
 "use strict";
@@ -17,10 +17,10 @@
     ["recrutado", "Morel recrutado"], ["sem_ouro", "Sem ouro"]];
   const f = document.createElement("div");
   f.id = "faixa-tav";
-  document.body.dataset.tavCand = document.body.dataset.tavCand || "g2";  // a G refinada; a G ao lado (as outras: histórico)
+  document.body.dataset.tavCand = document.body.dataset.tavCand || "g3";  // a G3; a G2 e a G ao lado (as outras: histórico)
   document.body.dataset.tavProva = document.body.dataset.tavProva || "b4";
   document.body.dataset.tavMorel = document.body.dataset.tavMorel || "m1";
-  const CANDS = [["g2", "G refinada (G2)"], ["g", "G original"], ["h", "Candidata H (histórico)"], ["prova", "Prova: os jogadores (histórico)"], ["f", "Candidata F (histórico)"], ["e", "Candidata E (histórico)"],
+  const CANDS = [["g3", "G3: a G2 com as correções"], ["g2", "G2 aprovada (antes das correções)"], ["g", "G original"], ["h", "Candidata H (histórico)"], ["prova", "Prova: os jogadores (histórico)"], ["f", "Candidata F (histórico)"], ["e", "Candidata E (histórico)"],
     ["d", "Candidata D (histórico)"], ["c", "Candidata C (histórico)"], ["b", "Candidata B (histórico)"], ["a", "Candidata A (histórico)"]];
   const GRADES = [["a", "Grade A: a atual (66×42)"], ["b", "Grade B: o dobro (132×84)"],
                   ["b2", "Grade B2: a B refinada pela referência (132×84)"],
@@ -37,7 +37,9 @@
     ${MORELS.map(([id, nome]) => `<button type="button" data-morel="${id}" aria-pressed="${id === document.body.dataset.tavMorel}">${nome}</button>`).join("")}
     <b>O estado do save temporário</b>
     ${ESTADOS.map(([id, nome]) => `<button type="button" data-tav="${id}" aria-pressed="${id === "homem_do_canto"}">${nome}</button>`).join("")}
-    <button type="button" data-reduzido aria-pressed="false">Pose parada</button></div><span class="aviso"></span>`;
+    <button type="button" data-reduzido aria-pressed="false">Pose parada</button>
+    <b>Estudo livre (fora da HUD)</b>
+    <button type="button" data-estudo>Diante de Morel (o estudo em Aseprite)</button></div><span class="aviso"></span>`;
   const topo = document.getElementById("topo");
   topo.insertBefore(f, document.getElementById("acoes-topo"));
   const abre = f.querySelector(".abre"), painel = f.querySelector("#faixa-tav-painel"), aviso = f.querySelector(".aviso");
@@ -95,6 +97,39 @@
     const sim = document.body.dataset.tavIsolado !== "1";
     document.body.dataset.tavIsolado = sim ? "1" : "";
     ev.currentTarget.setAttribute("aria-pressed", String(sim));
+  });
+  // O estudo de Morel: uma vista à parte, por cima de tudo, na resolução dele (360×120), em ampliação inteira (o padrão
+  // é a maior que cabe na janela) ou no tamanho nativo; "Caber na janela" é uma prévia reduzida, dita na legenda, para
+  // não confundir um problema de exibição com a qualidade do desenho. Esc ou Fechar voltam ao jogo.
+  const estudo = document.createElement("div");
+  estudo.id = "estudo-morel"; estudo.hidden = true;
+  estudo.innerHTML = `<div class="barra"><b>Estudo livre: diante de Morel</b>
+    <span class="tam"></span><span class="zooms"></span><button type="button" data-fechar>Fechar (Esc)</button></div>
+    <div class="quadro"><img alt="Estudo: sentado diante de Morel, na taverna" src="/proto-tav/camadas/morel/estudo.png"></div>`;
+  document.body.appendChild(estudo);
+  const img = estudo.querySelector("img"), tam = estudo.querySelector(".tam"), zooms = estudo.querySelector(".zooms");
+  const NAT = [360, 120];
+  const maior = () => Math.max(1, Math.floor(Math.min((innerWidth - 32) / NAT[0], (innerHeight - 90) / NAT[1])));
+  function zoom(z) {
+    const caber = z === "caber";
+    const k = caber ? Math.min((innerWidth - 32) / NAT[0], (innerHeight - 90) / NAT[1]) : z;
+    Object.assign(img.style, { width: Math.round(NAT[0] * k) + "px", height: Math.round(NAT[1] * k) + "px" });
+    tam.textContent = caber && !Number.isInteger(k)
+      ? `prévia ajustada à janela (${k.toFixed(2)}×): não é a arte fiel`
+      : `${k}× (${NAT[0] * k}×${NAT[1] * k}), fiel: cada pixel da arte em ${k}×${k}`;
+    zooms.querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", String(String(z) === b.dataset.z)));
+  }
+  zooms.innerHTML = [1, 2, 3, 4, 5, 6].map((z) => `<button type="button" data-z="${z}">${z === 1 ? "Nativo (1×)" : z + "×"}</button>`).join("")
+    + `<button type="button" data-z="caber">Caber na janela</button>`;
+  zooms.querySelectorAll("button").forEach((b) => b.addEventListener("click", () => zoom(b.dataset.z === "caber" ? "caber" : +b.dataset.z)));
+  const fecharEstudo = () => { estudo.hidden = true; abre.focus(); };
+  estudo.querySelector("[data-fechar]").addEventListener("click", fecharEstudo);
+  document.addEventListener("keydown", (ev) => { if (ev.key === "Escape" && !estudo.hidden) { ev.stopPropagation(); ev.preventDefault(); fecharEstudo(); } }, true);
+  painel.querySelector("[data-estudo]").addEventListener("click", () => {
+    abrir(false);
+    estudo.hidden = false;
+    zoom(maior());
+    estudo.querySelector("[data-fechar]").focus();
   });
   painel.querySelector("[data-reduzido]").addEventListener("click", (ev) => {
     const sim = document.body.dataset.tavReduzido !== "1";

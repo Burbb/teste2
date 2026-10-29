@@ -1,5 +1,5 @@
 // Confere as candidatas da taverna no jogo de verdade (demo.py, save temporário), a 1920×945 e a 1280×720: entra
-// pelo prédio da taverna no Vau e, em cada candidata (CANDS, padrão "g2,g"; "h" também serve; trocadas pelo painel, no mesmo estado
+// pelo prédio da taverna no Vau e, em cada candidata (CANDS, padrão "g3,g2"; "g", "h" também servem; trocadas pelo painel, no mesmo estado
 // do jogo) e em cada estado do save (o homem do canto, a despensa esperando, Morel conhecido, recrutado, sem ouro),
 // fotografa a cena com o balcão embaixo e confere: os pontos (o Taverneiro sempre, a Despensa
 // só enquanto ela espera; nenhum da escada, da rua ou de Morel), os nomes dentro da arte, sem cobrir o rosto nem as
@@ -66,8 +66,8 @@ try {
     p.on("console", (m) => { if (m.type() === "error") erros.push(m.text()); });
     await p.goto(url); await parado(p);
     conferir(await entrar(p), "entra na taverna pelo prédio");
-    conferir(await p.evaluate(() => document.body.dataset.tavCand === "g2"), "a demonstração abre na G refinada");
-    for (const cand of (process.env.CANDS || "g2,g").split(",")) {
+    conferir(await p.evaluate(() => document.body.dataset.tavCand === "g3"), "a demonstração abre na G3");
+    for (const cand of (process.env.CANDS || "g3,g2").split(",")) {
     if (await p.evaluate(() => document.body.dataset.tavCand) !== cand) {  // a troca pelo painel, no mesmo estado
       await p.click("#faixa-tav .abre"); await p.click(`#faixa-tav-painel [data-cand="${cand}"]`); await espera(500);
       conferir(await p.evaluate((c) => document.body.dataset.tavCand === c && Cenas.atual().d.cena === "taverna", cand),
@@ -136,6 +136,15 @@ try {
     conferir(a1 === a2, "com a pose parada, o fogo e o lampião param");
     await p.click("#faixa-tav-painel [data-reduzido]"); await p.click("#faixa-tav .abre");  // o painel continua aberto
     await trocarEstado(p, "homem_do_canto");
+    // o estudo de Morel: a vista à parte, na maior ampliação inteira que cabe, e o Esc fechando
+    await p.click("#faixa-tav .abre"); await p.click("#faixa-tav-painel [data-estudo]"); await espera(600);
+    const est = await p.evaluate(() => { const i = document.querySelector("#estudo-morel img");
+      return { aberto: !document.getElementById("estudo-morel").hidden, nat: [i.naturalWidth, i.naturalHeight],
+        largura: i.getBoundingClientRect().width, legenda: document.querySelector("#estudo-morel .tam").textContent }; });
+    conferir(est.aberto && est.nat[0] === 360 && est.largura % 360 === 0, `o estudo de Morel em ampliação inteira (${est.legenda})`);
+    await p.screenshot({ path: path.join(SAIDA, `${jan}-estudo-morel.png`) });
+    await p.keyboard.press("Escape"); await espera(200);
+    conferir(await p.evaluate(() => document.getElementById("estudo-morel").hidden), "o Esc fecha o estudo");
     conferir(erros.length === 0, `o console sem erro${erros.length ? ": " + erros.join(" | ") : ""}`);
     await p.close();
   }

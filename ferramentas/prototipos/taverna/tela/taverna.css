@@ -46,3 +46,16 @@ body.tav-interior #cena-cab, body.tav-interior #texto { display: none; }
 #tav-prova > * { position: absolute; image-rendering: pixelated; image-rendering: crisp-edges; }
 #tav-prova .neutro { background: #2e2c2a; }
 #tav-prova [hidden] { display: none; }
+
+/* O estudo de Morel (protótipo): uma vista à parte, por cima do jogo, em ampliação inteira e sem suavização. */
+#estudo-morel { position: fixed; inset: 0; z-index: 80; background: #0b0908; display: flex; flex-direction: column;
+  align-items: center; gap: 8px; padding: 8px 16px; overflow: auto; }
+#estudo-morel[hidden] { display: none; }
+#estudo-morel .barra { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font: 13px/1.3 serif; color: #c8bea6; }
+#estudo-morel .barra b { color: #e0c070; font-weight: normal; }
+#estudo-morel .tam { color: #9a907c; font-style: italic; }
+#estudo-morel button { font: 12px/1.2 serif; color: #c8bea6; background: #2a241c; border: 1px solid #4a3e2a;
+  padding: 3px 8px; cursor: pointer; }
+#estudo-morel button[aria-pressed="true"] { background: #4a3c24; border-color: #c8a050; color: #f0e2b8; }
+#estudo-morel .quadro { margin: auto; }
+#estudo-morel img { display: block; image-rendering: pixelated; }
