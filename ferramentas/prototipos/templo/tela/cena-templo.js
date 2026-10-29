@@ -23,7 +23,7 @@
   fetch("/proto-tpl/camadas/rotina.json").then((r) => r.json()).then((j) => { ROTINA = j; }).catch(() => {});
   const pronta = (i) => i && i.complete && i.naturalWidth > 0;
   const reduzido = () => matchMedia("(prefers-reduced-motion: reduce)").matches || document.body.dataset.tplReduzido === "1";
-  const cand = () => (document.body.dataset.tplCand === "b" ? "b" : "a");
+  const cand = () => (document.body.dataset.tplCand === "a" ? "a" : "b");
 
   function poseDe(q, c) {
     const rot = ROTINA && ROTINA[c];

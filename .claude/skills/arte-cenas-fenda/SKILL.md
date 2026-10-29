@@ -15,7 +15,7 @@ medidas, o ciclo de 53 quadros, a martelada e a paleta são da forja). A curande
 O que se quer evitar de novo: a imagem gerada reduzida e usada sem transposição artística, o personagem fora do estilo
 do jogo, os apoios desconectados, a anatomia confusa e as correções da animação descobertas tarde.
 
-## O fluxo de um interior (10 passos)
+## O fluxo de um interior (11 passos)
 
 Cada passo fecha antes do seguinte; as seções abaixo detalham.
 
@@ -23,21 +23,24 @@ Cada passo fecha antes do seguinte; as seções abaixo detalham.
    quem atende em cada momento), os serviços, os objetos que o ofício precisa, a circulação.
 2. **Composição** (seção 1): a câmera pela atividade, a escala do personagem, as áreas de trabalho e os pontos de
    interação (os rótulos fora do personagem e da ação).
-3. **Referências separadas** (seção 2): a imagem de composição de um lado; as cenas aprovadas do jogo, de outro, como a
-   referência canônica do acabamento.
-4. **Desenho na grade real** (seção 3): silhuetas e volumes primeiro, nos pixels do jogo; materiais e detalhes depois.
-5. **Personagem** (seção 4): identidade (só o que o jogo estabelece), proporções, perspectiva e leitura no tamanho de
+3. **Referências separadas** (seção 2): uma referência de composição discutida com o Jean de um lado; as cenas
+   aprovadas do jogo, de outro, como a referência canônica do acabamento. A referência gerada orienta a construção,
+   mas não prova que a perspectiva dela está certa: o desenho precisa da conferência própria (seção 3a).
+4. **O espaço antes dos objetos** (seção 3a): o piso, os planos, a circulação e os apoios, conferidos com os móveis e
+   as pessoas escondidos, antes de detalhar.
+5. **Desenho na grade real** (seção 3): silhuetas e volumes primeiro, nos pixels do jogo; materiais e detalhes depois.
+6. **Personagem** (seção 4): identidade (só o que o jogo estabelece), proporções, perspectiva e leitura no tamanho de
    uso.
-6. **Atividade** (seções 5 e 5b): a atividade e os apoios por escrito, quem conduz, acompanha e fica, as poses-chave
+7. **Atividade** (seções 5 e 5b): a atividade e os apoios por escrito, quem conduz, acompanha e fica, as poses-chave
    do corpo inteiro, os contatos e a trajetória da ferramenta antes de completar o ciclo; a geometria do alcance
    (seção 5a).
-7. **Animação** (seções 5 e 5b): uma rotina com pausas e intenção, as passagens escalonadas, os apoios preservados, o
+8. **Animação** (seções 5 e 5b): uma rotina com pausas e intenção, as passagens escalonadas, os apoios preservados, o
    ritmo da atividade (não o de outra cena) e a passagem limpa do fim para o começo; a pose parada para o movimento
    reduzido. Limpeza, quantidade de quadros e atuação conferidas em separado.
-8. **Conferência no contexto** (seção 3, último item): a cena junto da HUD, dos serviços e dos rótulos, nas resoluções
+9. **Conferência no contexto** (seção 3, último item): a cena junto da HUD, dos serviços e dos rótulos, nas resoluções
    suportadas.
-9. **Fonte final** (seção 6): o arquivo editável como autoridade, a exportação reproduzível, os retoques protegidos.
-10. **Integração**: só a candidata aprovada, conferida no jogo real (seção "Três aprovações").
+10. **Fonte final** (seção 6): o arquivo editável como autoridade, a exportação reproduzível, os retoques protegidos.
+11. **Integração**: só a candidata aprovada, conferida no jogo real (seção "Três aprovações").
 
 Caminhos relativos à raiz do repositório. O que já está documentado em outro lugar não se repete aqui:
 - as fontes em Aseprite, o `pintar.lua`, a montagem e a exportação em lote: `ferramentas/arte/aseprite/LEIA-ME.md`;
@@ -89,6 +92,28 @@ um pixel. Aplique o que é comum; não copie o que é de uma cena só (o céu da
 **A redução automática** de uma imagem de referência pode servir de guia (de posição e de luz), nunca de fundo: ela
 dá manchas, não objetos. **Contar cores ou tirar contornos não prova coerência:** compare as cenas lado a lado, no
 tamanho de uso.
+
+## 3a. O espaço antes dos objetos (o templo B, 28/10/2026)
+
+A primeira passada da B transpôs a distribuição da referência mas perdeu as superfícies que explicavam a
+profundidade: tudo pisava na linha em que o piso começava, e o piso, em fiadas desencontradas como uma parede, lia
+como um muro baixo. Mesa, armário, porta e clérigo pareciam grudados na parede. Antes de desenhar os objetos:
+
+1. **O piso sozinho.** Desenhe as paredes, o piso e as elevações sem os móveis nem as pessoas (uma função como
+   `so_o_espaco()`) e olhe no tamanho do jogo: o piso tem de ler horizontal. Juntas transversais mais juntas no fundo
+   e mais abertas na frente; as longitudinais convergindo para o fundo (numa câmera de frente). Fiadas desencontradas
+   de largura igual são parede, não chão. Não precisa de perspectiva rígida: coerente com a câmera e legível.
+2. **Onde a parede encontra o piso** é uma linha só, atrás de tudo; o que se encosta nela pisa logo à frente; o que
+   está mais perto pisa mais embaixo. Deixe chão à vista entre as coisas (o pé da mesa, a barra da roupa, o pé do
+   banco) onde ele explica a posição delas.
+3. **Elevação só onde ela existe** (o presbitério, um estrado): o piso de cada degrau claro (horizontal), a frente
+   escura (vertical). Não invente um degrau para justificar um objeto mal apoiado.
+4. **Cada objeto apoiado**: tampo (o claro de cima e a espessura), pernas até o piso, base ou rodapé; o que pesa (o
+   altar) tem base mais larga. As portas têm soleira; a entrada liga o vão ao piso de dentro.
+5. **As sobreposições**, também durante a animação: em cada cruzamento, decida o que está à frente (a roupa e o pé da
+   mesa não se tocam; uma conta pode conferir que nenhum pixel da figura cai nas pernas em nenhuma pose do ciclo).
+6. **Sombra de contato** de um pixel, só depois da geometria: ela confirma o apoio, não o cria.
+7. **O primeiro plano** enquadra pelos cantos; uma silhueta que esconde os apoios ou faz uma barra sem função sai.
 
 ## 3. Construir o ambiente
 
@@ -249,4 +274,6 @@ ferramenta: o pilão no almofariz, a faca na tábua, a concha no caldeirão.
 | O braço da menina como uma barra no ombro | a bancada de adulto: o almofariz na altura do peito dela | mudar a cena (o banquinho), não esticar o braço (5b, passo 3) |
 | Os maços como pinhatas | o mesmo saco simétrico em cores diferentes, o nó em bloco | cada planta pela silhueta dela, à mão: o barbante e as voltas da amarração, os talos, o leque, a espiga, a cabeça redonda, o cacho de bolinhas |
 | O braço "contínuo demais" perto do corpo | 12 poses de um tique no braço, o corpo em passos raros de 1 px | poucas poses expressivas sustentadas, o tempo na pressão (5b, passo 8) |
+| Móveis e pessoas grudados na parede (o templo B) | tudo pisando na linha onde o piso começava; o piso em fiadas de parede | o espaço sozinho primeiro; a parede encontrando o piso atrás de tudo, chão à vista entre as coisas (3a) |
+| A roupa misturada ao pé da mesa | a barra do hábito encostada na perna, o hábito no mesmo marrom da madeira | 2 px de chão entre eles; o hábito noutro valor; a conta das sobreposições em todo o ciclo (3a) |
 | O pescoço solto do vestido | a grade da cabeça desenhada sem olhar onde começa o tronco | o pescoço da grade cai no colo do vestido em todas as poses da cabeça |

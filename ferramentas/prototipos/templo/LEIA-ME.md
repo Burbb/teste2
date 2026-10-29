@@ -1,6 +1,7 @@
 # Protótipo: o interior do templo (candidatas A e B)
 
-28/10/2026. **Só no protótipo, esperando a avaliação do Jean.** O jogo não carrega esta pasta: diante do templo, a
+28/10/2026. **A B é a direção escolhida pelo Jean** (a A fica como histórico); a segunda passada da B corrige o espaço
+(seção "B, segunda passada"). **Só no protótipo, esperando a avaliação do Jean; a integração não está autorizada.** O jogo não carrega esta pasta: diante do templo, a
 vila continua aproximada, com o balcão. Segundo interior da etapa 5 (Curandeira → Templo → Taverna; a taverna não foi
 começada). Feito pelo fluxo da skill `arte-cenas-fenda`.
 
@@ -16,7 +17,7 @@ A faixa do alto:
 
 | Botão | O que faz |
 |---|---|
-| **Candidata A / Candidata B** | troca o interior (os pontos da cena acompanham) |
+| **Candidata B / A (histórico)** | troca o interior (a demonstração abre na B; os pontos da cena acompanham) |
 | **Ferido, 1º grátis** | o herói com 40% da vida e o primeiro atendimento por usar (o estado de abertura) |
 | **Sem ouro** | o herói ferido, sem ouro e com o grátis já usado: o cartão apagado com o motivo |
 | **Odette ferida** | só Odette precisa: o cartão "Cuidar de Odette" |
@@ -117,3 +118,43 @@ apagado); sair e voltar três vezes com um relógio só, a 100 ms; a pose parada
 - `b/desenho.py`, `b/figura.py`: a candidata B (o ambiente reaproveita as cores e o pincel da A).
 - `exportar.py`: as camadas de `camadas/a`, `camadas/b` e o `rotina.json`.
 - `demo.py`, `demo.bat`, `tela/` (`cena-templo.js`, `faixa.js`, `templo.css`): a demonstração.
+
+## B, segunda passada (28/10/2026): o piso, os planos e os apoios
+
+**O que o Jean disse:** a composição está boa (a câmera afastada, o arco e o altar no centro, a janela quente, a
+entrada à esquerda, os bancos, o atendimento à direita); o problema era a perspectiva e o apoio. O piso da direita
+parecia a frente de um degrau ou uma parede baixa; clérigo, mesa, armário e porta terminavam numa faixa escura sem
+chão à frente (flutuando ou grudados na parede); a roupa do clérigo se misturava ao pé da mesa.
+
+**A causa:** tudo pisava na linha em que o piso começava (y 70), e o piso, em fiadas desencontradas de largura igual,
+lia como as fiadas de uma parede. A referência gerada não resolve isso sozinha: a perspectiva precisou da conferência
+própria.
+
+**O que mudou** (`b/desenho.py`, o espaço conferido primeiro sozinho, `so_o_espaco()`):
+- o piso contínuo da entrada ao atendimento: as juntas transversais mais juntas no fundo e mais abertas na frente, as
+  longitudinais convergindo para o fundo da nave; a parede de fundo encontrando o piso em y 58, atrás de tudo;
+- a elevação só no presbitério: o piso dele e o do degrau claros, as frentes dos dois degraus escuras; o altar como um
+  bloco de pedra com a base mais larga apoiada no piso dele, a sombra no pé e a toalha só no alto; o castiçal de chão
+  apoiado ali também; as colunas de pé no piso da nave, logo à frente dos degraus;
+- o armário encostado na parede com o rodapé no piso logo à frente dela; a porta lateral e a da rua com a soleira; a
+  luz do dia deitada no piso à frente da entrada; o banquinho e a mesinha do incenso com os pés no piso;
+- a mesa dos panos mais à frente: o tampo (o claro de cima e a espessura), as pernas até o piso, a travessa, a caixa
+  embaixo; os bancos em três fileiras pisando cada uma mais à frente, com o vão até o piso, as cabeceiras e um pé no
+  meio; chão à vista entre as coisas;
+- as sombras de contato de um pixel, depois da geometria;
+- o primeiro plano só nos cantos (o pote baixo à esquerda, a jarra à direita); a caixa preta do meio saiu.
+
+**O clérigo** (`b/figura.py`): a mesa acaba em x 219 e a barra do hábito começa em x 220, com 2 px de chão entre o pé
+da mesa e a roupa; o hábito passou a uma lã crua acinzentada (o pé da mesa é madeira escura e quente) e o pano ficou
+mais claro que o avental. O monte e a pilha vieram para perto (o alcance: a conta do cotovelo pegou a pega no monte
+0,3 px além do braço, e o monte veio 1 px, em vez de o braço esticar). Uma conta confere que nenhum pixel da figura cai
+nas pernas da mesa em nenhuma das 8 poses do ciclo. A atividade, o ritmo e a participação do corpo são os de antes.
+
+**Conferido:** o espaço sozinho e a cena inteira ampliados sem suavização; as 8 poses do ciclo, uma a uma; no jogo,
+pela demonstração, a 1920×945 e a 1280×720: o interior no lugar da vila com o balcão e os pontos (Clérigo, Saída),
+cuidar da vida com o balcão continuando, as duas candidatas, a Saída e o Esc, ninguém precisando, sem ouro, sair e
+voltar com um relógio só, a pose parada, sem erros no console.
+
+**Limites:** o rosto do clérigo continua de poucos pixels (a escala da referência); o piso não segue uma perspectiva
+matemática exata (as juntas convergem para um ponto só e as transversais foram postas à mão), de propósito, pela
+leitura no tamanho do jogo.

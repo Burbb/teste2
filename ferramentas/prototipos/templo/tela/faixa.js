@@ -9,7 +9,7 @@
 
 (() => {
   if (typeof ACOES_OCULTAS !== "undefined" && !ACOES_OCULTAS.includes("tpl_estado")) ACOES_OCULTAS.push("tpl_estado");
-  document.body.dataset.tplCand = document.body.dataset.tplCand || "a";
+  document.body.dataset.tplCand = document.body.dataset.tplCand || "b";  // a B é a direção escolhida (a A fica como histórico)
 
   const DADOS = () => ({ cena: "templo", titulo: "O templo", pagina: true, pontos: [
     { id: "clerigo", nome: "Clérigo", faz: "cuidar da vida", estado: "O clérigo, na mesa dos panos.", servicos: true },
@@ -40,8 +40,8 @@
   const f = document.createElement("div");
   f.id = "faixa-tpl";
   f.innerHTML = `<b>Templo (protótipo)</b>
-    <button type="button" data-cand="a" aria-pressed="true">Candidata A</button>
-    <button type="button" data-cand="b" aria-pressed="false">Candidata B</button>
+    <button type="button" data-cand="b" aria-pressed="true">Candidata B</button>
+    <button type="button" data-cand="a" aria-pressed="false" title="A primeira direção, guardada como histórico">A (histórico)</button>
     <span class="sep"></span>${ESTADOS.map(([id, nome]) => `<button type="button" data-tpl="${id}">${nome}</button>`).join("")}
     <button type="button" data-reduzido aria-pressed="false">Pose parada</button><span class="aviso"></span>`;
   document.body.appendChild(f);

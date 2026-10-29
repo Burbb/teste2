@@ -18,10 +18,10 @@ from .desenho import PES, QH, QW, Pincel, Tela
 
 COR = {
     "pele": ("#b07858", "#cc9676", "#82543a"),
-    "habito": ("#5a4a3a", "#6e5c48", "#3e3226"),
-    "avental": ("#857c68", "#9a9078", "#655e50"),
+    "habito": ("#625c52", "#777064", "#46413a"),   # a lã crua acinzentada (o pé da mesa é madeira escura e quente)
+    "avental": ("#8f8672", "#a39a84", "#6e675a"),
     "cabelo": ("#3e342c", "#5a5048", "#2a221c"),
-    "linho": ("#c8bea6", "#e0d8c2", "#9a917c"),
+    "linho": ("#d4cab2", "#e8e0ca", "#a29882"),
 }
 X, TOPO = 222, 39
 TRONCO = [(47, 225, 228), (48, 224, 229), (49, 223, 230), (50, 223, 230), (51, 223, 230), (52, 223, 230),
@@ -29,8 +29,8 @@ TRONCO = [(47, 225, 228), (48, 224, 229), (49, 223, 230), (50, 223, 230), (51, 2
 BARRA = (220, 233)
 OMBRO = (227, 49)
 BRACO = (6.0, 7.0)
-MONTE = (214, 54)    # o monte de panos soltos, no tampo (o canto de cima à esquerda)
-PILHA = (218, 53)    # a pilha dos dobrados, embaixo das mãos
+MONTE = (212, 54)    # o monte de panos soltos, no tampo (o canto de cima à esquerda)
+PILHA = (214, 53)    # a pilha dos dobrados, embaixo das mãos (a mesa acaba em x 219; a barra do hábito, em 220)
 
 CABECA = {
     "baixo": [
@@ -57,14 +57,14 @@ CABECA = {
 
 # as poses: os ombros (o tronco), a cabeça, as duas mãos e o pano (onde está e que forma tem)
 POSES = {
-    "pega": {"ombro": (-2, 1), "cabeca": (-2, 1, "baixo"), "perto": (214, 54), "longe": (215, 53), "pano": None},
-    "ergue": {"ombro": (0, -1), "cabeca": (0, 0, "baixo"), "perto": (217, 47), "longe": (218, 46), "pano": "pendurado"},
-    "sacode": {"ombro": (0, -1), "cabeca": (0, 0, "baixo"), "perto": (217, 48), "longe": (218, 47), "pano": "balanca"},
-    "dobra": {"ombro": (0, 0), "cabeca": (-1, 1, "baixo"), "perto": (218, 49), "longe": (219, 48), "pano": "meio"},
-    "assenta": {"ombro": (-1, 0), "cabeca": (-1, 1, "baixo"), "perto": (218, 52), "longe": (219, 52), "pano": "dobrado"},
-    "alisa": {"ombro": (-1, 1), "cabeca": (-1, 1, "baixo"), "perto": (218, 52), "longe": (220, 52), "pano": None},
-    "beira": {"ombro": (0, 0), "cabeca": (-1, 1, "baixo"), "perto": (221, 55), "longe": (222, 55), "pano": None},
-    "olha": {"ombro": (1, -1), "cabeca": (0, -1, "alto"), "perto": (221, 55), "longe": (222, 55), "pano": None},
+    "pega": {"ombro": (-3, 1), "cabeca": (-3, 1, "baixo"), "perto": (212, 54), "longe": (213, 53), "pano": None},
+    "ergue": {"ombro": (0, -1), "cabeca": (0, 0, "baixo"), "perto": (215, 47), "longe": (216, 46), "pano": "pendurado"},
+    "sacode": {"ombro": (0, -1), "cabeca": (0, 0, "baixo"), "perto": (215, 48), "longe": (216, 47), "pano": "balanca"},
+    "dobra": {"ombro": (0, 0), "cabeca": (-1, 1, "baixo"), "perto": (215, 49), "longe": (216, 48), "pano": "meio"},
+    "assenta": {"ombro": (-1, 0), "cabeca": (-1, 1, "baixo"), "perto": (215, 52), "longe": (216, 52), "pano": "dobrado"},
+    "alisa": {"ombro": (-1, 1), "cabeca": (-1, 1, "baixo"), "perto": (215, 52), "longe": (217, 52), "pano": None},
+    "beira": {"ombro": (0, 0), "cabeca": (-1, 1, "baixo"), "perto": (218, 55), "longe": (219, 55), "pano": None},
+    "olha": {"ombro": (1, -1), "cabeca": (0, -1, "alto"), "perto": (218, 55), "longe": (219, 55), "pano": None},
 }
 DOBRA = [("pega", 3), ("ergue", 3), ("sacode", 2), ("ergue", 2), ("dobra", 3), ("assenta", 3), ("alisa", 5)]
 ROTINA = DOBRA * 2 + [("beira", 3), ("olha", 14), ("beira", 3)]
@@ -126,7 +126,8 @@ def figura(nome):
             px(a_, y, 1, 1, av_luz)
             px(a_ + w - 1, y, 1, 1, av_esc)
     px(b0 + 1, PES - 2, b1 - b0 - 1, 1, ha_esc)
-    px(b0 - 1, PES - 2, 3, 2, "#2a1c12")
+    px(b0, PES - 2, 3, 2, "#2a1c12")                       # a ponta da sandália, saindo da barra
+    px(b0, PES, b1 - b0 + 1, 1, "#1c1a17")                # a sombra de contato no piso
     # ---- o tronco: o hábito, o peito do avental, o cordão
     for y, a_, b_ in TRONCO:
         dx, dy = desvio(y)

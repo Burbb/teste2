@@ -8251,3 +8251,21 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   enrola ataduras na mesa dos unguentos, ~42 px), e **B**, da referência do Jean (a nave de frente para o altar sob o
   arco; o clérigo dobra panos, ~31 px; sem os símbolos gerados). O interior entra no lugar da vila aproximada; o balcão
   e os cartões são os de sempre. Conferido na demonstração nas duas resoluções. A taverna não foi começada.
+
+### 28/10/2026 (data do computador local) — Templo B: o piso, os planos e os apoios (protótipo, segunda passada)
+
+- **Avaliação do Jean:** a B é a direção do templo (a A fica como histórico); a composição está boa. O problema era a
+  perspectiva e o apoio: o piso da direita parecia a frente de um degrau, os móveis e o clérigo pareciam flutuar ou
+  estar grudados na parede, e a roupa do clérigo se misturava ao pé da mesa. Integração não autorizada.
+- **Feito (só no protótipo, `ferramentas/prototipos/templo/b`):** o espaço construído e conferido antes dos objetos: o
+  piso contínuo com as juntas convergindo para o fundo, a parede encontrando o piso atrás de tudo, a elevação só no
+  presbitério (os degraus com o piso claro e a frente escura, o altar como bloco com base), cada objeto com o seu apoio
+  (tampo, espessura, pernas, rodapé, soleira) e chão à vista entre eles, as sombras de contato depois, o primeiro plano
+  só nos cantos; o clérigo com 2 px de chão entre o hábito e o pé da mesa, o hábito em outro valor, e a conta das
+  sobreposições nas 8 poses. A demonstração abre na B.
+- **Skill `arte-cenas-fenda`:** a seção 3a (o espaço antes dos objetos) e o passo 4 do fluxo: a referência de
+  composição discutida com o Jean, o piso, os planos, a circulação e os apoios validados antes do detalhe, as
+  sobreposições conferidas durante a animação; a referência gerada não prova a própria perspectiva.
+- **Conferido:** o espaço sozinho e a cena ampliados; as poses; no jogo, pela demonstração, nas duas resoluções (o
+  interior, os pontos, os serviços, as duas candidatas, a Saída e o Esc, ninguém precisando, sem ouro, o relógio, a pose
+  parada, sem erros no console). Esperando a avaliação do Jean.
