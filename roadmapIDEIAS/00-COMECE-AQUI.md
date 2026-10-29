@@ -8403,3 +8403,22 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Os limites que ficam:** o velho do fogo com 4 px de cabeça; a cicatriz de Morel em dois pixels; a perspectiva
   forçada do piso da galeria. **Estudo estático em avaliação, sem integração:** a animação do elenco e a integração
   esperam o Jean; som, equilíbrio e narrativa adiados.
+
+### 29/10/2026 (data do computador local) — A taverna D: os conjuntos refeitos (protótipo, estudo estático, nada no jogo)
+
+- **Pedido do Jean:** a C melhorou a organização, mas não foi aprovada; o maior problema era a relação entre a pessoa,
+  o assento e a mesa (Morel longe do espaldar, o jogador de amarelo suspenso, a cadeira vazia grande e atravessando o
+  tampo, o homem de marrom misturado ao balcão, o freguês de costas em barra, a caneca do taverneiro numa mancha, o
+  velho do fogo sem pose); também os degraus, o piso da galeria, a boca da lareira, o balcão, as prateleiras, as faixas
+  no reboco, a direita fundida e a narração da praça embaixo do interior.
+- **Feito, só no protótipo** (`ferramentas/prototipos/taverna/d`; `demo.bat` abre na D, a C, a B e a A no botão
+  Protótipo; o LEIA-ME tem o roteiro e os compromissos): cada conjunto refeito junto (o assento, a orientação, o
+  alcance, a atividade); a escada de piso largo e menos íngreme; a galeria com o piso claro e o guarda-corpo discreto;
+  a lareira com a boca funda; o balcão com a borda grossa; as prateleiras com poucos objetos de silhueta própria; a luz
+  contínua, sem anéis; dentro da taverna, a narração da vila sai da página (fica a frase da taverna, uma vez).
+- **Conferido:** técnico (no jogo, as duas janelas): os pontos e os cartões, Morel presente e recrutado, a troca de
+  candidata (a C fotografada no mesmo estado), a narração da vila fora da taverna e de volta na vila, os cartões e o
+  Voltar acima da doca, teclado, Saída, Esc, relógio, movimento reduzido, console. Artístico: no tamanho real e ampliado
+  sem suavização, cada conjunto com o apoio, a orientação e o alcance legíveis; a avaliação final é do Jean.
+- **A lição** foi para a skill de cenas: quem senta se constrói junto do móvel e da atividade. **Estudo estático em
+  avaliação, sem integração;** a animação do elenco espera a aprovação; som, equilíbrio e narrativa adiados.
