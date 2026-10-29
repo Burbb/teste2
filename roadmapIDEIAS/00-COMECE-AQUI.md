@@ -8639,3 +8639,26 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Conferido:** G2 e G no jogo a 1920×945 e 1280×720 (`g/conferir.mjs`), no tamanho real e ampliado sem suavização. O
   código do jogo não mudou.
 - **Parado aqui:** a avaliação do acabamento é do Jean; nada animado nem integrado.
+
+### 29/10/2026 (data do computador local) — A taverna: a G2 aprovada com correções (G3) e o estudo de Morel (protótipo)
+
+Dois trabalhos separados, nenhum integrado nem animado.
+
+**1. A G2 aprovada, com correções locais (a G3).** O Jean aprovou a composição, a câmera e o acabamento da G2 e pediu
+três correções, sem reabrir o resto:
+- o freguês da esquerda reconstruído pela anatomia de quem está sentado perto da câmera (a cabeça de adulto, o pescoço,
+  os ombros quase horizontais, o braço descendo para fora do quadro), escuro e secundário, sem cobrir mais a lareira;
+- as duas garrafas com o gargalo fora do eixo (a de vinho e a bojuda de âmbar) refeitas no eixo, apoiadas na tábua;
+- o pano passando pela borda da caneca, apertado pela mão e pendendo em pregas, com a ponta e a barra em diagonal.
+Feita da fonte da G2 (`g3/retoques.py`, `g3/fonte.py`; `g3/aseprite/taverna-g3.aseprite`, `--criar` protegido); a G2
+continua igual. `demo.bat` abre na G3, com a G2 e a G no painel. Conferida no jogo a 1920×945 e 1280×720.
+
+**2. O estudo livre "Diante de Morel", com liberdade de acabamento, em avaliação.** Outra vista da mesma taverna: o
+jogador sentado à mesa, de frente para Morel, com o balcão, o taverneiro e a lareira ao fundo. Referência "Morel
+diante do fogo na taverna" (registrada com o hash; só orienta). 360×120, paleta própria, luz em camadas (multiplicar e
+somar), feito no Aseprite pela ponte (`morel/aseprite/morel-mesa.aseprite`, a autoridade; `morel/exportar.py` só
+exporta). Morel segue o jogo (a cicatriz, o couro, o vermelho no peito, a ombreira, a pele, a espada) e come sem
+levantar os olhos do prato. O LEIA-ME do protótipo diz o que foi desenhado no editor e o que foi automatizado. Abre no
+painel, numa vista à parte, em ampliação inteira ou no tamanho nativo; "Caber na janela" é uma prévia reduzida, dita
+como tal.
+- **Parado aqui:** a avaliação dos dois lotes é do Jean.

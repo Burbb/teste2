@@ -1,10 +1,86 @@
-# Protótipo: o interior da taverna (a G, o balcão de perto, e a G refinada; a H e o salão panorâmico como histórico)
+# Protótipo: o interior da taverna (a G3 e o estudo de Morel; a G2, a G, a H e o salão como histórico)
+
+**O estado** (29/10/2026): **a G2 está aprovada** pelo Jean (a composição, a câmera e o acabamento geral). **A G3** é a
+G2 com três correções locais pedidas por ele (o freguês da esquerda, duas garrafas, o pano), para comparar com a G2 no
+mesmo `demo.bat`. À parte, **o estudo livre "Diante de Morel"**, outra vista da mesma taverna, com liberdade de
+acabamento, em avaliação. Nada animado nem integrado.
+
+## A G3 (a G2 aprovada com as correções locais)
+
+**Feita a partir da fonte da G2**, sem reabrir a câmera, o balcão, a luz nem o acabamento: `g3/fonte.py --criar` lê as
+células de `g2/aseprite/taverna-g2.aseprite`, aplica `g3/retoques.py` e grava `g3/aseprite/taverna-g3.aseprite` (a
+autoridade daqui em diante; `--criar` não a sobrescreve sem `--refazer`). Cada parte nova usa a paleta e a luz da G.
+- **O freguês da esquerda** (`fregues_esquerda`): na G2 a cabeça pequena ficava ligada a um corpo enorme descendo em
+  diagonal, sem ombro, costas nem braço. Refeito pela anatomia de quem está sentado ao balcão, perto da câmera: a
+  cabeça de um adulto nessa distância (~19×22 px, como na G), o pescoço, a gola, a linha dos ombros quase horizontal, o
+  ombro de cá redondo e o braço descendo do ombro para fora do quadro (o cotovelo, apoiado no balcão, fica abaixo da
+  borda), as costas entre a gola e o braço; depois a capa por cima. Continua uma silhueta escura e secundária, no mesmo
+  canto, sem cobrir mais a lareira; o contorno do lado do fogo pega a luz dela. Onde o da G e o da G2 estavam, volta o
+  balcão da G.
+- **As garrafas** (`garrafas`): a de vinho verde e a bojuda de âmbar tinham o gargalo de 2 px sobre um corpo de
+  largura ímpar (meio pixel fora do eixo, parecendo inclinado). Refeitas no eixo: a base apoiada na tábua, o corpo, os
+  ombros afinando, o gargalo, o anel da boca e a rolha. Atrás delas volta a parede da G.
+- **O pano** (`pano`): saía da mão como um bloco quadrado. Agora passa por cima da borda da caneca (a dobra entrando
+  na boca), desce pelo lado dela até a mão que o aperta e pende em pregas que convergem para o punho, com a ponta mais
+  baixa e a barra em diagonal. A pose, as mãos simples e a caneca não mudam.
+
+**No painel:** "G3: a G2 com as correções" (o padrão), "G2 aprovada (antes das correções)" e "G original", com a troca
+imediata, no mesmo estado do jogo. Os pontos, os cartões, os serviços e as condições são os da G.
+
+## O estudo livre "Diante de Morel" (em avaliação)
+
+**O pedido:** outra perspectiva da mesma taverna, com liberdade de acabamento (resolução, paleta, densidade, luz) e
+construída no Aseprite: o jogador sentado à mesa, de frente para Morel, bem perto; ao fundo, o balcão, o taverneiro e
+os elementos que reconhecem o lugar. A referência é "Morel diante do fogo na taverna"
+(`ferramentas/arte/referencias/cenarios internos`): ela orienta a proximidade, a situação e a atmosfera; não é copiada.
+
+**As escolhas:** 360×120 (3:1, como a referência; a cabeça de Morel com ~31 px), uma paleta própria mais rica que a das
+cenas do jogo, a luz feita em camadas com modo de mistura (a `sombra` multiplica; o `brilho` soma, em anéis com a borda
+pontilhada) e as chamas por cima. Morel segue o jogo, não a imagem gerada: o cabelo e a barba castanhos curtos, as
+sobrancelhas carregadas, a cicatriz em diagonal da testa à bochecha passando pelo nariz, o gibão de couro com o colete
+vermelho no peito (as duas tiras com fivelas), a ombreira de metal num ombro, a pele no outro, o punho da espada atrás
+do ombro. Ele come "sem levantar os olhos do prato" (o texto do encontro): as pálpebras baixas, a colher na mão
+direita com o cotovelo apoiado na mesa e a concha dentro do ensopado, a outra mão espalmada junto da tigela. Ele se
+senta numa cadeira de espaldar (os montantes atrás dos ombros). Na mesa, a caneca de estanho e a vela no pires perto
+de nós (a fonte de luz principal), a tigela, o pão na tábua. Ao fundo, à esquerda, o mesmo lugar da G2 visto de outro
+ângulo: a lareira com o caldeirão, as prateleiras com a louça e as garrafas, o barril, as linguiças e o alho, o
+lampião, o balcão com três banquetas e o taverneiro pequeno atrás dele (a calva, a barba, a camisa clara, o avental, a
+caneca e o pano); à direita, a pedra, um esteio e uma prateleira curta.
+
+**Como foi feito (o que foi desenhado no editor e o que foi automatizado):**
+- **No editor, pelas ferramentas do Aseprite** (`app.useTool`: o retângulo e a elipse cheios, o contorno preenchido, a
+  linha, o lápis), comandadas pela ponte do Aseprite, camada por camada, com cada forma posta por mim e conferida na
+  exportação ampliada: as paredes, o balcão, as prateleiras e o que está nelas, as banquetas, a mesa, a tigela, a
+  caneca, a vela, o pão, o corpo, a ombreira, a pele, os braços, as mãos, a colher, a cadeira, a sombra, os halos e as
+  chamas. Os retoques também: o corpo refeito duas vezes (o pescoço comprido e a ombreira como uma panela, na primeira),
+  o colete estreitado num V, a ombreira refeita como uma capa sobre o ombro, a pele refeita (lia como malha), a concha
+  cheia, o modelado do rosto, o fogo refeito em línguas, os halos diminuídos.
+- **Grades desenhadas à mão, postas por um laço:** a cabeça de Morel (31×31) e o taverneiro (13×15) foram desenhados
+  pixel a pixel numa grade de caracteres e postos na camada por um laço em Lua (o laço só copia; o desenho é a grade).
+- **Automatizado:** a camada `guia` (a redução automática da referência a 360×120, oculta, fora da exportação); a
+  repetição mecânica de alguns padrões (as juntas da pedra e das lajes, as juntas das tábuas fugindo para o ponto de
+  fuga, a borda pontilhada dos anéis de luz, os tufos da pele); a exportação (`morel/exportar.py`: o Aseprite em lote
+  achata as camadas visíveis com os modos de mistura; saiu idêntica à exportação do editor).
+- **Não houve desenho com o mouse:** tudo passou pela ponte. Nenhuma imagem foi gerada em Python e empacotada.
+
+**A fonte é a autoridade:** `morel/aseprite/morel-mesa.aseprite` (as camadas `guia` (oculta), `parede`, `balcao`,
+`taverneiro`, `cadeira`, `morel`, `mesa`, `maos`, `sombra`, `brilho`, `chamas`). A exportação lê dela.
+
+**Ver:** no botão Protótipo, "Diante de Morel (o estudo em Aseprite)" abre uma vista à parte, por cima do jogo (fora da
+HUD), na maior ampliação inteira que cabe na janela (5× a 1920×945, 3× a 1280×720); os botões trocam para o tamanho nativo
+(1×) ou outra ampliação inteira; "Caber na janela" é uma prévia reduzida, e a legenda diz quando a imagem não está
+fiel. Esc ou Fechar voltam ao jogo. Não há navegação, diálogo, regra nem encontro novos.
+
+**O que ainda vejo de limite:** a ombreira é grande e clara para o tamanho da cabeça; o rosto de Morel resolve a
+expressão (os olhos baixos, a cicatriz, a barba) com pouco modelado; o taverneiro, pequeno, é reconhecível pela calva,
+pela barba e pela camisa, sem leitura do gesto; o fundo da direita é simples (a pedra, um esteio, uma prateleira).
+
+## A decisão anterior: a G escolhida e a G2
 
 **A decisão do Jean** (29/10/2026): **a G é a composição escolhida** (a câmera, o enquadramento, o balcão, as
-silhuetas). **A H foi uma experiência encerrada** (o afastamento não foi aprovado) e fica só como histórico. **O
-acabamento da G continua em avaliação:** a **G refinada (G2)** é a G com retoques locais (o taverneiro, a cabeça
-contra a prateleira, o ombro do freguês da esquerda), para comparar com a G original no mesmo `demo.bat`. Nada animado
-nem integrado.
+silhuetas). **A H foi uma experiência encerrada** (o afastamento não foi aprovado) e fica só como histórico. A **G
+refinada (G2)** é a G com retoques locais (o taverneiro, a cabeça contra a prateleira, o freguês da esquerda); depois
+**aprovada**.
 
 **A candidata G** é a câmera perto do balcão, de frente, como quem está sentado diante dele, pela referência frontal
 "Taverneiro desconfiado atrás do balcão-1" (`ferramentas/arte/referencias/cenarios internos`). A cena representa o
@@ -20,13 +96,13 @@ mais correções nessa direção.
 
 Dê dois cliques em `demo.bat` (ou `python ferramentas/prototipos/taverna/demo.py` na raiz). O jogo abre no navegador
 num **save temporário** (os saves do Jean não são lidos nem tocados), na porta 8795: o Guerreiro no Vau, com a
-campanha começada e 60 de ouro. Clique na **Taverna** na vila: a G refinada aparece no topo e o balcão de sempre
+campanha começada e 60 de ouro. Clique na **Taverna** na vila: a G3 aparece no topo e o balcão de sempre
 embaixo. Se uma demonstração antiga estiver aberta, feche a janela dela antes (a porta é a mesma).
 
-O botão **Protótipo** na barra do alto abre o painel: a candidata (**G refinada (G2)**, o padrão, e **G original**: a
+O botão **Protótipo** na barra do alto abre o painel: a candidata (**G3**, o padrão, **G2** e **G original**: a
 troca é imediata, sem sair da taverna, no mesmo estado do jogo; a H, a prova de qualidade e da **F** à **A**, o
 histórico), o estado do save (**Despensa esperando**, **Homem do canto**, **Morel conhecido**, **Morel recrutado**,
-**Sem ouro**) e a **Pose parada** (o fogo e o lampião param).
+**Sem ouro**), a **Pose parada** (o fogo e o lampião param) e o estudo **Diante de Morel**.
 
 ## A G refinada (G2)
 
@@ -190,6 +266,9 @@ Esc e o Voltar à vila voltando à vila, a pose parada parando o fogo, o console
   `g/fonte.py`: a fonte em Aseprite e a exportação para `camadas/g/`; `g/conferir.mjs`: a conferência no jogo, da G e
   da H.
 - `g2/retoques.py` e `g2/fonte.py`: a G refinada (os retoques seletivos e a fonte dela, feita da fonte da G).
+- `g3/retoques.py` e `g3/fonte.py`: a G3 (as correções locais e a fonte dela, feita da fonte da G2).
+- `morel/aseprite/morel-mesa.aseprite` e `morel/exportar.py`: o estudo livre de Morel e a exportação dele
+  (`camadas/morel/estudo.png`).
 - `h/desenho.py`, `h/taverneiro.py` e `h/fonte.py`: a H (histórico).
 - `f/` a `b/`, `prova/` e a raiz (`desenho.py`, `gente.py`): o salão panorâmico, histórico.
 - `exportar.py`: as camadas da A em `camadas/` e as dos estudos estáticos em `camadas/b/` a `camadas/f/`.
