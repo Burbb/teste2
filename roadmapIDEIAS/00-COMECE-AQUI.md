@@ -8518,3 +8518,20 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   outra mão. Aberto: a 1280, o antebraço e o punho do de verde junto da barba ainda pequenos; a calota acesa do ombro de
   cá é luz de cima; o resto da B2 (o tamanho em relação à sala, o grão, a escala fracionada).
 - **Parado aqui:** a avaliação é do Jean; nada animado, integrado ou aplicado ao resto da sala.
+
+### 29/10/2026 (data do computador local) — A taverna: a B4, o ombro de cá do de verde (protótipo, nada no jogo)
+
+- **Pedido do Jean:** a B3 esclareceu os braços; o de ocre fica como está. No de verde, suavizar só o ombro de cá: a
+  faixa clara lia como tira ou ombreira, e a separação escura fazia o braço parecer encaixado. Integrar ombro, peito e
+  costas, quebrar a luz, sem divisão rígida; preservar a leitura dos braços, o cotovelo no tampo e a mão na coxa; não
+  mexer no punho junto da barba, na cabeça, nas pernas, nos móveis, na escala nem no de ocre. Versões identificadas
+  nos controles.
+- **Feito** (`ferramentas/prototipos/taverna/prova/b4`; a seção "A B4" de `prova/LEIA-ME.md`): a luz do ombro em duas
+  manchas curtas sobre o tecido, o tom médio contínuo do ombro ao peito e às costas, uma sombra de um pixel no tom de
+  sombra só do sovaco ao cotovelo, o punho dobrado sem a faixa clara. A fonte `b4.aseprite` é a da B3 com só a camada
+  verde retocada (55 pixels; conferido o que salvou); a B3 e a B2 exportam iguais. O botão Protótipo diz a versão à
+  vista desde a entrada (antes, um texto fixo dizia "prova A"); `demo.bat` abre na B4.
+- **Conferido no jogo** a 1920×945 e 1280×720, na cena e isolado. Aberto: na cena completa, os dois jogadores parecem
+  maiores e mais finos que as figuras da F à mesma distância (a escala ficou, por pedido); a 1280 o braço de cá ficou
+  um pouco menos marcado que na B3, ainda legível.
+- **Parado aqui:** a avaliação é do Jean; nada animado, integrado ou aplicado ao resto da sala.
