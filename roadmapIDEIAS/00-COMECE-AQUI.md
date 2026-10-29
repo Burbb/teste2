@@ -8279,3 +8279,14 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   no pires em cima do armário e duas arandelas de ferro com vela; a folha da porta da rua aberta, de quina, com tábuas,
   ferragens e argola; a toalha num cravo; no primeiro plano, as pontas da fileira de bancos mais próxima no lugar dos
   vasos. O LEIA-ME do protótipo tem a tabela. Conferido no jogo nas duas resoluções. Integração não autorizada.
+
+### 28/10/2026 (data do computador local) — Templo B: construção e identidade dos objetos (protótipo, quarta passada)
+
+- **Pedido do Jean:** preservar a composição e o piso; estrutura de madeira coerente, portas reconhecíveis, fogo com
+  suporte e recipiente, primeiro plano com propósito, a luz quadriculada da entrada; poucos objetos legíveis, podendo
+  remover o que não ajuda.
+- **Feito (só no protótipo):** os postes de madeira saíram (o frechal agora apoia em mísulas de pedra); a porta da rua
+  em arco de pedra, com o lado de fora e a luz no piso chapados (sem xadrez); a porta lateral com dobradiças e argola;
+  o castiçal de chão com os copos; o fogareiro do incenso em tigela com as brasas (a vela solta saiu); a toalha e a
+  caixinha do armário saíram; o primeiro plano saiu (as pontas de banco não se alinhavam com os blocos). Conferido no
+  jogo nas duas resoluções. Integração não autorizada.

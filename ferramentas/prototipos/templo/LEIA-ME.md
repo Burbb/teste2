@@ -179,3 +179,28 @@ bacia (a água para limpar), a caixa dos panos, a mesinha do incenso, o banquinh
 
 **Conferido:** no jogo, pela demonstração, nas duas resoluções (o interior, os pontos, os serviços, a Saída e o Esc,
 ninguém precisando, sem ouro, o relógio, a pose parada, sem erros no console).
+
+## B, quarta passada (28/10/2026): construção e identidade dos objetos
+
+**O que o Jean pediu:** preservar a composição e o piso; revisar a construção e a identidade: a estrutura de madeira
+coerente, as portas reconhecíveis, o fogo com suporte e recipiente, um primeiro plano com propósito, a luz quadriculada
+da entrada; poucos objetos legíveis, de um templo em uso; pode remover o que não ajuda, sem substituir cada coisa.
+
+| O quê | Decisão |
+|---|---|
+| os postes de madeira rente à parede de pedra | **saíram** (não sustentavam nada que se visse); o frechal, a viga do alto que recebe o telhado, passou a apoiar em cinco mísulas de pedra saindo da parede, no mesmo espaçamento |
+| a porta da rua | o vão de pedra em arco, como o da porta lateral (antes, um batente de madeira na pedra); o lado de fora em faixas chapadas (o céu, o muro ao longe, a neve), fora do escurecimento pontilhado da sala; a folha aberta fica |
+| a luz da entrada | a mancha no piso chapada, de borda firme, em dois tons (mais clara junto da soleira); o pontilhado frio do piso saiu |
+| a porta lateral | as duas dobradiças de ferro e a argola |
+| o castiçal de chão | cada vela no seu copo, em cima da barra |
+| o incenso | o fogareiro passou de uma caixa a uma tigela de ferro com a borda, as brasas e o pé; a vela solta ao lado **saiu** |
+| o armário | **saíram** a toalha e a caixinha de cima; ficam os potes, a jarra e a vela no pires |
+| o primeiro plano | **saiu**: as pontas de banco dos cantos não se alinhavam com os dois blocos de bancos (seriam um terceiro bloco fora do corredor); sem ele, o piso fica todo à vista |
+
+As fontes de fogo, agora: as velas do altar nos castiçais de latão, as do castiçal de chão nos copos, as duas arandelas
+de ferro chumbadas na pedra, a vela no pires em cima do armário e o fogareiro do incenso. Cada chama tem a vela ou as
+brasas embaixo e o que as segura.
+
+**Conferido:** os recortes ampliados (a entrada, o altar, o atendimento); no jogo, pela demonstração, nas duas
+resoluções (o interior, os pontos, os serviços, a Saída e o Esc, ninguém precisando, sem ouro, o relógio, a pose
+parada, sem erros no console). Integração não autorizada.

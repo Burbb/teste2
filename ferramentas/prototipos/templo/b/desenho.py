@@ -42,8 +42,9 @@ C.update({
     "fundoArco": "#2a2622", "fundoArcoLuz": "#363029",
     "piso": "#4a443c", "pisoLuz": "#575047", "pisoJunta": "#332f2a", "contato": "#1c1a17",
     "degrau": "#5a534a", "degrauFrente": "#33302b",
+    "luzDia": "#5d6266", "luzDiaForte": "#727a80",
     "tapete": "#2e3640", "tapeteLuz": "#3c4652", "tapeteBorda": "#7a6430",
-    "brasa": "#c8501a",
+    "brasa": "#c8501a", "brasaEsc": "#7a2a10",
 })
 
 
@@ -59,28 +60,26 @@ def paredes(px):
     for x, y in [(20, 16), (50, 40), (210, 22), (250, 46), (300, 28), (226, 34)]:
         px(x + 1, y + 1, 14, 1, "pedraBLuz")
     px(0, PAREDE - 2, QW, 2, "pedraBEsc")   # o rodapé: a última fiada, mais escura, no encontro com o piso
-    for x0, x1 in ((0, 76), (190, QW)):     # o vigamento: a viga alta e as escoras
+    # a madeira do telhado: o frechal (a viga que corre no alto da parede e recebe o telhado), apoiado em mísulas de
+    # pedra saindo da parede, poucas e no mesmo espaçamento; acima dele, o escuro do telhado
+    for x0, x1 in ((0, 76), (190, QW)):
         px(x0, 0, x1 - x0, 4, "madeiraEsc")
-        px(x0, 4, x1 - x0, 2, "madeira")
+        px(x0, 4, x1 - x0, 3, "madeira")
         px(x0, 4, x1 - x0, 1, "madeiraLuz")
-    # os postes que seguram a viga, cada um com a mão-francesa reta (45°) para cada vão que sustenta: os do meio, dos
-    # dois lados; os do canto (junto da borda ou do arco), só para o lado do vão
-    for x0, lados in POSTES:
-        px(x0, 0, 4, PAREDE, "madeira")
-        px(x0, 0, 1, PAREDE, "madeiraLuz")
-        px(x0 + 3, 0, 1, PAREDE, "madeiraEsc")
-        for lado in lados:
-            for i in range(8):
-                x = x0 + 4 + i if lado > 0 else x0 - 2 - i
-                px(x, 13 - i, 2, 1, "madeira")
-                px(x, 14 - i, 2, 1, "madeiraEsc")
+        px(x0, 7, x1 - x0, 1, "madeiraEsc")
+    for x in MISULAS:
+        px(x, 8, 6, 2, "pedraBLuz")       # a mísula: duas pedras em degrau, a de cima mais larga
+        px(x, 8, 6, 1, "calLuz")
+        px(x + 1, 10, 4, 2, "pedraBLuz")
+        px(x + 1, 11, 4, 1, "pedraB")
+        px(x + 1, 12, 4, 1, "pedraBEsc")
 
 
-POSTES = [(2, (1,)), (62, (-1,)), (200, (1,)), (268, (-1, 1)), (314, (-1,))]  # x e os lados das mãos-francesas
+MISULAS = [22, 52, 214, 248, 292]  # o x de cada mísula de pedra sob o frechal
 
 
 def arandela(px, x, base):
-    """A arandela de ferro na parede: a chapa presa, o braço, o copo e a vela (a chama vem na camada velas, em
+    """A arandela de ferro chumbada na pedra: a chapa, o braço, o copo e a vela (a chama vem na camada velas, em
     (x, base - 7))."""
     px(x + 2, base - 1, 2, 4, "ferro")           # a chapa na parede
     px(x + 2, base - 1, 1, 4, "ferroLuz")
@@ -178,12 +177,13 @@ def presbiterio(px):
     px(cx, 38, 2, pe - 1 - 38, "ferro")
     px(cx - 3, pe - 1, 8, 1, "ferroLuz")
     px(cx - 3, pe, 8, 1, "contato")
-    px(cx - 5, 38, 12, 1, "ferroLuz")
-    for xx in (cx - 5, cx - 2, cx + 1, cx + 4, cx + 6):
-        px(xx, 34 + (xx % 3), 1, 4 - (xx % 3), "cera")
+    px(cx - 5, 39, 13, 1, "ferro")                       # a barra dos braços
+    for xx in (cx - 5, cx - 2, cx + 1, cx + 4, cx + 7):  # cada vela no seu copo, em cima da barra
+        px(xx - 1, 38, 3, 1, "ferroLuz")
+        px(xx, 35, 1, 3, "cera")
 
 
-VELAS = [(122, 27), (144, 27), (87, 33), (90, 32), (93, 33), (96, 32), (98, 33), (54, 33), (198, 33), (306, 40), (249, 23)]
+VELAS = [(122, 27), (144, 27), (87, 33), (90, 33), (93, 33), (96, 33), (99, 33), (54, 33), (202, 33), (249, 23)]
 
 
 def colunas(px):
@@ -214,21 +214,28 @@ def colunas(px):
 
 
 def entrada(px):
-    """A porta da rua, na parede da esquerda: o vão com a luz do dia (frio) até o piso, a soleira de pedra saindo um
-    pouco para dentro, a folha de tábuas aberta para dentro, o batente de madeira; a luz do dia deitada no piso da nave
-    à frente da porta; a arandela com a vela; o banquinho de esperar encostado na parede."""
-    x0, x1, y0 = 16, 30, 26
-    for y in range(y0, PAREDE):
-        t = (y - y0) / (PAREDE - y0)
+    """A porta da rua, na parede da esquerda: o vão de pedra em arco (como a porta lateral), com o lado de fora em
+    faixas chapadas (o céu de inverno, o muro ao longe, a neve), a soleira saindo um pouco para dentro, a folha de
+    tábuas aberta para dentro; a luz do dia deitada no piso à frente da porta; a arandela com a vela; o banquinho de
+    esperar encostado na parede."""
+    x0, x1, y0 = 16, 30, 30
+    cx, r = (x0 + x1) / 2, (x1 - x0) / 2
+    for y in range(y0 - round(r), PAREDE):     # o vão: o arco no alto, os lados retos
         for x in range(x0, x1):
-            px.p(x, y, "ceu" if pont(x, y, int(t * 26)) else "ceuAlto")
-    px(x0, 46, x1 - x0, 2, "longe")
-    px(x0, 48, x1 - x0, PAREDE - 48, "neve")
+            if y < y0 and math.hypot(x + 0.5 - cx, (y0 - y - 0.5)) > r:
+                continue
+            px.p(x, y, "ceuAlto" if y < 46 else "longe" if y < 48 else "neve")
+    px(x0, 48, x1 - x0, 1, "neveSombra")
+    # o batente de pedra: as ombreiras e as aduelas do arco (como o da porta lateral)
     for xx in (x0 - 3, x1):
-        px(xx, y0 - 3, 3, PAREDE - y0 + 3, "madeira")
-        px(xx, y0 - 3, 1, PAREDE - y0 + 3, "madeiraLuz")
-    px(x0 - 4, y0 - 5, x1 - x0 + 8, 3, "madeira")
-    px(x0 - 4, y0 - 5, x1 - x0 + 8, 1, "madeiraLuz")
+        px(xx, y0, 3, PAREDE - y0, "pedraBLuz")
+        px(xx, y0, 1, PAREDE - y0, "calLuz")
+        px(xx + 2, y0, 1, PAREDE - y0, "pedraB")
+    for y in range(y0 - round(r) - 3, y0):
+        for x in range(x0 - 3, x1 + 3):
+            d = math.hypot(x + 0.5 - cx, (y0 - y - 0.5))
+            if r <= d < r + 3:
+                px.p(x, y, "calLuz" if d < r + 1 else "pedraBLuz")
     # a soleira de pedra, no chão do vão, saindo para dentro (o piso dela claro, a frente escura)
     px(x0 - 3, PAREDE, x1 - x0 + 6, 1, "pedraBLuz")
     px(x0 - 3, PAREDE + 1, x1 - x0 + 6, 1, "pedraBEsc")
@@ -246,12 +253,12 @@ def entrada(px):
     px(h0, y0 + 1, 1, PAREDE - y0, "madeiraLuz")
     px.p(h1 - 2, (y0 + PAREDE) // 2, "ferroLuz")  # a argola
     px.p(h1 - 2, (y0 + PAREDE) // 2 + 1, "ferro")
-    # a luz do dia deitada no piso, abrindo para a frente e para a direita (a perspectiva do piso)
-    for y in range(PAREDE + 2, PAREDE + 13):
+    # a luz do dia deitada no piso: uma mancha chapada, de borda firme, abrindo para a frente e para a direita (a
+    # perspectiva do piso); mais clara junto da soleira
+    for y in range(PAREDE + 2, PAREDE + 12):
         k = y - PAREDE - 2
-        for x in range(x0 - 2 + k // 2, x1 + 3 + k * 2):
-            if pont(x, y, 9 - k * 0.7):
-                px.p(x, y, "neveSombra")
+        a_, b_ = x0 - 1 + k // 3, x1 + 2 + round(k * 1.6)
+        px(a_, y, b_ - a_, 1, "luzDiaForte" if k < 3 else "luzDia")
     arandela(px, 54, 40)  # a arandela da entrada, acima do banquinho
     # o banquinho de esperar, encostado na parede, os pés no piso logo à frente dela
     px(46, 53, 14, 2, "madeiraMeio")
@@ -327,18 +334,14 @@ def atendimento(px):
     px(a0 - 2, ab, a1 - a0 + 4, 1, "contato")
     for x, y, w, h, cor in [(238, 35, 4, 5, "linho"), (243, 36, 4, 4, "linho"), (249, 35, 3, 5, "barro"), (254, 36, 4, 4, "barroEsc"),
                             (238, 43, 3, 5, "barro"), (243, 44, 5, 4, "linhoSombra"), (250, 43, 3, 5, "barroLuz"),
-                            (240, 27, 4, 4, "barro"), (252, 28, 5, 3, "madeiraMeio")]:
+                            (240, 27, 4, 4, "barro")]:
         px(x, y, w, h, cor)
         px(x, y, w, 1, cor + "Luz" if cor + "Luz" in C else cor)
-    px(265, 39, 2, 1, "ferroLuz")                          # o cravo do lado do armário e a toalha pendurada nele
-    px(265, 40, 3, 10, "linho")
-    px(265, 40, 3, 1, "linhoLuz")
-    px(267, 41, 1, 9, "linhoSombra")
     px(248, 30, 4, 1, "latao")                             # a vela no pires de latão, em cima do armário
     px(248, 30, 1, 1, "lataoLuz")
     px(249, 25, 2, 5, "cera")
     px(250, 25, 1, 5, "ceraEsc")
-    arandela(px, 198, 40)                                  # a arandela da parede, junto da coluna
+    arandela(px, 202, 40)                                  # a arandela da parede, junto da coluna
     # a porta lateral, de tábuas, no batente de pedra, com a soleira saindo um pouco para dentro
     d0, d1 = 284, 300
     px(d0 - 3, 26, d1 - d0 + 6, PAREDE - 26, "pedraBLuz")
@@ -346,7 +349,11 @@ def atendimento(px):
     px(d0, 29, d1 - d0, PAREDE - 29, "madeira")
     for xx in range(d0 + 3, d1, 4):
         px(xx, 29, 1, PAREDE - 29, "madeiraEsc")
-    px(d1 - 4, 44, 2, 3, "ferro")
+    for yy in (33, 50):                                     # as dobradiças de ferro, do lado das dobras
+        px(d0, yy, 9, 1, "ferroLuz")
+        px(d0, yy + 1, 9, 1, "ferro")
+    px(d1 - 4, 42, 2, 2, "ferroLuz")                        # a argola
+    px(d1 - 4, 44, 2, 1, "ferro")
     px(d0 - 3, PAREDE, d1 - d0 + 6, 1, "pedraBLuz")
     px(d0 - 3, PAREDE + 1, d1 - d0 + 6, 1, "pedraBEsc")
     # a mesinha do incenso, no piso à frente da parede, com o fogareiro e a vela
@@ -358,11 +365,13 @@ def atendimento(px):
         px(xx, 53, 2, mb - 53, "madeira")
         px(xx + 1, 53, 1, mb - 53, "madeiraEsc")
         px(xx - 1, mb, 4, 1, "contato")
-    px(303, 46, 7, 4, "ferro")
-    px(303, 46, 7, 1, "ferroLuz")
-    px.p(305, 46, "brasa")
-    px.p(307, 46, "brasa")
-    px(306, 42, 2, 8, "cera")
+    px(304, 44, 1, 1, "brasa")                              # o fogareiro: as brasas, a borda, a tigela, o pé
+    px(306, 44, 1, 1, "brasaEsc")
+    px(308, 44, 1, 1, "brasa")
+    px(302, 45, 9, 1, "ferroLuz")
+    px(303, 46, 7, 2, "ferro")
+    px(304, 48, 5, 1, "ferroEsc")
+    px(305, 49, 3, 1, "ferro")
     # a mesa dos panos, mais à frente: o tampo (o piso de cima claro, a espessura escura), as pernas até o piso, a
     # travessa de baixo; a caixa embaixo; a jarra e a bacia em cima
     m0, m1 = MESA_X
@@ -384,7 +393,7 @@ def atendimento(px):
     px(m0 + 7, MESA - 2, 5, 1, "barroLuz")
 
 
-INCENSO = (306, 45)
+INCENSO = (306, 43)
 
 
 # ---------------------------------------------------------------- a luz
@@ -396,6 +405,8 @@ def luz(t):
     frio no chão; a janela clareia o presbitério."""
     for y in range(QH):
         for x in range(QW):
+            if 16 <= x < 30 and 23 <= y < PAREDE:  # o lado de fora, no vão da porta: a luz do dia, sem o escuro da sala
+                continue
             perto = 0.0
             for lx, ly, r, f in LUZES:
                 d = math.hypot(x - lx, (y - ly) * 1.4)
@@ -411,8 +422,7 @@ def luz(t):
                 if d2 < 1:
                     al = 0.18 if d2 < 0.08 else 0.11 if d2 < 0.3 else 0.06 if d2 < 0.65 else 0.03
                     t.mistura(x, y, (255, 170, 90), al * f)
-            if frio > 0 and y >= PAREDE and pont(x, y, int(frio * 8)):
-                t.mistura(x, y, (190, 210, 228), 0.12)
+
 
 
 def so_o_espaco():
@@ -473,22 +483,6 @@ def fumaca(i):
 
 
 def frente():
-    """O primeiro plano: as pontas da fileira de bancos mais perto de quem olha, nos dois cantos de baixo, cortadas pela
-    borda (quem entra está no fundo da nave); enquadram sem cobrir apoio nenhum."""
-    t = Tela(QW, QH)
-    px = Pincel(t)
-    v, vl = "vulto", "vultoLuz"
-    CAB = [  # a cabeceira de perto, mais alta que o encosto, com o alto arredondado e o recorte (um caractere por pixel)
-        ".lll.",
-        "lvvvv",
-        "lvvvv",
-        "lv.vv",
-        "lvvvv",
-    ]
-    for x0, x1, cab in ((0, 34, 30), (286, QW, 286)):
-        px(x0, 86, x1 - x0, 5, v)          # o encosto
-        px(x0, 86, x1 - x0, 1, vl)
-        px.grade(cab, 79, CAB, {"l": vl, "v": v})
-        px(cab, 84, 5, QH - 84, v)         # a cabeceira até o chão
-        px(x0 + (x1 - x0) // 2 - 1, 91, 3, QH - 91, v)  # o pé do meio
-    return t
+    """Sem primeiro plano: as silhuetas dos cantos não tinham motivo (pontas de banco fora dos dois blocos), e o piso
+    fica todo à vista. A camada continua (vazia) para a tela não mudar."""
+    return Tela(QW, QH)
