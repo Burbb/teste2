@@ -1,9 +1,10 @@
 # Protótipo: o interior da taverna (candidatas A a F e a prova de qualidade)
 
 **Agora: a prova de qualidade** (29/10/2026): as reconstruções completas estão interrompidas; os dois jogadores, a mesa e
-os banquinhos em duas grades nativas (A, a atual; B, o dobro), no mesmo lugar da tela, sobre a F. O método, as medidas
-e as conclusões estão em [prova/LEIA-ME.md](prova/LEIA-ME.md). `demo.bat` abre na prova; a F e as anteriores seguem
-no botão Protótipo, como histórico.
+os banquinhos em duas grades nativas (A, a atual; B, o dobro), no mesmo lugar da tela, sobre a F; e a **B2**, só esse
+conjunto refinado na grade da B pela referência "Jogo de tabuleiro na taverna", com a fonte em Aseprite
+(`prova/b2`). O método, as medidas e as conclusões estão em [prova/LEIA-ME.md](prova/LEIA-ME.md). `demo.bat` abre na
+B2, com a A e a B para comparar; a F e as anteriores seguem no botão Protótipo, como histórico.
 
 **A candidata F é um estudo estático** (29/10/2026), agora histórico, sem aprovação e sem integração: a composição, as poses e a relação
 entre pessoas e móveis da **nova referência aprovada pelo Jean** ("Taverna medieval entre brasas e sombras", em

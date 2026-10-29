@@ -2,8 +2,9 @@
    duas grades nativas, no mesmo lugar da tela. A sala por baixo é a F sem o conjunto (o entorno provisório, sem
    aprovação), com o fogo e as velas da F; o conjunto vem por cima, numa imagem com a resolução nativa dele:
    - A: 66×42 (a grade atual: um pixel do conjunto por pixel da sala);
-   - B: 132×84 (o dobro em cada eixo, na mesma área).
-   As duas ocupam exatamente o recorte R da sala (x 174, y 42, 66×42 pixels da sala), escaladas pelo navegador sem
+   - B: 132×84 (o dobro em cada eixo, na mesma área);
+   - B2: a B refinada pela referência "Jogo de tabuleiro na taverna" (132×84; a fonte em prova/b2/aseprite).
+   As três ocupam exatamente o recorte R da sala (x 174, y 42, 66×42 pixels da sala), escaladas pelo navegador sem
    suavização (image-rendering: pixelated) com a mesma escala da vista (Vista.caixaDaArte). Com "Isolado", um fundo
    neutro cobre a sala e o conjunto aparece sozinho, no mesmo tamanho, com o trecho de piso.
 
@@ -25,7 +26,7 @@
   capa.id = "tav-prova";
   capa.innerHTML = `<div class="neutro"></div><img class="chao" alt=""><img class="grupo" alt="">`;
   const neutro = capa.querySelector(".neutro"), chao = capa.querySelector(".chao"), grupo = capa.querySelector(".grupo");
-  const grade = () => (document.body.dataset.tavProva === "b" ? "b" : "a");
+  const grade = () => (["b", "b2"].includes(document.body.dataset.tavProva) ? document.body.dataset.tavProva : "a");
   let ativa = false;
 
   function posicionar() {
