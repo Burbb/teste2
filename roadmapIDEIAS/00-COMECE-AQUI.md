@@ -8323,3 +8323,18 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Feito (só no protótipo):** a inclinação deixou de fatiar o tronco: o tronco e a cabeça inclinam como um bloco e o
   hábito absorve, da cintura à barra parada; uma pose de passagem entre a pega e o erguer. Conferido pose a pose (o
   contorno sem degraus) e no jogo nas duas resoluções. A lição foi para a tabela de erros da skill de cenas.
+
+### 29/10/2026 (data do computador local) — O templo no jogo (1.219.0)
+
+- **Integrada a candidata B aprovada**, com a oitava passada (o corpo do clérigo sem quebra) e sem ornamento novo: a
+  fonte em Aseprite (`ferramentas/prototipos/templo/aseprite/templo.aseprite`, criada por `fonte.py --criar`, que não
+  a sobrescreve; os scripts antigos não tocam nela), exportada para `rpg/web/static/cenas/templo/` e conferida contra a
+  candidata (4 de 4 camadas e a rotina iguais).
+- **No jogo:** o motor manda a cena (`servicos.cena_templo`, em `estado.local.interiores`, só na vila); diante do
+  templo, a vista mostra o interior no lugar da vila aproximada (`app/vila.js`) e a Saída da cena é o Voltar à vila do
+  balcão (`telas/cenas.js`). Serviços, preços, o primeiro atendimento grátis, os cuidados da comitiva, o acesso sem
+  ninguém precisando e a permanência depois do atendimento, como antes.
+- **Conferido:** a cena do jogo igual à candidata pixel a pixel nos 62 tiques; o ciclo completo, os contatos, o
+  movimento reduzido, a entrada e a saída, o teclado, o clique duplo, só arquivos de produção, nas duas janelas.
+  `unittest`, gabarito (só entrou `estado.local.interiores`, conferido linha a linha), pyflakes e fumaça (388).
+
