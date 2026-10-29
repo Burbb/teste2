@@ -8384,3 +8384,22 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Conferido no jogo** nas duas janelas: os pontos nos objetos certos e os cartões de cada um, Morel presente e
   recrutado, a troca de candidata, o teclado, a Saída e o Esc, um relógio só, o movimento reduzido, sem erros no
   console. **Aguarda o Jean** antes de animar o elenco novo ou integrar; som, equilíbrio e narrativa adiados.
+
+### 29/10/2026 (data do computador local) — A taverna C: o estudo estático em avaliação (protótipo, nada no jogo)
+
+- **Pedido do Jean:** a B melhorou sobre a A, mas não foi aprovada: profundidade exagerada (a diferença de três vezes
+  entre a frente e o fundo não leu bem; não é uma exigência), o fundo pequeno demais (Morel com 3 a 4 px de cabeça),
+  objetos com cara de esboço. Prioridades: a escada e a galeria como estrutura, o enquadramento e os grupos, os
+  personagens, o volume e os materiais. Ainda estático.
+- **Feito, só no protótipo** (`ferramentas/prototipos/taverna/c`; `demo.bat` abre na C, a B e a A no botão
+  Protótipo; o LEIA-ME tem o roteiro e os limites): a régua contida (13 a 30 px por metro), o balcão e Morel na faixa
+  do meio (cabeças de 6); a escada com o pilar do pé, os degraus, o banzo e o corrimão até o patamar, que é o esteio da
+  galeria; a galeria com o piso visto de cima, a testeira, as mãos-francesas e as portas inteiras; três pessoas na
+  mesa comprida da esquerda, dois jogando na redonda, a cadeira vazia, a passagem livre no meio; as pessoas à mão com
+  cabeça, pescoço, tronco, braços e mãos separados; a lareira em planos; a luz em faixas lisas.
+- **Conferido no jogo** nas duas janelas: os pontos nos objetos certos e os cartões de cada um, Morel presente e
+  recrutado, a troca de candidata, o teclado, a Saída e o Esc, um relógio só, o movimento reduzido, os cartões e o
+  Voltar acima da doca, sem erros no console.
+- **Os limites que ficam:** o velho do fogo com 4 px de cabeça; a cicatriz de Morel em dois pixels; a perspectiva
+  forçada do piso da galeria. **Estudo estático em avaliação, sem integração:** a animação do elenco e a integração
+  esperam o Jean; som, equilíbrio e narrativa adiados.
