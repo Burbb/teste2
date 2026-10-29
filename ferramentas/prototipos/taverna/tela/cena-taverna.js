@@ -1,7 +1,8 @@
 /* O interior da taverna (protótipo, candidata A; nada disto entra no jogo): o ambiente da taverna no quadro de cima,
    pelo sistema das cenas (telas/cenas.js), como o templo. A sala vista de frente, um pouco mais de longe que o
    templo: a porta da rua à esquerda, o balcão com o barril e as prateleiras no fundo, as mesas em profundidade, a
-   lareira com o caldeirão, a escada para os quartos e, debaixo dela, o canto de Morel.
+   lareira com o caldeirão, a escada para os quartos e, debaixo dela, o canto de Morel. Desde a candidata B, esta
+   fica como histórico (window.CenaTavernaA): a cena que o jogo vê é a de cena-taverna-b.js, que escolhe entre as duas.
 
    As camadas vêm de ferramentas/prototipos/taverna/exportar.py (servidas pela demonstração em /proto-tav/camadas/): o
    fundo, o fogo (4 quadros), as mesas e o balcão da frente, as velas (4) e uma tira por pessoa (taverna.json: a caixa,
@@ -9,7 +10,7 @@
    (ninguém atravessa um tampo). O relógio é o das cenas (100 ms): o fogo e as velas a 200 ms; as pessoas, um passo
    da rotina a cada 200 ms, cada uma com a sua fase. Movimento reduzido: as poses paradas, tudo parado.
 
-   Morel só aparece quando o motor manda `d.morel` (está no canto). Exporta window.CenaTaverna. */
+   Morel só aparece quando o motor manda `d.morel` (está no canto). Exporta window.CenaTavernaA. */
 "use strict";
 
 (() => {
@@ -81,5 +82,5 @@
     saida: { area: [10, 18, 24, 40], balao: [21, 14], foco: [21, 44] },
   };
 
-  window.CenaTaverna = { base, desenhar, pontos: PONTOS, poseDe, presentes, QW, QH };
+  window.CenaTavernaA = { base, desenhar, pontos: PONTOS, poseDe, presentes, QW, QH };
 })();

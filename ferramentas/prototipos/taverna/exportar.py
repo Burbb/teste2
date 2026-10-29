@@ -10,6 +10,10 @@
 
     python ferramentas/prototipos/taverna/exportar.py
 
+Também a candidata B (o estudo estático, `b/`) em `camadas/b/`: `fundo.png` (a sala com as pessoas e a luz, com
+Morel no canto), `fundo-sem-morel.png` (o canto vazio, quando ele foi recrutado), `fogo.png` e `velas.png` (4 quadros
+cada, lado a lado). As pessoas da B ainda não têm ciclos: ficam no fundo.
+
 Só escreve em `camadas/`."""
 import json
 import os
@@ -64,6 +68,22 @@ def exportar():
         json.dump({"gente": dados}, f, separators=(",", ":"))
 
 
+def exportar_b():
+    from b import desenho as DB, gente as GB
+    pasta = os.path.join(CAMADAS, "b")
+    os.makedirs(pasta, exist_ok=True)
+    for nome, morel in (("fundo", True), ("fundo-sem-morel", False)):
+        t = DB.Tela(DB.QW, DB.QH)
+        px = DB.Pincel(t)
+        r = DB.sala(px)
+        GB.desenhar(px, r, morel=morel)
+        DB.luz(t, DB.chamas_velas())
+        t.imagem().save(os.path.join(pasta, f"{nome}.png"))
+    tira([DB.fogo(i) for i in range(4)]).save(os.path.join(pasta, "fogo.png"))
+    tira([DB.velas(i) for i in range(4)]).save(os.path.join(pasta, "velas.png"))
+
+
 if __name__ == "__main__":
     exportar()
+    exportar_b()
     print("ok")

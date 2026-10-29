@@ -2,6 +2,23 @@
    (css/31-templo.css: o cartão chamado, os prédios escondidos com o interior à vista). */
 /* Os nomes dos pontos da taverna ficam sempre à vista, como os do templo. */
 #pontos-cena[data-cena="taverna"] .ci-ponto:not(.parado) .ci-balao { visibility: visible; }
+/* Com o interior à vista, o balcão como o da forja (css/26-forja.css): a cena já mostra o lugar e quem atende, então
+   o topo fica numa linha (a fala e o ouro, sem o ícone e o título repetidos) e os cartões vão lado a lado, à vista sem
+   rolar a 1280×720 e sem nada atrás da doca. A mudança, se a taverna for integrada, vale para o templo também. */
+body:has(#pontos-cena[data-cena="taverna"]) .balcao-predio .loja-topo { padding: 4px 12px; margin-bottom: 6px; }
+body:has(#pontos-cena[data-cena="taverna"]) .balcao-predio .loja-topo > img,
+body:has(#pontos-cena[data-cena="taverna"]) .balcao-predio .loja-topo > canvas,
+body:has(#pontos-cena[data-cena="taverna"]) .balcao-predio .loja-topo > div > b { display: none; }
+body:has(#pontos-cena[data-cena="taverna"]) .balcao-predio .loja-topo .lore { font-size: 16px; }
+/* Os cartões em duas colunas, numa grade do balcão inteiro: o Voltar à vila entra na próxima célula livre (ao lado
+   do último cartão, quando eles são três), em vez de uma linha a mais que ficava atrás da doca a 1280×720. A ordem do
+   teclado não muda (é a do documento). */
+body:has(#pontos-cena[data-cena="taverna"]) .balcao-predio { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px; align-items: start; }
+body:has(#pontos-cena[data-cena="taverna"]) .balcao-predio > .loja-topo { grid-column: 1 / -1; margin-bottom: 0; }
+body:has(#pontos-cena[data-cena="taverna"]) .balcao-predio .servicos { display: contents; }
+body:has(#pontos-cena[data-cena="taverna"]) .balcao-predio .voltar-vila { margin-top: 0; align-self: end; justify-self: start; }
+body:has(#pontos-cena[data-cena="taverna"]) #folha:has(.balcao-predio) { padding-bottom: 0; }
 
 /* A demonstração: o botão "Protótipo" na barra do alto, no fluxo dela (entre os sigilos e o menu), e o painel que ele
    abre embaixo, com os estados do save temporário e a pose parada. */

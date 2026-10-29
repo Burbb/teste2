@@ -295,3 +295,15 @@ Uma cena com muita gente: as mesmas regras de uma figura, multiplicadas, e o que
 | O fogo como um gráfico de barras | retângulos de alturas diferentes | línguas que afinam para cima, a ponta pendendo, a lenha e as brasas embaixo e o caldeirão na frente das chamas |
 | A porta aberta contradizendo a vila | a rua de dia, com neve, da referência | uma vista de fora só se o interior acompanhar a hora e o tempo; senão, a porta fechada |
 | O nome de um ponto cobrindo uma cabeça | o balão posto em cima do objeto pequeno no piso | conferir os balões com as pessoas no lugar, nas duas resoluções; o balão vai onde não há rosto nem mão |
+
+**A candidata B (estudo estático, 29/10/2026)**, depois da A não aprovada:
+
+| Erro da A | Como a B resolveu |
+|---|---|
+| Um banner com figuras pequenas: tudo na mesma faixa de profundidade | o ponto de fuga dentro do quadro e muita profundidade (11 px/m no fundo, 34 na borda de baixo): quem está na frente fica três vezes maior, na mesma régua; mesas em três distâncias |
+| Pessoas estreitas, iguais, de perfil | cada figura à mão numa grade, com porte e ângulo próprios (de frente, três quartos, costas, perfil); acertar três representativas no tamanho real antes de fazer as outras |
+| O balcão enorme perto de quem está atrás | o balcão na régua de quem atende (1,05 m), mais perto da câmera que a parede do fundo |
+| Piso, móveis, roupas e fundo no mesmo marrom | cada material num valor: a pedra fria e escura, o reboco claro, os móveis mais quentes que o piso, as roupas em cores contidas e diferentes |
+| Tábuas radiando de um ponto de fuga dentro do quadro viram tracejado nas laterais | as tábuas paralelas ao fundo, mais juntas longe, e as emendas correndo para o ponto de fuga |
+| Um alçapão aberto (e barris deitados com o tampo para a sala) lendo como caixote e rodas | a entrada como porta (baixa, entreaberta, com o escuro na fresta); os barris em pé, de lado |
+| O cenário mais alto empurrando os cartões para trás da doca | o balcão compacto com o interior (a fala numa linha, os cartões em duas colunas, o Voltar na célula livre) e a rolagem refeita quando a página muda; conferir que cada cartão e o Voltar ficam acima da doca sem rolar |

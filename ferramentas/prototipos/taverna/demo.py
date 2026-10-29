@@ -1,4 +1,5 @@
-"""Demonstração do interior da taverna (protótipo, candidata A; nada disto entra no jogo).
+"""Demonstração do interior da taverna (protótipo: a candidata B, estudo estático, e a A como histórico; nada disto
+entra no jogo).
 
     python ferramentas/prototipos/taverna/demo.py      (ou dois cliques em demo.bat)
 
@@ -13,7 +14,8 @@ o Guerreiro no Vau, com a campanha começada. Entre na taverna pelo prédio da v
   Para um ponto levar a um cartão certo, a demonstração serve o telas/cenas.js com `servicos: "<serviço>"` aceito
   (no jogo, `servicos: true` leva ao primeiro cartão); é a única mudança que a integração pediria fora da cena;
 - Morel aparece no canto só quando `morel_no_canto` diz (abaixo); recrutado, não está lá;
-- a faixa do alto troca o estado do save temporário e liga a pose parada.
+- o botão Protótipo, na barra do alto, troca a candidata (B, o padrão; A, o histórico), o estado do save temporário e
+  liga a pose parada.
 
 A porta é `DEMO_PORTA` (padrão 8795: não usa a 8791 do jogo, a 8793 da curandeira nem a 8794 do templo)."""
 import os
@@ -187,9 +189,11 @@ def servir():
             a = '<script src="/static/telas/cenas.js"></script>'
             assert a in html
             html = html.replace(a, '<script src="/proto-tav/cena-taverna.js"></script>\n'
+                                   '<script src="/proto-tav/cena-taverna-b.js"></script>\n'
                                    '<script src="/proto-tav/cenas.js"></script>')
             html = html.replace("</head>", '<link rel="stylesheet" href="/proto-tav/taverna.css">\n</head>')
-            html = html.replace("</body>", '<script src="/proto-tav/faixa.js"></script></body>')
+            html = html.replace("</body>", '<script src="/proto-tav/faixa.js"></script>\n'
+                                           '<script src="/proto-tav/balcao.js"></script></body>')
             return self._responder(200, html.encode("utf-8"), "text/html; charset=utf-8")
         if caminho == "/proto-tav/cenas.js":
             with open(os.path.join(mod_srv.PASTA, "telas", "cenas.js"), encoding="utf-8") as f:
