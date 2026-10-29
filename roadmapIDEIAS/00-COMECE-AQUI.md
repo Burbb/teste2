@@ -8618,3 +8618,24 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Aberto:** a cabeça dos fregueses fica um pouco menor que a do taverneiro, embora mais perto (para não dominarem); a
   perspectiva de um ponto só; a lareira mais cortada; as fontes sem retoques à mão.
 - **Parado aqui:** a escolha entre G e H é do Jean; nada animado nem integrado.
+
+### 29/10/2026 (data do computador local) — A taverna: a G escolhida e a G refinada (protótipo, nada no jogo)
+
+- **Decisão do Jean:** **a G é a composição escolhida** (a câmera, o enquadramento, a escala e a posição do taverneiro,
+  o balcão inteiro, a organização, a luz, os fregueses como silhuetas). **A H foi uma experiência encerrada** (o
+  afastamento não foi aprovado; a limpeza dela deixou a camisa chapada e os ombros como peças redondas) e fica só como
+  histórico. **O acabamento da G continua em avaliação.**
+- **Feito: a G refinada (G2)** (`ferramentas/prototipos/taverna/g2`; a seção "A G refinada" do LEIA-ME do protótipo),
+  feita a partir da fonte da G, com retoques seletivos por região e com as cores que já estão ali:
+  - a pele da testa e dos antebraços sem os pixels soltos do pontilhado (as sombras, os relevos e o rosto ficam);
+  - as mangas com uma dobra atravessando cada braço, no lugar das rugas diagonais; o pontilhado da camisa fica;
+  - a barba terminando em pontas espalhadas, a sombra embaixo seguindo as pontas, os lados do pescoço escurecendo
+    para a gola (o pescoço não cresce);
+  - a prateleira escurecida em volta da cabeça (a tábua continua inteira);
+  - o freguês da esquerda refeito pela referência (a cabeça era uma bola grande sobre um ombro pequeno, observação
+    do Jean): a cabeça menor afundada nos ombros, a capa até o queixo, o perfil da barba; continua silhueta, sem braço;
+  - a fonte `g2/aseprite/taverna-g2.aseprite` (`--criar` protegido; é a autoridade para os retoques à mão);
+  - `demo.bat` abre na G2, com a G original no mesmo painel e a troca imediata no mesmo estado do jogo.
+- **Conferido:** G2 e G no jogo a 1920×945 e 1280×720 (`g/conferir.mjs`), no tamanho real e ampliado sem suavização. O
+  código do jogo não mudou.
+- **Parado aqui:** a avaliação do acabamento é do Jean; nada animado nem integrado.
