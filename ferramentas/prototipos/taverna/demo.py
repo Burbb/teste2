@@ -1,5 +1,5 @@
-"""Demonstração do interior da taverna (protótipo: a candidata C, estudo estático em avaliação, e a B e a A como
-histórico; nada disto entra no jogo).
+"""Demonstração do interior da taverna (protótipo: a candidata D, estudo estático em avaliação, e a C, a B e a A
+como histórico; nada disto entra no jogo).
 
     python ferramentas/prototipos/taverna/demo.py      (ou dois cliques em demo.bat)
 
@@ -14,7 +14,7 @@ o Guerreiro no Vau, com a campanha começada. Entre na taverna pelo prédio da v
   Para um ponto levar a um cartão certo, a demonstração serve o telas/cenas.js com `servicos: "<serviço>"` aceito
   (no jogo, `servicos: true` leva ao primeiro cartão); é a única mudança que a integração pediria fora da cena;
 - Morel aparece no canto só quando `morel_no_canto` diz (abaixo); recrutado, não está lá;
-- o botão Protótipo, na barra do alto, troca a candidata (C, o padrão; B e A, o histórico), o estado do save temporário e
+- o botão Protótipo, na barra do alto, troca a candidata (D, o padrão; C, B e A, o histórico), o estado do save temporário e
   liga a pose parada.
 
 A porta é `DEMO_PORTA` (padrão 8795: não usa a 8791 do jogo, a 8793 da curandeira nem a 8794 do templo)."""

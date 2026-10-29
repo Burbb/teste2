@@ -317,3 +317,19 @@ Uma cena com muita gente: as mesmas regras de uma figura, multiplicadas, e o que
 | A lareira como um bloco cinza | os planos: a laje no piso, a boca com as faces de dentro e o fundo, a verga com a prateleira, a coifa que só abre embaixo, a chaminé estreita; o caldeirão pequeno e alto, para o fogo aparecer |
 | A cabeça alta demais, o corpo afundando atrás do balcão | medir a altura dos ombros pela régua (1,45 m em pé) e caber a cabeça com a barba em 0,25 a 0,3 m; o pescoço em pele entre a barba e a gola |
 | O pontilhado da luz fazendo anéis no reboco | faixas lisas de escuro; o pontilhado só onde ele ajuda |
+
+**A lição geral da candidata D (29/10/2026): quem senta se constrói junto do móvel e da atividade.** Na C as figuras
+estavam certas uma a uma e erradas em conjunto (Morel na ponta do banco longe do espaldar, um jogador sem assento, um
+homem sentado na mesa e no balcão ao mesmo tempo, uma cadeira vazia maior que as ocupadas e com o encosto
+atravessando o tampo). Para cada pessoa sentada, nesta ordem e com os móveis desenhados primeiro sozinhos:
+
+1. **o assento:** onde o quadril pousa (a altura de 0,45 m na régua do lugar), e de que lado está o encosto;
+2. **a orientação:** para onde ficam o quadril, o tronco e as pernas, coerentes com o assento e com quem está em volta;
+3. **o alcance:** do ombro à mão, no máximo o braço (0,6 m na régua); se não alcança, aproximar o assento ou a mesa;
+4. **a atividade:** o objeto na mão ou no tampo (a caneca, a colher na tigela, a peça no tabuleiro), visível;
+5. **as sobreposições:** quem está atrás do tampo, desenhado antes dele, mostra embaixo o que o apoia (as coxas, as
+   canelas, os pés do banquinho); nada atravessa o tampo nem esconde justamente a parte que explica o apoio; a figura
+   não encosta em outro móvel que a confunda (o balcão atrás das pernas de quem senta na cabeceira);
+6. **a escala dos móveis vazios** é a dos ocupados.
+
+Não é preciso mostrar todas as pernas e articulações: as partes visíveis explicam a pose sem contradição.

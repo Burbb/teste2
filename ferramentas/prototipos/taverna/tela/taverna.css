@@ -35,3 +35,6 @@ body:has(#pontos-cena[data-cena="taverna"]) #folha:has(.balcao-predio) { padding
 #faixa-tav .aviso { position: absolute; top: 100%; left: 0; margin-top: 3px; padding: 3px 6px; background: #15120f;
   border: 1px solid #5a4a30; color: #9a907c; font-style: italic; white-space: nowrap; }
 #faixa-tav .aviso:empty { display: none; }
+/* Dentro da taverna, a narração da vila (a tábua no poço da praça) e o cabeçalho dela saem da página: o contexto é o
+   do balcão, com a frase da taverna (tela/balcao.js põe a classe). */
+body.tav-interior #cena-cab, body.tav-interior #texto { display: none; }

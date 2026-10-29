@@ -10,9 +10,9 @@
 
     python ferramentas/prototipos/taverna/exportar.py
 
-Também as candidatas B e C (os estudos estáticos, `b/` e `c/`) em `camadas/b/` e `camadas/c/`: `fundo.png` (a sala com as pessoas e a luz, com
+Também as candidatas B, C e D (os estudos estáticos, `b/`, `c/` e `d/`) em `camadas/<b|c|d>/`: `fundo.png` (a sala com as pessoas e a luz, com
 Morel no canto), `fundo-sem-morel.png` (o canto vazio, quando ele foi recrutado), `fogo.png` e `velas.png` (4 quadros
-cada, lado a lado). As pessoas da B e da C ainda não têm ciclos: ficam no fundo.
+cada, lado a lado). As pessoas dos estudos estáticos ainda não têm ciclos: ficam no fundo.
 
 Só escreve em `camadas/`."""
 import json
@@ -90,4 +90,5 @@ if __name__ == "__main__":
     exportar()
     exportar_estatica("b")
     exportar_estatica("c")
+    exportar_estatica("d")
     print("ok")
