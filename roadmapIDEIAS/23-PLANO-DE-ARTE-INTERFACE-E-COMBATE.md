@@ -13,14 +13,14 @@ Não iniciar todo o plano numa única tarefa. As etapas técnicas A–I e a vali
 
 ## Estado de referência — 29/10/2026
 
-- Produção **1.219.0** na branch `claude/tender-einstein-tx3tjl`.
+- Produção **1.219.1** na branch `claude/tender-einstein-tx3tjl` (a comparação de peças na casa decimal delas).
 - **Etapa 2 concluída no escopo acordado** (1.201.0 a 1.209.0), com as exceções registradas no
   [ROADMAP](../docs/ROADMAP.md) (adiados pelo Jean, reservados às etapas 8 e 9, opcionais).
 - **Etapas 3 e 4 (a forja) integradas:** a oficina e o ferreiro; o reforço, o encantamento, a transferência e a
   desmontagem na 1.216.0, com a [especificação 27](27-FORJA-ESPECIFICACAO.md) como a referência atual (o
   [25](25-ETAPA4-REFORCO-E-ENCANTAMENTO.md) é a pesquisa que a antecedeu).
 - **Etapa 5 aberta:** a curandeira integrada (1.218.0), o templo integrado (1.219.0), a taverna em protótipo
-  (`ferramentas/prototipos/taverna`, esperando o Jean). Som, equilíbrio e expansão narrativa adiados.
+  (`ferramentas/prototipos/taverna`: a candidata B, estudo estático, esperando o Jean; a A como histórico). Som, equilíbrio e expansão narrativa adiados.
 
 ## Histórico: o estado de referência de 21/10/2026 em diante (superado pelo de 29/10/2026, acima)
 

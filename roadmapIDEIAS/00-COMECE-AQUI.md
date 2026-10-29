@@ -8356,3 +8356,31 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   sem erros no console. As lições foram para a tabela de erros da skill de cenas.
 - **Para integrar (se aprovada):** a cena e a regra de Morel no motor, `servicos: "<serviço>"` aceito pelo
   `telas/cenas.js` e a fonte em Aseprite. **A etapa 5 continua aberta;** som, equilíbrio e expansão narrativa adiados.
+
+### 29/10/2026 (data do computador local) — A comparação de peças na casa decimal (1.219.1, produção)
+
+- **O defeito:** num achado real, o Orbe de Aço com 4 de Poder contra o equipado com 7,6 mostrava
+  "−3,5999999999999996 Poder". A comparação (`telas/itens.js`, `Telas.linhasTroca`: o caminho único do achado, do
+  Inventário, do mercado e da forja) escrevia a subtração em ponto flutuante crua.
+- **A correção:** a diferença na precisão das peças (uma casa, a de `forja/regras.limpo`), com a vírgula e o menos
+  tipográfico ("▼ −3,6 Poder"); o percentual colado ("▲ +3,3% crítico"); o que sobra abaixo da casa é zero (a linha
+  some, sem "−0"). Só a escrita; os valores das peças e as contas de combate não mudam.
+- **Conferido:** com fichas reais do motor e na fumaça (positiva, negativa, inteira, fracionária, percentual, quase
+  zero); `unittest` (797), gabarito sem mudança, pyflakes, fumaça.
+
+### 29/10/2026 (data do computador local) — A taverna B: o estudo estático (protótipo, nada no jogo)
+
+- **Pedido do Jean:** a A não foi aprovada visualmente (as pessoas estreitas, parecidas, de perfil; as mesas na mesma
+  faixa; o balcão enorme; as prateleiras em fila; tudo marrom; a escada sem o acesso aos quartos; um banner no tamanho
+  da HUD). Uma segunda candidata estática, a sala e as pessoas primeiro, a animação depois da aprovação.
+- **Feito, só no protótipo** (`ferramentas/prototipos/taverna/b`, LEIA-ME com o roteiro; `demo.bat` abre na B, a A
+  fica no botão Protótipo): a câmera mais funda (o ponto de fuga no quadro, 11 a 34 px por metro), a parede do balcão
+  mais perto e o salão fundo, as mesas em três distâncias; oito pessoas à mão, de frente, três quartos, costas e
+  perfil, com a cadeira vazia e passagens livres; a escada até a galeria com as portas dos quartos; a despensa como a
+  porta baixa entreaberta; os materiais por valor. Morel com a aparência do jogo, presente e recrutado pela mesma
+  hipótese da A (`demo.morel_no_canto`).
+- **O balcão embaixo** (só na demonstração): o topo numa linha e os cartões em duas colunas, com o Voltar à vila na
+  célula livre, e a rolagem refeita quando a página muda: tudo acima da doca, sem rolar, nas duas janelas.
+- **Conferido no jogo** nas duas janelas: os pontos nos objetos certos e os cartões de cada um, Morel presente e
+  recrutado, a troca de candidata, o teclado, a Saída e o Esc, um relógio só, o movimento reduzido, sem erros no
+  console. **Aguarda o Jean** antes de animar o elenco novo ou integrar; som, equilíbrio e narrativa adiados.
