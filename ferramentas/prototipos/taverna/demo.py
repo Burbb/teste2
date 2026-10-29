@@ -1,4 +1,4 @@
-"""Demonstração do interior da taverna (protótipo: a candidata G, o balcão de perto; como histórico do salão
+"""Demonstração do interior da taverna (protótipo: as candidatas H e G, o balcão de perto; como histórico do salão
 panorâmico, a prova de qualidade dos jogadores e o M1 de Morel, e as candidatas da F à A; nada disto entra no jogo).
 
     python ferramentas/prototipos/taverna/demo.py      (ou dois cliques em demo.bat)
@@ -11,12 +11,12 @@ o Guerreiro no Vau, com a campanha começada. Entre na taverna pelo prédio da v
   com os cartões que já existem (dormir, a bebida e os rumores, a despensa e o homem do canto da abertura);
 - os pontos da cena levam a esses cartões: o Taverneiro à bebida, a Escada ao Dormir, a Despensa (só enquanto ela
   espera) ao Descer à despensa, o Homem do canto (só enquanto o cartão existe) ao Sentar com ele; a Saída volta à vila.
-  O motor manda todos; a cena à vista mostra só os que ela desenha (a G: o Taverneiro e a Despensa). Para um ponto
+  O motor manda todos; a cena à vista mostra só os que ela desenha (a G e a H: o Taverneiro e a Despensa). Para um ponto
   levar a um cartão certo, a demonstração serve o telas/cenas.js com `servicos: "<serviço>"` aceito (no jogo,
   `servicos: true` leva ao primeiro cartão) e com os pontos filtrados pela cena (`cenas_js`);
 - Morel aparece no canto do salão (as candidatas antigas) só quando `morel_no_canto` diz (abaixo); recrutado, não está
-  lá; a G não mostra o canto;
-- o botão Protótipo, na barra do alto, troca entre a G (o padrão), a prova de qualidade (a B4 e o Morel M1, com a A, a
+  lá; a G e a H não mostram o canto;
+- o botão Protótipo, na barra do alto, troca entre a H (o padrão), a G, a prova de qualidade (a B4 e o Morel M1, com a A, a
   B, a B2, a B3 e o canto da F para comparar e a vista isolada) e as candidatas da F à A, o estado do save temporário
   e liga a pose parada; o botão diz as versões à vista.
 

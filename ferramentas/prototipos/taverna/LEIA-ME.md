@@ -1,10 +1,14 @@
-# Protótipo: o interior da taverna (a candidata G, o balcão de perto; o salão panorâmico como histórico)
+# Protótipo: o interior da taverna (o balcão de perto, as candidatas G e H; o salão panorâmico como histórico)
 
-**Agora: a candidata G** (29/10/2026), um estudo estático para a avaliação do Jean, sem aprovação e sem integração: a
-câmera perto do balcão, de frente, como quem está sentado diante dele, pela referência frontal "Taverneiro desconfiado
-atrás do balcão-1" (`ferramentas/arte/referencias/cenarios internos`). A cena representa o balcão, não a planta da
-taverna: um personagem com presença numa atividade legível (o taverneiro limpa uma caneca e olha de lado para quem
-chegou), os produtos e utensílios da casa, os fregueses recortados nos cantos.
+**A direção aprovada pelo Jean** (29/10/2026): o balcão de perto com o taverneiro como foco (a candidata G). O
+enquadramento ainda não está fechado: **a candidata H** experimenta um pouco mais de profundidade (a câmera um pouco
+mais afastada e para o lado, o balcão com volume, os fregueses sentados de perto), e a **G** continua como a
+alternativa válida, as duas no mesmo `demo.bat`. Nada animado nem integrado.
+
+**A candidata G** é a câmera perto do balcão, de frente, como quem está sentado diante dele, pela referência frontal
+"Taverneiro desconfiado atrás do balcão-1" (`ferramentas/arte/referencias/cenarios internos`). A cena representa o
+balcão, não a planta da taverna: um personagem com presença numa atividade legível (o taverneiro limpa uma caneca e
+olha de lado para quem chegou), os produtos e utensílios da casa, os fregueses recortados nos cantos.
 
 **O salão panorâmico está suspenso** (pedido do Jean, 29/10/2026): as candidatas A a F, a prova de qualidade (as grades
 A e B, a B2, a B3, a B4) e o M1 de Morel não resolveram de forma satisfatória a anatomia, a escala, a perspectiva e a
@@ -15,12 +19,56 @@ mais correções nessa direção.
 
 Dê dois cliques em `demo.bat` (ou `python ferramentas/prototipos/taverna/demo.py` na raiz). O jogo abre no navegador
 num **save temporário** (os saves do Jean não são lidos nem tocados), na porta 8795: o Guerreiro no Vau, com a
-campanha começada e 60 de ouro. Clique na **Taverna** na vila: a G aparece no topo e o balcão de sempre embaixo. Se uma
+campanha começada e 60 de ouro. Clique na **Taverna** na vila: a H aparece no topo e o balcão de sempre embaixo. Se uma
 demonstração antiga estiver aberta, feche a janela dela antes (a porta é a mesma).
 
-O botão **Protótipo** na barra do alto abre o painel: a candidata (**G**, o padrão; a prova de qualidade e da **F** à
-**A**, o histórico), o estado do save (**Despensa esperando**, **Homem do canto**, **Morel conhecido**, **Morel
-recrutado**, **Sem ouro**) e a **Pose parada** (o fogo e o lampião param).
+O botão **Protótipo** na barra do alto abre o painel: a candidata (**H**, o padrão, e **G**: a troca é imediata, sem
+sair da taverna, no mesmo estado do jogo; a prova de qualidade e da **F** à **A**, o histórico), o estado do save
+(**Despensa esperando**, **Homem do canto**, **Morel conhecido**, **Morel recrutado**, **Sem ouro**) e a **Pose parada**
+(o fogo e o lampião param).
+
+## Roteiro curto para comparar a H e a G
+
+1. No tamanho do jogo, a 1920 e a 1280, alternando H e G pelo painel: a profundidade do tampo e a lateral da ponta do
+   balcão; os fregueses sentados (a postura, o braço no tampo, a caneca); se o taverneiro continua lendo igual (o rosto,
+   o olhar de lado, as mãos, a caneca, o pano).
+2. Na H, o taverneiro sem o pontilhado na pele e na camisa, a gola ligada à barba e ao peito, as dobras das mangas, a
+   cabeça no vão entre as duas prateleiras.
+3. Os pontos e os cartões, nos estados do save, como no roteiro da G abaixo.
+
+## A candidata H
+
+**O que muda em relação à G** (`h/desenho.py`, `h/taverneiro.py`):
+- **A câmera:** uma perspectiva simplificada de um ponto, com o ponto de fuga na beira direita, na altura do olho de quem
+  está sentado ao balcão (`PF`). A parede, as prateleiras e a frente do balcão ficam de frente; o que corre para o fundo
+  converge para ele. Daí o tampo mais fundo (12 px, contra 6 na G) e a ponta da direita do balcão com a lateral curta
+  (a quina da frente acesa pelo lampião, a aresta de cima subindo para o ponto de fuga); depois da ponta, a passagem e a
+  porta da despensa até o fim do quadro.
+- **Os planos:** os dois fregueses sentados na frente; o balcão (o tampo com a tábua do pão e do queijo e as canecas
+  dos fregueses: a área de servir); o taverneiro e a bancada; a parede com as prateleiras, a lareira e a despensa.
+- **O taverneiro do mesmo tamanho da G**, mais para cima e para a esquerda (`TAV`): o afastamento aparece no tampo, na
+  ponta e nos fregueses, não na leitura dele. Os refinamentos: a pele e a camisa sem o pontilhado da luz (um tom de
+  luz só para a figura; a modelagem fica nos planos do desenho); a sombra da barba no pescoço, os lados do pescoço, o
+  peito no V da gola e as abas deitadas até o peitilho; as dobras das mangas como arcos atravessando cada braço, acima
+  do rolo; a prateleira em duas partes, com o vão atrás da cabeça (nenhuma linha encosta nela).
+- **O balcão com menos bordas competindo:** uma aresta clara atrás do tampo, emendas discretas, uma aresta forte na
+  frente e a frente escura sem a travessa; a bancada de trás sem a aresta clara.
+- **Os fregueses**, construídos por partes (`Vulto`): a cabeça, o pescoço, a linha dos ombros, as costas estreitando
+  para a cintura, o braço do ombro ao cotovelo pousado na borda do tampo e o antebraço até a caneca, cada material em
+  três tons escuros com o contorno aceso pelo fogo (o da esquerda) e pelo lampião (o de capuz, à direita). A primeira
+  versão deles tinha as costas como dois montes redondos e grandes (a observação do Jean); a de agora tem a anatomia e
+  a cabeça um pouco menor que a do taverneiro (~18×21 px).
+- **Os objetos da G** entram pelo desenho dela (`de_g`), no lugar novo: o canto de preparo um pouco para a esquerda e
+  para cima, a louça e as garrafas nas duas prateleiras, o barril e a jarra na bancada, o pão e o queijo no tampo, os
+  pendurados perto do lampião, que agora sai do esteio para a esquerda, em cima da ponta do balcão.
+- **Os pontos:** os mesmos da G, no lugar novo (o nome do Taverneiro ao lado da cabeça, na prateleira da direita; acima
+  dela, a 1280, sairia da arte).
+- **A fonte:** `h/aseprite/taverna-h.aseprite`, pelo mesmo caminho da G (`h/fonte.py` usa o `g/fonte.py`; `--criar`
+  protegido, a exportação para `camadas/h/` conferida com o código).
+
+**Os limites que ficam:** a cabeça dos fregueses fica um pouco menor que a do taverneiro, embora eles estejam mais
+perto (para não dominarem a cena); a perspectiva é de um ponto só (a parede e a frente do balcão continuam de frente);
+a lareira fica mais cortada pela borda e pelo freguês da esquerda; a fonte ainda sem retoques à mão.
 
 ## Roteiro curto para avaliar a G
 
@@ -107,10 +155,12 @@ Esc e o Voltar à vila voltando à vila, a pose parada parando o fogo, o console
 ## Os arquivos
 
 - `g/desenho.py` e `g/taverneiro.py`: a G (o espaço, os objetos, o balcão, os fregueses, a luz, o fogo; o taverneiro);
-  `g/fonte.py`: a fonte em Aseprite e a exportação para `camadas/g/`; `g/conferir.mjs`: a conferência no jogo.
+  `g/fonte.py`: a fonte em Aseprite e a exportação para `camadas/g/`; `g/conferir.mjs`: a conferência no jogo, da G e
+  da H.
+- `h/desenho.py`, `h/taverneiro.py` e `h/fonte.py`: a H (o que muda com a câmera; o resto vem da G) e a fonte dela.
 - `f/` a `b/`, `prova/` e a raiz (`desenho.py`, `gente.py`): o salão panorâmico, histórico.
 - `exportar.py`: as camadas da A em `camadas/` e as dos estudos estáticos em `camadas/b/` a `camadas/f/`.
-- `tela/cena-taverna-b.js`: as cenas estáticas da B à G e a escolha entre elas (`window.CenaTaverna`);
+- `tela/cena-taverna-b.js`: as cenas estáticas da B à H e a escolha entre elas (`window.CenaTaverna`);
   `tela/cena-taverna-prova.js`: a prova de qualidade; `tela/cena-taverna.js`: a A; `tela/faixa.js`: o botão Protótipo;
   `tela/taverna.css` e `tela/balcao.js`: os nomes e o balcão.
 - `demo.py` e `demo.bat`: a demonstração.

@@ -43,11 +43,11 @@ def quadros_do_codigo():
             "taverneiro": [T.camada().imagem()], "frente": [D.frente().imagem()]}
 
 
-def criar():
-    if FONTE.exists() and "--refazer" not in sys.argv:
-        sys.exit(f"{FONTE.name} já existe: os retoques dela se perderiam. Use --refazer para gerar de novo.")
-    FONTE.parent.mkdir(exist_ok=True)
-    q = quadros_do_codigo()
+def criar(fonte=FONTE, quadros=quadros_do_codigo):
+    if fonte.exists() and "--refazer" not in sys.argv:
+        sys.exit(f"{fonte.name} já existe: os retoques dela se perderiam. Use --refazer para gerar de novo.")
+    fonte.parent.mkdir(exist_ok=True)
+    q = quadros()
     n = max(len(v) for v in q.values())
     with tempfile.TemporaryDirectory() as tmp:
         tmp = pathlib.Path(tmp)
@@ -58,22 +58,22 @@ def criar():
         shutil.copy(LUA / "montar_forja.lua", script)
         r = subprocess.run([aseprite(), "-b", "--script-param", f"pasta={tmp}", "--script-param",
                             f"camadas={','.join(CAMADAS)}", "--script-param",
-                            f"estados={','.join(f'q{i:02d}' for i in range(n))}", "--script-param", f"saida={FONTE}",
+                            f"estados={','.join(f'q{i:02d}' for i in range(n))}", "--script-param", f"saida={fonte}",
                             "--script", str(script)], capture_output=True, text=True)
-        if not FONTE.exists() or "celulas" not in r.stdout:
+        if not fonte.exists() or "celulas" not in r.stdout:
             sys.exit(f"O Aseprite não montou a fonte:\n{r.stdout}{r.stderr}")
-        print(FONTE.name, "celulas", r.stdout.split("celulas")[-1].split()[0])
+        print(fonte.name, "celulas", r.stdout.split("celulas")[-1].split()[0])
 
 
-def ler_fonte():
+def ler_fonte(fonte=FONTE):
     """{camada: [imagem, ...]}: as células da fonte, como estão (os retoques inclusive)."""
-    if not FONTE.exists():
-        sys.exit(f"Sem a fonte {FONTE}: crie com --criar.")
+    if not fonte.exists():
+        sys.exit(f"Sem a fonte {fonte}: crie com --criar.")
     with tempfile.TemporaryDirectory() as tmp:
         tmp = pathlib.Path(tmp)
         script = tmp / "exportar.lua"
         shutil.copy(LUA / "exportar_forja.lua", script)
-        r = subprocess.run([aseprite(), "-b", "--script-param", f"fonte={FONTE}", "--script-param", f"pasta={tmp}",
+        r = subprocess.run([aseprite(), "-b", "--script-param", f"fonte={fonte}", "--script-param", f"pasta={tmp}",
                             "--script", str(script)], capture_output=True, text=True)
         if "celulas" not in r.stdout:
             sys.exit(f"O Aseprite não exportou:\n{r.stdout}{r.stderr}")
@@ -106,28 +106,33 @@ def montar(q):
     return {"fundo": fundo, "fundo-sem-morel": fundo, **tiras}
 
 
-def exportar():
-    saida = montar(ler_fonte())
-    SAIDA.mkdir(parents=True, exist_ok=True)
+def exportar(fonte=FONTE, pasta=SAIDA):
+    saida = montar(ler_fonte(fonte))
+    pasta.mkdir(parents=True, exist_ok=True)
     for nome, im in saida.items():
-        im.save(SAIDA / f"{nome}.png", optimize=True)
-    print("camadas/g:", ", ".join(sorted(f"{n}.png" for n in saida)))
+        im.save(pasta / f"{nome}.png", optimize=True)
+    print(f"camadas/{pasta.name}:", ", ".join(sorted(f"{n}.png" for n in saida)))
     return saida
 
 
-def conferir(saida):
+def conferir(saida, quadros=quadros_do_codigo):
     """O que saiu da fonte contra o desenho do código, pixel a pixel."""
-    codigo = montar(quadros_do_codigo())
+    codigo = montar(quadros())
     dif = [n for n in saida if saida[n].tobytes() != codigo[n].tobytes()]
     print(f"conferido: {len(saida) - len(dif)} de {len(saida)} imagens iguais ao código"
           + (f" (diferem: {', '.join(dif)}: os retoques da fonte)" if dif else ""))
     return not dif
 
 
-if __name__ == "__main__":
+def principal(fonte=FONTE, pasta=SAIDA, quadros=quadros_do_codigo):
+    """A linha de comando (a da G; a H usa a mesma, com a fonte, a pasta e o desenho dela)."""
     if "--criar" in sys.argv:
-        criar()
+        criar(fonte, quadros)
         sys.exit(0)
-    s = exportar()
-    if "--conferir" in sys.argv and not conferir(s):
+    s = exportar(fonte, pasta)
+    if "--conferir" in sys.argv and not conferir(s, quadros):
         sys.exit(1)
+
+
+if __name__ == "__main__":
+    principal()
