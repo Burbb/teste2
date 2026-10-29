@@ -8530,7 +8530,8 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   manchas curtas sobre o tecido, o tom médio contínuo do ombro ao peito e às costas, uma sombra de um pixel no tom de
   sombra só do sovaco ao cotovelo, o punho dobrado sem a faixa clara. A fonte `b4.aseprite` é a da B3 com só a camada
   verde retocada (55 pixels; conferido o que salvou); a B3 e a B2 exportam iguais. O botão Protótipo diz a versão à
-  vista desde a entrada (antes, um texto fixo dizia "prova A"); `demo.bat` abre na B4.
+  vista desde a entrada (antes, um texto fixo dizia "prova A"); `demo.bat` abre na B4. Depois, a pedido do Jean
+  (pixels cor de pele perdidos), o decote solto no peito saiu por um retoque de 10 pixels na própria `b4.aseprite`.
 - **Conferido no jogo** a 1920×945 e 1280×720, na cena e isolado. Aberto: na cena completa, os dois jogadores parecem
   maiores e mais finos que as figuras da F à mesma distância (a escala ficou, por pedido); a 1280 o braço de cá ficou
   um pouco menos marcado que na B3, ainda legível.

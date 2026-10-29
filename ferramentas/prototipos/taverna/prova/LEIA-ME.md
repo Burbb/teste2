@@ -183,8 +183,12 @@ mesmo lugar. O botão mostra a versão à vista ("Protótipo: prova B4 · ..."),
 - **O punho dobrado no cotovelo:** uma dobra baixa no tom da manga, sem a faixa clara.
 - **A fonte:** `b4/fonte.py --criar` copiou `b3/aseprite/b3.aseprite` para `b4/aseprite/b4.aseprite` e trocou só a
   camada verde, nos 55 pixels em que `b4/desenho.py` difere do desenho da B3 (todos entre x 15 e 24, y 24 e 38),
-  conferindo o que salvou; `--criar` não sobrescreve; `--conferir` dá 0 pixels de diferença da B3 com o retoque. A B3
-  e a B2 exportam iguais a antes.
+  conferindo o que salvou; `--criar` não sobrescreve. A B3 e a B2 exportam iguais a antes.
+- **O decote, retocado na fonte:** o Jean viu pixels cor de pele perdidos no peito. Eram o decote da B3 (x 28 a 31,
+  y 24 a 27): com o pescoço escondido pela barba, ele ficava solto no meio da túnica. Os 10 pixels foram pintados na
+  própria `b4.aseprite` (`b2/aseprite/retocar.lua`), no tom da túnica em volta; por isso `--conferir` dá 10 pixels
+  diferentes da B3 com o retoque do ombro. Uma varredura da exportação não acha outros pixels de pele isolados. O giro
+  do peito fica dito pelos dois ombros.
 
 **Conferido no jogo** a 1920×945 e 1280×720, na cena e isolado, no mesmo lugar e tamanho das outras, console limpo,
 a demonstração inteira passando: o ombro lê como tecido, sem tira e sem encaixe; os dois braços continuam se
