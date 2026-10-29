@@ -8464,3 +8464,22 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   aparência do jogo, sem estandartes, tapete e cabeça de cervo, a porta da rua fechada. **Compromissos:** as pessoas da
   frente um pouco menores que na imagem; o gesto da mão no queixo pequeno; o fundo com cabeças de 5 px.
   **Estudo estático em avaliação, sem integração.**
+
+### 29/10/2026 (data do computador local) — A taverna: a prova de qualidade dos jogadores (protótipo, nada no jogo)
+
+- **Pedido do Jean:** interromper as reconstruções completas (a F fica como histórico, sem aprovação nem integração) e
+  descobrir quanto do problema vem da resolução: os dois jogadores, a mesa e os banquinhos em duas grades nativas, no
+  mesmo lugar da tela, com a mesma câmera, composição, poses, luz e paleta. A experiência não autoriza mudar a
+  resolução dos interiores.
+- **Feito** (`ferramentas/prototipos/taverna/prova`, LEIA-ME com o método, as medidas e as conclusões; `demo.bat` abre
+  na prova, com Grade A, Grade B e Isolado no botão Protótipo): A em 66×42 e B em 132×84, as duas no recorte R da sala
+  (x 174, y 42), desenhadas à mão em cada grade (nenhuma é a outra ampliada); os móveis pela projeção da F; a luz da
+  sala no ponto de cada pixel. A F ganhou a chave `SEM_RODA`, desligada por padrão (as camadas dela não mudaram).
+- **Medido no jogo:** a 1920×945, 219,4×139,6 px (3,325 px por pixel da A, 1,66 da B); a 1280×720, 146×92,8 px (2,21 e
+  1,11); sem suavização. A escala não inteira deixa os pixels da B irregulares a 1920 (1 ou 2 px).
+- **Conclusões (o LEIA-ME tem os detalhes):** na A, os dois sentados, os móveis, as pernas e o braço estendido leem; o
+  braço dobrado e o tabuleiro ficam no limite. Na B, o gesto, a peça na mão, o tabuleiro e o volume do joelho e das
+  botas leem; ela destoa um pouco da sala em volta (o grão mais fino). Nas duas, os troncos ainda retos, as roupas com
+  poucas dobras e o contraste com o fundo escuro.
+- **Parado aqui:** o padrão de qualidade é escolha do Jean antes de aplicá-lo ao resto da sala; nada reconstruído,
+  animado ou integrado.
