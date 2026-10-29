@@ -61,12 +61,15 @@ def paredes(px):
         px(x + 1, y + 1, 14, 1, "pedraBLuz")
     px(0, PAREDE - 2, QW, 2, "pedraBEsc")   # o rodapé: a última fiada, mais escura, no encontro com o piso
     # a madeira do telhado: o frechal (a viga que corre no alto da parede e recebe o telhado), apoiado em mísulas de
-    # pedra saindo da parede, poucas e no mesmo espaçamento; acima dele, o escuro do telhado
-    for x0, x1 in ((0, 76), (190, QW)):
+    # pedra saindo da parede, no mesmo espaçamento. Cada viga termina antes do arco, com o topo da madeira à vista,
+    # em cima de uma mísula: entre a ponta e o arco, parede (a viga não entra no desenho do arco)
+    for x0, x1, topo in VIGAS:
         px(x0, 0, x1 - x0, 4, "madeiraEsc")
         px(x0, 4, x1 - x0, 3, "madeira")
         px(x0, 4, x1 - x0, 1, "madeiraLuz")
         px(x0, 7, x1 - x0, 1, "madeiraEsc")
+        px(topo, 4, 1, 4, "madeiraLuz")      # o topo da viga (o corte da madeira), aceso
+        px(topo + (1 if topo == x1 - 1 else -1), 4, 1, 4, "pedraBEsc")  # a sombra dela na parede, logo depois
     for x in MISULAS:
         px(x, 8, 6, 2, "pedraBLuz")       # a mísula: duas pedras em degrau, a de cima mais larga
         px(x, 8, 6, 1, "calLuz")
@@ -75,7 +78,8 @@ def paredes(px):
         px(x + 1, 12, 4, 1, "pedraBEsc")
 
 
-MISULAS = [22, 52, 214, 248, 292]  # o x de cada mísula de pedra sob o frechal
+VIGAS = [(0, 66, 65), (200, QW, 200)]       # cada viga: de x0 a x1 e onde fica o topo (a ponta junto do arco)
+MISULAS = [2, 32, 60, 200, 230, 260, 290]  # o x de cada mísula (a primeira e a última de cada lado, sob as pontas)
 
 
 def arandela(px, x, base):
@@ -190,27 +194,37 @@ def colunas(px):
     """As duas colunas de pedra que seguram o arco, em blocos, com o capitel e a base, de pé no piso da nave, logo à
     frente dos degraus; o arco de aduelas por cima, cortado pelo alto do quadro (a nave é mais alta que o que se vê)."""
     for x0, x1 in ((72, 82), (184, 194)):
-        px(x0, 12, x1 - x0, DEGRAU + 2 - 12, "pedraBLuz")
-        px(x0, 12, 2, DEGRAU + 2 - 12, "calLuz")
-        px(x1 - 2, 12, 2, DEGRAU + 2 - 12, "pedraB")
+        dentro = x1 if x0 < 133 else x0 - 3      # o lado de dentro do pilar: a espessura da parede, mais escura
+        px(x0, 12, x1 - x0, DEGRAU + 2 - 12, "pedraBLuz")   # a face do pilar
+        px(x0, 12, 1, DEGRAU + 2 - 12, "calLuz")
         for y in range(18, DEGRAU, 7):
             px(x0, y, x1 - x0, 1, "pedraB")
-        px(x0 - 2, 10, x1 - x0 + 4, 3, "pedraBLuz")   # o capitel
-        px(x0 - 2, 12, x1 - x0 + 4, 1, "pedraB")
+        px(dentro, 12, 3, DEGRAU + 2 - 12, "pedraB")        # o intradorso (o lado de dentro), descendo até o piso
+        px(dentro + (0 if x0 < 133 else 2), 12, 1, DEGRAU + 2 - 12, "pedraBEsc")
+        px(min(x0, dentro) - 1, 9, x1 - x0 + 5, 3, "pedraBLuz")   # a imposta: a pedra saliente onde o arco nasce
+        px(min(x0, dentro) - 1, 9, x1 - x0 + 5, 1, "calLuz")
+        px(min(x0, dentro) - 1, 11, x1 - x0 + 5, 1, "pedraB")
         px(x0 - 2, DEGRAU, x1 - x0 + 4, 4, "pedraBLuz")  # a base, no piso da nave
         px(x0 - 2, DEGRAU, x1 - x0 + 4, 1, "calLuz")
         px(x0 - 3, DEGRAU + 4, x1 - x0 + 6, 1, "contato")
-    cx, cy, r = 133, 54.2, 66.2
-    for y in range(0, 12):
+    # o arco, acima da imposta: a face (a mesma largura do pilar, em pedra clara, com as juntas das aduelas em raio) e,
+    # por dentro dela, o intradorso (a espessura, mais escuro); cortado pelo alto do quadro. Por fora, a parede que
+    # paredes() já desenhou.
+    # o círculo passa pela borda de dentro da face do pilar (x 82) na altura da imposta (y 9): a curva nasce ali,
+    # em cima do pilar, e sobe para dentro (um arco abatido, como o da referência; o alto fica acima do quadro)
+    cx, cy, face, esp = 133, 54.0, 10, 3
+    r = math.hypot(cx - 82, cy - 9)
+    for y in range(0, 9):
         for x in range(70, 197):
-            d = math.hypot(x - cx, y - cy)
-            if d < r:
-                continue
-            if d < r + 7:
-                px.p(x, y, "calLuz" if d < r + 1 else "pedraBEsc" if int(math.degrees(math.atan2(cy - y, x - cx))) % 9 == 0
-                     else "pedraBLuz" if d < r + 5 else "pedraB")
-            else:
-                px.p(x, y, "juntaB" if y % 6 == 4 else "pedraB")
+            d = math.hypot(x + 0.5 - cx, (y + 0.5 - cy))
+            if r - esp <= d < r:
+                px.p(x, y, "pedraBEsc" if d < r - esp + 1 else "pedraB")
+            elif r <= d < r + face:
+                ang = math.degrees(math.atan2(cy - y - 0.5, x + 0.5 - cx))
+                junta = abs((ang + 3) % 12 - 6) < 0.9
+                px.p(x, y, "pedraB" if junta else "calLuz" if d < r + 1 else "pedraBLuz")
+            elif r + face <= d < r + face + 1:
+                px.p(x, y, "pedraB")
 
 
 def entrada(px):
@@ -269,36 +283,49 @@ def entrada(px):
     px(46, PAREDE + 2, 14, 1, "contato")
 
 
-FILEIRAS = [(60, 68, (58, 116), (150, 194)), (66, 76, (54, 118), (148, 196)), (74, 86, (50, 120), (146, 198))]
+BANCOS = [68, 76, 86]            # onde cada fileira pisa (do fundo para a frente)
+BLOCOS = [(20, 116), (152, 214)]  # cada bloco na borda de baixo (y = QH): as pontas seguem as linhas até VP
+
+
+def pela_distancia(y_pe):
+    """Quanto a fileira que pisa em y_pe encolhe (1 na borda de baixo), pela mesma conta do piso."""
+    return (y_pe - VP[1]) / (QH - VP[1])
 
 
 def bancos(px):
-    """Os bancos vistos por trás, em dois blocos de três fileiras, cada uma pisando mais à frente (FILEIRAS: o alto do
-    encosto, o pé e os dois blocos). De cada banco se vê o encosto (a tábua de cima acesa), e embaixo dele o vão até o
-    piso, com as cabeceiras nas pontas e um pé no meio: o chão aparece por baixo, e a sombra de contato marca onde
-    cada pé encosta."""
-    for topo, pe, *blocos in FILEIRAS:
-        h = 4 + (pe - topo) // 5           # a altura do encosto
-        for x0, x1 in blocos:
+    """Os bancos vistos por trás, em dois blocos de três fileiras, desenhados pela perspectiva do piso: as pontas de
+    cada bloco seguem duas linhas que vão a VP, e a altura de cada banco encolhe com a distância. De cada banco se vê o
+    encosto, o vão até o piso, as duas
+    cabeceiras (a tábua da ponta, até o chão) e um pé no meio; a sombra de contato embaixo de cada pé. O encosto é um
+    painel de duas tábuas retas; a altura dele e a do banco saem da mesma conta da distância, nas três fileiras."""
+    for pe in BANCOS:
+        k = pela_distancia(pe)
+        alto = round(13 * k)                      # do alto do encosto ao chão
+        topo = pe - alto
+        for xb0, xb1 in BLOCOS:
+            x0 = round(VP[0] + (xb0 - VP[0]) * k)
+            x1 = round(VP[0] + (xb1 - VP[0]) * k)
+            h = round(7 * k)                         # o encosto: duas tábuas, a altura pela distância
             px(x0, topo, x1 - x0, h, "madeira")
             px(x0, topo, x1 - x0, 1, "madeiraLuz")
+            px(x0, topo + h // 2, x1 - x0, 1, "madeiraEsc")    # a junta entre as duas tábuas
             px(x0, topo + h - 1, x1 - x0, 1, "madeiraEsc")
-            px(x0 + 3, topo + h, x1 - x0 - 6, 1, "madeiraEsc")  # a borda do assento, um tom abaixo
-            for xx in (x0, (x0 + x1) // 2, x1 - 3):           # as cabeceiras e o pé do meio
-                larg = 3 if xx != (x0 + x1) // 2 else 2
-                alto = topo - 2 if larg == 3 else topo + h
-                px(xx, alto, larg, pe - alto, "madeiraMeio")
-                px(xx, alto, 1, pe - alto, "madeiraLuz")
-                px(xx + larg - 1, alto + 1, 1, pe - alto - 1, "madeiraEsc")
-                px(xx - 1, pe, larg + 2, 1, "contato")
+            px(x0 + 2, topo + h + 1, x1 - x0 - 4, 1, "madeiraEsc")  # a borda do assento, atrás, um tom abaixo
+            for xx in (x0, x1 - 2):                 # as cabeceiras, do alto do encosto ao chão
+                px(xx, topo - 1, 2, alto + 1, "madeiraMeio")
+                px(xx, topo - 1, 1, alto + 1, "madeiraLuz")
+                px(xx - 1, pe, 4, 1, "contato")
+            meio = (x0 + x1) // 2                   # o pé do meio
+            px(meio, topo + h, 1, alto - h, "madeira")
+            px(meio - 1, pe, 3, 1, "contato")
 
 
 def corredor(px):
     """A passadeira do corredor, deitada no piso da nave do degrau até a frente, alargando (a perspectiva), com a barra
     de cor velha nas bordas e o claro da janela batendo nela."""
     for y in range(DEGRAU, QH):
-        k = (y - DEGRAU) / (QH - DEGRAU)
-        a, b = round(126 - k * 10), round(142 + k * 10)
+        k = pela_distancia(y)                      # as bordas seguem as linhas do piso até VP
+        a, b = round(VP[0] - 15 * k), round(VP[0] + 15 * k)
         px(a, y, b - a, 1, "tapete")
         px(a, y, 1, 1, "tapeteBorda")
         px(b - 1, y, 1, 1, "tapeteBorda")

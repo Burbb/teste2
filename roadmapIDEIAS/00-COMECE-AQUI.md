@@ -8290,3 +8290,12 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   o castiçal de chão com os copos; o fogareiro do incenso em tigela com as brasas (a vela solta saiu); a toalha e a
   caixinha do armário saíram; o primeiro plano saiu (as pontas de banco não se alinhavam com os blocos). Conferido no
   jogo nas duas resoluções. Integração não autorizada.
+
+### 28/10/2026 (data do computador local) — Templo B: o arco, as vigas e os bancos (protótipo, quinta passada)
+
+- **Pedido do Jean:** antes de integrar, o encontro das vigas com o arco (apoio real, não recorte) e os bancos (tábuas
+  retas, espessura consistente, a mesma perspectiva); no arco, a passagem do pilar para a curva e a espessura interna.
+- **Feito (só no protótipo):** as vigas terminam antes do arco, cada ponta numa mísula; o arco nasce na imposta, sobre
+  o pilar, com a face e o intradorso (a espessura continuando pelo lado de dentro dos pilares); os bancos e a passadeira
+  pela mesma perspectiva do piso, com o encosto de duas tábuas retas. Conferido no jogo nas duas resoluções. Integração
+  não autorizada.

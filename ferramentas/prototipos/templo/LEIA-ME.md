@@ -204,3 +204,26 @@ brasas embaixo e o que as segura.
 **Conferido:** os recortes ampliados (a entrada, o altar, o atendimento); no jogo, pela demonstração, nas duas
 resoluções (o interior, os pontos, os serviços, a Saída e o Esc, ninguém precisando, sem ouro, o relógio, a pose
 parada, sem erros no console). Integração não autorizada.
+
+## B, quinta passada (28/10/2026): o arco, as vigas e os bancos
+
+**O que o Jean pediu:** preservar o ambiente, os objetos e o piso; o encontro das vigas com o arco com apoio ou
+sobreposição real (não um recorte seco); os bancos com tábuas retas, espessura consistente e fileiras na mesma
+perspectiva (a redução pela distância, não deformação da madeira); no arco, a passagem do pilar para a curva e a
+espessura interna com poucos planos, sem textura miúda.
+
+- **As vigas:** cada uma termina antes do arco, com o topo da madeira aceso e a sombra dela na parede, em cima de uma
+  mísula; entre a ponta e o arco, parede. As mísulas passaram a um espaçamento regular, com uma sob cada ponta. Antes, a
+  viga acabava onde começava o desenho do arco, cortada.
+- **O arco:** o pilar recebe a imposta (a pedra saliente onde o arco nasce); a face do arco sai dela com a mesma
+  largura do pilar e se curva para dentro (abatido, como na referência; o alto fica acima do quadro), com as juntas
+  das aduelas em raio; por dentro da face, o intradorso (a espessura da parede, mais escuro) continua pelo lado de
+  dentro dos pilares até o piso. Três planos: a face, a espessura, a parede.
+- **Os bancos:** desenhados pela mesma conta do piso (`pela_distancia`, o mesmo VP): as pontas de cada bloco seguem
+  duas linhas que vão ao fundo, e a altura do banco e do encosto (duas tábuas retas, com a junta no meio) encolhem com
+  a distância. A passadeira do corredor também segue o VP. Antes, as pontas e as alturas eram postas à mão, fileira a
+  fileira.
+
+**Conferido:** os recortes ampliados do arco e dos bancos; no jogo, pela demonstração, nas duas resoluções (as 20
+checagens: o interior, os pontos, os serviços, a Saída e o Esc, ninguém precisando, sem ouro, o relógio, a pose
+parada, sem erros no console). Integração não autorizada.
