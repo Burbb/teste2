@@ -283,8 +283,12 @@ def entrada(px):
     px(46, PAREDE + 2, 14, 1, "contato")
 
 
-BANCOS = [68, 76, 86]            # onde cada fileira pisa (do fundo para a frente)
-BLOCOS = [(20, 116), (152, 214)]  # cada bloco na borda de baixo (y = QH): as pontas seguem as linhas até VP
+BANCOS = [72, 80, 90]            # onde cada fileira pisa (do fundo para a frente): longe o bastante do presbitério
+                                 # para os degraus aparecerem pelo corredor
+METRO = 28.2                     # 1 m em pixels na borda de baixo (k = 1): o clérigo, ~1,70 m, tem 32 px pisando em y 70
+BANCO_ALTO, ASSENTO = 0.90, 0.45  # um banco de igreja: o alto do encosto e o assento, em metros
+BLOCOS = [(20, 116), (152, 200)]  # cada bloco na borda de baixo (y = QH): as pontas seguem as linhas até VP; o da
+                                  # direita acaba antes do pé da mesa dos panos
 
 
 def pela_distancia(y_pe):
@@ -300,12 +304,12 @@ def bancos(px):
     painel de duas tábuas retas; a altura dele e a do banco saem da mesma conta da distância, nas três fileiras."""
     for pe in BANCOS:
         k = pela_distancia(pe)
-        alto = round(13 * k)                      # do alto do encosto ao chão
+        alto = round(BANCO_ALTO * METRO * k)     # do alto do encosto ao chão, na escala do clérigo
         topo = pe - alto
         for xb0, xb1 in BLOCOS:
             x0 = round(VP[0] + (xb0 - VP[0]) * k)
             x1 = round(VP[0] + (xb1 - VP[0]) * k)
-            h = round(7 * k)                         # o encosto: duas tábuas, a altura pela distância
+            h = alto - round(ASSENTO * METRO * k)    # o encosto, do alto até o assento: duas tábuas
             px(x0, topo, x1 - x0, h, "madeira")
             px(x0, topo, x1 - x0, 1, "madeiraLuz")
             px(x0, topo + h // 2, x1 - x0, 1, "madeiraEsc")    # a junta entre as duas tábuas

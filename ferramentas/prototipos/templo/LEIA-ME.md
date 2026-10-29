@@ -227,3 +227,18 @@ espessura interna com poucos planos, sem textura miúda.
 **Conferido:** os recortes ampliados do arco e dos bancos; no jogo, pela demonstração, nas duas resoluções (as 20
 checagens: o interior, os pontos, os serviços, a Saída e o Esc, ninguém precisando, sem ouro, o relógio, a pose
 parada, sem erros no console). Integração não autorizada.
+
+## B, sexta passada (28/10/2026): a altura dos bancos pela escala do clérigo
+
+**O que o Jean perguntou:** se a altura dos bancos estava certa em relação ao clérigo. Não estava: medidos pela mesma
+conta de distância do piso, eles tinham ~0,45 m (8, 10 e 11 px), a altura de um assento sem encosto. O clérigo, ~1,70
+m, tem 32 px pisando em y 70: 1 m vale 28,2 px na borda de baixo do quadro (`METRO`). A mesa dos panos já estava certa
+(0,74 m).
+
+- **A altura:** os bancos saem de medidas em metros (`BANCO_ALTO` 0,90 m até o alto do encosto, `ASSENTO` 0,45 m) na
+  escala do clérigo e pela distância: 18, 20 e 23 px, com o encosto de duas tábuas do alto até o assento.
+- **O lugar:** com a altura certa, a fileira do fundo cobria os degraus e a base do altar; as fileiras vieram para mais
+  perto (pisam em 72, 80 e 90), e os degraus aparecem pelo corredor, como na referência. O bloco da direita acaba antes
+  do pé da mesa dos panos (o apoio dela continua à vista).
+
+**Conferido:** no jogo, pela demonstração, nas duas resoluções (as 20 checagens). Integração não autorizada.

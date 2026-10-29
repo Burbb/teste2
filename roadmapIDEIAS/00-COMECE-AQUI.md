@@ -8299,3 +8299,11 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   o pilar, com a face e o intradorso (a espessura continuando pelo lado de dentro dos pilares); os bancos e a passadeira
   pela mesma perspectiva do piso, com o encosto de duas tábuas retas. Conferido no jogo nas duas resoluções. Integração
   não autorizada.
+
+### 28/10/2026 (data do computador local) — Templo B: os bancos na escala do clérigo (protótipo, sexta passada)
+
+- **Pergunta do Jean:** a altura dos bancos em relação ao clérigo. Medidos pela conta de distância do piso, tinham
+  ~0,45 m (metade de um banco real).
+- **Feito (só no protótipo):** os bancos passam a sair de medidas em metros na escala do clérigo (0,90 m no encosto,
+  0,45 m no assento); as fileiras vieram para mais perto, para os degraus aparecerem pelo corredor, e o bloco da
+  direita acaba antes do pé da mesa. Conferido no jogo nas duas resoluções. Integração não autorizada.
