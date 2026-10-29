@@ -8483,3 +8483,21 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   poucas dobras e o contraste com o fundo escuro.
 - **Parado aqui:** o padrão de qualidade é escolha do Jean antes de aplicá-lo ao resto da sala; nada reconstruído,
   animado ou integrado.
+
+### 29/10/2026 (data do computador local) — A taverna: a B2, os jogadores refinados pela referência (protótipo, nada no jogo)
+
+- **Pedido do Jean:** refinar só o conjunto dos dois jogadores na grade 132×84, pela referência nova "Jogo de tabuleiro
+  na taverna" (poses, volumes, a relação com a mesa e os banquinhos), com o acabamento das cenas aprovadas; corpos sem
+  rigidez, o cotovelo do de verde no tampo (ajuste local), móveis na mesma escala; a fonte editável com a referência
+  numa guia fora da exportação; a A e a B preservadas para comparar. Não aprova a resolução da taverna.
+- **Feito** (`ferramentas/prototipos/taverna/prova/b2`; a seção "A B2" de `prova/LEIA-ME.md`): a referência guardada
+  sem alteração e registrada com o hash; a fonte `b2/aseprite/b2.aseprite` (guia oculta, bancos, mesa, verde, ocre),
+  semeada pelo `desenho.py` (`fonte.py --criar` recusa sobrescrevê-la sem `--refazer`), com retoques feitos nela (as
+  sombras de contato do cotovelo e das botas); a exportação lê da fonte. `demo.bat` abre na B2; Grade A, Grade B,
+  Grade B2 e Isolado no botão Protótipo, no mesmo lugar.
+- **Conferido no jogo** a 1920×945 e 1280×720 (a mesma posição e o mesmo tamanho da A e da B; sem suavização; console
+  limpo; a demonstração inteira passando): os dois sentados, os gestos reconhecíveis, braço, tampo e tabuleiro separados.
+- **Ainda aberto:** as pessoas da B2 ficaram maiores que as da A e da B (as proporções da referência); o grão mais fino
+  que a sala; a 1920, a escala fracionada (1,66 px por pixel) deixa linhas de 1 pixel com 1 ou 2 px; a 1280, o punho e
+  o rosto do de verde ficam no limite; rostos, mãos e roupas simples.
+- **Parado aqui:** a avaliação é do Jean; nada animado, integrado ou aplicado ao resto da sala.
