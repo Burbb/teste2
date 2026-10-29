@@ -14,7 +14,9 @@
 
    A G2 (a G refinada) vem da fonte dela (g2/fonte.py: a fonte da G com os retoques), em /proto-tav/camadas/g2/.
 
-   Também exporta window.CenaTaverna, que escolhe entre a G2 (o padrão), a G, a H, a prova de qualidade (cena-taverna-prova.js) e
+   A G3 (a G2 com as correções) vem de g3/fonte.py (a fonte da G2 com as correções), em /proto-tav/camadas/g3/.
+
+   Também exporta window.CenaTaverna, que escolhe entre a G3 (o padrão), a G2, a G, a H, a prova de qualidade (cena-taverna-prova.js) e
    as candidatas da F à A (histórico) pela faixa da demonstração (body.dataset.tavCand). */
 "use strict";
 
@@ -119,6 +121,10 @@
   // ombro do freguês da esquerda (g2/retoques.py); os pontos da G, no mesmo lugar.
   window.CenaTavernaG2 = estatica("g2", window.CenaTavernaG.pontos, ["taverneiro", "freguês da esquerda", "freguês da direita"]);
 
+  // G3. A G2 aprovada com três correções locais (g3/retoques.py): o freguês da esquerda, as duas garrafas, o pano;
+  // os pontos da G, no mesmo lugar.
+  window.CenaTavernaG3 = estatica("g3", window.CenaTavernaG.pontos, ["taverneiro", "freguês da esquerda", "freguês da direita"]);
+
   // H (experiência encerrada, histórico). A G com a câmera um pouco mais afastada e para a direita (o tampo fundo, a lateral da ponta, os fregueses
   // sentados de perto): os mesmos pontos, no lugar novo. O nome do Taverneiro ao lado da cabeça, na prateleira da
   // direita (acima dela, a 1280, sairia da arte); o da Despensa no alto da folha, depois da ponta do balcão.
@@ -127,13 +133,13 @@
     despensa: { area: [292, 10, 26, 60], balao: [303, 18], foco: [304, 40] },
   }, ["taverneiro", "freguês da esquerda", "freguês da direita"]);
 
-  // A cena que o jogo registra (telas/cenas.js): a da faixa (a G2 por padrão, a G original ao lado para comparar; a H,
-  // a prova de qualidade e da F à A, o histórico)
+  // A cena que o jogo registra (telas/cenas.js): a da faixa (a G3 por padrão, a G2 e a G original ao lado para
+  // comparar; a H, a prova de qualidade e da F à A, o histórico)
   const CANDS = { a: () => window.CenaTavernaA, b: () => window.CenaTavernaB, c: () => window.CenaTavernaC,
     d: () => window.CenaTavernaD, e: () => window.CenaTavernaE, f: () => window.CenaTavernaF,
-    g: () => window.CenaTavernaG, g2: () => window.CenaTavernaG2, h: () => window.CenaTavernaH,
+    g: () => window.CenaTavernaG, g2: () => window.CenaTavernaG2, g3: () => window.CenaTavernaG3, h: () => window.CenaTavernaH,
     prova: () => window.CenaTavernaProva };
-  const cand = () => (CANDS[document.body.dataset.tavCand] || CANDS.g2)();
+  const cand = () => (CANDS[document.body.dataset.tavCand] || CANDS.g3)();
   window.CenaTaverna = {
     base: (W, d) => cand().base(W, d),
     desenhar: (...a) => cand().desenhar(...a),
