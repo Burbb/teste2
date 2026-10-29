@@ -8269,3 +8269,13 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Conferido:** o espaço sozinho e a cena ampliados; as poses; no jogo, pela demonstração, nas duas resoluções (o
   interior, os pontos, os serviços, as duas candidatas, a Saída e o Esc, ninguém precisando, sem ouro, o relógio, a pose
   parada, sem erros no console). Esperando a avaliação do Jean.
+
+### 28/10/2026 (data do computador local) — Templo B: cada coisa com um motivo (protótipo, terceira passada)
+
+- **Avaliação do Jean:** gostou; pediu que tudo na tela tenha motivo para estar ali (os postes com "braços" só em
+  alguns e tortos, chamas soltas, a porta que lia como sarrafo, os vasos pretos avulsos), com um primeiro plano que
+  traga mais a igreja de uma cidade mediana sem atrapalhar a vista.
+- **Feito (só no protótipo):** as mãos-francesas retas e coerentes em todos os postes; as chamas soltas viraram a vela
+  no pires em cima do armário e duas arandelas de ferro com vela; a folha da porta da rua aberta, de quina, com tábuas,
+  ferragens e argola; a toalha num cravo; no primeiro plano, as pontas da fileira de bancos mais próxima no lugar dos
+  vasos. O LEIA-ME do protótipo tem a tabela. Conferido no jogo nas duas resoluções. Integração não autorizada.

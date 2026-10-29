@@ -142,7 +142,7 @@ própria.
   embaixo; os bancos em três fileiras pisando cada uma mais à frente, com o vão até o piso, as cabeceiras e um pé no
   meio; chão à vista entre as coisas;
 - as sombras de contato de um pixel, depois da geometria;
-- o primeiro plano só nos cantos (o pote baixo à esquerda, a jarra à direita); a caixa preta do meio saiu.
+- o primeiro plano só nos cantos; a caixa preta do meio saiu (os potes dos cantos viraram bancos na terceira passada).
 
 **O clérigo** (`b/figura.py`): a mesa acaba em x 219 e a barra do hábito começa em x 220, com 2 px de chão entre o pé
 da mesa e a roupa; o hábito passou a uma lã crua acinzentada (o pé da mesa é madeira escura e quente) e o pano ficou
@@ -158,3 +158,24 @@ voltar com um relógio só, a pose parada, sem erros no console.
 **Limites:** o rosto do clérigo continua de poucos pixels (a escala da referência); o piso não segue uma perspectiva
 matemática exata (as juntas convergem para um ponto só e as transversais foram postas à mão), de propósito, pela
 leitura no tamanho do jogo.
+
+## B, terceira passada (28/10/2026): cada coisa com um motivo
+
+**O que o Jean disse:** gostou; pediu para perguntar, de cada coisa na tela, o que ela é e por que está ali. Os postes
+tinham "braços" só em alguns, e tortos; uma chama solta em cima do armário; ao lado da porta da rua, um sarrafo que
+não lia como porta; outra chama minúscula perto do clérigo; os dois vasos pretos da frente, avulsos.
+
+| O quê | Antes | Agora |
+|---|---|---|
+| os postes do vigamento | cinco, só dois com escora, tortas | cada um com a mão-francesa reta (45°) para cada vão que sustenta; os de canto, só para o lado do vão |
+| a chama em cima do armário | sem vela | a vela num pires de latão em cima da cornija (a luz do canto do atendimento) |
+| a chama perto do clérigo | solta junto da coluna | uma arandela de ferro com a vela, presa no poste; a da entrada no mesmo desenho, acima do banquinho |
+| ao lado da porta da rua | uma tábua de 5 px | a folha da porta aberta para dentro, de quina: a ponta livre mais perto, as tábuas, as duas ferragens e a argola |
+| a toalha | por cima das prateleiras | num cravo do lado de fora do armário |
+| o primeiro plano | dois vasos pretos avulsos | as pontas da fileira de bancos mais perto de quem olha, cortadas pela borda, com a cabeceira dos bancos da nave |
+
+O resto foi conferido com a mesma pergunta e fica: o altar com o livro e as velas, o castiçal de chão, a jarra e a
+bacia (a água para limpar), a caixa dos panos, a mesinha do incenso, o banquinho de esperar, a passadeira.
+
+**Conferido:** no jogo, pela demonstração, nas duas resoluções (o interior, os pontos, os serviços, a Saída e o Esc,
+ninguém precisando, sem ouro, o relógio, a pose parada, sem erros no console).
