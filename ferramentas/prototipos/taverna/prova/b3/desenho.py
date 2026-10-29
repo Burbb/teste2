@@ -29,7 +29,8 @@ from prova.b2.desenho import partes, tom  # noqa: E402
 W, H, S = B2.W, B2.H, B2.S
 
 
-def _verde():
+def verde_partes():
+    """As partes do de verde na B3, na ordem de pintura ({nome: trechos}); a B4 troca algumas."""
     p = B2.verde_partes()
     # o braço da mesa (o de lá) primeiro: o peito vem por cima da raiz dele
     sup = {25: (36, 40), 26: (36, 40), 27: (37, 41), 28: (37, 41), 29: (38, 41), 30: (38, 41), 31: (39, 42),
@@ -69,7 +70,7 @@ def _verde():
     ordem = dict(coxa_la=p["coxa_la"], canela_la=p["canela_la"], bota_la=p["bota_la"], coxa_ca=p["coxa_ca"],
                  canela_ca=p["canela_ca"], bota_ca=p["bota_ca"], braco_la=braco_la, tronco=tronco, cabeca=p["cabeca"],
                  braco_ca=braco_ca, mao_coxa=mao_coxa, ante=ante, punho=p["punho"])
-    return partes(*ordem.values())
+    return ordem
 
 
 def _ocre():
@@ -88,7 +89,7 @@ def _ocre():
     return partes(*ordem.values())
 
 
-VERDE, OCRE = _verde(), _ocre()
+VERDE, OCRE = partes(*verde_partes().values()), _ocre()
 
 
 def camada(linhas, pal):

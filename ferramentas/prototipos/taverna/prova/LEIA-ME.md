@@ -165,3 +165,36 @@ caindo na frente das costas e o braço da mesa saindo de trás do peito; no de o
 - o que já estava aberto na B2: o tamanho em relação à sala, o grão mais fino, a escala fracionada a 1920, os rostos e
   as mãos simples.
 
+## A B4: o ombro de cá do de verde suavizado (29/10/2026)
+
+A B3 esclareceu os braços, mas no de verde a construção do ombro de cá perdeu naturalidade: a faixa clara contínua no
+alto do ombro, na aresta da manga e no punho dobrado lia como uma tira ou uma ombreira, e a coluna escura entre o braço
+e o peito fazia o braço parecer encaixado no tronco. A B4 retoca **só esse ombro e essa manga**; a cabeça, o punho
+junto da barba, o braço da mesa, as pernas, os móveis, a escala, a posição e o de ocre inteiro continuam os da B3, que
+fica para comparar. **Abrir:** `demo.bat` abre na B4; no botão **Protótipo**, as grades da A à B4 e o Isolado, no
+mesmo lugar. O botão mostra a versão à vista ("Protótipo: prova B4 · ..."), fora da arte; antes, ao abrir, ele dizia
+"prova A" por um texto fixo, corrigido.
+
+- **O ombro:** sem a calota de luz forte; a luz cai em duas manchas curtas sobre o tecido (o alto do ombro e o alto do
+  braço, onde ele é mais redondo), quebradas por tons médios. O ombro continua no peito e nas costas pelo mesmo tom
+  médio, sem a linha escura no alto.
+- **Entre o braço e o peito:** uma sombra de um pixel no tom de sombra, só do sovaco ao cotovelo, no lugar da coluna
+  dupla mais escura. A faixa escura das costas atrás do braço continua: é ela que põe o braço na frente do tronco.
+- **O punho dobrado no cotovelo:** uma dobra baixa no tom da manga, sem a faixa clara.
+- **A fonte:** `b4/fonte.py --criar` copiou `b3/aseprite/b3.aseprite` para `b4/aseprite/b4.aseprite` e trocou só a
+  camada verde, nos 55 pixels em que `b4/desenho.py` difere do desenho da B3 (todos entre x 15 e 24, y 24 e 38),
+  conferindo o que salvou; `--criar` não sobrescreve; `--conferir` dá 0 pixels de diferença da B3 com o retoque. A B3
+  e a B2 exportam iguais a antes.
+
+**Conferido no jogo** a 1920×945 e 1280×720, na cena e isolado, no mesmo lugar e tamanho das outras, console limpo,
+a demonstração inteira passando: o ombro lê como tecido, sem tira e sem encaixe; os dois braços continuam se
+acompanhando até os ombros, com o cotovelo no tampo e a mão na coxa.
+
+**Ainda aberto:**
+- **O tamanho e o acabamento em relação ao entorno**, visto na cena completa: os dois jogadores parecem maiores que as
+  figuras da F à mesma distância (o homem junto da lareira, Morel no canto) e mais finos que elas (o grão da B contra a
+  sala na grade atual). A escala ficou como estava, por pedido.
+- A 1280, o braço de cá ficou um pouco menos marcado que na B3 (ainda se lê pela faixa das costas, pelo cotovelo e pela
+  mão na coxa).
+- O punho junto da barba, a escala fracionada a 1920 e os rostos simples, como antes.
+
