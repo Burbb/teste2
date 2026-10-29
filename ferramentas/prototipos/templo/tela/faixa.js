@@ -1,39 +1,13 @@
-/* A demonstração do templo (protótipo): o interior no lugar da vila aproximada enquanto o jogador está diante do
-   templo, e a faixa do alto (a candidata A ou B, o estado do save temporário, a pose parada).
-
-   O balcão do templo é o de sempre (vila.js: os cartões que o motor marca, o Voltar à vila, o Esc, as teclas 1, 2...);
-   só a vista muda. Ao entrar no templo, a tela mostra a cena "templo" (Cenas.mostrar, como a forja e a curandeira
-   fazem pelo motor); ao sair dele (Voltar, Esc, a Saída da cena), a vila volta. Depois de cuidar de alguém, o motor
-   mantém o balcão aberto e a vila se remonta já diante dele: a cena volta junto. */
+/* A demonstração do templo (protótipo): a faixa do alto (a candidata A ou B, o estado do save temporário, a pose
+   parada). Desde a 1.219.0 o jogo mostra o interior sozinho diante do templo (vila.js, estado.local.interiores, e a
+   Saída da cena pelo Voltar à vila do balcão); a demonstração só troca o desenho de produção pelo do protótipo
+   (tela/cena-templo.js, com as duas candidatas). */
 "use strict";
 
 (() => {
   if (typeof ACOES_OCULTAS !== "undefined" && !ACOES_OCULTAS.includes("tpl_estado")) ACOES_OCULTAS.push("tpl_estado");
-  document.body.dataset.tplCand = document.body.dataset.tplCand || "b";  // a B é a direção escolhida (a A fica como histórico)
-
-  const DADOS = () => ({ cena: "templo", titulo: "O templo", pagina: true, pontos: [
-    { id: "clerigo", nome: "Clérigo", faz: "cuidar da vida", estado: "O clérigo, na mesa dos panos.", servicos: true },
-    { id: "saida", nome: "Saída", faz: "voltar à vila", estado: "A porta para a rua do Vau.", acao: { tpl_saida: true } },
-  ] });
+  document.body.dataset.tplCand = document.body.dataset.tplCand || "b";  // a B, aprovada (a A fica como histórico)
   const noTemplo = () => !!(window.Cenas && Cenas.atual() && Cenas.atual().d.cena === "templo");
-
-  // ---- o interior no lugar da vila aproximada
-  const entrar0 = window.entrarNoPredio, montar0 = window.montarVila, fechar0 = window.fecharVila, sair0 = window.sairDoPredio;
-  window.entrarNoPredio = function (id, ...resto) {
-    const r = entrar0.call(this, id, ...resto);
-    if (id === "templo" && vilaAberta && vilaAberta.predio === "templo") Cenas.mostrar(DADOS());
-    return r;
-  };
-  window.montarVila = function (...a) { if (noTemplo()) Cenas.limpar(); return montar0.apply(this, a); };
-  window.fecharVila = function (...a) { if (noTemplo()) Cenas.limpar(); return fechar0.apply(this, a); };
-  window.sairDoPredio = function (...a) { if (noTemplo()) Cenas.limpar(); return sair0.apply(this, a); };
-  // a Saída da cena faz o que o Voltar à vila do balcão faz (o local, ou o do motor quando ele mantém o balcão)
-  document.addEventListener("click", (ev) => {
-    const bt = ev.target.closest && ev.target.closest('#pontos-cena .ci-ponto[data-ponto="saida"]');
-    if (!bt || !noTemplo()) return;
-    ev.stopPropagation(); ev.preventDefault();
-    if (pergunta && pergunta.voltarLocal) pergunta.voltarLocal();
-  }, true);
 
   // ---- a faixa
   const ESTADOS = [["ferido", "Ferido, 1º grátis"], ["sem_ouro", "Sem ouro"], ["comitiva", "Odette ferida"], ["ninguem", "Ninguém precisa"]];
@@ -49,7 +23,7 @@
   f.querySelectorAll("[data-cand]").forEach((b) => b.addEventListener("click", () => {
     document.body.dataset.tplCand = b.dataset.cand;
     f.querySelectorAll("[data-cand]").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
-    if (noTemplo()) Cenas.mostrar(DADOS());  // os pontos da outra candidata
+    if (noTemplo()) Cenas.mostrar(Cenas.atual().d);  // os pontos da outra candidata
   }));
   f.querySelectorAll("[data-tpl]").forEach((b) => b.addEventListener("click", () => {
     const volta = noTemplo();

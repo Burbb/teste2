@@ -6,8 +6,8 @@ Abre o jogo de sempre num **save temporário** (uma pasta nova a cada vez; os sa
 o Guerreiro no Vau, com a campanha começada, a vida em 40%, Odette na comitiva, ferida, 120 de ouro e o primeiro
 atendimento do templo ainda por usar. Entre no templo pelo prédio da vila. Só nesta execução:
 
-- diante do templo, a vista mostra o interior (a candidata A ou B) no lugar da vila aproximada; o balcão é o de sempre
-  (os cartões, os preços, o primeiro atendimento grátis, o Voltar à vila, o Esc), sem nenhuma mudança no motor;
+- diante do templo, a vista mostra o interior no lugar da vila aproximada (o jogo faz isso sozinho desde a 1.219.0);
+  aqui o desenho é o do protótipo, com a candidata A ou B; o balcão é o de sempre;
 - a faixa do alto troca a candidata, o estado do save temporário (ferido com o primeiro atendimento; sem ouro; Odette
   ferida; ninguém precisando) e liga a pose parada.
 
@@ -122,17 +122,12 @@ def servir():
         if caminho in ("/", "/index.html"):
             with open(os.path.join(mod_srv.PASTA, "index.html"), encoding="utf-8") as f:
                 html = f.read()
-            html = html.replace('<script src="/static/telas/cenas.js"></script>',
-                                '<script src="/proto-tpl/cena-templo.js"></script>\n'
-                                '<script src="/static/telas/cenas.js"></script>')
+            # o desenho do protótipo (as duas candidatas) no lugar do de produção (no jogo desde a 1.219.0)
+            html = html.replace('<script src="/static/telas/cena-templo.js"></script>',
+                                '<script src="/proto-tpl/cena-templo.js"></script>')
             html = html.replace("</head>", '<link rel="stylesheet" href="/proto-tpl/templo.css">\n</head>')
             html = html.replace("</body>", '<script src="/proto-tpl/faixa.js"></script></body>')
             return self._responder(200, html.encode("utf-8"), "text/html; charset=utf-8")
-        if caminho == "/static/telas/cenas.js":  # a cena "templo" registrada ao lado da forja e da curandeira
-            with open(os.path.join(mod_srv.PASTA, "telas", "cenas.js"), encoding="utf-8") as f:
-                js = f.read()
-            js = js.replace("    forja: window.CenaForja,\n", "    forja: window.CenaForja,\n    templo: window.CenaTemplo,  // a demonstração\n")
-            return self._responder(200, js.encode("utf-8"), "text/javascript; charset=utf-8")
         if caminho.startswith("/proto-tpl/"):
             nome = caminho[len("/proto-tpl/"):]
             base = CAMADAS if nome.startswith("camadas/") else TELA

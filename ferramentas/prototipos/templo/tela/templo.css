@@ -1,9 +1,4 @@
-/* O templo com o interior (protótipo): a vista mostra a cena no lugar da vila aproximada; o balcão (os cartões) fica
-   embaixo, como já é. Os nomes do Clérigo e da Saída sempre à vista. */
-#pontos-cena[data-cena="templo"] .ci-ponto:not(.parado) .ci-balao { visibility: visible; }
-.balcao-predio .servico.chamado { border-color: var(--latao-claro); }
-/* Com o interior, os balões dos prédios da vila não aparecem (a vila não está à vista). */
-#cena.com-ambiente.vila-hub #predios { display: none; }
+/* A demonstração do templo (protótipo). As regras do interior estão no jogo desde a 1.219.0 (css/31-templo.css). */
 
 /* A faixa da demonstração: a candidata, o estado do save temporário e a pose parada. */
 #faixa-tpl { position: fixed; left: 50%; top: 4px; transform: translateX(-50%); z-index: 60; display: flex; gap: 6px;

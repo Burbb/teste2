@@ -1,9 +1,22 @@
 # Protótipo: o interior do templo (candidatas A e B)
 
-28/10/2026. **A B é a direção escolhida pelo Jean** (a A fica como histórico); a segunda passada da B corrige o espaço
-(seção "B, segunda passada"). **Só no protótipo, esperando a avaliação do Jean; a integração não está autorizada.** O jogo não carrega esta pasta: diante do templo, a
-vila continua aproximada, com o balcão. Segundo interior da etapa 5 (Curandeira → Templo → Taverna; a taverna não foi
-começada). Feito pelo fluxo da skill `arte-cenas-fenda`.
+**A candidata B foi aprovada e integrada no jogo na 1.219.0 (29/10/2026)**, com todas as passadas abaixo (o piso e os
+apoios, os objetos, o arco e as vigas, os bancos na escala do clérigo, a simetria e o corpo do clérigo sem quebra).
+Esta pasta continua como o laboratório: a fonte, o código que a gerou, a candidata A (histórico) e a demonstração.
+
+## A fonte e o jogo
+
+- **A fonte** é `aseprite/templo.aseprite` (320×96; as camadas fundo, velas, fumaca e clerigo), criada a partir do
+  código da B por `fonte.py --criar`, que não a sobrescreve sem `--refazer`. Depois de criada, os retoques se fazem nela.
+- **A exportação** é `fonte.py [--conferir] [--jogo]`: lê a fonte, monta as tiras em `final/` com o `rotina.json` do
+  clérigo, confere contra `camadas/b` (a candidata aprovada exportada do código) e copia para
+  `rpg/web/static/cenas/templo/`. Na integração: 4 de 4 camadas e a rotina iguais à candidata.
+- **No jogo:** `servicos.cena_templo` (o motor manda a cena; `estado.local.interiores` a leva à tela, só na vila),
+  `app/vila.js` (diante do templo, o interior no lugar da vila aproximada; ao sair, a vila volta), `telas/cenas.js` (a
+  Saída de um interior de balcão é o Voltar à vila do balcão), `telas/cena-templo.js` (só arquivos de produção),
+  `css/31-templo.css`.
+- `exportar.py` continua desenhando as candidatas do código em `camadas/` (só o protótipo lê); não toca a fonte nem o
+  jogo. A demonstração mostra as duas candidatas sobre o jogo de hoje (o interior já é o integrado).
 
 ## Abrir
 
@@ -278,3 +291,12 @@ tronco a meio caminho) entre a pega e o erguer, na mesma duração.
 **Conferido:** pose a pose, o contorno das costas sem degrau de mais de 1 px (fora a curva do pescoço para o ombro,
 igual em todas); a sequência tique a tique; nenhuma pose encostando no pé da mesa; no jogo, pela demonstração, nas duas
 resoluções (as 20 checagens). Integração não autorizada.
+
+## A integração (1.219.0)
+
+**Conferido no jogo real** (o cenário `tutorial`, com o herói ferido e Odette ferida), a 1920×945 e a 1280×720: o
+interior no lugar da vila com o primeiro atendimento grátis e o cuidado de Odette; o clique duplo cuidando só de um; a
+tecla 1; o balcão e o interior continuando depois do atendimento; ninguém precisando (o interior e o balcão abrem); o
+Tab nos pontos; a Saída da cena e o Esc voltando à vila; sair e voltar com um relógio só; o movimento reduzido; só
+arquivos de produção; sem erros no console. A cena desenhada no jogo saiu igual à candidata pixel a pixel nos 62
+tiques do ciclo.
