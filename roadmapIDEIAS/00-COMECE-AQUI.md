@@ -8422,3 +8422,26 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   sem suavização, cada conjunto com o apoio, a orientação e o alcance legíveis; a avaliação final é do Jean.
 - **A lição** foi para a skill de cenas: quem senta se constrói junto do móvel e da atividade. **Estudo estático em
   avaliação, sem integração;** a animação do elenco espera a aprovação; som, equilíbrio e narrativa adiados.
+
+### 29/10/2026 (data do computador local) — A taverna E: a sala reconstruída numa projeção só (protótipo, estudo estático)
+
+- **Mudança de direção (pedido do Jean):** a D melhorou os apoios, mas a escala e a perspectiva não convenciam (Morel e
+  a mesa dos jogadores em escalas diferentes; a parede frontal e os tampos em graus diferentes). **A composição da C e
+  da D deixou de ser uma restrição**, porque os ajustes locais não resolveram a coerência espacial: a câmera, a
+  profundidade e a distribuição dos grupos podiam mudar, mantendo a identidade do lugar (o balcão, as mesas ocupadas,
+  a lareira, a escada com a galeria, a despensa, o canto de Morel) e uma vista geral só.
+- **Feito, só no protótipo** (`ferramentas/prototipos/taverna/e`; `demo.bat` abre na E, da D à A no botão
+  Protótipo; o LEIA-ME tem o roteiro e os compromissos): primeiro o estudo de construção (uma projeção para tudo, as
+  paredes do lado encontrando o piso, os móveis como caixas projetadas, uma figura de referência em pé e sentada em
+  vários lugares); depois as pessoas à mão no ponto que a projeção dá a cada assento (Morel maior, num banco robusto,
+  na mesma régua); a mesa comprida e a redonda na mesma faixa da sala, Morel contra a parede da direita, a passagem
+  livre no meio; o acabamento da D (as prateleiras, a luz contínua, o contexto da taverna sem a narração da praça).
+- **Conferido:** técnico (no jogo, as duas janelas): os pontos e os cartões, Morel presente e recrutado, a troca de
+  candidata (a D fotografada no mesmo estado), a narração da praça fora da taverna, os cartões e o Voltar acima da
+  doca, teclado, Saída, Esc, relógio, movimento reduzido, console. Artístico: no tamanho real e ampliado sem
+  suavização; a avaliação é do Jean. **Compromissos:** as pessoas um pouco menores que as da frente da D (cabeças de 5
+  a 6 px); os degraus em paralelogramo; as portas dos quartos com o alto debaixo da viga.
+- **Possibilidade futura, sem compromisso:** um salão geral com aproximações para conversas ou atividades específicas;
+  nada implementado.
+- **A lição** foi para a skill de cenas: com vários grupos, validar uma escala e uma câmera comuns antes de detalhar
+  cada conjunto. **Estudo estático em avaliação, sem integração;** a animação espera a aprovação.
