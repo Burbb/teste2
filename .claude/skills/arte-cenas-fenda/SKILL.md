@@ -357,3 +357,13 @@ imagem gerada para a composição e as poses, ela orienta, mas não prova a cons
 posições, os tamanhos, as cabeças), escolha a câmera da projeção que reproduz essas medidas, e construa a sala nessa
 projeção. Onde a imagem não fecha (uma galeria baixa demais para a profundidade, uma mesa cortada pela borda, um
 personagem com acessórios que não são dele), a construção e o jogo vencem, e a diferença é registrada.
+
+**As candidatas G e H (29/10/2026): o balcão de perto.** Com muita gente na mesma vista, as figuras não convenciam; a
+saída foi mudar a cena, não as figuras: uma câmera perto do balcão, uma atividade principal (o taverneiro limpando a
+caneca), como na forja. Na mesma grade (320×96), a câmera de perto já dá espaço para o rosto e as mãos.
+
+| Erro | O que causou | Como evitar |
+|---|---|---|
+| Os fregueses da frente como montes redondos e grandes (a primeira H) | as costas desenhadas como um polígono curvo, sem ombro, pescoço nem braço | construir o vulto por partes, como uma figura: a cabeça, o pescoço, a linha dos ombros, o tronco estreitando, o braço até o apoio; três tons escuros, não uma mancha |
+| O pontilhado da luz na pele e na camisa | a luz da sala, em degraus pontilhados, aplicada também à figura | quem está no meio da cena recebe a luz num tom só; a modelagem fica nos planos do desenho |
+| A cabeça encostando nas linhas da prateleira | uma prateleira contínua atrás da cabeça | a prateleira em duas partes, com o vão atrás da cabeça |

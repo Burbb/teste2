@@ -8594,3 +8594,27 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   o rosto tem mais detalhe que as figuras aprovadas, pela câmera; a camisa clara é a maior mancha (o foco), com poucas
   dobras; a fonte ainda sem retoques à mão.
 - **Parado aqui:** a avaliação é do Jean; nada animado nem integrado, nenhuma outra frente começada.
+
+### 29/10/2026 (data do computador local) — A taverna: a candidata H, o balcão com volume (protótipo, nada no jogo)
+
+- **Pedido do Jean:** a G foi aprovada como direção (o balcão de perto, o taverneiro como foco), mas o enquadramento
+  não está fechado: uma H estática com um pouco mais de profundidade (a câmera um pouco mais afastada e para o lado, a
+  lateral curta do balcão, o tampo fundo, dois fregueses sentados recortados pela borda de baixo), a G preservada para
+  comparar, os refinamentos do taverneiro (a pele e a camisa sem pontilhado, a barba ligada ao pescoço, ao peito e à
+  gola, as dobras das mangas por braço, a cabeça longe da prateleira, menos bordas no balcão). Sem salão, sem
+  animação, sem integração.
+- **Feito** (`ferramentas/prototipos/taverna/h`; a seção "A candidata H" do LEIA-ME do protótipo):
+  - a câmera de um ponto com o ponto de fuga na beira direita: o tampo com 12 px de fundo, a ponta da direita com a
+    lateral, a passagem para a despensa depois dela;
+  - o taverneiro do mesmo tamanho da G (a leitura dele não cai), com os refinamentos; a prateleira em duas partes;
+  - os fregueses construídos por partes (cabeça, pescoço, ombros, tronco, o braço do ombro ao cotovelo no tampo e à
+    caneca), em três tons escuros com o contorno aceso. A primeira versão tinha as costas como montes redondos e
+    grandes (observação do Jean durante a rodada); foi refeita;
+  - os objetos da G no lugar novo (o pão e o queijo no tampo, como área de servir);
+  - a fonte `h/aseprite/taverna-h.aseprite` pelo caminho da G (`g/fonte.py` ganhou os parâmetros; a G sai idêntica);
+  - `demo.bat` abre na H; a G no mesmo painel, com a troca imediata no mesmo estado do jogo.
+- **Conferido:** G e H no jogo a 1920×945 e 1280×720 (`g/conferir.mjs`, agora com as duas), os estados do save, os
+  pontos, os nomes, os cartões, o Tab, o Esc, o Voltar, o console. O código do jogo não mudou.
+- **Aberto:** a cabeça dos fregueses fica um pouco menor que a do taverneiro, embora mais perto (para não dominarem); a
+  perspectiva de um ponto só; a lareira mais cortada; as fontes sem retoques à mão.
+- **Parado aqui:** a escolha entre G e H é do Jean; nada animado nem integrado.
