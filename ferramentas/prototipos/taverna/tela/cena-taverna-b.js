@@ -1,4 +1,6 @@
-/* Os estudos estáticos do interior da taverna (protótipo; nada disto entra no jogo): a candidata B (o salão fundo; a
+/* Os estudos estáticos do interior da taverna (protótipo; nada disto entra no jogo): a candidata G (o balcão de perto, a
+   direção atual: o taverneiro atrás do balcão, o canto de preparo, a despensa, os fregueses nos cantos) e, como
+   histórico do salão panorâmico (suspenso), a candidata B (o salão fundo; a
    avaliação: profundidade demais, o fundo pequeno, a escada um esboço), a C (a profundidade contida, a escada e a
    galeria como estrutura, os grupos redistribuídos), a D (a C refeita nos conjuntos de pessoa, assento e mesa), a E (a
    sala numa projeção só) e a F (a composição da referência aprovada). Cada uma é um fundo com as pessoas paradas (com Morel ou, recrutado, sem ele), o fogo e as velas (4 quadros cada, a
@@ -6,9 +8,11 @@
    /proto-tav/camadas/<b|c|d|e|f>/. Movimento reduzido: o fogo e as velas parados. As pessoas ainda não se mexem: a animação
    vem depois de a construção ser aprovada.
 
-   Também exporta window.CenaTaverna, que escolhe entre a prova de qualidade (cena-taverna-prova.js, o padrão) e as
-   candidatas (histórico) pela faixa da
-   demonstração (body.dataset.tavCand). */
+   A G vem da fonte em Aseprite (ferramentas/prototipos/taverna/g/fonte.py), em /proto-tav/camadas/g/, com as mesmas
+   quatro imagens.
+
+   Também exporta window.CenaTaverna, que escolhe entre a G (o padrão), a prova de qualidade (cena-taverna-prova.js) e
+   as candidatas da F à A (histórico) pela faixa da demonstração (body.dataset.tavCand). */
 "use strict";
 
 (() => {
@@ -99,11 +103,21 @@
     saida: { area: [54, 12, 21, 43], balao: [64, 11], foco: [64, 36] },
   }, ["taverneiro", "freguesa", "cabeceira", "freguês de costas", "jogador de verde", "jogador de ocre", "junto do fogo"]);
 
-  // A cena que o jogo registra (telas/cenas.js): a da faixa (a prova de qualidade por padrão; da F à A, o histórico)
+  // G. O balcão de perto (a referência frontal "Taverneiro desconfiado atrás do balcão-1"): só o que está desenhado tem
+  // ponto. O Taverneiro leva à bebida, com o nome acima da cabeça, na pedra livre debaixo da viga; a Despensa (só
+  // enquanto ela espera) é a porta da direita, com o nome no alto da folha (acima da verga, a 1280, sairia da arte).
+  // Não há escada, porta da rua nem Morel nesta vista: o Dormir, o Homem do canto e o Voltar ficam nos cartões.
+  window.CenaTavernaG = estatica("g", {
+    taverneiro: { area: [138, 17, 46, 57], balao: [160, 16], foco: [160, 44] },
+    despensa: { area: [281, 12, 30, 44], balao: [296, 19], foco: [296, 38] },
+  }, ["taverneiro", "freguês da esquerda", "freguês da direita"]);
+
+  // A cena que o jogo registra (telas/cenas.js): a da faixa (a G, o balcão de perto, por padrão; a prova de qualidade e
+  // da F à A, o histórico)
   const CANDS = { a: () => window.CenaTavernaA, b: () => window.CenaTavernaB, c: () => window.CenaTavernaC,
     d: () => window.CenaTavernaD, e: () => window.CenaTavernaE, f: () => window.CenaTavernaF,
-    prova: () => window.CenaTavernaProva };
-  const cand = () => (CANDS[document.body.dataset.tavCand] || CANDS.prova)();
+    g: () => window.CenaTavernaG, prova: () => window.CenaTavernaProva };
+  const cand = () => (CANDS[document.body.dataset.tavCand] || CANDS.g)();
   window.CenaTaverna = {
     base: (W, d) => cand().base(W, d),
     desenhar: (...a) => cand().desenhar(...a),

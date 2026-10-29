@@ -1,5 +1,5 @@
-"""Demonstração do interior da taverna (protótipo: a prova de qualidade dos jogadores, nas grades A e B e na B2 à B4, e
-o canto de Morel no M1, sobre a F, e as candidatas da F à A como histórico; nada disto entra no jogo).
+"""Demonstração do interior da taverna (protótipo: a candidata G, o balcão de perto; como histórico do salão
+panorâmico, a prova de qualidade dos jogadores e o M1 de Morel, e as candidatas da F à A; nada disto entra no jogo).
 
     python ferramentas/prototipos/taverna/demo.py      (ou dois cliques em demo.bat)
 
@@ -11,11 +11,14 @@ o Guerreiro no Vau, com a campanha começada. Entre na taverna pelo prédio da v
   com os cartões que já existem (dormir, a bebida e os rumores, a despensa e o homem do canto da abertura);
 - os pontos da cena levam a esses cartões: o Taverneiro à bebida, a Escada ao Dormir, a Despensa (só enquanto ela
   espera) ao Descer à despensa, o Homem do canto (só enquanto o cartão existe) ao Sentar com ele; a Saída volta à vila.
-  Para um ponto levar a um cartão certo, a demonstração serve o telas/cenas.js com `servicos: "<serviço>"` aceito
-  (no jogo, `servicos: true` leva ao primeiro cartão); é a única mudança que a integração pediria fora da cena;
-- Morel aparece no canto só quando `morel_no_canto` diz (abaixo); recrutado, não está lá;
-- o botão Protótipo, na barra do alto, troca entre a prova de qualidade (o padrão: a B4 e o Morel M1, com a A, a B,
-  a B2, a B3 e o canto da F para comparar e a vista isolada; o botão diz as versões à vista) e as candidatas (da F à A, o histórico), o estado do save temporário e liga a pose parada.
+  O motor manda todos; a cena à vista mostra só os que ela desenha (a G: o Taverneiro e a Despensa). Para um ponto
+  levar a um cartão certo, a demonstração serve o telas/cenas.js com `servicos: "<serviço>"` aceito (no jogo,
+  `servicos: true` leva ao primeiro cartão) e com os pontos filtrados pela cena (`cenas_js`);
+- Morel aparece no canto do salão (as candidatas antigas) só quando `morel_no_canto` diz (abaixo); recrutado, não está
+  lá; a G não mostra o canto;
+- o botão Protótipo, na barra do alto, troca entre a G (o padrão), a prova de qualidade (a B4 e o Morel M1, com a A, a
+  B, a B2, a B3 e o canto da F para comparar e a vista isolada) e as candidatas da F à A, o estado do save temporário
+  e liga a pose parada; o botão diz as versões à vista.
 
 A porta é `DEMO_PORTA` (padrão 8795: não usa a 8791 do jogo, a 8793 da curandeira nem a 8794 do templo)."""
 import os
@@ -58,7 +61,7 @@ def cena_taverna(g):
     ]
     if a.get("despensa") == "adiada":
         pontos.append({"id": "despensa", "nome": "Despensa", "faz": "descer à despensa",
-                       "estado": "O alçapão da despensa.", "servicos": "despensa"})
+                       "estado": "A porta da despensa.", "servicos": "despensa"})
     if a.get("despensa") == "feita" and abertura.morel_esperando(g):
         pontos.append({"id": "morel", "nome": "Homem do canto", "faz": "sentar com ele",
                        "estado": "Um homem grande come sozinho no canto.", "servicos": "morel"})
@@ -157,15 +160,21 @@ def rodar(ui, pasta):
 
 # ------------------------------------------------------------------ o servidor
 def cenas_js(texto):
-    """O telas/cenas.js do jogo com a taverna registrada e `servicos: "<serviço>"` aceito (o ponto leva àquele cartão)."""
+    """O telas/cenas.js do jogo com a taverna registrada, `servicos: "<serviço>"` aceito (o ponto leva àquele cartão) e
+    os pontos da taverna filtrados pela candidata à vista."""
     a = "    templo: window.CenaTemplo,\n"
     assert a in texto
     texto = texto.replace(a, a + "    // a taverna (protótipo): ferramentas/prototipos/taverna/tela/cena-taverna.js\n"
                                  "    taverna: window.CenaTaverna,\n")
     b = '        const cartoes = [...document.querySelectorAll("#folha .servico")];\n'
     assert b in texto
-    return texto.replace(b, '        const cartoes = [...document.querySelectorAll("#folha .servico")]\n'
-                            '          .filter((c) => typeof p.servicos !== "string" || c.dataset.servico === p.servicos);\n')
+    texto = texto.replace(b, '        const cartoes = [...document.querySelectorAll("#folha .servico")]\n'
+                             '          .filter((c) => typeof p.servicos !== "string" || c.dataset.servico === p.servicos);\n')
+    # a candidata à vista decide quais pontos existem (a G não desenha a escada, a porta da rua nem Morel): o ponto que
+    # a cena não tem não aparece. No jogo, o motor mandaria só os pontos da cena integrada.
+    c = "    if (!def) { limpar(); return; }\n"
+    assert c in texto
+    return texto.replace(c, c + '    if (d.cena === "taverna") d = Object.assign({}, d, { pontos: d.pontos.filter((p) => def.pontos[p.id]) });\n')
 
 
 def servir():

@@ -1,10 +1,11 @@
 /* A demonstração da taverna (protótipo): um botão "Protótipo" na barra do alto, entre os sigilos e o menu (no fluxo
-   da barra: o clima, a hora e os sigilos não ficam embaixo dele), abre o painel: a prova de qualidade (os jogadores
+   da barra: o clima, a hora e os sigilos não ficam embaixo dele), abre o painel: a candidata G (o balcão de perto, o
+   padrão), a prova de qualidade (histórico) (os jogadores
    nas grades A e B; na B2, a B refinada pela referência; na B3, a B2 com os braços legíveis; e na B4, a B3 com o
    ombro do de verde suavizado; com a vista isolada), o canto de Morel (o M1, o novo, ou o da F), as candidatas (da F
    à A, o histórico), o estado do save temporário (a despensa esperando, o homem do canto, Morel já conhecido, Morel
-   recrutado, sem ouro) e a pose parada. Escolhido, o painel fecha; o botão diz as versões à vista ("Protótipo: prova
-   B4 · Morel M1 · ..."). O interior entra pelo caminho do templo (vila.js, estado.local.interiores, com a taverna
+   recrutado, sem ouro) e a pose parada. Escolhido, o painel fecha; o botão diz as versões à vista ("Protótipo: G ·
+   Homem do canto", "Protótipo: prova B4 · Morel M1 · ..."). O interior entra pelo caminho do templo (vila.js, estado.local.interiores, com a taverna
    acrescentada pelo demo.py). */
 "use strict";
 
@@ -15,10 +16,10 @@
     ["recrutado", "Morel recrutado"], ["sem_ouro", "Sem ouro"]];
   const f = document.createElement("div");
   f.id = "faixa-tav";
-  document.body.dataset.tavCand = document.body.dataset.tavCand || "prova";  // a prova de qualidade (as candidatas: histórico)
+  document.body.dataset.tavCand = document.body.dataset.tavCand || "g";  // a G, o balcão de perto (as outras: histórico)
   document.body.dataset.tavProva = document.body.dataset.tavProva || "b4";
   document.body.dataset.tavMorel = document.body.dataset.tavMorel || "m1";
-  const CANDS = [["prova", "Prova: os jogadores (F em volta)"], ["f", "Candidata F (histórico)"], ["e", "Candidata E (histórico)"],
+  const CANDS = [["g", "Candidata G: o balcão de perto"], ["prova", "Prova: os jogadores (histórico)"], ["f", "Candidata F (histórico)"], ["e", "Candidata E (histórico)"],
     ["d", "Candidata D (histórico)"], ["c", "Candidata C (histórico)"], ["b", "Candidata B (histórico)"], ["a", "Candidata A (histórico)"]];
   const GRADES = [["a", "Grade A: a atual (66×42)"], ["b", "Grade B: o dobro (132×84)"],
                   ["b2", "Grade B2: a B refinada pela referência (132×84)"],
@@ -27,8 +28,8 @@
   const MORELS = [["m1", "Morel M1: Morel, a cadeira e a mesa novos"], ["f", "Morel F: o canto anterior"]];
   f.innerHTML = `<button type="button" class="abre" aria-expanded="false" aria-controls="faixa-tav-painel"></button>
     <div id="faixa-tav-painel" hidden><b>Taverna (protótipo): a candidata</b>
-    ${CANDS.map(([id, nome]) => `<button type="button" data-cand="${id}" aria-pressed="${id === "prova"}">${nome}</button>`).join("")}
-    <b>A prova de qualidade (os jogadores)</b>
+    ${CANDS.map(([id, nome]) => `<button type="button" data-cand="${id}" aria-pressed="${id === document.body.dataset.tavCand}">${nome}</button>`).join("")}
+    <b>A prova de qualidade (os jogadores, histórico)</b>
     ${GRADES.map(([id, nome]) => `<button type="button" data-grade="${id}" aria-pressed="${id === document.body.dataset.tavProva}">${nome}</button>`).join("")}
     <button type="button" data-isolado aria-pressed="false">Isolado (fundo neutro, mesmo tamanho)</button>
     <b>O canto de Morel</b>

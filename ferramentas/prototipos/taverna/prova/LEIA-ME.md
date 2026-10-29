@@ -1,5 +1,8 @@
 # Prova de qualidade: os jogadores em duas grades (29/10/2026)
 
+**Histórico (29/10/2026):** o salão panorâmico está suspenso, e esta prova (a B4 e o M1 inclusive) fica como
+registro, sem mais correções. A direção atual é a candidata G, o balcão de perto (`../LEIA-ME.md`).
+
 As reconstruções completas da taverna estão interrompidas; a F fica como histórico, sem aprovação e sem integração.
 Esta prova separa o que vem da resolução do que vem da construção e do acabamento: os dois jogadores, a mesa redonda e
 os banquinhos da F, desenhados de novo em duas grades nativas, no mesmo lugar da tela. **Não é a taverna resolvida:** é
