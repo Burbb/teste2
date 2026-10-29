@@ -242,3 +242,21 @@ m, tem 32 px pisando em y 70: 1 m vale 28,2 px na borda de baixo do quadro (`MET
   do pé da mesa dos panos (o apoio dela continua à vista).
 
 **Conferido:** no jogo, pela demonstração, nas duas resoluções (as 20 checagens). Integração não autorizada.
+
+## B, sétima passada (28/10/2026): a simetria no eixo da nave
+
+**O que o Jean perguntou:** por que os bancos de um lado eram mais compridos. Não era perspectiva (o ponto de fuga fica
+no meio do corredor): o bloco da direita tinha sido encurtado para não cobrir o pé da mesa dos panos, e a cena ficou
+sem razão para a diferença. Ele autorizou mexer no que fosse preciso para a simetria.
+
+- **O eixo** (`EIXO`, x 134): o altar, a janela, a passadeira e o ponto de fuga já estavam nele; as colunas e o arco
+  estavam 1 px fora e foram para ele. A convenção: o pixel x tem a imagem em 267 - x.
+- **Os bancos:** os dois blocos com o mesmo comprimento, curtos; o da direita é o espelho exato do da esquerda. Os
+  dois acabam antes do pé da mesa dos panos (à direita) e deixam livre a passagem entre a porta da rua e os bancos
+  (à esquerda).
+- **As mísulas, as pontas das vigas e as arandelas:** espelhadas no eixo.
+- **Fica assimétrico de propósito:** o atendimento à direita, a porta da rua à esquerda e o castiçal de chão de um lado
+  só (como na referência); a luz (que vem da esquerda em cada objeto).
+
+**Conferido:** por conta, a forma das colunas, do arco e dos bancos espelhada no eixo, sem pixel fora; no jogo, pela
+demonstração, nas duas resoluções (as 20 checagens). Integração não autorizada.

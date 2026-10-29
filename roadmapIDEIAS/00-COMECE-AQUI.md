@@ -8307,3 +8307,12 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Feito (só no protótipo):** os bancos passam a sair de medidas em metros na escala do clérigo (0,90 m no encosto,
   0,45 m no assento); as fileiras vieram para mais perto, para os degraus aparecerem pelo corredor, e o bloco da
   direita acaba antes do pé da mesa. Conferido no jogo nas duas resoluções. Integração não autorizada.
+
+### 28/10/2026 (data do computador local) — Templo B: a simetria no eixo da nave (protótipo, sétima passada)
+
+- **Pergunta do Jean:** por que os bancos de um lado eram mais compridos (não era perspectiva: o bloco da direita
+  tinha sido encurtado por causa da mesa). Ele autorizou mexer no que fosse preciso para a simetria.
+- **Feito (só no protótipo):** os dois blocos de bancos iguais e curtos (o da direita, o espelho exato do da esquerda),
+  com a passagem livre da porta da rua; as colunas e o arco no eixo (estavam 1 px fora); as mísulas, as pontas das
+  vigas e as arandelas espelhadas. Conferido por conta (a forma espelhada sem pixel fora) e no jogo nas duas
+  resoluções. Integração não autorizada.

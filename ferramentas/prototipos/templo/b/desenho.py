@@ -78,8 +78,8 @@ def paredes(px):
         px(x + 1, 12, 4, 1, "pedraBEsc")
 
 
-VIGAS = [(0, 66, 65), (200, QW, 200)]       # cada viga: de x0 a x1 e onde fica o topo (a ponta junto do arco)
-MISULAS = [2, 32, 60, 200, 230, 260, 290]  # o x de cada mísula (a primeira e a última de cada lado, sob as pontas)
+VIGAS = [(0, 66, 65), (202, QW, 202)]       # cada viga: de x0 a x1 e onde fica o topo (a ponta junto do arco)
+MISULAS = [0, 30, 60, 202, 232, 262, 292]  # o x de cada mísula, espelhadas no eixo da nave (as do meio, sob as pontas)
 
 
 def arandela(px, x, base):
@@ -112,7 +112,8 @@ def piso(px):
                 px.p(round(x), y, "pisoJunta")
 
 
-ARCO = (82, 184)   # o vão do arco, entre as colunas
+EIXO = 134          # o eixo da nave: o altar, a janela, o arco, o corredor e o ponto de fuga
+ARCO = (83, 185)   # o vão do arco, entre as colunas (simétrico no eixo)
 JANELA = (128, 3, 12, 30)  # x, y, largura, altura do vão de vidro
 
 
@@ -187,20 +188,20 @@ def presbiterio(px):
         px(xx, 35, 1, 3, "cera")
 
 
-VELAS = [(122, 27), (144, 27), (87, 33), (90, 33), (93, 33), (96, 33), (99, 33), (54, 33), (202, 33), (249, 23)]
+VELAS = [(122, 27), (144, 27), (87, 33), (90, 33), (93, 33), (96, 33), (99, 33), (65, 33), (202, 33), (249, 23)]
 
 
 def colunas(px):
     """As duas colunas de pedra que seguram o arco, em blocos, com o capitel e a base, de pé no piso da nave, logo à
     frente dos degraus; o arco de aduelas por cima, cortado pelo alto do quadro (a nave é mais alta que o que se vê)."""
-    for x0, x1 in ((72, 82), (184, 194)):
-        dentro = x1 if x0 < 133 else x0 - 3      # o lado de dentro do pilar: a espessura da parede, mais escura
+    for x0, x1 in ((73, 83), (185, 195)):     # espelhadas no eixo
+        dentro = x1 if x0 < EIXO else x0 - 3      # o lado de dentro do pilar: a espessura da parede, mais escura
         px(x0, 12, x1 - x0, DEGRAU + 2 - 12, "pedraBLuz")   # a face do pilar
         px(x0, 12, 1, DEGRAU + 2 - 12, "calLuz")
         for y in range(18, DEGRAU, 7):
             px(x0, y, x1 - x0, 1, "pedraB")
         px(dentro, 12, 3, DEGRAU + 2 - 12, "pedraB")        # o intradorso (o lado de dentro), descendo até o piso
-        px(dentro + (0 if x0 < 133 else 2), 12, 1, DEGRAU + 2 - 12, "pedraBEsc")
+        px(dentro + (0 if x0 < EIXO else 2), 12, 1, DEGRAU + 2 - 12, "pedraBEsc")
         px(min(x0, dentro) - 1, 9, x1 - x0 + 5, 3, "pedraBLuz")   # a imposta: a pedra saliente onde o arco nasce
         px(min(x0, dentro) - 1, 9, x1 - x0 + 5, 1, "calLuz")
         px(min(x0, dentro) - 1, 11, x1 - x0 + 5, 1, "pedraB")
@@ -212,10 +213,10 @@ def colunas(px):
     # paredes() já desenhou.
     # o círculo passa pela borda de dentro da face do pilar (x 82) na altura da imposta (y 9): a curva nasce ali,
     # em cima do pilar, e sobe para dentro (um arco abatido, como o da referência; o alto fica acima do quadro)
-    cx, cy, face, esp = 133, 54.0, 10, 3
-    r = math.hypot(cx - 82, cy - 9)
+    cx, cy, face, esp = EIXO, 54.0, 10, 3
+    r = math.hypot(cx - 83, cy - 9)
     for y in range(0, 9):
-        for x in range(70, 197):
+        for x in range(70, 198):
             d = math.hypot(x + 0.5 - cx, (y + 0.5 - cy))
             if r - esp <= d < r:
                 px.p(x, y, "pedraBEsc" if d < r - esp + 1 else "pedraB")
@@ -273,7 +274,7 @@ def entrada(px):
         k = y - PAREDE - 2
         a_, b_ = x0 - 1 + k // 3, x1 + 2 + round(k * 1.6)
         px(a_, y, b_ - a_, 1, "luzDiaForte" if k < 3 else "luzDia")
-    arandela(px, 54, 40)  # a arandela da entrada, acima do banquinho
+    arandela(px, 65, 40)  # a arandela da entrada (a imagem da da direita, no eixo da nave)
     # o banquinho de esperar, encostado na parede, os pés no piso logo à frente dela
     px(46, 53, 14, 2, "madeiraMeio")
     px(46, 53, 14, 1, "madeiraLuz")
@@ -287,8 +288,9 @@ BANCOS = [72, 80, 90]            # onde cada fileira pisa (do fundo para a frent
                                  # para os degraus aparecerem pelo corredor
 METRO = 28.2                     # 1 m em pixels na borda de baixo (k = 1): o clérigo, ~1,70 m, tem 32 px pisando em y 70
 BANCO_ALTO, ASSENTO = 0.90, 0.45  # um banco de igreja: o alto do encosto e o assento, em metros
-BLOCOS = [(20, 116), (152, 200)]  # cada bloco na borda de baixo (y = QH): as pontas seguem as linhas até VP; o da
-                                  # direita acaba antes do pé da mesa dos panos
+BLOCO = (68, 116)  # o bloco da esquerda na borda de baixo (y = QH): as pontas seguem as linhas até VP. O da direita é
+                   # o espelho exato dele no eixo (o pixel x vira 267 - x): acaba antes do pé da mesa dos panos, e o da
+                   # esquerda deixa livre a passagem da porta da rua
 
 
 def pela_distancia(y_pe):
@@ -306,9 +308,9 @@ def bancos(px):
         k = pela_distancia(pe)
         alto = round(BANCO_ALTO * METRO * k)     # do alto do encosto ao chão, na escala do clérigo
         topo = pe - alto
-        for xb0, xb1 in BLOCOS:
-            x0 = round(VP[0] + (xb0 - VP[0]) * k)
-            x1 = round(VP[0] + (xb1 - VP[0]) * k)
+        e0, e1 = round(EIXO + (BLOCO[0] - EIXO) * k), round(EIXO + (BLOCO[1] - EIXO) * k)
+        e_meio = (e0 + e1) // 2
+        for x0, x1, meio in ((e0, e1, e_meio), (268 - e1, 268 - e0, 267 - e_meio)):
             h = alto - round(ASSENTO * METRO * k)    # o encosto, do alto até o assento: duas tábuas
             px(x0, topo, x1 - x0, h, "madeira")
             px(x0, topo, x1 - x0, 1, "madeiraLuz")
@@ -319,8 +321,7 @@ def bancos(px):
                 px(xx, topo - 1, 2, alto + 1, "madeiraMeio")
                 px(xx, topo - 1, 1, alto + 1, "madeiraLuz")
                 px(xx - 1, pe, 4, 1, "contato")
-            meio = (x0 + x1) // 2                   # o pé do meio
-            px(meio, topo + h, 1, alto - h, "madeira")
+            px(meio, topo + h, 1, alto - h, "madeira")  # o pé do meio
             px(meio - 1, pe, 3, 1, "contato")
 
 
