@@ -260,3 +260,21 @@ sem razão para a diferença. Ele autorizou mexer no que fosse preciso para a si
 
 **Conferido:** por conta, a forma das colunas, do arco e dos bancos espelhada no eixo, sem pixel fora; no jogo, pela
 demonstração, nas duas resoluções (as 20 checagens). Integração não autorizada.
+
+## B, oitava passada (28/10/2026): o corpo do clérigo sem quebra
+
+**O que o Jean notou:** o corpo do clérigo "se quebra" quadro a quadro; dava para ver o encaixe.
+
+**A causa (pose a pose):** a inclinação era feita fatiando o tronco (cada linha andava um pouco mais que a de baixo)
+sobre uma cintura e um hábito parados. Na pega (o tronco 3 px à frente) e no olhar (1 px para trás), a frente do
+peito, o avental e a amarra viravam degraus, e o tronco deslizava sobre a cintura. Da pega para o erguer, o tronco
+ainda saltava 3 px num tique.
+
+**A correção** (`b/figura.py`): o tronco, os ombros e a cabeça inclinam como um bloco; o hábito absorve a inclinação,
+da cintura (levada pelo tronco) até a barra (parada no chão), numa diagonal suave, com um arredondamento só por linha;
+a amarra vai com a cintura; a cabeça sobe com o tronco ao erguer. Uma pose de passagem (puxar o pano do monte, o
+tronco a meio caminho) entre a pega e o erguer, na mesma duração.
+
+**Conferido:** pose a pose, o contorno das costas sem degrau de mais de 1 px (fora a curva do pescoço para o ombro,
+igual em todas); a sequência tique a tique; nenhuma pose encostando no pé da mesa; no jogo, pela demonstração, nas duas
+resoluções (as 20 checagens). Integração não autorizada.

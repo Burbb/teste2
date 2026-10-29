@@ -58,15 +58,17 @@ CABECA = {
 # as poses: os ombros (o tronco), a cabeça, as duas mãos e o pano (onde está e que forma tem)
 POSES = {
     "pega": {"ombro": (-3, 1), "cabeca": (-3, 1, "baixo"), "perto": (212, 54), "longe": (213, 53), "pano": None},
-    "ergue": {"ombro": (0, -1), "cabeca": (0, 0, "baixo"), "perto": (215, 47), "longe": (216, 46), "pano": "pendurado"},
-    "sacode": {"ombro": (0, -1), "cabeca": (0, 0, "baixo"), "perto": (215, 48), "longe": (216, 47), "pano": "balanca"},
+    # a passagem da pega para o erguer: o pano saindo do monte, o tronco a meio caminho (sem saltar 3 px num tique)
+    "puxa": {"ombro": (-2, 0), "cabeca": (-2, 0, "baixo"), "perto": (213, 50), "longe": (214, 49), "pano": "meio"},
+    "ergue": {"ombro": (0, -1), "cabeca": (0, -1, "baixo"), "perto": (215, 47), "longe": (216, 46), "pano": "pendurado"},
+    "sacode": {"ombro": (0, -1), "cabeca": (0, -1, "baixo"), "perto": (215, 48), "longe": (216, 47), "pano": "balanca"},
     "dobra": {"ombro": (0, 0), "cabeca": (-1, 1, "baixo"), "perto": (215, 49), "longe": (216, 48), "pano": "meio"},
     "assenta": {"ombro": (-1, 0), "cabeca": (-1, 1, "baixo"), "perto": (215, 52), "longe": (216, 52), "pano": "dobrado"},
     "alisa": {"ombro": (-1, 1), "cabeca": (-1, 1, "baixo"), "perto": (215, 52), "longe": (217, 52), "pano": None},
     "beira": {"ombro": (0, 0), "cabeca": (-1, 1, "baixo"), "perto": (218, 55), "longe": (219, 55), "pano": None},
     "olha": {"ombro": (1, -1), "cabeca": (0, -1, "alto"), "perto": (218, 55), "longe": (219, 55), "pano": None},
 }
-DOBRA = [("pega", 3), ("ergue", 3), ("sacode", 2), ("ergue", 2), ("dobra", 3), ("assenta", 3), ("alisa", 5)]
+DOBRA = [("pega", 2), ("puxa", 1), ("ergue", 3), ("sacode", 2), ("ergue", 2), ("dobra", 3), ("assenta", 3), ("alisa", 5)]
 ROTINA = DOBRA * 2 + [("beira", 3), ("olha", 14), ("beira", 3)]
 PARADA = "olha"
 
@@ -92,9 +94,11 @@ def figura(nome):
     y_cint, fr_c, co_c = TRONCO[-1]
     y_alto = TRONCO[0][0]
 
+    # A inclinação: o tronco, os ombros e a cabeça andam juntos, como um bloco (sx, sy); quem a absorve é o hábito, da
+    # cintura (que vai com o tronco) até a barra (parada no chão), numa diagonal suave. Antes o tronco era fatiado (cada
+    # linha andava um pouco) sobre uma cintura parada, e o encaixe aparecia quadro a quadro.
     def desvio(y):
-        k = (y_cint - y) / (y_cint - y_alto)
-        return round(sx * k), round(sy * k)
+        return sx, sy
 
     # ---- o monte de panos soltos e a pilha dos dobrados, no tampo (parados)
     mx, my = MONTE
@@ -112,10 +116,12 @@ def figura(nome):
     _capsula(t, co, (ml[0] + 0.5, ml[1] + 0.5), 0.8, pe_esc, pe, pe_esc)
     # ---- o hábito: da cintura ao chão; o avental na frente, até perto da barra
     b0, b1 = BARRA
-    for y in range(y_cint + 1, PES - 1):
-        k = (y - y_cint) / (PES - 2 - y_cint)
-        a_ = round(fr_c + (b0 - fr_c) * k)
-        b_ = round(co_c + (b1 - co_c) * k ** 1.3)
+    cint = y_cint + sy                                     # a cintura, levada pelo tronco
+    for y in range(cint + 1, PES - 1):
+        k = (y - cint) / (PES - 2 - cint)
+        d = sx * (1 - k)                                   # o hábito vai da cintura inclinada à barra parada
+        a_ = round(fr_c + (b0 - fr_c) * k + d)             # (um arredondamento só: sem degrau duplo no contorno)
+        b_ = round(co_c + (b1 - co_c) * k ** 1.3 + d)
         px(a_, y, b_ - a_ + 1, 1, ha)
         px(b_ - 1, y, 2, 1, ha_esc)
         if k > 0.3:
@@ -137,7 +143,7 @@ def figura(nome):
         if y >= y_alto + 2:
             px(a_ + dx, y + dy, 2, 1, av)
             px(a_ + dx, y + dy, 1, 1, av_luz)
-    px(fr_c, y_cint, co_c - fr_c + 1, 1, av_esc)  # a amarra do avental
+    px(fr_c + sx, cint, co_c - fr_c + 1, 1, av_esc)  # a amarra do avental, na cintura
     # ---- a cabeça
     cx, cy, olhar = p["cabeca"]
     pal = {"K": COR["cabelo"][0], "k": COR["cabelo"][2], "B": COR["cabelo"][0], "g": "#6a625a", "s": pe, "S": pe_esc, "l": pe_luz,

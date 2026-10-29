@@ -8316,3 +8316,10 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   com a passagem livre da porta da rua; as colunas e o arco no eixo (estavam 1 px fora); as mísulas, as pontas das
   vigas e as arandelas espelhadas. Conferido por conta (a forma espelhada sem pixel fora) e no jogo nas duas
   resoluções. Integração não autorizada.
+
+### 28/10/2026 (data do computador local) — Templo B: o corpo do clérigo sem quebra (protótipo, oitava passada)
+
+- **O que o Jean notou:** o corpo do clérigo se quebrava quadro a quadro (o encaixe aparecia).
+- **Feito (só no protótipo):** a inclinação deixou de fatiar o tronco: o tronco e a cabeça inclinam como um bloco e o
+  hábito absorve, da cintura à barra parada; uma pose de passagem entre a pega e o erguer. Conferido pose a pose (o
+  contorno sem degraus) e no jogo nas duas resoluções. A lição foi para a tabela de erros da skill de cenas.
