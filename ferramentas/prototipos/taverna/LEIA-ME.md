@@ -1,9 +1,10 @@
-# Protótipo: o interior da taverna (o balcão de perto, as candidatas G e H; o salão panorâmico como histórico)
+# Protótipo: o interior da taverna (a G, o balcão de perto, e a G refinada; a H e o salão panorâmico como histórico)
 
-**A direção aprovada pelo Jean** (29/10/2026): o balcão de perto com o taverneiro como foco (a candidata G). O
-enquadramento ainda não está fechado: **a candidata H** experimenta um pouco mais de profundidade (a câmera um pouco
-mais afastada e para o lado, o balcão com volume, os fregueses sentados de perto), e a **G** continua como a
-alternativa válida, as duas no mesmo `demo.bat`. Nada animado nem integrado.
+**A decisão do Jean** (29/10/2026): **a G é a composição escolhida** (a câmera, o enquadramento, o balcão, as
+silhuetas). **A H foi uma experiência encerrada** (o afastamento não foi aprovado) e fica só como histórico. **O
+acabamento da G continua em avaliação:** a **G refinada (G2)** é a G com retoques locais (o taverneiro, a cabeça
+contra a prateleira, o ombro do freguês da esquerda), para comparar com a G original no mesmo `demo.bat`. Nada animado
+nem integrado.
 
 **A candidata G** é a câmera perto do balcão, de frente, como quem está sentado diante dele, pela referência frontal
 "Taverneiro desconfiado atrás do balcão-1" (`ferramentas/arte/referencias/cenarios internos`). A cena representa o
@@ -19,24 +20,55 @@ mais correções nessa direção.
 
 Dê dois cliques em `demo.bat` (ou `python ferramentas/prototipos/taverna/demo.py` na raiz). O jogo abre no navegador
 num **save temporário** (os saves do Jean não são lidos nem tocados), na porta 8795: o Guerreiro no Vau, com a
-campanha começada e 60 de ouro. Clique na **Taverna** na vila: a H aparece no topo e o balcão de sempre embaixo. Se uma
-demonstração antiga estiver aberta, feche a janela dela antes (a porta é a mesma).
+campanha começada e 60 de ouro. Clique na **Taverna** na vila: a G refinada aparece no topo e o balcão de sempre
+embaixo. Se uma demonstração antiga estiver aberta, feche a janela dela antes (a porta é a mesma).
 
-O botão **Protótipo** na barra do alto abre o painel: a candidata (**H**, o padrão, e **G**: a troca é imediata, sem
-sair da taverna, no mesmo estado do jogo; a prova de qualidade e da **F** à **A**, o histórico), o estado do save
-(**Despensa esperando**, **Homem do canto**, **Morel conhecido**, **Morel recrutado**, **Sem ouro**) e a **Pose parada**
-(o fogo e o lampião param).
+O botão **Protótipo** na barra do alto abre o painel: a candidata (**G refinada (G2)**, o padrão, e **G original**: a
+troca é imediata, sem sair da taverna, no mesmo estado do jogo; a H, a prova de qualidade e da **F** à **A**, o
+histórico), o estado do save (**Despensa esperando**, **Homem do canto**, **Morel conhecido**, **Morel recrutado**,
+**Sem ouro**) e a **Pose parada** (o fogo e o lampião param).
 
-## Roteiro curto para comparar a H e a G
+## A G refinada (G2)
 
-1. No tamanho do jogo, a 1920 e a 1280, alternando H e G pelo painel: a profundidade do tampo e a lateral da ponta do
-   balcão; os fregueses sentados (a postura, o braço no tampo, a caneca); se o taverneiro continua lendo igual (o rosto,
-   o olhar de lado, as mãos, a caneca, o pano).
-2. Na H, o taverneiro sem o pontilhado na pele e na camisa, a gola ligada à barba e ao peito, as dobras das mangas, a
-   cabeça no vão entre as duas prateleiras.
-3. Os pontos e os cartões, nos estados do save, como no roteiro da G abaixo.
+**Feita a partir da fonte da G**, sem reorganizar nada: `g2/fonte.py --criar` lê as células de
+`g/aseprite/taverna-g.aseprite` como estão, aplica os retoques de `g2/retoques.py` e grava
+`g2/aseprite/taverna-g2.aseprite`. Cada retoque age numa região marcada, com as cores que já estão ali (a luz e o
+pontilhado da G); não há limpeza geral nem preenchimento chapado (o erro da H, que deixou a camisa chapada e os ombros
+como peças redondas separadas). A câmera, o balcão (as bordas e as linhas), os objetos, a luz e os fregueses são os da
+G, pixel a pixel, fora das regiões abaixo.
+- **A pele** (`pele_lisa`, 188 px): na testa e nos antebraços, o pixel solto do pontilhado (os dois vizinhos de um eixo
+  iguais entre si e parecidos com ele) toma a cor dos vizinhos; as sombras, os relevos, o rosto e as bordas ficam.
+- **As mangas** (`mangas`, 26 px): as quatro rugas diagonais da G, que cortavam o braço, saem; entra uma dobra
+  atravessando cada manga, perpendicular ao braço, acima do rolo, com a luz em cima. O pontilhado da camisa em volta
+  (o tecido gasto, as transições de volume) fica.
+- **A barba, o pescoço e a gola** (`pescoco`, 29 px): a barba termina em pontas espalhadas, não numa linha reta; a
+  sombra embaixo segue as pontas; os lados do pescoço escurecem descendo para a gola. O pescoço não cresce.
+- **A cabeça e a prateleira** (`cabeca_e_prateleira`, 27 px): a tábua escurece até a sombra da parede nos dois pixels
+  em volta da cabeça, onde encostava no cabelo; a prateleira continua inteira e no lugar.
+- **O freguês da esquerda** (`fregues_esquerda`): na G a cabeça era uma bola grande sobre um ombro pequeno e baixo
+  (a observação do Jean, comparando com a referência). Refeito pela referência: a cabeça menor (~15×17 px, contra
+  ~18×21) e afundada nos ombros, a capa larga subindo até o queixo, o capuz amontoado em volta do pescoço, as dobras
+  descendo, o perfil da barba e a orelha do lado do fogo. Onde o da G estava, volta o balcão da G; o novo recebe a
+  mesma luz. Continua uma silhueta escura, no mesmo canto: sem braço, sem rosto, sem presença nova, e cobre menos o fogo.
 
-## A candidata H
+**A fonte é a autoridade:** depois de criada, os retoques à mão se fazem em `taverna-g2.aseprite`; `--criar` não a
+sobrescreve sem `--refazer`. `g2/fonte.py` exporta dela para `camadas/g2/`; `--conferir` compara com a fonte da G mais
+os retoques do script (hoje, 4 de 4 iguais: ainda sem retoques à mão). A fonte da G não muda.
+
+**No painel:** "G refinada (G2)" (o padrão) e "G original", com a troca imediata, sem sair da taverna, no mesmo estado do
+jogo. Os pontos, os cartões, os serviços e as condições são os da G.
+
+**Para avaliar:** no tamanho real, a 1920 e a 1280, alternando G2 e G: se o desenho ficou mais claro (a testa e os
+braços, as mangas, a ligação da barba com o pescoço, a cabeça contra a prateleira, o ombro do freguês) sem perder o
+volume, a textura e a personalidade da G.
+
+## A H (experiência encerrada, histórico)
+
+A H experimentou mais profundidade (a câmera um pouco mais afastada e para o lado, o balcão com volume, os fregueses
+sentados de perto). O Jean preferiu a câmera, a composição, o balcão e as silhuetas da G; o afastamento não foi
+aprovado. Ela continua no painel ("Candidata H (histórico)"), sem mais trabalho.
+
+**Como a H foi feita:**
 
 **O que muda em relação à G** (`h/desenho.py`, `h/taverneiro.py`):
 - **A câmera:** uma perspectiva simplificada de um ponto, com o ponto de fuga na beira direita, na altura do olho de quem
@@ -157,7 +189,8 @@ Esc e o Voltar à vila voltando à vila, a pose parada parando o fogo, o console
 - `g/desenho.py` e `g/taverneiro.py`: a G (o espaço, os objetos, o balcão, os fregueses, a luz, o fogo; o taverneiro);
   `g/fonte.py`: a fonte em Aseprite e a exportação para `camadas/g/`; `g/conferir.mjs`: a conferência no jogo, da G e
   da H.
-- `h/desenho.py`, `h/taverneiro.py` e `h/fonte.py`: a H (o que muda com a câmera; o resto vem da G) e a fonte dela.
+- `g2/retoques.py` e `g2/fonte.py`: a G refinada (os retoques seletivos e a fonte dela, feita da fonte da G).
+- `h/desenho.py`, `h/taverneiro.py` e `h/fonte.py`: a H (histórico).
 - `f/` a `b/`, `prova/` e a raiz (`desenho.py`, `gente.py`): o salão panorâmico, histórico.
 - `exportar.py`: as camadas da A em `camadas/` e as dos estudos estáticos em `camadas/b/` a `camadas/f/`.
 - `tela/cena-taverna-b.js`: as cenas estáticas da B à H e a escolha entre elas (`window.CenaTaverna`);

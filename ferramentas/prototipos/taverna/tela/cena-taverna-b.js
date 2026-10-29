@@ -12,7 +12,9 @@
    A G e a H vêm das fontes em Aseprite (ferramentas/prototipos/taverna/g/fonte.py e h/fonte.py), em
    /proto-tav/camadas/g/ e /proto-tav/camadas/h/, com as mesmas quatro imagens.
 
-   Também exporta window.CenaTaverna, que escolhe entre a H (o padrão), a G, a prova de qualidade (cena-taverna-prova.js) e
+   A G2 (a G refinada) vem da fonte dela (g2/fonte.py: a fonte da G com os retoques), em /proto-tav/camadas/g2/.
+
+   Também exporta window.CenaTaverna, que escolhe entre a G2 (o padrão), a G, a H, a prova de qualidade (cena-taverna-prova.js) e
    as candidatas da F à A (histórico) pela faixa da demonstração (body.dataset.tavCand). */
 "use strict";
 
@@ -113,7 +115,11 @@
     despensa: { area: [281, 12, 30, 44], balao: [296, 19], foco: [296, 38] },
   }, ["taverneiro", "freguês da esquerda", "freguês da direita"]);
 
-  // H. A G com a câmera um pouco mais afastada e para a direita (o tampo fundo, a lateral da ponta, os fregueses
+  // G2. A G refinada: a mesma cena, com os retoques seletivos no taverneiro, na prateleira em volta da cabeça e no
+  // ombro do freguês da esquerda (g2/retoques.py); os pontos da G, no mesmo lugar.
+  window.CenaTavernaG2 = estatica("g2", window.CenaTavernaG.pontos, ["taverneiro", "freguês da esquerda", "freguês da direita"]);
+
+  // H (experiência encerrada, histórico). A G com a câmera um pouco mais afastada e para a direita (o tampo fundo, a lateral da ponta, os fregueses
   // sentados de perto): os mesmos pontos, no lugar novo. O nome do Taverneiro ao lado da cabeça, na prateleira da
   // direita (acima dela, a 1280, sairia da arte); o da Despensa no alto da folha, depois da ponta do balcão.
   window.CenaTavernaH = estatica("h", {
@@ -121,12 +127,13 @@
     despensa: { area: [292, 10, 26, 60], balao: [303, 18], foco: [304, 40] },
   }, ["taverneiro", "freguês da esquerda", "freguês da direita"]);
 
-  // A cena que o jogo registra (telas/cenas.js): a da faixa (a H por padrão, a G ao lado para comparar; a prova de
-  // qualidade e da F à A, o histórico)
+  // A cena que o jogo registra (telas/cenas.js): a da faixa (a G2 por padrão, a G original ao lado para comparar; a H,
+  // a prova de qualidade e da F à A, o histórico)
   const CANDS = { a: () => window.CenaTavernaA, b: () => window.CenaTavernaB, c: () => window.CenaTavernaC,
     d: () => window.CenaTavernaD, e: () => window.CenaTavernaE, f: () => window.CenaTavernaF,
-    g: () => window.CenaTavernaG, h: () => window.CenaTavernaH, prova: () => window.CenaTavernaProva };
-  const cand = () => (CANDS[document.body.dataset.tavCand] || CANDS.h)();
+    g: () => window.CenaTavernaG, g2: () => window.CenaTavernaG2, h: () => window.CenaTavernaH,
+    prova: () => window.CenaTavernaProva };
+  const cand = () => (CANDS[document.body.dataset.tavCand] || CANDS.g2)();
   window.CenaTaverna = {
     base: (W, d) => cand().base(W, d),
     desenhar: (...a) => cand().desenhar(...a),

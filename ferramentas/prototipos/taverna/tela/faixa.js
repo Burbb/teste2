@@ -1,10 +1,11 @@
 /* A demonstração da taverna (protótipo): um botão "Protótipo" na barra do alto, entre os sigilos e o menu (no fluxo
-   da barra: o clima, a hora e os sigilos não ficam embaixo dele), abre o painel: as candidatas H (o padrão) e G (o
-   balcão de perto; a troca é imediata, no mesmo estado do jogo), a prova de qualidade (histórico) (os jogadores
+   da barra: o clima, a hora e os sigilos não ficam embaixo dele), abre o painel: a G refinada (G2, o padrão) e a G
+   original (a composição escolhida; a troca é imediata, no mesmo estado do jogo), a H e a prova de qualidade
+   (histórico) (os jogadores
    nas grades A e B; na B2, a B refinada pela referência; na B3, a B2 com os braços legíveis; e na B4, a B3 com o
    ombro do de verde suavizado; com a vista isolada), o canto de Morel (o M1, o novo, ou o da F), as candidatas (da F
    à A, o histórico), o estado do save temporário (a despensa esperando, o homem do canto, Morel já conhecido, Morel
-   recrutado, sem ouro) e a pose parada. Escolhido, o painel fecha; o botão diz as versões à vista ("Protótipo: H ·
+   recrutado, sem ouro) e a pose parada. Escolhido, o painel fecha; o botão diz as versões à vista ("Protótipo: G2 ·
    Homem do canto", "Protótipo: prova B4 · Morel M1 · ..."). O interior entra pelo caminho do templo (vila.js, estado.local.interiores, com a taverna
    acrescentada pelo demo.py). */
 "use strict";
@@ -16,10 +17,10 @@
     ["recrutado", "Morel recrutado"], ["sem_ouro", "Sem ouro"]];
   const f = document.createElement("div");
   f.id = "faixa-tav";
-  document.body.dataset.tavCand = document.body.dataset.tavCand || "h";  // a H; a G ao lado (as outras: histórico)
+  document.body.dataset.tavCand = document.body.dataset.tavCand || "g2";  // a G refinada; a G ao lado (as outras: histórico)
   document.body.dataset.tavProva = document.body.dataset.tavProva || "b4";
   document.body.dataset.tavMorel = document.body.dataset.tavMorel || "m1";
-  const CANDS = [["h", "Candidata H: o balcão com volume"], ["g", "Candidata G: o balcão de frente"], ["prova", "Prova: os jogadores (histórico)"], ["f", "Candidata F (histórico)"], ["e", "Candidata E (histórico)"],
+  const CANDS = [["g2", "G refinada (G2)"], ["g", "G original"], ["h", "Candidata H (histórico)"], ["prova", "Prova: os jogadores (histórico)"], ["f", "Candidata F (histórico)"], ["e", "Candidata E (histórico)"],
     ["d", "Candidata D (histórico)"], ["c", "Candidata C (histórico)"], ["b", "Candidata B (histórico)"], ["a", "Candidata A (histórico)"]];
   const GRADES = [["a", "Grade A: a atual (66×42)"], ["b", "Grade B: o dobro (132×84)"],
                   ["b2", "Grade B2: a B refinada pela referência (132×84)"],

@@ -1,5 +1,5 @@
-// Confere as candidatas G e H da taverna no jogo de verdade (demo.py, save temporário), a 1920×945 e a 1280×720:
-// entra pelo prédio da taverna no Vau e, em cada candidata (CANDS, padrão "h,g", trocadas pelo painel, no mesmo estado
+// Confere as candidatas da taverna no jogo de verdade (demo.py, save temporário), a 1920×945 e a 1280×720: entra
+// pelo prédio da taverna no Vau e, em cada candidata (CANDS, padrão "g2,g"; "h" também serve; trocadas pelo painel, no mesmo estado
 // do jogo) e em cada estado do save (o homem do canto, a despensa esperando, Morel conhecido, recrutado, sem ouro),
 // fotografa a cena com o balcão embaixo e confere: os pontos (o Taverneiro sempre, a Despensa
 // só enquanto ela espera; nenhum da escada, da rua ou de Morel), os nomes dentro da arte, sem cobrir o rosto nem as
@@ -66,8 +66,8 @@ try {
     p.on("console", (m) => { if (m.type() === "error") erros.push(m.text()); });
     await p.goto(url); await parado(p);
     conferir(await entrar(p), "entra na taverna pelo prédio");
-    conferir(await p.evaluate(() => document.body.dataset.tavCand === "h"), "a demonstração abre na candidata H");
-    for (const cand of (process.env.CANDS || "h,g").split(",")) {
+    conferir(await p.evaluate(() => document.body.dataset.tavCand === "g2"), "a demonstração abre na G refinada");
+    for (const cand of (process.env.CANDS || "g2,g").split(",")) {
     if (await p.evaluate(() => document.body.dataset.tavCand) !== cand) {  // a troca pelo painel, no mesmo estado
       await p.click("#faixa-tav .abre"); await p.click(`#faixa-tav-painel [data-cand="${cand}"]`); await espera(500);
       conferir(await p.evaluate((c) => document.body.dataset.tavCand === c && Cenas.atual().d.cena === "taverna", cand),
