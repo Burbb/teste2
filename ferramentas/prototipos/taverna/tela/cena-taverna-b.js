@@ -1,12 +1,12 @@
 /* Os estudos estáticos do interior da taverna (protótipo; nada disto entra no jogo): a candidata B (o salão fundo; a
    avaliação: profundidade demais, o fundo pequeno, a escada um esboço), a C (a profundidade contida, a escada e a
-   galeria como estrutura, os grupos redistribuídos) e a D (a C refeita nos conjuntos de pessoa, assento e mesa). Cada
-   uma é um fundo com as pessoas paradas (com Morel ou, recrutado, sem ele), o fogo e as velas (4 quadros cada, a
+   galeria como estrutura, os grupos redistribuídos), a D (a C refeita nos conjuntos de pessoa, assento e mesa) e a E
+   (a sala reconstruída numa projeção só). Cada uma é um fundo com as pessoas paradas (com Morel ou, recrutado, sem ele), o fogo e as velas (4 quadros cada, a
    200 ms), exportados por ferramentas/prototipos/taverna/exportar.py (exportar_estatica) em
-   /proto-tav/camadas/<b|c|d>/. Movimento reduzido: o fogo e as velas parados. As pessoas ainda não se mexem: a animação
+   /proto-tav/camadas/<b|c|d|e>/. Movimento reduzido: o fogo e as velas parados. As pessoas ainda não se mexem: a animação
    vem depois de a construção ser aprovada.
 
-   Também exporta window.CenaTaverna, que escolhe entre a D (o padrão), a C, a B e a A (histórico) pela faixa da
+   Também exporta window.CenaTaverna, que escolhe entre a E (o padrão), a D, a C, a B e a A (histórico) pela faixa da
    demonstração (body.dataset.tavCand). */
 "use strict";
 
@@ -78,10 +78,20 @@
     saida: { area: [4, 22, 26, 42], balao: [16, 21], foco: [16, 44] },
   }, ["taverneiro", "freguesa", "cabeceira", "freguês de costas", "roda, atrás", "roda, de lado", "junto do fogo"]);
 
-  // A cena que o jogo registra (telas/cenas.js): a candidata da faixa (D por padrão; C, B e A como histórico)
+  // E. A sala reconstruída numa projeção só: os nomes em cima das portas do fundo (a despensa, a rua), da escada e da
+  // galeria (no guarda-corpo, longe das cabeças), do taverneiro (nas prateleiras) e de Morel (na parede da direita).
+  window.CenaTavernaE = estatica("e", {
+    taverneiro: { area: [50, 38, 14, 16], balao: [57, 37], foco: [57, 46] },
+    escada: { area: [210, 3, 66, 50], balao: [258, 12], foco: [244, 32] },
+    despensa: { area: [96, 30, 16, 27], balao: [104, 29], foco: [104, 44] },
+    morel: { area: [282, 52, 18, 28], balao: [291, 51], foco: [290, 64] },
+    saida: { area: [124, 14, 21, 43], balao: [134, 13], foco: [134, 40] },
+  }, ["taverneiro", "freguesa", "cabeceira", "freguês de costas", "roda, atrás", "roda, de lado", "junto do fogo"]);
+
+  // A cena que o jogo registra (telas/cenas.js): a candidata da faixa (E por padrão; D, C, B e A como histórico)
   const CANDS = { a: () => window.CenaTavernaA, b: () => window.CenaTavernaB, c: () => window.CenaTavernaC,
-    d: () => window.CenaTavernaD };
-  const cand = () => (CANDS[document.body.dataset.tavCand] || CANDS.d)();
+    d: () => window.CenaTavernaD, e: () => window.CenaTavernaE };
+  const cand = () => (CANDS[document.body.dataset.tavCand] || CANDS.e)();
   window.CenaTaverna = {
     base: (W, d) => cand().base(W, d),
     desenhar: (...a) => cand().desenhar(...a),

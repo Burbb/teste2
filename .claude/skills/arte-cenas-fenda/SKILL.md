@@ -333,3 +333,21 @@ atravessando o tampo). Para cada pessoa sentada, nesta ordem e com os móveis de
 6. **a escala dos móveis vazios** é a dos ocupados.
 
 Não é preciso mostrar todas as pernas e articulações: as partes visíveis explicam a pose sem contradição.
+
+**A lição da candidata E (29/10/2026): com vários grupos, uma escala e uma câmera comuns antes de cada conjunto.** Da
+B à D, cada conjunto foi corrigido no seu lugar, e eles continuavam sem concordar (Morel e a mesa ao lado em escalas
+diferentes; a parede frontal e os tampos, cada um num grau). O que resolveu:
+
+1. **Uma projeção para tudo**, numa função (`P(X, Z, H)`): o piso, as paredes, os tampos, os assentos, os degraus, a
+   galeria e as pessoas saem dela. Uma perspectiva simplificada vale, desde que seja a mesma em toda a cena (a face de
+   cima de uma mesa e a do piso da galeria aparecem pela mesma conta).
+2. **Os móveis como caixas projetadas** (a face de cima, a da frente, a do lado que olha para o meio), não desenhados
+   cada um com o seu grau.
+3. **Uma figura de referência** (1,75 m, em pé e sentada) em vários lugares da sala, antes das pessoas: na porta, no
+   balcão, no pé da escada, debaixo da galeria, em cada assento. Portas, degraus, tampos e bancos conferidos contra ela.
+   A altura da cabeça ou a linha dos pés sozinhas não provam a perspectiva: o conjunto precisa convencer no tamanho do
+   jogo.
+4. **Só então as pessoas**, à mão, no ponto que a projeção dá ao assento de cada uma; as diferenças de porte (Morel
+   maior, num banco robusto) vêm depois, sobre a mesma régua.
+5. **A composição anterior não é sagrada:** quando os ajustes locais não resolvem a coerência, mude a câmera e a
+   distribuição.
