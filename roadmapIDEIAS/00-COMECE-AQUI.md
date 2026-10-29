@@ -8445,3 +8445,22 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   nada implementado.
 - **A lição** foi para a skill de cenas: com vários grupos, validar uma escala e uma câmera comuns antes de detalhar
   cada conjunto. **Estudo estático em avaliação, sem integração;** a animação espera a aprovação.
+
+### 29/10/2026 (data do computador local) — A taverna F: a nova referência aprovada (protótipo, estudo estático)
+
+- **Pedido do Jean:** uma nova referência visual aprovada ("Taverna medieval entre brasas e sombras", guardada em
+  `ferramentas/arte/referencias/cenarios internos`, com o papel no LEIA-ME de lá) passa a definir a composição, as
+  poses e a relação entre pessoas e móveis; o acabamento segue o jogo; a E fica como histórico.
+- **Feito, só no protótipo** (`ferramentas/prototipos/taverna/f`; `demo.bat` abre na F, da E à A no botão Protótipo;
+  o LEIA-ME tem o roteiro, as diferenças em relação à referência e os compromissos): a referência medida na grade do
+  jogo (não reduzida); a projeção da E com a câmera dela (14 a 28 px por metro, o olho a 3 m); o estudo de construção
+  com a figura de referência; as pessoas à mão no ponto de cada assento; Morel na cadeira robusta de espaldar com a
+  mesa individual inteira; a escada subindo até o patamar e a galeria com as portas inteiras; o piso de lajes.
+- **Conferido:** técnico (no jogo, as duas janelas): os pontos e os cartões, Morel presente e recrutado, "Homem do
+  canto" antes de conhecido, a troca de candidata (a E fotografada no mesmo estado), a narração da praça fora da
+  taverna, os cartões e o Voltar acima da doca, teclado, Saída, Esc, relógio, movimento reduzido, console. Artístico:
+  no tamanho real e ampliado sem suavização; a avaliação é do Jean.
+- **Diferenças em relação à referência:** a galeria na altura que a projeção dá, a mesa de Morel inteira, Morel com a
+  aparência do jogo, sem estandartes, tapete e cabeça de cervo, a porta da rua fechada. **Compromissos:** as pessoas da
+  frente um pouco menores que na imagem; o gesto da mão no queixo pequeno; o fundo com cabeças de 5 px.
+  **Estudo estático em avaliação, sem integração.**
