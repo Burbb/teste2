@@ -8818,3 +8818,26 @@ foi automatizado.
   sozinha e com o dado: inteiro, embaixo da arte, o véu fora da disputa; o encontro e o pagamento como antes; o
   console): tudo certo. O código do jogo não mudou.
 - **Parado aqui:** a avaliação da pose central é do Jean; as vitórias e a animação esperam a aprovação dela.
+
+### 30/10/2026 (data do computador local) — A taverna: a manga de Morel comendo, uma peça só do ombro ao punho (protótipo)
+
+- **Pedido do Jean:** a queda de braço suspensa (as três propostas ficam como histórico); na vista de Morel comendo
+  (aprovada), o ombro lia como uma peça encaixada e o cotovelo como uma dobradiça: o acabamento da roupa sobre a
+  construção, nas três poses-chave e depois no ciclo inteiro, sem mexer na anatomia, no ritmo nem no percurso.
+- **Causa:** no acabamento, não na construção nem em guia exportada: o `vestir.lua` vestia o braço como duas cápsulas
+  com faixas de luz próprias, a do braço terminando numa calota acima do ombro do tronco, o antebraço um tom abaixo
+  exatamente na junta, o vinco como um traço entre os dois.
+- **Feito** (o LEIA-ME do protótipo, "A manga"): `morel/vista/manga.py` refaz a camada `morel_braco` das 20 poses com as
+  mesmas juntas: uma forma só, a curva por fora do cotovelo, o antebraço passando na frente do bíceps por dentro (com a
+  luz dele e a sombra no braço), sem calota no ombro, a luz contínua em três tons, o antebraço escurecendo depois da
+  junta, uma dobra curta por dentro; a mão e a colher intactas; os retoques numa lista no script. No meio da rodada, o
+  Jean viu o antebraço esmagado no bíceps nas poses de braço bem dobrado (a união suave também por dentro): corrigido.
+  A versão anterior no painel ("antes do acabamento da manga") e a folha das 20 poses antes e depois. As skills de
+  personagens e de cenas: a estrutura orienta o movimento e o acabamento une os segmentos (sem fundir a sobreposição),
+  cada pose sozinha e na sequência, uma articulação certa que ainda parece mecânica, construção e aprovação artística
+  como verificações diferentes.
+- **Conferido:** o fundo, as chamas, o taverneiro e a mesa idênticos; a recomposição igual ao achatamento do Aseprite
+  nos 20 quadros; as três poses-chave e o ciclo, quadro a quadro e em sequência; `g/conferir.mjs` (a vista atual e a
+  anterior) e `morel/conferir-encontro.mjs` (a mesa no encontro, a reação ao pagamento, a pose parada) a 1920×945 e
+  1280×720. O código do jogo não mudou.
+- **Parado aqui:** a avaliação da manga é do Jean.

@@ -2,10 +2,10 @@
 
 **O estado** (30/10/2026): as duas vistas **aprovadas** pelo Jean (o balcão da G4 e a vista diante de Morel, com as
 últimas correções) estão **ligadas ao encontro** no protótipo: sentar com o homem do canto leva à mesa dele, as opções do
-evento aparecem ali, o pagamento lança moedas na mesa, e a conversa acaba de volta ao balcão. Na **queda de braço**, a
-terceira proposta é **só a pose central**, desenhada à mão sobre a construção (em avaliação; as vitórias e a animação
-esperam ela ser aprovada); a segunda (a vista de detalhe calculada) e a primeira (na câmera da conversa) ficam como
-histórico. Nada integrado à produção.
+evento aparecem ali, o pagamento lança moedas na mesa, e a conversa acaba de volta ao balcão. Na vista de Morel, o
+**braço da colher ganhou o acabamento de uma manga só** (o ombro e o cotovelo liam como peças articuladas; em
+avaliação; a versão anterior no painel). A **queda de braço** está suspensa: as três propostas ficam como histórico.
+Nada integrado à produção.
 
 ## O encontro à mesa de Morel (30/10/2026; protótipo)
 
@@ -301,9 +301,25 @@ mesmo estado do jogo; a primeira também ("a primeira versão").
   o fundo e Morel saem iguais. Embaixo do braço de apoio, o tampo tinha um retângulo sem a sombra pontilhada e sem a
   junta da tábua (era onde ficavam o punho e o antebraço da v2): a camada `sombra` ganhou ali o mesmo pontilhado das
   linhas de cima, e a junta em x 240 continua até a borda da frente, para o ponto de fuga do tampo.
+- **A manga** (o Jean, 30/10/2026; em avaliação): o ombro lia como uma peça encaixada no tronco e o cotovelo como
+  uma dobradiça. A causa estava no acabamento do `vestir.lua`, não na construção nem em guia exportada (a `guia` fica
+  fora da exportação): o braço vestido como duas cápsulas, cada uma com as faixas de luz dela; a do braço terminando
+  numa calota acima da linha do ombro do tronco; o antebraço inteiro um tom abaixo exatamente na junta, com o vinco
+  como um traço entre os dois. `morel/vista/manga.py` refaz a camada `morel_braco` das 20 poses com as mesmas juntas
+  (as da `guia` e o ombro de `juntas.py`) e os mesmos raios: uma forma só, unida com suavidade no lado de fora do
+  cotovelo (a curva); por dentro, o antebraço continua passando na frente do bíceps, com a luz dele e a sombra no braço
+  (na primeira aplicação a união também por dentro esmagou o antebraço no bíceps nas poses de braço bem dobrado, que o
+  Jean marcou); sem calota no ombro (fora do tronco, o alto da manga vai só até a linha do ombro do
+  casaco), a luz de uma superfície só em três tons, o antebraço escurecendo meio tom depois da junta, uma dobra de dois
+  pixels por dentro do cotovelo com a crista acesa; a mão e a colher de antes, intactas. Os retoques à mão ficam numa
+  lista no script (`RETOQUES`), para refazer a manga sem perdê-los; depois de gravada, a fonte é a autoridade. A versão
+  anterior: "Diante de Morel, a versão anterior (antes do acabamento da manga)" no painel (a fonte em `morel/vista-v3/`,
+  as camadas em `camadas/morel-vista-v3/`); a folha "a manga, as 20 poses antes e depois" na inspeção. Conferido: o
+  fundo, as chamas, o taverneiro e a mesa saem idênticos; a recomposição da cena igual ao achatamento do Aseprite nos 20
+  quadros; as três poses-chave e o ciclo, quadro a quadro e em sequência; no jogo a 1920×945 e 1280×720, com a pose
+  parada e a reação ao pagamento.
 - **Os limites que ficam:** a boca é a pose mais fraca (o braço curto em escorço se mistura um pouco com o casaco
-  claro); todas as poses do braço saem de `vestir.lua` (o volume sobre a construção), conferidas na ampliação mas sem
-  retoque à mão; a espada nas costas continua com a guarda logo acima do ombro.
+  claro); as poses do braço saem de `manga.py` (antes, de `vestir.lua`), revistas na ampliação e em sequência; a espada nas costas continua com a guarda logo acima do ombro.
 
 ## Diante de Morel: a segunda passada (o espaço, a mesa, o braço; histórico)
 
