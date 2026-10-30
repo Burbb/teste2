@@ -1,9 +1,106 @@
-# Protótipo: o interior da taverna (a G3 e o estudo de Morel; a G2, a G, a H e o salão como histórico)
+# Protótipo: o interior da taverna (o balcão animado e a vista diante de Morel; o resto como histórico)
 
-**O estado** (29/10/2026): **a G2 está aprovada** pelo Jean (a composição, a câmera e o acabamento geral). **A G3** é a
-G2 com três correções locais pedidas por ele (o freguês da esquerda, duas garrafas, o pano), para comparar com a G2 no
-mesmo `demo.bat`. À parte, **o estudo livre "Diante de Morel"**, outra vista da mesma taverna, com liberdade de
-acabamento, em avaliação. Nada animado nem integrado.
+**O estado** (29/10/2026): **o balcão aprovado** (a G2, com os retoques locais da G3) agora **animado** na **G4**: o
+taverneiro limpa a caneca e para para olhar os fregueses. **A vista diante de Morel**, saída do estudo livre (que o Jean
+gostou), foi **adaptada ao acabamento do jogo e animada**, e continua **em avaliação**. As duas no mesmo `demo.bat`, com
+a pose parada de cada uma e as versões anteriores para comparar. Nada integrado; sem som, diálogo ou regra nova.
+
+## A G4: o balcão aprovado, animado
+
+**A base:** a fonte da G3 (a G2 aprovada com os retoques locais), sem mudar a composição; mais o garrafão empalhado,
+que era a "garrafa bojuda amarelada" marcada pelo Jean (o bojo torto, o gargalo fora do eixo): refeito simétrico, no
+eixo x 207, a base reta apoiada na tábua, o gargalo de vidro de 3 px no meio (`g4/fonte.py`, `garrafao`). As duas
+garrafas corrigidas na G3 (a de vinho e a bojuda de âmbar) ficam como estão.
+
+**A rotina** (`g4/taverneiro.py`, pela seção 5b da skill):
+
+| Trecho | Conduz | Acompanha | Fica |
+|---|---|---|---|
+| Esfregar (3 passadas e uma mais lenta) | a mão do pano dá a volta na caneca: entra pela boca, desce pelo lado, volta (até 2 px) | a ponta do pano um tique atrasada, para o outro lado; o tronco desce 1 px na passada de baixo; a cabeça 1 px um tique depois do tronco; os olhos baixos, na caneca | a caneca e a mão da asa (com o tronco), o quadril |
+| Olhar os fregueses | os olhos sobem primeiro (o olhar de lado da G) | a cabeça sobe 1 px um tique depois; depois o olhar vai para o outro lado; volta | as duas mãos na caneca, o tronco |
+
+8 poses, sustentadas de 2 a 24 tiques; o ciclo tem 119 tiques (11,9 s, a 100 ms) e emenda na mesma pose em que começa.
+A pose parada (o movimento reduzido) é a da G3: o olhar de lado, desconfiado.
+
+**Sem cintilar:** cada parte (o tronco com os braços de cima, a cabeça, o braço do pano com o pano, a caneca com a mão
+da asa, o pano na boca da caneca) é desenhada e iluminada na posição da G (o pontilhado da luz da G preso a ela),
+retocada como na G2 e só depois deslocada; o pontilhado anda com a parte. A caneca mantém o tamanho, o volume e a pega.
+
+**A fonte:** `g4/aseprite/taverna-g4.aseprite` (8 quadros: o taverneiro um por pose, o fogo e o lampião nos 4
+primeiros), feita da fonte da G3 (`--criar` protegido; depois, a autoridade). `g4/fonte.py` exporta para `camadas/g4/`
+(o fundo, as chamas, a tira das poses recortada na caixa delas, a frente e `rotina.json`); `--conferir` compara com o
+código. A cena (`tela/cena-taverna-anim.js`, `CenaTavernaG4`) desenha o fundo, as chamas, a pose da vez e o balcão por
+cima, pelo relógio da vista do jogo (sair e entrar não cria outro relógio).
+
+## Diante de Morel: a vista adaptada e animada (em avaliação)
+
+**O que veio do estudo livre:** a ideia (sentados perto de Morel, do outro lado da mesa, o balcão e o taverneiro ao
+fundo), a presença e a aparência dele, a vela e a caneca perto de nós. **O que mudou:** o acabamento é o dos interiores
+aprovados e da G3 (a paleta da G e a do retrato de Morel, a pedra em fiadas com as juntas um tom abaixo, a madeira com a
+aresta acesa, o metal com o brilho de um pixel, a luz em degraus pontilhados e o halo quente), na grade 320×96 (o pixel
+do mesmo tamanho dos outros interiores; o rosto de Morel ganha mais pixels por estar perto: a cabeça tem 21×25).
+
+**O esquema da sala e da câmera** (a G3 como referência): na parede do fundo, de oeste para leste, a lareira, a bancada
+com o barril, as prateleiras, o taverneiro, os pendurados, o esteio com o lampião e a porta da despensa; o balcão corre
+na frente deles. A mesa de Morel fica no salão, na frente da ponta leste do balcão; a câmera, sentada à mesa, olha para
+o norte. À esquerda de Morel aparecem a lareira (atrás do balcão: as chamas por trás do tampo, não na frente), o barril
+(entre a lareira e o taverneiro, como na G3; no estudo ele estava do lado errado), as prateleiras, o taverneiro e os
+pendurados; à direita dele, o lampião e a porta da despensa. Escala: o balcão com 1,05 m a ~21 px/m, o taverneiro com
+~1,72 m (a cabeça de ~6 px, o corpo escondido abaixo do tampo), as banquetas na altura de um assento de balcão, com o
+assento, as pernas de 2 px, a travessa e o pé no chão.
+
+**Morel** (a identidade do jogo: o retrato 80×80 e o 16×16): o cabelo e a barba castanhos curtos, as sobrancelhas
+carregadas, a cicatriz em diagonal da testa à bochecha (atravessando a sobrancelha e o nariz), o gibão de couro, o
+colete vermelho num V entre as abas, com o volume do peito e as tiras com as fivelas seguindo a curva, o punho da espada
+atrás do ombro. **Os ombros, como no retrato:** a ombreira de metal no ombro da colher (menor e mais escura que no
+estudo, o brilho só num fio) e, no outro, a peça escura cinza-amarronzada (menor, sem brilho de metal, com a costura) que
+os registros chamam de "a pele". Ele se senta numa cadeira de espaldar (os montantes atrás dos ombros). Os dois braços
+saem dos ombros e passam por cima da borda da mesa (no estudo, a borda passava por cima do braço): o da colher com o
+cotovelo apoiado no tampo; o outro com o antebraço deitado e a mão espalmada junto da tigela.
+
+**A mesa:** as juntas das tábuas correm para o mesmo ponto de fuga, de ponta a ponta (também à direita); os riscos de
+uso são curtos, claros e em outras direções; as sombras de contato embaixo da tigela, da caneca, da vela e do pão; a
+lateral da esquerda com a espessura.
+
+**A rotina de Morel** (`morel/vista/exportar.py`, `ROTINA_MOREL`): recolher o ensopado (duas vezes, a colher no fundo
+da tigela), a mão sair da tigela com o cotovelo ainda no tampo, subir pelo peito (o cotovelo sai do tampo), a colher na
+boca (a cabeça desce 1 px ao encontro dela, a boca aberta), a volta com a colher vazia, descansar, mastigar (o queixo
+desce e sobe), descansar; na segunda volta, ele ergue os olhos para quem está à mesa (a cabeça sobe 1 px) e volta à
+comida. 12 poses, 148 tiques (14,8 s); a última (descansa) emenda na primeira (recolhe) com a mão 1 px. A pose parada:
+descansando, os olhos na tigela (ele "fala sem levantar os olhos do prato"). **O taverneiro ao fundo** esfrega a caneca
+em duas poses, com uma pausa longa (37 tiques). **A luz:** a vela (a principal), a lareira e o lampião; o rosto, as
+mãos e a comida fora da sombra pontilhada; o halo contínuo, sem anéis.
+
+**Os pontos:** só o que está desenhado: o Taverneiro (a bebida); Morel (o cartão do encontro, só quando o motor o manda,
+o "Homem do canto"), com o nome no balcão ao lado dele, longe do rosto; a porta da despensa (só enquanto ela espera).
+Dormir e o resto ficam nos cartões.
+
+**Como foi feito (o que foi desenhado no editor e o que foi automatizado):**
+- **No editor**, pelas ferramentas do Aseprite (o retângulo e a elipse cheios, o contorno preenchido, a linha, o lápis)
+  comandadas pela ponte, camada por camada, conferindo cada passada na exportação ampliada: a sala, a lareira, as
+  prateleiras e o que está nelas, o barril, o balcão, as banquetas, a cadeira, o corpo de Morel (refeito duas vezes: na
+  primeira, largo demais para a cabeça), a ombreira, a peça do outro ombro, os braços em cada pose, as mãos, a colher, a
+  mesa e o que está nela.
+- **Grades desenhadas à mão, postas por um laço:** a cabeça de Morel (21×25, com os quatro jeitos: olhos baixos, boca
+  aberta, mastigando, olhando) e o taverneiro ao fundo (15×15, duas poses).
+- **Automatizado:** a camada `guia` (a referência reduzida, oculta); os padrões repetidos (as fiadas da pedra e das
+  lajes, as juntas das tábuas para o ponto de fuga); a luz (`sombra` e `brilho`, calculadas por um laço com a regra da
+  luz da G); as cópias dos quadros e a ligação das células paradas; a exportação (`morel/vista/exportar.py` só lê a
+  fonte; a recomposição da cena saiu idêntica ao achatamento do Aseprite).
+
+**A fonte:** `morel/vista/morel-vista.aseprite` (320×96, 12 quadros; as camadas `guia` (oculta), `parede`, `fundo_bar`,
+`fogo`, `taverneiro`, `balcao`, `cadeira`, `morel_corpo`, `morel_cabeca`, `mesa`, `maos`, `morel_braco`, `sombra` em
+multiplicar, `brilho` em somar, `chamas`; as paradas com as células ligadas em todos os quadros). Ela é a autoridade:
+não há script que a gere. O estudo livre (`morel/aseprite/morel-mesa.aseprite`) fica como histórico.
+
+**Ver:** no painel, "Diante de Morel (animada)" a mostra na área de cena da HUD, no lugar do balcão, com os cartões da
+taverna embaixo; "Inspeção ampliada" mostra a vista na pose parada, ou o estudo livre, em ampliação inteira.
+
+**Os limites que ficam:** o rosto de Morel tem poucos tons (resolve a expressão, a cicatriz e a barba, sem rugas); no
+gesto da boca, a manga passa na frente da ombreira; o fogo da lareira aparece por trás do caldeirão; o taverneiro ao
+fundo tem duas poses só.
+
+## A G3 (a G2 aprovada com as correções locais)
 
 ## A G3 (a G2 aprovada com as correções locais)
 
@@ -96,11 +193,11 @@ mais correções nessa direção.
 
 Dê dois cliques em `demo.bat` (ou `python ferramentas/prototipos/taverna/demo.py` na raiz). O jogo abre no navegador
 num **save temporário** (os saves do Jean não são lidos nem tocados), na porta 8795: o Guerreiro no Vau, com a
-campanha começada e 60 de ouro. Clique na **Taverna** na vila: a G3 aparece no topo e o balcão de sempre
+campanha começada e 60 de ouro. Clique na **Taverna** na vila: o balcão animado (G4) aparece no topo e o balcão de sempre
 embaixo. Se uma demonstração antiga estiver aberta, feche a janela dela antes (a porta é a mesma).
 
-O botão **Protótipo** na barra do alto abre o painel: a candidata (**G3**, o padrão, **G2** e **G original**: a
-troca é imediata, sem sair da taverna, no mesmo estado do jogo; a H, a prova de qualidade e da **F** à **A**, o
+O botão **Protótipo** na barra do alto abre o painel: a vista (**Balcão animado (G4)**, o padrão, **Diante de Morel
+(animada)**, **G3 estática**, **G2** e **G original**: a troca é imediata, sem sair da taverna, no mesmo estado do jogo; a H, a prova de qualidade e da **F** à **A**, o
 histórico), o estado do save (**Despensa esperando**, **Homem do canto**, **Morel conhecido**, **Morel recrutado**,
 **Sem ouro**), a **Pose parada** (o fogo e o lampião param) e o estudo **Diante de Morel**.
 
@@ -267,6 +364,9 @@ Esc e o Voltar à vila voltando à vila, a pose parada parando o fogo, o console
   da H.
 - `g2/retoques.py` e `g2/fonte.py`: a G refinada (os retoques seletivos e a fonte dela, feita da fonte da G).
 - `g3/retoques.py` e `g3/fonte.py`: a G3 (as correções locais e a fonte dela, feita da fonte da G2).
+- `g4/taverneiro.py` e `g4/fonte.py`: o balcão animado (as poses e a rotina do taverneiro, o garrafão, a fonte).
+- `morel/vista/morel-vista.aseprite` e `morel/vista/exportar.py`: a vista diante de Morel, adaptada e animada
+  (`camadas/morel-vista/`); `tela/cena-taverna-anim.js`: as duas cenas animadas.
 - `morel/aseprite/morel-mesa.aseprite` e `morel/exportar.py`: o estudo livre de Morel e a exportação dele
   (`camadas/morel/estudo.png`).
 - `h/desenho.py`, `h/taverneiro.py` e `h/fonte.py`: a H (histórico).

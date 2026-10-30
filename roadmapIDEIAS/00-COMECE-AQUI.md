@@ -8662,3 +8662,26 @@ levantar os olhos do prato. O LEIA-ME do protótipo diz o que foi desenhado no e
 painel, numa vista à parte, em ampliação inteira ou no tamanho nativo; "Caber na janela" é uma prévia reduzida, dita
 como tal.
 - **Parado aqui:** a avaliação dos dois lotes é do Jean.
+
+### 29/10/2026 (data do computador local) — A taverna: o balcão animado (G4) e a vista diante de Morel (protótipo)
+
+Nada integrado; sem som, diálogo, recompensa ou regra nova.
+
+**O balcão aprovado (a G2, com os retoques locais da G3), animado na G4.** A composição não mudou. O taverneiro limpa a
+caneca (a mão do pano dá a volta nela, o pano atrasa um tique, o tronco e a cabeça acompanham 1 px) e, a cada volta,
+para e olha os fregueses (os olhos primeiro, a cabeça depois). 8 poses, 119 tiques; a pose parada é a da G3. O garrafão
+empalhado (a "garrafa bojuda amarelada" marcada pelo Jean) refeito no eixo. Fonte `g4/aseprite/taverna-g4.aseprite`
+(feita da fonte da G3, `--criar` protegido).
+
+**A vista diante de Morel, adaptada e animada, em avaliação.** O estudo livre (que o Jean gostou) virou uma vista no
+acabamento do jogo (320×96, a paleta da G e a do retrato de Morel), com a sala organizada como a G3 vista de outro
+lugar (a lareira atrás do balcão, o barril entre ela e o taverneiro, a despensa à direita de Morel), o taverneiro na
+escala do balcão, os braços de Morel por cima da borda da mesa, a ombreira menor e a peça escura do outro ombro como no
+retrato, o colete com volume. Morel recolhe o ensopado, leva a colher à boca, volta, mastiga e, às vezes, ergue os
+olhos (12 poses, 148 tiques); o taverneiro ao fundo esfrega a caneca. Fonte `morel/vista/morel-vista.aseprite`,
+construída no editor pela ponte (a autoridade; nenhum script a gera); o estudo livre fica como histórico.
+
+**No painel:** o balcão animado (o padrão), a vista de Morel (na área de cena da HUD), a G3 estática, a G2 e a G, a
+pose parada, a inspeção ampliada. O LEIA-ME do protótipo tem as tabelas da rotina e o que foi feito no editor e o que
+foi automatizado.
+- **Parado aqui:** a avaliação das duas vistas animadas é do Jean.
