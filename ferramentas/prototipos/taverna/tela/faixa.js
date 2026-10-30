@@ -27,6 +27,8 @@
   document.body.dataset.tavMorel = document.body.dataset.tavMorel || "m1";
   const CANDS = [["g4", "Balcão animado (G4, a atuação ajustada)"], ["g4v1", "Balcão animado, a atuação anterior"],
     ["morel", "Diante de Morel (animada)"],
+    ["queda1", "Queda de braço, pose 1: a disputa (para avaliar)"], ["queda2", "Queda de braço, pose 2: nós vencemos (para avaliar)"],
+    ["queda3", "Queda de braço, pose 3: Morel vence (para avaliar)"],
     ["morel2", "Diante de Morel, a segunda versão (antes do estudo do braço)"],
     ["morel1", "Diante de Morel, a primeira versão"], ["g3", "G3 estática"],
     ["g2", "G2 aprovada (antes das correções)"], ["g", "G original"], ["h", "Candidata H (histórico)"], ["prova", "Prova: os jogadores (histórico)"], ["f", "Candidata F (histórico)"], ["e", "Candidata E (histórico)"],
@@ -54,6 +56,8 @@
     <button type="button" data-estudo="vista">Diante de Morel: a vista adaptada (pose parada)</button>
     <button type="button" data-estudo="construcao">Diante de Morel: o estudo de construção e a aplicação</button>
     <button type="button" data-estudo="trajetorias">Diante de Morel: as trajetórias do cotovelo, da mão e da colher</button>
+    <button type="button" data-estudo="queda">Queda de braço: o estudo de construção e as poses vestidas</button>
+    <button type="button" data-estudo="quedaEstudo">Queda de braço: o estudo inteiro (as poses, a planta, a pega)</button>
     <button type="button" data-estudo="estudo">Diante de Morel: o estudo livre (histórico)</button></div><span class="aviso"></span>`;
   const topo = document.getElementById("topo");
   topo.insertBefore(f, document.getElementById("acoes-topo"));
@@ -141,6 +145,10 @@
     trajetorias: { src: "/proto-tav/camadas/morel-vista/trajetorias.png", nat: [192, 96],
       titulo: "Diante de Morel: as trajetórias de uma volta (cotovelo, mão, ponta da colher), antes e depois" },
     estudo: { src: "/proto-tav/camadas/morel/estudo.png", nat: [360, 120], titulo: "Diante de Morel: o estudo livre (histórico)" },
+    queda: { src: "/proto-tav/camadas/morel-vista/queda-construcao.png", nat: [480, 192],
+      titulo: "Queda de braço: o estudo de construção (em cima) e as poses vestidas (embaixo): a disputa, nós vencemos, Morel vence" },
+    quedaEstudo: { src: "/proto-tav/camadas/morel-vista/queda-estudo.png", nat: [320, 480],
+      titulo: "Queda de braço: as três poses em formas simples, a mesa vista de cima (o caminho da pega) e a pega ampliada" },
   };
   let NAT = [360, 120];
   const maior = () => Math.max(1, Math.floor(Math.min((innerWidth - 32) / NAT[0], (innerHeight - 90) / NAT[1])));

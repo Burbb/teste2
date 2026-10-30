@@ -215,6 +215,26 @@ try {
     await proxima(p);
     await p.click("#faixa-tav .abre"); await p.click("#faixa-tav-painel [data-reduzido]"); await p.click("#faixa-tav .abre");
 
+    // 8. as três poses da queda de braço na área de cena da HUD (pelo painel), e as folhas de inspeção
+    await entrar(p);
+    for (const [cand, nome] of [["queda1", "disputa"], ["queda2", "vitoria-jogador"], ["queda3", "vitoria-morel"]]) {
+      await p.click("#faixa-tav .abre"); await p.click(`#faixa-tav-painel [data-cand="${cand}"]`); await espera(500);
+      const v = await p.evaluate(() => { const c = document.getElementById("vista"), r = c.getBoundingClientRect();
+        const d = c.getContext("2d").getImageData(0, 0, c.width, c.height).data; let n = 0;
+        for (let i = 3; i < d.length; i += 4) if (d[i]) n++;
+        return { cheia: n / (d.length / 4), larg: Math.round(r.width), alt: Math.round(r.height) }; });
+      conferir(v.cheia > 0.99, `${nome}: a pose desenhada na área de cena (${v.larg}×${v.alt})`);
+      await p.screenshot({ path: path.join(SAIDA, `${jan}-queda-${nome}.png`) });
+    }
+    for (const [vista, larg] of [["queda", 480], ["quedaEstudo", 320]]) {
+      await p.click("#faixa-tav .abre"); await p.click(`#faixa-tav-painel [data-estudo="${vista}"]`); await espera(600);
+      const est = await p.evaluate(() => { const i = document.querySelector("#estudo-morel img");
+        return { aberto: !document.getElementById("estudo-morel").hidden, nat: i.naturalWidth, largura: i.getBoundingClientRect().width }; });
+      conferir(est.aberto && est.nat === larg && est.largura % larg === 0, `${vista}: a folha em ampliação inteira (${est.largura / larg}×)`);
+      await p.screenshot({ path: path.join(SAIDA, `${jan}-inspecao-${vista}.png`) });
+      await p.keyboard.press("Escape"); await espera(200);
+    }
+    await p.click("#faixa-tav .abre"); await p.click('#faixa-tav-painel [data-cand="g4"]'); await espera(300);
     conferir(erros.length === 0, `o console sem erro${erros.length ? ": " + erros.join(" | ") : ""}`);
     await p.close();
   }

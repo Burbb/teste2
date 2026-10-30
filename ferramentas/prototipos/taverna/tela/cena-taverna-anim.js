@@ -9,6 +9,7 @@
      window.CenaTavernaMorelV2 (camadas/morel-vista-v2, antes do estudo do braço) e window.CenaTavernaMorelV1 (a
      primeira, camadas/morel-vista-v1), para comparar. Na atual, cada pagamento do evento lança as moedas na mesa
      (moedas.json) e Morel para de comer para olhar; demo.py registra a mesma vista como a cena `taverna_mesa`.
+   - window.CenaTavernaQueda: as três poses da queda de braço (paradas, para a avaliação).
 
    O tempo é o relógio da vista do jogo (o `quadro` que a cena recebe, a 100 ms): sair e entrar não cria outro relógio.
    Movimento reduzido (a preferência do sistema ou a "Pose parada" do painel): a pose parada de cada um e as chamas
@@ -135,6 +136,20 @@
     morel: { area: [182, 4, 72, 58], balao: [280, 46], foco: [218, 30] },
     despensa: { area: [274, 7, 25, 29], balao: [286, 18], foco: [286, 22] },
   }, true);
+  // as três poses da queda de braço (morel/queda/poses.py), paradas, para a avaliação: a disputa, nós vencendo, Morel
+  // vencendo, cada uma na moldura da vista (sem pontos; a animação espera as poses aprovadas)
+  const QUEDA = carregar("/proto-tav/camadas/morel-vista/", ["queda"]).queda;
+  window.CenaTavernaQueda = [0, 1, 2].map((i) => ({
+    base: (W, d) => Object.assign(base(), { d }),
+    desenhar(c) {
+      c.imageSmoothingEnabled = false;
+      c.clearRect(0, 0, QW, QH);
+      tira(c, QUEDA, i);
+    },
+    pontos: {},
+    presentes: () => ["Morel"],
+    QW, QH,
+  }));
   // a segunda versão (antes do estudo de construção do braço), com os mesmos pontos
   window.CenaTavernaMorelV2 = vistaMorel("/proto-tav/camadas/morel-vista-v2/", window.CenaTavernaMorel.pontos);
   // a primeira versão (antes das correções do espaço, da mesa e do braço), para comparar no mesmo estado
