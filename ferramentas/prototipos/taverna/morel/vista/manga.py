@@ -114,6 +114,7 @@ def manga(S, E, W, corpo_alfa, k=2.4):
         b = ante(p)
         return min(a, b) if dentro(p) else _smin(a, b, k)
     out = {}
+    manga.antebraco = set()  # os pixels do antebraço (passam na frente da ombreira quando a colher vai à boca)
     frente = set()  # os pixels do antebraço que passa na frente do braço
     x0, x1 = int(min(S[0], E[0], W[0]) - 8), int(max(S[0], E[0], W[0]) + 8)
     y0, y1 = int(min(S[1], E[1], W[1]) - 8), int(max(S[1], E[1], W[1]) + 8)
@@ -149,6 +150,8 @@ def manga(S, E, W, corpo_alfa, k=2.4):
             s = nx * LUZ[0] + ny * LUZ[1] + nz * LUZ[2]
             # ao longo da manga: 0 no ombro, L1 no cotovelo, L1 + L2 no punho
             u = ta * L1 if da <= db and ta < 1 else L1 + tb * L2
+            if u > L1:
+                manga.antebraco.add((x, y))
             if u > L1 + 3:   # o antebraço escurece aos poucos, depois da junta: meio tom
                 s -= min(0.16, (u - L1 - 3) * 0.04)
             if u > L1 + 0.86 * L2:  # o punho da manga
@@ -208,6 +211,76 @@ def _celulas(tmp):
     return pasta
 
 
+# ------------------------------------------------------------------ as ombreiras (o Jean, 30/10/2026)
+# Nas outras versões de Morel no jogo (o retrato de retratos.js, a figura de 16 px), ele tem duas ombreiras: a do ombro
+# direito em aço claro, com a guarda da espada logo acima, e a do esquerdo mais escura. A vista tinha só a esquerda, e o
+# couro do ombro aparecia acima e além da borda de cima dela.
+PLACA = {H("4e4640")[:3], H("6a6058")[:3], H("34302c")[:3]}
+COURO_ROUPA = {H("6a4a2c")[:3], H("8a5a38")[:3], H("4e3420")[:3]}
+REPOUSO = 17          # o quadro de referência (o tronco e o ombro de repouso)
+OMBRO_REPOUSO = (198, 35)
+
+
+def _dy_corpo(cel, k):
+    """Quanto o tronco do quadro k está deslocado em relação ao do repouso (a mesma imagem, deslocada)."""
+    topo = lambda q: Image.open(cel / f"morel_corpo-{q}.png").getbbox()[1]  # noqa: E731
+    return topo(k) - topo(REPOUSO)
+
+
+def corpo_corrigido(cel, k):
+    """O tronco do quadro k com a ombreira esquerda cobrindo o alto do ombro: nas linhas de cima da placa, o couro que
+    sobrava à direita da borda dela vira placa (a fresta escura na ponta, o alto aceso na primeira linha). Aplicar de
+    novo não muda nada."""
+    im = np.array(Image.open(cel / f"morel_corpo-{k}.png").convert("RGBA"))
+    dy = _dy_corpo(cel, k)
+    for y0 in range(29, 34):
+        y = y0 + dy
+        xs = [x for x in range(226, 246) if tuple(im[y, x, :3]) in PLACA and im[y, x, 3]]
+        if not xs:
+            continue
+        borda = max(xs)
+        couro = [x for x in range(borda + 1, borda + 5) if im[y, x, 3] == 0 or tuple(im[y, x, :3]) in COURO_ROUPA]
+        couro = [x for i, x in enumerate(couro) if x == borda + 1 + i]  # só o que encosta na borda
+        if y0 == 29:  # a primeira linha: os dois pixels de couro soltos acima da borda e o vão até eles
+            couro = [x for x in range(borda + 1, 241) if im[y, x, 3] == 0 or tuple(im[y, x, :3]) in COURO_ROUPA]
+        for i, x in enumerate(couro):
+            cor = "34302c" if i == len(couro) - 1 else ("6a6058" if y0 == 29 else "4e4640")
+            im[y, x] = H(cor)
+    return Image.fromarray(im, "RGBA")
+
+
+# a ombreira direita, à mão: a calota no alto do ombro (como no retrato), com a borda de cima acesa do lado da luz, a
+# fileira de rebites (o pontilhado da esquerda), a borda de baixo escura e a sombra no braço; inclinada como a linha do
+# ombro (alta junto ao pescoço, descendo para fora), assentada na raiz do braço, entre a borda de fora dele e a do
+# tronco (a borda de fora do braço fica em x 194 nessa altura); o canto de cima à esquerda em (193, 30), logo abaixo
+# da guarda da espada (y 29), no ombro de repouso
+OMBREIRA_DIR = [
+    "........hhhh...",
+    ".....hhSSSSSs..",
+    "...hSSSSSSSSss.",
+    "..hSSmSmSmSSsss",
+    ".hSSSSSSSSSsssm",
+    "hSSmSmSmSmmmmd.",
+    "SSmmmmmmmmmdd..",
+    "mmmmmmmmmddk...",
+    ".ddddddddk.....",
+    "..cccccc.......",
+]
+_OMB_COR = {"h": H("c4c6cc"), "S": H("9a9ca4"), "s": H("7a7c84"), "m": H("6e7078"), "d": H("4e4640"),
+            "k": H("34302c"), "c": COURO["c"]}
+
+
+def ombreira_direita(S):
+    """A ombreira direita no quadro: acompanha a junta do ombro (o ombro sobe e entra 1 px quando a colher vai à boca)."""
+    dx, dy = round(S[0] - 0.5) - OMBRO_REPOUSO[0], round(S[1] - 0.5) - OMBRO_REPOUSO[1]
+    out = {}
+    for y, linha in enumerate(OMBREIRA_DIR):
+        for x, ch in enumerate(linha):
+            if ch in _OMB_COR:
+                out[(193 + x + dx, 30 + y + dy)] = _OMB_COR[ch]
+    return out
+
+
 def braco(cel, k, j):
     """A camada morel_braco do quadro k: a manga nova, a sombra de um pixel no que está embaixo, a mão e a colher de
     antes, e os retoques à mão."""
@@ -220,8 +293,8 @@ def braco(cel, k, j):
     # a mão e a colher de antes, por cima (o que tem a cor delas na camada antiga)
     mao = {}
     ys, xs = np.nonzero(antes[:, :, 3])
-    for y, x in zip(ys, xs):
-        if tuple(antes[y, x, :3]) in MAO_COLHER:
+    for y, x in zip(ys, xs):  # só perto do pulso e da colher (a ombreira, também de aço, fica de fora)
+        if tuple(antes[y, x, :3]) in MAO_COLHER and _seg((x + 0.5, y + 0.5), j["W"], j.get("T", j["W"]))[1] <= 6:
             mao[(int(x), int(y))] = tuple(int(v) for v in antes[y, x])
     out = dict(m)
     out.update(mao)
@@ -237,6 +310,10 @@ def braco(cel, k, j):
                     r, g, b = camada[q[1], q[0], :3]
                     out[q] = (int(r * 0.68), int(g * 0.68), int(b * 0.68), 255)
                     break
+    # a ombreira por cima da manga, mas atrás do antebraço e da mão (na boca, o antebraço sobe na frente do ombro)
+    for q, cor in ombreira_direita(j["S"]).items():
+        if q not in manga.antebraco and q not in mao:
+            out[q] = cor
     for q, tom in RETOQUES.get(k, {}).items():
         if tom == ".":
             out.pop(q, None)
@@ -251,13 +328,18 @@ def braco(cel, k, j):
 
 _GRAVAR = r'''
 local s = app.open(app.params["fonte"])
-local camada
-for _, l in ipairs(s.layers) do if l.name == "morel_braco" then camada = l end end
+local camada, corpo
+for _, l in ipairs(s.layers) do
+  if l.name == "morel_braco" then camada = l end
+  if l.name == "morel_corpo" then corpo = l end
+end
 local n = 0
-app.transaction("A manga nova", function()
+app.transaction("A manga nova e as ombreiras", function()
   for i, f in ipairs(s.frames) do
     local img = Image{ fromFile = app.params["pasta"] .. "/braco-" .. (i - 1) .. ".png" }
     s:newCel(camada, f, img, Point(0, 0))
+    local tr = Image{ fromFile = app.params["pasta"] .. "/corpo-" .. (i - 1) .. ".png" }
+    s:newCel(corpo, f, tr, Point(0, 0))
     n = n + 1
   end
 end)
@@ -272,6 +354,7 @@ def _gravar(fonte, cel, tmp):
     pasta.mkdir(exist_ok=True)
     for k, j in enumerate(J):
         braco(cel, k, j).save(pasta / f"braco-{k}.png")
+        corpo_corrigido(cel, k).save(pasta / f"corpo-{k}.png")
     lua = pathlib.Path(tmp) / "gravar.lua"
     lua.write_text(_GRAVAR, encoding="utf-8")
     r = subprocess.run([aseprite(), "-b", "--script-param", f"fonte={fonte}", "--script-param", f"pasta={pasta}",
