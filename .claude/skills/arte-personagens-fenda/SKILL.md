@@ -66,9 +66,13 @@ Vistas de verdade (imagens, folhas, sequências), não só resumos de busca:
    uns 30°, com a mão um pouco à frente do queixo; ou (b) curvar o tronco e baixar a cabeça uns 8 px. Escolha
    conscientemente (Morel ficou com a; a cabeça desce 3 px ao encontro da colher) e registre por quê. Se nenhuma
    serve, mude a cena (a altura da mesa, a distância), não o pixel.
-6. **O ombro e o tronco participam.** Quando a mão sobe para a boca, o ombro sobe e entra 1 px (a clavícula sobe e
-   avança); o corpo desce 1 px na direção da tigela enquanto ele come. Nunca prenda a junta do ombro embaixo de uma
-   peça de equipamento na altura errada.
+6. **O ombro e o tronco participam quando o gesto pede, e só o quanto pede.** Uma ação natural não exige o corpo
+   inteiro: a participação vem do esforço, do alcance, dos apoios e da intenção, e as partes estáveis também fazem
+   parte da atuação. Em Morel, a mão vai à boca, mais alto que o ombro: o ombro sobe e entra 1 px (a clavícula sobe e
+   avança), o corpo desce 1 px para a tigela e a cabeça vai ao encontro da colher (a boca é o alvo do gesto). No
+   taverneiro da G4, a mão do pano trabalha na altura das mãos, sem esforço: só o cotovelo e o ombro do pano acompanham
+   (1 px) e o tronco e a cabeça ficam; olhar os fregueses é outra ação, na pausa. Na martelada do ferreiro, o esforço
+   leva o corpo todo. Nunca prenda a junta do ombro embaixo de uma peça de equipamento na altura errada.
 7. **Vista a figura sobre a construção.** A roupa segue os volumes e mostra a dobra: o braço e o antebraço como dois
    volumes, cada um com a sua luz; o antebraço um tom abaixo do braço (separa os segmentos e separa o antebraço da mesa,
    que tinha o tom do braço); o antebraço que cruza na frente projeta uma linha de sombra no braço; o vinco de dentro do
@@ -126,3 +130,4 @@ As fontes do caso: `ferramentas/prototipos/taverna/morel/estudo-construcao/` (o 
 | A colher que muda de tamanho | a ponta interpolada solta | a ferramenta rígida a partir do pulso (passo 4) |
 | Saltos de 9 a 11 px a cada 200 ms | poucas poses, todas de 2 tiques | passagens no espaço, até ~6 px por desenho, o tempo das cenas aprovadas (passo 10) |
 | O guidão do ferreiro, a barra do jogador (antes) | o alcance não medido | arte-cenas-fenda, seções 5a e 5b (o alcance decide o corpo) |
+| O corpo inteiro limpando a caneca (a primeira G4) | o tronco e a cabeça movidos por regra a cada passada | a participação pelo esforço e pelo alcance (passo 6; arte-cenas-fenda, 5b) |

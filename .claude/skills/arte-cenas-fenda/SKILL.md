@@ -150,9 +150,10 @@ Braços, ombros e mãos em ação (o braço que encurta, gruda no peito ou some 
 - **Estude movimento de verdade** (um GIF, um vídeo do Jean, uma animação de jogo) e registre o que foi observado
   quadro a quadro e o que foi só lido numa página ou visto numa imagem parada.
 - **Poses, apoios e contatos antes do polimento.** Decida o que fica parado (os pés no chão, a mão na ferramenta, a
-  peça na bigorna) e redesenhe cada pose inteira a partir desses apoios: o corpo participa (os joelhos dobram, o
-  quadril desce, o tronco inclina, a barriga achata, o cabelo e a barba acompanham) **sem separar o tronco das pernas**
-  e sem uma metade deslizar por cima da outra.
+  peça na bigorna) e redesenhe cada pose inteira a partir desses apoios. Quando o esforço pede (a martelada), o corpo
+  participa (os joelhos dobram, o quadril desce, o tronco inclina, a barriga achata, o cabelo e a barba acompanham)
+  **sem separar o tronco das pernas** e sem uma metade deslizar por cima da outra; quando não pede, o tronco firme é
+  parte da pose (seção 5b, "Quanto do corpo participa").
 - **Mantenha conectado o que a ação exige:** a mão fechada na tenaz, a tenaz presa na peça, a peça apoiada; o
   balanço do corpo não arrasta o objeto. Um movimento deliberado do objeto (virar a peça) é um momento à parte,
   sempre acompanhado pela mão.
@@ -163,25 +164,42 @@ Braços, ombros e mãos em ação (o braço que encurta, gruda no peito ou some 
 
 ## 5b. A atuação, passo a passo (a curandeira, 28/10/2026)
 
-O ferreiro aprovado não impediu o erro de reaparecer na curandeira: o braço do pilão ficou limpo, com 12 poses a
-100 ms, sobre um tronco e uma cabeça desenhados uma vez só, e o resultado foi robótico. **Braço limpo e fluido sobre um
-corpo imóvel ainda é uma animação robótica.** A correção não é "mexer tudo": é decidir, pela atividade, quem mexe e
-quanto, nesta ordem e por escrito, antes dos quadros intermediários.
+Na curandeira, o braço do pilão ficou limpo, com 12 poses a 100 ms, e o resultado foi robótico; a resposta que funcionou
+lá (os ombros e a cabeça acompanhando o esforço do pilão) foi depois aplicada como regra no taverneiro da G4, onde não
+havia esforço, e leu como o corpo inteiro limpando a caneca. Nenhum dos dois erros é "mexer pouco" ou "mexer muito": é não decidir, pela atividade, quem mexe e
+quanto. Faça isso nesta ordem e por escrito, antes dos quadros intermediários.
+
+**Quanto do corpo participa** (o Jean, 29/10/2026): uma ação natural não exige movimento do corpo inteiro. A
+participação depende do **esforço**, do **alcance**, dos **apoios** e da **intenção**; as partes estáveis também fazem
+parte da atuação (é o tronco firme que deixa a mão trabalhar). Três casos diferentes:
+- **Martelar** (o ferreiro): esforço grande e golpe longo; os joelhos, o quadril, o tronco e os ombros participam, e a
+  cabeça acompanha o golpe.
+- **Limpar uma caneca** (o taverneiro da G4): pouco esforço e alcance curto; conduzem a mão do pano e a mão que segura
+  a caneca (pequenos ajustes de pega); acompanham o antebraço, o cotovelo e o ombro do pano (o alcance e a pressão,
+  1 px); o tronco fica; a cabeça olha o trabalho, parada. O pano segue o contato e a gravidade, sem balanço.
+- **Olhar para alguém** é uma ação própria, com a sua hora (uma pausa, um som, alguém que chega): os olhos sobem e a
+  cabeça vai junto. Não é consequência de cada gesto da mão; a cabeça não "acompanha" uma passada de pano.
+
+Diminuir igualmente a amplitude de tudo não resolve: decida parte por parte o que precisa mexer e o que dá
+estabilidade.
 
 1. **A atividade e os apoios.** Uma frase do que a pessoa faz ("mói ervas, olha a mistura, cheira uma pitada, volta a
    moer") e a lista do que não se mexe enquanto ela faz (os pés, a barra da saia, o almofariz no tampo, a mão que
    segura a borda, o pé do pilão dentro da boca).
-2. **Quem conduz, quem acompanha, quem fica**, numa tabela por trecho da rotina. Na curandeira, moendo: conduz a mão no
-   pilão; acompanham o cotovelo (sai do comprimento fixo do braço), os ombros (1 px à frente quando o pilão vai longe,
-   1 px abaixo onde a pedra aperta) e a cabeça (um quadro depois dos ombros); ficam o quadril e a saia. Olhando a
+2. **Quem conduz, quem acompanha, quem fica**, numa tabela por trecho da rotina, pelo esforço e pelo alcance (o
+   quadro acima). Na curandeira, moendo (a pedra aperta e o pilão vai longe do corpo): conduz a mão no pilão;
+   acompanham o cotovelo (sai do comprimento fixo do braço), os ombros (1 px à frente quando o pilão vai longe, 1 px
+   abaixo onde a pedra aperta) e a cabeça (um quadro depois dos ombros, porque ela olha a mistura que aperta); ficam o
+   quadril e a saia. Olhando a
    mistura: conduz o tronco; o quadril vai para trás, a saia acompanha no alto, a barra fica. O que fica parado é uma
    decisão, não um esquecimento.
 3. **O alcance decide o corpo.** Braço com comprimentos fixos (ombro-cotovelo, cotovelo-mão) e o cotovelo calculado;
    se a mão não alcança o ponto, o desenho falha (um `assert`) em vez de esticar o braço. Quem não alcança leva o corpo
-   junto, e é daí que o tronco participa de verdade. Se a geometria força uma postura ruim, mude a cena, não o pixel: a
+   junto, e é daí que o tronco participa de verdade (se a mão alcança sem ele, o tronco fica). Se a geometria força uma postura ruim, mude a cena, não o pixel: a
    Pita, de pé no chão, trabalhava com o almofariz na altura do peito e o braço esticado na altura do ombro; um
    banquinho de madeira (ela sobe nele para alcançar a bancada da Marta) e 2 px mais perto resolveram.
-4. **Poses-chave do corpo inteiro**, numa folha de trabalho com a figura completa (pés até a cabeça) em cada uma: o
+4. **Poses-chave do corpo inteiro**, numa folha de trabalho com a figura completa (pés até a cabeça) em cada uma,
+   também as partes que ficam paradas (é na figura inteira que se vê se o que fica dá apoio ao que mexe): o
    início, as pontas do gesto, a pausa, o contato com cada objeto. A ferramenta com tamanho fixo em todas (o pilão é um
    vetor de comprimento constante, desenhado linha a linha com a mesma espessura).
 5. **Uma rotina, não um laço.** Uma atividade tem trechos com intenção e pausas: trabalhar algumas vezes, desacelerar,
@@ -190,7 +208,8 @@ quanto, nesta ordem e por escrito, antes dos quadros intermediários.
    por uma pose em que a ferramenta já está igual (a pega deixa o pilão onde a pose 1 do giro o tem). A linha do tempo
    sai da fonte (um JSON gerado), não é repetida na tela.
 6. **As passagens:** em cada troca de trecho, uma parte vai na frente e as outras chegam depois (a mão antes do corpo,
-   o corpo antes da cabeça, a cabeça vira por último); nenhuma pose troca tronco, quadril, cabeça e mão de uma vez.
+   o corpo antes da cabeça, a cabeça vira por último), entre as partes que participam daquele trecho; nenhuma pose
+   troca tronco, quadril, cabeça e mão de uma vez.
    Meça quanto cada parte anda de um tique para o outro (≤ 1 px no corpo, a mão um pouco mais); a contagem de pixels
    mudados serve para achar candidatos a pulo, mas engana (deslocar o tronco 1 px muda muitos pixels e lê como
    movimento pequeno).
@@ -202,12 +221,12 @@ quanto, nesta ordem e por escrito, antes dos quadros intermediários.
    de vez em quando, e o braço parecia de outro jogo (contínuo demais, como um vídeo sobre pixel art). O que funcionou
    (quarta passada): poucas poses escolhidas pela expressão (7 por volta, não 12), cada uma sustentada de 2 a 3
    tiques, e o tempo concentrado no momento de esforço (a pressão longe do corpo dura 4 a 6 tiques, e a cabeça termina
-   de descer no meio dela, como acompanhamento). Mantenha a duração da ação: redistribua, não acelere. O relógio da
+   de descer no meio dela, porque ali o esforço pede). Mantenha a duração da ação: redistribua, não acelere. O relógio da
    cena continua a 100 ms (o fogo, a troca de pose); é a pose que segura mais tempo.
 9. **Conferência em três camadas, separadas:** a **limpeza técnica** (pixels soltos, buracos, a manga ligada ao braço,
    nenhum pedaço do avental virando braço, a ferramenta do mesmo tamanho) no zoom; a **quantidade de quadros e o
-   ritmo** na linha do tempo; a **atuação** (o que a pessoa está fazendo, onde ela olha, se o corpo reage ao esforço,
-   se as pausas têm intenção, se a volta ao começo some) na sequência tique a tique e no jogo, no tamanho real. Passar
+   ritmo** na linha do tempo; a **atuação** (o que a pessoa está fazendo, onde ela olha, se o corpo reage na medida do
+   esforço, sem mexer o que deveria dar apoio, se as pausas têm intenção, se a volta ao começo some) na sequência tique a tique e no jogo, no tamanho real. Passar
    na primeira não diz nada das outras duas.
 
 ## 5a. Ferramenta, braço e contato (o golpe do ferreiro, 28/10/2026)
@@ -273,7 +292,8 @@ ferramenta: o pilão no almofariz, a faca na tábua, a concha no caldeirão.
 
 | Erro | O que causou | Como evitar |
 |---|---|---|
-| O trabalho robótico com o braço limpo | tronco, cabeça e saia desenhados uma vez; só o braço em 12 poses | a tabela de quem conduz, acompanha e fica; o alcance fixo levando o corpo (5b) |
+| O trabalho robótico com o braço limpo | só o braço em 12 poses, sem decidir quem acompanha o esforço e o alcance | a tabela de quem conduz, acompanha e fica; o alcance fixo levando o corpo quando a mão não chega (5b) |
+| O taverneiro limpando a caneca com o corpo inteiro (a primeira G4) | o tronco e a cabeça descendo a cada passada, por regra, enquanto a mão do pano andava 1 a 2 px | a mão do pano conduz uma volta na caneca, o cotovelo e o ombro do pano acompanham 1 px, a mão da caneca ajusta a pega; o tronco e a cabeça ficam; olhar os fregueses é uma ação à parte, na pausa (5b, "Quanto do corpo participa") |
 | Mais quadros sem melhorar | o mesmo gesto isolado subdividido | uma rotina com desaceleração, pausa e ação secundária (5b, passo 5) |
 | O braço da menina como uma barra no ombro | a bancada de adulto: o almofariz na altura do peito dela | mudar a cena (o banquinho), não esticar o braço (5b, passo 3) |
 | Os maços como pinhatas | o mesmo saco simétrico em cores diferentes, o nó em bloco | cada planta pela silhueta dela, à mão: o barbante e as voltas da amarração, os talos, o leque, a espiga, a cabeça redonda, o cacho de bolinhas |
