@@ -2,9 +2,10 @@
 
 **O estado** (30/10/2026): as duas vistas **aprovadas** pelo Jean (o balcão da G4 e a vista diante de Morel, com as
 últimas correções) estão **ligadas ao encontro** no protótipo: sentar com o homem do canto leva à mesa dele, as opções do
-evento aparecem ali, o pagamento lança moedas na mesa, e a conversa acaba de volta ao balcão. A **queda de braço** ganhou
-uma **vista de detalhe** própria (a segunda proposta: o estudo e **três poses acabadas, em avaliação**; nada animado); a
-primeira proposta, na câmera da conversa, fica como histórico. Nada integrado à produção.
+evento aparecem ali, o pagamento lança moedas na mesa, e a conversa acaba de volta ao balcão. Na **queda de braço**, a
+terceira proposta é **só a pose central**, desenhada à mão sobre a construção (em avaliação; as vitórias e a animação
+esperam ela ser aprovada); a segunda (a vista de detalhe calculada) e a primeira (na câmera da conversa) ficam como
+histórico. Nada integrado à produção.
 
 ## O encontro à mesa de Morel (30/10/2026; protótipo)
 
@@ -50,10 +51,58 @@ bebida só quando ele é candidato agora). `morel/conferir-encontro.mjs` percorr
 4. "Homem do canto, 10 de ouro" com o dado em 1: perde e a conversa acaba (sem a pergunta dos 25).
 5. "Morel conhecido" e "Bebida: Morel puxa conversa": a bebida leva à mesa de Morel (já conhecido).
 6. "Pose parada": as moedas já na mesa, nada se mexe.
-7. As três poses da queda de braço: "Queda de braço, vista de detalhe 1/2/3" no painel (na área de cena); as folhas em
-   "Inspeção ampliada"; a primeira proposta, para comparar, em "primeira proposta 1/2/3".
+7. A pose central da queda de braço: "Queda de braço, terceira proposta: a disputa" no painel (na área de cena); a
+   comparação com a vista aprovada e as guias em "Inspeção ampliada"; as propostas anteriores, para comparar, em
+   "segunda proposta" e "primeira proposta". Para ver o dado: com a pose à vista, um teste de Força (no console,
+   `rolagem({atributo: "Força", cd: 14, d20: 10, mod: 4, total: 14, sucesso: true})`) rola embaixo da arte.
 
-## A queda de braço: a vista de detalhe (30/10/2026; a segunda proposta, em avaliação, nada animado)
+## A queda de braço: a pose central desenhada à mão (30/10/2026; a terceira proposta, em avaliação)
+
+**O pedido do Jean:** a segunda proposta separava bem os braços, mas o acabamento parecia um modelo 3D simplificado em
+baixa resolução (os braços como tubos facetados, o peito um bloco com o vermelho aplicado como placa, a ombreira
+arredondada, as juntas do boneco à mostra, o pontilhado igual em áreas grandes). Só a pose central, para acertar a
+linguagem: a construção como guia oculta e o acabamento redesenhado por cima, com a vista aprovada de Morel comendo ao
+lado; a câmera um pouco mais baixa e menos inclinada; mãos simples (duas formas, um polegar no máximo); o dado inteiro
+e a disputa à vista enquanto ele gira.
+
+**A câmera** (`morel/queda3/juntas.py`): 40° do nosso lado e 15° acima do tampo (antes 50° e 30°), um pouco mais perto
+(~2 px por cm na pega), a pega no meio do quadro, em (150, 26). O tampo vira uma faixa; Morel ganha porte (o peito, a
+ombreira, a ponta da barba no alto); à esquerda entram a vela, a caneca e a tigela deslizada (objetos da cena aprovada,
+na mesma mesa), no lugar da parede vazia. O nosso ombro fica no canto de baixo, na sombra (desta altura ele entra no
+quadro; o tronco, não). Os dois derrubes continuam correndo de lado e cabem no quadro (a guia `guia_vitorias`: o arco
+da pega e os dois fins, com os antebraços de quem perde).
+
+**O desenho** (`morel/queda3/pose.py`, a fonte `disputa.aseprite`; a autoridade é a fonte): cada elemento é uma silhueta
+e grupos de luz escolhidos à mão, não volume calculado: o tampo com as juntas para o ponto de fuga, o halo da vela (o
+único pontilhado grande, na passagem da luz), as arestas; a frente do balcão no escuro, esquentando para a esquerda; o
+peito de Morel (o couro em tons de bloco, mais escuro atrás do braço direito, com a sombra que o braço faz no peito; a
+lapela acesa; o colete sobre o corpo, com a borda clara do lado da vela, a costura, as duas tiras curvando com o peito e
+as fivelas quadradas; a gola, o pescoço e a borda da barba; o punho da espada; a ombreira em cunha, estreita e escura,
+como na vista, com o pontilhado só nela); o braço direito dele (a manga de couro com a aresta acesa, a costura do ombro,
+as dobras de dentro do cotovelo, o antebraço um tom abaixo, o punho escuro, a sombra do cotovelo no tampo); o esquerdo
+saindo da ombreira até a mão na borda de lá; o nosso antebraço de lã (a aresta acesa, as dobras perto do cotovelo, o
+punho escuro); a pega em duas formas (a nossa mão na frente, mais clara, com o polegar por cima; a de Morel atrás, mais
+escura e quente, o nó do polegar em cima e os dedos numa faixa só dobrada sobre a borda do nosso punho). As camadas da
+construção (`guia`) e dos derrubes (`guia_vitorias`) ficam ocultas e fora da exportação.
+
+**O dado** (`tela/rolagem-queda.js`, só no protótipo): a captura que mostrava o dado cortado era um recorte da
+conferência; na tela inteira ele estava inteiro. O que atrapalhava era o layout: o grupo do dado centrado na altura da
+cena e o véu escurecendo a arte. Com a pose da queda de braço à vista, o grupo desce para logo embaixo da arte (inteiro
+na janela; a doca fica atrás dele por um instante) e o véu cobre só a página: a disputa fica clara enquanto o dado
+gira. O dado, o tempo, o som, o resultado e a descida até a tirinha são os do jogo.
+
+**Conferido:** a fonte exportada idêntica ao desenho; a pose na área de cena a 1920×945 e 1280×720, sozinha e com o dado
+(o dado inteiro, embaixo da arte, o véu fora da disputa); a folha lado a lado com a vista aprovada.
+**O que depende do olho do Jean:** se o acabamento está na linguagem da vista aprovada (o couro, o colete sobre o corpo,
+a ombreira, as mãos simples); se a pega lê firme e cada mão segue até o seu antebraço; se o nosso ombro no canto e o
+enquadramento funcionam no jogo.
+
+A sequência futura continua a mesma (preparar a pega, o esforço contido enquanto o dado gira, revelar o resultado, o
+derrube, a pausa), e a continuidade da tigela também (abaixo, na segunda proposta).
+
+## A queda de braço: a vista de detalhe (30/10/2026; a segunda proposta, histórico)
+
+Recusada no acabamento (acima); a câmera, a pesquisa, a construção e a continuidade da tigela continuam valendo.
 
 **O pedido do Jean:** a primeira proposta não comunicava a disputa (as mãos numa massa só, a mão derrubada indistinta na
 nossa vitória, o nosso antebraço parecendo em pé na de Morel, a ação pequena na câmera da conversa). Uma vista própria,

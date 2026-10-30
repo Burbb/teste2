@@ -8799,3 +8799,22 @@ foi automatizado.
   ele rolando, o console): tudo certo. O código do jogo não mudou nesta rodada (a bateria anterior vale; pyflakes nos
   arquivos novos).
 - **Parado aqui:** a avaliação das três poses e do enquadramento é do Jean; a animação espera a aprovação.
+
+### 30/10/2026 (data do computador local) — A taverna: a pose central da queda de braço desenhada à mão (protótipo)
+
+- **Pedido do Jean:** a vista de detalhe não foi aprovada: o acabamento parecia um modelo 3D simplificado em baixa
+  resolução. Só a pose central: a construção como guia oculta e o acabamento redesenhado na linguagem da vista aprovada
+  de Morel comendo; a câmera mais baixa e menos inclinada; mãos simples; o dado inteiro e a disputa à vista enquanto ele
+  gira; nas skills, a diferença entre o estudo de construção e o acabamento. Nada animado nem integrado.
+- **Feito** (a seção "A queda de braço: a pose central desenhada à mão" do LEIA-ME do protótipo): a câmera a 40° e 15°
+  (`morel/queda3/juntas.py`), a pega no meio, o tampo numa faixa, a vela, a caneca e a tigela deslizada à esquerda;
+  `morel/queda3/pose.py` e a fonte `disputa.aseprite`: o tampo, o balcão, o peito de Morel (o couro em blocos, o colete
+  sobre o corpo com as tiras e as fivelas, a ombreira em cunha, a barba no alto), os braços com mangas, dobras e punhos,
+  a pega em duas formas, cada elemento desenhado por cima da guia, com a vista aprovada ao lado; as guias da construção
+  e dos dois derrubes ocultas. No protótipo, com a pose à vista, o dado rola embaixo da arte e o véu fica fora dela
+  (`tela/rolagem-queda.js`; o corte da captura anterior era do recorte). As duas skills de arte separam o estudo do
+  acabamento; a terceira tentativa está registrada como em avaliação.
+- **Conferido:** a fonte exportada idêntica ao desenho; `morel/conferir-encontro.mjs` a 1920×945 e 1280×720 (a pose
+  sozinha e com o dado: inteiro, embaixo da arte, o véu fora da disputa; o encontro e o pagamento como antes; o
+  console): tudo certo. O código do jogo não mudou.
+- **Parado aqui:** a avaliação da pose central é do Jean; as vitórias e a animação esperam a aprovação dela.
