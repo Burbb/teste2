@@ -161,6 +161,10 @@ Braços, ombros e mãos em ação (o braço que encurta, gruda no peito ou some 
   ritmo de uma ação (53 quadros de 100 ms, a martelada) não é padrão para outras.
 - **Confira ciclos completos:** os quadros intermediários, a passagem do fim para o começo, a repetição, o movimento
   reduzido (uma pose parada coerente), e que sair e entrar de novo não acumule relógios.
+- **Um acontecimento do motor na cena** (o pagamento na mesa de Morel, 30/10/2026): o motor decide e conta (a cobrança,
+  o resultado); a cena só desenha uma vez por acontecimento que ele mandou, e repetir a mensagem não repete o efeito. O
+  que ele deixa na cena fica até ela acabar (as moedas não somem), e quem estava na rotina reage só o que o fato pede,
+  com as poses que já existem (a colher volta ao descanso pelo caminho mais curto, os olhos vão ao que caiu).
 
 ## 5b. A atuação, passo a passo (a curandeira, 28/10/2026)
 

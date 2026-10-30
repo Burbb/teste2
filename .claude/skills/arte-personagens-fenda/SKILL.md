@@ -117,6 +117,29 @@ As fontes do caso: `ferramentas/prototipos/taverna/morel/estudo-construcao/` (o 
 `juntas.py` e `vestir.lua`, que refaz o braço vestido da fonte pixel a pixel) e `morel/vista/morel-vista.aseprite`
 (as juntas de cada quadro na camada `guia`, um pixel de cor por junta).
 
+## Dois corpos ligados por um contato (a queda de braço, 30/10/2026)
+
+Quando duas figuras se seguram (uma queda de braço, um aperto de mão, puxar alguém), o contato é a junta que as duas
+dividem, e o método é o mesmo com uma condição a mais (`ferramentas/prototipos/taverna/morel/queda/`):
+- **A câmera em números antes das juntas.** Numa vista aprovada, tire a câmera do que já está desenhado (as linhas de
+  fuga do tampo, as bordas, um ombro conhecido) e ponha as duas figuras no mesmo espaço; a figura de perto fica maior
+  na tela pela distância, não por escolha.
+- **O contato só existe onde as duas cadeias alcançam.** Com os apoios fixos (os cotovelos no tampo) e os comprimentos
+  fixos, a mão comum fica num círculo (as duas distâncias iguais às de cada braço); as poses-chave são pontos desse
+  círculo, e a animação anda por ele. Desenhe o círculo na guia e numa planta vista de cima: é ela que mostra o espaço
+  na mesa e o lado de cada desfecho.
+- **A regra da ação decide o lado.** Na queda de braço com a mão direita, quem vence leva a mão do outro para a própria
+  esquerda; os dois desfechos caem para lados opostos do arco, e um dos antebraços sempre aponta para a câmera (fica
+  curto): dê a ele pistas de que está deitado (a sombra no tampo, a mão por baixo da outra).
+- **A pega funciona antes de simplificar:** estude as duas mãos ampliadas (o dorso, os dedos de uma sobre o dorso da
+  outra, os polegares) e só então reduza a bolinhas de pele com dois tons de pele diferentes.
+- **Quem é quem:** cor e material diferentes para cada braço (o couro dele, a lã nossa), a pele de um um pouco mais
+  clara, e a sobreposição decidida pela profundidade (o braço de perto passa na frente).
+- **O braço de quem olha** (a primeira pessoa): só o antebraço e a mão; o braço de cima sai pela borda do quadro na
+  direção do ombro, que fica embaixo da câmera. Evita o escorço do ombro e do peito sem esconder o apoio.
+- **Os objetos saem do caminho e voltam pelo mesmo caminho** (a tigela empurrada antes, puxada de volta depois): planeje
+  isso junto das poses, para nada pular de lugar entre as vistas.
+
 ## Erros que já aconteceram
 
 | Erro | Causa | O que fazer |
