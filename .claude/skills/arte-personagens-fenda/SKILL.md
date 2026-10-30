@@ -120,25 +120,43 @@ As fontes do caso: `ferramentas/prototipos/taverna/morel/estudo-construcao/` (o 
 ## Dois corpos ligados por um contato (a queda de braço, 30/10/2026)
 
 Quando duas figuras se seguram (uma queda de braço, um aperto de mão, puxar alguém), o contato é a junta que as duas
-dividem, e o método é o mesmo com uma condição a mais (`ferramentas/prototipos/taverna/morel/queda/`):
-- **A câmera em números antes das juntas.** Numa vista aprovada, tire a câmera do que já está desenhado (as linhas de
-  fuga do tampo, as bordas, um ombro conhecido) e ponha as duas figuras no mesmo espaço; a figura de perto fica maior
-  na tela pela distância, não por escolha.
-- **O contato só existe onde as duas cadeias alcançam.** Com os apoios fixos (os cotovelos no tampo) e os comprimentos
-  fixos, a mão comum fica num círculo (as duas distâncias iguais às de cada braço); as poses-chave são pontos desse
-  círculo, e a animação anda por ele. Desenhe o círculo na guia e numa planta vista de cima: é ela que mostra o espaço
-  na mesa e o lado de cada desfecho.
-- **A regra da ação decide o lado.** Na queda de braço com a mão direita, quem vence leva a mão do outro para a própria
-  esquerda; os dois desfechos caem para lados opostos do arco, e um dos antebraços sempre aponta para a câmera (fica
-  curto): dê a ele pistas de que está deitado (a sombra no tampo, a mão por baixo da outra).
-- **A pega funciona antes de simplificar:** estude as duas mãos ampliadas (o dorso, os dedos de uma sobre o dorso da
-  outra, os polegares) e só então reduza a bolinhas de pele com dois tons de pele diferentes.
-- **Quem é quem:** cor e material diferentes para cada braço (o couro dele, a lã nossa), a pele de um um pouco mais
-  clara, e a sobreposição decidida pela profundidade (o braço de perto passa na frente).
-- **O braço de quem olha** (a primeira pessoa): só o antebraço e a mão; o braço de cima sai pela borda do quadro na
-  direção do ombro, que fica embaixo da câmera. Evita o escorço do ombro e do peito sem esconder o apoio.
-- **Os objetos saem do caminho e voltam pelo mesmo caminho** (a tigela empurrada antes, puxada de volta depois): planeje
-  isso junto das poses, para nada pular de lugar entre as vistas.
+dividem. O caso: `ferramentas/prototipos/taverna/morel/queda2/` (`juntas.py`, `maos.py`, `estudo.py`, `poses.py`). A
+primeira tentativa (`morel/queda/`, na câmera da conversa) não resolveu: a ação pequena, as mãos numa massa só, os
+desfechos indo para perto e para longe da câmera. Ela fica como histórico, não como exemplo.
+
+**O que o estudo demonstrou** (as poses estão em avaliação pelo Jean; o método vale para a construção):
+- **A regra real decide o movimento, e o movimento decide a câmera.** Pela mesa e pelas regras da WAF, os cotovelos
+  ficam quase alinhados (cerca de 38 cm um do outro, na direção de quem está sentado para quem está do outro lado), a
+  pega é palma com palma, com os polegares em cima, e quem vence leva a mão do outro para a própria esquerda: os
+  desfechos correm de lado. Uma câmera atrás de quem joga põe esse movimento em profundidade (escorço nos dois fins);
+  ao longo da linha dos cotovelos, um antebraço esconde o outro na disputa; de lado demais, a mesa vira um losango no
+  canto. Três quartos (50° do nosso lado, 30° acima) mostrou o V da disputa aberto e os dois fins para os lados do
+  quadro, com o braço de quem perde deitado e comprido no tampo. Teste as câmeras em números, com esboços simples, antes
+  de desenhar.
+- **O contato só existe onde as duas cadeias alcançam:** com os apoios fixos (os cotovelos) e os comprimentos fixos, a
+  mão comum anda num círculo; as poses-chave são pontos dele. Desenhe o círculo na guia, numa planta vista de cima (o
+  espaço na mesa, o lado de cada fim, os objetos) e sobreposto à pose do meio (o quadro comporta o caminho?).
+- **O que a tela põe por cima entra na composição:** o dado dos testes rola no meio do palco; a pega da disputa ficou
+  no alto e à esquerda, fora dele nas duas janelas (medido: na arte, x 100 a 220 a partir de y 63 a 1920×945; x 70 a
+  250 a partir de y 45 a 1280×720).
+- **A pega se constrói antes de simplificar,** no mesmo espaço dos braços: os punhos (elipsoides), os dedos (cápsulas, um
+  por dedo), os polegares; a nossa mão do lado dela, a dele do outro, os dedos de cada um dobrados sobre o dorso do
+  outro. Nos fins, a mão de quem perde fica de dorso no tampo e passa um pouco do punho de quem vence (senão o punho de
+  cima e o antebraço que vem da câmera a escondem).
+- **Duas peles parecidas se separam pelo valor, não pelo contorno:** a de um mais escura e quente; um pixel de sombra da
+  pele de quem está atrás onde uma parte passa atrás da outra (a mão do outro, outro dedo, o polegar por cima); os
+  pontinhos que isso deixa saem numa limpeza; e o que explica a pega (os dedos dele sobre o nosso dorso, em listras,
+  cada um com o lado de cima claro e o vão escuro) é retocado à mão por cima da construção. Sem isso, as duas mãos
+  voltaram a ser uma massa.
+- **Quem é quem até o ombro:** cor e material de cada braço (o couro dele, a lã nossa); o nosso braço sai pela borda do
+  quadro na direção do ombro (o tronco fora dele), o dele chega ao peito, com o colete e a ombreira (a identidade).
+- **Os objetos saem do caminho e voltam pelo mesmo caminho:** a tigela deslizada para longe dos dois fins, na mesa que a
+  vista aprovada estabelece (a mesa termina perto da quina; foi a disputa que andou para oeste), e puxada de volta
+  antes de comer.
+
+**Ainda hipótese** (depende da avaliação no jogo): se as vitórias se reconhecem sem legenda no tamanho da HUD; se 2 px
+por cm na pega é perto o bastante; se o volume calculado do peito e dos braços, com o acabamento em degraus, segura a
+identidade de Morel ao lado das cenas desenhadas à mão.
 
 ## Erros que já aconteceram
 
@@ -154,3 +172,5 @@ dividem, e o método é o mesmo com uma condição a mais (`ferramentas/prototip
 | Saltos de 9 a 11 px a cada 200 ms | poucas poses, todas de 2 tiques | passagens no espaço, até ~6 px por desenho, o tempo das cenas aprovadas (passo 10) |
 | O guidão do ferreiro, a barra do jogador (antes) | o alcance não medido | arte-cenas-fenda, seções 5a e 5b (o alcance decide o corpo) |
 | O corpo inteiro limpando a caneca (a primeira G4) | o tronco e a cabeça movidos por regra a cada passada | a participação pelo esforço e pelo alcance (passo 6; arte-cenas-fenda, 5b) |
+| As duas mãos de uma pega numa massa só (a primeira queda de braço) | tons de pele parecidos, a pega desenhada direto na escala da cena | a pega construída com formas simples e separada pelo valor (a pele de um mais escura, um pixel de sombra onde uma passa atrás da outra, os dedos em listras) |
+| Os desfechos indo para perto e para longe da câmera (a primeira queda de braço) | a câmera escolhida pela cena anterior, não pelo movimento | a regra real do gesto diz para onde ele vai; a câmera é escolhida para esse movimento correr de lado |
