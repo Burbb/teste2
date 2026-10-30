@@ -9,8 +9,9 @@
      window.CenaTavernaMorelV2 (camadas/morel-vista-v2, antes do estudo do braço) e window.CenaTavernaMorelV1 (a
      primeira, camadas/morel-vista-v1), para comparar. Na atual, cada pagamento do evento lança as moedas na mesa
      (moedas.json) e Morel para de comer para olhar; demo.py registra a mesma vista como a cena `taverna_mesa`.
-   - window.CenaTavernaQueda2: as três poses da queda de braço na vista de detalhe (paradas, para a avaliação);
-     window.CenaTavernaQueda, as da primeira proposta (na câmera da conversa), como histórico.
+   - window.CenaTavernaQueda3: a pose central da queda de braço, a terceira proposta (desenhada à mão sobre a
+     construção; para a avaliação); window.CenaTavernaQueda2 (a vista de detalhe calculada) e window.CenaTavernaQueda
+     (na câmera da conversa), as anteriores, como histórico.
 
    O tempo é o relógio da vista do jogo (o `quadro` que a cena recebe, a 100 ms): sair e entrar não cria outro relógio.
    Movimento reduzido (a preferência do sistema ou a "Pose parada" do painel): a pose parada de cada um e as chamas
@@ -139,7 +140,7 @@
   }, true);
   // as três poses da queda de braço (morel/queda/poses.py), paradas, para a avaliação: a disputa, nós vencendo, Morel
   // vencendo, cada uma na moldura da vista (sem pontos; a animação espera as poses aprovadas)
-  const QUEDA = carregar("/proto-tav/camadas/morel-vista/", ["queda", "queda2"]);
+  const QUEDA = carregar("/proto-tav/camadas/morel-vista/", ["queda", "queda2", "queda3"]);
   // a primeira proposta (a câmera da conversa: histórico) e a vista de detalhe (morel/queda2/poses.py, a atual)
   const poseQueda = (img, i) => ({
     base: (W, d) => Object.assign(base(), { d }),
@@ -152,6 +153,7 @@
     presentes: () => ["Morel"],
     QW, QH,
   });
+  window.CenaTavernaQueda3 = poseQueda(QUEDA.queda3, 0);  // a terceira proposta: só a disputa, desenhada à mão
   window.CenaTavernaQueda2 = [0, 1, 2].map((i) => poseQueda(QUEDA.queda2, i));
   window.CenaTavernaQueda = [0, 1, 2].map((i) => poseQueda(QUEDA.queda, i));
   // a segunda versão (antes do estudo de construção do braço), com os mesmos pontos

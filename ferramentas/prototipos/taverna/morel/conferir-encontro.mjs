@@ -217,7 +217,7 @@ try {
 
     // 8. as três poses da queda de braço na área de cena da HUD (pelo painel), e as folhas de inspeção
     await entrar(p);
-    for (const [cand, nome] of [["qd1", "disputa"], ["qd2", "vitoria-jogador"], ["qd3", "vitoria-morel"],
+    for (const [cand, nome] of [["q3", "q3-disputa"], ["qd1", "disputa"], ["qd2", "vitoria-jogador"], ["qd3", "vitoria-morel"],
                                 ["queda1", "v1-disputa"], ["queda2", "v1-vitoria-jogador"], ["queda3", "v1-vitoria-morel"]]) {
       await p.click("#faixa-tav .abre"); await p.click(`#faixa-tav-painel [data-cand="${cand}"]`); await espera(500);
       const v = await p.evaluate(() => { const c = document.getElementById("vista"), r = c.getBoundingClientRect();
@@ -227,23 +227,24 @@ try {
       conferir(v.cheia > 0.99, `${nome}: a pose desenhada na área de cena (${v.larg}×${v.alt})`);
       await p.screenshot({ path: path.join(SAIDA, `${jan}-queda-${nome}.png`) });
     }
-    // o dado rolando por cima da disputa (a vista de detalhe): a pega fica fora do grupo dele, à vista
-    await p.click("#faixa-tav .abre"); await p.click('#faixa-tav-painel [data-cand="qd1"]'); await espera(400);
+    // o dado rolando com a disputa à vista (a terceira proposta): o grupo inteiro na janela, embaixo da arte, e o véu
+    // só na página (tela/rolagem-queda.js); a disputa clara enquanto ele gira
+    await p.click("#faixa-tav .abre"); await p.click('#faixa-tav-painel [data-cand="q3"]'); await espera(400);
     const dado = await p.evaluate(async () => {
       const pr = rolagem({ atributo: "Força", cd: 14, d20: 10, mod: 4, total: 14, sucesso: true });
       await new Promise((r) => setTimeout(r, 350));
       const g = document.querySelector(".rolagem-centro .rc-grupo").getBoundingClientRect();
-      const q = Vista.caixaDaArte(), o = document.getElementById("cena").getBoundingClientRect();
-      const tela = (x, y) => [o.left + q.esq + q.dx + x * q.ex, o.top + q.topo + q.dy + y * q.ey];
-      const [px, py] = tela(76, 21), [ax, ay] = tela(66, 9), [bx, by] = tela(86, 32);  // a pega e a caixa dela
-      const fora = bx < g.left || ax > g.right || by < g.top || ay > g.bottom;
+      const v = document.querySelector(".rolagem-centro .rc-veu").getBoundingClientRect();
+      const arte = document.getElementById("vista").getBoundingClientRect();
       window.__dadoFim = pr;
-      return { fora, pega: [Math.round(px), Math.round(py)], grupo: [g.left, g.top, g.right, g.bottom].map(Math.round) };
+      return { inteiro: g.top >= 0 && g.bottom <= innerHeight && g.left >= 0 && g.right <= innerWidth,
+        embaixo: g.top >= arte.bottom - 1, veu: v.top >= arte.bottom - 1,
+        grupo: [g.left, g.top, g.right, g.bottom].map(Math.round), arte: Math.round(arte.bottom) };
     });
-    await p.screenshot({ path: path.join(SAIDA, `${jan}-queda-com-dado.png`) });
+    await p.screenshot({ path: path.join(SAIDA, `${jan}-q3-com-dado.png`) });
     await p.evaluate(() => window.__dadoFim);
-    conferir(dado.fora, `com o dado rolando, a pega da disputa à vista, fora do grupo dele (${JSON.stringify(dado)})`);
-    for (const [vista, larg] of [["queda2", 960], ["queda2Estudo", 320], ["queda", 480], ["quedaEstudo", 320]]) {
+    conferir(dado.inteiro && dado.embaixo && dado.veu, `com o dado rolando: o dado inteiro, embaixo da arte, o véu fora da disputa (${JSON.stringify(dado)})`);
+    for (const [vista, larg] of [["queda3", 640], ["queda2", 960], ["queda2Estudo", 320], ["queda", 480], ["quedaEstudo", 320]]) {
       await p.click("#faixa-tav .abre"); await p.click(`#faixa-tav-painel [data-estudo="${vista}"]`); await espera(600);
       const est = await p.evaluate(() => { const i = document.querySelector("#estudo-morel img");
         return { aberto: !document.getElementById("estudo-morel").hidden, nat: i.naturalWidth, largura: i.getBoundingClientRect().width }; });

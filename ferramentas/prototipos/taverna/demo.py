@@ -310,7 +310,8 @@ def servir():
                                    '<script src="/proto-tav/cenas.js"></script>')
             html = html.replace("</head>", '<link rel="stylesheet" href="/proto-tav/taverna.css">\n</head>')
             html = html.replace("</body>", '<script src="/proto-tav/faixa.js"></script>\n'
-                                           '<script src="/proto-tav/balcao.js"></script></body>')
+                                           '<script src="/proto-tav/balcao.js"></script>\n'
+                                           '<script src="/proto-tav/rolagem-queda.js"></script></body>')
             return self._responder(200, html.encode("utf-8"), "text/html; charset=utf-8")
         if caminho == "/proto-tav/cenas.js":
             with open(os.path.join(mod_srv.PASTA, "telas", "cenas.js"), encoding="utf-8") as f:

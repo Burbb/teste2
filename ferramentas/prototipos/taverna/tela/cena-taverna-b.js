@@ -142,6 +142,7 @@
     g4: () => window.CenaTavernaG4, g4v1: () => window.CenaTavernaG4V1, morel: () => window.CenaTavernaMorel, morel1: () => window.CenaTavernaMorelV1,
     morel2: () => window.CenaTavernaMorelV2,
     queda1: () => window.CenaTavernaQueda[0], queda2: () => window.CenaTavernaQueda[1], queda3: () => window.CenaTavernaQueda[2],
+    q3: () => window.CenaTavernaQueda3,
     qd1: () => window.CenaTavernaQueda2[0], qd2: () => window.CenaTavernaQueda2[1], qd3: () => window.CenaTavernaQueda2[2],
     prova: () => window.CenaTavernaProva };
   const cand = () => (CANDS[document.body.dataset.tavCand] || CANDS.g4)();
