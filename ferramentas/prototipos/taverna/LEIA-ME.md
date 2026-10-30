@@ -32,7 +32,44 @@ primeiros), feita da fonte da G3 (`--criar` protegido; depois, a autoridade). `g
 código. A cena (`tela/cena-taverna-anim.js`, `CenaTavernaG4`) desenha o fundo, as chamas, a pose da vez e o balcão por
 cima, pelo relógio da vista do jogo (sair e entrar não cria outro relógio).
 
-## Diante de Morel: a vista adaptada e animada (em avaliação)
+## Diante de Morel: a segunda passada (o espaço, a mesa, o braço; em avaliação)
+
+**O pedido do Jean** (29/10/2026): o mesmo lugar da G4 (que não muda), a mesa com fim, o braço da colher construído, a
+postura participando do gesto. A versão anterior fica no painel ("Diante de Morel, a versão anterior": a fonte em
+`morel/vista-v1/`, as camadas em `camadas/morel-vista-v1/`), no mesmo estado do jogo.
+
+- **O fundo como a G4, visto da mesa:** uma prateleira só (a louça à esquerda; o vão; as garrafas à direita), as
+  canecas penduradas embaixo dela, a bancada mais baixa (só o que está nela aparece acima do balcão: o barril no berço
+  com a torneira para o meio, à esquerda; a jarra, o pão e o queijo à direita do taverneiro); os pendurados junto do
+  esteio da direita (acima do ombro de Morel); o lampião no braço do esteio; a porta da despensa atrás da ponta do
+  balcão, como na G4. As distâncias entre os grupos estão comprimidas (a parede está mais longe), a ordem não.
+- **A lareira** com a construção da G4, simplificada: a chaminé de pedra em blocos, a verga com a prateleirinha (o pote
+  de sal), o arco de pedras em cima da boca, as faces de dentro, a cremalheira com o caldeirão, a concha e a frigideira
+  em pregos; as chamas atrás do balcão.
+- **O balcão termina** depois da porta, com a quina acesa e a lateral curta (a ponta do tampo e a cabeceira de tábuas);
+  além dela, a passagem para trás do balcão, até a porta, e a quina da sala.
+- **O taverneiro** na proporção da G4: duas cabeças e meia acima do tampo (a figura inteira, com os pés no chão atrás do
+  balcão, é a referência; só o que fica acima do tampo aparece), a calva, a barba, a camisa, as alças com as fivelas, a
+  caneca e o pano.
+- **A mesa:** o tampo e a espessura primeiro (a borda de lá, a lateral da direita recuando até a quina da frente, a borda
+  da frente com a espessura; a da esquerda sai do quadro), e o chão do salão aparece além da quina; depois as tábuas,
+  todas para o mesmo ponto de fuga do tampo (238, 30), num tom só um pouco abaixo da madeira; os riscos de uso curtos e
+  noutras direções; as sombras de contato embaixo da tigela, da caneca, da vela e do pão (que foi para dentro do
+  tampo, longe da mão).
+- **O braço da colher, por partes** (`BRACO3` na fonte: o braço de cima, do ombro embaixo da ombreira ao cotovelo; o
+  cotovelo como uma junta redonda, a dobra de dentro em sombra; o antebraço noutra direção até o punho da manga; a mão
+  simples, sem dedos; a colher): recolhendo e descansando, o braço de cima sai por fora do tronco e o cotovelo pousa no
+  tampo; subindo, o cotovelo sai do tampo e vem para a frente do peito; na boca, a mão fica ao lado da barba (sem
+  atravessá-la) e a colher chega à boca. Uma sombra no lado do tronco, embaixo da ombreira, separa o braço do peito. O
+  braço que descansa: o braço de cima com o corpo, o cotovelo e o antebraço no tampo, a mão simplificada.
+- **A postura:** comendo, o corpo e a cabeça descem 2 px para a tigela; descansando, 1 px; olhando para quem está à
+  mesa, ereto, e a cabeça sobe mais 1 px. O corpo de Morel virou uma célula por quadro (a mesma imagem, deslocada).
+- **A animação:** as mesmas atividades e a mesma linha do tempo (12 poses, 148 tiques), com as poses refeitas; a última
+  (descansa) emenda na primeira (recolhe) com a mão 1 px e o corpo 1 px.
+- **A conferência:** a recomposição da cena sai idêntica ao achatamento do Aseprite nos 12 quadros (fora as chamas dos
+  quadros que a linha do tempo não usa).
+
+## Diante de Morel: a primeira versão adaptada (histórico)
 
 **O que veio do estudo livre:** a ideia (sentados perto de Morel, do outro lado da mesa, o balcão e o taverneiro ao
 fundo), a presença e a aparência dele, a vela e a caneca perto de nós. **O que mudou:** o acabamento é o dos interiores
@@ -365,7 +402,8 @@ Esc e o Voltar à vila voltando à vila, a pose parada parando o fogo, o console
 - `g2/retoques.py` e `g2/fonte.py`: a G refinada (os retoques seletivos e a fonte dela, feita da fonte da G).
 - `g3/retoques.py` e `g3/fonte.py`: a G3 (as correções locais e a fonte dela, feita da fonte da G2).
 - `g4/taverneiro.py` e `g4/fonte.py`: o balcão animado (as poses e a rotina do taverneiro, o garrafão, a fonte).
-- `morel/vista/morel-vista.aseprite` e `morel/vista/exportar.py`: a vista diante de Morel, adaptada e animada
+- `morel/vista/morel-vista.aseprite` e `morel/vista/exportar.py`: a vista diante de Morel (a segunda passada; a
+  primeira em `morel/vista-v1/` e `camadas/morel-vista-v1/`)
   (`camadas/morel-vista/`); `tela/cena-taverna-anim.js`: as duas cenas animadas.
 - `morel/aseprite/morel-mesa.aseprite` e `morel/exportar.py`: o estudo livre de Morel e a exportação dele
   (`camadas/morel/estudo.png`).

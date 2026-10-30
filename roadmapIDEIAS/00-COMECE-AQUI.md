@@ -8685,3 +8685,16 @@ construída no editor pela ponte (a autoridade; nenhum script a gera); o estudo 
 pose parada, a inspeção ampliada. O LEIA-ME do protótipo tem as tabelas da rotina e o que foi feito no editor e o que
 foi automatizado.
 - **Parado aqui:** a avaliação das duas vistas animadas é do Jean.
+
+### 29/10/2026 (data do computador local) — A taverna: a vista diante de Morel, segunda passada (protótipo)
+
+- **Pedido do Jean:** a vista de Morel no mesmo lugar da G4 (que não mudou), a mesa com fim, o braço da colher
+  construído e a postura participando do gesto; sem rotina nova.
+- **Feito** (a seção "Diante de Morel: a segunda passada" do LEIA-ME do protótipo): o fundo refeito pela G4 (uma
+  prateleira, as canecas penduradas, a bancada com o barril, a lareira com a construção dela, a porta da despensa atrás
+  da ponta do balcão), o balcão terminando com a lateral e a passagem até a porta, o taverneiro na proporção da G4, a
+  mesa com a quina e a lateral à direita e as tábuas num ponto de fuga só, o braço da colher por partes (o braço de
+  cima, o cotovelo, o antebraço) em todas as poses, a mão simples, o corpo inclinando para a tigela enquanto ele come.
+  A versão anterior fica no painel para comparar. A fonte continua `morel/vista/morel-vista.aseprite` (no editor).
+- **Conferido:** no jogo a 1920×945 e 1280×720 (`g/conferir.mjs`) e a recomposição contra o achatamento do Aseprite.
+- **Parado aqui:** a avaliação é do Jean; nada integrado.
