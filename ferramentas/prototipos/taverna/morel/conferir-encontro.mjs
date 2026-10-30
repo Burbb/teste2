@@ -34,7 +34,16 @@ if (!url) { proc.kill(); throw new Error("a demonstração não subiu"); }
 
 const ouro = (p) => p.evaluate(() => App.estado.heroi.ouro);
 const cena = (p) => p.evaluate(() => { const a = window.Cenas && Cenas.atual(); return a ? { cena: a.d.cena,
-  titulo: a.d.titulo, pagamentos: a.d.pagamentos || 0, lances: (a.est.tavLances || []).length } : null; });
+  titulo: a.d.titulo, pagamentos: a.d.pagamentos || 0, lances: (a.est.tavLances || []).length, queda: a.d.queda || null,
+  pose: a.est.qcPose || null } : null; });
+/** Espera a queda de braço chegar à pose `nome` (a pose à vista, que a cena anota); devolve se chegou. */
+async function naPose(p, nome, ms = 20000) {
+  for (let k = 0; k < ms / 100; k++) {
+    if (await p.evaluate((n) => { const a = window.Cenas && Cenas.atual(); return !!a && a.est.qcPose === n; }, nome)) return true;
+    await espera(100);
+  }
+  return false;
+}
 const opcoes = (p) => p.$$eval(MENU, (es) => es.map((e) => e.textContent.replace(/\s+/g, " ").trim()));
 const cartoes = (p) => p.$$eval("#folha .servico", (es) => es.map((e) => e.dataset.servico));
 async function parado(p) {
@@ -135,6 +144,17 @@ try {
     ops = await opcoes(p);
     conferir(!ops.some((t) => t.includes("Pagar 40")), "com 30 de ouro, sem a opção dos 40");
     await p.keyboard.press(String(ops.findIndex((t) => t.includes("Queda de braço")) + 1));
+    await espera(400);
+    conferir((await cena(p)).queda === "prepara", "o teste de Força começa: a cena começa a preparação");
+    for (let k = 0; k < 100 && (await cena(p)).queda === "prepara"; k++) await espera(100);
+    conferir((await cena(p)).queda === "morel", `o resultado do motor chega à cena: Morel vence (${(await cena(p)).queda})`);
+    conferir(await naPose(p, "desliza3"), "a preparação: a tigela deslizando");
+    await p.screenshot({ path: path.join(SAIDA, `${jan}-queda-preparo.png`) });
+    conferir(await naPose(p, "disputa"), "a disputa");
+    await p.screenshot({ path: path.join(SAIDA, `${jan}-queda-disputa-com-texto.png`) });
+    conferir(await naPose(p, "morel_fim"), "o desfecho do motor: Morel vence");
+    await p.screenshot({ path: path.join(SAIDA, `${jan}-queda-morel-vence.png`) });
+    conferir(await naPose(p, "depois"), "o depois: as mãos soltas, o nosso braço fora");
     await proxima(p);
     ops = await opcoes(p);
     console.log("   depois de perder:", JSON.stringify(ops));
@@ -166,6 +186,12 @@ try {
     await faixa(p, "dado", "ganhar");
     conferir(await sentar(p), "60 de ouro: senta de novo");
     await escolher(p, "Queda de braço");
+    await espera(400);
+    conferir((await cena(p)).queda === "prepara", "o teste de Força começa: a cena começa a preparação");
+    for (let k = 0; k < 100 && (await cena(p)).queda === "prepara"; k++) await espera(100);
+    conferir((await cena(p)).queda === "nos", `o resultado do motor chega à cena: nós vencemos (${(await cena(p)).queda})`);
+    conferir(await naPose(p, "nos_fim", 25000), "o desfecho do motor: nós vencemos");
+    await p.screenshot({ path: path.join(SAIDA, `${jan}-queda-nos-vencemos.png`) });
     await proxima(p);
     c = await cena(p);
     ops = await opcoes(p);
@@ -261,6 +287,36 @@ try {
         return { aberto: !document.getElementById("estudo-morel").hidden, nat: i.naturalWidth, largura: i.getBoundingClientRect().width }; });
       conferir(est.aberto && est.nat === larg && est.largura % larg === 0, `${vista}: a folha em ampliação inteira (${est.largura / larg}×)`);
       await p.screenshot({ path: path.join(SAIDA, `${jan}-inspecao-${vista}.png`) });
+      await p.keyboard.press("Escape"); await espera(200);
+    }
+    // a queda de braço no canto pelo painel: as duas candidatas, o reinício separado e a pose parada
+    for (const [cand, fim] of [["qc_nos", "nos_fim"], ["qc_morel", "morel_fim"]]) {
+      await p.click("#faixa-tav .abre"); await p.click(`#faixa-tav-painel [data-cand="${cand}"]`); await espera(300);
+      conferir(await naPose(p, "disputa", 15000), `${cand}: a preparação chega à disputa`);
+      await p.screenshot({ path: path.join(SAIDA, `${jan}-${cand}-disputa.png`) });
+      conferir(await naPose(p, fim, 20000), `${cand}: o fim`);
+      await p.screenshot({ path: path.join(SAIDA, `${jan}-${cand}-fim.png`) });
+      conferir(await naPose(p, "depois", 10000), `${cand}: o depois fica`);
+      await espera(1500);
+      conferir((await cena(p)).pose === "depois", `${cand}: sem voltar sozinha ao começo`);
+    }
+    await p.click("#faixa-tav .abre"); await p.click("#faixa-tav-painel [data-qc-repetir]"); await espera(400);
+    conferir((await cena(p)).pose === null, "repetir: o reinício mostra o repouso antes de recomeçar");
+    conferir(await naPose(p, "olha", 5000), "repetir: a sequência recomeça do começo");
+    await p.click("#faixa-tav .abre"); await p.click("#faixa-tav-painel [data-reduzido]"); await p.click("#faixa-tav .abre");
+    await p.click("#faixa-tav .abre"); await p.click('#faixa-tav-painel [data-cand="qc_nos"]'); await espera(300);
+    await naPose(p, "disputa", 3000); await espera(200);
+    const q1 = await p.evaluate(() => document.getElementById("vista").toDataURL());
+    await espera(700);
+    const q2 = await p.evaluate(() => document.getElementById("vista").toDataURL());
+    conferir(q1 === q2 && (await cena(p)).pose === "disputa", `pose parada: a disputa, nada se mexe (${(await cena(p)).pose})`);
+    await p.screenshot({ path: path.join(SAIDA, `${jan}-qc-pose-parada.png`) });
+    await p.click("#faixa-tav .abre"); await p.click("#faixa-tav-painel [data-reduzido]"); await p.click("#faixa-tav .abre");
+    for (const [vista, larg] of [["quedaCantoPoses", 2264], ["quedaCantoSequencia", 1744]]) {
+      await p.click("#faixa-tav .abre"); await p.click(`#faixa-tav-painel [data-estudo="${vista}"]`); await espera(600);
+      const est = await p.evaluate(() => ({ aberto: !document.getElementById("estudo-morel").hidden,
+        nat: document.querySelector("#estudo-morel img").naturalWidth }));
+      conferir(est.aberto && est.nat === larg, `${vista}: a folha abre e carrega`);
       await p.keyboard.press("Escape"); await espera(200);
     }
     // as folhas da revisão do canto (a mastigação, o tronco, a parede): abrem e carregam (as mais largas que a janela

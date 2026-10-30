@@ -293,6 +293,26 @@ ação que acontece ali (`morel/queda-vista/`). Com a câmera fixa, a construç�
   dentro; um pouco mais para o fundo, lê atrás. A mão livre de quem disputa vai para o colo se, no tampo, ficaria onde
   a pega cai.
 
+### Numa câmera de primeira pessoa (o canto de Morel, 30/10/2026; candidata, sem avaliação artística)
+
+O que foi testado (`morel/queda-canto/`: construído, animado e conferido no encontro; a aprovação artística ainda é do
+Jean):
+- **Leia a câmera da cena como perspectiva antes de pôr os apoios:** o horizonte, o ponto de fuga e a borda de lá do
+  tampo dão a altura do olho e a profundidade de cada linha do tampo. Numa primeira pessoa perto da mesa, o tampo
+  visível é raso (aqui, uns 35 cm): onde os fins vão cair na tela se mede antes, não se descobre no derrube.
+- **O nosso cotovelo fica na construção, fora do quadro:** o antebraço entra pela borda de baixo, em perspectiva (mais
+  grosso perto da câmera), e o comprimento dele continua fixo no espaço.
+- **A disposição dos apoios é uma troca, escolhida com números:** cotovelos alinhados em profundidade fazem um
+  antebraço cobrir o outro na disputa; afastados de lado, os dois aparecem, mas os fins correm em profundidade (o de
+  quem perde do nosso lado deita para o fundo e encurta na tela). Registre a troca e trate o escorço no desenho (a face
+  larga do antebraço deitado), sem esticar o membro.
+- **Os objetos saem pelo caminho que a mão faz, e ficam onde a construção diz que os fins não chegam:** meça o lugar dos
+  dois fins antes de decidir para onde a tigela vai; a mão acompanha o objeto o tempo todo, e o braço que ficaria no
+  caminho de um fim vai para outro apoio (aqui, o colo, atrás do tampo).
+- **A cena acompanha o motor, não o contrário:** a preparação começa quando o teste começa, o derrube é o do resultado
+  que chegou, e o depois fica (sem voltar a uma atividade que o encontro já encerrou). Repetir no painel é um reinício
+  declarado, separado da sequência.
+
 ## Erros que já aconteceram
 
 | Erro | Causa | O que fazer |

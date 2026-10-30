@@ -110,17 +110,77 @@
       c.drawImage(img, i * M.celula, 0, w, h, x + lance.dx, y, w, h);
     });
   }
+  /** A queda de braço no canto (morel/queda-canto/, candidata): o pose da sequência no tique, ou um número negativo
+   *  -(1 + p) enquanto Morel ainda volta ao repouso pela pose p da rotina de comer. A sequência começa quando o pedido
+   *  chega (o motor: `prepara` quando o teste de Força começa, `nos` ou `morel` com o resultado; ou o painel): a volta
+   *  ao repouso pelo caminho mais curto (o mesmo do pagamento), a preparação (a colher solta, a tigela para a direita, o
+   *  braço ao meio, o nosso entrando, a pega), a espera (a disputa) até o motor dizer o resultado, a disputa e o derrube
+   *  desse resultado, e o depois, que fica. A apresentação acompanha o resultado do motor; não o decide. */
+  function poseQuedaCanto(Q, est, quadro, quieto) {
+    const q = est.tavQueda;
+    const t = quadro - q.inicio - (q.pausa || 0);
+    const disputa = Q.poses.indexOf("disputa");
+    if (quieto) {   // movimento reduzido: sem a volta nem as passagens; a disputa, o fim e o depois, parados
+      const red = q.desfecho && Q.desfechos[q.desfecho].reduzido;
+      return red ? red[Math.max(0, Math.min(t, red.length - 1))] : disputa;
+    }
+    if (t < 0) return -(1 + 17);                          // o reinício pelo painel: o repouso, parado, antes de recomeçar
+    if (t < q.volta.length) return -(1 + q.volta[t]);
+    const u = t - q.volta.length;
+    if (u < Q.preparo.length) return Q.preparo[u];
+    if (!q.desfecho) return Q.espera[(u - Q.preparo.length) % Q.espera.length];
+    if (q.inicioD === undefined) q.inicioD = u;
+    const tempo = Q.desfechos[q.desfecho].tempo;
+    return tempo[Math.min(u - q.inicioD, tempo.length - 1)];
+  }
   /** A vista diante de Morel a partir das camadas de uma pasta (a atual e a anterior, para comparar). `comMoedas`: a
-   *  atual, a única com o pagamento. */
-  function vistaMorel(raiz, pontos, comMoedas, semTaverneiro) {
+   *  atual, a única com o pagamento; `comQueda`: o canto, com a queda de braço candidata. */
+  function vistaMorel(raiz, pontos, comMoedas, semTaverneiro, comQueda) {
     const MO = carregar(raiz, ["fundo", "chamas", "morel", "frente"].concat(semTaverneiro ? [] : ["taverneiro"])
-      .concat(comMoedas ? ["moedas"] : []));
+      .concat(comMoedas ? ["moedas"] : []).concat(comQueda ? ["queda-canto"] : []));
     const ROT = json(raiz + "rotina.json");
     const MOE = comMoedas ? json(raiz + "moedas.json") : { pronto: null };
+    const QC = comQueda ? json(raiz + "queda-canto.json") : { pronto: null };
     return {
       base: (W, d) => Object.assign(base(), { d }),
       desenhar(c, W, b, est, quadro) {
-        const quieto = reduzido(), r = ROT.pronto, M = MOE.pronto;
+        const quieto = reduzido(), r = ROT.pronto, M = MOE.pronto, Q = QC.pronto;
+        const pedido = est.qcForcado || (b.d && b.d.queda);
+        if (Q && r && pedido) {
+          if (!est.tavQueda) {
+            const agora = poseMorel(r.morel, quadro, false, est.tavLances && est.tavLances[est.tavLances.length - 1]);
+            est.tavQueda = { inicio: quadro, volta: M ? M.reacao.volta[agora].concat([17]) : [17], pausa: est.qcPausa || 0 };
+          }
+          if (!est.tavQueda.desfecho && (pedido === "nos" || pedido === "morel")) est.tavQueda.desfecho = pedido;
+          const n = poseQuedaCanto(Q, est, quadro, quieto);
+          est.qcPose = n < 0 ? null : Q.poses[n];   // a pose à vista (para a conferência)
+          if (n >= 0 && pronta(MO["queda-canto"])) {
+            pagamentos(est, b.d, quadro, r, M);
+            const [x, y, w, h] = Q.caixa;
+            c.imageSmoothingEnabled = false;
+            c.clearRect(0, 0, QW, QH);
+            if (pronta(MO.fundo)) c.drawImage(MO.fundo, 0, 0);
+            if (pronta(MO.frente)) c.drawImage(MO.frente, 0, 0);
+            c.drawImage(MO["queda-canto"], n * w, 0, w, h, x, y, w, h);
+            tira(c, MO.chamas, quieto ? 1 : Math.floor(quadro / 2) % 4);
+            if (M) (est.tavLances || []).forEach((l) => moedas(c, MO.moedas, M, l, quadro, quieto));
+            return;
+          }
+          if (n < 0) {   // ainda voltando ao repouso: a rotina de comer, na pose da volta
+            const p = -n - 1;
+            const morel = Object.assign({}, r.morel, { tempo: [p], parada: p });
+            c.imageSmoothingEnabled = false;
+            c.clearRect(0, 0, QW, QH);
+            if (pronta(MO.fundo)) c.drawImage(MO.fundo, 0, 0);
+            faixa(c, MO.morel, morel, 0, true, 0);
+            if (pronta(MO.frente)) c.drawImage(MO.frente, 0, 0);
+            tira(c, MO.chamas, quieto ? 1 : Math.floor(quadro / 2) % 4);
+            faixa(c, MO.morel, morel, 0, true, 1);
+            return;
+          }
+        } else if (est.tavQueda && !pedido) {
+          delete est.tavQueda;
+        }
         pagamentos(est, b.d, quadro, r, M);
         const lance = est.tavLances && est.tavLances[est.tavLances.length - 1];
         const morel = r && Object.assign({}, r.morel, { tempo: [poseMorel(r.morel, quadro, quieto, lance)], parada: poseMorel(r.morel, quadro, quieto, lance) });
@@ -152,14 +212,39 @@
   // atrás dele; o ponto de Morel sobre ele, o balão na parede à direita, longe do rosto
   window.CenaTavernaMorelCanto = vistaMorel("/proto-tav/camadas/morel-canto/", {
     morel: { area: [118, 2, 102, 70], balao: [250, 40], foco: [171, 30] },
-  }, true, true);
+  }, true, true, true);
+  // a queda de braço no canto pelo painel (candidatas): a cena do canto com o desfecho pedido, do repouso ao depois, uma
+  // vez (o depois fica); "Repetir do começo" recomeça com uma pausa no repouso, um reinício separado da sequência
+  let qcRepetir = false;
+  const quedaCanto = (desfecho) => ({
+    base: (W, d) => window.CenaTavernaMorelCanto.base(W, d),
+    desenhar(c, W, b, est, quadro) {
+      if (qcRepetir || est.qcDesfecho !== desfecho) {
+        delete est.tavQueda;
+        est.qcPausa = qcRepetir ? 12 : 0;
+        est.qcDesfecho = desfecho;
+        qcRepetir = false;
+      }
+      est.qcForcado = desfecho;   // só durante este desenho: a cena do encontro não herda o pedido do painel
+      window.CenaTavernaMorelCanto.desenhar(c, W, b, est, quadro);
+      delete est.qcForcado;
+    },
+    pontos: {},
+    presentes: () => ["Morel"],
+    QW, QH,
+  });
+  window.CenaTavernaQuedaCanto = { nos: quedaCanto("nos"), morel: quedaCanto("morel"), repetir: () => { qcRepetir = true; } };
   // a primeira candidata do canto (antes da revisão da mastigação, do tronco e da parede da esquerda), com os mesmos
   // pontos, para comparar no mesmo estado do encontro
   window.CenaTavernaMorelCantoV1 = vistaMorel("/proto-tav/camadas/morel-canto-v1/", window.CenaTavernaMorelCanto.pontos,
     true, true);
+  // a candidata revisada antes das correções da alimentação (a colher de madeira, a coleta na borda da tigela, o
+  // cotovelo sobre a caneca), para comparar no mesmo estado do encontro
+  window.CenaTavernaMorelCantoV2 = vistaMorel("/proto-tav/camadas/morel-canto-v2/", window.CenaTavernaMorelCanto.pontos,
+    true, true);
   // a mesa do encontro (demo.py registra a cena `taverna_mesa` como esta): o canto (o padrão), a primeira candidata do
   // canto ou a vista diante do balcão (a anterior, reservada para a Vó Berta), pela faixa do protótipo
-  const mesa = () => ({ balcao: window.CenaTavernaMorel, canto1: window.CenaTavernaMorelCantoV1 })[document.body.dataset.tavMesa]
+  const mesa = () => ({ balcao: window.CenaTavernaMorel, canto1: window.CenaTavernaMorelCantoV1, canto2: window.CenaTavernaMorelCantoV2 })[document.body.dataset.tavMesa]
     || window.CenaTavernaMorelCanto;
   window.CenaTavernaMesa = {
     base: (W, d) => mesa().base(W, d),

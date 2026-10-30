@@ -139,7 +139,7 @@
   const CANDS = { a: () => window.CenaTavernaA, b: () => window.CenaTavernaB, c: () => window.CenaTavernaC,
     d: () => window.CenaTavernaD, e: () => window.CenaTavernaE, f: () => window.CenaTavernaF,
     g: () => window.CenaTavernaG, g2: () => window.CenaTavernaG2, g3: () => window.CenaTavernaG3, h: () => window.CenaTavernaH,
-    g4: () => window.CenaTavernaG4, g4v1: () => window.CenaTavernaG4V1, morel: () => window.CenaTavernaMorel, canto: () => window.CenaTavernaMorelCanto, canto1: () => window.CenaTavernaMorelCantoV1, morel1: () => window.CenaTavernaMorelV1,
+    g4: () => window.CenaTavernaG4, g4v1: () => window.CenaTavernaG4V1, morel: () => window.CenaTavernaMorel, canto: () => window.CenaTavernaMorelCanto, canto1: () => window.CenaTavernaMorelCantoV1, canto2: () => window.CenaTavernaMorelCantoV2, qc_nos: () => window.CenaTavernaQuedaCanto.nos, qc_morel: () => window.CenaTavernaQuedaCanto.morel, morel1: () => window.CenaTavernaMorelV1,
     morel3: () => window.CenaTavernaMorelV3,
     morel2: () => window.CenaTavernaMorelV2,
     queda1: () => window.CenaTavernaQueda[0], queda2: () => window.CenaTavernaQueda[1], queda3: () => window.CenaTavernaQueda[2],

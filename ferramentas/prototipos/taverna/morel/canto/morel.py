@@ -324,11 +324,13 @@ def braco(S, E, W, corpo, extra=None):
     return m, set(MG.manga.antebraco)
 
 
-COLHER = [h("b08050"), h("8a5e38"), h("5e3e22")]
+# a colher de metal, no cinza do estanho da caneca (a de madeira tinha os tons do tampo e, pousada, se confundia com a
+# borda dele; subindo, parecia um pedaço da mesa que se soltou)
+COLHER = [h("b4b6bc"), h("8a8c94"), h("5a5c64")]
 
 
 def colher(W, T):
-    """A colher de madeira, rígida: o cabo do punho (`W`) à ponta (`T`), dois pixels de grosso (a aresta de cima
+    """A colher de metal, rígida: o cabo do punho (`W`) à ponta (`T`), dois pixels de grosso (a aresta de cima
     acesa), e a concha na ponta, uma elipse pequena com a borda de baixo escura."""
     out = {}
     n = int(max(abs(T[0] - W[0]), abs(T[1] - W[1]))) + 1

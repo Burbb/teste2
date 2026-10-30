@@ -104,10 +104,25 @@ def a_mesa(fn):
                 g.ui.painel("cena", dict(d))
             return pago
         g.perder_ouro = perder_ouro
+        testar = g.teste
+
+        def teste(atributo, cd, *a, **k):
+            """O teste de Força deste evento é a queda de braço: a cena começa a preparação quando ele começa
+            (`prepara`) e, com o resultado que o motor decidiu, toca a disputa e o desfecho dele (`nos` ou `morel`)."""
+            if atributo != "forca":
+                return testar(atributo, cd, *a, **k)
+            d["queda"] = "prepara"
+            g.ui.painel("cena", dict(d))
+            ok = testar(atributo, cd, *a, **k)
+            d["queda"] = "nos" if ok else "morel"
+            g.ui.painel("cena", dict(d))
+            return ok
+        g.teste = teste
         try:
             return fn(g)
         finally:
             del g.perder_ouro
+            del g.teste
             g.tav_balcao = True
     return evento
 

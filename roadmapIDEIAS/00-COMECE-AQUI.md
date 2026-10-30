@@ -8935,3 +8935,22 @@ foi automatizado.
 - **Conferido:** a fonte igual ao desenho; nenhuma fenda nas 20 poses; `morel/conferir-encontro.mjs` nas duas janelas,
   tudo certo; a suíte, o gabarito e o pyflakes. O código do jogo e o encontro não mudaram.
 - **Parado aqui:** a avaliação artística é do Jean (as hipóteses no LEIA-ME); a queda de braço espera a aprovação.
+
+### 30/10/2026 (data do computador local) — A taverna: a queda de braço no canto (protótipo, candidata)
+
+- **Pedido do Jean:** o canto ficou muito bom (preservar a câmera, a perspectiva, o cenário, a construção, a gola e a
+  mastigação); três correções na alimentação (a colher confundida com a borda da mesa, a coleta na borda da tigela, o
+  cotovelo atravessando a caneca) e começar a queda de braço nessa mesma cena, pela referência nova (a pose do meio, o
+  nosso antebraço cortado pela borda de baixo, a tigela à direita), com a preparação da mesa, os dois desfechos e o
+  resultado do motor. Nada integrado.
+- **Feito** (o LEIA-ME do protótipo, "A queda de braço no canto"): a colher de metal, a coleta dentro do caldo, a caneca
+  4 px para perto da vela e o cotovelo longe dela; `morel/queda-canto/` (`geometria.py`: a câmera do canto como
+  perspectiva, os cotovelos fixos, o círculo da pega; `poses.py`: a preparação, a disputa, os derrubes e o depois, 41
+  poses, a fonte `queda-canto.aseprite`; `exportar.py`); a cena do canto toca a sequência quando o motor manda
+  (`demo.py` embrulha o teste de Força do evento: `prepara`, depois `nos` ou `morel`); no painel, as duas candidatas, o
+  reinício e as folhas.
+- **Conferido:** as fontes iguais ao desenho; `conferir-encontro.mjs` nas duas janelas, tudo certo; a suíte, o gabarito
+  e o pyflakes. O código do jogo e o encontro (os textos, os preços, o teste) não mudaram.
+- **Parado aqui:** a avaliação artística é do Jean (as limitações no LEIA-ME: o texto do resultado antes do derrube, a
+  mão dele perto da borda de baixo na nossa vitória, o nosso antebraço curto na derrota, o cotovelo esquerdo alto ao
+  deslizar a tigela, a pega pequena no tamanho do jogo).

@@ -21,7 +21,8 @@
     ["perder", "Queda de braço: o dado em 1 (perde)"]];
   // a vista da mesa no encontro: o canto (a nova direção) ou diante do balcão (a anterior, reservada para a Vó Berta)
   document.body.dataset.tavMesa = document.body.dataset.tavMesa || "canto";
-  const MESAS = [["canto", "A mesa do encontro: no canto (a nova direção, revisada)"],
+  const MESAS = [["canto", "A mesa do encontro: no canto (com as correções da alimentação e a queda de braço)"],
+    ["canto2", "A mesa do encontro: no canto, antes das correções da alimentação"],
     ["canto1", "A mesa do encontro: no canto, a primeira candidata (antes da revisão)"],
     ["balcao", "A mesa do encontro: diante do balcão (a anterior; reservada para a Vó Berta)"]];
   const BEBIDAS = [["sorteio", "Bebida: o sorteio de sempre"], ["morel", "Bebida: Morel puxa conversa (se ele pode)"]];
@@ -32,7 +33,10 @@
   document.body.dataset.tavMorel = document.body.dataset.tavMorel || "m1";
   const CANDS = [["g4", "Balcão animado (G4, a atuação ajustada)"], ["g4v1", "Balcão animado, a atuação anterior"],
     ["canto", "Morel no canto da taverna (a nova direção, revisada: para avaliar)"],
+    ["canto2", "Morel no canto da taverna, antes das correções da alimentação (a colher, a coleta, a caneca)"],
     ["canto1", "Morel no canto da taverna, a primeira candidata (antes da revisão)"],
+    ["qc_nos", "Queda de braço no canto, candidata: da comida à preparação, a disputa e nós vencemos"],
+    ["qc_morel", "Queda de braço no canto, candidata: da comida à preparação, a disputa e Morel vence"],
     ["morel", "Diante de Morel, junto do balcão (a anterior; reservada para a Vó Berta)"],
     ["qv_nos", "Queda de braço na vista aprovada (o queda 1 refinado), animada: nós vencemos (para avaliar)"],
     ["qv_morel", "Queda de braço na vista aprovada (o queda 1 refinado), animada: Morel vence (para avaliar)"],
@@ -69,11 +73,14 @@
     ${BEBIDAS.map(([id, nome]) => `<button type="button" data-bebida="${id}" aria-pressed="${id === "sorteio"}">${nome}</button>`).join("")}
     ${MESAS.map(([id, nome]) => `<button type="button" data-mesa="${id}" aria-pressed="${id === document.body.dataset.tavMesa}">${nome}</button>`).join("")}
     <button type="button" data-reduzido aria-pressed="false">Pose parada</button>
+    <button type="button" data-qc-repetir>Queda de braço no canto: repetir do começo (um reinício, não uma transição)</button>
     <b>Inspeção ampliada (fora da HUD)</b>
     <button type="button" data-estudo="canto">Morel no canto: a referência (em cima) e a cena (embaixo)</button>
     <button type="button" data-estudo="cantoPoses">Morel no canto: as 20 poses do ciclo</button>
     <button type="button" data-estudo="cantoMastigacao">Morel no canto, a revisão: a mastigação (antes e depois)</button>
     <button type="button" data-estudo="cantoTronco">Morel no canto, a revisão: o tronco e a gola (antes e depois)</button>
+    <button type="button" data-estudo="quedaCantoPoses">Queda de braço no canto: as poses principais (a construção e o acabamento)</button>
+    <button type="button" data-estudo="quedaCantoSequencia">Queda de braço no canto: todas as poses, em ordem</button>
     <button type="button" data-estudo="cantoParede">Morel no canto, a revisão: a parede da esquerda (antes e depois)</button>
     <button type="button" data-estudo="vista">Diante de Morel: a vista adaptada (pose parada)</button>
     <button type="button" data-estudo="manga">Diante de Morel: a manga, as 20 poses antes (em cima) e depois (embaixo)</button>
@@ -176,6 +183,10 @@
     vista: { src: "/proto-tav/camadas/morel-vista/parada.png", nat: [320, 96], titulo: "Diante de Morel: a vista adaptada (pose parada)" },
     canto: { src: "/proto-tav/camadas/morel-canto/comparacao.png", nat: [320, 194],
       titulo: "Morel no canto da taverna: a referência aprovada no lugar em que é transposta (em cima) e a cena na grade do jogo (embaixo)" },
+    quedaCantoPoses: { src: "/proto-tav/camadas/morel-canto/queda-canto-poses.png", nat: [2264, 356],
+      titulo: "Queda de braço no canto: a disputa, a passagem para cada lado, o meio de cada derrube e os dois fins; em cima, a construção (os ossos, o círculo da pega) sobre a pose escurecida; embaixo, o acabamento" },
+    quedaCantoSequencia: { src: "/proto-tav/camadas/morel-canto/queda-canto-sequencia.png", nat: [1744, 488],
+      titulo: "Queda de braço no canto: as 41 poses, em ordem (a preparação, a disputa, os derrubes alternados, os fins, as mãos soltas, o depois)" },
     cantoMastigacao: { src: "/proto-tav/camadas/morel-canto/revisao-mastigacao.png", nat: [1028, 404],
       titulo: "Morel no canto, a mastigação: a primeira candidata (em cima) e a revisada (embaixo); em repouso, as três poses de mastigar, a colher na boca e o olhar" },
     cantoTronco: { src: "/proto-tav/camadas/morel-canto/revisao-tronco.png", nat: [1476, 484],
@@ -233,6 +244,10 @@
     zoom(maior());
     estudo.querySelector("[data-fechar]").focus();
   }));
+  painel.querySelector("[data-qc-repetir]").addEventListener("click", () => {
+    abrir(false);
+    if (window.CenaTavernaQuedaCanto) window.CenaTavernaQuedaCanto.repetir();
+  });
   painel.querySelector("[data-reduzido]").addEventListener("click", (ev) => {
     const sim = document.body.dataset.tavReduzido !== "1";
     document.body.dataset.tavReduzido = sim ? "1" : "";

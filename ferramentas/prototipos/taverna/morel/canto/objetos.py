@@ -106,7 +106,7 @@ def chama(img, q):
 def caneca(img):
     """A caneca de estanho: o corpo em faixas verticais (o realce do lado da vela, o meio, o escuro à direita), a boca
     em elipse com a borda acesa e o fundo escuro, os dois aros, a alça à esquerda."""
-    x0, x1, y0, y1 = 82, 103, 60, 83
+    x0, x1, y0, y1 = 78, 99, 60, 83   # 4 px mais perto da vela: o cotovelo pousa ao lado dela, sem encostar
     sombra(img, [(x, y1 - 1) for x in range(x0, x1)], 2, 1)
     sombra(img, [(x, y1) for x in range(x0 + 2, x1 + 1)], 0, 0)
     for y in range(y0, y1):

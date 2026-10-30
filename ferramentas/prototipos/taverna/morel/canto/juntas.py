@@ -53,11 +53,13 @@ _n = math.sqrt(_dot(_DC, _DC))
 # as chaves: o ombro na tela e a profundidade, o pulso no espaço, a direção da colher, o polo (o cotovelo para fora e
 # para baixo: na referência ele pousa ao lado da caneca)
 CHAVES = {
-    "recolher": dict(S=(138, 44, -6), W=(133, 59, 17), T=(0.85, 0.25, 0.2), polo=(-1, 0.7, 0.3)),
+    # na tigela, a ponta da colher pega o caldo por dentro da boca dela (não na borda): o pulso junto da borda da
+    # esquerda e a colher descendo para dentro
+    "recolher": dict(S=(138, 44, -6), W=(141, 59, 17), T=(0.88, 0.41, 0.24), polo=(-1, 0.7, 0.3)),
     "levantar": dict(S=(138, 44, -5), W=(140, 44, 14), T=(0.6, -0.45, 0.45), polo=(-1, 0.7, 0.3)),
     "boca": dict(S=(140, 42, -4), W=tuple(b - d / _n * COLHER for b, d in zip(BOCA, _DC)), T=_DC, polo=(-1, 0.8, 0.3)),
     "retornar": dict(S=(138, 44, -5), W=(139, 47, 15), T=(0.6, -0.3, 0.45), polo=(-1, 0.7, 0.3)),
-    "repousar": dict(S=(138, 44, -6), W=(132, 60, 18), T=(0.85, 0.25, 0.2), polo=(-1, 0.7, 0.3)),
+    "repousar": dict(S=(138, 44, -6), W=(140, 60, 18), T=(0.88, 0.41, 0.24), polo=(-1, 0.7, 0.3)),
 }
 # (pose, chave de partida, chave de chegada, fração, corpo desce, cabeça, cabeça desce, colher cheia): a mesma ordem da
 # vista aprovada (as frações dão a facilidade: devagar ao sair da tigela e ao chegar à boca)
