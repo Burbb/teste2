@@ -176,9 +176,18 @@ def quadro(nome):
     return q
 
 
+# a dobra do pano na pega (x 153 a 155, y 55 a 59): o tecido entre os dedos e a caneca, ligando o que entra pela boca ao
+# que pende da mão; a crista pega a luz, a sombra curta separa do metal (à direita) e dos dedos (embaixo do polegar)
+_DOBRA = {55: "LpS", 56: "LpS", 57: "pLS", 58: "SLp", 59: "Spp"}
+
+
 def _pano_na_caneca(f, dx, dy):
     g = _figura()
     R3._pano_na_caneca(g)
+    cores = {"L": "panoLuz", "p": "pano", "S": "panoSombra"}
+    for y, linha in _DOBRA.items():
+        for k, ch in enumerate(linha):
+            g.p(153 + k, y, cores[ch])
     for (x, y), c in g.px.items():
         f.px[(x + dx, y + dy)] = c
 

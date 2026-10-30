@@ -32,6 +32,11 @@ A pose parada (o movimento reduzido) é a da G3: o olhar de lado, desconfiado. A
 ("Balcão animado, a atuação anterior": a fonte em `g4/aseprite-v1/`, as camadas em `camadas/g4-v1/`); o desenho, o
 enquadramento, os objetos e o balcão são os mesmos (o fundo, a frente e as chamas saem idênticos).
 
+**A dobra na pega** (o Jean marcou o vazio entre a mão do pano e a caneca): uma dobra de 3 px (x 153 a 155, y 55 a 59
+na pose da G) liga o pano que entra pela boca ao que pende da mão; a crista pega a luz, uma sombra curta separa o
+tecido do metal e dos dedos. Ela anda com a mão do pano, então continua ligada nas 9 poses; o movimento é o mesmo
+(só esses 15 px mudam em cada pose).
+
 **Sem cintilar:** cada parte (o tronco com os braços de cima, a cabeça, o braço do pano com o pano, a caneca com a mão
 da asa, o pano na boca da caneca) é desenhada e iluminada na posição da G (o pontilhado da luz da G preso a ela),
 retocada como na G2 e só depois deslocada; o pontilhado anda com a parte. A caneca mantém o tamanho, o volume e a pega.

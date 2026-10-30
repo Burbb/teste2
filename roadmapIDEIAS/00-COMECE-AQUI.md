@@ -8734,3 +8734,6 @@ foi automatizado.
   px mudados nas trocas de pose enquanto ele esfrega (antes, até 329); no jogo a 1920×945 e 1280×720 (`g/conferir.mjs`
   com a G4, a anterior e Morel).
 - **Parado aqui:** a avaliação das duas vistas é do Jean; nada integrado.
+- **Depois, no mesmo dia:** a dobra do pano na pega da G4 (o vazio entre a mão e a caneca que o Jean marcou), ligada
+  ao pano pendurado, com a sombra curta entre tecido, dedos e metal; o movimento aprovado não mudou (só os 15 px da
+  dobra mudam em cada pose).
