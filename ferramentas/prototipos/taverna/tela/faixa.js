@@ -11,10 +11,15 @@
 "use strict";
 
 (() => {
-  if (typeof ACOES_OCULTAS !== "undefined" && !ACOES_OCULTAS.includes("tav_estado")) ACOES_OCULTAS.push("tav_estado");
+  if (typeof ACOES_OCULTAS !== "undefined") ["tav_estado", "tav_dado", "tav_bebida"].forEach((k) => { if (!ACOES_OCULTAS.includes(k)) ACOES_OCULTAS.push(k); });
   const naTaverna = () => !!(window.Cenas && Cenas.atual() && Cenas.atual().d.cena === "taverna");
-  const ESTADOS = [["despensa", "Despensa esperando"], ["homem_do_canto", "Homem do canto"], ["conhecido", "Morel conhecido"],
-    ["recrutado", "Morel recrutado"], ["sem_ouro", "Sem ouro"]];
+  const ESTADOS = [["despensa", "Despensa esperando"], ["homem_do_canto", "Homem do canto (60 de ouro)"],
+    ["pouco_ouro", "Homem do canto, 30 de ouro (sem os 40)"], ["quase_sem_ouro", "Homem do canto, 10 de ouro (nem os 25)"],
+    ["conhecido", "Morel conhecido"], ["recrutado", "Morel recrutado"], ["sem_ouro", "Sem ouro"]];
+  // os casos de teste do encontro (demo.py): o dado da queda de braço e Morel na próxima bebida, só onde as regras deixam
+  const DADOS = [["sorteio", "Queda de braço: o sorteio"], ["ganhar", "Queda de braço: o dado em 20 (vence)"],
+    ["perder", "Queda de braço: o dado em 1 (perde)"]];
+  const BEBIDAS = [["sorteio", "Bebida: o sorteio de sempre"], ["morel", "Bebida: Morel puxa conversa (se ele pode)"]];
   const f = document.createElement("div");
   f.id = "faixa-tav";
   document.body.dataset.tavCand = document.body.dataset.tavCand || "g4";  // o balcão animado; as outras para comparar
@@ -41,6 +46,9 @@
     ${MORELS.map(([id, nome]) => `<button type="button" data-morel="${id}" aria-pressed="${id === document.body.dataset.tavMorel}">${nome}</button>`).join("")}
     <b>O estado do save temporário</b>
     ${ESTADOS.map(([id, nome]) => `<button type="button" data-tav="${id}" aria-pressed="${id === "homem_do_canto"}">${nome}</button>`).join("")}
+    <b>O encontro com Morel (casos de teste)</b>
+    ${DADOS.map(([id, nome]) => `<button type="button" data-dado="${id}" aria-pressed="${id === "sorteio"}">${nome}</button>`).join("")}
+    ${BEBIDAS.map(([id, nome]) => `<button type="button" data-bebida="${id}" aria-pressed="${id === "sorteio"}">${nome}</button>`).join("")}
     <button type="button" data-reduzido aria-pressed="false">Pose parada</button>
     <b>Inspeção ampliada (fora da HUD)</b>
     <button type="button" data-estudo="vista">Diante de Morel: a vista adaptada (pose parada)</button>
@@ -86,6 +94,17 @@
       if (volta) predioPedido = "taverna";  // a vila se remonta e entra de novo na taverna
     }, volta ? 60 : 0);
   }));
+  // o dado e a bebida (sem mexer no save): o balcão é o próprio menu da vila, então a resposta vai direto; a vila se
+  // remonta e entra de novo na taverna
+  [["dado", "tav_dado"], ["bebida", "tav_bebida"]].forEach(([d, meta]) => painel.querySelectorAll(`[data-${d}]`).forEach((b) => b.addEventListener("click", () => {
+    abrir(false);
+    const volta = naTaverna();
+    if (volta) predioPedido = "taverna";
+    const ok = App.acao({ [meta]: b.dataset[d] });
+    aviso.textContent = ok ? "" : "Termine a conversa para trocar o caso de teste.";
+    if (!ok) { if (volta) predioPedido = null; return; }
+    painel.querySelectorAll(`[data-${d}]`).forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+  })));
   painel.querySelectorAll("[data-grade]").forEach((b) => b.addEventListener("click", () => {
     abrir(false);
     document.body.dataset.tavProva = b.dataset.grade;            // a troca é imediata, no mesmo lugar (a camada lê a cada quadro)
