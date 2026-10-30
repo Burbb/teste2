@@ -156,6 +156,8 @@
   window.CenaTavernaQueda3 = poseQueda(QUEDA.queda3, 0);  // a terceira proposta: só a disputa, desenhada à mão
   window.CenaTavernaQueda2 = [0, 1, 2].map((i) => poseQueda(QUEDA.queda2, i));
   window.CenaTavernaQueda = [0, 1, 2].map((i) => poseQueda(QUEDA.queda, i));
+  // a terceira versão (antes do acabamento da manga: o ombro e o cotovelo por segmentos), com os mesmos pontos
+  window.CenaTavernaMorelV3 = vistaMorel("/proto-tav/camadas/morel-vista-v3/", window.CenaTavernaMorel.pontos);
   // a segunda versão (antes do estudo de construção do braço), com os mesmos pontos
   window.CenaTavernaMorelV2 = vistaMorel("/proto-tav/camadas/morel-vista-v2/", window.CenaTavernaMorel.pontos);
   // a primeira versão (antes das correções do espaço, da mesa e do braço), para comparar no mesmo estado

@@ -1,6 +1,8 @@
--- Veste o braço de Morel sobre as juntas do estudo de construção (protótipo). Roda no Aseprite (pela ponte do
--- editor), com a vista aberta: POSES3 vem de `juntas.py --lua`; DESENHA_CABECA é a grade da cabeça feita à mão (na
--- fonte, camada morel_cabeca). O que este arquivo faz na fonte já está salvo em morel/vista/morel-vista.aseprite (a
+-- Veste o braço de Morel sobre as juntas do estudo de construção (protótipo). O braço da colher deixou de sair daqui em
+-- 30/10/2026: vestido em duas cápsulas, o ombro lia como peça encaixada e o cotovelo como dobradiça; a manga de agora
+-- vem de morel/vista/manga.py (uma forma só). Este arquivo fica pelo braço de apoio e pelo tronco, e como histórico.
+-- Roda no Aseprite (pela ponte do editor), com a vista aberta: POSES3 vem de `juntas.py --lua`; DESENHA_CABECA é a grade
+-- da cabeça feita à mão (na fonte, camada morel_cabeca). O que este arquivo faz na fonte já está salvo em morel/vista/morel-vista.aseprite (a
 -- fonte é a autoridade); ele fica aqui para refazer ou adaptar o método.
 --
 -- O braço é dois volumes de couro (o braço e o antebraço), cada um com a sua luz (a lareira e a vela, à esquerda e na

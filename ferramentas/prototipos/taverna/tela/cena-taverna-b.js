@@ -140,6 +140,7 @@
     d: () => window.CenaTavernaD, e: () => window.CenaTavernaE, f: () => window.CenaTavernaF,
     g: () => window.CenaTavernaG, g2: () => window.CenaTavernaG2, g3: () => window.CenaTavernaG3, h: () => window.CenaTavernaH,
     g4: () => window.CenaTavernaG4, g4v1: () => window.CenaTavernaG4V1, morel: () => window.CenaTavernaMorel, morel1: () => window.CenaTavernaMorelV1,
+    morel3: () => window.CenaTavernaMorelV3,
     morel2: () => window.CenaTavernaMorelV2,
     queda1: () => window.CenaTavernaQueda[0], queda2: () => window.CenaTavernaQueda[1], queda3: () => window.CenaTavernaQueda[2],
     q3: () => window.CenaTavernaQueda3,

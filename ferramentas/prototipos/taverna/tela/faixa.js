@@ -33,6 +33,7 @@
     ["qd3", "Queda de braço, segunda proposta 3: Morel vence (histórico)"],
     ["queda1", "Queda de braço, primeira proposta 1: a disputa (histórico)"], ["queda2", "Queda de braço, primeira proposta 2: nós vencemos (histórico)"],
     ["queda3", "Queda de braço, primeira proposta 3: Morel vence (histórico)"],
+    ["morel3", "Diante de Morel, a versão anterior (antes do acabamento da manga)"],
     ["morel2", "Diante de Morel, a segunda versão (antes do estudo do braço)"],
     ["morel1", "Diante de Morel, a primeira versão"], ["g3", "G3 estática"],
     ["g2", "G2 aprovada (antes das correções)"], ["g", "G original"], ["h", "Candidata H (histórico)"], ["prova", "Prova: os jogadores (histórico)"], ["f", "Candidata F (histórico)"], ["e", "Candidata E (histórico)"],
@@ -58,6 +59,7 @@
     <button type="button" data-reduzido aria-pressed="false">Pose parada</button>
     <b>Inspeção ampliada (fora da HUD)</b>
     <button type="button" data-estudo="vista">Diante de Morel: a vista adaptada (pose parada)</button>
+    <button type="button" data-estudo="manga">Diante de Morel: a manga, as 20 poses antes (em cima) e depois (embaixo)</button>
     <button type="button" data-estudo="construcao">Diante de Morel: o estudo de construção e a aplicação</button>
     <button type="button" data-estudo="trajetorias">Diante de Morel: as trajetórias do cotovelo, da mão e da colher</button>
     <button type="button" data-estudo="queda3">Queda de braço, terceira proposta: ao lado da vista aprovada, e com as guias</button>
@@ -147,6 +149,8 @@
   const img = estudo.querySelector("img"), tam = estudo.querySelector(".tam"), zooms = estudo.querySelector(".zooms");
   const VISTAS = {
     vista: { src: "/proto-tav/camadas/morel-vista/parada.png", nat: [320, 96], titulo: "Diante de Morel: a vista adaptada (pose parada)" },
+    manga: { src: "/proto-tav/camadas/morel-vista/manga-comparacao.png", nat: [920, 116],
+      titulo: "Diante de Morel: o braço da colher nas 20 poses, a versão anterior (em cima) e a manga refeita (embaixo)" },
     construcao: { src: "/proto-tav/camadas/morel-vista/construcao.png", nat: [480, 192],
       titulo: "Diante de Morel: o estudo de construção (em cima) e a aplicação (embaixo), pose a pose" },
     trajetorias: { src: "/proto-tav/camadas/morel-vista/trajetorias.png", nat: [192, 96],
