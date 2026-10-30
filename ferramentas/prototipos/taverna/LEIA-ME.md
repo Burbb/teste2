@@ -22,8 +22,8 @@ alcance curto), então as mãos conduzem e o tronco dá a base:
 
 | Trecho | Conduz | Acompanha | Fica |
 |---|---|---|---|
-| Esfregar (três passadas, uma lenta, mais uma) | a mão do pano dá uma volta na caneca: entra pela boca, gira por dentro, desce pelo lado fazendo força, volta (até 2 px) | o antebraço do pano (sai do cotovelo); o cotovelo 1 px para dentro quando a mão entra e 1 px abaixo na pressão; o ombro do pano 1 px abaixo só na pressão; a ponta do pano 1 px atrás da mão, caindo de volta | o tronco, a cabeça (os olhos baixos, na caneca), a caneca e a mão da asa |
-| Ajustar a pega (na passada lenta) | a mão da asa ergue a caneca 1 px | a mão do pano, dentro dela | o tronco, a cabeça |
+| Esfregar (três passadas, uma lenta, mais uma) | a mão do pano dá uma volta pela parede de cá da caneca: sobe, atravessa, desce fazendo força, volta (até 2 px; no máximo 1 px para o lado) | o antebraço do pano (sai do cotovelo); o cotovelo 1 px para dentro quando a mão atravessa a parede e 1 px abaixo na pressão; o ombro do pano 1 px abaixo só na pressão; a ponta do pano 1 px atrás da mão, caindo de volta | o tronco, a cabeça (os olhos baixos, na caneca), a caneca e a mão da asa |
+| Ajustar a pega (na passada lenta) | a mão da asa ergue a caneca 1 px | a mão do pano e o pano da borda, que vão com ela | o tronco, a cabeça |
 | Olhar os fregueses (a pausa, uma ação própria) | os olhos sobem primeiro (o olhar de lado da G) | a cabeça sobe 1 px um tique depois; depois o olhar vai para o outro lado; volta | as duas mãos na caneca, o tronco |
 
 9 poses, sustentadas de 2 a 24 tiques (a pressão 3 ou 4); o ciclo tem 122 tiques (12,2 s, a 100 ms) e emenda na mesma
@@ -34,8 +34,11 @@ enquadramento, os objetos e o balcão são os mesmos (o fundo, a frente e as cha
 
 **A dobra na pega** (o Jean marcou o vazio entre a mão do pano e a caneca): uma dobra de 3 px (x 153 a 155, y 55 a 59
 na pose da G) liga o pano que entra pela boca ao que pende da mão; a crista pega a luz, uma sombra curta separa o
-tecido do metal e dos dedos. Ela anda com a mão do pano, então continua ligada nas 9 poses; o movimento é o mesmo
-(só esses 15 px mudam em cada pose).
+tecido do metal e dos dedos. Depois (o Jean viu o pano entrando na caneca e um pedaço da borda aparecendo atrás dele
+na pressão): ele limpa o lado de fora virado para ele. O pano que passava por cima da borda (da G3, de quando ele entrava na
+caneca) saiu: parado, lia como uma peça dura em cima da caneca. O pano fica todo na mão, apertado contra a parede de
+cá (um volume curto acima dos dedos, descendo até a parte pendurada), e a mão sobe e desce pela parede, no máximo 1 px
+para o lado; o ritmo e as poses do corpo são os mesmos.
 
 **Sem cintilar:** cada parte (o tronco com os braços de cima, a cabeça, o braço do pano com o pano, a caneca com a mão
 da asa, o pano na boca da caneca) é desenhada e iluminada na posição da G (o pontilhado da luz da G preso a ela),
@@ -75,6 +78,11 @@ mesmo estado do jogo; a primeira também ("a primeira versão").
   da fonte (um pixel de cor por junta).
 - **Ver no painel:** "Diante de Morel: o estudo de construção e a aplicação" (as chaves nas formas simples e vestidas) e
   "as trajetórias do cotovelo, da mão e da colher" (uma volta, a v2 e a atual), em ampliação inteira, fora da HUD.
+- **A lareira** (o Jean, 30/10/2026): o fogo passava na frente do caldeirão, ao contrário do balcão. O caldeirão e a
+  cremalheira foram para uma camada própria, `caldeirao`, acima do `fogo`, e as chamas exportadas são cortadas por ela;
+  o fundo e Morel saem iguais. Embaixo do braço de apoio, o tampo tinha um retângulo sem a sombra pontilhada e sem a
+  junta da tábua (era onde ficavam o punho e o antebraço da v2): a camada `sombra` ganhou ali o mesmo pontilhado das
+  linhas de cima, e a junta em x 240 continua até a borda da frente, para o ponto de fuga do tampo.
 - **Os limites que ficam:** a boca é a pose mais fraca (o braço curto em escorço se mistura um pouco com o casaco
   claro); todas as poses do braço saem de `vestir.lua` (o volume sobre a construção), conferidas na ampliação mas sem
   retoque à mão; a espada nas costas continua com a guarda logo acima do ombro.

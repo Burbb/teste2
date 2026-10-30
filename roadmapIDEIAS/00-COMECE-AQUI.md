@@ -8737,3 +8737,16 @@ foi automatizado.
 - **Depois, no mesmo dia:** a dobra do pano na pega da G4 (o vazio entre a mão e a caneca que o Jean marcou), ligada
   ao pano pendurado, com a sombra curta entre tecido, dedos e metal; o movimento aprovado não mudou (só os 15 px da
   dobra mudam em cada pose).
+
+### 30/10/2026 (data do computador local) — A taverna: o pano por fora da caneca na G4 e o caldeirão na frente do fogo na vista de Morel (protótipo)
+
+- **Pedido do Jean:** na G4, o pano parecia entrar e atravessar a caneca, e um pedaço da borda aparecia atrás dele; ele
+  deve limpar o lado virado para ele. Na vista de Morel, o fogo estava na frente do caldeirão.
+- **Feito:** o pano que passava por cima da borda saiu (parado, lia como uma peça dura em cima da caneca); o pano
+  fica todo na mão, apertado contra a parede de cá, e a mão sobe e desce por ela (no máximo 1 px para o lado); o ritmo
+  e as poses do corpo iguais. Na
+  vista de Morel, o caldeirão e a cremalheira numa camada `caldeirao` acima do `fogo`, e as chamas exportadas cortadas
+  por ela (o fundo e Morel iguais); embaixo do braço de apoio, o retângulo do tampo sem sombra e sem a junta da
+  tábua (o lugar do punho da v2) completado com o pontilhado e a junta.
+- **Conferido:** a fonte da G4 igual ao código; no jogo a 1920×945 e 1280×720 (`g/conferir.mjs`, G4 e Morel).
+
