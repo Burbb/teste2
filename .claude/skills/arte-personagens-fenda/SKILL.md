@@ -146,7 +146,8 @@ Por isso:
   se chapa tudo: o detalhe é escolhido, os volumes continuam legíveis;
 - mãos de cena simples (bolinhas ou formas sem dedos): numa pega, duas formas distinguíveis pela silhueta, pela
   sobreposição nos dois sentidos e pelo tom; o polegar, se preciso, numa indicação mínima.
-A tentativa feita assim (`morel/queda3/`, a pose central) está **em avaliação**; não é exemplo resolvido.
+A tentativa feita assim (`morel/queda3/`, a pose central, noutra câmera) não foi seguida: o Jean voltou à câmera
+da cena aprovada (a seção "Na câmera de uma cena aprovada", abaixo).
 
 ### Uma articulação certa que ainda parece mecânica (Morel comendo, 30/10/2026)
 
@@ -180,7 +181,8 @@ gerando a manga; o que mudou foi o que ele desenha e a revisão antes de virar a
 Quando duas figuras se seguram (uma queda de braço, um aperto de mão, puxar alguém), o contato é a junta que as duas
 dividem. O caso: `ferramentas/prototipos/taverna/morel/queda2/` (`juntas.py`, `maos.py`, `estudo.py`, `poses.py`). A
 primeira tentativa (`morel/queda/`, na câmera da conversa) não resolveu: a ação pequena, as mãos numa massa só, os
-desfechos indo para perto e para longe da câmera. Ela fica como histórico, não como exemplo.
+desfechos indo para perto e para longe da câmera. Ela fica como histórico, não como exemplo; a mesma câmera foi
+retomada depois, com a construção refeita ("Na câmera de uma cena aprovada", abaixo).
 
 **O que o estudo demonstrou** (as poses estão em avaliação pelo Jean; o método vale para a construção):
 - **A regra real decide o movimento, e o movimento decide a câmera.** Pela mesa e pelas regras da WAF, os cotovelos
@@ -216,6 +218,42 @@ desfechos indo para perto e para longe da câmera. Ela fica como histórico, nã
 ao lado das cenas desenhadas à mão (a seção anterior); a câmera de 50° e 30° acima deixou o tampo e a parede dominarem
 o quadro, e a terceira tentativa baixou a câmera (40° e 15°), aproximando a sensação da conversa. **Ainda hipótese:** se
 as vitórias se reconhecem sem legenda no tamanho da HUD (elas esperam a pose central ser aprovada).
+
+### Na câmera de uma cena aprovada (o queda 1 refinado, 30/10/2026; candidata em avaliação)
+
+Depois das câmeras próprias, o Jean pediu a disputa **na cena aprovada**: a mesma câmera, Morel, mesa e luz, como uma
+ação que acontece ali (`morel/queda-vista/`). Com a câmera fixa, a construção é que se adapta a ela:
+- **Reaproveite a cena aprovada pela fonte de agora** (as camadas da vista, o tronco e a cabeça como uma peça andando
+  com o ombro, a função que veste a manga aprovada): os braços novos saem na mesma linguagem, sem redesenhar o estilo.
+- **Ponha os apoios onde a câmera separa as formas, e meça:** de frente, um antebraço tende a cobrir o outro. Cada
+  antebraço aponta para a sua mão, não para o meio da pega; o braço de cima de quem está do outro lado corre pela borda
+  do tronco dele (cruzando o casaco, couro sobre couro, some); e a posição dos cotovelos sai de uma busca com números:
+  o ângulo entre os dois antebraços no fim mais difícil (com 25°, um sumia embaixo do outro; com 34°, aparece), o
+  comprimento na tela do antebraço que vai para longe (abaixo de ~10 px, lê em pé) e a altura da pega (abaixo da
+  barba). Cada ganho custa noutra pose: registre a troca.
+- **A junta não é o ponto de contato:** o cotovelo fica uns 4 cm acima do tampo (o osso, a pele, a manga) e o contato
+  é a borda de baixo da forma, com a sombra ali; desenhada no contato, a forma atravessava a madeira.
+- **Com o braço muito dobrado na tela,** o braço de cima recua meio degrau atrás do antebraço, longe da junta (a curva
+  do cotovelo continua uma peça só) e a sombra do antebraço nele cresce para dois pixels: no tamanho do jogo, com um,
+  os dois se fundiam.
+- **A luz da sala sobre a figura num tom só por parte:** os degraus pontilhados da sombra da cena cruzando um braço
+  leem como textura do tecido.
+- **A pega em duas bolinhas, como as mãos da cena:** sobrepostas (só encostadas, duas bolas empilhadas), a de um um
+  degrau mais escura, um pixel de sombra onde uma passa atrás da outra e só a tira dos dedos de quem está por trás; um
+  nó de polegar a mais virou um calombo.
+- **A postura de origem vem antes dos apoios** (o Jean, na revisão): a primeira candidata partiu de Morel na postura
+  da conversa e mexeu só nos cotovelos; o nosso braço atravessava a mesa e, para a vitória dele ter curso, o cotovelo
+  dele foi arrastado (um remendo, recusado). Preservar a cena é manter a identidade, o estilo, o cenário e a câmera,
+  não congelar a postura: quem disputa se prepara com o corpo. Refeito a partir do ombro de quem se debruça (o tronco
+  desce e vem para o meio, a cabeça desce mais; com o braço de cima de comprimento fixo, o cotovelo cai à frente do
+  meio do tronco), do nosso cotovelo colado à borda e do encontro no meio do tampo em profundidade, os dois desfechos
+  funcionaram com os apoios parados. Os números de antes não são requisito quando a postura muda.
+- **A face de um membro que gira se mostra pela forma:** deitando com a palma para cima, a face larga do antebraço
+  vira para a câmera; a forma lê achatada (o topo largo num tom, a borda de baixo estreita e escura, a dobra do
+  cotovelo por cima, a ponta do cotovelo para baixo, sem realce), não uma troca de cor na manga nem a mão torcida.
+- **O que sai do caminho entra em outro lugar que leia:** a tigela atrás da vela, na mesma linha, parecia ter a vela
+  dentro; um pouco mais para o fundo, lê atrás. A mão livre de quem disputa vai para o colo se, no tampo, ficaria onde
+  a pega cai.
 
 ## Erros que já aconteceram
 
