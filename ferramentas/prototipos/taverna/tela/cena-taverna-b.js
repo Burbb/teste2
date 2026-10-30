@@ -133,13 +133,15 @@
     despensa: { area: [292, 10, 26, 60], balao: [303, 18], foco: [304, 40] },
   }, ["taverneiro", "freguês da esquerda", "freguês da direita"]);
 
-  // A cena que o jogo registra (telas/cenas.js): a da faixa (a G3 por padrão, a G2 e a G original ao lado para
-  // comparar; a H, a prova de qualidade e da F à A, o histórico)
+  // A cena que o jogo registra (telas/cenas.js): a da faixa (o balcão animado, a G4, por padrão; a vista diante de
+  // Morel, animada (cena-taverna-anim.js); a G3 estática, a G2 e a G original para comparar; a H, a prova de qualidade e
+  // da F à A, o histórico)
   const CANDS = { a: () => window.CenaTavernaA, b: () => window.CenaTavernaB, c: () => window.CenaTavernaC,
     d: () => window.CenaTavernaD, e: () => window.CenaTavernaE, f: () => window.CenaTavernaF,
     g: () => window.CenaTavernaG, g2: () => window.CenaTavernaG2, g3: () => window.CenaTavernaG3, h: () => window.CenaTavernaH,
+    g4: () => window.CenaTavernaG4, morel: () => window.CenaTavernaMorel,
     prova: () => window.CenaTavernaProva };
-  const cand = () => (CANDS[document.body.dataset.tavCand] || CANDS.g3)();
+  const cand = () => (CANDS[document.body.dataset.tavCand] || CANDS.g4)();
   window.CenaTaverna = {
     base: (W, d) => cand().base(W, d),
     desenhar: (...a) => cand().desenhar(...a),

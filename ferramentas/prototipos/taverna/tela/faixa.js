@@ -5,7 +5,7 @@
    nas grades A e B; na B2, a B refinada pela referência; na B3, a B2 com os braços legíveis; e na B4, a B3 com o
    ombro do de verde suavizado; com a vista isolada), o canto de Morel (o M1, o novo, ou o da F), as candidatas (da F
    à A, o histórico), o estado do save temporário (a despensa esperando, o homem do canto, Morel já conhecido, Morel
-   recrutado, sem ouro) e a pose parada. Escolhido, o painel fecha; o botão diz as versões à vista ("Protótipo: G3 ·
+   recrutado, sem ouro) e a pose parada. Escolhido, o painel fecha; o botão diz as versões à vista ("Protótipo: G4 ·
    Homem do canto", "Protótipo: prova B4 · Morel M1 · ..."). O interior entra pelo caminho do templo (vila.js, estado.local.interiores, com a taverna
    acrescentada pelo demo.py). */
 "use strict";
@@ -17,10 +17,11 @@
     ["recrutado", "Morel recrutado"], ["sem_ouro", "Sem ouro"]];
   const f = document.createElement("div");
   f.id = "faixa-tav";
-  document.body.dataset.tavCand = document.body.dataset.tavCand || "g3";  // a G3; a G2 e a G ao lado (as outras: histórico)
+  document.body.dataset.tavCand = document.body.dataset.tavCand || "g4";  // o balcão animado; as outras para comparar
   document.body.dataset.tavProva = document.body.dataset.tavProva || "b4";
   document.body.dataset.tavMorel = document.body.dataset.tavMorel || "m1";
-  const CANDS = [["g3", "G3: a G2 com as correções"], ["g2", "G2 aprovada (antes das correções)"], ["g", "G original"], ["h", "Candidata H (histórico)"], ["prova", "Prova: os jogadores (histórico)"], ["f", "Candidata F (histórico)"], ["e", "Candidata E (histórico)"],
+  const CANDS = [["g4", "Balcão animado (G4)"], ["morel", "Diante de Morel (animada)"], ["g3", "G3 estática"],
+    ["g2", "G2 aprovada (antes das correções)"], ["g", "G original"], ["h", "Candidata H (histórico)"], ["prova", "Prova: os jogadores (histórico)"], ["f", "Candidata F (histórico)"], ["e", "Candidata E (histórico)"],
     ["d", "Candidata D (histórico)"], ["c", "Candidata C (histórico)"], ["b", "Candidata B (histórico)"], ["a", "Candidata A (histórico)"]];
   const GRADES = [["a", "Grade A: a atual (66×42)"], ["b", "Grade B: o dobro (132×84)"],
                   ["b2", "Grade B2: a B refinada pela referência (132×84)"],
@@ -38,8 +39,9 @@
     <b>O estado do save temporário</b>
     ${ESTADOS.map(([id, nome]) => `<button type="button" data-tav="${id}" aria-pressed="${id === "homem_do_canto"}">${nome}</button>`).join("")}
     <button type="button" data-reduzido aria-pressed="false">Pose parada</button>
-    <b>Estudo livre (fora da HUD)</b>
-    <button type="button" data-estudo>Diante de Morel (o estudo em Aseprite)</button></div><span class="aviso"></span>`;
+    <b>Inspeção ampliada (fora da HUD)</b>
+    <button type="button" data-estudo="vista">Diante de Morel: a vista adaptada (pose parada)</button>
+    <button type="button" data-estudo="estudo">Diante de Morel: o estudo livre (histórico)</button></div><span class="aviso"></span>`;
   const topo = document.getElementById("topo");
   topo.insertBefore(f, document.getElementById("acoes-topo"));
   const abre = f.querySelector(".abre"), painel = f.querySelector("#faixa-tav-painel"), aviso = f.querySelector(".aviso");
@@ -103,12 +105,16 @@
   // não confundir um problema de exibição com a qualidade do desenho. Esc ou Fechar voltam ao jogo.
   const estudo = document.createElement("div");
   estudo.id = "estudo-morel"; estudo.hidden = true;
-  estudo.innerHTML = `<div class="barra"><b>Estudo livre: diante de Morel</b>
+  estudo.innerHTML = `<div class="barra"><b class="titulo"></b>
     <span class="tam"></span><span class="zooms"></span><button type="button" data-fechar>Fechar (Esc)</button></div>
     <div class="quadro"><img alt="Estudo: sentado diante de Morel, na taverna" src="/proto-tav/camadas/morel/estudo.png"></div>`;
   document.body.appendChild(estudo);
   const img = estudo.querySelector("img"), tam = estudo.querySelector(".tam"), zooms = estudo.querySelector(".zooms");
-  const NAT = [360, 120];
+  const VISTAS = {
+    vista: { src: "/proto-tav/camadas/morel-vista/parada.png", nat: [320, 96], titulo: "Diante de Morel: a vista adaptada (pose parada)" },
+    estudo: { src: "/proto-tav/camadas/morel/estudo.png", nat: [360, 120], titulo: "Diante de Morel: o estudo livre (histórico)" },
+  };
+  let NAT = [360, 120];
   const maior = () => Math.max(1, Math.floor(Math.min((innerWidth - 32) / NAT[0], (innerHeight - 90) / NAT[1])));
   function zoom(z) {
     const caber = z === "caber";
@@ -125,12 +131,14 @@
   const fecharEstudo = () => { estudo.hidden = true; abre.focus(); };
   estudo.querySelector("[data-fechar]").addEventListener("click", fecharEstudo);
   document.addEventListener("keydown", (ev) => { if (ev.key === "Escape" && !estudo.hidden) { ev.stopPropagation(); ev.preventDefault(); fecharEstudo(); } }, true);
-  painel.querySelector("[data-estudo]").addEventListener("click", () => {
+  painel.querySelectorAll("[data-estudo]").forEach((bt) => bt.addEventListener("click", () => {
     abrir(false);
+    const v = VISTAS[bt.dataset.estudo];
+    NAT = v.nat; img.src = v.src; estudo.querySelector(".titulo").textContent = v.titulo;
     estudo.hidden = false;
     zoom(maior());
     estudo.querySelector("[data-fechar]").focus();
-  });
+  }));
   painel.querySelector("[data-reduzido]").addEventListener("click", (ev) => {
     const sim = document.body.dataset.tavReduzido !== "1";
     document.body.dataset.tavReduzido = sim ? "1" : "";

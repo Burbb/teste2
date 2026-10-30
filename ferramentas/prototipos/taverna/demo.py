@@ -172,10 +172,12 @@ def cenas_js(texto):
     texto = texto.replace(b, '        const cartoes = [...document.querySelectorAll("#folha .servico")]\n'
                              '          .filter((c) => typeof p.servicos !== "string" || c.dataset.servico === p.servicos);\n')
     # a candidata à vista decide quais pontos existem (a G não desenha a escada, a porta da rua nem Morel): o ponto que
-    # a cena não tem não aparece. No jogo, o motor mandaria só os pontos da cena integrada.
+    # a cena não tem não aparece. A lista inteira do motor fica guardada (`todos`), para a troca de vista pelo painel
+    # filtrar de novo a partir dela. No jogo, o motor mandaria só os pontos da cena integrada.
     c = "    if (!def) { limpar(); return; }\n"
     assert c in texto
-    return texto.replace(c, c + '    if (d.cena === "taverna") d = Object.assign({}, d, { pontos: d.pontos.filter((p) => def.pontos[p.id]) });\n')
+    return texto.replace(c, c + '    if (d.cena === "taverna") { const todos = d.todos || d.pontos; '
+                                'd = Object.assign({}, d, { todos, pontos: todos.filter((p) => def.pontos[p.id]) }); }\n')
 
 
 def servir():
@@ -201,6 +203,7 @@ def servir():
             html = html.replace(a, '<script src="/proto-tav/cena-taverna.js"></script>\n'
                                    '<script src="/proto-tav/cena-taverna-b.js"></script>\n'
                                    '<script src="/proto-tav/cena-taverna-prova.js"></script>\n'
+                                   '<script src="/proto-tav/cena-taverna-anim.js"></script>\n'
                                    '<script src="/proto-tav/cenas.js"></script>')
             html = html.replace("</head>", '<link rel="stylesheet" href="/proto-tav/taverna.css">\n</head>')
             html = html.replace("</body>", '<script src="/proto-tav/faixa.js"></script>\n'

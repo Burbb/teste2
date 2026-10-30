@@ -1,5 +1,5 @@
 // Confere as candidatas da taverna no jogo de verdade (demo.py, save temporário), a 1920×945 e a 1280×720: entra
-// pelo prédio da taverna no Vau e, em cada candidata (CANDS, padrão "g3,g2"; "g", "h" também servem; trocadas pelo painel, no mesmo estado
+// pelo prédio da taverna no Vau e, em cada candidata (CANDS, padrão "g4,morel"; "g3", "g2", "g", "h" também servem; trocadas pelo painel, no mesmo estado
 // do jogo) e em cada estado do save (o homem do canto, a despensa esperando, Morel conhecido, recrutado, sem ouro),
 // fotografa a cena com o balcão embaixo e confere: os pontos (o Taverneiro sempre, a Despensa
 // só enquanto ela espera; nenhum da escada, da rua ou de Morel), os nomes dentro da arte, sem cobrir o rosto nem as
@@ -63,17 +63,23 @@ try {
     console.log(`== ${W}×${H}`);
     const p = await b.newPage({ viewport: { width: W, height: H } });
     const erros = []; p.on("pageerror", (e) => erros.push(String(e)));
+    await p.addInitScript(() => { window.__relogios = 0; const si = window.setInterval; window.setInterval = (...a) => { window.__relogios++; return si(...a); }; });
     p.on("console", (m) => { if (m.type() === "error") erros.push(m.text()); });
     await p.goto(url); await parado(p);
     conferir(await entrar(p), "entra na taverna pelo prédio");
-    conferir(await p.evaluate(() => document.body.dataset.tavCand === "g3"), "a demonstração abre na G3");
-    for (const cand of (process.env.CANDS || "g3,g2").split(",")) {
+    conferir(await p.evaluate(() => document.body.dataset.tavCand === "g4"), "a demonstração abre no balcão animado (G4)");
+    for (const cand of (process.env.CANDS || "g4,morel").split(",")) {
     if (await p.evaluate(() => document.body.dataset.tavCand) !== cand) {  // a troca pelo painel, no mesmo estado
       await p.click("#faixa-tav .abre"); await p.click(`#faixa-tav-painel [data-cand="${cand}"]`); await espera(500);
       conferir(await p.evaluate((c) => document.body.dataset.tavCand === c && Cenas.atual().d.cena === "taverna", cand),
         `a troca para a ${cand.toUpperCase()} pelo painel, sem sair da taverna`);
     }
     const [fx, fy] = cand === "h" ? [-10, -6] : [0, 0];  // onde o taverneiro cai em cada uma
+    // o rosto e as mãos de quem é o foco da vista (o taverneiro no balcão; Morel na vista dele)
+    const ROSTO = cand === "morel" ? [208, 2, 21, 27] : [149 + fx, 17 + fy, 22, 27];
+    const MAOS = cand === "morel" ? [196, 60, 48, 24] : [146 + fx, 50 + fy, 30, 16];
+    const esperado = (est) => cand !== "morel" ? ESPERADO[est]
+      : est === "homem_do_canto" ? ["taverneiro", "morel"] : est === "despensa" ? ["taverneiro", "despensa"] : ["taverneiro"];
     for (const est of Object.keys(ESPERADO)) {
       if (est !== "homem_do_canto") await trocarEstado(p, est);  // a demonstração abre (e a volta deixa) no homem do canto
       await p.mouse.move(2, 2); await espera(300);
@@ -88,25 +94,30 @@ try {
           rola: pg.scrollHeight > pg.clientHeight + 1 };
       });
       console.log(`  [${est}]`, JSON.stringify(lay));
-      conferir(JSON.stringify(lay.pontos) === JSON.stringify(ESPERADO[est]), `${cand} ${est}: os pontos ${lay.pontos.join(", ")}`);
+      conferir(JSON.stringify(lay.pontos) === JSON.stringify(esperado(est)), `${cand} ${est}: os pontos ${lay.pontos.join(", ")}`);
       conferir(lay.cabem, `${cand} ${est}: os cartões e o Voltar acima da doca, sem rolar`);
       // os nomes com F4 (Destacar interações): dentro da arte, longe do rosto e das mãos
       await p.evaluate(() => document.body.classList.add("destacar-interacoes")); await espera(250);
-      const bal = await p.evaluate(([fx, fy]) => {
+      const bal = await p.evaluate(([R, M]) => {
         const r = document.getElementById("vista").getBoundingClientRect(), q = Vista.caixaDaArte();
-        const ar = (x, y, w, h) => ({ l: q.esq + q.dx + x * q.ex, t: q.topo + q.dy + y * q.ey, r: q.esq + q.dx + (x + w) * q.ex, b: q.topo + q.dy + (y + h) * q.ey });
-        const rosto = ar(149 + fx, 17 + fy, 22, 27), maos = ar(146 + fx, 50 + fy, 30, 16);
+        // a caixa da arte (Vista.caixaDaArte) é relativa à área de cena; os nomes, à janela: soma-se a posição da cena
+        const o = document.getElementById("cena").getBoundingClientRect();
+        const ar = (x, y, w, h) => ({ l: o.left + q.esq + q.dx + x * q.ex, t: o.top + q.topo + q.dy + y * q.ey,
+          r: o.left + q.esq + q.dx + (x + w) * q.ex, b: o.top + q.topo + q.dy + (y + h) * q.ey });
+        const rosto = ar(...R), maos = ar(...M);
         const cruza = (a, c) => a.left < c.r && a.right > c.l && a.top < c.b && a.bottom > c.t;
         return [...document.querySelectorAll("#pontos-cena .ci-balao")].map((e) => { const a = e.getBoundingClientRect();
           return { texto: e.textContent, dentro: a.left >= r.left - 1 && a.right <= r.right + 1 && a.top >= r.top - 1,
-            livre: !cruza(a, rosto) && !cruza(a, maos) }; });
-      }, [fx, fy]);
-      conferir(bal.every((x) => x.dentro && x.livre), `${cand} ${est}: os nomes dentro da arte, sem cobrir rosto nem mãos (${bal.map((x) => x.texto).join(", ")})`);
+            livre: !cruza(a, rosto) && !cruza(a, maos), caixa: [a.left, a.top, a.right, a.bottom].map(Math.round),
+            arte: [r.left, r.top, r.right].map(Math.round), rosto: [rosto.l, rosto.t, rosto.r, rosto.b].map(Math.round),
+            maos: [maos.l, maos.t, maos.r, maos.b].map(Math.round) }; });
+      }, [ROSTO, MAOS]);
+      conferir(bal.every((x) => x.dentro && x.livre), `${cand} ${est}: os nomes dentro da arte, sem cobrir rosto nem mãos (${bal.map((x) => x.texto + (x.dentro && x.livre ? "" : ` FORA ${JSON.stringify(x)}`)).join(", ")})`);
       await p.screenshot({ path: path.join(SAIDA, `${jan}-${cand}-${est}-nomes.png`) });
       await p.evaluate(() => document.body.classList.remove("destacar-interacoes"));
       await p.screenshot({ path: path.join(SAIDA, `${jan}-${cand}-${est}.png`) });
       // cada ponto leva ao cartão dele
-      for (const [ponto, servico] of [["taverneiro", "rumores"], ["despensa", "despensa"]]) {
+      for (const [ponto, servico] of [["taverneiro", "rumores"], ["despensa", "despensa"], ["morel", "morel"]]) {
         if (!lay.pontos.includes(ponto)) continue;
         await p.click(`#pontos-cena .ci-ponto[data-ponto="${ponto}"]`); await espera(250);
         const foco = await p.evaluate(() => { const c = document.activeElement.closest("#folha .servico"); return c ? c.dataset.servico : null; });
@@ -115,16 +126,30 @@ try {
     }
     await trocarEstado(p, "homem_do_canto");
     }
+    // a animação anda (dois instantes diferentes); a pose parada e o relógio são conferidos adiante
+    for (const cand of (process.env.CANDS || "g4,morel").split(",")) {
+      await p.click("#faixa-tav .abre"); await p.click(`#faixa-tav-painel [data-cand="${cand}"]`); await espera(1500);
+      // três instantes (0, 0,5 s e 1,3 s): o fogo troca de desenho a cada 200 ms, mesmo com a figura numa pausa
+      const f1 = await p.evaluate(() => document.getElementById("vista").toDataURL());
+      await espera(500);
+      const f2 = await p.evaluate(() => document.getElementById("vista").toDataURL());
+      await espera(800);
+      const f3 = await p.evaluate(() => document.getElementById("vista").toDataURL());
+      conferir(f1 !== f2 || f2 !== f3, `${cand}: a vista anima`);
+    }
     // o teclado chega aos pontos; Esc volta à vila; o Voltar também
     await p.evaluate(() => document.activeElement && document.activeElement.blur());
     let chegou = false;
     for (let k = 0; k < 50 && !chegou; k++) { await p.keyboard.press("Tab"); chegou = await p.evaluate(() => !!document.activeElement.closest("#pontos-cena .ci-ponto")); }
     conferir(chegou, "o Tab chega ao ponto do Taverneiro");
     await p.screenshot({ path: path.join(SAIDA, `${jan}-foco-ponto.png`) });
+    const r1 = await p.evaluate(() => window.__relogios);
     await p.keyboard.press("Escape");
     conferir(await naVila(p), "o Esc volta à vila");
     await parado(p);
     conferir(await entrar(p), "entra de novo");
+    const r2 = await p.evaluate(() => window.__relogios);
+    conferir(r1 === r2, `sair e entrar não cria outro relógio (${r1} → ${r2})`);
     const voltar = await p.$("#folha .escolha:has-text('Voltar')") || await p.$("text=Voltar à vila");
     if (voltar) { await voltar.click(); conferir(await naVila(p), "o Voltar à vila volta à vila"); } else conferir(false, "o Voltar à vila à vista");
     await parado(p);
@@ -137,7 +162,7 @@ try {
     await p.click("#faixa-tav-painel [data-reduzido]"); await p.click("#faixa-tav .abre");  // o painel continua aberto
     await trocarEstado(p, "homem_do_canto");
     // o estudo de Morel: a vista à parte, na maior ampliação inteira que cabe, e o Esc fechando
-    await p.click("#faixa-tav .abre"); await p.click("#faixa-tav-painel [data-estudo]"); await espera(600);
+    await p.click("#faixa-tav .abre"); await p.click('#faixa-tav-painel [data-estudo="estudo"]'); await espera(600);
     const est = await p.evaluate(() => { const i = document.querySelector("#estudo-morel img");
       return { aberto: !document.getElementById("estudo-morel").hidden, nat: [i.naturalWidth, i.naturalHeight],
         largura: i.getBoundingClientRect().width, legenda: document.querySelector("#estudo-morel .tam").textContent }; });
