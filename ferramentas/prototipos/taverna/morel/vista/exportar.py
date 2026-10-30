@@ -5,7 +5,7 @@
 A fonte é a autoridade: este script só a lê (o Aseprite em lote achata cada quadro com as camadas de luz, `sombra` em
 multiplicar e `brilho` em somar, e exporta as células de cada camada) e recorta as peças que a cena desenha:
 - `fundo.png`: o quadro 1 sem as camadas animadas, a mesa e as mãos (a sala, o balcão, a cadeira);
-- `chamas.png`: 4 quadros, o fogo da lareira (onde o balcão não o cobre) e a chama da vela (a cena a desenha
+- `chamas.png`: 4 quadros, o fogo da lareira (onde o balcão e o caldeirão não o cobrem) e a chama da vela (a cena a desenha
   depois da mesa: a base da chama encosta no pavio);
 - `taverneiro.png`: as poses do taverneiro ao fundo (só o que o balcão não cobre), recortadas na caixa delas;
 - `morel.png`: as poses de Morel, recortadas na caixa delas, em duas faixas: a de cima é o corpo e a cabeça (atrás da
@@ -129,6 +129,7 @@ def main():
             return np.array(Image.open(p).convert("RGBA"))[:, :, 3] > 0
 
         balcao = alfa("balcao", 0)
+        caldeirao = alfa("caldeirao", 0)  # o caldeirão pendurado fica na frente do fogo
         SAIDA.mkdir(parents=True, exist_ok=True)
         fundo.save(SAIDA / "fundo.png", optimize=True)
         frente = _mascara(mesa, alfa("mesa", 0) | alfa("maos", 0))
@@ -136,7 +137,7 @@ def main():
         # as chamas: 4 quadros
         tira = Image.new("RGBA", (320 * 4, 96))
         for i in range(4):
-            tira.paste(_mascara(Q[i], (alfa("fogo", i) & ~balcao) | alfa("chamas", i)), (320 * i, 0))
+            tira.paste(_mascara(Q[i], (alfa("fogo", i) & ~balcao & ~caldeirao) | alfa("chamas", i)), (320 * i, 0))
         tira.save(SAIDA / "chamas.png", optimize=True)
         # o taverneiro: as duas poses (quadros 1 e 2), só o que o balcão não cobre
         tav = [_mascara(Q[j], alfa("taverneiro", j) & ~balcao) for j in range(2)]

@@ -4,20 +4,21 @@ pose a pose, pelo fluxo da skill `arte-cenas-fenda` (seção 5b).
 **A atividade e os apoios.** Ele esfrega a caneca com o pano e, de tempos em tempos, para e olha os fregueses. Limpar
 uma caneca é um trabalho de mãos: pouco esforço, alcance curto, a caneca apoiada na outra mão. O que fica (e dá
 estabilidade à ação): os pés (fora do quadro), o quadril atrás do balcão, o tronco, a cabeça enquanto ele esfrega (os
-olhos baixos, no trabalho). O que mexe: a mão do pano, que dá a volta na caneca (entra pela boca, gira por dentro, desce
-pelo lado fazendo força, volta).
+olhos baixos, no trabalho). O que mexe: a mão do pano, que dá a volta na caneca (sobe pela parede de cá, atravessa, desce
+fazendo força, volta). Ele limpa o lado de fora virado para ele: o pano fica na mão, apertado contra a parede de
+cá (não passa pela borda nem entra na caneca), e a mão anda no máximo 1 px para o lado.
 
 **Quem conduz, quem acompanha, quem fica** (a segunda versão; a primeira descia o tronco e a cabeça a cada passada e
 lia como o corpo inteiro limpando a caneca: `g4/aseprite-v1/`, `camadas/g4-v1/`).
 
 | Trecho | Conduz | Acompanha | Fica |
 |---|---|---|---|
-| Esfregar | a mão do pano (até 2 px, uma volta na caneca) | o antebraço do pano (sai do cotovelo); o cotovelo 1 px para dentro quando a mão entra na caneca e 1 px abaixo na pressão; o ombro do pano 1 px abaixo só na pressão; o pano pendurado (a ponta 1 px atrás do movimento da mão, caindo de volta) | o tronco, a cabeça (os olhos na caneca), a caneca e a mão da asa |
-| Ajustar a pega (uma vez, na passada lenta) | a mão da caneca ergue a caneca 1 px | a mão do pano, que está dentro dela | o tronco, a cabeça |
+| Esfregar | a mão do pano (até 2 px, uma volta pela parede de cá) | o antebraço do pano (sai do cotovelo); o cotovelo 1 px para dentro quando a mão atravessa a parede e 1 px abaixo na pressão; o ombro do pano 1 px abaixo só na pressão; o pano pendurado (a ponta 1 px atrás do movimento da mão, caindo de volta) | o tronco, a cabeça (os olhos na caneca), a caneca e a mão da asa |
+| Ajustar a pega (uma vez, na passada lenta) | a mão da caneca ergue a caneca 1 px | a mão do pano, que vai com ela | o tronco, a cabeça |
 | Olhar os fregueses (a pausa: uma ação própria) | os olhos (sobem primeiro) | a cabeça (sobe 1 px um tique depois), depois os olhos vão para o outro lado | as duas mãos paradas na caneca, o tronco |
 
 **As partes andam presas a elas mesmas:** cada parte (o tronco com os braços de cima, a cabeça, o braço do pano com o
-pano, a caneca com a mão da asa, o pano na boca da caneca) é desenhada e iluminada na posição da G (`g.desenho.luz`, o
+pano, a caneca com a mão da asa, o pano apertado na caneca) é desenhada e iluminada na posição da G (`g.desenho.luz`, o
 pontilhado da G), retocada como na G2 (`pele_lisa`, `mangas`, `pescoco`) e só depois deslocada: o pontilhado anda com
 a parte e não cintila. O antebraço do pano é o único redesenhado a cada pose (do cotovelo à mão)."""
 import numpy as np
@@ -139,8 +140,8 @@ def _colar(quadro, a, dx, dy):
 # ponta do pano (a), olhos e cabeça além do tronco (h). O tronco não se mexe.
 POSES = {
     "esfrega0": dict(w=(0, 0), e=(0, 0), o=(0, 0), c=(0, 0), a=0, h=(0, 0, "baixo")),    # a mão na boca da caneca
-    "esfrega1": dict(w=(1, -1), e=(1, 0), o=(0, 0), c=(0, 0), a=-1, h=(0, 0, "baixo")),  # entra pela boca; o cotovelo vem
-    "esfrega2": dict(w=(2, 0), e=(1, 0), o=(0, 0), c=(0, 0), a=-1, h=(0, 0, "baixo")),   # gira por dentro
+    "esfrega1": dict(w=(0, -1), e=(0, 0), o=(0, 0), c=(0, 0), a=0, h=(0, 0, "baixo")),   # sobe pela parede de cá
+    "esfrega2": dict(w=(1, 0), e=(1, 0), o=(0, 0), c=(0, 0), a=-1, h=(0, 0, "baixo")),   # atravessa a parede; o cotovelo vem
     "esfrega3": dict(w=(1, 2), e=(0, 1), o=(0, 1), c=(0, 0), a=0, h=(0, 0, "baixo")),    # desce pelo lado: a pressão
     "esfrega4": dict(w=(0, 1), e=(0, 0), o=(0, 0), c=(0, 0), a=1, h=(0, 0, "baixo")),    # volta; a ponta cai atrás
     "pega": dict(w=(0, -1), e=(0, 0), o=(0, 0), c=(0, -1), a=0, h=(0, 0, "baixo")),      # a mão da asa ajeita a caneca
@@ -176,20 +177,20 @@ def quadro(nome):
     return q
 
 
-# a dobra do pano na pega (x 153 a 155, y 55 a 59): o tecido entre os dedos e a caneca, ligando o que entra pela boca ao
-# que pende da mão; a crista pega a luz, a sombra curta separa do metal (à direita) e dos dedos (embaixo do polegar)
-_DOBRA = {55: "LpS", 56: "LpS", 57: "pLS", 58: "SLp", 59: "Spp"}
+# o pano na mão, apertado contra a parede de cá da caneca (x 153 a 155, de y 52 a y 59 na pose da G): o volume curto que
+# sai de cima dos dedos e desce até a parte que pende; anda com a mão. A borda de cima arredondada, a crista pega a luz,
+# a sombra curta separa do metal (à direita) e dos dedos (embaixo do polegar). Ele limpa a caneca por fora: o pano que
+# passava por cima da borda (o da G3, de quando o pano entrava na caneca) saiu.
+_PANO_NA_MAO = {52: "Lp.", 53: "LpS", 54: "LpS", 55: "LpS", 56: "LpS", 57: "pLS", 58: "SLp", 59: "Spp"}
 
 
-def _pano_na_caneca(f, dx, dy):
-    g = _figura()
-    R3._pano_na_caneca(g)
+def _pano_na_caneca(f, wx, wy):
+    """O pano que a mão aperta contra a parede de cá da caneca, deslocado com a mão (wx, wy)."""
     cores = {"L": "panoLuz", "p": "pano", "S": "panoSombra"}
-    for y, linha in _DOBRA.items():
+    for y, linha in _PANO_NA_MAO.items():
         for k, ch in enumerate(linha):
-            g.p(153 + k, y, cores[ch])
-    for (x, y), c in g.px.items():
-        f.px[(x + dx, y + dy)] = c
+            if ch != ".":
+                f.p(153 + k + wx, y + wy, cores[ch])
 
 
 def tempo():
