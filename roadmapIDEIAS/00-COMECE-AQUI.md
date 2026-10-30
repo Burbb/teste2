@@ -8717,3 +8717,20 @@ foi automatizado.
   taverneiro e a mesa idênticos aos da v2; `vestir.lua` refaz o braço da fonte pixel a pixel; no jogo a 1920×945 e
   1280×720 (`g/conferir.mjs`, com as vistas de inspeção).
 - **Parado aqui:** a avaliação artística é do Jean; nada integrado.
+
+### 29/10/2026 (data do computador local) — A taverna: a atuação do taverneiro da G4 e a participação do corpo nas skills (protótipo)
+
+- **Pedido do Jean:** a vista de Morel aprovada para a avaliação (sem mexer nela); o taverneiro da G4 movia o corpo
+  inteiro de um jeito forçado para limpar a caneca: as mãos e os braços conduzem, o tronco fica, a cabeça olha o
+  trabalho ou os fregueses nas pausas; e as skills dizendo que uma ação natural não exige o corpo inteiro.
+- **Feito:** `g4/taverneiro.py` refeito (a mão do pano dá uma volta na caneca até 2 px; o cotovelo e o ombro do pano
+  acompanham 1 px no alcance e na pressão; a mão da asa ajusta a pega uma vez; o tronco e a cabeça parados enquanto ele
+  esfrega; olhar os fregueses como uma ação à parte, na pausa), a fonte refeita pelo código (`--criar --refazer`; não
+  havia retoques à mão), a atuação anterior no painel (`g4/aseprite-v1/`, `camadas/g4-v1/`). Nas skills: a seção 5b da
+  `arte-cenas-fenda` ganhou "Quanto do corpo participa" (esforço, alcance, apoios, intenção; martelar, limpar uma
+  caneca, olhar para alguém) e perdeu a regra "braço limpo sobre corpo imóvel é robótico"; o passo 6 da
+  `arte-personagens-fenda` diz que ombro e tronco participam quando o gesto pede.
+- **Conferido:** a fonte igual ao código; o fundo, a frente e as chamas idênticos aos da atuação anterior; a cabeça com 0
+  px mudados nas trocas de pose enquanto ele esfrega (antes, até 329); no jogo a 1920×945 e 1280×720 (`g/conferir.mjs`
+  com a G4, a anterior e Morel).
+- **Parado aqui:** a avaliação das duas vistas é do Jean; nada integrado.

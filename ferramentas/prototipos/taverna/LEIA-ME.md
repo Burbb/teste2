@@ -1,10 +1,11 @@
 # Protótipo: o interior da taverna (o balcão animado e a vista diante de Morel; o resto como histórico)
 
 **O estado** (29/10/2026): **o balcão aprovado** (a G2, com os retoques locais da G3) agora **animado** na **G4**: o
-taverneiro limpa a caneca e para para olhar os fregueses. **A vista diante de Morel**, saída do estudo livre (que o Jean
+taverneiro limpa a caneca (na segunda atuação, com as mãos e os braços; o tronco firme) e para para olhar os
+fregueses. **A vista diante de Morel**, saída do estudo livre (que o Jean
 gostou), foi **adaptada ao acabamento do jogo e animada**, e continua **em avaliação**; na terceira passada, o braço
 foi refeito a partir de um **estudo de construção** (a pesquisa, o boneco com formas simples, os comprimentos fixos) que
-virou a skill `arte-personagens-fenda`. As duas no mesmo `demo.bat`, com a pose parada de cada uma e as versões
+virou a skill `arte-personagens-fenda`; ela está aprovada para a avaliação e não mudou nesta rodada. As duas no mesmo `demo.bat`, com a pose parada de cada uma e as versões
 anteriores para comparar. Nada integrado; sem som, diálogo ou regra nova.
 
 ## A G4: o balcão aprovado, animado
@@ -14,21 +15,28 @@ que era a "garrafa bojuda amarelada" marcada pelo Jean (o bojo torto, o gargalo 
 eixo x 207, a base reta apoiada na tábua, o gargalo de vidro de 3 px no meio (`g4/fonte.py`, `garrafao`). As duas
 garrafas corrigidas na G3 (a de vinho e a bojuda de âmbar) ficam como estão.
 
-**A rotina** (`g4/taverneiro.py`, pela seção 5b da skill):
+**A rotina** (`g4/taverneiro.py`, pela seção 5b da skill, "Quanto do corpo participa"). A segunda versão da atuação
+(29/10/2026): na primeira, o tronco (com a caneca e as duas mãos) descia 1 px a cada passada e a cabeça ia junto, e o
+Jean viu o corpo inteiro limpando a caneca de um jeito forçado. Limpar uma caneca é trabalho de mãos (pouco esforço,
+alcance curto), então as mãos conduzem e o tronco dá a base:
 
 | Trecho | Conduz | Acompanha | Fica |
 |---|---|---|---|
-| Esfregar (3 passadas e uma mais lenta) | a mão do pano dá a volta na caneca: entra pela boca, desce pelo lado, volta (até 2 px) | a ponta do pano um tique atrasada, para o outro lado; o tronco desce 1 px na passada de baixo; a cabeça 1 px um tique depois do tronco; os olhos baixos, na caneca | a caneca e a mão da asa (com o tronco), o quadril |
-| Olhar os fregueses | os olhos sobem primeiro (o olhar de lado da G) | a cabeça sobe 1 px um tique depois; depois o olhar vai para o outro lado; volta | as duas mãos na caneca, o tronco |
+| Esfregar (três passadas, uma lenta, mais uma) | a mão do pano dá uma volta na caneca: entra pela boca, gira por dentro, desce pelo lado fazendo força, volta (até 2 px) | o antebraço do pano (sai do cotovelo); o cotovelo 1 px para dentro quando a mão entra e 1 px abaixo na pressão; o ombro do pano 1 px abaixo só na pressão; a ponta do pano 1 px atrás da mão, caindo de volta | o tronco, a cabeça (os olhos baixos, na caneca), a caneca e a mão da asa |
+| Ajustar a pega (na passada lenta) | a mão da asa ergue a caneca 1 px | a mão do pano, dentro dela | o tronco, a cabeça |
+| Olhar os fregueses (a pausa, uma ação própria) | os olhos sobem primeiro (o olhar de lado da G) | a cabeça sobe 1 px um tique depois; depois o olhar vai para o outro lado; volta | as duas mãos na caneca, o tronco |
 
-8 poses, sustentadas de 2 a 24 tiques; o ciclo tem 119 tiques (11,9 s, a 100 ms) e emenda na mesma pose em que começa.
-A pose parada (o movimento reduzido) é a da G3: o olhar de lado, desconfiado.
+9 poses, sustentadas de 2 a 24 tiques (a pressão 3 ou 4); o ciclo tem 122 tiques (12,2 s, a 100 ms) e emenda na mesma
+pose em que começa. Enquanto ele esfrega, a cabeça não muda um pixel (na primeira versão, até 329 px por troca de pose).
+A pose parada (o movimento reduzido) é a da G3: o olhar de lado, desconfiado. A atuação anterior fica no painel
+("Balcão animado, a atuação anterior": a fonte em `g4/aseprite-v1/`, as camadas em `camadas/g4-v1/`); o desenho, o
+enquadramento, os objetos e o balcão são os mesmos (o fundo, a frente e as chamas saem idênticos).
 
 **Sem cintilar:** cada parte (o tronco com os braços de cima, a cabeça, o braço do pano com o pano, a caneca com a mão
 da asa, o pano na boca da caneca) é desenhada e iluminada na posição da G (o pontilhado da luz da G preso a ela),
 retocada como na G2 e só depois deslocada; o pontilhado anda com a parte. A caneca mantém o tamanho, o volume e a pega.
 
-**A fonte:** `g4/aseprite/taverna-g4.aseprite` (8 quadros: o taverneiro um por pose, o fogo e o lampião nos 4
+**A fonte:** `g4/aseprite/taverna-g4.aseprite` (9 quadros: o taverneiro um por pose, o fogo e o lampião nos 4
 primeiros), feita da fonte da G3 (`--criar` protegido; depois, a autoridade). `g4/fonte.py` exporta para `camadas/g4/`
 (o fundo, as chamas, a tira das poses recortada na caixa delas, a frente e `rotina.json`); `--conferir` compara com o
 código. A cena (`tela/cena-taverna-anim.js`, `CenaTavernaG4`) desenha o fundo, as chamas, a pose da vez e o balcão por
@@ -267,7 +275,7 @@ num **save temporário** (os saves do Jean não são lidos nem tocados), na port
 campanha começada e 60 de ouro. Clique na **Taverna** na vila: o balcão animado (G4) aparece no topo e o balcão de sempre
 embaixo. Se uma demonstração antiga estiver aberta, feche a janela dela antes (a porta é a mesma).
 
-O botão **Protótipo** na barra do alto abre o painel: a vista (**Balcão animado (G4)**, o padrão, **Diante de Morel
+O botão **Protótipo** na barra do alto abre o painel: a vista (**Balcão animado (G4)**, o padrão, com a atuação ajustada, a **atuação anterior** para comparar, **Diante de Morel
 (animada)**, a segunda e a primeira versão dela, **G3 estática**, **G2** e **G original**: a troca é imediata, sem sair da taverna, no mesmo estado do jogo; a H, a prova de qualidade e da **F** à **A**, o
 histórico), o estado do save (**Despensa esperando**, **Homem do canto**, **Morel conhecido**, **Morel recrutado**,
 **Sem ouro**), a **Pose parada** (o fogo e o lampião param) e as vistas de inspeção de Morel (a vista parada, o
