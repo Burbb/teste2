@@ -8850,3 +8850,5 @@ foi automatizado.
   duas conferências no jogo nas duas resoluções.
 - **E depois:** os pixels marrons da manga que apareciam encostados na ponta esquerda da calota em alguns quadros (e
   a beirada de cima dela nos quadros da boca) saíram: acima da ponta da calota, a manga não passa para fora dela.
+- **E por último:** a ponta horizontal da ombreira esquerda (a primeira correção tinha estendido a placa sobre o fundo)
+  saiu; a placa, refeita do tronco original, arredonda no alto e cobre o ombro só até o contorno dele.

@@ -201,12 +201,12 @@ def _juntas_fonte(cel):
     return out
 
 
-def _celulas(tmp):
-    pasta = pathlib.Path(tmp) / "cel"
+def _celulas(tmp, fonte=FONTE, nome="cel"):
+    pasta = pathlib.Path(tmp) / nome
     pasta.mkdir()
     script = pathlib.Path(tmp) / "celulas.lua"
     shutil.copy(CELULAS, script)
-    subprocess.run([aseprite(), "-b", "--script-param", f"fonte={FONTE}", "--script-param", f"pasta={pasta}",
+    subprocess.run([aseprite(), "-b", "--script-param", f"fonte={fonte}", "--script-param", f"pasta={pasta}",
                     "--script", str(script)], capture_output=True, text=True)
     return pasta
 
@@ -227,25 +227,28 @@ def _dy_corpo(cel, k):
     return topo(k) - topo(REPOUSO)
 
 
-def corpo_corrigido(cel, k):
-    """O tronco do quadro k com a ombreira esquerda cobrindo o alto do ombro: nas linhas de cima da placa, o couro que
-    sobrava à direita da borda dela vira placa (a fresta escura na ponta, o alto aceso na primeira linha). Aplicar de
-    novo não muda nada."""
-    im = np.array(Image.open(cel / f"morel_corpo-{k}.png").convert("RGBA"))
+# o fim da placa esquerda em cada linha de cima (no repouso): o canto de cima arredondado, seguindo o contorno do ombro,
+# e a fresta escura logo depois; nada passa do contorno (a primeira correção estendia a placa sobre o fundo, numa
+# lâmina horizontal que o Jean marcou)
+FIM_PLACA = {29: 237, 30: 239, 31: 240, 32: 241, 33: 241}
+ORIGINAL = AQUI.parent / "vista-v3" / "morel-vista.aseprite"  # o tronco antes de qualquer correção da ombreira
+
+
+def corpo_corrigido(cel, k, original):
+    """O tronco do quadro k com a ombreira esquerda cobrindo o alto do ombro, a partir do tronco original (as células
+    da versão anterior em `original`): em cada linha de cima, a placa vai da borda dela até FIM_PLACA (o alto aceso na
+    primeira linha) e a fresta escura fecha a curva, só dentro do contorno do ombro."""
+    im = np.array(Image.open(original / f"morel_corpo-{k}.png").convert("RGBA"))
     dy = _dy_corpo(cel, k)
-    for y0 in range(29, 34):
+    for y0, fim in FIM_PLACA.items():
         y = y0 + dy
-        xs = [x for x in range(226, 246) if tuple(im[y, x, :3]) in PLACA and im[y, x, 3]]
+        xs = [x for x in range(226, 246) if im[y, x, 3] and tuple(im[y, x, :3]) in PLACA]
         if not xs:
             continue
-        borda = max(xs)
-        couro = [x for x in range(borda + 1, borda + 5) if im[y, x, 3] == 0 or tuple(im[y, x, :3]) in COURO_ROUPA]
-        couro = [x for i, x in enumerate(couro) if x == borda + 1 + i]  # só o que encosta na borda
-        if y0 == 29:  # a primeira linha: os dois pixels de couro soltos acima da borda e o vão até eles
-            couro = [x for x in range(borda + 1, 241) if im[y, x, 3] == 0 or tuple(im[y, x, :3]) in COURO_ROUPA]
-        for i, x in enumerate(couro):
-            cor = "34302c" if i == len(couro) - 1 else ("6a6058" if y0 == 29 else "4e4640")
-            im[y, x] = H(cor)
+        for x in range(max(xs) + 1, fim + 1):
+            im[y, x] = H("6a6058") if y0 == 29 else H("4e4640")
+        if im[y, fim + 1, 3]:
+            im[y, fim + 1] = H("34302c")
     return Image.fromarray(im, "RGBA")
 
 
@@ -365,11 +368,12 @@ print("gravados " .. n)
 
 def _gravar(fonte, cel, tmp):
     J = _juntas_fonte(cel)
+    original = _celulas(tmp, ORIGINAL, "original")
     pasta = pathlib.Path(tmp) / "novos"
     pasta.mkdir(exist_ok=True)
     for k, j in enumerate(J):
         braco(cel, k, j).save(pasta / f"braco-{k}.png")
-        corpo_corrigido(cel, k).save(pasta / f"corpo-{k}.png")
+        corpo_corrigido(cel, k, original).save(pasta / f"corpo-{k}.png")
     lua = pathlib.Path(tmp) / "gravar.lua"
     lua.write_text(_GRAVAR, encoding="utf-8")
     r = subprocess.run([aseprite(), "-b", "--script-param", f"fonte={fonte}", "--script-param", f"pasta={pasta}",

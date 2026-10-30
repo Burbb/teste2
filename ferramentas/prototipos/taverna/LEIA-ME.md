@@ -330,6 +330,10 @@ mesmo estado do jogo; a primeira também ("a primeira versão").
   deslocamento do tronco de cada um). Depois (o Jean viu um ou dois pixels marrons, da manga, encostados na ponta
   esquerda da calota em alguns quadros, e uma beirada em cima quando o ombro sobe para a boca): acima da ponta esquerda
   da calota, nada da manga passa para fora dela; embaixo, a borda de fora do braço continua.
+  E na esquerda (o Jean): a primeira correção estendia a placa sobre o fundo nas linhas de cima, numa lâmina
+  horizontal discrepante; agora ela parte do tronco original (`morel/vista-v3`) e vai, linha a linha, só até o contorno
+  do ombro (`FIM_PLACA`), com o canto de cima arredondado e a fresta escura fechando a curva: cobre o ombro como a
+  direita.
 - **Os limites que ficam:** a boca é a pose mais fraca (o braço curto em escorço se mistura um pouco com o casaco
   claro); as poses do braço saem de `manga.py` (antes, de `vestir.lua`), revistas na ampliação e em sequência; a espada nas costas continua com a guarda logo acima do ombro.
 
