@@ -78,7 +78,7 @@ try {
     // o rosto e as mãos de quem é o foco da vista (o taverneiro no balcão; Morel na vista dele)
     // na vista de Morel, o rosto em todas as poses da cabeça e as mãos com a colher em todas as poses do braço
     const ROSTO = cand.startsWith("morel") ? [208, 1, 21, 31] : [149 + fx, 17 + fy, 22, 27];
-    const MAOS = cand.startsWith("morel") ? [194, 24, 52, 58] : [146 + fx, 50 + fy, 30, 16];
+    const MAOS = cand.startsWith("morel") ? [182, 22, 71, 60] : [146 + fx, 50 + fy, 30, 16];
     const esperado = (est) => !cand.startsWith("morel") ? ESPERADO[est]
       : est === "homem_do_canto" ? ["taverneiro", "morel"] : est === "despensa" ? ["taverneiro", "despensa"] : ["taverneiro"];
     for (const est of Object.keys(ESPERADO)) {
@@ -162,15 +162,18 @@ try {
     conferir(a1 === a2, "com a pose parada, o fogo e o lampião param");
     await p.click("#faixa-tav-painel [data-reduzido]"); await p.click("#faixa-tav .abre");  // o painel continua aberto
     await trocarEstado(p, "homem_do_canto");
-    // o estudo de Morel: a vista à parte, na maior ampliação inteira que cabe, e o Esc fechando
-    await p.click("#faixa-tav .abre"); await p.click('#faixa-tav-painel [data-estudo="estudo"]'); await espera(600);
-    const est = await p.evaluate(() => { const i = document.querySelector("#estudo-morel img");
-      return { aberto: !document.getElementById("estudo-morel").hidden, nat: [i.naturalWidth, i.naturalHeight],
-        largura: i.getBoundingClientRect().width, legenda: document.querySelector("#estudo-morel .tam").textContent }; });
-    conferir(est.aberto && est.nat[0] === 360 && est.largura % 360 === 0, `o estudo de Morel em ampliação inteira (${est.legenda})`);
-    await p.screenshot({ path: path.join(SAIDA, `${jan}-estudo-morel.png`) });
-    await p.keyboard.press("Escape"); await espera(200);
-    conferir(await p.evaluate(() => document.getElementById("estudo-morel").hidden), "o Esc fecha o estudo");
+    // as vistas de inspeção de Morel (o estudo livre, o estudo de construção com a aplicação, as trajetórias): à parte,
+    // na maior ampliação inteira que cabe, e o Esc fechando
+    for (const [vista, larg] of [["estudo", 360], ["construcao", 480], ["trajetorias", 192]]) {
+      await p.click("#faixa-tav .abre"); await p.click(`#faixa-tav-painel [data-estudo="${vista}"]`); await espera(600);
+      const est = await p.evaluate(() => { const i = document.querySelector("#estudo-morel img");
+        return { aberto: !document.getElementById("estudo-morel").hidden, nat: [i.naturalWidth, i.naturalHeight],
+          largura: i.getBoundingClientRect().width, legenda: document.querySelector("#estudo-morel .tam").textContent }; });
+      conferir(est.aberto && est.nat[0] === larg && est.largura % larg === 0, `${vista}: em ampliação inteira (${est.legenda})`);
+      await p.screenshot({ path: path.join(SAIDA, `${jan}-inspecao-${vista}.png`) });
+      await p.keyboard.press("Escape"); await espera(200);
+      conferir(await p.evaluate(() => document.getElementById("estudo-morel").hidden), `${vista}: o Esc fecha`);
+    }
     conferir(erros.length === 0, `o console sem erro${erros.length ? ": " + erros.join(" | ") : ""}`);
     await p.close();
   }

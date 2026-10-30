@@ -5,7 +5,8 @@
      linha do tempo (rotina.json, um índice por tique de 100 ms), e o balcão com os fregueses por cima.
    - window.CenaTavernaMorel: a vista diante de Morel (morel/vista/exportar.py), na mesma moldura (320×96): o fundo, a
      pose do taverneiro ao fundo, o corpo e a cabeça de Morel, a mesa, as chamas e o braço da colher por cima;
-     window.CenaTavernaMorelV1, a versão anterior (camadas/morel-vista-v1), para comparar.
+     window.CenaTavernaMorelV2 (camadas/morel-vista-v2, antes do estudo do braço) e window.CenaTavernaMorelV1 (a
+     primeira, camadas/morel-vista-v1), para comparar.
 
    O tempo é o relógio da vista do jogo (o `quadro` que a cena recebe, a 100 ms): sair e entrar não cria outro relógio.
    Movimento reduzido (a preferência do sistema ou a "Pose parada" do painel): a pose parada de cada um e as chamas
@@ -86,10 +87,12 @@
   // despensa, à direita dele, só enquanto ela espera
   window.CenaTavernaMorel = vistaMorel("/proto-tav/camadas/morel-vista/", {
     taverneiro: { area: [142, 15, 18, 21], balao: [151, 15], foco: [151, 24] },
-    morel: { area: [186, 4, 64, 56], balao: [272, 44], foco: [218, 30] },
+    morel: { area: [182, 4, 72, 58], balao: [280, 46], foco: [218, 30] },
     despensa: { area: [274, 7, 25, 29], balao: [286, 18], foco: [286, 22] },
   });
-  // a versão anterior (antes das correções do espaço, da mesa e do braço), para comparar no mesmo estado
+  // a segunda versão (antes do estudo de construção do braço), com os mesmos pontos
+  window.CenaTavernaMorelV2 = vistaMorel("/proto-tav/camadas/morel-vista-v2/", window.CenaTavernaMorel.pontos);
+  // a primeira versão (antes das correções do espaço, da mesa e do braço), para comparar no mesmo estado
   window.CenaTavernaMorelV1 = vistaMorel("/proto-tav/camadas/morel-vista-v1/", {
     taverneiro: { area: [92, 20, 20, 17], balao: [102, 19], foco: [102, 28] },
     morel: { area: [186, 4, 64, 56], balao: [272, 40], foco: [218, 30] },

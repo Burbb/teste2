@@ -21,7 +21,8 @@
   document.body.dataset.tavProva = document.body.dataset.tavProva || "b4";
   document.body.dataset.tavMorel = document.body.dataset.tavMorel || "m1";
   const CANDS = [["g4", "Balcão animado (G4)"], ["morel", "Diante de Morel (animada)"],
-    ["morel1", "Diante de Morel, a versão anterior"], ["g3", "G3 estática"],
+    ["morel2", "Diante de Morel, a segunda versão (antes do estudo do braço)"],
+    ["morel1", "Diante de Morel, a primeira versão"], ["g3", "G3 estática"],
     ["g2", "G2 aprovada (antes das correções)"], ["g", "G original"], ["h", "Candidata H (histórico)"], ["prova", "Prova: os jogadores (histórico)"], ["f", "Candidata F (histórico)"], ["e", "Candidata E (histórico)"],
     ["d", "Candidata D (histórico)"], ["c", "Candidata C (histórico)"], ["b", "Candidata B (histórico)"], ["a", "Candidata A (histórico)"]];
   const GRADES = [["a", "Grade A: a atual (66×42)"], ["b", "Grade B: o dobro (132×84)"],
@@ -42,6 +43,8 @@
     <button type="button" data-reduzido aria-pressed="false">Pose parada</button>
     <b>Inspeção ampliada (fora da HUD)</b>
     <button type="button" data-estudo="vista">Diante de Morel: a vista adaptada (pose parada)</button>
+    <button type="button" data-estudo="construcao">Diante de Morel: o estudo de construção e a aplicação</button>
+    <button type="button" data-estudo="trajetorias">Diante de Morel: as trajetórias do cotovelo, da mão e da colher</button>
     <button type="button" data-estudo="estudo">Diante de Morel: o estudo livre (histórico)</button></div><span class="aviso"></span>`;
   const topo = document.getElementById("topo");
   topo.insertBefore(f, document.getElementById("acoes-topo"));
@@ -113,6 +116,10 @@
   const img = estudo.querySelector("img"), tam = estudo.querySelector(".tam"), zooms = estudo.querySelector(".zooms");
   const VISTAS = {
     vista: { src: "/proto-tav/camadas/morel-vista/parada.png", nat: [320, 96], titulo: "Diante de Morel: a vista adaptada (pose parada)" },
+    construcao: { src: "/proto-tav/camadas/morel-vista/construcao.png", nat: [480, 192],
+      titulo: "Diante de Morel: o estudo de construção (em cima) e a aplicação (embaixo), pose a pose" },
+    trajetorias: { src: "/proto-tav/camadas/morel-vista/trajetorias.png", nat: [192, 96],
+      titulo: "Diante de Morel: as trajetórias de uma volta (cotovelo, mão, ponta da colher), antes e depois" },
     estudo: { src: "/proto-tav/camadas/morel/estudo.png", nat: [360, 120], titulo: "Diante de Morel: o estudo livre (histórico)" },
   };
   let NAT = [360, 120];
