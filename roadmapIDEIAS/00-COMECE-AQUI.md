@@ -8775,3 +8775,27 @@ foi automatizado.
   e fumaça.
 - **Parado aqui:** a avaliação das três poses (e se a disputa pede uma câmera mais perto) e do pagamento é do Jean; a
   animação da queda de braço espera as poses aprovadas.
+
+### 30/10/2026 (data do computador local) — A taverna: a queda de braço numa vista de detalhe (protótipo)
+
+- **Pedido do Jean:** só a queda de braço (o resto aprovado; o encontro e o pagamento preservados): as poses da
+  primeira proposta não comunicavam a disputa (a pega numa massa, a mão derrubada indistinta, o nosso antebraço parecendo
+  em pé, a ação pequena na câmera da conversa); uma vista própria, próxima, um pouco de lado e acima do tampo, o estudo
+  com formas simples, pesquisa de queda de braço real, o acabamento nas três poses, a direção da animação ligada à
+  rolagem só registrada, a continuidade da tigela planejada. Nada animado nem integrado.
+- **Feito** (a seção "A queda de braço: a vista de detalhe" do LEIA-ME do protótipo): as regras e a mesa da WAF (a pega
+  palma com palma, os polegares em cima, os cotovelos parados, a mão perdedora levada para a esquerda de quem vence: o
+  derrube corre de lado); a câmera escolhida em números e esboços (`morel/queda2/juntas.py`: 50° do nosso lado, 30°
+  acima, ~2 px por cm na pega; a pega da disputa fora do dado, que rola no meio do palco); o estudo
+  (`estudo-queda2.aseprite`: as poses em formas simples com as juntas, o arco da pega e a área do dado nas guias, o
+  percurso, a planta da mesa, as pegas construídas e ampliadas); as poses acabadas (`queda2.aseprite`: os volumes
+  projetados e iluminados com as paletas aprovadas, a pega construída e separada pelo valor, os dedos de Morel retocados
+  à mão; a tigela deslizada para oeste, longe dos dois derrubes). A primeira proposta fica no painel como histórico. A
+  skill de personagens trocou o que a primeira tentativa tinha deixado como regra pelo que o estudo demonstrou, com as
+  hipóteses à parte.
+- **Conferido:** os cotovelos parados, os braços com o comprimento fixo e a pega no círculo nas três poses; a fonte
+  exportada idêntica ao desenho (0 pixels diferentes); `morel/conferir-encontro.mjs` a 1920×945 e 1280×720 (o encontro e
+  o pagamento como antes, as três poses novas e as antigas na área de cena, as folhas, a pega fora do grupo do dado com
+  ele rolando, o console): tudo certo. O código do jogo não mudou nesta rodada (a bateria anterior vale; pyflakes nos
+  arquivos novos).
+- **Parado aqui:** a avaliação das três poses e do enquadramento é do Jean; a animação espera a aprovação.

@@ -2,8 +2,9 @@
 
 **O estado** (30/10/2026): as duas vistas **aprovadas** pelo Jean (o balcão da G4 e a vista diante de Morel, com as
 últimas correções) estão **ligadas ao encontro** no protótipo: sentar com o homem do canto leva à mesa dele, as opções do
-evento aparecem ali, o pagamento lança moedas na mesa, e a conversa acaba de volta ao balcão. A **queda de braço** tem o
-estudo e **três poses paradas, em avaliação** (nada animado). Nada integrado à produção.
+evento aparecem ali, o pagamento lança moedas na mesa, e a conversa acaba de volta ao balcão. A **queda de braço** ganhou
+uma **vista de detalhe** própria (a segunda proposta: o estudo e **três poses acabadas, em avaliação**; nada animado); a
+primeira proposta, na câmera da conversa, fica como histórico. Nada integrado à produção.
 
 ## O encontro à mesa de Morel (30/10/2026; protótipo)
 
@@ -49,10 +50,81 @@ bebida só quando ele é candidato agora). `morel/conferir-encontro.mjs` percorr
 4. "Homem do canto, 10 de ouro" com o dado em 1: perde e a conversa acaba (sem a pergunta dos 25).
 5. "Morel conhecido" e "Bebida: Morel puxa conversa": a bebida leva à mesa de Morel (já conhecido).
 6. "Pose parada": as moedas já na mesa, nada se mexe.
-7. As três poses da queda de braço: "Queda de braço, pose 1/2/3" no painel (na área de cena); as folhas em "Inspeção
-   ampliada".
+7. As três poses da queda de braço: "Queda de braço, vista de detalhe 1/2/3" no painel (na área de cena); as folhas em
+   "Inspeção ampliada"; a primeira proposta, para comparar, em "primeira proposta 1/2/3".
 
-## A queda de braço: o estudo e as três poses (30/10/2026; em avaliação, nada animado)
+## A queda de braço: a vista de detalhe (30/10/2026; a segunda proposta, em avaliação, nada animado)
+
+**O pedido do Jean:** a primeira proposta não comunicava a disputa (as mãos numa massa só, a mão derrubada indistinta na
+nossa vitória, o nosso antebraço parecendo em pé na de Morel, a ação pequena na câmera da conversa). Uma vista própria,
+próxima, um pouco de lado e acima do tampo, com a pega no centro da ação, os dois cotovelos apoiados, o peito de Morel
+ao fundo; construída com formas simples antes do acabamento; as vitórias reconhecíveis sem legenda nem só pela sombra.
+
+**As referências reais** (as regras e a mesa da WAF, World Armwrestling Federation): a pega palma com palma, os
+polegares cruzados em cima e o nó do polegar à vista, os punhos retos no começo; os cotovelos nas almofadas, quase
+alinhados (uns 38 cm, na direção de um para o outro), parados até o fim; a mão perdedora vai à almofada que fica à
+esquerda de quem vence (braço direito): **o derrube corre de lado**, não para longe nem para perto.
+
+**A câmera** (`morel/queda2/juntas.py`, uma câmera de verdade em números): de detalhe, não os nossos olhos; 50° a leste
+do nosso lado e 30° acima do tampo, a ~2 px por cm na pega (a conversa tem 0,9). Assim o V da disputa abre (de trás de
+nós, um antebraço esconde o outro), os dois derrubes correm para os lados do quadro (nós vencendo, para a esquerda;
+Morel vencendo, para a direita), e o braço de quem perde fica deitado e comprido no tampo, atravessado. Os esboços que
+levaram a ela (de trás, de lado demais) estão descritos no `juntas.py`. **O dado** dos testes rola no meio do palco; a
+pega da disputa fica no alto e à esquerda, fora dele nas duas janelas (medido); a 1280×720 o dado cobre o cotovelo de
+Morel enquanto rola, não a pega nem os antebraços.
+
+**O lugar:** a mesa da conversa (70 cm de fundo, comprida para o oeste, a quina de leste perto do pão); a disputa fica
+15 cm a oeste do eixo, diante do peito de Morel, para os dois derrubes caberem no tampo. Ao fundo, a frente do balcão no
+escuro, com a luz do lampião no alto à direita (o tampo do balcão fica fora do quadro, desta altura); essa área quieta é
+onde o dado rola. De Morel se vê o peito (o couro, o colete vermelho com as duas fivelas, a ombreira do ombro esquerdo,
+o pescoço e a borda da barba no alto); o braço esquerdo dele agarra a borda de lá da mesa. Do nosso lado, o braço de lã
+azul-acinzentada sai pela borda da esquerda (o tronco, fora do quadro).
+
+**O estudo** (`estudo-queda2.aseprite`, `estudo.py`): as três poses em formas simples (Morel em vermelho e laranja, o
+braço esquerdo dele mais escuro, nós em azul; as pegas construídas por partes), com as juntas, a linha dos cotovelos e o
+arco da pega na camada `guia` e a área do dado na `dado`; o percurso (as três pegas e o arco sobre a disputa); a planta
+(a mesa vista de cima: os cotovelos, o caminho da pega, os dois derrubes, a tigela no lugar de antes e no novo, a vela,
+a caneca, o pão); e as três pegas construídas, ampliadas 3×, nas cores das partes (`maos.py`: os punhos, um dedo por
+cápsula, os polegares; nos fins, a mão de quem perde de dorso no tampo, passando um pouco do punho de quem vence).
+Conferido: os cotovelos parados; o braço de cima com 30 cm e os antebraços com 27 e 28 em todas as poses; a pega a
+27 cm do tampo na disputa e a 5 cm nos fins; cada antebraço gira em volta do cotovelo, no mesmo plano.
+
+**As poses acabadas** (`queda2.aseprite`, `poses.py`; a fonte é a autoridade, e a exportação sai dela idêntica ao
+desenho): os volumes (os braços, o peito, a pega) projetados pela câmera, cada pixel na camada da superfície mais perto
+(`desenho.py`), iluminados pela vela e pela lareira em degraus de tom, sem contorno, com as paletas aprovadas (o couro e
+a pele de Morel, o colete, o aço, a madeira do tampo, a tigela); a sombra de contato no tampo onde o braço encosta. A
+pega separada pelo valor: a pele de Morel mais escura e quente que a nossa; um pixel de sombra onde uma parte passa atrás
+da outra; os pontinhos limpos; e, na disputa, os dedos de Morel sobre o nosso dorso retocados à mão em listras (o lado
+de cima claro, o vão escuro). 1. A disputa: o V, a pega no alto, os polegares em cima. 2. Nós vencemos: o braço de
+Morel deitado e comprido para a esquerda, a mão dele de dorso no tampo, os dedos dela além do nosso punho, fechado por
+cima. 3. Morel vence: o nosso braço deitado para a direita, a nossa mão de dorso no tampo, o punho dele por cima.
+
+**O que depende do olho do Jean:** se as duas vitórias se reconhecem sem legenda, no tamanho da HUD; se a pega lê como
+duas mãos (e não uma massa); se o peito de Morel, feito por volume calculado e acabamento em degraus, segura a identidade
+ao lado das cenas desenhadas à mão; se o fundo quieto à direita (onde o dado rola) pesa na composição parada.
+
+**A tigela, a colher e os objetos** (para a animação): antes da disputa, Morel larga a colher dentro da tigela e, com a
+mesma mão, desliza a tigela pela metade de lá da mesa para a direita dele (oeste), num empurrão, para além da coluna da
+vela (na vista de detalhe, ela fica no canto de cima à esquerda); na vista da conversa, é o braço da colher indo para a
+esquerda da tela e a tigela parando atrás da vela. Depois da disputa, de volta à conversa, ele puxa a tigela pelo mesmo
+caminho e pega a colher antes de voltar a comer. A caneca, a vela e o pão não se mexem. As moedas do pagamento de 25 só
+caem depois, na vista da conversa, com a tigela já no lugar.
+
+**A animação, depois das poses aprovadas** (só a intenção, ligada à rolagem que já existe; nada feito):
+1. Ao escolher a queda de braço: o corte para a vista de detalhe; a pega se firma (as mãos se ajeitam, os ombros descem).
+2. Enquanto o dado gira (os 950 ms dele, mais o tempo de leitura): os dois fazem força na posição central, com uma
+   tremida contida nas mãos e nos antebraços (a pega oscila 1 px pelo arco, um deslocamento curto e a recuperação), sem
+   antecipar quem vence; os cotovelos não deslizam, as mãos não se soltam, a tela não treme.
+3. Quando o dado mostra o resultado: o tempo de lê-lo e o desfecho que o motor já decidiu (o teste de Força 14 roda uma
+   vez; a animação não muda chances, não cria outro teste nem repete consequências).
+4. O derrube: quem vence leva a mão do outro pelo arco até o tampo, acelerando no fim; um impacto curto e a acomodação.
+5. Uma pausa na posição final, para ficar claro quem venceu; depois a volta à conversa e às consequências de sempre.
+Movimento reduzido: a posição central durante a rolagem e a pose final, sem tremida nem impacto.
+
+## A queda de braço: a primeira proposta (30/10/2026; histórico)
+
+Substituída pela vista de detalhe (acima), depois da avaliação do Jean; o plano de animação desta seção também. Fica no
+painel para comparar ("primeira proposta 1/2/3"), com o estudo dela (`morel/queda/`).
 
 **O enquadramento:** a câmera da vista aprovada, o mesmo pixel, não outra mais perto. Assim Morel (o rosto, a cicatriz,
 o colete), a sala e a mesa ficam como foram aprovados, a disputa ocupa o meio do quadro e nada precisa ser redesenhado
