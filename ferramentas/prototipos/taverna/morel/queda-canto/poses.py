@@ -132,7 +132,7 @@ def tigela_e_colher(off, solta):
         rep = _repouso()
         W, T, d = rep["W"], rep["T"], rep["dir_colher"]
         colher = _mover(MO.colher((W[0] + d[0] * 5, W[1] + d[1] * 5), T), *off)
-        out.update({q: c for q, c in colher.items() if not MO.no_caldo(*q, *off)})
+        out.update({q: c for q, c in colher.items() if not MO.na_tigela(*q, *off, funda=True)})
     return out
 
 
@@ -442,7 +442,7 @@ def construir(nome):
         dir_, ante = MO.braco(S, E, W, corpo)
         d = rep["dir_colher"]
         colher = MO.colher((W[0] + d[0] * 5, W[1] + d[1] * 5), rep["T"])   # como na cena (canto/cena.py)
-        dir_.update({q: cor for q, cor in colher.items() if not MO.no_caldo(*q)})
+        dir_.update({q: cor for q, cor in colher.items() if not MO.na_tigela(*q, funda=True)})
         dir_.update(MO.mao((W[0] + d[0] * 3, W[1] + d[1] * 3), 6.5, 5.5))
     elif "dir" in k:
         modo, f = k["dir"]

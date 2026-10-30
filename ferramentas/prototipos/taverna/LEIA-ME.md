@@ -131,6 +131,14 @@ com o castiçal junto dela.
 
 ### A queda de braço no canto (30/10/2026; a candidata, em avaliação)
 
+**A colher, na terceira revisão (o Jean):** ela ainda se distorcia entre os quadros, a ponta aparecia fora da
+tigela, ia de encontro à cara em vez de entrar na boca e o braço tinha dois pixels de sujeira. Agora a colher é desenhada
+pixel a pixel (`morel.colher`: o cabo numa linha limpa de 1 px com a sombra, a concha em 3 pixels que continuam o cabo),
+some inteira na tigela quando a ponta está no caldo (`morel.na_tigela`, também atrás da borda da frente e do bojo), e na
+boca nada dela passa da linha dos lábios. A subida e a descida são uma curva só cada (`juntas.SUBIDA`, `DESCIDA`): a mão
+não faz mais gancho, e o passo cresce e diminui aos poucos. A sujeira era o vinco do cotovelo da manga, que nesta vista
+caía no meio do antebraço: tirado só aqui. O olho da direita tinha 5 px; ficou com 4, como o outro.
+
 **A colher, na segunda revisão (o Jean):** ela mudava de forma subindo para a boca (a mão cobria quase todo o cabo, e
 a concha era uma elipse sempre deitada) e, na coleta, a ponta aparecia na borda da frente, como apoiada para fora da
 tigela. Agora é uma peça rígida (`morel.colher`: o cabo com a mesma largura em qualquer ângulo, a concha girando com

@@ -112,7 +112,11 @@ def pose(p):
     d = p["dir_colher"]
     mao = (p["W"][0] + d[0] * 3, p["W"][1] + d[1] * 3)
     colher = MO.colher((p["W"][0] + d[0] * 5, p["W"][1] + d[1] * 5), p["T"])
-    dir_.update({q: c for q, c in colher.items() if not MO.no_caldo(*q)})
+    # e na boca a concha entra: nada da colher acima da linha da boca (a ponta não sobe pela cara; aberta, o cabo entra
+    # na fresta de baixo)
+    labio = MO.CABECA_POS[1] + dy + p["dyc"] + 23
+    funda = MO.na_tigela(int(p["T"][0]), int(p["T"][1]))
+    dir_.update({q: c for q, c in colher.items() if not MO.na_tigela(*q, funda=funda) and q[1] > labio})
     dir_.update(MO.mao(mao, 6.5, 5.5))
     c["morel_braco"] = _img(dir_)
     jj = {}

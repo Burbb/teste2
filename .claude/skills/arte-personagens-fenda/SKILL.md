@@ -313,9 +313,19 @@ Jean):
   o braço do outro lado, cotovelo no alto, era quase impossível; varrer com o lado de fora do antebraço deitado no tampo
   (a mão de cutelo na borda, o cotovelo deslizando, o tronco inclinando para alcançar) é o que se faz para abrir espaço.
   O objeto fica no apoio (no meio do tampo, não na beirada).
-- **Uma ferramenta pequena é uma peça rígida também no desenho:** largura constante em qualquer ângulo, a ponta girando
-  com o cabo, a mão sem cobrir quase tudo; e o que entra num líquido some nele (a ponta da colher no caldo), em vez de
-  ficar desenhado por cima.
+- **Uma ferramenta pequena se desenha pixel a pixel, não por área** (o Jean, duas rodadas): rasterizar uma faixa de
+  2 px e uma elipse na ponta a cada ângulo muda a forma quadro a quadro (a concha ora bloco, ora toco; o cabo em escada
+  nas diagonais). O que segura: o cabo como linha limpa de 1 px (um pixel por passo no eixo maior) com a sombra de 1 px
+  ao lado, e a ponta como um punhado fixo de pixels que continua o cabo na mesma direção (forçada na horizontal ou na
+  vertical, ela entorta como um taco). Confira a peça sozinha, ampliada, em todas as poses lado a lado.
+- **O que entra some:** a ponta no caldo e o toco do cabo sobre a borda quando a ponta está mergulhada (o toco parecia
+  a ponta apoiada para fora); atrás da borda da frente da tigela, nada; na boca, nada acima da linha dos lábios (a
+  concha entra, não sobe pela cara).
+- **Um gesto de ida é uma curva só:** com três chaves (sair, pausa, chegar) interpoladas em dois trechos retos, a mão
+  fazia gancho (para um lado, depois para o outro) e o passo dobrava de um quadro ao seguinte; a curva de Bézier pelas
+  três chaves, com as frações dando a facilidade, anda sem tranco.
+- **Um vinco da manga é para o cotovelo visto de lado:** com o cotovelo pousado e visto de cima, os dois pixels da
+  dobra caíam no meio do antebraço e andavam com ele como uma sujeira (`manga(..., vinco=False)`).
 - **A cena acompanha o motor, não o contrário:** a preparação começa quando o teste começa, o derrube é o do resultado
   que chegou, e o depois fica (sem voltar a uma atividade que o encontro já encerrou). Repetir no painel é um reinício
   declarado, separado da sequência.

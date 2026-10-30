@@ -61,38 +61,49 @@ CHAVES = {
     "retornar": dict(S=(138, 44, -5), W=(139, 47, 15), T=(0.6, -0.3, 0.45), polo=(-1, 0.7, 0.3)),
     "repousar": dict(S=(138, 44, -6), W=(142, 56, 18), T=(0.765, 0.294, 0.571), polo=(-1, 0.7, 0.3)),
 }
-# (pose, chave de partida, chave de chegada, fração, corpo desce, cabeça, cabeça desce, colher cheia): a mesma ordem da
-# vista aprovada (as frações dão a facilidade: devagar ao sair da tigela e ao chegar à boca)
+# a subida e a descida, cada uma uma curva só (a curva de Bézier quadrática pelas três chaves do trecho: a do meio puxa
+# a curva sem que a mão passe por ela, e a mão não faz gancho para um lado e depois para o outro); a fração na curva
+# dá a facilidade: devagar ao sair da tigela, na pausa diante do peito e ao chegar à boca, passos parecidos no meio
+SUBIDA = ("recolher", "levantar", "boca")
+DESCIDA = ("boca", "retornar", "repousar")
+# (pose, trecho, fração, corpo desce, cabeça, cabeça desce, colher cheia): a mesma ordem da vista aprovada
 ROTEIRO = [
-    ("recolhe", "recolher", "recolher", 0, 1, "baixo", 1, False),
-    ("recolhe2", "recolher", "recolher", 0, 1, "baixo", 1, False),
-    ("sai", "recolher", "levantar", 0.17, 1, "baixo", 1, True),
-    ("sobe1", "recolher", "levantar", 0.44, 1, "baixo", 1, True),
-    ("sobe2", "recolher", "levantar", 0.72, 1, "baixo", 1, True),
-    ("levanta", "levantar", "levantar", 0, 1, "baixo", 1, True),
-    ("sobe3", "levantar", "boca", 0.3, 1, "baixo", 1, True),
-    ("sobe4", "levantar", "boca", 0.6, 1, "baixo", 2, True),
-    ("sobe5", "levantar", "boca", 0.85, 1, "boca", 3, True),
-    ("boca", "boca", "boca", 0, 1, "boca", 3, False),
-    ("desce1", "boca", "retornar", 0.15, 1, "baixo", 2, False),
-    ("desce2", "boca", "retornar", 0.36, 1, "mastiga", 1, False),
-    ("desce2b", "boca", "retornar", 0.58, 1, "baixo", 1, False),
-    ("desce2c", "boca", "retornar", 0.8, 1, "mastiga", 1, False),
-    ("retorna", "retornar", "retornar", 0, 1, "baixo", 1, False),
-    ("desce3", "retornar", "repousar", 0.4, 1, "baixo", 1, False),
-    ("desce4", "retornar", "repousar", 0.73, 0, "mastiga", 0, False),
-    ("repousa", "repousar", "repousar", 0, 0, "baixo", 0, False),
-    ("mastiga", "repousar", "repousar", 0, 0, "mastiga", 0, False),
-    ("olha", "repousar", "repousar", 0, 0, "olha", -1, False),
+    ("recolhe", ("recolher",), 0, 1, "baixo", 1, False),
+    ("recolhe2", ("recolher",), 0, 1, "baixo", 1, False),
+    ("sai", SUBIDA, 0.09, 1, "baixo", 1, True),
+    ("sobe1", SUBIDA, 0.21, 1, "baixo", 1, True),
+    ("sobe2", SUBIDA, 0.34, 1, "baixo", 1, True),
+    ("levanta", SUBIDA, 0.46, 1, "baixo", 1, True),
+    ("sobe3", SUBIDA, 0.61, 1, "baixo", 1, True),
+    ("sobe4", SUBIDA, 0.77, 1, "baixo", 2, True),
+    ("sobe5", SUBIDA, 0.91, 1, "boca", 3, True),
+    ("boca", ("boca",), 0, 1, "boca", 3, False),
+    ("desce1", DESCIDA, 0.1, 1, "baixo", 2, False),
+    ("desce2", DESCIDA, 0.23, 1, "mastiga", 1, False),
+    ("desce2b", DESCIDA, 0.37, 1, "baixo", 1, False),
+    ("desce2c", DESCIDA, 0.51, 1, "mastiga", 1, False),
+    ("retorna", DESCIDA, 0.64, 1, "baixo", 1, False),
+    ("desce3", DESCIDA, 0.77, 1, "baixo", 1, False),
+    ("desce4", DESCIDA, 0.9, 0, "mastiga", 0, False),
+    ("repousa", ("repousar",), 0, 0, "baixo", 0, False),
+    ("mastiga", ("repousar",), 0, 0, "mastiga", 0, False),
+    ("olha", ("repousar",), 0, 0, "olha", -1, False),
 ]
+
+
+def _curva(trecho, t, k):
+    if len(trecho) == 1:
+        return CHAVES[trecho[0]][k]
+    a, b, c = (CHAVES[n][k] for n in trecho)
+    return tuple((1 - t) ** 2 * x + 2 * (1 - t) * t * y + t * t * z for x, y, z in zip(a, b, c))
 
 
 def poses():
     out = []
-    for nome, a, b, t, dy, cab, dyc, cheia in ROTEIRO:
-        p = {k: _lerp(CHAVES[a][k], CHAVES[b][k], t) for k in ("S", "W", "T", "polo")}
+    for nome, trecho, t, dy, cab, dyc, cheia in ROTEIRO:
+        p = {k: _curva(trecho, t, k) for k in ("S", "W", "T", "polo")}
         S = espaco(p["S"][0], p["S"][1], p["S"][2])
-        W, d = p["W"], p["T"]
+        W, d = p["W"], _un(p["T"])
         if nome == "recolhe2":  # a concha mais funda no caldo
             W = (W[0] + 1, W[1] + 1, W[2])
             d = (d[0], d[1] + 0.2, d[2])

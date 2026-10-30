@@ -8967,3 +8967,14 @@ foi automatizado.
 - **Conferido:** as fontes iguais ao desenho; o braço não toca a caneca em nenhuma pose; `conferir-encontro.mjs` nas
   duas janelas, tudo certo; a suíte, o gabarito, o pyflakes e a fumaça.
 - **Parado aqui:** a avaliação do Jean.
+
+### 30/10/2026 (data do computador local) — A taverna: a colher pixel a pixel, a curva da subida, os olhos (protótipo)
+
+- **Pedido do Jean:** a colher se distorcia entre os quadros, a ponta aparecia fora da tigela e ia de encontro à cara;
+  dois pixels de sujeira andavam com o braço; um olho maior que o outro.
+- **Feito** (o LEIA-ME do protótipo, "A colher, na terceira revisão"): a colher desenhada pixel a pixel; ela some na
+  tigela com a ponta no caldo e na boca acima dos lábios; subida e descida numa curva só; o vinco do cotovelo tirado
+  nesta vista; o olho da direita com 4 px.
+- **Conferido:** as fontes iguais ao desenho; `conferir-encontro.mjs` nas duas janelas, tudo certo; a suíte, o
+  gabarito, o pyflakes e a fumaça.
+- **Parado aqui:** a avaliação do Jean.

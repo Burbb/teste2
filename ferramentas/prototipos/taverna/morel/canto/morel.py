@@ -65,7 +65,7 @@ CABECA = [
     "...bddddddgdddddddddddddffhc",
     "..bddiiiiiigiddddiiiiiifffhc",
     "..hdddddddddgddddddddddfffh.",
-    ".fhddjjjjddddgddddjjjjjfffhh",
+    ".fhddjjjjddddgddddjjjjdfffhh",
     ".fddddddddddddgdddddddddffhh",
     ".fdddddddddddhfgdddddddffhhc",
     "..dddddddddhhffhgddddddfffh.",
@@ -94,7 +94,7 @@ def cabeca(variante="baixo", dy=0):
     linhas = [list(r) for r in CABECA]
     if variante == "olha":
         # os olhos abertos: a sobrancelha 1 px acima, o branco e a pupila (olhando para a frente, um pouco para baixo)
-        linhas[14] = list(".fhddqwkwddddgddddqwkwqfffhh")
+        linhas[14] = list(".fhddqwkwddddgddddqwkwdfffhh")
     elif variante == "boca":
         linhas[23] = list("..llllmmmmoooooooommmmmllli.")
         linhas[24] = list("..llllmmmmmoooooommmmmmllli.")
@@ -317,7 +317,9 @@ def braco(S, E, W, corpo, extra=None):
     r0 = dict(MG.R4)
     MG.R4.update(R_MOREL)
     try:
-        m = MG.manga(S, E, W, lambda x, y: (x, y) in corpo)
+        # sem o vinco do cotovelo: com o cotovelo pousado e visto de cima, os dois pixels caíam no meio do antebraço
+        # e andavam com ele como uma sujeira
+        m = MG.manga(S, E, W, lambda x, y: (x, y) in corpo, vinco=False)
     finally:
         MG.R4.clear()
         MG.R4.update(r0)
@@ -330,34 +332,53 @@ COLHER = [h("b4b6bc"), h("8a8c94"), h("5a5c64")]
 
 
 def colher(W, T):
-    """A colher de metal, rígida: o cabo do punho (`W`) à ponta (`T`), dois pixels de grosso (a aresta de cima
-    acesa), e a concha na ponta, uma elipse pequena com a borda de baixo escura."""
-    # uma peça rígida: o cabo com a mesma largura em qualquer ângulo (a distância ao eixo, não um degrau por linha) e a
-    # concha girando com ele (uma elipse ao longo do cabo); o lado de cima (a vela) aceso, o de baixo escuro
+    """A colher de metal, rígida: o cabo do punho (`W`) à ponta (`T`) e a concha na ponta, com o mesmo número de pixels
+    em qualquer ângulo."""
+    # pixel a pixel, não por área: o cabo é uma linha limpa de 1 px (um pixel por passo no eixo maior, sem degraus
+    # dobrados) acesa, com a sombra de 1 px do lado de baixo; a concha, 3 pixels que continuam o cabo com a sombra e
+    # um bojo de 1 px. Rasterizar uma elipse e uma faixa de 2 px a cada ângulo mudava a forma
+    # quadro a quadro (a concha ora bloco, ora toco; o cabo em escada nas diagonais)
     out = {}
     L = math.dist(W, T)
     ux, uy = (T[0] - W[0]) / L, (T[1] - W[1]) / L
-    nx, ny = -uy, ux
-    if nx + ny > 0:
-        nx, ny = -nx, -ny                 # a normal do lado da luz (para cima e para a esquerda)
-    fim = L - 2.2                         # o cabo vai até o pescoço da concha
-    for y in range(math.floor(min(W[1], T[1]) - 3), math.ceil(max(W[1], T[1]) + 3) + 1):
-        for x in range(math.floor(min(W[0], T[0]) - 3), math.ceil(max(W[0], T[0]) + 3) + 1):
-            px, py = x + 0.5 - W[0], y + 0.5 - W[1]
-            a = px * ux + py * uy
-            b = px * nx + py * ny
-            ca, cb = a - L, b                # na concha: ao longo e através
-            if (ca / 2.8) ** 2 + (cb / 1.8) ** 2 <= 1:
-                out[(x, y)] = COLHER[0] if cb > 0.5 else COLHER[1] if cb > -0.6 else COLHER[2]
-            elif 0 <= a <= fim and -0.95 < b <= 0.95:
-                out[(x, y)] = COLHER[0] if b > 0 else COLHER[1]
+    deitada = abs(ux) >= abs(uy)
+    fim = L - 3.0                         # o cabo vai até o pescoço da concha
+    n = max(1, math.ceil(fim * max(abs(ux), abs(uy))))   # passos de no máximo 1 px: sem buraco no cabo
+    for k in range(n + 1):
+        t = fim * k / n
+        q = (math.floor(W[0] + ux * t), math.floor(W[1] + uy * t))
+        out[q] = COLHER[0]
+    for (x, y) in list(out):              # a sombra: embaixo do cabo deitado, do lado de fora (direito) do cabo em pé
+        q = (x, y + 1) if deitada else (x + 1, y)
+        if q not in out:
+            out[q] = COLHER[2]
+    # a concha continua o cabo na mesma direção (não deitada nem em pé à força: na diagonal ela entortava como um taco):
+    # 3 pixels ao longo, acesos, a sombra do mesmo lado da do cabo, e o bojo de 1 px do lado da luz no meio
+    sombra = (0, 1) if deitada else (1, 0)
+    for a in (1, 2, 3):
+        q = (math.floor(W[0] + ux * (fim + a)), math.floor(W[1] + uy * (fim + a)))
+        out[q] = COLHER[0] if a < 3 else COLHER[1]
+        out[(q[0] + sombra[0], q[1] + sombra[1])] = COLHER[2]
+        if a == 2:
+            out[(q[0] - sombra[0], q[1] - sombra[1])] = COLHER[1]
     return out
 
 
-def no_caldo(x, y, dx=0, dy=0):
-    """Se o pixel cai na superfície do caldo da tigela (deslocada dx, dy): o que da colher passa ali está mergulhado."""
+def na_tigela(x, y, dx=0, dy=0, funda=False):
+    """Se o pixel da colher fica escondido pela tigela (deslocada dx, dy): mergulhado no caldo, ou atrás da borda da
+    frente e do bojo (a colher está dentro da tigela: o que passaria por eles não aparece). `funda`: a ponta está no
+    caldo (a coleta, o repouso, a colher largada): a colher toda some na tigela, também o toco do cabo sobre a borda,
+    que de longe parecia a ponta apoiada para fora."""
     cx, cy = 170 + dx, 72 + dy
-    return ((x + 0.5 - cx) / 22.5) ** 2 + ((y + 0.5 - cy) / 5.0) ** 2 <= 0.62
+    u, v = (x + 0.5 - cx) / 22.5, (y + 0.5 - cy) / 5.0
+    if u * u + v * v <= (1.35 if funda else 0.62):
+        return True
+    if y < cy:
+        return False
+    if u * u + v * v <= 1:
+        return True
+    t = (y - cy) / 11                     # o bojo, como em objetos.tigela
+    return y < cy + 12 and abs(x + 0.5 - cx) < 22.5 * (max(0.0, 1 - t * t * 0.75)) ** 0.5
 
 
 def mao(c, rx=5.0, ry=4.2):

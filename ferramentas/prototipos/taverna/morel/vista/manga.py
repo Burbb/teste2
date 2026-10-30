@@ -84,8 +84,9 @@ def _smin(a, b, k):
     return min(a, b) - h * h * k * 0.25
 
 
-def manga(S, E, W, corpo_alfa, k=2.4):
-    """O candidato: {(x, y): cor} da manga (sem a mão nem a colher) e o conjunto dos pixels dela."""
+def manga(S, E, W, corpo_alfa, k=2.4, vinco=True):
+    """O candidato: {(x, y): cor} da manga (sem a mão nem a colher) e o conjunto dos pixels dela. `vinco`: a dobra
+    marcada por dentro do cotovelo (sem ela quando o cotovelo pousa visto de cima e a marca cai no meio do antebraço)."""
     rE = R4["cotoveloPerto"] if math.dist(S, E) < 22 else R4["cotovelo"]
 
     # o ombro: o eixo do braço, para saber o que passa do ombro para cima
@@ -170,7 +171,7 @@ def manga(S, E, W, corpo_alfa, k=2.4):
             out[(x, y)] = COURO["c"]
     # a compressão por dentro do cotovelo: uma dobra curta, do lado de dentro da curva para a junta, e o pixel aceso
     # da crista ao lado dela (do lado da luz); nada de mancha no lugar da junta
-    if dobra:
+    if dobra and vinco:
         perp = (-dobra[1], dobra[0])
         if perp[0] * LUZ[0] + perp[1] * LUZ[1] < 0:
             perp = (-perp[0], -perp[1])  # para o lado da luz
