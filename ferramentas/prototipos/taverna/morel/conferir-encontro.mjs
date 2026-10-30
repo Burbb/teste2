@@ -215,6 +215,17 @@ try {
     await proxima(p);
     await p.click("#faixa-tav .abre"); await p.click("#faixa-tav-painel [data-reduzido]"); await p.click("#faixa-tav .abre");
 
+    // 7b. a primeira candidata do canto, no mesmo estado do encontro (a faixa "A mesa do encontro")
+    await faixa(p, "tav", "homem_do_canto");
+    await p.click("#faixa-tav .abre"); await p.click('#faixa-tav-painel [data-mesa="canto1"]'); await espera(200);
+    conferir(await sentar(p), "a primeira candidata do canto: senta com o homem do canto");
+    await espera(800);
+    await p.screenshot({ path: path.join(SAIDA, `${jan}-mesa-canto-v1.png`) });
+    await p.click("#faixa-tav .abre"); await p.click('#faixa-tav-painel [data-mesa="canto"]'); await espera(800);
+    await p.screenshot({ path: path.join(SAIDA, `${jan}-mesa-canto-revisada.png`) });
+    await escolher(p, "Recusar");
+    await proxima(p);
+
     // 8. as três poses da queda de braço na área de cena da HUD (pelo painel), e as folhas de inspeção
     await entrar(p);
     for (const [cand, nome] of [["q3", "q3-disputa"], ["qd1", "disputa"], ["qd2", "vitoria-jogador"], ["qd3", "vitoria-morel"],
@@ -249,6 +260,16 @@ try {
       const est = await p.evaluate(() => { const i = document.querySelector("#estudo-morel img");
         return { aberto: !document.getElementById("estudo-morel").hidden, nat: i.naturalWidth, largura: i.getBoundingClientRect().width }; });
       conferir(est.aberto && est.nat === larg && est.largura % larg === 0, `${vista}: a folha em ampliação inteira (${est.largura / larg}×)`);
+      await p.screenshot({ path: path.join(SAIDA, `${jan}-inspecao-${vista}.png`) });
+      await p.keyboard.press("Escape"); await espera(200);
+    }
+    // as folhas da revisão do canto (a mastigação, o tronco, a parede): abrem e carregam (as mais largas que a janela
+    // entram na prévia reduzida, dita na legenda)
+    for (const [vista, larg] of [["cantoMastigacao", 1028], ["cantoTronco", 1476], ["cantoParede", 1088]]) {
+      await p.click("#faixa-tav .abre"); await p.click(`#faixa-tav-painel [data-estudo="${vista}"]`); await espera(600);
+      const est = await p.evaluate(() => { const i = document.querySelector("#estudo-morel img");
+        return { aberto: !document.getElementById("estudo-morel").hidden, nat: i.naturalWidth }; });
+      conferir(est.aberto && est.nat === larg, `${vista}: a folha da revisão abre e carrega`);
       await p.screenshot({ path: path.join(SAIDA, `${jan}-inspecao-${vista}.png`) });
       await p.keyboard.press("Escape"); await espera(200);
     }

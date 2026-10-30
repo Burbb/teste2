@@ -10,7 +10,9 @@ cima: `guia` (a referência reduzida, no lugar dela, oculta e fora da exportaç�
 esteios, a travessa), `espada`, `morel_corpo` (o tronco), `morel_cabeca`, `mesa` (o tampo), `objetos` (o castiçal, a
 vela, a caneca, o pão, a tigela), `morel_esquerdo` (o braço que descansa, a mão e a ombreira escura), `morel_braco`
 (o braço da colher, a mão, a colher e a ombreira clara), `chamas` (a chama da vela, nos quatro primeiros quadros) e
-`juntas` (um pixel de cor por junta, oculta). Depois de montada, a fonte é a autoridade: `exportar.py` só lê dela.
+`juntas` (um pixel de cor por junta, oculta) e `construcao` (oculta: a perspectiva da sala, com o horizonte, o ponto
+de fuga e as fugas da parede da esquerda e da mesa, e a construção do tronco, com o ovo da caixa torácica, o pescoço,
+as clavículas, as juntas dos ombros e as axilas). Depois de montada, a fonte é a autoridade: `exportar.py` só lê dela.
 
 **O que se move, pose a pose** (`juntas.py`): o braço da colher (o cotovelo pela cinemática, a colher rígida); o tronco
 e a cabeça descem 1 px para a tigela enquanto ele come e a cabeça vai ao encontro da colher na boca (até 3 px); a
@@ -33,12 +35,13 @@ import espaco as ES  # noqa: E402
 import juntas as J  # noqa: E402
 import morel as MO  # noqa: E402
 import objetos as OB  # noqa: E402
+import tronco_estudo as TE  # noqa: E402
 
 FONTE = AQUI / "canto.aseprite"
 REFERENCIA = RAIZ / "ferramentas" / "arte" / "referencias" / "cenarios internos" / "Encontro com Morel na taverna.png"
 CAMADAS = ["guia", "parede", "espada", "morel_corpo", "morel_cabeca", "mesa", "objetos", "morel_esquerdo",
-           "morel_braco", "chamas", "juntas"]
-OCULTAS = ("guia", "juntas")
+           "morel_braco", "chamas", "juntas", "construcao"]
+OCULTAS = ("guia", "juntas", "construcao")
 # o braço que descansa (na tela, à direita): o ombro embaixo da ombreira escura, o cotovelo pousado para fora, a mão
 # espalmada no tampo ao lado da tigela (a mão não se move; o ombro acompanha o tronco)
 ESQ = dict(S=(206, 46), E=(221, 67), W=(209, 74), M=(202, 75))
@@ -117,10 +120,21 @@ def pose(p):
     return c
 
 
+def construcao():
+    """A guia oculta da construção: a perspectiva da sala e, por cima, a do tronco (na pose de repouso)."""
+    im = ES.guia_perspectiva()
+    with tempfile.TemporaryDirectory() as tmp:
+        arq = pathlib.Path(tmp) / "tronco.png"
+        TE.guia(arq)
+        im.alpha_composite(Image.open(arq).convert("RGBA"))
+    return im
+
+
 def quadros():
     """[(nome, {camada: Image})] na ordem de juntas.ROTEIRO."""
     fixas = estaticas()
     g = guia()
+    fixas["construcao"] = construcao()
     out = []
     for i, p in enumerate(J.poses()):
         c = dict(fixas, guia=g, **pose(p))

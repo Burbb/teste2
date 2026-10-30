@@ -153,9 +153,14 @@
   window.CenaTavernaMorelCanto = vistaMorel("/proto-tav/camadas/morel-canto/", {
     morel: { area: [118, 2, 102, 70], balao: [250, 40], foco: [171, 30] },
   }, true, true);
-  // a mesa do encontro (demo.py registra a cena `taverna_mesa` como esta): o canto (o padrão) ou a vista diante do
-  // balcão (a anterior, reservada para a Vó Berta), pela faixa do protótipo
-  const mesa = () => (document.body.dataset.tavMesa === "balcao" ? window.CenaTavernaMorel : window.CenaTavernaMorelCanto);
+  // a primeira candidata do canto (antes da revisão da mastigação, do tronco e da parede da esquerda), com os mesmos
+  // pontos, para comparar no mesmo estado do encontro
+  window.CenaTavernaMorelCantoV1 = vistaMorel("/proto-tav/camadas/morel-canto-v1/", window.CenaTavernaMorelCanto.pontos,
+    true, true);
+  // a mesa do encontro (demo.py registra a cena `taverna_mesa` como esta): o canto (o padrão), a primeira candidata do
+  // canto ou a vista diante do balcão (a anterior, reservada para a Vó Berta), pela faixa do protótipo
+  const mesa = () => ({ balcao: window.CenaTavernaMorel, canto1: window.CenaTavernaMorelCantoV1 })[document.body.dataset.tavMesa]
+    || window.CenaTavernaMorelCanto;
   window.CenaTavernaMesa = {
     base: (W, d) => mesa().base(W, d),
     desenhar: (...a) => mesa().desenhar(...a),

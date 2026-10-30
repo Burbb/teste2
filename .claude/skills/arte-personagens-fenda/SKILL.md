@@ -176,6 +176,44 @@ O estudo de construção (o apoio, o alcance, as juntas) e a aprovação artíst
 verificações diferentes: passar na primeira não diz nada da segunda. E isto não proíbe a automação: o cálculo continuou
 gerando a manga; o que mudou foi o que ele desenha e a revisão antes de virar a arte.
 
+## O tronco sob os braços e o rosto em pequenos movimentos (Morel no canto, 30/10/2026)
+
+Na primeira candidata do canto, o rosto de Morel se partia ao mastigar (a metade de baixo descia como uma peça, com uma
+faixa de fundo dos lados) e o tronco era um bloco do tamanho do espaço entre os braços, com o colete cortado reto e uma
+faixa marrom até a barba. O estudo, as fontes vistas e as medidas estão em [tronco-e-rosto.md](tronco-e-rosto.md); o
+espaço em volta (a parede lateral do mesmo quadro) é da `arte-cenas-fenda`, "Paredes laterais e cantos".
+
+**Princípios gerais:**
+- **Um movimento pequeno do rosto é uma variante da cabeça inteira, não um recorte deslocado.** Mastigar, falar,
+  piscar: o que se move (a mandíbula, a boca, o queixo) muda de forma dentro do contorno, e o contorno segue contínuo
+  (as bochechas, os lados do rosto, a barba). Deslocar um pedaço deixa área descoberta ou sobreposição; procure a
+  causa na construção da variante, não numa linha de sombra.
+- **O tronco tem limites próprios.** Meça pela cabeça (pelo crânio, não pelo cabelo e pela barba); a caixa torácica
+  de frente costuma ser mais estreita que a distância entre as juntas dos ombros, e os braços saem por fora dela.
+  Abaixo da axila, onde o braço se afasta, aparece o que está atrás. Robusto não é bloco: estreitar o tronco não é
+  afinar a cintura (a largura continua até o apoio quando o porte pede).
+- **A ordem da construção:** a caixa torácica (um ovo de topo mais estreito, inclinado), o trapézio descendo do pescoço
+  (côncavo), o ombro arredondado por cima do deltoide (convexo), a axila onde o contorno de dentro do braço encontra o
+  lado do tronco; só então a roupa sobre esses volumes.
+- **Pescoço, barba e roupa se ligam por sobreposição de formas:** o que está na frente passa por cima (a barba sobre o
+  colete), a gola envolve o pescoço e aparece dos lados, as lapelas descem até onde a roupa de baixo começa. Nem blocos
+  empilhados (colete, faixa, queixo), nem uma mancha escura escondendo a ligação.
+- **Faixas sobre um volume** (tiras, cintos, costuras) seguem a curva que a câmera vê (vista de cima, a frente de um
+  cilindro fica mais baixa que os lados).
+- **Confira com o que cobre escondido e depois com tudo à vista:** braços, ombreiras e objetos ocultos (o tronco lê
+  sozinho?); em repouso, no gesto que cruza o peito e na pose de outra ação (o olhar do pagamento). Uma conta por linha
+  acha fundo entre contornos em todas as poses; a leitura é no tamanho real.
+
+**Neste caso** (os exemplos; as medidas são de Morel): [canto-mastigacao.png](exemplos/canto-mastigacao.png) (em cima,
+a primeira candidata; embaixo, a revisada: repouso, as três poses de mastigar, a colher na boca, o olhar) e
+[canto-tronco.png](exemplos/canto-tronco.png) (sem os braços, e com tudo à vista em repouso, na boca e olhando). O
+tronco passou de 92 para 62 px, com a axila em x 141 e 203; a gola em pé dos dois lados da barba; o colete fechado até
+a garganta; a mastigação, uma grade de 35 linhas. A grade do tronco (`morel.TRONCO`) saiu da construção
+(`tronco_estudo.py`) e é retocada à mão; a construção fica na camada oculta `construcao` da fonte.
+
+**Ainda hipótese** (espera a avaliação do Jean): se 1 px de mandíbula lê como mastigar no tamanho do jogo; se a gola
+em pé lê como gola; se o vão entre o braço da colher e o tronco lê como espaço, e não como buraco.
+
 ## Dois corpos ligados por um contato (a queda de braço, 30/10/2026)
 
 Quando duas figuras se seguram (uma queda de braço, um aperto de mão, puxar alguém), o contato é a junta que as duas
@@ -272,4 +310,6 @@ ação que acontece ali (`morel/queda-vista/`). Com a câmera fixa, a construç�
 | As duas mãos de uma pega numa massa só (a primeira queda de braço) | tons de pele parecidos, a pega desenhada direto na escala da cena | a pega construída com formas simples e separada pelo valor (a pele de um mais escura, um pixel de sombra onde uma passa atrás da outra, os dedos em listras) |
 | Os desfechos indo para perto e para longe da câmera (a primeira queda de braço) | a câmera escolhida pela cena anterior, não pelo movimento | a regra real do gesto diz para onde ele vai; a câmera é escolhida para esse movimento correr de lado |
 | O acabamento parecendo um modelo 3D em baixa resolução (a segunda queda de braço) | os volumes da construção iluminados e pontilhados usados como a arte | a construção vira guia oculta; o acabamento é redesenhado por cima, pela cena aprovada (silhuetas, mangas, dobras, grupos de luz, textura só onde diz algo) |
+| O rosto partido ao mastigar, com uma faixa de fundo dos lados (Morel no canto) | a variante descia um recorte do queixo 1 px e preenchia o vão só no meio | a variante como cabeça inteira: a boca desce com o queixo, a barba ganha uma linha, o contorno contínuo; a conta de fundo entre contornos em todas as poses |
+| O tronco como um bloco entre os braços; o colete, uma faixa e a barba empilhados (Morel no canto) | o tronco como polígono do tamanho do espaço entre os braços; a gola como faixa reta | o tronco pela cabeça e pela caixa torácica, mais estreito que os ombros, a axila, a roupa sobre os volumes, a barba por cima do colete, a gola em pé dos lados |
 | O ombro como peça encaixada, o cotovelo como dobradiça (Morel comendo, a terceira passada) | o braço vestido em duas cápsulas: a calota acima do ombro do tronco, o antebraço um tom abaixo exatamente na junta, as faixas de luz de cada segmento | uma manga só, sem calota, a luz contínua pela curva do cotovelo, o escurecimento depois da junta, uma dobra curta por dentro (passo 7) |

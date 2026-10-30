@@ -27,7 +27,8 @@ Cada passo fecha antes do seguinte; as seções abaixo detalham.
    aprovadas do jogo, de outro, como a referência canônica do acabamento. A referência gerada orienta a construção,
    mas não prova que a perspectiva dela está certa: o desenho precisa da conferência própria (seção 3a).
 4. **O espaço antes dos objetos** (seção 3a): o piso, os planos, a circulação e os apoios, conferidos com os móveis e
-   as pessoas escondidos, antes de detalhar.
+   as pessoas escondidos, antes de detalhar; as paredes laterais e os cantos pela mesma projeção (seção "Paredes
+   laterais e cantos").
 5. **Desenho na grade real** (seção 3): silhuetas e volumes primeiro, nos pixels do jogo; materiais e detalhes depois.
 6. **Personagem** (seção 4): identidade (só o que o jogo estabelece), proporções, perspectiva e leitura no tamanho de
    uso. A construção do corpo e dos membros (o estudo com formas simples, os comprimentos fixos, o escorço, a roupa por
@@ -303,6 +304,41 @@ um adulto sentado à mesa: o braço do jogador precisava atravessar a mesa. A sa
   partes, na escala nova (a cabeça numa grade à mão no jeito da aprovada, os braços pela manga aprovada).
 - **A cena antiga não se apaga:** fica preservada e com a destinação registrada (a vista do balcão, para a Vó Berta).
 
+## Paredes laterais e cantos (o canto de Morel, 30/10/2026)
+
+Na primeira candidata do canto, a parede da esquerda tinha um ponto de fuga próprio, escolhido para imitar as fiadas
+suaves da imagem gerada, e lia como outra parede de frente com textura inclinada; o tampo atravessava a parede. O
+estudo, as fontes vistas e a construção estão em [paredes-laterais.md](paredes-laterais.md). O tronco e o rosto da
+figura no mesmo quadro são da `arte-personagens-fenda` ("O tronco sob os braços e o rosto em pequenos movimentos").
+
+**Princípios gerais:**
+- **A projeção antes das inclinações:** o horizonte é a altura dos olhos da câmera; numa câmera de frente para a parede
+  do fundo (um ponto), tudo o que corre em profundidade foge para o mesmo ponto: as tábuas do piso ou do tampo e as
+  linhas horizontais das paredes laterais. Ponto próprio para uma parede só se a sala não for retangular (decisão
+  registrada). Nenhuma viga ou fiada ganha uma inclinação escolhida isoladamente.
+- **Acima e abaixo do horizonte:** o que está acima desce em direção ao fundo, o que está abaixo sobe, o que está na
+  altura dos olhos fica horizontal; mais longe do horizonte, mais inclinado. As verticais continuam verticais.
+- **O encontro das paredes** é uma vertical; o que é contínuo na construção continua no canto na mesma altura (as
+  fiadas, a viga que vira o canto).
+- **A diminuição em profundidade:** espaçamentos iguais na parede (blocos, vigas, esteios) encurtam para o fundo pela
+  profundidade, não por um passo fixo; a parede perto de nós tem fiadas e blocos maiores.
+- **As faces que aparecem dizem a altura do olho:** uma viga acima do olho mostra a face de baixo; abaixo, a de cima; um
+  esteio mostra a face voltada para o ponto de fuga.
+- **Os móveis respeitam a parede:** um tampo que passa do ponto em que a parede está naquela profundidade entra nela;
+  encoste o móvel (o encontro foge para o ponto) ou termine-o antes.
+- **Confira o espaço sozinho**, com as guias (o horizonte, o ponto, as fugas) numa camada oculta, e sem elas no tamanho
+  real; pedra e madeira no mesmo plano (as juntas e as vigas pela mesma conta). A luz reforça o espaço, não o constrói.
+- **Uma referência gerada se verifica:** meça as fugas dela sobre a guia; se as linhas de uma parede não passam no ponto
+  do resto da imagem (ou contradizem a altura do olho que o tampo mostra), ela orienta a composição, não a perspectiva.
+
+**Neste caso** (o exemplo; as medidas são da cena de Morel): [canto-parede-lateral.png](exemplos/canto-parede-lateral.png)
+(em cima, a primeira candidata; embaixo, a revisada: o espaço sozinho, com as guias da sala e a cena inteira). O
+horizonte em y 22 e o ponto em x 170 já eram os do tampo; a lateral passou a fugir para eles, com as fiadas de 10 px no
+canto e uns 23 na borda, os blocos de 7 a 36 px pela profundidade, a travessa virando o canto, a mesa encostada.
+
+**Ainda hipótese** (espera a avaliação do Jean): se a convergência forte lê como o canto de uma sala pequena, ou pede o
+canto mais para a esquerda (fugas mais suaves); se a mesa encostada lê bem com o castiçal junto dela.
+
 ## Erros que aconteceram na forja (e como evitá-los)
 
 | Erro | O que causou | Como evitar |
@@ -428,4 +464,5 @@ caneca), como na forja. Na mesma grade (320×96), a câmera de perto já dá esp
 | A cabeça do freguês de costas como uma bola grande sobre um ombro pequeno (a G) | a cabeça desenhada do tamanho de quem está perto, o ombro baixo e estreito | de costas, a cabeça afunda nos ombros e a capa sobe até o queixo; a cabeça cabe umas duas vezes e meia na largura dos ombros |
 | O barril do lado errado e o fogo na frente do balcão (o estudo livre de Morel) | a outra vista do mesmo lugar distribuída para encher o quadro | antes de desenhar, um esquema da sala (o que fica em cada parede, de que lado) e da câmera; o objeto muda de lugar na imagem, não na sala; o que fica atrás de um móvel vai numa camada abaixo dele (o fogo abaixo do balcão) |
 | O taverneiro pequeno demais ao fundo; a borda da mesa por cima do braço de Morel | a escala escolhida pelo quadro, não pelo móvel; a mesa desenhada por último | a escala pelo móvel junto da pessoa (o balcão de 1,05 m dá o corpo inteiro, mesmo escondido); o braço que pousa no tampo passa por cima da borda, numa camada acima da mesa |
+| A parede da esquerda lendo como outra parede de frente (o canto de Morel) | um ponto de fuga próprio para ela, escolhido para imitar as fiadas suaves da imagem gerada; o tampo atravessando-a | as linhas da lateral para o ponto da sala, as fiadas do canto na altura das do fundo, a diminuição pela profundidade, a mesa encostada ("Paredes laterais e cantos") |
 | O braço da colher como uma faixa de couro junto do tronco (a vista de Morel) | o braço desenhado como um contorno só, colado ao peito | o braço de cima, o cotovelo e o antebraço como peças com direções próprias (o cotovelo é uma junta, com a dobra de dentro em sombra), e uma separação do peito por silhueta, sobreposição ou sombra |

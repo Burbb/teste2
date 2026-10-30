@@ -122,7 +122,55 @@ def main():
     for k in range(n):
         poses.alpha_composite(cena[k].crop(R), ((k % 10) * 132, (k // 10) * 98))
     poses.save(SAIDA / "poses.png", optimize=True)
+    revisao(C)
     print(f"morel-canto: {n} poses, caixa {[x0, y0, w, h]}, {len(tempo)} tiques")
+
+
+def _folha(linhas, esc, fundo=(24, 22, 20, 255), vao=4):
+    """Uma folha de inspeção: as linhas (listas de imagens do mesmo tamanho) ampliadas sem suavização."""
+    w, h = linhas[0][0].size
+    cols = max(len(lin) for lin in linhas)
+    out = Image.new("RGBA", (cols * (w * esc + vao) - vao, len(linhas) * (h * esc + vao) - vao), fundo)
+    for i, lin in enumerate(linhas):
+        for j, im in enumerate(lin):
+            out.alpha_composite(im.resize((w * esc, h * esc), Image.NEAREST), (j * (w * esc + vao), i * (h * esc + vao)))
+    return out
+
+
+def revisao(C):
+    """As folhas da revisão (antes, a primeira candidata em `morel/canto-v1/`, em cima; depois, embaixo):
+    - `revisao-mastigacao.png`: a cabeça em repouso, mastigando (as três poses de mastigar), com a colher na boca e
+      olhando para quem pagou;
+    - `revisao-tronco.png`: o tronco com os braços, as ombreiras e os objetos ocultos; e tudo à vista em repouso, com
+      a colher na boca e olhando;
+    - `revisao-parede.png`: o espaço sozinho, o espaço com as guias da sala (o horizonte, o ponto de fuga, as fugas da
+      parede da esquerda e da mesa) e a cena inteira."""
+    with tempfile.TemporaryDirectory() as tmp:
+        V = fa.celulas(AQUI.parent / "canto-v1" / "canto.aseprite", pathlib.Path(tmp) / "v1")
+        V1 = {}
+        for c in CE.CAMADAS:
+            V1[c] = []
+            for k in range(len(CE.J.ROTEIRO)):
+                arq = V / f"{c}-{k}.png"
+                V1[c].append(Image.open(arq).convert("RGBA") if arq.exists() else Image.new("RGBA", (320, 96)))
+    tudo = [c for c in CE.CAMADAS if c not in CE.OCULTAS]
+
+    def cena(D, k, tirar=(), mais=()):
+        return _junta([Image.new("RGBA", (320, 96), (24, 22, 20, 255))] +
+                      [D[c][k if c not in ("chamas",) else 1] for c in tudo if c not in tirar] + list(mais))
+    mast = [17, 18, 16, 13, 9, 19]
+    _folha([[cena(D, k).crop((150, 0, 192, 50)) for k in mast] for D in (V1, C)], 4).save(
+        SAIDA / "revisao-mastigacao.png", optimize=True)
+    so = ("morel_esquerdo", "morel_braco", "objetos", "chamas")
+    R = (110, 0, 232, 80)
+    _folha([[cena(D, 17, so).crop(R)] + [cena(D, k).crop(R) for k in (17, 9, 19)] for D in (V1, C)], 3).save(
+        SAIDA / "revisao-tronco.png", optimize=True)
+    espaco = ("espada", "morel_corpo", "morel_cabeca", "objetos", "morel_esquerdo", "morel_braco", "chamas")
+    guia = CE.ES.guia_perspectiva()
+    guia.putalpha(guia.getchannel("A").point(lambda a: 170 if a else 0))
+    P = (0, 0, 180, 96)
+    _folha([[cena(D, 17, espaco).crop(P), cena(D, 17, espaco, [guia]).crop(P), cena(D, 17).crop(P)] for D in (V1, C)],
+           2).save(SAIDA / "revisao-parede.png", optimize=True)
 
 
 def conferir():

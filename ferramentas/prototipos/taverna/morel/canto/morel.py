@@ -12,11 +12,15 @@ reduzido para virar arte; ela dá as posições, as proporções e a distribuiç
 - **A cabeça** (`CABECA`, numa grade à mão, um caractere por pixel): o mesmo desenho da aprovada levado à escala nova
   (os três tons do cabelo, a pele com o lado da vela claro, a cicatriz num traço claro e rosado, as sobrancelhas, a
   barba em dois tons com a boca num traço). Variantes: `baixo` (os olhos na tigela, as pálpebras), `olha` (os olhos
-  abertos, o branco e a pupila), `boca` (a boca aberta para a colher), `mastiga` (o queixo 1 px abaixo).
-- **O tronco** (`tronco`): o casaco em blocos de couro, a luz da vela pela esquerda, as lapelas com a borda clara, o
-  colete vermelho com a costura no meio e o lado da luz mais claro, as duas tiras de couro com as fivelas de aço, a
-  gola. O braço direito sai do tronco: o tronco é desenhado inteiro, também atrás dele (quando a colher vai à boca,
-  aparece o que estava atrás).
+  abertos, o branco e a pupila), `boca` (a boca aberta para a colher), `mastiga` (a mandíbula 1 px abaixo,
+  desenhada inteira: a boca desce com o queixo e a barba ganha uma linha, sem fresta dos lados).
+- **O tronco** (`TRONCO`, numa grade à mão a partir da construção de `tronco_estudo.py`): a caixa torácica mais
+  estreita que as juntas dos ombros (os braços saem por fora dela, o fundo aparece abaixo das axilas), os ombros
+  arredondados por cima do deltoide, o casaco aberto em blocos de couro com a luz da vela pela esquerda, a gola em pé
+  atrás da barba descendo em lapelas até as bordas do colete, o colete vermelho fechado até a garganta (a barba por
+  cima dele) com a costura no meio e o lado da luz mais claro, as duas tiras com as fivelas seguindo a curva do peito.
+  O braço direito sai do tronco: o tronco é desenhado inteiro, também atrás dele (quando a colher vai à boca, aparece o
+  que estava atrás).
 - **Os braços** pela função da manga aprovada (`morel/vista/manga.py`: uma forma só do ombro ao punho, a curva por
   fora do cotovelo, a dobra curta por dentro, o antebraço escurecendo depois da junta), com os raios desta escala; as
   mãos em bolinha de pele, sem dedos."""
@@ -86,7 +90,7 @@ CABECA = [
 
 def cabeca(variante="baixo", dy=0):
     """A cabeça em {(x, y): cor}: `baixo` (os olhos na tigela), `olha` (para quem está à mesa: os olhos abertos),
-    `boca` (aberta para a colher), `mastiga` (o queixo 1 px abaixo)."""
+    `boca` (aberta para a colher), `mastiga` (a mandíbula 1 px abaixo, numa grade inteira)."""
     linhas = [list(r) for r in CABECA]
     if variante == "olha":
         # os olhos abertos: a sobrancelha 1 px acima, o branco e a pupila (olhando para a frente, um pouco para baixo)
@@ -94,6 +98,12 @@ def cabeca(variante="baixo", dy=0):
     elif variante == "boca":
         linhas[23] = list("..llllmmmmoooooooommmmmllli.")
         linhas[24] = list("..llllmmmmmoooooommmmmmllli.")
+    elif variante == "mastiga":
+        # a mandíbula desce 1 px dentro de uma cabeça contínua: o bigode e as bochechas ficam, a boca (fechada, um
+        # pouco mais curta) desce com o queixo, e a barba de baixo ganha uma linha inteira, com o contorno dos lados
+        # seguindo sem fresta (antes, um recorte do queixo descia 1 px e deixava o fundo à mostra dos lados)
+        linhas[23] = list("..llllmmmmmmmmmmmmmmmmmllli.")
+        linhas.insert(24, list("..llllmmmmmoooooommmmmmllli."))
     # o lado da sombra (longe da vela): a pele da metade da direita desce um degrau, e mais junto da orelha
     for y in range(8, 21):
         for x, ch in enumerate(linhas[y]):
@@ -109,13 +119,7 @@ def cabeca(variante="baixo", dy=0):
                 BARBA.get(ch) if ch in "lmnio" else OLHO.get(ch) if ch in "jwkq" else None
             if cor is None:
                 continue
-            yy = y0 + y + dy
-            if variante == "mastiga" and y >= 23:
-                yy += 1  # o queixo e a barba de baixo descem 1 px
-            out[(x0 + x, yy)] = cor
-    if variante == "mastiga":  # o vão que o queixo deixou embaixo da boca, na barba
-        for x in range(x0 + 6, x0 + 22):
-            out.setdefault((x, y0 + 23 + dy), BARBA["m"])
+            out[(x0 + x, y0 + y + dy)] = cor
     return out
 
 
@@ -137,45 +141,92 @@ def _poligono(pts):
     return out
 
 
-TRONCO = [(126, 48), (134, 38), (148, 33), (160, 34), (184, 34), (196, 33), (210, 38), (216, 48), (218, 80),
-          (126, 80)]
-COLETE_X = (158, 184)
+# o tronco numa grade à mão (um caractere por pixel; o rascunho saiu da construção de `tronco_estudo.py` e foi
+# retocado aqui): o casaco em j (a aresta acesa), a (o lado da vela), b (a frente), c (a sombra), l (a sombra funda);
+# o colete em 1 a 5 (do aceso à borda escura); "." vazio. O casaco aberto acompanha a caixa torácica, mais estreita que
+# as juntas dos ombros (os braços saem por fora dela, a axila em x 141 e 203); a gola em pé atrás da barba e as lapelas
+# descendo até as bordas do colete; o colete fechado até a garganta, embaixo da barba.
+TRONCO_POS = (128, 25)
+TRONCO = [
+    "..........................................................................................",
+    "..........................................................................................",
+    ".........................jjjjj1112222222222433333333344444bbbbb...........................",
+    "......................jjabbbaj1112222222222433333333344444lccccbb.........................",
+    "...................jjaaaabbbaj1112222222222433333333344444lccccbbbbb......................",
+    "................jjaaaaaaabbbaj1112222222222433333333344444lccccbbbbbcll...................",
+    ".............jjaaaaaaaaaabbbaj1112222222222433333333344444lccccbbbbbccccll................",
+    "...........jjaaaaaaaaaaaabbbaj1112222222222433333333344444lccccbbbbbccccccll..............",
+    ".........jjaaaaaaaaaaaaaabbbaj1112222222222433333333344444lccccbbbbbccccccccll............",
+    "........jjaaaaaaaaaaaaaaabbbaj1112222222222433333333344444lccccbbbbbcccccccccll...........",
+    ".......jjaaaaaaaaaaaaaaaaabbaj1112222222222433333333344444lcccbbbbbbccccccccccll..........",
+    "......aaaaaaaaaaaaaaaaaaaabbaj111222222222243333333334444lcccbbbbbbbcccccccccccll.........",
+    ".....aaaaaaaaaaaaaaaaaaaaabbaj111222222222243333333334444lcccbbbbbbbccccccccccccll........",
+    ".....aaaaaaaaaaaaaaaaaaaaaabbaj11222222222243333333334444lcccbbbbbbbccccccccccccll........",
+    ".....aaaaaaaaaaaaaaaaaaaaaabbaj1122222222224333333333444lcccbbbbbbbbccccccccccccll........",
+    ".....aaaaaaaaaaaaaaaaaaaaaaabaj1122222222224333333333444lccbbbbbbbbbccccccccccccll........",
+    ".....aaaaaaaaaaaaaaaaaaaaaaabaj1122222222224333333333444lccbbbbbbbbbccccccccccccll........",
+    ".....aaaaaaaaaaaaaaaaaaaaaaabaj1122222222224333333333444lccbbbbbbbbbccccccccccccll........",
+    ".....aaaaaaaaaaaaaaaaaaaaaaabaj1122222222224333333333444lccbbbbbbbbbccccccccccccll........",
+    ".....aaaaaaaaaaaaaaaaaaaaaaabaj1122222222224333333333444lccbbbbbbbbbccccccccccccll........",
+    "......aaaaaaaaaaaaaaaaaaaaaabaj1122222222224333333333444lccbbbbbbbbbcccccccccccll.........",
+    ".......aaaaaaaaaaaaaaaaaaaaabaj1122222222224333333333444lccbbbbbbbbbccccccccccll..........",
+    "........jaaaaaaaaaaaaaaaaaaabaj1122222222224333333333444lccbbbbbbbbbcccccccccll...........",
+    "..........jaaaaaaaaaaaaaaaaabaj1122222222224333333333444lccbbbbbbbbbccccccccll............",
+    "...........jaaaaaaaaaaaaaaaabaj1122222222224333333333444lccbbbbbbbbbcccccccll.............",
+    "............jaaaaaaaaaaaaaaabaj1122222222224333333333444lccbbbbbbbbbcccccccll.............",
+    ".............jaaaaaaaaaaaaaabaj1122222222224333333333444lccbbbbbbbbbccccccll..............",
+    ".............jaaaaaaaaaaaaaabaj1122222222224333333333444lccbbbbbbbbbccccccll..............",
+    ".............jaaaaaaaaaaaaaabaj1122222222224333333333444lccbbbbbbbbbccccccll..............",
+    ".............jaaaaaaaaaaaaaabaj1122222222224333333333444lccbbbbbbbbbccccccll..............",
+    "............jaaaaaaaaaaaaaaabaj1122222222224333333333444lccbbbbbbbbbccccccll..............",
+    "............jaaaaaaaaaaaaaaabaj1122222222224333333333444lccbbbbbbbbbccccccll..............",
+    "............jaaaaaaaaaaaaaaabaj1122222222224333333333444lccbbbbbbbbbccccccll..............",
+    "............jaaaaaaaaaaaaaaabaj1122222222224333333333444lccbbbbbbbbbccccccll..............",
+    "............jaaaaaaaaaaaaaaabaj1122222222224333333333444lccbbbbbbbbbccccccll..............",
+    "............jaaaaaaaaaaaaaaabaj1122222222224333333333444lccbbbbbbbbbccccccll..............",
+    "............jaaaaaaaaaaaaaaabaj1122222222224333333333444lccbbbbbbbbbccccccll..............",
+    "............jaaaaaaaaaaaaaaabaj1122222222224333333333444lccbbbbbbbbbccccccll..............",
+    "............jaaaaaaaaaaaaaaabaj1122222222224333333333444lccbbbbbbbbbccccccll..............",
+    "............jaaaaaaaaaaaaaaabaj1122222222224333333333444lccbbbbbbbbbccccccll..............",
+    ".............jaaaaaaaaaaaaaabaj1122222222224333333333444lccbbbbbbbbbcccccll...............",
+    ".............jaaaaaaaaaaaaaabaj1122222222224333333333444lccbbbbbbbbbcccccll...............",
+    ".............jaaaaaaaaaaaaaabaj1122222222224333333333444lccbbbbbbbbbcccccll...............",
+    ".............jaaaaaaaaaaaaaabaj1122222222224333333333444lccbbbbbbbbbcccccll...............",
+    ".............jaaaaaaaaaaaaaabaj1122222222224333333333444lccbbbbbbbbbcccccll...............",
+    ".............jaaaaaaaaaaaaaabaj1122222222224333333333444lccbbbbbbbbbcccccll...............",
+    ".............jaaaaaaaaaaaaaabaj1122222222224333333333444lccbbbbbbbbbcccccll...............",
+    ".............jaaaaaaaaaaaaaabaj1122222222224333333333444lccbbbbbbbbbcccccll...............",
+    ".............jaaaaaaaaaaaaaabaj1122222222224333333333444lccbbbbbbbbbcccccll...............",
+    ".............jaaaaaaaaaaaaaabaj1122222222224333333333444lccbbbbbbbbbcccccll...............",
+    ".............jaaaaaaaaaaaaaabaj1122222222224333333333444lccbbbbbbbbbcccccll...............",
+    ".............jaaaaaaaaaaaaaabaj1122222222224333333333444lccbbbbbbbbbcccccll...............",
+    ".............jaaaaaaaaaaaaaabaj1122222222224333333333444lccbbbbbbbbbcccccll...............",
+    ".............jaaaaaaaaaaaaaabaj1122222222224333333333444lccbbbbbbbbbcccccll...............",
+    ".............jaaaaaaaaaaaaaabaj1122222222224333333333444lccbbbbbbbbbcccccll...............",
+    ".............jaaaaaaaaaaaaaabaj1122222222224333333333444lccbbbbbbbbbcccccll...............",
+]
+COLETE_X = (159, 184)   # as bordas do colete embaixo das lapelas (as tiras vão de uma à outra)
 TIRAS_Y = (49, 61)
 
 
 def tronco(dy=0):
-    """O tronco em {(x, y): cor}: o casaco, o colete com as tiras e as fivelas, a gola."""
+    """O tronco em {(x, y): cor}: o casaco, a gola, o colete (da grade `TRONCO`), as tiras com as fivelas por cima,
+    seguindo a curva do peito (visto de cima, a frente do peito fica mais baixa: as pontas das tiras sobem 1 px)."""
     out = {}
-    corpo = _poligono([(x, y + dy) for x, y in TRONCO])
-    cx = 171
-    for (x, y) in corpo:
-        u = (x - cx) / 40       # -1 à esquerda (a vela), +1 à direita
-        cor = COURO["a"] if u < -0.45 else COURO["b"] if u < 0.35 else COURO["c"]
-        if u < -0.75:
-            cor = COURO["j"] if (y - dy) < 58 else COURO["a"]
-        out[(x, y)] = cor
-    # o colete: a faixa do meio, com a costura e o lado da luz
-    for (x, y) in list(corpo):
-        if COLETE_X[0] <= x < COLETE_X[1] and y - dy >= 36:
-            k = x - COLETE_X[0]
-            cor = COLETE[0] if k in (2, 3) else COLETE[1] if k < 11 else COLETE[2] if k < 20 else COLETE[3]
-            if k == 12:
-                cor = COLETE[3]     # a costura do meio
-            if k in (0, 25):
-                cor = COLETE[4]     # a borda que entra embaixo da lapela
-            out[(x, y)] = cor
-    # as lapelas do casaco: a borda clara do lado da vela, a sombra que fazem no colete
-    for y in range(36 + dy, 81 + dy):
-        for x, cor in ((COLETE_X[0] - 1, COURO["j"]), (COLETE_X[0] - 2, COURO["a"]), (COLETE_X[1], COURO["l"]),
-                       (COLETE_X[1] + 1, COURO["b"])):
-            if (x, y) in corpo:
-                out[(x, y)] = cor
-    # as tiras com as fivelas
+    x0, y0 = TRONCO_POS
+    for gy, linha in enumerate(TRONCO):
+        for gx, ch in enumerate(linha):
+            if ch == ".":
+                continue
+            cor = COURO[ch] if ch in COURO else COLETE[int(ch) - 1]
+            out[(x0 + gx, y0 + gy + dy)] = cor
     for ty in TIRAS_Y:
-        for y in range(ty + dy, ty + 3 + dy):
-            for x in range(COLETE_X[0] - 1, COLETE_X[1] + 1):
-                out[(x, y)] = COURO["c"] if y == ty + dy else COURO["b"] if y == ty + 1 + dy else COURO["l"]
-        bx = 167
+        for x in range(COLETE_X[0] - 1, COLETE_X[1] + 1):
+            sobe = 1 if abs(x - 171.5) > 9 else 0
+            for j in range(3):
+                y = ty + j - sobe + dy
+                out[(x, y)] = COURO["c"] if j == 0 else COURO["b"] if j == 1 else COURO["l"]
+        bx = 168
         for y in range(ty - 1 + dy, ty + 4 + dy):  # a fivela: o aro de aço, o vão escuro no meio
             for x in range(bx, bx + 8):
                 k, j = x - bx, y - (ty - 1 + dy)
@@ -184,11 +235,6 @@ def tronco(dy=0):
                     out[(x, y)] = ACO[1] if (j == 0 or k == 0) else ACO[3]
                 else:
                     out[(x, y)] = COURO["l"] if k < 4 else ACO[4]
-    # a gola: o couro dobrado em volta do pescoço, embaixo da barba
-    for x in range(152, 192):
-        for y in range(34 + dy, 38 + dy):
-            if (x, y) in out or abs(x - 171) < 21:
-                out[(x, y)] = COURO["a"] if x < 165 else COURO["b"] if x < 180 else COURO["c"]
     return out
 
 

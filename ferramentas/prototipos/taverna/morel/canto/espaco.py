@@ -1,18 +1,23 @@
 """O canto da taverna onde Morel come (protótipo): o espaço sem pessoa nem objetos, na grade da cena (320×96).
 
-    python ferramentas/prototipos/taverna/morel/canto/espaco.py <pasta>     # espaco.png (e ampliado) para conferir
+    python ferramentas/prototipos/taverna/morel/canto/espaco.py <pasta>     # espaco.png (e ampliados) para conferir
 
 **A câmera** é a dos olhos de quem senta diante de Morel (a referência "Encontro com Morel na taverna", aprovada pelo
 Jean): perto, o tampo visto de cima, a borda do nosso lado fora do quadro. A referência tem 2,5 por 1; na altura das
 cenas (96) ela ocupa 240 de largura, no tamanho dela (nada esticado, Morel não achata, a câmera não recua), e os 40 px
 de cada lado continuam o canto: à esquerda, mais da parede lateral; à direita, outra baia da parede do fundo.
 
-**A perspectiva:** o horizonte na altura dos olhos de Morel (dois adultos sentados frente a frente), em y 22, com o
-ponto de fuga no meio dele (x 170): as tábuas do tampo, que correm de nós para ele, convergem para lá; a parede do fundo
-fica de frente (as fiadas horizontais). Na imagem gerada, a parede da esquerda tem as fiadas descendo para o canto como
-se o olho estivesse abaixo do tampo, o que não fecha com o tampo visto de cima; aqui ela é um pano em ângulo no canto
-(não a 90°), com o ponto de fuga dela longe (x 600, no mesmo horizonte): as fiadas ficam suaves como na referência, a
-viga de cima sobe para a esquerda como lá, e o conjunto é coerente.
+**A perspectiva** (a de um ponto: a câmera olha de frente para a parede do fundo): o horizonte na altura dos olhos de
+Morel (dois adultos sentados frente a frente), em y 22, com o ponto de fuga no meio dele (x 170). Tudo o que corre em
+profundidade foge para ele: as tábuas do tampo, a borda da mesa encostada na parede e **a parede da esquerda**, que é a
+lateral do cômodo, a 90° da do fundo (as fiadas, as vigas, as juntas). Na parede lateral, o que está acima do horizonte
+desce para o canto (a viga de cima, a travessa do fundo virando o canto, com a face de baixo à vista) e o que está
+abaixo sobe para ele (as fiadas de baixo, a viga do meio, com a face de cima à vista); as verticais continuam
+verticais; as fiadas medem no canto o mesmo que as do fundo e crescem para a esquerda, mais perto de nós; os blocos
+encurtam para o canto pela profundidade (`_dist_lateral`, com a distância focal `FOCO`), não por um passo fixo. A mesa,
+encostada no canto, encontra a parede numa linha que também foge para o ponto (`_y_mesa_parede`). Na imagem gerada, as
+fiadas dessa parede contradizem o tampo visto de cima; a construção vence (a skill `arte-cenas-fenda`, "Paredes
+laterais e cantos"). `guia_perspectiva()` desenha o horizonte, o ponto e as fugas para a camada oculta da fonte.
 
 **Os materiais** (as paletas das cenas aprovadas da taverna): a pedra em fiadas regulares com as juntas um tom abaixo e
 a aresta de cima de cada bloco acesa só onde a vela alcança; a madeira com a aresta acesa e o lado escuro; a parede da
@@ -25,12 +30,14 @@ from PIL import Image
 
 W, H = 320, 96
 OX = 40                      # a referência (240 de largura) começa aqui
-HORIZONTE, FUGA_X = 22, 170  # o ponto de fuga do tampo (e do que corre de nós para o fundo)
-FUGA2_X = 600                # o da parede da esquerda, em ângulo
-CANTO = (95, 106)            # o esteio do canto (x de um lado ao outro)
+HORIZONTE, FUGA_X = 22, 170  # o ponto de fuga de tudo o que corre de nós para o fundo (o tampo, a parede da esquerda)
+FOCO = 256                   # a distância focal em px (uns 64° de campo na largura): a profundidade da parede lateral
+CANTO = (95, 106)            # o esteio do canto (x de um lado ao outro); o encontro das paredes atrás dele, em x 95
 ESTEIO_DIR = (270, 280)      # o esteio da direita (o da referência, em x 230 a 240 dela)
 TRAVESSA = (9, 17)           # a travessa de madeira na parede do fundo (y)
 TAMPO_Y = 72                 # a borda de lá do tampo (Morel apoia os braços logo depois dela)
+MESA_PAREDE = 50             # onde a borda de lá do tampo encontra a parede da esquerda (a mesa encostada no canto)
+
 
 def h(s):
     return (int(s[0:2], 16), int(s[2:4], 16), int(s[4:6], 16), 255)
@@ -86,7 +93,7 @@ def parede_fundo(img):
                 _px(img, x, y, PEDRA[4])
             elif (x >= 236 or (x >= 228 and (x + y) % 2 == 0)) and c == PEDRA[1]:
                 _px(img, x, y, PEDRA[2])
-    # a travessa: a madeira com a aresta de cima acesa e a de baixo escura
+    # a travessa: a madeira com a aresta de cima acesa e a de baixo escura (a face de baixo: está acima do olho)
     for y in range(TRAVESSA[0], TRAVESSA[1]):
         for x in range(x0, W):
             cor = MADEIRA[3] if y == TRAVESSA[0] else MADEIRA[6] if y == TRAVESSA[1] - 1 else \
@@ -97,67 +104,98 @@ def parede_fundo(img):
         _px(img, x + 10, TRAVESSA[0] + 4, MADEIRA[6])
 
 
+def _r_lateral(x):
+    """Quanto um ponto da parede da esquerda em x está mais perto que o canto (1 no canto; mais à esquerda, maior)."""
+    return (FUGA_X - x) / (FUGA_X - CANTO[0])
+
+
 def _y_lateral(x, y_canto):
-    """A linha da parede da esquerda que passa por y_canto no canto, rumo ao ponto de fuga dela."""
-    return HORIZONTE + (y_canto - HORIZONTE) * (x - FUGA2_X) / (CANTO[0] - FUGA2_X)
+    """A linha da parede da esquerda que passa por y_canto no canto e foge para o ponto de fuga da sala."""
+    return HORIZONTE + (y_canto - HORIZONTE) * _r_lateral(x)
+
+
+def _dist_lateral(x):
+    """A distância ao longo da parede, do canto até x, na medida dos pixels da parede do fundo (o bloco de 24 lá)."""
+    return (1 - 1 / _r_lateral(x)) * FOCO
+
+
+def _y_mesa_parede(x):
+    """A linha em que o tampo encontra a parede da esquerda (foge para o ponto da sala, a partir de MESA_PAREDE)."""
+    return HORIZONTE + (TAMPO_Y - HORIZONTE) * (FUGA_X - x) / (FUGA_X - MESA_PAREDE)
 
 
 def parede_lateral(img):
-    """A parede da esquerda, em ângulo, aquecida pela vela: as fiadas de pedra rumo ao ponto de fuga dela e duas vigas
-    (a de cima, na altura da travessa do fundo; a do meio)."""
-    xs = range(0, CANTO[0])
-    linhas = [-6, 3, 12, 21, 30, 39, 48, 57, 66, 75, 84]  # as fiadas no canto
-    for x in xs:
+    """A parede da esquerda, a lateral do cômodo, aquecida pela vela: as fiadas no canto na altura das do fundo, fugindo
+    para o ponto da sala; as juntas verticais pela distância ao longo da parede (os blocos encurtam para o canto); a
+    viga de cima (a travessa do fundo virando o canto, com a face de baixo à vista: está acima do olho) e a do meio
+    (abaixo do olho: a face de cima à vista, acesa pela vela)."""
+    linhas = list(range(TRAVESSA[1] - 30, 130, 10))  # as fiadas no canto: as do fundo (17, 27, 37...) e acima da viga
+    for x in range(0, CANTO[0]):
+        r = _r_lateral(x)
+        d = _dist_lateral(x)
+        esc = r * r * (FUGA_X - CANTO[0]) / FOCO     # quantos px na tela vale 1 px da parede do fundo, ao longo dela
         for y in range(H):
-            # em que fiada está (pelas linhas que fogem para o ponto de fuga da parede)
-            ys = [_y_lateral(x, yc) for yc in linhas]
-            k = sum(1 for v in ys if v <= y) - 1
-            if k < 0 or k >= len(ys) - 1:
-                continue
-            y0, y1 = ys[k], ys[k + 1]
-            # o comprimento dos blocos encurta para o canto
-            esc = (CANTO[0] - FUGA2_X) / (x - FUGA2_X)
-            u = (CANTO[0] - x) * esc
-            passo, deslo = 26, (k * 11) % 26
-            bx = (u + deslo) % passo
+            yc = HORIZONTE + (y + 0.5 - HORIZONTE) / r   # a altura no canto da linha que passa pelo meio do pixel
+            k = max(i for i, v in enumerate(linhas) if v <= yc)
+            y0c, y1c = linhas[k], linhas[k + 1]
+            passo, deslo = 24, (k * 13) % 24
+            bloco, bx = divmod(d + deslo, passo)
             l = luz_vela(x, y)
             # o halo da vela em degraus (a pedra mais clara e quente perto dela), com a passagem pontilhada
             tom = 1 if l > 0.72 else 2 if l > 0.56 else 3 if l > 0.4 else 4
             if tom > 1 and (x + y) % 2 == 0 and l > (0.72, 0.56, 0.4)[tom - 2] - 0.04:
                 tom -= 1
-            if (int((u + deslo) // passo) + k) % 3 == 0:
+            if (int(bloco) + k) % 3 == 0:
                 tom = min(5, tom + 1)
             cor = PEDRA_QUENTE[tom]
-            if y >= y1 - 1.0 or bx < 1.0:
+            # a junta de baixo da fiada (1 px na tela) e a vertical (1 px, 2 bem perto de nós)
+            if (y1c - yc) * r < 1.0 or bx * esc < (1.0 if r < 1.8 else 2.0):
                 cor = PEDRA_QUENTE[min(6, tom + 2)]
-            elif y < y0 + 1.0 and l > 0.4:
-                cor = PEDRA_QUENTE[max(0, tom - 1)]
+            elif (yc - y0c) * r < 1.0 and l > 0.4:
+                cor = PEDRA_QUENTE[max(0, tom - 1)]     # a aresta de cima, onde a vela alcança
             _px(img, x, y, cor)
-    # as vigas: a da travessa (no canto, na mesma altura dela) e a do meio
-    for (yc0, yc1) in ((TRAVESSA[0], TRAVESSA[1]), (32, 38)):
-        for x in xs:
+    # as vigas: a de cima (a travessa do fundo virando o canto, na mesma altura) e a do meio
+    for (yc0, yc1), cima in (((TRAVESSA[0], TRAVESSA[1]), True), ((32, 38), False)):
+        for x in range(0, CANTO[0]):
             a, b = _y_lateral(x, yc0), _y_lateral(x, yc1)
-            for y in range(math.floor(a), math.ceil(b)):
+            face = max(1, round(_r_lateral(x) - 0.3))    # a face de baixo (ou de cima) cresce perto de nós
+            for y in range(math.floor(a), math.ceil(b) + (face if cima else 0)):
                 if not 0 <= y < H:
                     continue
                 l = luz_vela(x, y)
                 base = 1 if l > 0.5 else 2 if l > 0.3 else 3
-                cor = MADEIRA[base - 1] if y < a + 1 else MADEIRA[base + 3] if y >= b - 1 else MADEIRA[base]
+                if cima:
+                    # acima do olho: a aresta de cima acesa, o corpo, e embaixo a face de baixo, à sombra
+                    cor = MADEIRA[base - 1] if y < a + 1 else MADEIRA[6] if y >= b else \
+                        MADEIRA[base + 3] if y >= b - 1 else MADEIRA[base]
+                else:
+                    # abaixo do olho: a face de cima à vista, acesa pela vela, e a aresta de baixo escura
+                    cor = MADEIRA[max(0, base - 2)] if y < a + face else MADEIRA[base + 3] if y >= b - 1 else \
+                        MADEIRA[base]
                 _px(img, x, y, cor)
+    # a mesa encosta na parede: a sombra de contato de 1 px na parede, logo acima da linha em que o tampo a encontra
+    for x in range(0, MESA_PAREDE + 1):
+        _px(img, x, math.ceil(_y_mesa_parede(x)) - 1, PEDRA_QUENTE[6])
 
 
 def esteio(img, x0, x1, y1=TAMPO_Y):
-    """Um esteio de madeira de frente: a aresta da esquerda acesa (a vela), o meio, o lado escuro, os veios."""
+    """Um esteio de madeira de frente: a face lateral que aparece é a do lado do ponto de fuga (o do canto: a da
+    direita, longe da vela, escura; o da direita: a da esquerda, voltada para a vela, mais clara), a aresta, os veios."""
+    esquerda = x0 > FUGA_X   # à direita do ponto, vemos a face da esquerda
+    w = x1 - x0
     for y in range(0, y1):
+        l = luz_vela(x0, y)
         for x in range(x0, x1):
             k = x - x0
-            l = luz_vela(x0, y)
-            cor = (MADEIRA[1] if l > 0.4 else MADEIRA[2]) if k == 0 else MADEIRA[6] if k == x1 - x0 - 1 else \
-                MADEIRA[5] if k >= x1 - x0 - 3 else (MADEIRA[3] if l > 0.4 else MADEIRA[4])
+            if esquerda:
+                cor = MADEIRA[2] if k == 0 else MADEIRA[3] if k < 3 else MADEIRA[6] if k == w - 1 else MADEIRA[4]
+            else:
+                cor = (MADEIRA[1] if l > 0.4 else MADEIRA[2]) if k == 0 else MADEIRA[6] if k == w - 1 else \
+                    MADEIRA[5] if k >= w - 3 else (MADEIRA[3] if l > 0.4 else MADEIRA[4])
             _px(img, x, y, cor)
         if y % 17 == 5:
-            _px(img, x0 + 3, y, MADEIRA[5])
-            _px(img, x0 + 3, y + 1, MADEIRA[5])
+            _px(img, x0 + (4 if esquerda else 3), y, MADEIRA[5])
+            _px(img, x0 + (4 if esquerda else 3), y + 1, MADEIRA[5])
 
 
 def _tom_tampo(x, y):
@@ -171,16 +209,24 @@ def _tom_tampo(x, y):
     return t
 
 
+def _na_parede(x, y):
+    """Se (x, y), abaixo da borda de lá, ainda é a parede da esquerda (a mesa encosta nela)."""
+    return x < MESA_PAREDE and y < _y_mesa_parede(x)
+
+
 def tampo(img):
     """O tampo visto de cima: as tábuas correm de nós para Morel e fogem para o ponto de fuga; a borda de lá acesa;
-    perto da vela, quente; para a direita, escurecendo. A borda do nosso lado fica fora do quadro. Cada tábua num tom
-    (a luz é que muda); as juntas são linhas contínuas, um tom abaixo dois, e uma ou outra emenda curta."""
+    perto da vela, quente; para a direita, escurecendo. A borda do nosso lado fica fora do quadro; a da esquerda
+    encosta na parede lateral. Cada tábua num tom (a luz é que muda); as juntas são linhas contínuas, um tom abaixo
+    dois, e uma ou outra emenda curta."""
     for y in range(TAMPO_Y, H):
         for x in range(W):
+            if _na_parede(x, y):
+                continue
             t = _tom_tampo(x, y)
             cor = TAMPO[t]
-            if y == TAMPO_Y:
-                cor = TAMPO[max(0, t - 2)]            # a aresta da borda de lá
+            if y == TAMPO_Y or _na_parede(x, y - 1):
+                cor = TAMPO[max(0, t - 2)]            # a aresta da borda de lá (e a que encosta na parede)
             elif y == TAMPO_Y + 1:
                 cor = TAMPO[min(6, t + 1)]
             _px(img, x, y, cor)
@@ -189,11 +235,31 @@ def tampo(img):
         for y in range(TAMPO_Y + 2, H):
             f = (y - HORIZONTE) / (H - HORIZONTE)
             x = round(FUGA_X + (j - FUGA_X) * f - 0.5)
-            if 0 <= x < W:
+            if 0 <= x < W and not _na_parede(x, y - 1):
                 _px(img, x, y, TAMPO[min(6, _tom_tampo(x, y) + 2)])
     for (x, y, n) in ((60, 88, 5), (150, 83, 4), (232, 90, 6), (300, 80, 4)):  # as emendas das tábuas
         for k in range(n):
             _px(img, x + k, y, TAMPO[min(6, _tom_tampo(x + k, y) + 2)])
+
+
+def guia_perspectiva():
+    """A guia da perspectiva (a camada oculta `perspectiva` da fonte e as folhas): o horizonte, o ponto de fuga, o
+    encontro das paredes, as fugas da viga, de fiadas da parede da esquerda e da mesa encostada nela."""
+    img = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    hz, fg, ln = (80, 220, 255, 255), (255, 80, 200, 255), (255, 230, 80, 255)
+    for x in range(W):
+        _px(img, x, HORIZONTE, hz)
+    for y in range(H):
+        _px(img, CANTO[0], y, ln)
+    for yc in (TRAVESSA[0], TRAVESSA[1], 27, 37, 47):
+        for x in range(0, FUGA_X):
+            _px(img, x, round(_y_lateral(x, yc)), fg)
+    for x in range(0, FUGA_X):
+        _px(img, x, round(_y_mesa_parede(x)), fg)
+    for x in range(FUGA_X - 2, FUGA_X + 3):
+        for y in range(HORIZONTE - 2, HORIZONTE + 3):
+            _px(img, x, y, (255, 255, 255, 255))
+    return img
 
 
 def espaco():
@@ -211,3 +277,6 @@ if __name__ == "__main__":
     im = espaco()
     im.save(saida / "espaco.png")
     im.resize((W * 4, H * 4), Image.NEAREST).save(saida / "espaco4.png")
+    g = im.copy()
+    g.alpha_composite(guia_perspectiva())
+    g.resize((W * 4, H * 4), Image.NEAREST).save(saida / "espaco-guia4.png")

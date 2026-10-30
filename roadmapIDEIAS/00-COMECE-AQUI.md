@@ -8919,3 +8919,19 @@ foi automatizado.
   console): tudo certo. O código do jogo e o encontro não mudaram.
 - **Parado aqui:** a avaliação artística é do Jean; a queda de braço espera a aprovação desta base.
 
+### 30/10/2026 (data do computador local) — A taverna: Morel no canto, a revisão dos três pontos (protótipo)
+
+- **Pedido do Jean:** a cena nova ficou boa em direção, proximidade e composição; refinar três pontos sem reiniciar: o
+  rosto que se partia ao mastigar, o tronco largo demais com o colete cortado reto e uma faixa até a barba, e a parede
+  da esquerda que não lia como a lateral do cômodo. A queda de braço continua suspensa; nada integrado.
+- **Feito** (o LEIA-ME do protótipo, "A revisão dos três pontos"): a primeira candidata preservada
+  (`morel/canto-v1/`, `camadas/morel-canto-v1/`, no painel e na faixa "A mesa do encontro"); a mastigação como grade
+  inteira (a causa era um recorte do queixo descendo 1 px com o vão preenchido só no meio); o tronco pela construção
+  (`morel/canto/tronco_estudo.py` → a grade `morel.TRONCO`), mais estreito que os ombros, com as axilas, a gola em pé e
+  o colete até a garganta; a parede da esquerda fugindo para o ponto da sala, com a mesa encostada nela; as guias na
+  camada oculta `construcao`; as folhas antes/depois dos três pontos. As skills: `arte-personagens-fenda` ("O tronco
+  sob os braços e o rosto em pequenos movimentos", `tronco-e-rosto.md`) e `arte-cenas-fenda` ("Paredes laterais e
+  cantos", `paredes-laterais.md`), com princípios, o exemplo desta cena e as hipóteses separados.
+- **Conferido:** a fonte igual ao desenho; nenhuma fenda nas 20 poses; `morel/conferir-encontro.mjs` nas duas janelas,
+  tudo certo; a suíte, o gabarito e o pyflakes. O código do jogo e o encontro não mudaram.
+- **Parado aqui:** a avaliação artística é do Jean (as hipóteses no LEIA-ME); a queda de braço espera a aprovação.

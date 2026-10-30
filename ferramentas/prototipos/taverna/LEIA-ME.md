@@ -1,8 +1,10 @@
 # Protótipo: o interior da taverna (o balcão animado e a vista diante de Morel; o resto como histórico)
 
 **A nova direção** (30/10/2026, depois): o encontro com Morel passa para **o canto da taverna**, numa câmera de primeira
-pessoa (a seção "Morel no canto da taverna", abaixo; a candidata em avaliação); **a queda de braço fica suspensa** até
-essa base ser aprovada; **a vista diante do balcão fica reservada para a Vó Berta**, sem queda de braço.
+pessoa (a seção "Morel no canto da taverna", abaixo); **a queda de braço fica suspensa** até essa base ser aprovada;
+**a vista diante do balcão fica reservada para a Vó Berta**, sem queda de braço. **A candidata revisada** (a
+mastigação, o tronco e a gola, a parede da esquerda; a seção "A revisão dos três pontos") está em avaliação; a primeira
+candidata do canto fica no painel, no mesmo estado do encontro.
 
 **O estado anterior** (30/10/2026): as duas vistas **aprovadas** pelo Jean (o balcão da G4 e a vista diante de Morel, com as
 últimas correções) estão **ligadas ao encontro** no protótipo: sentar com o homem do canto leva à mesa dele, as opções do
@@ -37,8 +39,9 @@ sem mostrar o braço até o ombro (não desenhado nesta rodada).
 
 **O que precisou ser adaptado à grade e à coerência:**
 - **A parede da esquerda:** na imagem gerada, as fiadas dela descem para o canto como se o olho estivesse abaixo do
-  tampo, o que não fecha com o tampo visto de cima. Aqui ela é um pano em ângulo no canto, com o ponto de fuga dela
-  longe no mesmo horizonte: as fiadas ficam suaves como lá, a viga de cima sobe para a esquerda como lá.
+  tampo, o que não fecha com o tampo visto de cima. Na primeira candidata ela foi um pano em ângulo, com um ponto de
+  fuga próprio e longe (lia como outra parede de frente); na revisada, é a lateral do cômodo, fugindo para o ponto da
+  sala (a seção "A revisão dos três pontos").
 - **A redução da imagem não virou arte:** a redução mapeada nas paletas do jogo ficou granulada (o pontilhado da
   redução, o vermelho vazando para o pão e a parede, o rosto ruidoso); ela fica só como a camada `guia` da fonte. Cada
   coisa foi construída: as paredes, os esteios e o tampo em código (`espaco.py`); o castiçal, a vela e a chama, a
@@ -76,6 +79,51 @@ vencer, o Vazio, a bebida, o Esc, a pose parada, o console): tudo certo; as foto
 
 **O que depende do olho do Jean:** a leitura de primeira pessoa e a proximidade; o rosto na escala nova (o tom da
 pele, a cicatriz); as ombreiras e as mangas; a parede da esquerda em ângulo; o ciclo de comer nesta postura.
+
+### A revisão dos três pontos (30/10/2026; a candidata revisada, em avaliação)
+
+O Jean aprovou a direção, a proximidade e a composição, e marcou três problemas, sem reiniciar a arte. A primeira
+candidata ficou preservada (`morel/canto-v1/canto.aseprite`, exportada em `camadas/morel-canto-v1/`): no painel,
+"Morel no canto da taverna, a primeira candidata" e, no encontro, a faixa "A mesa do encontro: no canto, a primeira
+candidata". A identidade, a paleta, os objetos, as poses dos braços, o encontro, a alimentação e o pagamento não
+mudaram.
+
+1. **A mastigação: o rosto partido.** A causa (na construção, não numa sombra): a variante `mastiga` descia 1 px um
+   recorte das linhas da boca para baixo e preenchia o vão só no meio, então dos dois lados da barba ficava a parede à
+   mostra, uma faixa de fundo atravessando o rosto (nas quatro poses que a usam, inclusive a da volta à tigela que o
+   pagamento reaproveita). Agora a variante é uma grade inteira (`morel.cabeca`): o bigode e as bochechas ficam, a boca
+   fechada e um pouco mais curta desce com o queixo, a barba ganha uma linha inteira, com o contorno contínuo.
+   Conferido por conta em todas as 20 poses: nenhum pixel de fundo entre os contornos da cabeça, da gola e do tronco.
+   Os contatos da colher com a boca não mudaram (a variante `boca` é a mesma).
+2. **O tronco e a ligação com o pescoço e a barba.** Antes, um polígono de 92 px (mais largo que as juntas dos ombros)
+   enchia o espaço entre os braços, e a gola era uma faixa reta entre o colete e a barba. O estudo
+   (`morel/canto/tronco_estudo.py`; as fontes e o que se aproveitou de cada uma na skill `arte-personagens-fenda`,
+   `tronco-e-rosto.md`): a caixa torácica pela cabeça (62 px, mais estreita que os ombros), o trapézio, o ombro
+   arredondado, a axila em x 141 e 203; abaixo dela, o fundo aparece entre o braço e o tronco onde o braço se afasta. A
+   roupa por cima: o casaco aberto acompanhando o tronco, a gola em pé dos dois lados da barba, as lapelas descendo até
+   as bordas do colete, o colete fechado até a garganta (a barba por cima dele), as tiras seguindo a curva do peito. A
+   grade `morel.TRONCO` saiu da construção e é retocada à mão; a construção fica na camada oculta `construcao`.
+3. **A parede da esquerda como plano lateral.** O estudo (na skill `arte-cenas-fenda`, `paredes-laterais.md`): a câmera
+   de um ponto (a parede do fundo de frente), então as linhas horizontais da lateral fogem para o mesmo ponto do tampo
+   (x 170, y 22), não para um ponto próprio. No canto, as fiadas na altura das do fundo e a travessa virando o canto;
+   acima do horizonte as linhas descem para o canto, abaixo sobem; os blocos encurtam para o canto pela profundidade
+   (7 px no canto, 36 na borda); a viga de cima mostra a face de baixo e a do meio, a de cima; o esteio da direita
+   mostra a face da esquerda. A mesa encosta na parede (antes o tampo atravessava a parede), numa linha que também foge
+   para o ponto. As guias ficam na camada oculta `construcao`.
+
+**As folhas** (no painel, "Inspeção ampliada"; antes em cima, depois embaixo): `revisao-mastigacao.png` (repouso, as
+três poses de mastigar, a colher na boca, o olhar), `revisao-tronco.png` (sem braços, ombreiras e objetos; e com tudo
+em repouso, na boca e olhando), `revisao-parede.png` (o espaço sozinho, com as guias da sala e a cena inteira).
+
+**Conferido:** a fonte remontada (`cena.py --refazer`: a anterior não tinha retoques, `--conferir` dava igual) e
+exportada, a fonte igual ao desenho; a conta de fendas nas 20 poses; `morel/conferir-encontro.mjs` a 1920×945 e
+1280×720 (o encontro inteiro, as folhas da revisão e a primeira candidata no mesmo estado): tudo certo; as fotos em
+`morel/capturas/canto-revisao/` (fora do git). Teste técnico, não aprovação artística.
+
+**Ainda hipótese, para o olho do Jean:** se 1 px de mandíbula lê como mastigar no tamanho do jogo; se a gola em pé
+lê como gola; se o vão entre o braço da colher e o tronco lê como espaço; se a convergência forte da parede lê como o
+canto de uma sala pequena (ou pede o canto mais para a esquerda, com fugas mais suaves); se a mesa encostada lê bem
+com o castiçal junto dela.
 
 ## O encontro à mesa de Morel (30/10/2026; protótipo)
 

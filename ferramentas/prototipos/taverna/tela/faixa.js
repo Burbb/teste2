@@ -21,7 +21,8 @@
     ["perder", "Queda de braço: o dado em 1 (perde)"]];
   // a vista da mesa no encontro: o canto (a nova direção) ou diante do balcão (a anterior, reservada para a Vó Berta)
   document.body.dataset.tavMesa = document.body.dataset.tavMesa || "canto";
-  const MESAS = [["canto", "A mesa do encontro: no canto (a nova direção)"],
+  const MESAS = [["canto", "A mesa do encontro: no canto (a nova direção, revisada)"],
+    ["canto1", "A mesa do encontro: no canto, a primeira candidata (antes da revisão)"],
     ["balcao", "A mesa do encontro: diante do balcão (a anterior; reservada para a Vó Berta)"]];
   const BEBIDAS = [["sorteio", "Bebida: o sorteio de sempre"], ["morel", "Bebida: Morel puxa conversa (se ele pode)"]];
   const f = document.createElement("div");
@@ -30,7 +31,8 @@
   document.body.dataset.tavProva = document.body.dataset.tavProva || "b4";
   document.body.dataset.tavMorel = document.body.dataset.tavMorel || "m1";
   const CANDS = [["g4", "Balcão animado (G4, a atuação ajustada)"], ["g4v1", "Balcão animado, a atuação anterior"],
-    ["canto", "Morel no canto da taverna (a nova direção, para avaliar)"],
+    ["canto", "Morel no canto da taverna (a nova direção, revisada: para avaliar)"],
+    ["canto1", "Morel no canto da taverna, a primeira candidata (antes da revisão)"],
     ["morel", "Diante de Morel, junto do balcão (a anterior; reservada para a Vó Berta)"],
     ["qv_nos", "Queda de braço na vista aprovada (o queda 1 refinado), animada: nós vencemos (para avaliar)"],
     ["qv_morel", "Queda de braço na vista aprovada (o queda 1 refinado), animada: Morel vence (para avaliar)"],
@@ -70,6 +72,9 @@
     <b>Inspeção ampliada (fora da HUD)</b>
     <button type="button" data-estudo="canto">Morel no canto: a referência (em cima) e a cena (embaixo)</button>
     <button type="button" data-estudo="cantoPoses">Morel no canto: as 20 poses do ciclo</button>
+    <button type="button" data-estudo="cantoMastigacao">Morel no canto, a revisão: a mastigação (antes e depois)</button>
+    <button type="button" data-estudo="cantoTronco">Morel no canto, a revisão: o tronco e a gola (antes e depois)</button>
+    <button type="button" data-estudo="cantoParede">Morel no canto, a revisão: a parede da esquerda (antes e depois)</button>
     <button type="button" data-estudo="vista">Diante de Morel: a vista adaptada (pose parada)</button>
     <button type="button" data-estudo="manga">Diante de Morel: a manga, as 20 poses antes (em cima) e depois (embaixo)</button>
     <button type="button" data-estudo="construcao">Diante de Morel: o estudo de construção e a aplicação</button>
@@ -171,6 +176,12 @@
     vista: { src: "/proto-tav/camadas/morel-vista/parada.png", nat: [320, 96], titulo: "Diante de Morel: a vista adaptada (pose parada)" },
     canto: { src: "/proto-tav/camadas/morel-canto/comparacao.png", nat: [320, 194],
       titulo: "Morel no canto da taverna: a referência aprovada no lugar em que é transposta (em cima) e a cena na grade do jogo (embaixo)" },
+    cantoMastigacao: { src: "/proto-tav/camadas/morel-canto/revisao-mastigacao.png", nat: [1028, 404],
+      titulo: "Morel no canto, a mastigação: a primeira candidata (em cima) e a revisada (embaixo); em repouso, as três poses de mastigar, a colher na boca e o olhar" },
+    cantoTronco: { src: "/proto-tav/camadas/morel-canto/revisao-tronco.png", nat: [1476, 484],
+      titulo: "Morel no canto, o tronco: a primeira candidata (em cima) e a revisada (embaixo); sem os braços, as ombreiras e os objetos, e com tudo em repouso, com a colher na boca e olhando" },
+    cantoParede: { src: "/proto-tav/camadas/morel-canto/revisao-parede.png", nat: [1088, 388],
+      titulo: "Morel no canto, a parede da esquerda: a primeira candidata (em cima) e a revisada (embaixo); o espaço sozinho, com as guias da sala (o horizonte, o ponto de fuga, as fugas) e a cena inteira" },
     cantoPoses: { src: "/proto-tav/camadas/morel-canto/poses.png", nat: [1320, 196],
       titulo: "Morel no canto da taverna: as 20 poses do ciclo (recolher, subir, boca, descer, repousar, mastigar, olhar)" },
     manga: { src: "/proto-tav/camadas/morel-vista/manga-comparacao.png", nat: [920, 116],
