@@ -9,7 +9,7 @@
 "use strict";
 
 (() => {
-  const naQueda = () => /^(qd|q3)/.test(document.body.dataset.tavCand || "")
+  const naQueda = () => /^(qd|q3|qv)/.test(document.body.dataset.tavCand || "")
     || !!(window.Cenas && Cenas.atual() && Cenas.atual().d.cena === "taverna_queda");
   new MutationObserver((mudancas) => {
     for (const m of mudancas) for (const n of m.addedNodes) {

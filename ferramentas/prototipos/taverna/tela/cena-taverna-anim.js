@@ -8,7 +8,15 @@
      pose do taverneiro ao fundo, o corpo e a cabeça de Morel, a mesa, as chamas e o braço da colher por cima;
      window.CenaTavernaMorelV2 (camadas/morel-vista-v2, antes do estudo do braço) e window.CenaTavernaMorelV1 (a
      primeira, camadas/morel-vista-v1), para comparar. Na atual, cada pagamento do evento lança as moedas na mesa
-     (moedas.json) e Morel para de comer para olhar; demo.py registra a mesma vista como a cena `taverna_mesa`.
+     (moedas.json) e Morel para de comer para olhar.
+   - window.CenaTavernaMorelCanto: Morel comendo no canto da taverna (morel/canto/, a nova direção; a vista diante do
+     balcão fica reservada para a Vó Berta), pela mesma função; window.CenaTavernaMesa escolhe entre as duas pela faixa
+     (o canto por padrão) e é a que demo.py registra como a cena `taverna_mesa`, a do encontro.
+   - window.CenaTavernaQuedaVista.nos e .morel: a queda de braço na vista aprovada (o "queda 1" refinado,
+     morel/queda-vista/; a candidata em avaliação): a sequência de um desfecho (a pega se firma, a disputa, o derrube,
+     o impacto, a pausa), pela linha do tempo de queda-vista.json, a partir do momento em que a cena aparece; o fundo
+     da disputa, a pose da vez na caixa dela e as chamas da vista por cima. Movimento reduzido: a pose do meio
+     enquanto dura a disputa e a final depois, sem passagens, e as chamas paradas.
    - window.CenaTavernaQueda3: a pose central da queda de braço, a terceira proposta (desenhada à mão sobre a
      construção; para a avaliação); window.CenaTavernaQueda2 (a vista de detalhe calculada) e window.CenaTavernaQueda
      (na câmera da conversa), as anteriores, como histórico.
@@ -104,8 +112,9 @@
   }
   /** A vista diante de Morel a partir das camadas de uma pasta (a atual e a anterior, para comparar). `comMoedas`: a
    *  atual, a única com o pagamento. */
-  function vistaMorel(raiz, pontos, comMoedas) {
-    const MO = carregar(raiz, ["fundo", "chamas", "morel", "taverneiro", "frente"].concat(comMoedas ? ["moedas"] : []));
+  function vistaMorel(raiz, pontos, comMoedas, semTaverneiro) {
+    const MO = carregar(raiz, ["fundo", "chamas", "morel", "frente"].concat(semTaverneiro ? [] : ["taverneiro"])
+      .concat(comMoedas ? ["moedas"] : []));
     const ROT = json(raiz + "rotina.json");
     const MOE = comMoedas ? json(raiz + "moedas.json") : { pronto: null };
     return {
@@ -138,6 +147,22 @@
     morel: { area: [182, 4, 72, 58], balao: [280, 46], foco: [218, 30] },
     despensa: { area: [274, 7, 25, 29], balao: [286, 18], foco: [286, 22] },
   }, true);
+  // Morel no canto da taverna (morel/canto/, a nova direção, 30/10/2026; a candidata em avaliação): a mesma vista na
+  // tela (as duas faixas de Morel, a mesa, a chama, as moedas e a reação ao pagamento), sem o balcão e o taverneiro
+  // atrás dele; o ponto de Morel sobre ele, o balão na parede à direita, longe do rosto
+  window.CenaTavernaMorelCanto = vistaMorel("/proto-tav/camadas/morel-canto/", {
+    morel: { area: [118, 2, 102, 70], balao: [250, 40], foco: [171, 30] },
+  }, true, true);
+  // a mesa do encontro (demo.py registra a cena `taverna_mesa` como esta): o canto (o padrão) ou a vista diante do
+  // balcão (a anterior, reservada para a Vó Berta), pela faixa do protótipo
+  const mesa = () => (document.body.dataset.tavMesa === "balcao" ? window.CenaTavernaMorel : window.CenaTavernaMorelCanto);
+  window.CenaTavernaMesa = {
+    base: (W, d) => mesa().base(W, d),
+    desenhar: (...a) => mesa().desenhar(...a),
+    get pontos() { return mesa().pontos; },
+    presentes: () => ["Morel"],
+    QW, QH,
+  };
   // as três poses da queda de braço (morel/queda/poses.py), paradas, para a avaliação: a disputa, nós vencendo, Morel
   // vencendo, cada uma na moldura da vista (sem pontos; a animação espera as poses aprovadas)
   const QUEDA = carregar("/proto-tav/camadas/morel-vista/", ["queda", "queda2", "queda3"]);
@@ -154,6 +179,40 @@
     QW, QH,
   });
   window.CenaTavernaQueda3 = poseQueda(QUEDA.queda3, 0);  // a terceira proposta: só a disputa, desenhada à mão
+  // a queda de braço na vista aprovada (morel/queda-vista/exportar.py): um desfecho do começo ao fim, em volta
+  const CHAMAS = carregar("/proto-tav/camadas/morel-vista/", ["chamas"]).chamas;
+  const quedaVista = (desfecho, raiz) => {
+    const QV = carregar(raiz, ["queda-vista-fundo", "queda-vista"]);
+    const ROT_QV = json(raiz + "queda-vista.json");
+    return {
+      base: (W, d) => Object.assign(base(), { d }),
+      desenhar(c, W, b, est, quadro) {
+        const r = ROT_QV.pronto, quieto = reduzido();
+        if (est.qvInicio === undefined || est.qvDesfecho !== desfecho) { est.qvInicio = quadro; est.qvDesfecho = desfecho; }
+        c.imageSmoothingEnabled = false;
+        c.clearRect(0, 0, QW, QH);
+        if (pronta(QV["queda-vista-fundo"])) c.drawImage(QV["queda-vista-fundo"], 0, 0);
+        if (r && pronta(QV["queda-vista"])) {
+          const D = r.desfechos[desfecho], linha = quieto ? D.reduzido : D.tempo;
+          // est.qvFixo: um tique fixo da linha do tempo (só a conferência, morel/queda-vista/conferir.mjs, o usa)
+          const t = est.qvFixo !== undefined ? est.qvFixo : quadro - est.qvInicio;
+          const n = linha[t % linha.length];
+          est.qvPose = n;  // a pose à vista (para a conferência)
+          const [x, y, w, h] = r.caixa;
+          c.drawImage(QV["queda-vista"], n * w, 0, w, h, x, y, w, h);
+        }
+        tira(c, CHAMAS, quieto ? 1 : Math.floor(quadro / 2) % 4);  // a lareira e a vela, como na vista
+      },
+      pontos: {},
+      presentes: () => ["Morel", "taverneiro"],
+      QW, QH,
+    };
+  };
+  const RAIZ_QV = "/proto-tav/camadas/morel-vista/";
+  // nosV1 e morelV1: a primeira candidata (Morel na postura da conversa), camadas/morel-vista-qv1
+  const RAIZ_QV1 = "/proto-tav/camadas/morel-vista-qv1/";
+  window.CenaTavernaQuedaVista = { nos: quedaVista("nos", RAIZ_QV), morel: quedaVista("morel", RAIZ_QV),
+    nosV1: quedaVista("nos", RAIZ_QV1), morelV1: quedaVista("morel", RAIZ_QV1) };
   window.CenaTavernaQueda2 = [0, 1, 2].map((i) => poseQueda(QUEDA.queda2, i));
   window.CenaTavernaQueda = [0, 1, 2].map((i) => poseQueda(QUEDA.queda, i));
   // a terceira versão (antes do acabamento da manga: o ombro e o cotovelo por segmentos), com os mesmos pontos

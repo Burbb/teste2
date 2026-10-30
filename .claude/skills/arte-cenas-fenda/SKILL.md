@@ -287,6 +287,22 @@ ferramenta: o pilão no almofariz, a faca na tábua, a concha no caldeirão.
 - Registre no LEIA-ME do protótipo e na continuidade o que foi reconstruído, o que ainda vem de outra fonte e o que
   continua limitado, sem chamar de aprovado o que não foi.
 
+## A câmera vem antes da animação (o encontro com Morel, 30/10/2026)
+
+Uma queda de braço refeita várias vezes não fechava porque a câmera da cena (a vista diante do balcão) não era a de
+um adulto sentado à mesa: o braço do jogador precisava atravessar a mesa. A saída foi trocar a cena, não a pose:
+- **Primeira pessoa:** a câmera nos olhos de quem senta; o horizonte na altura dos olhos de quem está do outro lado;
+  o tampo de cima e a borda do nosso lado fora do quadro; o personagem grande. Um gesto nosso futuro (a mão, o
+  antebraço) entra pela borda de baixo, sem o braço até o ombro.
+- **A proporção da referência** se resolve sem esticar, sem achatar e sem recuar a câmera: ela entra no tamanho dela
+  na altura da cena, e o lugar continua nas laterais.
+- **Onde a perspectiva da imagem gerada não fecha** (as fiadas de uma parede contradizendo o tampo visto de cima),
+  a construção vence e a diferença fica registrada.
+- **A redução mapeada nas paletas não serve de arte,** nem segmentada por material: o pontilhado da redução, as cores
+  vazando de um material para outro, o rosto ruidoso. Ela fica como guia oculta; o personagem é desenhado de novo, por
+  partes, na escala nova (a cabeça numa grade à mão no jeito da aprovada, os braços pela manga aprovada).
+- **A cena antiga não se apaga:** fica preservada e com a destinação registrada (a vista do balcão, para a Vó Berta).
+
 ## Erros que aconteceram na forja (e como evitá-los)
 
 | Erro | O que causou | Como evitar |

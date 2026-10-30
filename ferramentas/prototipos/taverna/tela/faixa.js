@@ -19,6 +19,10 @@
   // os casos de teste do encontro (demo.py): o dado da queda de braço e Morel na próxima bebida, só onde as regras deixam
   const DADOS = [["sorteio", "Queda de braço: o sorteio"], ["ganhar", "Queda de braço: o dado em 20 (vence)"],
     ["perder", "Queda de braço: o dado em 1 (perde)"]];
+  // a vista da mesa no encontro: o canto (a nova direção) ou diante do balcão (a anterior, reservada para a Vó Berta)
+  document.body.dataset.tavMesa = document.body.dataset.tavMesa || "canto";
+  const MESAS = [["canto", "A mesa do encontro: no canto (a nova direção)"],
+    ["balcao", "A mesa do encontro: diante do balcão (a anterior; reservada para a Vó Berta)"]];
   const BEBIDAS = [["sorteio", "Bebida: o sorteio de sempre"], ["morel", "Bebida: Morel puxa conversa (se ele pode)"]];
   const f = document.createElement("div");
   f.id = "faixa-tav";
@@ -26,13 +30,18 @@
   document.body.dataset.tavProva = document.body.dataset.tavProva || "b4";
   document.body.dataset.tavMorel = document.body.dataset.tavMorel || "m1";
   const CANDS = [["g4", "Balcão animado (G4, a atuação ajustada)"], ["g4v1", "Balcão animado, a atuação anterior"],
-    ["morel", "Diante de Morel (animada)"],
-    ["q3", "Queda de braço, terceira proposta: a disputa (para avaliar)"],
+    ["canto", "Morel no canto da taverna (a nova direção, para avaliar)"],
+    ["morel", "Diante de Morel, junto do balcão (a anterior; reservada para a Vó Berta)"],
+    ["qv_nos", "Queda de braço na vista aprovada (o queda 1 refinado), animada: nós vencemos (para avaliar)"],
+    ["qv_morel", "Queda de braço na vista aprovada (o queda 1 refinado), animada: Morel vence (para avaliar)"],
+    ["qv1_nos", "Queda de braço na vista aprovada, a primeira candidata (Morel na postura da conversa): nós vencemos"],
+    ["qv1_morel", "Queda de braço na vista aprovada, a primeira candidata (Morel na postura da conversa): Morel vence"],
+    ["q3", "Queda de braço, terceira proposta: a disputa (histórico)"],
     ["qd1", "Queda de braço, segunda proposta 1: a disputa (histórico)"],
     ["qd2", "Queda de braço, segunda proposta 2: nós vencemos (histórico)"],
     ["qd3", "Queda de braço, segunda proposta 3: Morel vence (histórico)"],
-    ["queda1", "Queda de braço, primeira proposta 1: a disputa (histórico)"], ["queda2", "Queda de braço, primeira proposta 2: nós vencemos (histórico)"],
-    ["queda3", "Queda de braço, primeira proposta 3: Morel vence (histórico)"],
+    ["queda1", "Queda de braço, primeira proposta (o queda 1, antes do refinamento) 1: a disputa"], ["queda2", "Queda de braço, primeira proposta (o queda 1) 2: nós vencemos"],
+    ["queda3", "Queda de braço, primeira proposta (o queda 1) 3: Morel vence"],
     ["morel3", "Diante de Morel, a versão anterior (antes do acabamento da manga)"],
     ["morel2", "Diante de Morel, a segunda versão (antes do estudo do braço)"],
     ["morel1", "Diante de Morel, a primeira versão"], ["g3", "G3 estática"],
@@ -56,12 +65,18 @@
     <b>O encontro com Morel (casos de teste)</b>
     ${DADOS.map(([id, nome]) => `<button type="button" data-dado="${id}" aria-pressed="${id === "sorteio"}">${nome}</button>`).join("")}
     ${BEBIDAS.map(([id, nome]) => `<button type="button" data-bebida="${id}" aria-pressed="${id === "sorteio"}">${nome}</button>`).join("")}
+    ${MESAS.map(([id, nome]) => `<button type="button" data-mesa="${id}" aria-pressed="${id === document.body.dataset.tavMesa}">${nome}</button>`).join("")}
     <button type="button" data-reduzido aria-pressed="false">Pose parada</button>
     <b>Inspeção ampliada (fora da HUD)</b>
+    <button type="button" data-estudo="canto">Morel no canto: a referência (em cima) e a cena (embaixo)</button>
+    <button type="button" data-estudo="cantoPoses">Morel no canto: as 20 poses do ciclo</button>
     <button type="button" data-estudo="vista">Diante de Morel: a vista adaptada (pose parada)</button>
     <button type="button" data-estudo="manga">Diante de Morel: a manga, as 20 poses antes (em cima) e depois (embaixo)</button>
     <button type="button" data-estudo="construcao">Diante de Morel: o estudo de construção e a aplicação</button>
     <button type="button" data-estudo="trajetorias">Diante de Morel: as trajetórias do cotovelo, da mão e da colher</button>
+    <button type="button" data-estudo="qvComp">Queda de braço na vista aprovada: o queda 1, a primeira candidata e a refeita</button>
+    <button type="button" data-estudo="qvPoses">Queda de braço na vista aprovada: as 22 poses, a construção (em cima) e o acabamento</button>
+    <button type="button" data-estudo="qvTraj">Queda de braço na vista aprovada: as trajetórias da pega, dos pulsos e do ombro de Morel</button>
     <button type="button" data-estudo="queda3">Queda de braço, terceira proposta: ao lado da vista aprovada, e com as guias</button>
     <button type="button" data-estudo="queda2">Queda de braço, segunda proposta: o estudo e as poses (histórico)</button>
     <button type="button" data-estudo="queda2Estudo">Queda de braço, segunda proposta: o estudo inteiro (histórico)</button>
@@ -118,6 +133,11 @@
     if (!ok) { if (volta) predioPedido = null; return; }
     painel.querySelectorAll(`[data-${d}]`).forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
   })));
+  painel.querySelectorAll("[data-mesa]").forEach((b) => b.addEventListener("click", () => {
+    abrir(false);
+    document.body.dataset.tavMesa = b.dataset.mesa;              // a troca é imediata, na mesa à vista
+    painel.querySelectorAll("[data-mesa]").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+  }));
   painel.querySelectorAll("[data-grade]").forEach((b) => b.addEventListener("click", () => {
     abrir(false);
     document.body.dataset.tavProva = b.dataset.grade;            // a troca é imediata, no mesmo lugar (a camada lê a cada quadro)
@@ -149,6 +169,10 @@
   const img = estudo.querySelector("img"), tam = estudo.querySelector(".tam"), zooms = estudo.querySelector(".zooms");
   const VISTAS = {
     vista: { src: "/proto-tav/camadas/morel-vista/parada.png", nat: [320, 96], titulo: "Diante de Morel: a vista adaptada (pose parada)" },
+    canto: { src: "/proto-tav/camadas/morel-canto/comparacao.png", nat: [320, 194],
+      titulo: "Morel no canto da taverna: a referência aprovada no lugar em que é transposta (em cima) e a cena na grade do jogo (embaixo)" },
+    cantoPoses: { src: "/proto-tav/camadas/morel-canto/poses.png", nat: [1320, 196],
+      titulo: "Morel no canto da taverna: as 20 poses do ciclo (recolher, subir, boca, descer, repousar, mastigar, olhar)" },
     manga: { src: "/proto-tav/camadas/morel-vista/manga-comparacao.png", nat: [920, 116],
       titulo: "Diante de Morel: o braço da colher nas 20 poses, a versão anterior (em cima) e a manga refeita (embaixo)" },
     construcao: { src: "/proto-tav/camadas/morel-vista/construcao.png", nat: [480, 192],
@@ -156,6 +180,12 @@
     trajetorias: { src: "/proto-tav/camadas/morel-vista/trajetorias.png", nat: [192, 96],
       titulo: "Diante de Morel: as trajetórias de uma volta (cotovelo, mão, ponta da colher), antes e depois" },
     estudo: { src: "/proto-tav/camadas/morel/estudo.png", nat: [360, 120], titulo: "Diante de Morel: o estudo livre (histórico)" },
+    qvComp: { src: "/proto-tav/camadas/morel-vista/queda-vista-comparacao.png", nat: [488, 390],
+      titulo: "Queda de braço na vista aprovada: em colunas, o queda 1 (em cima, a vista aprovada), a primeira candidata e a refeita; em linhas, a pega se firmando, a disputa, nós vencemos, Morel vence" },
+    qvPoses: { src: "/proto-tav/camadas/morel-vista/queda-vista-poses.png", nat: [1224, 392],
+      titulo: "Queda de braço na vista aprovada: as 22 poses (a pega se firma, a disputa, os dois derrubes), a construção sobre o quadro escurecido em cima e o acabamento embaixo" },
+    qvTraj: { src: "/proto-tav/camadas/morel-vista/queda-vista-trajetorias.png", nat: [324, 96],
+      titulo: "Queda de braço na vista aprovada: um ponto por pose, nós vencendo (à esquerda) e Morel vencendo (à direita): a pega em amarelo, o pulso dele em laranja, o nosso em azul, o ombro dele em vermelho" },
     queda3: { src: "/proto-tav/camadas/morel-vista/queda3-comparacao.png", nat: [640, 192],
       titulo: "Queda de braço, terceira proposta: a vista aprovada (à esquerda) e a disputa (à direita); embaixo, os recortes lado a lado e a disputa com as guias (a construção, o arco da pega e os dois fins)" },
     queda2: { src: "/proto-tav/camadas/morel-vista/queda2-construcao.png", nat: [960, 192],

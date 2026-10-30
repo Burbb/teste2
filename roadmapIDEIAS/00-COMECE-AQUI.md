@@ -8852,3 +8852,70 @@ foi automatizado.
   a beirada de cima dela nos quadros da boca) saíram: acima da ponta da calota, a manga não passa para fora dela.
 - **E por último:** a ponta horizontal da ombreira esquerda (a primeira correção tinha estendido a placa sobre o fundo)
   saiu; a placa, refeita do tronco original, arredonda no alto e cobre o ombro só até o contorno dele.
+
+### 30/10/2026 (data do computador local) — A taverna: a queda de braço na vista aprovada, o queda 1 refinado e animado (protótipo)
+
+- **Pedido do Jean:** com a vista de Morel sentado aprovada (no protótipo; não é pedido de integrar), retomar o "queda
+  1" (a primeira proposta, na câmera da conversa) e refiná-lo com a cena aprovada como autoridade, até uma candidata
+  animada e revisada nos desfechos que o protótipo já tem; mãos simples, a estrutura sem aparecer, a pega unida, os
+  cotovelos apoiados, as sobreposições legíveis e o esforço pelo ritmo; nada de regra nova nem de produção.
+- **Feito** (o LEIA-ME do protótipo, "A queda de braço na vista aprovada"): `morel/queda-vista/` (`geometria.py`,
+  `poses.py`, a fonte `queda-vista.aseprite` com 22 poses, `exportar.py`, `conferir.mjs`). Reaproveitados a câmera, a sala,
+  a mesa, a luz e Morel inteiro da fonte aprovada de agora (as duas ombreiras, a manga de uma peça); refeitos a
+  construção (os cotovelos a 47 cm, achados por uma busca que mede a abertura entre os antebraços, o antebraço que vai
+  para longe e a altura da pega; cada antebraço para a sua mão; a junta acima do tampo), os braços pela função da manga
+  aprovada (o nosso em lã), a pega em duas bolinhas, a luz num tom só sobre as figuras, a tigela atrás da vela, o pão à
+  esquerda da caneca e a mão livre dele fora do tampo. A animação: a pega se firma, a disputa com intenção, o derrube acelerando, o impacto e a
+  pausa, nos dois desfechos (91 tiques); o movimento reduzido. No painel, as duas candidatas, a vista aprovada e o queda
+  1 antes, e três folhas de inspeção. A skill de personagens ganhou "Na câmera de uma cena aprovada".
+- **Conferido:** a fonte igual ao desenho (`exportar.py --conferir`); a recomposição igual ao achatamento do Aseprite;
+  `queda-vista/conferir.mjs` a 1920×945 e 1280×720 (a pose da linha do tempo e o canvas igual à exportação em oito poses
+  de cada desfecho, a emenda, o movimento reduzido, o dado embaixo da arte, a volta às outras versões, o console):
+  tudo certo. O código do jogo e o encontro não mudaram.
+- **No meio da rodada, o Jean:** na vitória de Morel, o nosso braço caía "muito amassado", sem espaço para virar;
+  sugeriu tirar o pão dali. A causa era geométrica: Morel está sentado à nossa esquerda e, com o cotovelo dele parado,
+  a mão dele não alcança nada à direita do nosso cotovelo (o nosso braço só caía para longe, com 11 px). Feito: ele vem
+  por cima, arrastando o cotovelo uns 15 cm para o meio no último terço do golpe (erguendo-o um pouco e pousando no
+  estalo), e o nosso braço deita de lado, com 23 px, onde estava o pão (levado para a esquerda da caneca, como a
+  tigela). A versão anterior no painel para comparar. Conferido de novo: a fonte igual ao desenho e `conferir.mjs` nas
+  duas janelas, tudo certo.
+- **Limites que ficam:** o arraste do cotovelo dele é uma liberdade de taverna (numa competição, falta); nas passagens
+  rápidas do nosso derrube, o antebraço dele passa um instante embaixo do nosso; em volta, o fim emenda no começo por
+  um corte (a volta à conversa, com a tigela e o pão de volta, não foi feita).
+- **Parado aqui:** a avaliação artística é do Jean.
+- **Revisão do Jean, no mesmo dia (a postura de origem):** na candidata, Morel continuava na postura da conversa e o
+  nosso braço atravessava a mesa; na nossa derrota, o braço parecia uma peça dobrada tombando; o arraste do cotovelo
+  dele era um remendo. Pedido: Morel se debruçando e trazendo o ombro, nós perto do apoio, o encontro no meio do tampo,
+  os dois desfechos com os apoios parados, o corpo participando, a face interna do nosso antebraço ao deitar; primeiro
+  um estudo de poses na cena. Feito: as referências (o cotovelo à frente e centrado no corpo; quem vence põe o corpo
+  por cima; no "press", a palma de quem perde para o teto); o estudo de três arranjos de apoio em formas simples sobre
+  a cena, cinco poses cada; a construção refeita a partir do ombro de Morel debruçado (o tronco 3 px abaixo e 2 para o
+  meio, a cabeça 2 a mais; o cotovelo dele à frente do meio do tronco, o nosso a 3 cm da nossa borda, o braço de cima
+  descendo reto para fora do quadro; a pega sobre o meio do tampo, abaixo do queixo dele); o arraste saiu; o tronco e
+  a cabeça dele em cada pose; o nosso antebraço girando com a palma para cima e lendo achatado ao deitar. A primeira
+  candidata fica no painel. Conferido de novo: a fonte igual ao desenho e `conferir.mjs` nas duas janelas, tudo certo.
+  Limites: o nosso ombro de verdade não aparece (com esta câmera ele cairia no quadro, com o tronco por cima da mesa);
+  na disputa, o antebraço dele fica estreito entre o braço de cima dele e o nosso; a volta à conversa não foi feita.
+
+### 30/10/2026 (data do computador local) — A taverna: a nova direção, Morel no canto em primeira pessoa (protótipo)
+
+- **Mudança de direção do Jean:** as tentativas de queda de braço mostraram que o problema era a perspectiva da cena
+  (a câmera da vista diante do balcão não era a de um adulto sentado à mesa). Primeiro a nova cena da conversa e da
+  comida, pela referência aprovada "Encontro com Morel na taverna" (e a captura do Gwent, só para o ponto de vista):
+  Morel de costas para a parede, no canto da taverna (corrige o lugar do encontro), a câmera nos olhos de quem senta
+  diante dele, perto, o tampo de cima, a borda do nosso lado fora do quadro, nenhum braço nosso. **A queda de braço
+  fica suspensa** até essa base ser aprovada. **A vista diante do balcão, com o taverneiro ao fundo, fica reservada
+  para a Vó Berta**, sem queda de braço (preservada, não substituída).
+- **Feito** (o LEIA-ME do protótipo, "Morel no canto da taverna"): `morel/canto/` (`espaco.py`, `objetos.py`,
+  `morel.py`, `juntas.py`, `cena.py`, a fonte `canto.aseprite`, `exportar.py`); as referências registradas com o hash.
+  A referência na altura das cenas, no tamanho dela (240 de 320), com o canto continuado 40 px de cada lado; a parede
+  da esquerda em ângulo (na imagem, as fiadas dela contradiziam o tampo visto de cima); a redução só como guia (ela
+  ficou granulada); cada coisa construída e Morel desenhado de novo na escala nova (a cabeça em grade à mão, o colete,
+  as fivelas, as duas ombreiras, a espada, a manga aprovada nos braços, as mãos em bolinha). As mesmas 20 poses e a
+  mesma linha do tempo da vista aprovada, com trajetórias novas; o pagamento com as moedas pousando nesta mesa; o
+  movimento reduzido. A cena do encontro mostra o canto por padrão; a vista do balcão pela faixa.
+- **Conferido:** a fonte igual ao desenho; `morel/conferir-encontro.mjs` a 1920×945 e 1280×720 com a mesa nova (o
+  fluxo inteiro do encontro, o pagamento, a queda de braço do texto, o Vazio, a bebida, o Esc, a pose parada, o
+  console): tudo certo. O código do jogo e o encontro não mudaram.
+- **Parado aqui:** a avaliação artística é do Jean; a queda de braço espera a aprovação desta base.
+

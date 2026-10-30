@@ -269,7 +269,7 @@ def cenas_js(texto):
                                  "    taverna: window.CenaTaverna,\n"
                                  "    // a mesa de Morel durante o evento dele: uma cena à parte, que a volta da vila não\n"
                                  "    // tira (o vila.js tira os interiores quando aparece outro menu)\n"
-                                 "    taverna_mesa: window.CenaTavernaMorel,\n")
+                                 "    taverna_mesa: window.CenaTavernaMesa,\n")
     b = '        const cartoes = [...document.querySelectorAll("#folha .servico")];\n'
     assert b in texto
     texto = texto.replace(b, '        const cartoes = [...document.querySelectorAll("#folha .servico")]\n'
