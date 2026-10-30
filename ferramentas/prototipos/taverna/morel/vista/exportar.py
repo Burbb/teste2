@@ -4,12 +4,12 @@
 
 A fonte é a autoridade: este script só a lê (o Aseprite em lote achata cada quadro com as camadas de luz, `sombra` em
 multiplicar e `brilho` em somar, e exporta as células de cada camada) e recorta as peças que a cena desenha:
-- `fundo.png`: o quadro 1 sem as camadas animadas, a mesa e as mãos (a sala, o balcão, a cadeira, o corpo de Morel);
+- `fundo.png`: o quadro 1 sem as camadas animadas, a mesa e as mãos (a sala, o balcão, a cadeira);
 - `chamas.png`: 4 quadros, o fogo da lareira (onde o balcão não o cobre) e a chama da vela (a cena a desenha
   depois da mesa: a base da chama encosta no pavio);
 - `taverneiro.png`: as poses do taverneiro ao fundo (só o que o balcão não cobre), recortadas na caixa delas;
-- `morel.png`: as poses de Morel (a cabeça e o braço da colher), recortadas na caixa delas, em duas faixas: a de cima é a
-  cabeça (atrás da mesa), a de baixo o braço (por cima da mesa);
+- `morel.png`: as poses de Morel, recortadas na caixa delas, em duas faixas: a de cima é o corpo e a cabeça (atrás da
+  mesa; o corpo se inclina para a tigela enquanto ele come), a de baixo o braço da colher (por cima da mesa);
 - `frente.png`: a mesa com o que está nela e o braço que descansa;
 - `rotina.json`: as caixas, as linhas do tempo (um índice por tique de 100 ms; `ROTINA_MOREL`, `ROTINA_TAVERNEIRO`), as
   poses paradas;
@@ -35,7 +35,7 @@ from exportar_aseprite import aseprite  # noqa: E402
 FONTE = AQUI / "morel-vista.aseprite"
 SAIDA = AQUI.parents[1] / "camadas" / "morel-vista"
 LUA = RAIZ / "ferramentas" / "prototipos" / "hud" / "forja" / "h2" / "aseprite" / "exportar_forja.lua"
-ANIMADAS = ["guia", "fogo", "chamas", "taverneiro", "morel_cabeca", "morel_braco", "mesa", "maos"]
+ANIMADAS = ["guia", "fogo", "chamas", "taverneiro", "morel_corpo", "morel_cabeca", "morel_braco", "mesa", "maos"]
 
 # Morel, pose a pose (o quadro da fonte menos 1): 0 recolhe, 1 recolhe (a colher no fundo da tigela), 7 a mão saindo
 # da tigela (o cotovelo ainda no tampo), 2 a mão no meio do caminho, 8 a mão no peito (o cotovelo sai do tampo), 3 a
@@ -127,7 +127,7 @@ def main():
         caixa_tav = [x, y, w, h]
         # Morel: a cabeça e o braço da colher, pose a pose (um quadro da fonte por pose)
         n = len(Q)
-        cab = [_mascara(Q[k], alfa("morel_cabeca", k)) for k in range(n)]
+        cab = [_mascara(Q[k], alfa("morel_corpo", k) | alfa("morel_cabeca", k)) for k in range(n)]
         bra = [_mascara(Q[k], alfa("morel_braco", k)) for k in range(n)]
         x, y, w, h = _caixa(cab + bra)
         m = Image.new("RGBA", (w * n, h * 2))

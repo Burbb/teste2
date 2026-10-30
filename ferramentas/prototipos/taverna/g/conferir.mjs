@@ -76,9 +76,10 @@ try {
     }
     const [fx, fy] = cand === "h" ? [-10, -6] : [0, 0];  // onde o taverneiro cai em cada uma
     // o rosto e as mãos de quem é o foco da vista (o taverneiro no balcão; Morel na vista dele)
-    const ROSTO = cand === "morel" ? [208, 2, 21, 27] : [149 + fx, 17 + fy, 22, 27];
-    const MAOS = cand === "morel" ? [196, 60, 48, 24] : [146 + fx, 50 + fy, 30, 16];
-    const esperado = (est) => cand !== "morel" ? ESPERADO[est]
+    // na vista de Morel, o rosto em todas as poses da cabeça e as mãos com a colher em todas as poses do braço
+    const ROSTO = cand.startsWith("morel") ? [208, 1, 21, 31] : [149 + fx, 17 + fy, 22, 27];
+    const MAOS = cand.startsWith("morel") ? [194, 24, 52, 58] : [146 + fx, 50 + fy, 30, 16];
+    const esperado = (est) => !cand.startsWith("morel") ? ESPERADO[est]
       : est === "homem_do_canto" ? ["taverneiro", "morel"] : est === "despensa" ? ["taverneiro", "despensa"] : ["taverneiro"];
     for (const est of Object.keys(ESPERADO)) {
       if (est !== "homem_do_canto") await trocarEstado(p, est);  // a demonstração abre (e a volta deixa) no homem do canto
