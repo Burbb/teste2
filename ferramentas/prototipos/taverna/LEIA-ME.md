@@ -2,8 +2,10 @@
 
 **O estado** (29/10/2026): **o balcão aprovado** (a G2, com os retoques locais da G3) agora **animado** na **G4**: o
 taverneiro limpa a caneca e para para olhar os fregueses. **A vista diante de Morel**, saída do estudo livre (que o Jean
-gostou), foi **adaptada ao acabamento do jogo e animada**, e continua **em avaliação**. As duas no mesmo `demo.bat`, com
-a pose parada de cada uma e as versões anteriores para comparar. Nada integrado; sem som, diálogo ou regra nova.
+gostou), foi **adaptada ao acabamento do jogo e animada**, e continua **em avaliação**; na terceira passada, o braço
+foi refeito a partir de um **estudo de construção** (a pesquisa, o boneco com formas simples, os comprimentos fixos) que
+virou a skill `arte-personagens-fenda`. As duas no mesmo `demo.bat`, com a pose parada de cada uma e as versões
+anteriores para comparar. Nada integrado; sem som, diálogo ou regra nova.
 
 ## A G4: o balcão aprovado, animado
 
@@ -32,10 +34,42 @@ primeiros), feita da fonte da G3 (`--criar` protegido; depois, a autoridade). `g
 código. A cena (`tela/cena-taverna-anim.js`, `CenaTavernaG4`) desenha o fundo, as chamas, a pose da vez e o balcão por
 cima, pelo relógio da vista do jogo (sair e entrar não cria outro relógio).
 
-## Diante de Morel: a segunda passada (o espaço, a mesa, o braço; em avaliação)
+## Diante de Morel: a terceira passada (a construção do braço; em avaliação)
+
+**O pedido do Jean** (29/10/2026): o braço continuava estranho (o mesmo problema do ferreiro e dos jogadores);
+pesquisar, estudar a anatomia simplificada, aplicar em Morel e consolidar o método numa skill. A segunda passada fica no
+painel ("Diante de Morel, a segunda versão": a fonte em `morel/vista-v2/`, as camadas em `camadas/morel-vista-v2/`), no
+mesmo estado do jogo; a primeira também ("a primeira versão").
+
+- **O erro de construção:** o ombro 12 px abaixo do lugar (no fim da ombreira), o cotovelo indo ao meio do peito, o
+  braço encurtando de 18 para 7 px sem pista de escorço, braço e antebraço no mesmo tom, a ombreira cobrindo a raiz do
+  braço, o braço de apoio como uma faixa escura; a mão saltando 9 a 11 px a cada 200 ms. O diagnóstico e as fontes
+  consultadas estão na skill.
+- **O estudo** (`morel/estudo-construcao/morel-construcao.aseprite`): cinco poses-chave (recolher, levantar, boca,
+  retornar, repousar) com formas simples (a cabeça, o tórax, as clavículas, os braços por cores, a mesa, a tigela) e as
+  juntas na guia. `juntas.py` dá as juntas de cada quadro: braço 28 px e antebraço 22 no espaço, o cotovelo pela
+  cinemática, a colher rígida de 12 px; o comprimento na tela muda pelo escorço (o braço tem 16 px na boca). Na boca, o
+  cotovelo fica logo abaixo do ombro, à frente, e a mão à frente do queixo; a cabeça desce 3 px ao encontro da colher.
+- **A aplicação** (`vestir.lua` refaz o braço da fonte pixel a pixel): o ombro da colher mostra o couro da jaqueta; a
+  ombreira de aço ficou só no ombro esquerdo dele (como na referência), a mesma da v2, por cima do braço de apoio; os
+  braços com o porte de Morel (11 px), o antebraço um tom abaixo do braço (separa os dois e separa o antebraço do
+  tampo), a sombra do antebraço no braço, o vinco do cotovelo, o punho da manga, a mão em bolinha, a sombra de um pixel
+  no peito e na mesa; o braço de apoio em três partes (a ombreira, o braço caído, o antebraço deitado). Rosto, cicatriz,
+  colete, espada, cores e o lugar ficam como estavam (o fundo, o fogo, o taverneiro e a mesa saem idênticos aos da v2).
+- **A animação:** 20 poses (as 5 chaves e as passagens interpoladas no espaço); a mão e o cotovelo andam no máximo 6 px
+  de um desenho para o seguinte; o tempo como o da curandeira e o do balcão (as pontas de cada trecho 2 tiques, as
+  passagens do meio 1, a boca 6); 156 tiques; a pose parada é `repousa`. As juntas de cada quadro estão na camada `guia`
+  da fonte (um pixel de cor por junta).
+- **Ver no painel:** "Diante de Morel: o estudo de construção e a aplicação" (as chaves nas formas simples e vestidas) e
+  "as trajetórias do cotovelo, da mão e da colher" (uma volta, a v2 e a atual), em ampliação inteira, fora da HUD.
+- **Os limites que ficam:** a boca é a pose mais fraca (o braço curto em escorço se mistura um pouco com o casaco
+  claro); todas as poses do braço saem de `vestir.lua` (o volume sobre a construção), conferidas na ampliação mas sem
+  retoque à mão; a espada nas costas continua com a guarda logo acima do ombro.
+
+## Diante de Morel: a segunda passada (o espaço, a mesa, o braço; histórico)
 
 **O pedido do Jean** (29/10/2026): o mesmo lugar da G4 (que não muda), a mesa com fim, o braço da colher construído, a
-postura participando do gesto. A versão anterior fica no painel ("Diante de Morel, a versão anterior": a fonte em
+postura participando do gesto. A versão anterior fica no painel ("Diante de Morel, a primeira versão": a fonte em
 `morel/vista-v1/`, as camadas em `camadas/morel-vista-v1/`), no mesmo estado do jogo.
 
 - **O fundo como a G4, visto da mesa:** uma prateleira só (a louça à esquerda; o vão; as garrafas à direita), as
@@ -234,9 +268,10 @@ campanha começada e 60 de ouro. Clique na **Taverna** na vila: o balcão animad
 embaixo. Se uma demonstração antiga estiver aberta, feche a janela dela antes (a porta é a mesma).
 
 O botão **Protótipo** na barra do alto abre o painel: a vista (**Balcão animado (G4)**, o padrão, **Diante de Morel
-(animada)**, **G3 estática**, **G2** e **G original**: a troca é imediata, sem sair da taverna, no mesmo estado do jogo; a H, a prova de qualidade e da **F** à **A**, o
+(animada)**, a segunda e a primeira versão dela, **G3 estática**, **G2** e **G original**: a troca é imediata, sem sair da taverna, no mesmo estado do jogo; a H, a prova de qualidade e da **F** à **A**, o
 histórico), o estado do save (**Despensa esperando**, **Homem do canto**, **Morel conhecido**, **Morel recrutado**,
-**Sem ouro**), a **Pose parada** (o fogo e o lampião param) e o estudo **Diante de Morel**.
+**Sem ouro**), a **Pose parada** (o fogo e o lampião param) e as vistas de inspeção de Morel (a vista parada, o
+estudo de construção com a aplicação, as trajetórias, o estudo livre).
 
 ## A G refinada (G2)
 

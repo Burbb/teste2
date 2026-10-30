@@ -8698,3 +8698,22 @@ foi automatizado.
   A versão anterior fica no painel para comparar. A fonte continua `morel/vista/morel-vista.aseprite` (no editor).
 - **Conferido:** no jogo a 1920×945 e 1280×720 (`g/conferir.mjs`) e a recomposição contra o achatamento do Aseprite.
 - **Parado aqui:** a avaliação é do Jean; nada integrado.
+
+### 29/10/2026 (data do computador local) — A taverna: a construção do braço de Morel e a skill de personagens (protótipo)
+
+- **Pedido do Jean:** o braço de Morel continuava estranho (o mesmo problema do ferreiro e dos jogadores): pesquisa
+  visual, estudo prático de anatomia simplificada, aplicação em Morel e o método numa skill, para não repetir a cada
+  personagem.
+- **Feito** (a seção "Diante de Morel: a terceira passada" do LEIA-ME do protótipo): as fontes consultadas (Slynyrd,
+  Clip Studio/Dani Puente, Proko, Rubenstein, Animation Mentor, o estudo de Kobe, Rothko na NGA); o estudo de construção
+  no Aseprite (`morel/estudo-construcao/`: as cinco poses-chave com formas simples e as juntas na guia, `juntas.py` com
+  os comprimentos fixos e o cotovelo pela cinemática, `vestir.lua` que refaz o braço vestido); Morel refeito (o ombro no
+  lugar, a ombreira só no ombro esquerdo como na referência, os braços com o porte dele, o antebraço um tom abaixo, o
+  braço de apoio em três partes), 20 poses com passos de até 6 px e o tempo da curandeira; a v2 preservada no painel;
+  as vistas de inspeção (o estudo com a aplicação, as trajetórias antes e depois). A skill nova
+  `.claude/skills/arte-personagens-fenda/` (o método em 11 passos, as fontes, os exemplos de antes e depois); a
+  `arte-cenas-fenda` e o `CLAUDE.md` apontam para ela.
+- **Conferido:** a recomposição da cena idêntica ao achatamento do Aseprite nas 20 poses; o fundo, o fogo, o
+  taverneiro e a mesa idênticos aos da v2; `vestir.lua` refaz o braço da fonte pixel a pixel; no jogo a 1920×945 e
+  1280×720 (`g/conferir.mjs`, com as vistas de inspeção).
+- **Parado aqui:** a avaliação artística é do Jean; nada integrado.

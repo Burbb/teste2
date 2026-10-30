@@ -21,7 +21,8 @@ Não iniciar todo o plano numa única tarefa. As etapas técnicas A–I e a vali
   [25](25-ETAPA4-REFORCO-E-ENCANTAMENTO.md) é a pesquisa que a antecedeu).
 - **Etapa 5 aberta:** a curandeira integrada (1.218.0), o templo integrado (1.219.0), a taverna em protótipo
   (`ferramentas/prototipos/taverna`: o balcão aprovado (G2/G3) animado na G4 e a vista diante de Morel
-  adaptada e animada, em avaliação, sem integração; a H foi uma experiência encerrada; o salão
+  adaptada e animada, em avaliação, sem integração (o braço refeito por um estudo de construção, que virou a skill
+  `arte-personagens-fenda`); a H foi uma experiência encerrada; o salão
   panorâmico, com as candidatas A a F, a prova de qualidade dos jogadores e o M1 de Morel, suspenso e guardado como
   histórico). Som, equilíbrio e expansão narrativa adiados.
 
