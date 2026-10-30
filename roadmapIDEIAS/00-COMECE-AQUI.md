@@ -8750,3 +8750,28 @@ foi automatizado.
   tábua (o lugar do punho da v2) completado com o pontilhado e a junta.
 - **Conferido:** a fonte da G4 igual ao código; no jogo a 1920×945 e 1280×720 (`g/conferir.mjs`, G4 e Morel).
 
+
+### 30/10/2026 (data do computador local) — A taverna: o encontro à mesa de Morel, o pagamento e as poses da queda de braço (protótipo)
+
+- **Pedido do Jean:** as duas vistas aprovadas (o balcão da G4 e a vista diante de Morel) ligadas ao encontro pelo
+  caminho normal; as moedas do pagamento caindo na mesa (40, e 25 depois de perder a queda de braço), com cobrança
+  única; a queda de braço só até o estudo e três poses paradas, para aprovação; o Vazio com a apresentação normal. Nada
+  integrado à produção.
+- **Feito** (a seção "O encontro à mesa de Morel" do LEIA-ME do protótipo): o evento `morel_na_taverna` de sempre (pelo
+  cartão da abertura ou pela bebida, com as condições dele) abre a vista diante de Morel com as opções embaixo e volta
+  ao balcão (a meta `balcao`, como o templo); `demo.py` só embrulha o evento: manda a cena ao começar e de novo a cada
+  ouro que o motor cobra de fato, e a tela lança as moedas uma vez por pagamento (`morel/moedas/`: cinco moedas
+  desenhadas à mão em grade, voo, pulinhos, escorregão, uma rolando; Morel para a colher, olha as moedas, olha para nós
+  e volta a comer, com as poses aprovadas; as moedas ficam até a cena acabar). Os casos de teste da faixa (o ouro, o
+  dado da queda de braço, Morel na próxima bebida) só valem onde as regras deixam. A queda de braço
+  (`morel/queda/`): a câmera da vista tirada em números, as juntas pelos comprimentos fixos com a pega no círculo
+  possível (`juntas.py`), o estudo em formas simples com a planta da mesa e a pega ampliada (`estudo-queda.aseprite`),
+  as três poses vestidas (`queda.aseprite`: a disputa, nós vencemos, Morel vence), a tigela empurrada para fora dos
+  cotovelos; o plano da animação e da volta da tigela registrado, nada animado. As skills de personagens (dois corpos
+  ligados por um contato) e de cenas (um acontecimento do motor na cena) ganharam o que serve de novo.
+- **Conferido:** `morel/conferir-encontro.mjs` a 1920×945 e 1280×720 (pagar 40 com clique duplo e tecla repetida, 25
+  depois de perder, sem os 25, vencer, o Vazio, Morel conhecido pela bebida, o Esc, a pose parada, as três poses na
+  área de cena, as folhas de inspeção, o console); `g/conferir.mjs` (as vistas de antes); unittest, gabarito, pyflakes
+  e fumaça.
+- **Parado aqui:** a avaliação das três poses (e se a disputa pede uma câmera mais perto) e do pagamento é do Jean; a
+  animação da queda de braço espera as poses aprovadas.

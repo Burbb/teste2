@@ -1,6 +1,103 @@
 # Protótipo: o interior da taverna (o balcão animado e a vista diante de Morel; o resto como histórico)
 
-**O estado** (29/10/2026): **o balcão aprovado** (a G2, com os retoques locais da G3) agora **animado** na **G4**: o
+**O estado** (30/10/2026): as duas vistas **aprovadas** pelo Jean (o balcão da G4 e a vista diante de Morel, com as
+últimas correções) estão **ligadas ao encontro** no protótipo: sentar com o homem do canto leva à mesa dele, as opções do
+evento aparecem ali, o pagamento lança moedas na mesa, e a conversa acaba de volta ao balcão. A **queda de braço** tem o
+estudo e **três poses paradas, em avaliação** (nada animado). Nada integrado à produção.
+
+## O encontro à mesa de Morel (30/10/2026; protótipo)
+
+**O fluxo, pelo caminho normal.** Entrar na taverna mostra o balcão (G4). O evento de sempre, `morel_na_taverna` (pelo
+cartão "Sentar com o homem do canto" da abertura, enquanto ele nunca apareceu, ou pela bebida, com as condições do
+evento: dia 2 em diante, livre, até 3 vezes, o intervalo), abre a vista diante de Morel no quadro de cima, com o texto e
+as opções do evento embaixo. Nada do evento muda: os textos, os preços (40; 25 depois de perder), os testes (Força 14,
+Carisma 15), as consequências (a vaga na comitiva, a simpatia). Terminada a conversa (pagando, vencendo, perdendo sem
+os 25, recusando, o Vazio), o balcão da taverna continua aberto até o Voltar à vila, como o templo faz (a meta `balcao`);
+recrutado ou já apresentado, o cartão do homem do canto sai, pela regra da abertura.
+- **Como:** `demo.py` embrulha a função do evento (`a_mesa`): ao começar, manda a cena `taverna_mesa` (a vista de Morel;
+  uma cena à parte, porque o `vila.js` tira os interiores quando aparece outro menu); a cada ouro que o motor cobra de
+  fato (`perder_ouro`), manda a mesma cena com mais um pagamento. A tela lança as moedas uma vez por pagamento contado
+  pelo motor: clique duplo, tecla repetida, Esc ou o texto adiantado não cobram de novo nem lançam outra vez.
+- **O nome:** a mesa "do homem do canto" antes de conhecê-lo, "de Morel" depois (pela contagem do evento); o texto do
+  evento é o de sempre (ele se apresenta nele).
+
+**O pagamento sobre a mesa** (`morel/moedas/`: a fonte `moedas.aseprite`, desenhada em grade à mão, e `moedas.py`).
+Cinco moedas (não quarenta), de latão da paleta da cena, com 3 px (a escala da vista): entram pela borda de baixo, de
+quem está sentado, voam girando (deitada, de quina, de pé), passam por cima da borda da mesa, caem no tampo entre a vela
+e a tigela, dão um pulinho de 2 px e outro de 1, escorregam 1 px; uma cai de pé, rola 3 px e tomba. A sombra corre no
+tampo embaixo de cada uma e encosta quando ela assenta. 12 tiques (1,2 s); as moedas ficam na mesa até a cena acabar (a
+volta ao balcão), sem sumir. A mesma animação nos 40 e nos 25 (o texto, a opção e o ouro da HUD dizem o valor).
+- **Morel** para de comer: a colher volta ao descanso pelo caminho mais curto entre as poses aprovadas (termina de descer,
+  ou desfaz a subida e pousa na tigela), os olhos ficam baixos, nas moedas, enquanto elas caem e ele conta, depois ele
+  olha para quem pagou (a pose `olha`) e volta à tigela; a rotina recomeça do começo. Nenhuma pose nova.
+- **Movimento reduzido:** as moedas já assentadas e Morel parado.
+
+**Os casos de teste da faixa** (só valem onde as regras do evento já deixam): o ouro ("Homem do canto" com 60, com 30 —
+sem os 40 — e com 10 — nem os 25); o dado da queda de braço (o sorteio, o dado em 20, o dado em 1: só no teste de Força
+desse evento; a conta e a rolagem na tela são as do motor); "Bebida: Morel puxa conversa" (força o evento na próxima
+bebida só quando ele é candidato agora). `morel/conferir-encontro.mjs` percorre os casos a 1920×945 e 1280×720.
+
+**A opção do Vazio** fica com a apresentação normal: o texto conduz, a regra e a consequência são as do evento.
+
+### Roteiro curto para testar
+
+1. `demo.bat`, entrar na taverna pelo prédio: o balcão animado.
+2. Cartão "Sentar com o homem do canto": a mesa de Morel, as quatro opções. "Pagar 40 ouro" (pode clicar duas vezes): as
+   moedas caem, Morel para, olha; o ouro cai 40 uma vez. Aceitar: de volta ao balcão, sem o cartão.
+3. Faixa "Homem do canto, 30 de ouro" e "Queda de braço: o dado em 1": sem os 40; a queda de braço perdida, "Pagar 25":
+   as mesmas moedas; o ouro vai a 5.
+4. "Homem do canto, 10 de ouro" com o dado em 1: perde e a conversa acaba (sem a pergunta dos 25).
+5. "Morel conhecido" e "Bebida: Morel puxa conversa": a bebida leva à mesa de Morel (já conhecido).
+6. "Pose parada": as moedas já na mesa, nada se mexe.
+7. As três poses da queda de braço: "Queda de braço, pose 1/2/3" no painel (na área de cena); as folhas em "Inspeção
+   ampliada".
+
+## A queda de braço: o estudo e as três poses (30/10/2026; em avaliação, nada animado)
+
+**O enquadramento:** a câmera da vista aprovada, o mesmo pixel, não outra mais perto. Assim Morel (o rosto, a cicatriz,
+o colete), a sala e a mesa ficam como foram aprovados, a disputa ocupa o meio do quadro e nada precisa ser redesenhado
+noutra escala; o nosso antebraço entra pelo primeiro plano, o braço de cima sai pela borda de baixo (o ombro fica
+embaixo da câmera, sem escorço do ombro nem do peito). Se o Jean quiser a disputa maior, o passo seguinte é uma câmera
+mais perto (Morel e a mesa redesenhados nela), não um recorte ampliado.
+
+**O estudo** (`morel/queda/`, pela `arte-personagens-fenda` e a `arte-cenas-fenda`): `juntas.py` dá a câmera da vista
+em números (as tábuas fogem para (238, 30); uma câmera de furo reproduz as bordas do tampo e o ombro de Morel) e as
+juntas das três poses: os dois cotovelos fincados no tampo e parados; o antebraço de Morel 28 cm e o nosso 27 (mais 6 até
+o meio da pega); as mãos só onde as duas distâncias batem (um círculo no plano que corta ao meio a linha dos cotovelos);
+no alto dele a disputa, caindo para a esquerda de quem vence até o dorso da mão de quem perde tocar o tampo (4 cm).
+Nenhum braço torce: cada antebraço gira em volta do cotovelo, no mesmo plano. `estudo-queda.aseprite` (`estudo.py`) tem
+as três poses em formas simples (Morel em vermelho e laranja, nós em azul, as juntas e o arco da pega na `guia`), a
+mesa vista de cima (os cotovelos, o caminho da pega, os dois fins, a tigela, a vela, a caneca e o pão) e a pega
+ampliada, à mão em grade: o nosso dorso na frente, os nossos dedos sobre o dorso da mão dele (à esquerda), os dele sobre
+o nosso (à direita), os polegares cruzados em cima. A pega da cena é ela simplificada em bolinhas de pele.
+
+**As poses** (`queda.aseprite`, `poses.py`; a autoridade é a fonte): 1. a disputa, a pega firme no alto, diante do peito
+de Morel; 2. nós vencemos, a mão dele presa no tampo à nossa esquerda, perto de nós; 3. Morel vence, a nossa presa à
+direita, longe. A pilha é a da vista aprovada (a sala, o taverneiro e o fogo parados, a luz em multiplicar e somar);
+Morel com o corpo e a cabeça da pose `olha` (os olhos em nós), deslocados 1 px a cada 2 do ombro (ele se inclina na
+disputa, cede no lado em que perde, vem por cima quando vence); os braços vestidos pelo método do `vestir.lua` (o couro
+dele em volume, o antebraço um tom abaixo, a sombra no braço e no casaco, o vinco, o punho escuro, a sombra de um pixel
+no tampo onde encosta); a nossa manga de lã azul-acinzentada e a nossa pele um pouco mais clara (os dois se distinguem
+pela cor e pela sobreposição); o braço esquerdo dele planta a mão no tampo à direita do nosso antebraço. A tigela saiu
+da área dos cotovelos: empurrada 46 px para a direita dele (a nossa esquerda), na mesma linha do tampo; o lugar dela
+ganhou as tábuas e as juntas pelas linhas de fuga. O pão fica (o nosso cotovelo pousa à esquerda dele).
+- **Conferido:** os cotovelos no tampo e os antebraços com o mesmo comprimento nas três poses (`juntas.py`); as poses na
+  área de cena a 1920×945 e 1280×720; o estudo e as poses lado a lado (`queda-construcao.png`).
+- **O que depende do olho do Jean:** se a pega lê como duas mãos agarradas no tamanho real; se a vitória de Morel lê como
+  o nosso braço deitado (o antebraço aponta para longe e aparece curto, em pé na tela; a sombra no tampo é a única
+  pista); se o enquadramento da vista basta ou se a disputa pede a câmera mais perto.
+
+**A animação, depois das poses aprovadas** (só a intenção; nada feito): (1) Morel puxa a tigela para a direita dele com
+a mão da colher e apoia o cotovelo; a pega se firma (as mãos se ajeitam 1 px, os ombros descem); (2) a disputa curta, a
+resistência legível em poucas poses sustentadas (a pega oscila 1 a 2 px no arco, o ombro de quem força desce); (3) o
+desfecho pelo resultado que o motor já decidiu (o teste de Força 14 roda antes; a animação não muda nem repete a
+rolagem): a pega cai pelo arco até o tampo do lado de quem vence; (4) uma pausa curta na posição final; (5) a volta à
+vista normal: as mãos se soltam e Morel puxa a tigela de volta antes de comer (ela não pula de lugar). Sem minigame,
+comandos de força ou interação que não existe; sem som.
+
+## O balcão animado (G4)
+
+**O estado anterior** (29/10/2026): **o balcão aprovado** (a G2, com os retoques locais da G3) agora **animado** na **G4**: o
 taverneiro limpa a caneca (na segunda atuação, com as mãos e os braços; o tronco firme) e para para olhar os
 fregueses. **A vista diante de Morel**, saída do estudo livre (que o Jean
 gostou), foi **adaptada ao acabamento do jogo e animada**, e continua **em avaliação**; na terceira passada, o braço
