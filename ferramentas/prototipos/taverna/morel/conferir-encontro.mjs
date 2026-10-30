@@ -217,7 +217,8 @@ try {
 
     // 8. as três poses da queda de braço na área de cena da HUD (pelo painel), e as folhas de inspeção
     await entrar(p);
-    for (const [cand, nome] of [["queda1", "disputa"], ["queda2", "vitoria-jogador"], ["queda3", "vitoria-morel"]]) {
+    for (const [cand, nome] of [["qd1", "disputa"], ["qd2", "vitoria-jogador"], ["qd3", "vitoria-morel"],
+                                ["queda1", "v1-disputa"], ["queda2", "v1-vitoria-jogador"], ["queda3", "v1-vitoria-morel"]]) {
       await p.click("#faixa-tav .abre"); await p.click(`#faixa-tav-painel [data-cand="${cand}"]`); await espera(500);
       const v = await p.evaluate(() => { const c = document.getElementById("vista"), r = c.getBoundingClientRect();
         const d = c.getContext("2d").getImageData(0, 0, c.width, c.height).data; let n = 0;
@@ -226,7 +227,23 @@ try {
       conferir(v.cheia > 0.99, `${nome}: a pose desenhada na área de cena (${v.larg}×${v.alt})`);
       await p.screenshot({ path: path.join(SAIDA, `${jan}-queda-${nome}.png`) });
     }
-    for (const [vista, larg] of [["queda", 480], ["quedaEstudo", 320]]) {
+    // o dado rolando por cima da disputa (a vista de detalhe): a pega fica fora do grupo dele, à vista
+    await p.click("#faixa-tav .abre"); await p.click('#faixa-tav-painel [data-cand="qd1"]'); await espera(400);
+    const dado = await p.evaluate(async () => {
+      const pr = rolagem({ atributo: "Força", cd: 14, d20: 10, mod: 4, total: 14, sucesso: true });
+      await new Promise((r) => setTimeout(r, 350));
+      const g = document.querySelector(".rolagem-centro .rc-grupo").getBoundingClientRect();
+      const q = Vista.caixaDaArte(), o = document.getElementById("cena").getBoundingClientRect();
+      const tela = (x, y) => [o.left + q.esq + q.dx + x * q.ex, o.top + q.topo + q.dy + y * q.ey];
+      const [px, py] = tela(76, 21), [ax, ay] = tela(66, 9), [bx, by] = tela(86, 32);  // a pega e a caixa dela
+      const fora = bx < g.left || ax > g.right || by < g.top || ay > g.bottom;
+      window.__dadoFim = pr;
+      return { fora, pega: [Math.round(px), Math.round(py)], grupo: [g.left, g.top, g.right, g.bottom].map(Math.round) };
+    });
+    await p.screenshot({ path: path.join(SAIDA, `${jan}-queda-com-dado.png`) });
+    await p.evaluate(() => window.__dadoFim);
+    conferir(dado.fora, `com o dado rolando, a pega da disputa à vista, fora do grupo dele (${JSON.stringify(dado)})`);
+    for (const [vista, larg] of [["queda2", 960], ["queda2Estudo", 320], ["queda", 480], ["quedaEstudo", 320]]) {
       await p.click("#faixa-tav .abre"); await p.click(`#faixa-tav-painel [data-estudo="${vista}"]`); await espera(600);
       const est = await p.evaluate(() => { const i = document.querySelector("#estudo-morel img");
         return { aberto: !document.getElementById("estudo-morel").hidden, nat: i.naturalWidth, largura: i.getBoundingClientRect().width }; });
