@@ -20,7 +20,8 @@
   document.body.dataset.tavCand = document.body.dataset.tavCand || "g4";  // o balcão animado; as outras para comparar
   document.body.dataset.tavProva = document.body.dataset.tavProva || "b4";
   document.body.dataset.tavMorel = document.body.dataset.tavMorel || "m1";
-  const CANDS = [["g4", "Balcão animado (G4)"], ["morel", "Diante de Morel (animada)"],
+  const CANDS = [["g4", "Balcão animado (G4, a atuação ajustada)"], ["g4v1", "Balcão animado, a atuação anterior"],
+    ["morel", "Diante de Morel (animada)"],
     ["morel2", "Diante de Morel, a segunda versão (antes do estudo do braço)"],
     ["morel1", "Diante de Morel, a primeira versão"], ["g3", "G3 estática"],
     ["g2", "G2 aprovada (antes das correções)"], ["g", "G original"], ["h", "Candidata H (histórico)"], ["prova", "Prova: os jogadores (histórico)"], ["f", "Candidata F (histórico)"], ["e", "Candidata E (histórico)"],

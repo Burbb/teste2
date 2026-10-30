@@ -139,7 +139,7 @@
   const CANDS = { a: () => window.CenaTavernaA, b: () => window.CenaTavernaB, c: () => window.CenaTavernaC,
     d: () => window.CenaTavernaD, e: () => window.CenaTavernaE, f: () => window.CenaTavernaF,
     g: () => window.CenaTavernaG, g2: () => window.CenaTavernaG2, g3: () => window.CenaTavernaG3, h: () => window.CenaTavernaH,
-    g4: () => window.CenaTavernaG4, morel: () => window.CenaTavernaMorel, morel1: () => window.CenaTavernaMorelV1,
+    g4: () => window.CenaTavernaG4, g4v1: () => window.CenaTavernaG4V1, morel: () => window.CenaTavernaMorel, morel1: () => window.CenaTavernaMorelV1,
     morel2: () => window.CenaTavernaMorelV2,
     prova: () => window.CenaTavernaProva };
   const cand = () => (CANDS[document.body.dataset.tavCand] || CANDS.g4)();

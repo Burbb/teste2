@@ -1,17 +1,20 @@
 """O taverneiro animado da G4: o homem da G3 (o desenho da G, com os retoques da G2 e o pano da G3) limpando a caneca,
 pose a pose, pelo fluxo da skill `arte-cenas-fenda` (seção 5b).
 
-**A atividade e os apoios.** Ele esfrega a caneca com o pano e, de tempos em tempos, para e olha os fregueses. O que
-fica: os pés (fora do quadro), o quadril atrás do balcão, a mão de lá segurando a caneca pela asa, a caneca (o mesmo
-tamanho, a mesma pega, presa ao tronco). O que mexe: a mão do pano, que dá a volta na caneca (entra pela boca, desce
-pelo lado, volta).
+**A atividade e os apoios.** Ele esfrega a caneca com o pano e, de tempos em tempos, para e olha os fregueses. Limpar
+uma caneca é um trabalho de mãos: pouco esforço, alcance curto, a caneca apoiada na outra mão. O que fica (e dá
+estabilidade à ação): os pés (fora do quadro), o quadril atrás do balcão, o tronco, a cabeça enquanto ele esfrega (os
+olhos baixos, no trabalho). O que mexe: a mão do pano, que dá a volta na caneca (entra pela boca, gira por dentro, desce
+pelo lado fazendo força, volta).
 
-**Quem conduz, quem acompanha, quem fica.**
+**Quem conduz, quem acompanha, quem fica** (a segunda versão; a primeira descia o tronco e a cabeça a cada passada e
+lia como o corpo inteiro limpando a caneca: `g4/aseprite-v1/`, `camadas/g4-v1/`).
 
 | Trecho | Conduz | Acompanha | Fica |
 |---|---|---|---|
-| Esfregar | a mão do pano (até 2 px) | o pano pendurado (um tique depois, a ponta para o outro lado), o tronco 1 px para baixo na passada de baixo, a cabeça 1 px um tique depois do tronco | a caneca e a mão da asa (com o tronco), o quadril |
-| Olhar os fregueses | os olhos (sobem primeiro) | a cabeça (sobe 1 px um tique depois), depois os olhos vão para o outro lado | as duas mãos paradas na caneca, o tronco |
+| Esfregar | a mão do pano (até 2 px, uma volta na caneca) | o antebraço do pano (sai do cotovelo); o cotovelo 1 px para dentro quando a mão entra na caneca e 1 px abaixo na pressão; o ombro do pano 1 px abaixo só na pressão; o pano pendurado (a ponta 1 px atrás do movimento da mão, caindo de volta) | o tronco, a cabeça (os olhos na caneca), a caneca e a mão da asa |
+| Ajustar a pega (uma vez, na passada lenta) | a mão da caneca ergue a caneca 1 px | a mão do pano, que está dentro dela | o tronco, a cabeça |
+| Olhar os fregueses (a pausa: uma ação própria) | os olhos (sobem primeiro) | a cabeça (sobe 1 px um tique depois), depois os olhos vão para o outro lado | as duas mãos paradas na caneca, o tronco |
 
 **As partes andam presas a elas mesmas:** cada parte (o tronco com os braços de cima, a cabeça, o braço do pano com o
 pano, a caneca com a mão da asa, o pano na boca da caneca) é desenhada e iluminada na posição da G (`g.desenho.luz`, o
@@ -64,9 +67,9 @@ def _olhos(f, modo):
         f.p(x, 28, c)
 
 
-def _braco_do_pano(f, dx, dy):
-    """O antebraço do pano, do cotovelo da G (parado) até a mão deslocada (dx, dy)."""
-    f.capsula((135, 66), (151 + dx, 62 + dy), 4.5, 3.4, "pele", luz=0.25, sombra=-0.35)
+def _braco_do_pano(f, dx, dy, cotovelo=(0, 0)):
+    """O antebraço do pano, do cotovelo da G (deslocado `cotovelo`) até a mão deslocada (dx, dy)."""
+    f.capsula((135 + cotovelo[0], 66 + cotovelo[1]), (151 + dx, 62 + dy), 4.5, 3.4, "pele", luz=0.25, sombra=-0.35)
 
 
 def _pano_e_mao(f, dx, dy, atraso):
@@ -83,12 +86,15 @@ def _pano_e_mao(f, dx, dy, atraso):
         f.px[(x + dx, y + dy)] = c
 
 
-def _tronco(f):
+def _tronco(f, ombro_pano=(0, 0), cotovelo_pano=(0, 0), pega=(0, 0)):
     """O tronco, os braços de cima com as mangas e o rolo, o antebraço da caneca e a gola (o desenho da G, sem o
-    antebraço do pano)."""
+    antebraço do pano). O braço de cima do pano acompanha a mão (o ombro e o cotovelo deslocados); o punho da caneca
+    acompanha o ajuste da pega."""
     GT.tronco(f)
     import math
-    for ombro, cotovelo, punho, lado in (((141, 50), (135, 66), None, -1), ((179, 50), (185, 66), (169, 62), 1)):
+    (ox, oy), (ex, ey), (px_, py_) = ombro_pano, cotovelo_pano, pega
+    for ombro, cotovelo, punho, lado in (((141 + ox, 50 + oy), (135 + ex, 66 + ey), None, -1),
+                                         ((179, 50), (185, 66), (169 + px_, 62 + py_), 1)):
         f.capsula(ombro, cotovelo, 7, 6, "camisa", luz=0.45 if lado < 0 else 0.7)
         (ax, ay), (bx, by) = ombro, cotovelo
         comp = math.hypot(bx - ax, by - ay)
@@ -129,39 +135,44 @@ def _colar(quadro, a, dx, dy):
 
 
 # ---------------------------------------------------------------- as poses
-# tronco (tx, ty), cabeça além do tronco (hx, hy, olhos), mão do pano (wx, wy), atraso da ponta do pano
+# mão do pano (w), cotovelo (e) e ombro (o) do pano, pega da caneca (c: a caneca, a mão da asa e o punho), atraso da
+# ponta do pano (a), olhos e cabeça além do tronco (h). O tronco não se mexe.
 POSES = {
-    "esfrega0": dict(t=(0, 0), h=(0, 0, "baixo"), w=(0, 0), a=0),     # a mão na boca da caneca
-    "esfrega1": dict(t=(0, 0), h=(0, 0, "baixo"), w=(1, -1), a=-1),   # empurra o pano para dentro
-    "esfrega2": dict(t=(0, 0), h=(0, 0, "baixo"), w=(1, 1), a=0),     # desce pelo lado
-    "esfrega3": dict(t=(0, 1), h=(0, 0, "baixo"), w=(0, 2), a=1),     # embaixo: o tronco desce 1 px
-    "esfrega4": dict(t=(0, 1), h=(0, 1, "baixo"), w=(0, 2), a=1),     # a cabeça acompanha um tique depois
-    "olha0": dict(t=(0, 0), h=(0, 0, "lado"), w=(0, 0), a=0),         # os olhos sobem primeiro
-    "olha1": dict(t=(0, 0), h=(0, -1, "lado"), w=(0, 0), a=0),        # a cabeça sobe: olha os fregueses
-    "olha2": dict(t=(0, 0), h=(0, -1, "outro"), w=(0, 0), a=0),       # o olhar vai para o outro lado
+    "esfrega0": dict(w=(0, 0), e=(0, 0), o=(0, 0), c=(0, 0), a=0, h=(0, 0, "baixo")),    # a mão na boca da caneca
+    "esfrega1": dict(w=(1, -1), e=(1, 0), o=(0, 0), c=(0, 0), a=-1, h=(0, 0, "baixo")),  # entra pela boca; o cotovelo vem
+    "esfrega2": dict(w=(2, 0), e=(1, 0), o=(0, 0), c=(0, 0), a=-1, h=(0, 0, "baixo")),   # gira por dentro
+    "esfrega3": dict(w=(1, 2), e=(0, 1), o=(0, 1), c=(0, 0), a=0, h=(0, 0, "baixo")),    # desce pelo lado: a pressão
+    "esfrega4": dict(w=(0, 1), e=(0, 0), o=(0, 0), c=(0, 0), a=1, h=(0, 0, "baixo")),    # volta; a ponta cai atrás
+    "pega": dict(w=(0, -1), e=(0, 0), o=(0, 0), c=(0, -1), a=0, h=(0, 0, "baixo")),      # a mão da asa ajeita a caneca
+    "olha0": dict(w=(0, 0), e=(0, 0), o=(0, 0), c=(0, 0), a=0, h=(0, 0, "lado")),        # os olhos sobem primeiro
+    "olha1": dict(w=(0, 0), e=(0, 0), o=(0, 0), c=(0, 0), a=0, h=(0, -1, "lado")),       # a cabeça sobe: olha os fregueses
+    "olha2": dict(w=(0, 0), e=(0, 0), o=(0, 0), c=(0, 0), a=0, h=(0, -1, "outro")),      # o olhar vai para o outro lado
 }
 ORDEM = list(POSES)
 PARADA = "olha0"  # o movimento reduzido: a pose da G3 (o olhar de lado, desconfiado)
 
-# a rotina, em tiques de 100 ms: quatro passadas de esfregar (a última mais lenta), a pausa para olhar os fregueses
-_PASSADA = [("esfrega0", 3), ("esfrega1", 3), ("esfrega2", 2), ("esfrega3", 2), ("esfrega4", 2), ("esfrega2", 2)]
-_LENTA = [("esfrega0", 4), ("esfrega1", 4), ("esfrega2", 3), ("esfrega3", 3), ("esfrega4", 3), ("esfrega2", 3)]
-ROTINA = _PASSADA * 3 + _LENTA + [("esfrega0", 4), ("olha0", 3), ("olha1", 24), ("olha2", 14), ("olha1", 6),
-                                  ("olha0", 3), ("esfrega0", 3)]
+# a rotina, em tiques de 100 ms: três passadas, uma lenta com o ajuste da pega, a pausa para olhar os fregueses. As
+# poses seguram 2 tiques (a pressão 3), como na curandeira; a mão anda até 2 px de uma pose para a outra.
+_PASSADA = [("esfrega0", 2), ("esfrega1", 2), ("esfrega2", 2), ("esfrega3", 3), ("esfrega4", 2)]
+_LENTA = [("esfrega0", 3), ("esfrega1", 3), ("esfrega2", 3), ("esfrega3", 4), ("esfrega4", 2), ("pega", 4),
+          ("esfrega0", 2)]
+ROTINA = _PASSADA * 3 + _LENTA + _PASSADA + [("esfrega0", 4), ("olha0", 3), ("olha1", 24), ("olha2", 14),
+                                             ("olha1", 6), ("olha0", 3), ("esfrega0", 3)]
 
 
 def quadro(nome):
     """Uma pose inteira, numa camada 320×96 (RGBA numpy)."""
     p = POSES[nome]
-    tx, ty = p["t"]
     hx, hy, olhos = p["h"]
     wx, wy = p["w"]
+    cx, cy = p["c"]
     q = np.zeros((QH, QW, 4), np.uint8)
-    _colar(q, _parte(_tronco, (R2.mangas,)), tx, ty)
-    _colar(q, _parte(_cabeca(olhos), (R2.pescoco, R2.pele_lisa)), tx + hx, ty + hy)
-    _colar(q, _parte(lambda f: (_braco_do_pano(f, wx, wy), _pano_e_mao(f, wx, wy, p["a"])), (R2.pele_lisa,)), tx, ty)
-    _colar(q, _parte(_caneca), tx, ty)
-    _colar(q, _parte(lambda f: _pano_na_caneca(f, wx, wy)), tx, ty)
+    _colar(q, _parte(lambda f: _tronco(f, p["o"], p["e"], p["c"]), (R2.mangas,)), 0, 0)
+    _colar(q, _parte(_cabeca(olhos), (R2.pescoco, R2.pele_lisa)), hx, hy)
+    _colar(q, _parte(lambda f: (_braco_do_pano(f, wx, wy, p["e"]), _pano_e_mao(f, wx, wy, p["a"])), (R2.pele_lisa,)),
+           0, 0)
+    _colar(q, _parte(_caneca), cx, cy)
+    _colar(q, _parte(lambda f: _pano_na_caneca(f, wx, wy)), 0, 0)
     return q
 
 

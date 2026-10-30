@@ -1,6 +1,7 @@
 /* As vistas animadas da taverna (protótipo; nada disto entra no jogo).
 
-   - window.CenaTavernaG4: o balcão aprovado (a G3) com o taverneiro limpando a caneca. Camadas de
+   - window.CenaTavernaG4: o balcão aprovado (a G3) com o taverneiro limpando a caneca (window.CenaTavernaG4V1, a
+     atuação anterior, em /proto-tav/camadas/g4-v1/, para comparar). Camadas de
      /proto-tav/camadas/g4/ (g4/fonte.py): o fundo, o fogo e as velas (4 quadros, a 200 ms), a pose do taverneiro pela
      linha do tempo (rotina.json, um índice por tique de 100 ms), e o balcão com os fregueses por cima.
    - window.CenaTavernaMorel: a vista diante de Morel (morel/vista/exportar.py), na mesma moldura (320×96): o fundo, a
@@ -40,9 +41,11 @@
   }
 
   // ---------------------------------------------------------------- o balcão animado (G4)
-  const G4 = carregar("/proto-tav/camadas/g4/", ["fundo", "fogo", "velas", "taverneiro", "frente"]);
-  const ROT_G4 = json("/proto-tav/camadas/g4/rotina.json");
-  window.CenaTavernaG4 = {
+  /** O balcão animado a partir das camadas de uma pasta (a atuação atual e a anterior, para comparar). */
+  const balcao = (raiz) => {
+    const G4 = carregar(raiz, ["fundo", "fogo", "velas", "taverneiro", "frente"]);
+    const ROT_G4 = json(raiz + "rotina.json");
+    return {
     base: (W, d) => Object.assign(base(), { d }),
     desenhar(c, W, b, est, quadro) {
       const quieto = reduzido();
@@ -57,7 +60,11 @@
     get pontos() { return window.CenaTavernaG.pontos; },
     presentes: () => ["taverneiro", "freguês da esquerda", "freguês da direita"],
     QW, QH,
+    };
   };
+  // a atuação atual (as mãos conduzem, o tronco fica) e a anterior (o tronco e a cabeça desciam a cada passada)
+  window.CenaTavernaG4 = balcao("/proto-tav/camadas/g4/");
+  window.CenaTavernaG4V1 = balcao("/proto-tav/camadas/g4-v1/");
 
   // ---------------------------------------------------------------- diante de Morel
   /** A vista diante de Morel a partir das camadas de uma pasta (a atual e a anterior, para comparar). */
