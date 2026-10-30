@@ -107,10 +107,13 @@ def pose(p):
         if q not in ante:
             dir_[q] = cor
     # a mão em volta do cabo: o centro um pouco além do pulso, na direção da colher; a colher sai dela
+    # (a mão mais perto do pulso, para o cabo aparecer além dela; a ponta não muda: os contatos com a boca ficam). O
+    # que da colher cai no caldo está mergulhado: não se desenha (a ponta some na coleta e reaparece ao sair)
     d = p["dir_colher"]
-    mao = (p["W"][0] + d[0] * 5, p["W"][1] + d[1] * 5)
-    dir_.update(MO.colher((p["W"][0] + d[0] * 7, p["W"][1] + d[1] * 7), p["T"]))
-    dir_.update(MO.mao(mao, 7.0, 6.0))
+    mao = (p["W"][0] + d[0] * 3, p["W"][1] + d[1] * 3)
+    colher = MO.colher((p["W"][0] + d[0] * 5, p["W"][1] + d[1] * 5), p["T"])
+    dir_.update({q: c for q, c in colher.items() if not MO.no_caldo(*q)})
+    dir_.update(MO.mao(mao, 6.5, 5.5))
     c["morel_braco"] = _img(dir_)
     jj = {}
     for k, cor in (("S", (255, 64, 64, 255)), ("E", (48, 255, 96, 255)), ("W", (48, 128, 255, 255)),

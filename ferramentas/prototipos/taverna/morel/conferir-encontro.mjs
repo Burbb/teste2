@@ -148,7 +148,7 @@ try {
     conferir((await cena(p)).queda === "prepara", "o teste de Força começa: a cena começa a preparação");
     for (let k = 0; k < 100 && (await cena(p)).queda === "prepara"; k++) await espera(100);
     conferir((await cena(p)).queda === "morel", `o resultado do motor chega à cena: Morel vence (${(await cena(p)).queda})`);
-    conferir(await naPose(p, "desliza3"), "a preparação: a tigela deslizando");
+    conferir(await naPose(p, "varre3"), "a preparação: o antebraço varrendo a tigela");
     await p.screenshot({ path: path.join(SAIDA, `${jan}-queda-preparo.png`) });
     conferir(await naPose(p, "disputa"), "a disputa");
     await p.screenshot({ path: path.join(SAIDA, `${jan}-queda-disputa-com-texto.png`) });

@@ -63,8 +63,7 @@ RAIO_PUNHO = (4.4, 3.6, 3.2)                               # cada mão fechada: 
 
 # a tigela no fim da preparação: para a direita e para o fundo (a borda de lá dela encosta perto da borda do tampo), fora
 # de onde a nossa mão cai quando Morel vence (x ~197, y ~82); a colher solta dentro dela, com o cabo apoiado na borda
-TIGELA_FIM = (54, -11)
-COLHER_SOLTA = ((144, 69), (155, 75))
+TIGELA_FIM = (57, 2)   # varrida para a direita, na mesma profundidade (no tampo, longe da borda de lá)
 # o braço esquerdo de Morel: em repouso (o da cena), pegando a tigela pela borda de cá e da direita, e no colo
 ESQ_REPOUSO = dict(S=(206, 46), E=(221, 67), W=(209, 74), M=(202, 75))
 
@@ -124,21 +123,16 @@ def _lerp(a, b, t):
 
 # ------------------------------------------------------------------ a mesa
 def tigela_e_colher(off, solta):
-    """A tigela (o desenho da cena) deslocada `off`, e a colher: solta dentro dela (o cabo na borda), na ordem certa
-    (a borda da frente por cima da concha)."""
+    """A tigela (o desenho da cena) deslocada `off`, e a colher solta dentro dela, onde a mão a largou (a da pose de
+    repouso da cena: o cabo sobre a borda da esquerda, a ponta mergulhada no caldo)."""
     t = Image.new("RGBA", (320, 96), (0, 0, 0, 0))
     OB.tigela(t)
     out = _pixels(t, *off)
     if solta:
-        out.update(_mover(MO.colher(*COLHER_SOLTA), *off))
-        f = Image.new("RGBA", (320, 96), (0, 0, 0, 0))
-        OB.tigela(f, so_frente=True)
-        frente = _pixels(f, *off)
-        a, b = COLHER_SOLTA
-        concha = {q for q in _mover(MO.colher(a, b), *off) if math.dist(q, (b[0] + off[0], b[1] + off[1])) < 3.5}
-        for q, c in frente.items():
-            if q in concha and q[1] >= b[1] + off[1] + 2:
-                out[q] = c
+        rep = _repouso()
+        W, T, d = rep["W"], rep["T"], rep["dir_colher"]
+        colher = _mover(MO.colher((W[0] + d[0] * 5, W[1] + d[1] * 5), T), *off)
+        out.update({q: c for q, c in colher.items() if not MO.no_caldo(*q, *off)})
     return out
 
 
@@ -287,6 +281,23 @@ def _repouso():
     return next(p for p in J.poses() if p["nome"] == "repousa")
 
 
+def _un2(a, b):
+    n = math.dist(a, b)
+    return ((b[0] - a[0]) / n, (b[1] - a[1]) / n)
+
+
+def _varrida(f):
+    """O braço direito varrendo a tigela (f de 0 a 1): o antebraço deitado no tampo, de lado, a mão de cutelo (o lado
+    de fora, o do dedo mínimo) encostada na borda da esquerda da tigela, empurrando-a para a direita; o cotovelo
+    desliza junto pelo tampo, à frente do corpo (o tronco se inclina para alcançar: `tronco` na pose). Devolve o
+    cotovelo, o punho e o centro da mão, na tela."""
+    ox = TIGELA_FIM[0] * _ease(f)
+    mao = (141.5 + ox, 72.5)          # a mão encostada na borda da esquerda da tigela (x 147,5 + o deslocamento)
+    W = (mao[0] - 4.5, mao[1] - 0.5)
+    E = (W[0] - 27.0, W[1] - 1.0)      # o antebraço deitado, quase horizontal na tela
+    return E, W, mao
+
+
 def _set_dir():
     """O braço direito pronto para a pega: o cotovelo no tampo, a mão aberta no alto (a pose do meio, antes de fechar)."""
     p = G.pose(0.0)
@@ -317,16 +328,17 @@ def _p(nome, **k):
 # ao colo; o braço direito vai para o meio; o nosso antebraço entra; a pega se firma
 _p("olha", dir="colher", esq="repouso", tigela=0.0, cabeca="olha")
 _p("solta", dir=("solta", 0.0), esq="repouso", tigela=0.0, cabeca="baixo")
-_p("pega_tigela1", dir=("solta", 0.0), esq=("tigela", -0.5), tigela=0.0, cabeca="baixo")
-_p("pega_tigela2", dir=("solta", 0.0), esq=("tigela", 0.0), tigela=0.0, cabeca="baixo")
-for i, f in enumerate((0.12, 0.35, 0.62, 0.85, 1.0)):
-    _p(f"desliza{i + 1}", dir=("solta", 0.0), esq=("tigela", f), tigela=f, cabeca="baixo")
-_p("larga", dir=("solta", 0.0), esq=("larga", 0.5), tigela=1.0, cabeca="olha")
-_p("colo", dir=("solta", 0.0), esq="colo", tigela=1.0, cabeca="olha")
+_p("esq_sai", dir=("solta", 0.0), esq=("sai", 0.5), tigela=0.0, cabeca="baixo")
+_p("colo", dir=("solta", 0.0), esq="colo", tigela=0.0, cabeca="baixo")
+_p("encosta", dir=("varre", -1.0), esq="colo", tigela=0.0, cabeca="baixo")
+for i, f in enumerate((0.0, 0.15, 0.4, 0.68, 0.9, 1.0)):
+    _p(f"varre{i + 1}", dir=("varre", f), esq="colo", tigela=f, cabeca="baixo",
+       tronco=(round(7 * _ease(f)), 1 if f > 0.3 else 0))
 for i, f in enumerate((0.3, 0.65, 1.0)):
-    _p(f"apoia{i + 1}", dir=("solta", f), esq="colo", tigela=1.0, cabeca="olha", nosso=(f * 0.6 if i else None))
-_p("entra1", dir=("solta", 1.0), esq="colo", tigela=1.0, cabeca="olha", nosso=0.75)
-_p("entra2", dir=("solta", 1.0), esq="colo", tigela=1.0, cabeca="olha", nosso=1.0)
+    _p(f"apoia{i + 1}", dir=("apoia", f), esq="colo", tigela=1.0, cabeca="olha", nosso=(f * 0.6 if i else None),
+       tronco=(round(7 * (1 - _ease(f))), 0))
+_p("entra1", dir=("apoia", 1.0), esq="colo", tigela=1.0, cabeca="olha", nosso=0.75)
+_p("entra2", dir=("apoia", 1.0), esq="colo", tigela=1.0, cabeca="olha", nosso=1.0)
 _p("firma", duelo=0.0, tronco=(0, 0), firme=False)
 # a disputa e os derrubes: a fração do caminho até o fim, o lado (-1: nós vencendo, para a esquerda da imagem; +1: Morel
 # vencendo), o tronco dele (px na tela: pende 1 px para o lado em que força, cede quando perde, vem por cima quando vence)
@@ -352,9 +364,9 @@ POSES = dict(ROTEIRO)
 # intenção (o método da queda-vista): quem perde ganha um pouco primeiro e segura, o outro recupera; as poses seguram de
 # 3 a 8 tiques. O derrube começa devagar e acelera até o tampo (1 tique cada); a pausa no fim; as mãos se soltam e o
 # nosso braço sai por baixo; o depois fica (a conversa continua no texto).
-PREPARO = [("olha", 6), ("solta", 4), ("pega_tigela1", 2), ("pega_tigela2", 3), ("desliza1", 3), ("desliza2", 2),
-           ("desliza3", 2), ("desliza4", 2), ("desliza5", 3), ("larga", 2), ("colo", 3), ("apoia1", 2), ("apoia2", 2),
-           ("apoia3", 3), ("entra1", 2), ("entra2", 3), ("firma", 6)]
+PREPARO = [("olha", 6), ("solta", 4), ("esq_sai", 2), ("colo", 3), ("encosta", 2), ("varre1", 3), ("varre2", 2),
+           ("varre3", 2), ("varre4", 2), ("varre5", 2), ("varre6", 3), ("apoia1", 2), ("apoia2", 2), ("apoia3", 3),
+           ("entra1", 2), ("entra2", 3), ("firma", 6)]
 ESPERA = [("disputa", 4), ("pende_m1", 3), ("disputa", 4), ("pende_n1", 3)]   # enquanto o motor não disse o resultado
 _DISPUTA = {
     "nos": [("disputa", 6), ("pende_m1", 3), ("pende_m2", 8), ("pende_m1", 4), ("disputa", 3), ("pende_n1", 3),
@@ -404,20 +416,11 @@ def construir(nome):
         E, W, M, mao = ESQ_REPOUSO["E"], ESQ_REPOUSO["W"], ESQ_REPOUSO["M"], (8.0, 5.0)
     elif esq == "colo":
         E, W, M, mao, atras = (214 + dx, 72 + dy), (213 + dx, 94), None, None, True
-    else:
-        modo, f = esq
-        borda = (189, 69)                         # a borda de lá e da direita da tigela: a mão a puxa por trás
-        if modo == "tigela":
-            o = tuple(v * _ease(max(0.0, f)) for v in TIGELA_FIM)
-            M = (borda[0] + o[0], borda[1] + o[1])
-            if f < 0:                             # chegando: da mão pousada para a borda
-                M = _lerp(ESQ_REPOUSO["M"], borda, 0.5)
-                M = (M[0], M[1] - 1)
-        else:                                     # larga: a mão sai da borda e volta para o corpo, a caminho do colo
-            fim = (borda[0] + TIGELA_FIM[0], borda[1] + TIGELA_FIM[1])
-            M = _lerp(fim, (218, 70), f)
-        W = (M[0] + 3, M[1] - 4)                  # o punho atrás da borda: o antebraço vem de trás, por cima dela
-        E = ik2(S_esq, W, 31, 24, 1)              # o cotovelo para cima e para fora, nunca na frente da tigela
+    else:                                         # saindo: a mão sobe do tampo e volta para o corpo, a caminho do colo
+        _, f = esq
+        M = _lerp(ESQ_REPOUSO["M"], (216, 71), f)
+        W = (M[0] + 5, M[1] - 2)
+        E = _lerp(ESQ_REPOUSO["E"], (219, 70), f)
         mao = (7.0, 5.0)
     esq_px, _ = MO.braco(S_esq, E, W, corpo)
     if M is not None:
@@ -438,21 +441,33 @@ def construir(nome):
         S, E, W = rep["S"], rep["E"], rep["W"]
         dir_, ante = MO.braco(S, E, W, corpo)
         d = rep["dir_colher"]
-        dir_.update(MO.colher((W[0] + d[0] * 7, W[1] + d[1] * 7), rep["T"]))
-        dir_.update(MO.mao((W[0] + d[0] * 5, W[1] + d[1] * 5), 7.0, 6.0))
+        colher = MO.colher((W[0] + d[0] * 5, W[1] + d[1] * 5), rep["T"])   # como na cena (canto/cena.py)
+        dir_.update({q: cor for q, cor in colher.items() if not MO.no_caldo(*q)})
+        dir_.update(MO.mao((W[0] + d[0] * 3, W[1] + d[1] * 3), 6.5, 5.5))
     elif "dir" in k:
-        _, f = k["dir"]
-        Sd, Ed, Wd = _set_dir()
+        modo, f = k["dir"]
         S = (rep["S"][0] + dx, rep["S"][1] + dy)
-        W0 = (rep["W"][0] + 1, rep["W"][1] - 3)  # a mão sobe um pouco: largou a colher
-        fe = _ease(f)
-        W = _lerp(W0, Wd, fe)
-        E = _lerp(rep["E"], Ed, fe)
-        E = (E[0], E[1] - 6 * math.sin(math.pi * f))  # o cotovelo sobe no meio do caminho e volta a pousar
+        W0 = (rep["W"][0] + 1, rep["W"][1] - 3)     # a mão sobe um pouco: largou a colher
+        if modo == "solta":
+            E, W = rep["E"], W0
+            u = _un2(E, W)
+            mao_c = (W[0] + u[0] * 4, W[1] + u[1] * 4)
+        else:
+            E, W, mao_c = _varrida(f if modo == "varre" else 1.0)
+            if modo == "varre" and f < 0:           # descendo da colher para o tampo, ao lado da tigela
+                E1, W1, m1 = _varrida(0.0)
+                E, W, mao_c = _lerp(rep["E"], E1, 0.6), _lerp(W0, W1, 0.6), _lerp((W0[0] + 3, W0[1]), m1, 0.6)
+            if modo == "apoia":                     # do fim da varrida ao meio da mesa, pronto para a pega
+                Sd, Ed, Wd = _set_dir()
+                fe = _ease(f)
+                W = _lerp(W, Wd, fe)
+                E = _lerp(E, Ed, fe)
+                E = (E[0], E[1] - 4 * math.sin(math.pi * f))  # o cotovelo sobe um pouco no caminho e volta a pousar
+                u = _un2(E, W)
+                mao_c = (W[0] + u[0] * 4, W[1] + u[1] * 4)
         dir_, ante = MO.braco(S, E, W, corpo)
         recuo(dir_, ante, S, E, W)
-        u = ((W[0] - E[0]) / math.dist(E, W), (W[1] - E[1]) / math.dist(E, W))
-        dir_.update(MO.mao((W[0] + u[0] * 4, W[1] + u[1] * 4), 6.0, 6.5))
+        dir_.update(MO.mao(mao_c, 6.0, 5.5 if modo == "varre" else 6.5))
         if k.get("nosso") is not None:
             pw = _entrada(k["nosso"])
             nosso = nosso_antebraco(G.COTOVELO_NOSSO, pw)

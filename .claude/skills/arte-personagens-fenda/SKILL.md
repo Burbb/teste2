@@ -309,6 +309,13 @@ Jean):
 - **Os objetos saem pelo caminho que a mão faz, e ficam onde a construção diz que os fins não chegam:** meça o lugar dos
   dois fins antes de decidir para onde a tigela vai; a mão acompanha o objeto o tempo todo, e o braço que ficaria no
   caminho de um fim vai para outro apoio (aqui, o colo, atrás do tampo).
+- **Tirar um objeto do caminho é um gesto que o corpo faz de verdade** (o Jean): puxar a tigela por trás da borda com
+  o braço do outro lado, cotovelo no alto, era quase impossível; varrer com o lado de fora do antebraço deitado no tampo
+  (a mão de cutelo na borda, o cotovelo deslizando, o tronco inclinando para alcançar) é o que se faz para abrir espaço.
+  O objeto fica no apoio (no meio do tampo, não na beirada).
+- **Uma ferramenta pequena é uma peça rígida também no desenho:** largura constante em qualquer ângulo, a ponta girando
+  com o cabo, a mão sem cobrir quase tudo; e o que entra num líquido some nele (a ponta da colher no caldo), em vez de
+  ficar desenhado por cima.
 - **A cena acompanha o motor, não o contrário:** a preparação começa quando o teste começa, o derrube é o do resultado
   que chegou, e o depois fica (sem voltar a uma atividade que o encontro já encerrou). Repetir no painel é um reinício
   declarado, separado da sequência.

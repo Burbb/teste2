@@ -8954,3 +8954,16 @@ foi automatizado.
 - **Parado aqui:** a avaliação artística é do Jean (as limitações no LEIA-ME: o texto do resultado antes do derrube, a
   mão dele perto da borda de baixo na nossa vitória, o nosso antebraço curto na derrota, o cotovelo esquerdo alto ao
   deslizar a tigela, a pega pequena no tamanho do jogo).
+
+### 30/10/2026 (data do computador local) — A taverna: a colher mergulhada e a tigela varrida (protótipo, candidata)
+
+- **Pedido do Jean** (o resto da queda de braço está bom): a colher mudava de forma subindo e, na coleta, aparecia
+  apoiada para fora da tigela (a ponta tem de sumir no caldo); tirar a tigela puxando por trás era quase impossível:
+  arrastar com o lado de fora do braço, tirando da frente, e deixar a tigela mais para dentro do tampo.
+- **Feito** (o LEIA-ME do protótipo, "A queda de braço no canto"): a colher como peça rígida, a mão mais perto do
+  pulso, o que cai no caldo não se desenha; na preparação, a esquerda vai ao colo e o antebraço direito varre a tigela
+  pelo tampo com a mão de cutelo, o tronco inclinando; a tigela fica na mesma profundidade, no meio do tampo, fora dos
+  dois fins.
+- **Conferido:** as fontes iguais ao desenho; o braço não toca a caneca em nenhuma pose; `conferir-encontro.mjs` nas
+  duas janelas, tudo certo; a suíte, o gabarito, o pyflakes e a fumaça.
+- **Parado aqui:** a avaliação do Jean.

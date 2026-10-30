@@ -332,19 +332,32 @@ COLHER = [h("b4b6bc"), h("8a8c94"), h("5a5c64")]
 def colher(W, T):
     """A colher de metal, rígida: o cabo do punho (`W`) à ponta (`T`), dois pixels de grosso (a aresta de cima
     acesa), e a concha na ponta, uma elipse pequena com a borda de baixo escura."""
+    # uma peça rígida: o cabo com a mesma largura em qualquer ângulo (a distância ao eixo, não um degrau por linha) e a
+    # concha girando com ele (uma elipse ao longo do cabo); o lado de cima (a vela) aceso, o de baixo escuro
     out = {}
-    n = int(max(abs(T[0] - W[0]), abs(T[1] - W[1]))) + 1
-    for i in range(n + 1):
-        t = i / n
-        x, y = W[0] + (T[0] - W[0]) * t, W[1] + (T[1] - W[1]) * t
-        out[(math.floor(x), math.floor(y))] = COLHER[0]
-        out[(math.floor(x), math.floor(y) + 1)] = COLHER[1]
-    for y in range(math.floor(T[1] - 1.5), math.ceil(T[1] + 1.5) + 1):
-        for x in range(math.floor(T[0] - 2.5), math.ceil(T[0] + 2.5) + 1):
-            u, v = (x + 0.5 - T[0]) / 2.6, (y + 0.5 - T[1]) / 1.6
-            if u * u + v * v <= 1:
-                out[(x, y)] = COLHER[0] if v < -0.2 else COLHER[1] if v < 0.5 else COLHER[2]
+    L = math.dist(W, T)
+    ux, uy = (T[0] - W[0]) / L, (T[1] - W[1]) / L
+    nx, ny = -uy, ux
+    if nx + ny > 0:
+        nx, ny = -nx, -ny                 # a normal do lado da luz (para cima e para a esquerda)
+    fim = L - 2.2                         # o cabo vai até o pescoço da concha
+    for y in range(math.floor(min(W[1], T[1]) - 3), math.ceil(max(W[1], T[1]) + 3) + 1):
+        for x in range(math.floor(min(W[0], T[0]) - 3), math.ceil(max(W[0], T[0]) + 3) + 1):
+            px, py = x + 0.5 - W[0], y + 0.5 - W[1]
+            a = px * ux + py * uy
+            b = px * nx + py * ny
+            ca, cb = a - L, b                # na concha: ao longo e através
+            if (ca / 2.8) ** 2 + (cb / 1.8) ** 2 <= 1:
+                out[(x, y)] = COLHER[0] if cb > 0.5 else COLHER[1] if cb > -0.6 else COLHER[2]
+            elif 0 <= a <= fim and -0.95 < b <= 0.95:
+                out[(x, y)] = COLHER[0] if b > 0 else COLHER[1]
     return out
+
+
+def no_caldo(x, y, dx=0, dy=0):
+    """Se o pixel cai na superfície do caldo da tigela (deslocada dx, dy): o que da colher passa ali está mergulhado."""
+    cx, cy = 170 + dx, 72 + dy
+    return ((x + 0.5 - cx) / 22.5) ** 2 + ((y + 0.5 - cy) / 5.0) ** 2 <= 0.62
 
 
 def mao(c, rx=5.0, ry=4.2):

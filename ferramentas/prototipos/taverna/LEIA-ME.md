@@ -131,6 +131,13 @@ com o castiçal junto dela.
 
 ### A queda de braço no canto (30/10/2026; a candidata, em avaliação)
 
+**A colher, na segunda revisão (o Jean):** ela mudava de forma subindo para a boca (a mão cobria quase todo o cabo, e
+a concha era uma elipse sempre deitada) e, na coleta, a ponta aparecia na borda da frente, como apoiada para fora da
+tigela. Agora é uma peça rígida (`morel.colher`: o cabo com a mesma largura em qualquer ângulo, a concha girando com
+ele), a mão um pouco mais perto do pulso (o cabo aparece além dela; a ponta na boca não mudou), e o que cai no caldo
+não se desenha (`morel.no_caldo`): na coleta, o cabo passa por cima da borda de trás e a ponta fica mergulhada; saindo,
+ela reaparece. Solta antes da queda de braço, ela fica assim na tigela e vai junto quando a tigela é varrida.
+
 **Antes, as três correções da alimentação** (a câmera, a perspectiva, o cenário, o tronco, a gola e a mastigação ficam; a versão anterior, preservada em `morel/canto-v2/` e `camadas/morel-canto-v2/`, no painel e na faixa da mesa):
 - **a colher** era de madeira nos tons do tampo: pousada, coincidia com a borda dele; subindo, parecia um pedaço da
   mesa que se soltou. Agora é de metal, no cinza do estanho da caneca (`morel.COLHER`), e, pousada, fica dentro da
@@ -153,10 +160,11 @@ nosso entrando pela direita), a pega fica na frente do peito (y 46, abaixo da ba
 do pão (a mão dele em x ~129) e da tigela (a nossa em x ~195).
 
 **A preparação** (no encontro, enquanto o dado rola): Morel volta ao repouso pelo caminho do pagamento e olha para nós;
-solta a colher dentro da tigela; a mão esquerda pega a tigela pela borda de lá e a desliza para a direita e para o fundo
-(a mão acompanha, a tigela no tampo, a colher junto) e desce para o colo, atrás do tampo (onde ficaria no tampo, a nossa
-mão cai quando ele vence); o braço direito vai ao meio, o cotovelo pousa; o nosso antebraço entra pela borda de baixo; a
-pega se firma. **A disputa** (o método da `queda-vista`): quem perde ganha um pouco primeiro e segura, o outro recupera;
+solta a colher, que fica mergulhada na tigela; a mão esquerda sai do tampo para o colo (onde ela estava, a nossa mão cai
+quando ele vence); o antebraço direito deita no tampo e **varre a tigela para a direita com o lado de fora** (a mão de
+cutelo encostada na borda da esquerda dela, o cotovelo deslizando junto, o tronco inclinando para alcançar), na mesma
+profundidade, no meio do tampo (não na borda de lá); o braço vai ao meio, o cotovelo pousa; o nosso antebraço entra pela
+borda de baixo; a pega se firma. **A disputa** (o método da `queda-vista`): quem perde ganha um pouco primeiro e segura, o outro recupera;
 o tronco dele pende 1 px para o lado em que força. **Os derrubes**, devagar no começo e acelerando até o tampo; a pausa;
 as mãos se soltam, o nosso braço sai por baixo e o dele pousa no tampo (o depois, que fica: a conversa continua no
 texto; nada volta a comer).
@@ -188,7 +196,6 @@ duas candidatas no painel, o depois que fica, o reinício, a pose parada, as fol
   real: o nosso está mais perto); no fim, o antebraço dele volta a aparecer, do cotovelo à mão;
 - na derrota, o nosso antebraço deita apontando para o fundo e fica curto na tela (uns 20 px), largo e com a palma para
   cima: é o escorço de verdade, mas pode ler como um toco;
-- deslizando a tigela, o cotovelo esquerdo de Morel sobe bastante (a mão puxa a tigela por trás da borda);
 - a pega são dois volumes de mão em três tons cada, a dele um degrau mais escura: distinguíveis no zoom, pequenos no
   tamanho do jogo.
 
