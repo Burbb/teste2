@@ -30,7 +30,8 @@ Cada passo fecha antes do seguinte; as seções abaixo detalham.
    as pessoas escondidos, antes de detalhar.
 5. **Desenho na grade real** (seção 3): silhuetas e volumes primeiro, nos pixels do jogo; materiais e detalhes depois.
 6. **Personagem** (seção 4): identidade (só o que o jogo estabelece), proporções, perspectiva e leitura no tamanho de
-   uso.
+   uso. A construção do corpo e dos membros (o estudo com formas simples, os comprimentos fixos, o escorço, a roupa por
+   cima, as passagens) segue a skill `arte-personagens-fenda`.
 7. **Atividade** (seções 5 e 5b): a atividade e os apoios por escrito, quem conduz, acompanha e fica, as poses-chave
    do corpo inteiro, os contatos e a trajetória da ferramenta antes de completar o ciclo; a geometria do alcance
    (seção 5a).
@@ -132,6 +133,9 @@ como um muro baixo. Mesa, armário, porta e clérigo pareciam grudados na parede
   vista sem rolar e sem rolagem vazia, a entrada, a saída e a volta, o Esc, o Tab chegando aos pontos.
 
 ## 4. O personagem de cena
+
+Braços, ombros e mãos em ação (o braço que encurta, gruda no peito ou some atrás da roupa): o método está na skill
+`arte-personagens-fenda` (o caso de Morel na taverna, 29/10/2026). Aqui fica o que é próprio da cena.
 
 - **Anatomia e silhueta legíveis antes do detalhe.** Leia a referência ampliada com a grade do jogo por cima para
   tirar as medidas (a cabeça, o tronco, as pernas, os pés); depois, construa.

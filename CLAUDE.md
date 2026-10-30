@@ -31,7 +31,8 @@ Leia antes de mexer:
   antes, formatos comuns de requisito, custo, quantidade e prévia, revisar cada mensagem, conferir na tela nas duas
   resoluções). Formato novo entra no componente compartilhado, não só numa tela.
 - Interior ou personagem de cena (a forja, a curandeira, o templo, a taverna, quem trabalha neles): siga o fluxo de
-  10 passos da skill `arte-cenas-fenda`, do levantamento à fonte em Aseprite e à integração.
+  10 passos da skill `arte-cenas-fenda`, do levantamento à fonte em Aseprite e à integração. O corpo e os membros de
+  um personagem (braços, ombros, mãos em ação, poses e passagens): skill `arte-personagens-fenda`.
 - Conteúdo é dado: habilidades (`rpg/habilidades.py`), talentos e passivas (`rpg/talentos.py`, com `mod`/`disparar`
   de `rpg/modificadores.py`), estados (`rpg/estados.py`). Nada de perguntar "tem o talento X?" no combate.
 - Mudou algo visual? Suba o jogo num cenário e **veja** (Playwright tira captura); o Jean percebe pulos, sobreposições
