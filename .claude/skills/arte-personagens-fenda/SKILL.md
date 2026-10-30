@@ -73,13 +73,19 @@ Vistas de verdade (imagens, folhas, sequências), não só resumos de busca:
    taverneiro da G4, a mão do pano trabalha na altura das mãos, sem esforço: só o cotovelo e o ombro do pano acompanham
    (1 px) e o tronco e a cabeça ficam; olhar os fregueses é outra ação, na pausa. Na martelada do ferreiro, o esforço
    leva o corpo todo. Nunca prenda a junta do ombro embaixo de uma peça de equipamento na altura errada.
-7. **Vista a figura sobre a construção.** A roupa segue os volumes e mostra a dobra: o braço e o antebraço como dois
-   volumes, cada um com a sua luz; o antebraço um tom abaixo do braço (separa os segmentos e separa o antebraço da mesa,
-   que tinha o tom do braço); o antebraço que cruza na frente projeta uma linha de sombra no braço; o vinco de dentro do
-   cotovelo quando dobra além de 120°; o punho da manga escuro no fim do antebraço; a sombra de um pixel, do lado oposto
-   à luz, no que está embaixo (o peito, a mesa). **Sem contorno escuro em volta.** Equipamento não esconde a raiz do
-   braço: a ombreira cobre o alto do deltoide, não metade do braço; em Morel, a ombreira de aço voltou só para o ombro
-   esquerdo, como na referência, e o ombro da colher mostra o couro.
+7. **Vista a figura sobre a construção, como uma roupa só.** A estrutura (as juntas, os segmentos) orienta o movimento;
+   o acabamento une os segmentos. A manga é **uma forma** do ombro ao punho, não um braço e um antebraço encaixados: no
+   ombro, sem calota acima da linha do ombro do tronco (o alto da manga continua a inclinação do casaco, o deltoide
+   por baixo); no cotovelo, o lado de fora numa curva e o de dentro comprimido numa dobra curta, com o pixel aceso da
+   crista, nunca uma quina ou um traço que divida as duas partes. **Unir não é fundir:** por dentro da dobra, quando o
+   braço dobra muito, o antebraço passa na frente do bíceps e continua uma forma própria, com a luz dele e a sombra que
+   faz no braço (a sobreposição); só o lado de fora vira curva; a luz de uma superfície só, o grupo de luz passando
+   do braço para o antebraço pela curva. O antebraço pode ficar mais escuro, mas aos poucos e alguns pixels depois da
+   junta, nunca um tom inteiro de uma vez exatamente nela. O antebraço que cruza na frente projeta sombra no braço; o
+   punho da manga escuro no fim; a sombra de um pixel, do lado oposto à luz, no que está embaixo (o peito, a mesa).
+   **Sem contorno escuro em volta**, e sem esconder a junta com mancha escura ou pontilhado. Equipamento não esconde a
+   raiz do braço: a ombreira cobre o alto do deltoide, não metade do braço; em Morel, a ombreira de aço voltou só para
+   o ombro esquerdo, como na referência, e o ombro da colher mostra o couro.
 8. **Simplifique para a grade, sem perder o porte.** Três tons por material, mão em bolinha de pele (a memória "mãos de
    cena sem dedos"). Confira a grossura: a primeira aplicação em Morel saiu com braços de 9 px e ele ficou franzino; com
    11 px (ombro e manga de couro) o porte voltou.
@@ -140,6 +146,33 @@ Por isso:
   sobreposição nos dois sentidos e pelo tom; o polegar, se preciso, numa indicação mínima.
 A tentativa feita assim (`morel/queda3/`, a pose central) está **em avaliação**; não é exemplo resolvido.
 
+### Uma articulação certa que ainda parece mecânica (Morel comendo, 30/10/2026)
+
+A construção do braço de Morel (o ombro no lugar, o cotovelo pela cinemática, os comprimentos, o alcance da colher)
+estava aprovada, e mesmo assim o Jean marcou o ombro como uma peça encaixada e o cotovelo como uma dobradiça. A causa
+estava no acabamento, não na anatomia nem em guia exportada: o `vestir.lua` vestia o braço como duas cápsulas, cada uma
+com faixas de luz paralelas às bordas; a do braço terminava numa calota redonda acima do ombro do tronco (uma forma
+reta, sem braço), e o antebraço inteiro descia um tom de uma vez, na junta, com o vinco como um traço entre os dois.
+**Uma articulação anatomicamente coerente pode parecer mecânica pela silhueta ou pela luz.**
+
+O que foi feito (`morel/vista/manga.py`, aplicado às 20 poses; em avaliação pelo Jean): as mesmas juntas e os mesmos
+raios; as duas cápsulas unidas numa forma só (uma união suave: o cotovelo de fora vira curva, o de dentro se fecha); o
+alto da manga, fora do tronco, só até a linha do ombro (4 px acima da junta, descendo para fora); a luz pela distância
+à borda da forma unida, em três tons e o realce só nos pontos mais acesos; o antebraço escurecendo meio tom, a partir de
+3 px depois da junta; por dentro da dobra, o antebraço por cima do braço como forma própria, com a sombra dele no braço
+(a primeira aplicação unia também por dentro, e nas poses de braço bem dobrado o antebraço sumiu no bíceps: o Jean
+marcou "o antebraço esmagado, virando uma coisa só com o bíceps"); uma dobra de dois pixels por dentro do cotovelo, com o pixel aceso da crista (com três, perto da
+boca, lia como um corte); a mão e a colher de antes, intactas (os contatos aprovados). O método, na ordem: (1) achar a
+causa na fonte e na geração das poses; (2) resolver três poses-chave (a colher na tigela, subindo, na boca), paradas e
+em sequência, antes e depois lado a lado; (3) aplicar ao ciclo inteiro e conferir **cada pose sozinha e na
+sequência** (espessura que muda, luz que pisca ou desliza, marca que salta, contato perdido), inclusive as poses que
+outra ação reaproveita (a reação ao pagamento); (4) gravar na fonte com os retoques numa lista no próprio script, para
+uma regeneração não apagar as correções. A versão anterior fica no painel, no mesmo estado, para comparar.
+
+O estudo de construção (o apoio, o alcance, as juntas) e a aprovação artística (a roupa, a silhueta, a luz) são
+verificações diferentes: passar na primeira não diz nada da segunda. E isto não proíbe a automação: o cálculo continuou
+gerando a manga; o que mudou foi o que ele desenha e a revisão antes de virar a arte.
+
 ## Dois corpos ligados por um contato (a queda de braço, 30/10/2026)
 
 Quando duas figuras se seguram (uma queda de braço, um aperto de mão, puxar alguém), o contato é a junta que as duas
@@ -199,3 +232,4 @@ as vitórias se reconhecem sem legenda no tamanho da HUD (elas esperam a pose ce
 | As duas mãos de uma pega numa massa só (a primeira queda de braço) | tons de pele parecidos, a pega desenhada direto na escala da cena | a pega construída com formas simples e separada pelo valor (a pele de um mais escura, um pixel de sombra onde uma passa atrás da outra, os dedos em listras) |
 | Os desfechos indo para perto e para longe da câmera (a primeira queda de braço) | a câmera escolhida pela cena anterior, não pelo movimento | a regra real do gesto diz para onde ele vai; a câmera é escolhida para esse movimento correr de lado |
 | O acabamento parecendo um modelo 3D em baixa resolução (a segunda queda de braço) | os volumes da construção iluminados e pontilhados usados como a arte | a construção vira guia oculta; o acabamento é redesenhado por cima, pela cena aprovada (silhuetas, mangas, dobras, grupos de luz, textura só onde diz algo) |
+| O ombro como peça encaixada, o cotovelo como dobradiça (Morel comendo, a terceira passada) | o braço vestido em duas cápsulas: a calota acima do ombro do tronco, o antebraço um tom abaixo exatamente na junta, as faixas de luz de cada segmento | uma manga só, sem calota, a luz contínua pela curva do cotovelo, o escurecimento depois da junta, uma dobra curta por dentro (passo 7) |

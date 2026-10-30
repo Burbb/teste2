@@ -266,6 +266,10 @@ ferramenta: o pilão no almofariz, a faca na tábua, a concha no caldeirão.
   retoques (`desenhar_h2.py --refazer` pede `--sem-os-retoques`), e o de consolidar não sobrescreve um retoque à mão
   sem `--forcar`. Confira o ciclo exportado contra a candidata aprovada, quadro a quadro, e veja as outras camadas
   saírem iguais.
+- **A articulação também se confere no acabamento:** uma junta no lugar certo ainda pode ler como peça encaixada pela
+  silhueta ou pela luz (o ombro e o cotovelo de Morel comendo, 30/10/2026: a manga em duas cápsulas). Confira cada pose
+  sozinha e o ciclo em sequência, antes e depois lado a lado, e as poses que outra ação reaproveita; o método está na
+  `arte-personagens-fenda` (passo 7 e "Uma articulação certa que ainda parece mecânica").
 - **Construção não é acabamento:** o que se calcula (as juntas, os volumes, a perspectiva, as sobreposições) é a guia
   oculta da fonte; o acabamento é desenhado por cima, com a cena aprovada ao lado, na linguagem dela (a queda de braço,
   30/10/2026: os volumes calculados e iluminados foram recusados por parecerem um modelo 3D em baixa resolução; o
