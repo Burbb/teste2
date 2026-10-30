@@ -84,8 +84,10 @@ Vistas de verdade (imagens, folhas, sequências), não só resumos de busca:
    junta, nunca um tom inteiro de uma vez exatamente nela. O antebraço que cruza na frente projeta sombra no braço; o
    punho da manga escuro no fim; a sombra de um pixel, do lado oposto à luz, no que está embaixo (o peito, a mesa).
    **Sem contorno escuro em volta**, e sem esconder a junta com mancha escura ou pontilhado. Equipamento não esconde a
-   raiz do braço: a ombreira cobre o alto do deltoide, não metade do braço; em Morel, a ombreira de aço voltou só para
-   o ombro esquerdo, como na referência, e o ombro da colher mostra o couro.
+   raiz do braço: a ombreira cobre o alto do deltoide, não metade do braço, e fecha o alto do ombro (sem couro
+   aparecendo acima da placa). No braço que se move, ela é curta (uma calota que acompanha a junta do ombro em cada
+   pose) e fica atrás do antebraço e da mão quando eles sobem na frente do ombro (Morel levando a colher à boca, com a
+   ombreira direita que o retrato do jogo tem).
 8. **Simplifique para a grade, sem perder o porte.** Três tons por material, mão em bolinha de pele (a memória "mãos de
    cena sem dedos"). Confira a grossura: a primeira aplicação em Morel saiu com braços de 9 px e ele ficou franzino; com
    11 px (ombro e manga de couro) o porte voltou.

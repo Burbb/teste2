@@ -8841,3 +8841,10 @@ foi automatizado.
   anterior) e `morel/conferir-encontro.mjs` (a mesa no encontro, a reação ao pagamento, a pose parada) a 1920×945 e
   1280×720. O código do jogo não mudou.
 - **Parado aqui:** a avaliação da manga é do Jean.
+- **Depois, no mesmo dia:** o Jean viu uma ponta quadrada no alto da manga, um pedaço do ombro de couro aparecendo
+  acima da ombreira esquerda, e pediu Morel conferido com as outras versões dele no jogo (o retrato e a figura têm duas
+  ombreiras). Feito: a ombreira direita desenhada à mão (uma calota no alto do ombro, logo abaixo da guarda da espada,
+  em aço mais claro, acompanhando a junta do ombro e atrás do antebraço na boca), cobrindo também a ponta; a esquerda
+  fechando o alto do ombro nos 20 quadros. O resto (a espada, a cicatriz, a barba, o colete, o couro) bate com o
+  retrato. Conferido: a recomposição igual ao achatamento do Aseprite nos 20 quadros, as outras camadas idênticas, e as
+  duas conferências no jogo nas duas resoluções.

@@ -318,6 +318,16 @@ mesmo estado do jogo; a primeira também ("a primeira versão").
   fundo, as chamas, o taverneiro e a mesa saem idênticos; a recomposição da cena igual ao achatamento do Aseprite nos 20
   quadros; as três poses-chave e o ciclo, quadro a quadro e em sequência; no jogo a 1920×945 e 1280×720, com a pose
   parada e a reação ao pagamento.
+- **As ombreiras** (o Jean, 30/10/2026; em avaliação): nas outras versões de Morel no jogo (o retrato de
+  `rpg/web/static/retratos.js`, a figura de 16 px), ele tem duas ombreiras (a do ombro direito em aço claro, com a
+  guarda da espada logo acima; a do esquerdo mais escura); a espada nas costas pelo ombro direito, a cicatriz, a barba, o
+  colete vermelho e o couro batem com a vista (as fivelas são só da vista, aprovadas). A vista tinha só a esquerda: a
+  direita entrou à mão (`manga.py`, `OMBREIRA_DIR`), uma calota inclinada como a linha do ombro, assentada na raiz do
+  braço e logo abaixo da guarda, em aço mais claro (o lado da luz), com a fileira de rebites, a borda escura embaixo e a
+  sombra no braço; ela acompanha a junta do ombro em cada pose e fica atrás do antebraço e da mão quando a colher vai
+  à boca; ela também cobre a ponta quadrada que sobrava no alto da manga. Na esquerda, o couro do ombro que aparecia
+  acima e além da borda de cima da placa virou placa (`corpo_corrigido`, a camada `morel_corpo` nos 20 quadros, com o
+  deslocamento do tronco de cada um).
 - **Os limites que ficam:** a boca é a pose mais fraca (o braço curto em escorço se mistura um pouco com o casaco
   claro); as poses do braço saem de `manga.py` (antes, de `vestir.lua`), revistas na ampliação e em sequência; a espada nas costas continua com a guarda logo acima do ombro.
 

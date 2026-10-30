@@ -266,6 +266,9 @@ ferramenta: o pilão no almofariz, a faca na tábua, a concha no caldeirão.
   retoques (`desenhar_h2.py --refazer` pede `--sem-os-retoques`), e o de consolidar não sobrescreve um retoque à mão
   sem `--forcar`. Confira o ciclo exportado contra a candidata aprovada, quadro a quadro, e veja as outras camadas
   saírem iguais.
+- **A identidade se confere com as outras versões do personagem no jogo** (o retrato, a figura pequena, a carta), não só
+  com a referência da cena: Morel na mesa tinha uma ombreira, e o retrato e a figura têm duas (30/10/2026). Liste o que
+  elas mostram (o equipamento, a arma, as marcas do rosto, as cores) e o que a cena acrescenta, antes de fechar.
 - **A articulação também se confere no acabamento:** uma junta no lugar certo ainda pode ler como peça encaixada pela
   silhueta ou pela luz (o ombro e o cotovelo de Morel comendo, 30/10/2026: a manga em duas cápsulas). Confira cada pose
   sozinha e o ciclo em sequência, antes e depois lado a lado, e as poses que outra ação reaproveita; o método está na
