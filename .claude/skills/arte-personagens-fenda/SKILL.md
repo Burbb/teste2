@@ -117,6 +117,29 @@ As fontes do caso: `ferramentas/prototipos/taverna/morel/estudo-construcao/` (o 
 `juntas.py` e `vestir.lua`, que refaz o braço vestido da fonte pixel a pixel) e `morel/vista/morel-vista.aseprite`
 (as juntas de cada quadro na camada `guia`, um pixel de cor por junta).
 
+## O estudo de construção e o acabamento são etapas diferentes
+
+O **estudo de construção** verifica o que não se vê de longe: o apoio, o alcance, os comprimentos, as articulações, o
+espaço do movimento, as sobreposições pela profundidade. Ele pode (e deve) ser calculado: juntas pela cinemática,
+volumes simples com profundidade, cores lisas por parte. O **acabamento** traduz essa construção para a linguagem do
+jogo, e não é a construção iluminada. Na queda de braço (30/10/2026), os volumes do estudo com a luz em degraus e um
+pontilhado por cima foram recusados pelo Jean: pareciam um modelo 3D simplificado em baixa resolução (os braços como
+tubos facetados com faixas regulares de luz, o peito um bloco com o vermelho aplicado como placa, a ombreira
+arredondada sem a forma da cena aprovada, as articulações do boneco à mostra, o pontilhado igual em áreas grandes).
+Por isso:
+- a construção fica na fonte como **guia oculta** (camadas `guia`, fora da exportação), e o acabamento é **desenhado por
+  cima**: silhuetas, mangas, dobras, sobreposições e grupos de luz escolhidos, com a cena aprovada ao lado (a folha de
+  comparação lado a lado);
+- da cena aprovada vêm a construção e o material da roupa (o couro em dois ou três tons em blocos, a aresta acesa do
+  lado da luz; o colete sobre o corpo, a borda clara, a costura, as tiras que acompanham o peito), a forma dos acessórios
+  (a ombreira em cunha, estreita e escura), a relação entre os braços, os ombros e o peito, o contraste, a paleta e o
+  tamanho do pixel;
+- textura e pontilhado são seletivos (a passagem da luz, um material que pede), não um filtro sobre tudo; e também não
+  se chapa tudo: o detalhe é escolhido, os volumes continuam legíveis;
+- mãos de cena simples (bolinhas ou formas sem dedos): numa pega, duas formas distinguíveis pela silhueta, pela
+  sobreposição nos dois sentidos e pelo tom; o polegar, se preciso, numa indicação mínima.
+A tentativa feita assim (`morel/queda3/`, a pose central) está **em avaliação**; não é exemplo resolvido.
+
 ## Dois corpos ligados por um contato (a queda de braço, 30/10/2026)
 
 Quando duas figuras se seguram (uma queda de braço, um aperto de mão, puxar alguém), o contato é a junta que as duas
@@ -154,9 +177,10 @@ desfechos indo para perto e para longe da câmera. Ela fica como histórico, nã
   vista aprovada estabelece (a mesa termina perto da quina; foi a disputa que andou para oeste), e puxada de volta
   antes de comer.
 
-**Ainda hipótese** (depende da avaliação no jogo): se as vitórias se reconhecem sem legenda no tamanho da HUD; se 2 px
-por cm na pega é perto o bastante; se o volume calculado do peito e dos braços, com o acabamento em degraus, segura a
-identidade de Morel ao lado das cenas desenhadas à mão.
+**O que a avaliação já respondeu:** o volume calculado com o acabamento em degraus **não** segura a identidade de Morel
+ao lado das cenas desenhadas à mão (a seção anterior); a câmera de 50° e 30° acima deixou o tampo e a parede dominarem
+o quadro, e a terceira tentativa baixou a câmera (40° e 15°), aproximando a sensação da conversa. **Ainda hipótese:** se
+as vitórias se reconhecem sem legenda no tamanho da HUD (elas esperam a pose central ser aprovada).
 
 ## Erros que já aconteceram
 
@@ -174,3 +198,4 @@ identidade de Morel ao lado das cenas desenhadas à mão.
 | O corpo inteiro limpando a caneca (a primeira G4) | o tronco e a cabeça movidos por regra a cada passada | a participação pelo esforço e pelo alcance (passo 6; arte-cenas-fenda, 5b) |
 | As duas mãos de uma pega numa massa só (a primeira queda de braço) | tons de pele parecidos, a pega desenhada direto na escala da cena | a pega construída com formas simples e separada pelo valor (a pele de um mais escura, um pixel de sombra onde uma passa atrás da outra, os dedos em listras) |
 | Os desfechos indo para perto e para longe da câmera (a primeira queda de braço) | a câmera escolhida pela cena anterior, não pelo movimento | a regra real do gesto diz para onde ele vai; a câmera é escolhida para esse movimento correr de lado |
+| O acabamento parecendo um modelo 3D em baixa resolução (a segunda queda de braço) | os volumes da construção iluminados e pontilhados usados como a arte | a construção vira guia oculta; o acabamento é redesenhado por cima, pela cena aprovada (silhuetas, mangas, dobras, grupos de luz, textura só onde diz algo) |

@@ -266,6 +266,12 @@ ferramenta: o pilão no almofariz, a faca na tábua, a concha no caldeirão.
   retoques (`desenhar_h2.py --refazer` pede `--sem-os-retoques`), e o de consolidar não sobrescreve um retoque à mão
   sem `--forcar`. Confira o ciclo exportado contra a candidata aprovada, quadro a quadro, e veja as outras camadas
   saírem iguais.
+- **Construção não é acabamento:** o que se calcula (as juntas, os volumes, a perspectiva, as sobreposições) é a guia
+  oculta da fonte; o acabamento é desenhado por cima, com a cena aprovada ao lado, na linguagem dela (a queda de braço,
+  30/10/2026: os volumes calculados e iluminados foram recusados por parecerem um modelo 3D em baixa resolução; o
+  detalhe na `arte-personagens-fenda`, "O estudo de construção e o acabamento são etapas diferentes").
+- **A interface que passa por cima da cena entra na composição:** o dado dos testes, os balões, a faixa de resultado.
+  Confira a cena com ela no tamanho real (a captura inteira, não um recorte, que pode cortar o que não está cortado).
 - **Conferência técnica separada da avaliação artística:** "53 de 53 quadros iguais" ou "tudo certo" no roteiro de
   fotos prova que funciona, não que está bonito. A avaliação é no tamanho de uso, ao lado das cenas aprovadas.
 - **Cada candidata nova numa pasta própria**, preservando a anterior, com folhas de comparação (antes × depois na
