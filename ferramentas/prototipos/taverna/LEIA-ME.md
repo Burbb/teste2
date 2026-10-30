@@ -327,7 +327,9 @@ mesmo estado do jogo; a primeira também ("a primeira versão").
   sombra no braço; ela acompanha a junta do ombro em cada pose e fica atrás do antebraço e da mão quando a colher vai
   à boca; ela também cobre a ponta quadrada que sobrava no alto da manga. Na esquerda, o couro do ombro que aparecia
   acima e além da borda de cima da placa virou placa (`corpo_corrigido`, a camada `morel_corpo` nos 20 quadros, com o
-  deslocamento do tronco de cada um).
+  deslocamento do tronco de cada um). Depois (o Jean viu um ou dois pixels marrons, da manga, encostados na ponta
+  esquerda da calota em alguns quadros, e uma beirada em cima quando o ombro sobe para a boca): acima da ponta esquerda
+  da calota, nada da manga passa para fora dela; embaixo, a borda de fora do braço continua.
 - **Os limites que ficam:** a boca é a pose mais fraca (o braço curto em escorço se mistura um pouco com o casaco
   claro); as poses do braço saem de `manga.py` (antes, de `vestir.lua`), revistas na ampliação e em sequência; a espada nas costas continua com a guarda logo acima do ombro.
 

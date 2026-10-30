@@ -8848,3 +8848,5 @@ foi automatizado.
   fechando o alto do ombro nos 20 quadros. O resto (a espada, a cicatriz, a barba, o colete, o couro) bate com o
   retrato. Conferido: a recomposição igual ao achatamento do Aseprite nos 20 quadros, as outras camadas idênticas, e as
   duas conferências no jogo nas duas resoluções.
+- **E depois:** os pixels marrons da manga que apareciam encostados na ponta esquerda da calota em alguns quadros (e
+  a beirada de cima dela nos quadros da boca) saíram: acima da ponta da calota, a manga não passa para fora dela.

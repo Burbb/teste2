@@ -311,9 +311,24 @@ def braco(cel, k, j):
                     out[q] = (int(r * 0.68), int(g * 0.68), int(b * 0.68), 255)
                     break
     # a ombreira por cima da manga, mas atrás do antebraço e da mão (na boca, o antebraço sobe na frente do ombro)
-    for q, cor in ombreira_direita(j["S"]).items():
+    calota = ombreira_direita(j["S"])
+    for q, cor in calota.items():
         if q not in manga.antebraco and q not in mao:
             out[q] = cor
+    # o que a manga deixava aparecer em volta da calota (o alto do braço antigo: um ou dois pixels marrons à esquerda
+    # dela, e a beirada de cima quando o ombro sobe para a boca): acima da ponta esquerda da calota, nada da manga passa
+    # para fora dela
+    placa = {q for q, cor in calota.items() if cor != COURO["c"]}
+    ponta = min(placa, key=lambda q: (q[0], -q[1]))[1]  # a linha da ponta esquerda da calota
+    for y in range(min(yy for _, yy in placa) - 3, ponta):
+        xs = [x for x, yy in placa if yy == y]
+        for x in range(min(xs) - 5 if xs else 0, min(xs) if xs else 0):
+            if (x, y) in out and (x, y) not in mao and (x, y) not in manga.antebraco:
+                del out[(x, y)]
+        if not xs:  # acima da calota (a beirada de cima): só o que fica sobre ela
+            for x in range(min(xx for xx, _ in placa), max(xx for xx, _ in placa) + 1):
+                if (x, y) in out and (x, y) not in mao and (x, y) not in manga.antebraco:
+                    del out[(x, y)]
     for q, tom in RETOQUES.get(k, {}).items():
         if tom == ".":
             out.pop(q, None)
