@@ -39,6 +39,9 @@ function rolagemResultado(m) {
 }
 
 async function rolagem(m) {
+  // o teste que a cena encena (a queda de braço da taverna): o dado espera as mãos se firmarem (Cenas.aguardar), mesmo
+  // com o texto adiantado; o adiantar de antes da espera não corta o dado que vem depois dela
+  if (!replay && velocidade !== "instantaneo" && window.Cenas && await Cenas.aguardar("rolagem")) pular = false;
   const sinal = rolagemSinal(m.mod), abs = Math.abs(m.mod);
   const centro = !(replay || instantaneo() || (estado && estado.combate));
   // a tirinha no texto; com o centro, guardada (ocupa o lugar, invisível) até o grupo descer até ela
@@ -83,12 +86,18 @@ async function rolagem(m) {
   const veu = palco.querySelector(".rc-veu"), grupo = palco.querySelector(".rc-grupo");
   Object.assign(veu.style, { left: p.left + "px", top: p.top + "px", width: p.width + "px", height: p.height + "px" });
   document.body.appendChild(palco);
-  // no meio do palco; na altura, o meio da cena
+  // no meio do palco; na altura, o meio da cena. Com uma ação na arte que o dado não deve cobrir (a queda de braço,
+  // Cenas.acaoNaArte), o grupo fica logo embaixo da arte (inteiro na janela) e o véu cobre só a página, não a arte.
+  const acao = window.Cenas && Cenas.acaoNaArte();
   grupo.style.left = Math.round(p.left + p.width / 2 - grupo.offsetWidth / 2) + "px";
-  grupo.style.top = Math.round(Math.max(8, Math.min(innerHeight - grupo.offsetHeight - 8, c.top + c.height / 2 - grupo.offsetHeight / 2))) + "px";
+  if (acao) {
+    const arte = $("#vista").getBoundingClientRect();
+    grupo.style.top = Math.round(Math.max(8, Math.min(arte.bottom + 6, innerHeight - grupo.offsetHeight - 4))) + "px";
+    Object.assign(veu.style, { top: Math.round(arte.bottom) + "px", height: Math.max(0, Math.round(p.bottom - arte.bottom)) + "px" });
+  } else grupo.style.top = Math.round(Math.max(8, Math.min(innerHeight - grupo.offsetHeight - 8, c.top + c.height / 2 - grupo.offsetHeight / 2))) + "px";
   const gr = grupo.getBoundingClientRect();  // o meio do véu (o mais escuro) atrás do grupo
   veu.style.setProperty("--cx", `${((gr.left + gr.width / 2 - p.left) / p.width) * 100}%`);
-  veu.style.setProperty("--cy", `${((gr.top + gr.height / 2 - p.top) / p.height) * 100}%`);
+  veu.style.setProperty("--cy", acao ? "40%" : `${((gr.top + gr.height / 2 - p.top) / p.height) * 100}%`);
   palco.classList.add("rc-entra", "rolando");
 
   // a rolagem: o mesmo som e os mesmos 950 ms de sempre; pular corta

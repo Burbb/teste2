@@ -307,6 +307,21 @@ id, `ficha_guardiao`; os contratos por `contratos.desc_caca` e `desc_alvo`, os m
   compacta o balcão). Os pontos: a Saída é o Voltar (`acao`); o Ferreiro é um ponto "de serviços" (`servicos`: leva o
   foco ao primeiro cartão que se pode pagar, embaixo, sem falar com o motor). O processo de arte está na skill
   `arte-cenas-fenda`.
+  A taverna do Vau (1.220.0) tem duas cenas em `telas/cena-taverna.js`, com a arte em `static/cenas/taverna/` e
+  `static/cenas/taverna-mesa/` (copiada das fontes em Aseprite do protótipo por
+  `ferramentas/prototipos/taverna/jogo.py`; não se editam as cópias). O balcão (`CENAS.taverna`, `window.CenaTaverna`)
+  é um interior como o do templo (`estado.local.interiores`, `servicos.cena_taverna`): o taverneiro limpando a caneca
+  pela rotina; os pontos só do que está desenhado, com `servicos: "<serviço>"` (o ponto leva ao cartão daquele serviço:
+  o Taverneiro à bebida, a Despensa enquanto ela espera). A mesa de Morel (`CENAS.taverna_mesa`,
+  `window.CenaTavernaMesa`) é a cena do evento `morel_na_taverna`: o motor manda `servicos.cena_mesa_morel` ao começar
+  e de novo a cada mudança que ele decidiu (`pagamentos`, contado pelo ouro cobrado de fato: a tela lança as moedas uma
+  vez por pagamento; `queda`: "prepara" quando o teste de Força começa, "nos" ou "morel" com o resultado, sem outra
+  rolagem). A fila espera a cena em dois momentos (`Cenas.aguardar`, pelo `aguardar` da cena): a rolagem do teste
+  espera a pega firmada (`app/rolagem.js`), e o painel do resultado espera o derrube batido antes do texto seguinte
+  (`app/nucleo.js`); o clique que adianta o texto não pula essas esperas, e com movimento reduzido elas não seguram
+  nada (poses paradas, na mesma ordem). Com a queda à vista, o dado fica embaixo da arte (`Cenas.acaoNaArte`). Depois
+  do encontro, a próxima volta ao menu da vila traz o Voltar do balcão da taverna (`Jogo.balcao_aberto`, só na tela
+  gráfica): a tela entra de novo nele. `tests/navegador/taverna.mjs` confere os caminhos no jogo (o cenário `taverna`).
   A fogueira (1.98.0) também é uma cena do topo: o painel `acampamento` (o mesmo do motor, `comitiva.fogueira`) monta
   a cena em `telas/acampamento.js` (`Acampamento.montar`: o lugar ao fundo, o teso com o fogo, a luz e a roda, o
   barranco na frente) e a passa à `Vista.usarAmbiente`; `telas/fogueira.js` desenha embaixo só a frase, a instrução e

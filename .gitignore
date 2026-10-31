@@ -3,3 +3,4 @@ __pycache__/
 saves/
 .coverage
 ferramentas/arte/capturas-*/
+tests/navegador/capturas-*/

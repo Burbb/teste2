@@ -1995,6 +1995,9 @@ async function cenarioOuroInsuficiente(browser) {
     for (const predio of ["taverna"]) {
       await page.click(`#predios .predio[data-predio="${predio}"]`);
       const caro = await page.waitForSelector(".servico.caro", { timeout: 10000 });
+      // com o interior (a taverna, desde a 1.220.0), a arte cresce até a altura dele e o balcão desce: os cliques vêm
+      // com o balcão já no lugar (o aviso fica preso ao cartão onde ele estava)
+      await page.waitForTimeout(700);
       const antes = await page.evaluate(() => ({ ouro: estado.heroi.ouro, texto: document.getElementById("texto").innerText, dia: estado.dia }));
       for (let k = 0; k < 3; k++) await caro.click({ force: true });
       await page.waitForTimeout(150);

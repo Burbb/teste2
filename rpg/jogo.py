@@ -74,6 +74,9 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
         self.frase_espolio = None
         self.nemesis = None
         self.forcados = []
+        # o balcão que a tela gráfica mantém aberto na próxima volta ao menu da vila (a taverna, depois do encontro à
+        # mesa de Morel: eventos/comitiva.py); só a interface gráfica o liga (não vai no save)
+        self.balcao_aberto = None
         self.proximo_id = 1
         self.combate_ativo = None
         self.queda_pendente = None  # a fome ou a infecção derrubou o herói nesta noite (só a campanha com resgate)
@@ -591,6 +594,9 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
             self.ambiente_visto = (self.loc["id"], self.dia, self.periodo)
             self.dizer(ambiente, "cinza")
             abertura.dica_texto(self, "vila")  # na interface de texto, a orientação do Mural numa linha
+        if self.balcao_aberto:  # o balcão continua aberto (vila.js entra nele de novo): o Voltar dele, com a meta
+            opcoes.append(("Voltar à vila", "balcao", {"voltar": True, "lugar": True, "balcao": self.balcao_aberto}))
+            self.balcao_aberto = None
         antes = abertura.proxima(self)  # a orientação da vez quando o menu abriu (cumpre-se pela resposta)
         op = self.menu(f"Você está em {self.loc['nome']}. O que faz?", opcoes + self.opcoes_comuns())
         abertura.depois_do_menu(self, antes, op)
@@ -620,6 +626,8 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
             missoes.executar(self, op[1], op[2])
         elif isinstance(op, tuple) and op[0] == "abertura":
             abertura.executar(self, op[1])
+        elif op == "balcao":
+            pass  # o Voltar do balcão mantido: só a tela volta à vila
         else:
             self.executar_comum(op)
 

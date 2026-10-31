@@ -42,7 +42,11 @@ Cada passo fecha antes do seguinte; as seções abaixo detalham.
 9. **Conferência no contexto** (seção 3, último item): a cena junto da HUD, dos serviços e dos rótulos, nas resoluções
    suportadas.
 10. **Fonte final** (seção 6): o arquivo editável como autoridade, a exportação reproduzível, os retoques protegidos.
-11. **Integração**: só a candidata aprovada, conferida no jogo real (seção "Três aprovações").
+11. **Integração**: só a candidata aprovada, conferida no jogo real (seção "Três aprovações"). Uma cena que encena
+   o que o motor decide (a queda de braço da taverna, 1.220.0) segue o motor por painéis (o pedido, depois o
+   resultado) e segura a fila nos momentos que a leitura pede pelo `aguardar` da cena (`Cenas.aguardar`: o dado na
+   pega firmada, o texto depois do derrube), sem temporizador próprio, sem o adiantar do texto pular a espera e sem
+   esperar nada no movimento reduzido; confira com resultados controlados (um cenário com o dado fixo só naquele teste).
 
 Caminhos relativos à raiz do repositório. O que já está documentado em outro lugar não se repete aqui:
 - as fontes em Aseprite, o `pintar.lua`, a montagem e a exportação em lote: `ferramentas/arte/aseprite/LEIA-ME.md`;

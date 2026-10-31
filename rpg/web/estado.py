@@ -542,13 +542,13 @@ def predios_fechados(g):
 
 
 def interiores(g):
-    """Na vila, o interior de cada prédio cujo balcão a tela monta (o templo, desde a 1.219.0): a tela mostra a cena no
-    lugar da vila aproximada enquanto o jogador está diante do prédio. A forja e a curandeira mandam a cena pela tela
-    delas (servicos.cena_forja, cena_curandeira)."""
+    """Na vila, o interior de cada prédio cujo balcão a tela monta (o templo, desde a 1.219.0; a taverna, desde a
+    1.220.0): a tela mostra a cena no lugar da vila aproximada enquanto o jogador está diante do prédio. A forja e a
+    curandeira mandam a cena pela tela delas (servicos.cena_forja, cena_curandeira)."""
     if g.loc["tipo"] != "vila":
         return {}
-    from ..sistemas.servicos import cena_templo
-    return {"templo": cena_templo()}
+    from ..sistemas.servicos import cena_taverna, cena_templo
+    return {"templo": cena_templo(), "taverna": cena_taverna(g)}
 
 
 def atendentes(g):

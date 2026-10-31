@@ -26,6 +26,7 @@
     python -m tests.navegador.cenarios integracao    # TESTE da etapa 4: herói com a comitiva em lutas seguidas (CLASSE, ESPEC, NIVEL, COMITIVA, LUTA, CAIDO, PENAS, PONTOS)
     python -m tests.navegador.cenarios grupo         # a janela do grupo: equipamento e atributos da comitiva (CLASSE, NIVEL, COMITIVA, CHEIA, FERIDO, LONGE)
     python -m tests.navegador.cenarios forja         # a forja do Vau com peças, fragmentos e essências (FRAGMENTOS, ESSENCIAS, OURO)
+    python -m tests.navegador.cenarios taverna       # o Vau com Morel à espera no canto da taverna (OURO, DADO, DESPENSA)
 
 Imprime o endereço do servidor na primeira linha e fica no ar até ser encerrado.
 """
@@ -1270,11 +1271,50 @@ def forja(ui):
         pass
 
 
+def taverna(ui):
+    """O Vau da campanha depois da despensa, com Morel à espera no canto (o cartão "Sentar com o homem do canto" no
+    balcão da taverna), de manhã. OURO (padrão 60). DADO=n: o d20 do teste de Força do encontro com Morel (a queda de
+    braço: 20 vence, 1 perde), só nele; sem DADO, o sorteio de sempre. DESPENSA=adiada: o pedido do taverneiro ainda
+    espera (a porta da despensa na cena do balcão). O resto da conta é a do motor (o modificador, a dificuldade)."""
+    from rpg import abertura as ab
+    from rpg import missoes
+    pasta = tempfile.mkdtemp()
+    g = Jogo(ui, seed=int(os.environ.get("SEMENTE", "11")), pasta_saves=pasta, hardcore=False)
+    ui.jogo = g
+    g.iniciar("Jean", os.environ.get("CLASSE", "guerreiro"), "turvo")
+    missoes.registro(g, "febre_do_turvo")["cenas"].append("abertura")
+    ab.comecar(g, False)
+    loc = next(lo for lo in g.mundo["locais"] if lo["chave"] == "vau_do_turvo")
+    g.mundo["atual"], loc["visitado"] = loc["id"], True
+    g.periodo, g.clima = 0, "limpo"
+    a = ab.estado(g)
+    a["despensa"], a["caneca"] = os.environ.get("DESPENSA", "feita"), False
+    g.j.ouro = int(os.environ.get("OURO", "60"))
+    dado = os.environ.get("DADO")
+    if dado:
+        teste0 = g.teste
+
+        def teste(attr, cd):
+            if attr != "forca" or g.evento_atual != ab.MOREL:
+                return teste0(attr, cd)
+            sortear = g.rng.randint
+            g.rng.randint = lambda a, b: int(dado)
+            try:
+                return teste0(attr, cd)
+            finally:
+                g.rng.randint = sortear
+        g.teste = teste
+    try:
+        g.rodar()
+    except FimDeJogo:
+        pass
+
+
 CENARIOS = {"integracao": integracao, "grupo": grupo, "forja": forja, "aneis": aneis, "mercado": mercado, "relatorio": relatorio, "combate": combate, "titulo": titulo, "vila": vila, "campanha": campanha, "baus": baus, "missao": missao,
             "recarga": recarga, "capela": capela, "retorno": retorno, "praca": praca, "encruzilhada": encruzilhada,
             "tiro_duplo": tiro_duplo, "covil": covil, "broquel": broquel, "muralha": muralha, "reacoes": reacoes, "resgate": resgate,
             "gelo": gelo, "abertura": abertura, "fogueira": fogueira,
-            "tutorial": tutorial}
+            "tutorial": tutorial, "taverna": taverna}
 
 
 def main():

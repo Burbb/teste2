@@ -9002,3 +9002,19 @@ foi automatizado.
 - **Conferido:** as fontes iguais ao desenho; o rosto gravado no jogo a 1920×945 no ciclo e na passagem para o olhar;
   `conferir-encontro.mjs` nas duas janelas (o pagamento e a queda); a suíte, o gabarito, o pyflakes e a fumaça.
 - **Parado aqui:** a avaliação do Jean.
+
+### 31/10/2026 (data do computador local) — A taverna no jogo (1.220.0)
+
+- **Pedido do Jean:** integrar as três cenas aprovadas (o balcão animado, Morel no canto, a queda de braço) com o fluxo
+  do encontro: o dado só na pega firmada, o desfecho pelo resultado do teste, as moedas a cada pagamento (também os 25
+  depois da derrota), o Vazio sem animação, o movimento reduzido na mesma ordem.
+- **Já estava no jogo:** só o prédio da taverna na vila e o evento de Morel em texto; nada da arte nem das animações.
+- **Feito:** `telas/cena-taverna.js` (as cenas `taverna` e `taverna_mesa`), a arte copiada das fontes por
+  `ferramentas/prototipos/taverna/jogo.py`, as fontes protegidas (`--sem-os-retoques`), o motor mandando a mesa no
+  evento (`servicos.cena_mesa_morel`) e mantendo o balcão aberto depois (`Jogo.balcao_aberto`, só na tela gráfica),
+  `Cenas.aguardar` (a rolagem espera a pega; o resultado espera o derrube; o adiantar do texto não pula), o dado
+  embaixo da arte na queda, o CSS do balcão (`32-taverna.css`), o cenário `taverna` e `tests/navegador/taverna.mjs`.
+  O gabarito da tela gráfica mudou de propósito (o interior no estado, os painéis da mesa e o Voltar do balcão depois
+  do encontro); o de texto, não.
+- **Conferido:** ver o commit (o roteiro do jogo real nas duas janelas, a suíte, o gabarito, o pyflakes, a fumaça).
+- **Parado aqui:** a avaliação do Jean no jogo.

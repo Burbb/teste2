@@ -23,10 +23,10 @@ o Guerreiro no Vau, com a campanha começada. Entre na taverna pelo prédio da v
 
 **O encontro à mesa de Morel** (30/10/2026): o evento de sempre (`morel_na_taverna`, pelo cartão "Sentar com o homem do
 canto" da abertura ou pela bebida, com as condições dele) abre a vista diante de Morel no lugar do balcão, com as opções
-do evento embaixo; nada do evento muda (os textos, os preços, os testes, as consequências). `a_mesa` só manda a cena ao
-começar e de novo quando o ouro sai de fato (`perder_ouro`, a cobrança do motor): é isso que lança as moedas na mesa,
-uma vez por pagamento. Terminado o evento, o balcão da taverna continua aberto (a meta `balcao`, como o templo faz) até
-o Voltar à vila. Os casos de teste da faixa (o ouro, o dado da queda de braço, Morel na próxima bebida) só valem quando
+do evento embaixo; nada do evento muda (os textos, os preços, os testes, as consequências). Desde a 1.220.0, isso é do
+jogo (o evento manda a mesa, `servicos.cena_mesa_morel`, e o balcão continua aberto depois, `Jogo.balcao_aberto`); a
+demonstração só troca a cena à vista pelas candidatas da faixa (`window.CenaTaverna` e `window.CenaTavernaMesa` do
+protótipo, que não seguram o dado até a pega como a do jogo). Os casos de teste da faixa (o ouro, o dado da queda de braço, Morel na próxima bebida) só valem quando
 as regras do evento já deixam.
 
 A porta é `DEMO_PORTA` (padrão 8795: não usa a 8791 do jogo, a 8793 da curandeira nem a 8794 do templo)."""
@@ -79,54 +79,6 @@ def cena_taverna(g):
     return {"cena": "taverna", "titulo": "A taverna", "pagina": True, "morel": morel_no_canto(g), "pontos": pontos}
 
 
-# ------------------------------------------------------------------ o encontro à mesa de Morel
-def mesa_de_morel(g):
-    """A vista diante de Morel durante o evento dele: sem pontos (as escolhas são as do evento, embaixo). Conhecido é
-    quem já tinha falado com ele antes desta vez (o evento já contou esta)."""
-    conhecido = g.contagem.get(abertura.MOREL, 0) > 1
-    return {"cena": "taverna_mesa", "pagina": False, "pontos": [], "pagamentos": 0,
-            "titulo": "A mesa de Morel" if conhecido else "A mesa do homem do canto"}
-
-
-def a_mesa(fn):
-    """O evento de Morel com a vista da mesa: a cena ao começar e, a cada ouro que o motor cobra de fato, a mesma cena
-    com mais um pagamento (a tela lança as moedas uma vez por pagamento; repetir a mensagem não lança de novo). Ao
-    terminar, o balcão da taverna continua aberto."""
-    def evento(g):
-        d = mesa_de_morel(g)
-        g.ui.painel("cena", dict(d))
-        cobrar = g.perder_ouro
-
-        def perder_ouro(n, destino="eventos"):
-            pago = cobrar(n, destino)
-            if pago:
-                d["pagamentos"] += 1
-                g.ui.painel("cena", dict(d))
-            return pago
-        g.perder_ouro = perder_ouro
-        testar = g.teste
-
-        def teste(atributo, cd, *a, **k):
-            """O teste de Força deste evento é a queda de braço: a cena começa a preparação quando ele começa
-            (`prepara`) e, com o resultado que o motor decidiu, toca a disputa e o desfecho dele (`nos` ou `morel`)."""
-            if atributo != "forca":
-                return testar(atributo, cd, *a, **k)
-            d["queda"] = "prepara"
-            g.ui.painel("cena", dict(d))
-            ok = testar(atributo, cd, *a, **k)
-            d["queda"] = "nos" if ok else "morel"
-            g.ui.painel("cena", dict(d))
-            return ok
-        g.teste = teste
-        try:
-            return fn(g)
-        finally:
-            del g.perder_ouro
-            del g.teste
-            g.tav_balcao = True
-    return evento
-
-
 # ------------------------------------------------------------------ os estados do save temporário
 ESTADOS = ("despensa", "homem_do_canto", "pouco_ouro", "quase_sem_ouro", "conhecido", "recrutado", "sem_ouro")
 DADOS = {"sorteio": None, "ganhar": 20, "perder": 1}  # o dado da queda de braço (só nela; 20 e 1 decidem sozinhos)
@@ -141,7 +93,6 @@ def estado(g, qual):
     g.contagem.pop(abertura.MOREL, None)
     g.historico.pop(abertura.MOREL, None)  # conhecido há tempo: o intervalo do evento já passou
     g.j.ouro, g.dia = 60, 1
-    g.tav_balcao = False
     a["despensa"], a["caneca"] = "feita", False
     if qual == "despensa":                     # a despensa adiada; Morel no canto, esperando a luta
         a["despensa"] = "adiada"
@@ -176,8 +127,6 @@ def ativar():
             r["taverna"] = cena_taverna(g)
         return r
     mod_estado.interiores = interiores
-    ev = next(e for e in motor.REGISTRO if e.id == abertura.MOREL)
-    ev.fn = a_mesa(ev.fn)
 
     # O dado da queda de braço (caso de teste): só no teste de Força do evento de Morel, e o resto da conta é a do motor
     # (o modificador, a dificuldade, a rolagem na tela). Um 20 vence e um 1 perde, como em qualquer teste.
@@ -221,8 +170,6 @@ def ativar():
             extra = [(f"Estado: {e}", ("__tav", e), {"tav_estado": e}) for e in ESTADOS]
             extra += [(f"Dado: {e}", ("__dado", e), {"tav_dado": e}) for e in DADOS]
             extra += [(f"Bebida: {e}", ("__bebida", e), {"tav_bebida": e}) for e in ("morel", "sorteio")]
-            if getattr(self, "tav_balcao", False):  # depois da mesa de Morel, o balcão continua aberto (como o templo)
-                extra.append(("Voltar à vila", ("__balcao",), {"voltar": True, "lugar": True, "balcao": "taverna"}))
             opcoes = list(opcoes)
             esc = menu0(pergunta, opcoes + extra, *a, **k)
             if isinstance(esc, tuple) and esc and esc[0] == "__tav":
@@ -234,12 +181,6 @@ def ativar():
             if isinstance(esc, tuple) and esc and esc[0] == "__bebida":
                 self.tav_bebida_morel = esc[1] == "morel"
                 raise _Trocar
-            if isinstance(esc, tuple) and esc and esc[0] == "__balcao":
-                self.tav_balcao = False
-                raise _Trocar
-            meta = next((o[2] for o in opcoes if o and len(o) > 2 and o[1] == esc), None) or {}
-            if meta.get("predio") != "taverna" or meta.get("servico") == "dormir":
-                self.tav_balcao = False  # saiu da taverna por outro caminho (outro prédio, dormir)
             return esc
         self.menu = menu
         try:
@@ -276,22 +217,12 @@ def rodar(ui, pasta):
 
 # ------------------------------------------------------------------ o servidor
 def cenas_js(texto):
-    """O telas/cenas.js do jogo com a taverna registrada, `servicos: "<serviço>"` aceito (o ponto leva àquele cartão) e
-    os pontos da taverna filtrados pela candidata à vista."""
-    a = "    templo: window.CenaTemplo,\n"
-    assert a in texto
-    texto = texto.replace(a, a + "    // a taverna (protótipo): ferramentas/prototipos/taverna/tela/cena-taverna.js\n"
-                                 "    taverna: window.CenaTaverna,\n"
-                                 "    // a mesa de Morel durante o evento dele: uma cena à parte, que a volta da vila não\n"
-                                 "    // tira (o vila.js tira os interiores quando aparece outro menu)\n"
-                                 "    taverna_mesa: window.CenaTavernaMesa,\n")
-    b = '        const cartoes = [...document.querySelectorAll("#folha .servico")];\n'
-    assert b in texto
-    texto = texto.replace(b, '        const cartoes = [...document.querySelectorAll("#folha .servico")]\n'
-                             '          .filter((c) => typeof p.servicos !== "string" || c.dataset.servico === p.servicos);\n')
+    """O telas/cenas.js do jogo com os pontos da taverna filtrados pela candidata à vista (a taverna e a mesa de Morel
+    já são do jogo desde a 1.220.0; aqui, `window.CenaTaverna` e `window.CenaTavernaMesa` são as do protótipo, que
+    escolhem pela faixa)."""
     # a candidata à vista decide quais pontos existem (a G não desenha a escada, a porta da rua nem Morel): o ponto que
     # a cena não tem não aparece. A lista inteira do motor fica guardada (`todos`), para a troca de vista pelo painel
-    # filtrar de novo a partir dela. No jogo, o motor mandaria só os pontos da cena integrada.
+    # filtrar de novo a partir dela.
     c = "    if (!def) { limpar(); return; }\n"
     assert c in texto
     return texto.replace(c, c + '    if (d.cena === "taverna") { const todos = d.todos || d.pontos; '

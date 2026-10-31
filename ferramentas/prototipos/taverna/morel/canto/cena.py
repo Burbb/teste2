@@ -220,6 +220,9 @@ def previa(saida):
 
 
 if __name__ == "__main__":
+    if "--refazer" in sys.argv and "--sem-os-retoques" not in sys.argv:
+        sys.exit("A fonte está no jogo desde a 1.220.0 (taverna/jogo.py): refazê-la do código descarta o que foi "
+                 "retocado nela. Para isso mesmo, junte --sem-os-retoques.")
     if "--previa" in sys.argv:
         previa(sys.argv[-1])
     elif "--criar" in sys.argv or "--refazer" in sys.argv:

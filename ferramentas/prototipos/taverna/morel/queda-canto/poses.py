@@ -661,6 +661,9 @@ def criar(refazer=False):
 
 
 if __name__ == "__main__":
+    if "--refazer" in sys.argv and "--sem-os-retoques" not in sys.argv:
+        sys.exit("A fonte está no jogo desde a 1.220.0 (taverna/jogo.py): refazê-la do código descarta o que foi "
+                 "retocado nela. Para isso mesmo, junte --sem-os-retoques.")
     if "--previa" in sys.argv:
         so = [a for a in sys.argv[2:] if not a.startswith("--")][1:] or None
         previa([a for a in sys.argv[2:] if not a.startswith("--")][0], "--guia" in sys.argv, so)

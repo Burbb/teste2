@@ -48,7 +48,31 @@ def cena_curandeira(g):
             ]}
 
 
-VAZIO_CURANDEIRA = "Nenhum ferimento a tratar."  # o serviço sem nada a fazer (a cabana continua aberta)
+def cena_taverna(g):
+    """O balcão da taverna para a interface gráfica (telas/cena-taverna.js; as de texto ignoram), diante do prédio,
+    como o templo: o taverneiro atrás do balcão e os fregueses. Só o que a cena desenha tem ponto: o Taverneiro leva ao
+    cartão da bebida e a Despensa, só enquanto ela espera (a abertura da campanha), ao de descer a ela. O Dormir, o
+    Homem do canto e o Voltar ficam nos cartões."""
+    pontos = [{"id": "taverneiro", "nome": "Taverneiro", "faz": "uma bebida e os rumores",
+               "estado": "O taverneiro, atrás do balcão.", "servicos": "rumores"}]
+    if any(meta.get("servico") == "despensa" for _, _, meta in abertura.opcoes(g)):
+        pontos.append({"id": "despensa", "nome": "Despensa", "faz": "descer à despensa", "estado": "A porta da despensa.",
+                       "servicos": "despensa"})
+    return {"cena": "taverna", "titulo": "A taverna", "pagina": True, "pontos": pontos}
+
+
+def cena_mesa_morel(g):
+    """A mesa de Morel, no canto da taverna, durante o encontro com ele (telas/cena-taverna.js, a cena `taverna_mesa`;
+    as de texto ignoram): sem pontos (as escolhas são as do evento, embaixo). O evento atualiza `pagamentos` a cada
+    ouro cobrado de fato (a tela lança as moedas uma vez por pagamento) e `queda` no teste de Força ("prepara" quando
+    ele começa; "nos" ou "morel" com o resultado). Conhecido é quem já tinha falado com ele antes desta vez (o evento
+    já contou esta)."""
+    conhecido = g.contagem.get(abertura.MOREL, 0) > 1
+    return {"cena": "taverna_mesa", "pagina": False, "pontos": [], "pagamentos": 0,
+            "titulo": "A mesa de Morel" if conhecido else "A mesa do homem do canto"}
+
+
+VAZIO_CURANDEIRA ="Nenhum ferimento a tratar."  # o serviço sem nada a fazer (a cabana continua aberta)
 
 
 class Servicos:

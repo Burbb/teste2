@@ -1102,6 +1102,10 @@
     curandeira: window.CenaCurandeira,
     // o interior do templo (telas/cena-templo.js): a nave e o clérigo dobrando os panos
     templo: window.CenaTemplo,
+    // a taverna do Vau (telas/cena-taverna.js): o balcão com o taverneiro, e a mesa de Morel no canto durante o
+    // encontro com ele (uma cena à parte, que a volta da vila não tira: vila.js só tira os interiores)
+    taverna: window.CenaTaverna,
+    taverna_mesa: window.CenaTavernaMesa,
   };
 
   /** O contorno de um ponto aceso, no estilo da arte: quatro cantos dourados com a sombra por fora, em volta da área. */
@@ -1146,6 +1150,7 @@
       fita: false, desce: 0, some: 0, turvo: 0, falha: 0, anim: null };
     if (!mesmo && antes && d.cena === "fundo" && ["luta", "destruida"].includes(d.momento)) est.canto = antes.est.canto;
     const troca = antes && !reduzido() ? { de: antes.b.canvas, inicio: performance.now() } : null;
+    if (atual && atual.est !== est) soltarEsperas(atual.est);  // outra cena: o que a de antes segurava segue
     atual = { d, def, b, est };
     cantoDeIlse();
     const cena = document.getElementById("cena"), alto = b.canvas.height > QH;
@@ -1179,6 +1184,7 @@
   function limpar() {
     pendente = false;
     if (!atual) return;
+    soltarEsperas(atual.est);
     atual = null;
     cantoDeIlse();  // saiu do fundo: o canto para
     const cena = document.getElementById("cena");
@@ -1187,6 +1193,16 @@
     Vista.usarAmbiente(null);
     montarPontos();
   }
+  /** A fila espera um momento da cena à vista (a taverna: "rolagem", a pega da queda de braço; "cena", o derrube
+   *  visto): a cena diz quando, pelo `aguardar` dela; sem cena ou sem `aguardar`, segue na hora. */
+  function aguardar(evento) {  // resolve com true se esperou de fato
+    if (!atual || !atual.def.aguardar) return Promise.resolve(false);
+    return atual.def.aguardar(atual.est, evento, atual.b);
+  }
+  /** A cena saiu (ou deu lugar a outra): o que ela segurava segue, sem nada dela agindo na seguinte. */
+  function soltarEsperas(est) { if (est && est.esperas) est.esperas.splice(0).forEach((e) => e.fim(false)); }
+  /** A cena à vista tem uma ação que o dado não deve cobrir (a queda de braço): ele fica embaixo da arte. */
+  function acaoNaArte() { return !!(atual && atual.def.acaoNaArte && atual.def.acaoNaArte(atual.d)); }
   /** A página virou (nova cena): o ambiente fica até a próxima mensagem; se ela não for um painel de cena, sai. */
   function virou() { if (atual) pendente = true; }
   function conferirPendente(m) {
@@ -1296,7 +1312,9 @@
       if (!pontosValem()) return;
       const foco = atual.def.pontos[p.id].foco;
       if (p.servicos) {  // quem atende (o ferreiro): o ponto leva aos cartões do serviço, embaixo, onde se escolhe
-        const cartoes = [...document.querySelectorAll("#folha .servico")];
+        // `servicos: "<serviço>"` (a taverna: o Taverneiro à bebida, a Despensa a descer): o cartão daquele serviço
+        const cartoes = [...document.querySelectorAll("#folha .servico")]
+          .filter((c) => typeof p.servicos !== "string" || c.dataset.servico === p.servicos);
         const alvo = cartoes.find((c) => !c.classList.contains("caro") && !c.classList.contains("limite")) || cartoes[0];
         if (!alvo) return;
         App.som("escolha");
@@ -1384,6 +1402,6 @@
 
   Telas.registrar("cena", () => "", {});
   Object.assign(Telas, { soltarCorrentes, momentoIlse });
-  window.Cenas = { mostrar, limpar, virou, conferirPendente, aoCombate, aoMenu, posicionar, atual: () => atual,
+  window.Cenas = { mostrar, limpar, virou, conferirPendente, aoCombate, aoMenu, posicionar, atual: () => atual, aguardar, acaoNaArte,
     alternarDestaque, destacando, afastar, cantos };  // cantos: o mesmo contorno nas figuras da fogueira
 })();

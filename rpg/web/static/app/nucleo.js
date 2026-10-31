@@ -248,7 +248,14 @@ async function tratar(m) {
         break;
       }
       // O ambiente da capela não entra no texto: ele troca a arte do topo (telas/cenas.js).
-      if (m.tipo === "cena") { Cenas.mostrar(m.dados); break; }
+      // Um momento da cena que a página espera (a queda de braço da taverna: o derrube batido antes do texto dele). O
+      // clique que adiantava o texto não pula o que a cena encena: a consequência não chega antes dela; e um adiantar
+      // de antes da espera não vale para o texto que vem depois.
+      if (m.tipo === "cena") {
+        Cenas.mostrar(m.dados);
+        if (!replay && velocidade !== "instantaneo" && await Cenas.aguardar("cena")) pular = false;
+        break;
+      }
       // A tela desenhada (inventário, mercado, mural) se lê de cima: a página não desce.
       if (emMenu()) seguir = false;
       anexar(Telas.painel(m));

@@ -174,6 +174,21 @@ function entrarNoPredio(id, pedido = false, continua = false) {
   if (sobra > 0) pagina.scrollTop += Math.min(sobra, caixa.getBoundingClientRect().top - pagina.getBoundingClientRect().top - 8);
 }
 
+/* Diante do balcão da taverna, a página ainda cresce depois de o balcão montar (a 1280×720, a última linha ficava atrás
+   da doca): a mesma conta se repete quando a página muda, só para a frente (nunca volta a rolagem de quem rolou para
+   cima) e só enquanto o balcão couber (o topo dele nunca sai da página). */
+(() => {
+  function ajustar() {
+    const c = document.querySelector(".balcao-predio");
+    if (!c || !window.Cenas || !Cenas.atual() || Cenas.atual().d.cena !== "taverna") return;
+    const pb = pagina.getBoundingClientRect(), cb = c.getBoundingClientRect();
+    const sobra = cb.bottom - pb.bottom + 8;
+    if (sobra > 0) pagina.scrollTop += Math.min(sobra, cb.top - pb.top - 4);
+  }
+  new MutationObserver(() => requestAnimationFrame(ajustar)).observe(pagina, { childList: true, subtree: true });
+  new ResizeObserver(() => requestAnimationFrame(ajustar)).observe(pagina);
+})();
+
 /** Voltar à vila: a câmera se afasta e o texto volta a ser o do lugar. */
 function sairDoPredio() {
   const v = vilaAberta;

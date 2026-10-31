@@ -176,6 +176,25 @@ def odete_conversa_final(g, m):
 @evento(contextos=("taverna",), peso=lambda g: 18 if g.dia <= 10 else 7, cooldown=4, max_vezes=3,
         cond=lambda g: g.dia >= 2 and cm.disponivel(g, "morel"))  # no canto da taverna: quem bebe ali o encontra
 def morel_na_taverna(g):
+    """Na tela gráfica, o encontro é à mesa dele, no canto (servicos.cena_mesa_morel; as de texto ignoram): a cena
+    acompanha o que o motor decide (cada ouro cobrado de fato lança as moedas; o teste de Força é a queda de braço,
+    com o desfecho do resultado). Terminado o encontro, o balcão da taverna continua aberto (Jogo.balcao_aberto)."""
+    from ..sistemas.servicos import cena_mesa_morel
+    mesa = cena_mesa_morel(g)
+    na_mesa = g.ui.painel("cena", dict(mesa))
+
+    def mostrar(**mudou):
+        if na_mesa:
+            mesa.update(mudou)
+            g.ui.painel("cena", dict(mesa))
+    try:
+        _encontro_morel(g, mostrar, lambda: mesa["pagamentos"] + 1)
+    finally:
+        if na_mesa:
+            g.balcao_aberto = "taverna"
+
+
+def _encontro_morel(g, mostrar, mais_um):
     g.dizer("No canto da taverna, um homem grande come sozinho, de costas para a parede. Uma cicatriz atravessa o "
             "rosto dele; a armadura é remendada com pedaços de outras armaduras. Ele fala sem levantar os olhos do prato.")
     g.dizer("\"Você tem cara de quem vai morrer na estrada. Eu tenho cara de quem impede isso. Quarenta moedas e a "
@@ -191,13 +210,17 @@ def morel_na_taverna(g):
         return
     simpatia = 0
     if op == "pagar":
-        g.perder_ouro(40)
+        if g.perder_ouro(40):
+            mostrar(pagamentos=mais_um())
         g.dizer("Ele conta as moedas duas vezes. \"Negócio fechado. Eu seguro a linha; você não morre. Simples.\"",
                 "verde")
         simpatia = 4
     elif op == "braco":
         g.dizer("A taverna inteira para para ver. A mesa range.", "amarelo")
-        if g.teste("forca", 14):
+        mostrar(queda="prepara")  # a preparação começa com o teste; o dado espera a pega (telas/cena-taverna.js)
+        ok = g.teste("forca", 14)
+        mostrar(queda="nos" if ok else "morel")  # o desfecho do resultado do teste, sem outra rolagem
+        if ok:
             g.dizer("O braço dele bate na mesa. O silêncio dura um segundo; depois Morel gargalha até tossir. "
                     "\"Faz dez anos que ninguém me derruba. Tá bom. De graça. Desta vez.\"", "verde")
             simpatia = 12
@@ -205,7 +228,8 @@ def morel_na_taverna(g):
             g.dizer("Seu braço bate na mesa com um estalo. Morel nem suou. \"Pelo espetáculo, faço por vinte e "
                     "cinco.\"", "vermelho")
             if g.j.ouro >= 25 and g.menu("Pagar 25?", [("Pagar 25 ouro", "sim"), ("Recusar", "nao")]) == "sim":
-                g.perder_ouro(25)
+                if g.perder_ouro(25):
+                    mostrar(pagamentos=mais_um())
                 simpatia = 2
             else:
                 return

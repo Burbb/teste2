@@ -1,5 +1,19 @@
 # Protótipo: o interior da taverna (o balcão animado e a vista diante de Morel; o resto como histórico)
 
+**No jogo desde a 1.220.0** (31/10/2026, a integração autorizada pelo Jean): **o balcão** (a G4, com o taverneiro
+animado), **Morel no canto** (a alimentação, o olhar, a reação ao pagamento) e **a queda de braço no canto** (a
+preparação, a disputa, os dois desfechos), como aprovados (a colher como ficou no `665b7372`; o olhar, no `f28102cf`).
+O jogo lê as cópias em `rpg/web/static/cenas/taverna/` e `cenas/taverna-mesa/`, feitas por `jogo.py` a partir das três
+fontes (`g4/aseprite/taverna-g4.aseprite`, `morel/canto/canto.aseprite`, `morel/queda-canto/queda-canto.aseprite`);
+`python ferramentas/prototipos/taverna/jogo.py --conferir` diz se as cópias são as das exportações. As fontes são a
+autoridade: `g4/fonte.py --criar --refazer`, `morel/canto/cena.py --refazer` e `morel/queda-canto/poses.py --refazer`
+recusam rodar sem `--sem-os-retoques`. A cena do jogo é `rpg/web/static/telas/cena-taverna.js` (o que mudou na
+integração: o dado do teste espera a pega firmada e fica embaixo da arte; o texto do resultado espera o derrube; no
+movimento reduzido, a mesma ordem com poses paradas; o motor manda a mesa no evento e mantém o balcão aberto depois;
+docs/ARQUITETURA.md). **A vista diante de Morel junto do balcão continua reservada para a Vó Berta**, fora do jogo.
+O `demo.bat` continua servindo às comparações: a faixa troca a cena à vista pelas candidatas do protótipo (que não
+seguram o dado até a pega, como a do jogo); o encontro, o evento e o balcão mantido já são os do jogo.
+
 **A queda de braço no canto** (30/10/2026, a candidata): o canto foi aprovado pelo Jean e a disputa recomeça nessa cena,
 como continuação da conversa (a seção "A queda de braço no canto", abaixo); a alimentação ganhou três correções (a
 colher de metal, a coleta dentro do caldo, o cotovelo longe da caneca).

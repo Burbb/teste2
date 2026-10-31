@@ -1,0 +1,26 @@
+/* A taverna com o interior (1.220.0): diante do prédio, a vista mostra o balcão (telas/cena-taverna.js, 320×96 como
+   a forja: a vista mais alta vem de 26-forja.css) no lugar da vila aproximada; os cartões ficam embaixo. As regras
+   gerais do interior de um balcão estão em 31-templo.css (o cartão chamado, os prédios escondidos). */
+/* Os nomes dos pontos da taverna ficam sempre à vista, como os do templo. */
+#pontos-cena[data-cena="taverna"] .ci-ponto:not(.parado) .ci-balao { visibility: visible; }
+/* Com o interior à vista, o balcão como o da forja (26-forja.css): a cena já mostra o lugar e quem atende, então o
+   topo fica numa linha (a fala e o ouro, sem o ícone e o título repetidos) e os cartões vão lado a lado, à vista sem
+   rolar a 1280×720 e sem nada atrás da doca. */
+body:has(#pontos-cena[data-cena="taverna"]) .balcao-predio .loja-topo { padding: 4px 12px; margin-bottom: 6px; }
+body:has(#pontos-cena[data-cena="taverna"]) .balcao-predio .loja-topo > img,
+body:has(#pontos-cena[data-cena="taverna"]) .balcao-predio .loja-topo > canvas,
+body:has(#pontos-cena[data-cena="taverna"]) .balcao-predio .loja-topo > div > b { display: none; }
+body:has(#pontos-cena[data-cena="taverna"]) .balcao-predio .loja-topo .lore { font-size: 16px; }
+/* Os cartões em duas colunas, numa grade do balcão inteiro: o Voltar à vila entra na próxima célula livre (ao lado
+   do último cartão, quando eles são três), em vez de uma linha a mais que ficava atrás da doca a 1280×720. A ordem do
+   teclado não muda (é a do documento). */
+body:has(#pontos-cena[data-cena="taverna"]) .balcao-predio { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px; align-items: start; }
+body:has(#pontos-cena[data-cena="taverna"]) .balcao-predio > .loja-topo { grid-column: 1 / -1; margin-bottom: 0; }
+body:has(#pontos-cena[data-cena="taverna"]) .balcao-predio .servicos { display: contents; }
+body:has(#pontos-cena[data-cena="taverna"]) .balcao-predio .voltar-vila { margin-top: 0; align-self: end; justify-self: start; }
+body:has(#pontos-cena[data-cena="taverna"]) #folha:has(.balcao-predio) { padding-bottom: 0; }
+/* Diante do balcão, a narração da vila (a tábua no poço da praça) e o cabeçalho dela saem da página: o contexto é o
+   do balcão, com a frase da taverna ("Fumaça, palha no chão..."), uma vez só. */
+body:has(#pontos-cena[data-cena="taverna"]):has(.balcao-predio) #cena-cab,
+body:has(#pontos-cena[data-cena="taverna"]):has(.balcao-predio) #texto { display: none; }
