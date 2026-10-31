@@ -42,7 +42,7 @@ PLACA = [h("8a8078"), h("6a6058"), h("4e4640"), h("34302c"), h("221e1b")]
 PELE = {"e": h("d8aa90"), "d": h("c09070"), "f": h("9a6c52"), "h": h("6c4a38"), "g": h("9a6656"), "x": h("b07a60")}
 PELO = {"a": h("6a4a30"), "b": h("4a3220"), "c": h("33231a"), "n": h("7a5a3a")}
 BARBA = {"l": h("3e2a1c"), "m": h("5a3e2a"), "i": h("2a1c14"), "o": h("20160f"), "n": h("6a4a30")}
-OLHO = {"j": h("20160f"), "w": h("d8c8b8"), "k": h("20160f"), "q": h("2a1c14")}
+OLHO = {"j": h("20160f"), "w": h("d8c8b8"), "k": h("20160f"), "q": h("2a1c14"), "u": h("c8b4a0"), "v": h("a89080")}
 MADEIRA_ESPADA = [h("7a5034"), h("5a3a22"), h("3a2414"), h("24160c")]
 
 # ------------------------------------------------------------------ a cabeça
@@ -65,7 +65,7 @@ CABECA = [
     "...bddddddgdddddddddddddffhc",
     "..bddiiiiiigiddddiiiiiifffhc",
     "..hdddddddddgddddddddddfffh.",
-    ".fhddjjjjddddgddddjjjjdfffhh",
+    ".fhddddddddddgdddddddddfffhh",
     ".fddddddddddddgdddddddddffhh",
     ".fdddddddddddhfgdddddddffhhc",
     "..dddddddddhhffhgddddddfffh.",
@@ -88,14 +88,34 @@ CABECA = [
 ]
 
 
+# os olhos, desenhados à parte da grade (linha, coluna inicial, pixels; "." deixa a pele): o da luz (x 5 a 8) e o da
+# sombra (x 18 a 21), embaixo das sobrancelhas da linha 12.
+# comendo: a pálpebra de cima baixada, uma linha escura com as pontas em pele de sombra e os cílios por baixo no meio
+# (a curva para baixo de quem olha a tigela, não o traço reto de olho fechado)
+OLHOS_BAIXO = [(14, 5, "fjjf"), (15, 6, "hh"), (14, 18, "fjjj"), (15, 19, "hh")]
+# olhando para nós: a íris no meio do olho, o branco baixo dos lados, a dobra da pálpebra por cima
+OLHOS_OLHA = [(13, 6, "hh"), (14, 5, "ukku"), (13, 19, "hh"), (14, 18, "vkkh")]
+
+
+def _olhos(linhas, desenho):
+    for y, x0, px in desenho:
+        for i, ch in enumerate(px):
+            if ch != ".":
+                linhas[y][x0 + i] = ch
+
+
 def cabeca(variante="baixo", dy=0):
     """A cabeça em {(x, y): cor}: `baixo` (os olhos na tigela), `olha` (para quem está à mesa: os olhos abertos),
     `boca` (aberta para a colher), `mastiga` (a mandíbula 1 px abaixo, numa grade inteira)."""
     linhas = [list(r) for r in CABECA]
     if variante == "olha":
-        # os olhos abertos: a sobrancelha 1 px acima, o branco e a pupila (olhando para a frente, um pouco para baixo)
-        linhas[14] = list(".fhddqwkwddddgddddqwkwdfffhh")
-    elif variante == "boca":
+        # olhando para nós (a câmera na altura dos olhos, de frente): a íris escura no meio de cada olho, o branco
+        # baixo dos dois lados, a dobra da pálpebra de cima em pele escura; o olho da sombra com o branco apagado e o
+        # canto de fora na sombra (não uma cópia do outro)
+        _olhos(linhas, OLHOS_OLHA)
+    else:
+        _olhos(linhas, OLHOS_BAIXO)
+    if variante == "boca":
         linhas[23] = list("..llllmmmmoooooooommmmmllli.")
         linhas[24] = list("..llllmmmmmoooooommmmmmllli.")
     elif variante == "mastiga":
@@ -116,7 +136,7 @@ def cabeca(variante="baixo", dy=0):
     for y, linha in enumerate(linhas):
         for x, ch in enumerate(linha):
             cor = PELO.get(ch) if ch in "abc" else PELE.get(ch) if ch in "edxfhg" else \
-                BARBA.get(ch) if ch in "lmnio" else OLHO.get(ch) if ch in "jwkq" else None
+                BARBA.get(ch) if ch in "lmnio" else OLHO.get(ch) if ch in "jwkquv" else None
             if cor is None:
                 continue
             out[(x0 + x, y0 + y + dy)] = cor

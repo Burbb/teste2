@@ -200,6 +200,13 @@ espaço em volta (a parede lateral do mesmo quadro) é da `arte-cenas-fenda`, "P
   empilhados (colete, faixa, queixo), nem uma mancha escura escondendo a ligação.
 - **Faixas sobre um volume** (tiras, cintos, costuras) seguem a curva que a câmera vê (vista de cima, a frente de um
   cilindro fica mais baixa que os lados).
+- **O olhar se diz pela posição do escuro no olho, não pela largura** (o Jean): igualar os dois olhos pixel a pixel
+  deixa um rosto copiado, e um olho de 4 px em escuro-branco-escuro-branco põe a pupila de lado (olha para fora, não
+  para nós). Olhando para quem está na frente, na altura dos olhos: a íris escura no meio de cada olho, o branco baixo
+  (quase pele) dos lados, a dobra da pálpebra por cima; olhando para baixo (comendo): a pálpebra baixada, com o escuro
+  embaixo do olho, e não um traço reto, que lê como olho fechado. O olho do lado da sombra tem branco mais apagado e o
+  canto de fora na sombra. Os olhos ficam à parte da grade, um desenho por estado (`OLHOS_BAIXO`, `OLHOS_OLHA` em
+  `canto/morel.py`), e se conferem no tamanho do jogo (a cena ~3,3×), na passagem e no pagamento.
 - **Confira com o que cobre escondido e depois com tudo à vista:** braços, ombreiras e objetos ocultos (o tronco lê
   sozinho?); em repouso, no gesto que cruza o peito e na pose de outra ação (o olhar do pagamento). Uma conta por linha
   acha fundo entre contornos em todas as poses; a leitura é no tamanho real.
