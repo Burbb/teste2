@@ -17,8 +17,9 @@ Não iniciar todo o plano numa única tarefa. As etapas técnicas A–I e a vali
 Grimório como um sistema), antes da etapa 9 (expansão e reescrita da campanha). As **cenas de eventos** ficam para
 depois de as histórias deles estarem definidas na 9. Efeito na **etapa 6**: os cenários dos lugares e os entornos de
 acampamento podem seguir quando pedidos (conferindo, lugar a lugar, se ficam na campanha); as cenas de acontecimentos
-(Caspar na praça e outros) esperam a 9. A etapa 7 (eventos da estrada) segue a mesma lógica, a confirmar. O estudo da
-etapa 8 está no [28](28-ETAPA8-HABILIDADES-TALENTOS-E-BUILDS.md) (pesquisa e propostas; nenhuma regra mudou).
+(Caspar na praça e outros) esperam a 9. **As cenas dos eventos da estrada (etapa 7) também esperam a 9** (confirmado
+pelo Jean na mesma data). O estudo da etapa 8 está no [28](28-ETAPA8-HABILIDADES-TALENTOS-E-BUILDS.md) (pesquisa e
+propostas, revisão 2; a arquitetura está pendente de avaliação; nenhuma regra mudou).
 
 ## Estado de referência — 29/10/2026
 
@@ -1482,6 +1483,8 @@ cenários dos lugares e os entornos de acampamento continuam disponíveis antes 
 
 ## 7. Eventos recorrentes da estrada
 
+**Desde 31/10/2026 (decisão do Jean):** as cenas destes eventos esperam a etapa 9 definir as histórias.
+
 Representar mercadores, viajantes vendendo objetos, pessoas feridas e outros eventos frequentes. Preferir
 composições reutilizáveis com variações coerentes quando isso evitar trabalho repetido. Preservar escolhas e
 consequências; cenário interativo não precisa virar exploração por movimento.
@@ -1492,8 +1495,10 @@ consequências; cenário interativo não precisa virar exploração por moviment
 [28](28-ETAPA8-HABILIDADES-TALENTOS-E-BUILDS.md): o diagnóstico da 1.220.0, a pesquisa, as possibilidades além de dano
 e cura (o cronômante incluído), talentos e habilidades juntos, as estruturas comparadas, builds diante dos mesmos
 encontros, os requisitos para a etapa 9 e a tela, as decisões pendentes e um protótipo pequeno proposto. Recomendação:
-ameaças inimigas legíveis (intenção, relógio e travas), versões por habilidade e princípios de especialização. Nada
-disso está aprovado; aguarda as decisões do Jean (seção 9 do 28).
+na revisão 2 (o Jean leu a primeira e pediu mais variedade de estilos), um vocabulário de produtos compartilhados
+(fichas, camadas, ossos, runas, ambiente) com uma árvore de regras por etiqueta, e as ameaças legíveis, as travas e
+duas intervenções na ordem dos turnos como módulos separados. **A arquitetura está pendente de avaliação do Jean**
+(seção 13 do 28); o protótipo proposto (seção 14) não foi criado.
 
 **Decisão de Jean (19/10/2026):** produzir os ícones de habilidades e talentos junto da revisão dos respectivos
 sistemas e telas, evitando arte para conceitos prestes a mudar. O visual antigo do Grimório e da árvore não está

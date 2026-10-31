@@ -9041,3 +9041,22 @@ foi automatizado.
   turnos continua fixa (25, 3.5) e a fantasia temporal fica no relógio das preparações.
 - **Parado aqui:** as decisões do Jean (seção 9 do 28) e, se ele aprovar, o protótipo isolado da seção 10
   (`ferramentas/prototipos/etapa8-builds/`, ainda não criado).
+
+### 31/10/2026 (data do computador local) — Etapa 8: a revisão 2 do estudo
+
+- **Pedido do Jean:** usar o estudo 28 como base sem aprovar a arquitetura nem o protótipo; ampliar além das respostas
+  a preparações inimigas (construir, arriscar, sustentar a comitiva), reabrir a ordem dos turnos para análise,
+  aprofundar a construção das builds e os talentos, rever a regra das cadeias, corrigir as contradições das
+  demonstrações, separar a progressão do capítulo atual e redesenhar o protótipo. Confirmou que as cenas dos eventos
+  da estrada (etapa 7) esperam a etapa 9.
+- **Feito:** o [28](28-ETAPA8-HABILIDADES-TALENTOS-E-BUILDS.md) reescrito (revisão 2): pesquisa nova (os orbes e as
+  posturas de Slay the Spire, as fichas de Darkest Dungeon II, o sacrifício de Inscryption, passar e adiar a vez,
+  laços no Magic); regras de referência antes dos exemplos; quatro estilos; o ambiente da luta (o clima já existe sem
+  dono); a ordem dos turnos comparada (alterar, transferir, gerar); três builds do Piromante e duas de outras
+  especializações com o processo de montagem; a regra das cadeias revista; a progressão por fases; nove trechos em
+  quatro encontros com as falhas classificadas; o protótipo em quatro experimentos separáveis.
+- **Recomendação (pendente de avaliação do Jean):** produtos compartilhados com uma árvore de regras por etiqueta,
+  versões em poucas habilidades e números que disputam o orçamento; ameaças legíveis, travas e duas intervenções na
+  ordem (Esperar, Revezamento) como módulos separados; cadeias limitadas por "uma vez por cadeia e por alvo".
+- **Nada do jogo mudou** (a 1.220.0 continua como está).
+- **Parado aqui:** a avaliação do Jean (seção 13 do 28) e a escolha dos experimentos do protótipo (seção 14).
