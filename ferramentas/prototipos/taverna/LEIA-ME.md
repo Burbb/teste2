@@ -131,7 +131,16 @@ com o castiçal junto dela.
 
 ### A queda de braço no canto (30/10/2026; a candidata, em avaliação)
 
-**A colher, na terceira revisão (o Jean):** ela ainda se distorcia entre os quadros, a ponta aparecia fora da
+**A colher, na quarta revisão (o Jean):** a terceira apagava a colher inteira quando a ponta entrava no caldo (recusado:
+Morel segura o cabo fora da tigela), e a colher ainda girava demais entre a coleta e a boca. Agora ela se esconde por
+trecho (`morel.colher(mergulha=morel.no_caldo)`: da superfície do caldo para a ponta, não se desenha; `atras_da_borda`:
+o que ficaria atrás da borda da frente e do bojo): a haste sai da mão, passa por cima da borda e some no caldo. As
+chaves (`juntas.CHAVES`) dão uma colher rígida, um pouco mais longa (20, uns 0,7 do antebraço), com a pega fixa e a
+mão um pouco afastada da borda; a direção muda só o que o gesto pede: a ponta para dentro do caldo na coleta, quase
+nivelada subindo, um ajuste curto para a boca, onde a concha chega aos lábios. A colher largada na queda de braço
+mostra a haste saindo da tigela; a disputa não mudou. Antes e depois em `camadas/morel-canto/revisao-colher.png`.
+
+**A colher, na terceira revisão (o Jean; a ocultação inteira foi recusada na quarta):** ela ainda se distorcia entre os quadros, a ponta aparecia fora da
 tigela, ia de encontro à cara em vez de entrar na boca e o braço tinha dois pixels de sujeira. Agora a colher é desenhada
 pixel a pixel (`morel.colher`: o cabo numa linha limpa de 1 px com a sombra, a concha em 3 pixels que continuam o cabo),
 some inteira na tigela quando a ponta está no caldo (`morel.na_tigela`, também atrás da borda da frente e do bojo), e na

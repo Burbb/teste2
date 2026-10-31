@@ -8978,3 +8978,16 @@ foi automatizado.
 - **Conferido:** as fontes iguais ao desenho; `conferir-encontro.mjs` nas duas janelas, tudo certo; a suíte, o
   gabarito, o pyflakes e a fumaça.
 - **Parado aqui:** a avaliação do Jean.
+
+### 30/10/2026 (data do computador local) — A taverna: a colher por trecho e rígida no gesto (protótipo)
+
+- **Pedido do Jean** (a queda de braço aprovada; preservar): a colher não pode sumir inteira na tigela (a haste fica
+  visível saindo da mão; só a parte submersa some) e precisa ler como peça rígida, sem girar demais entre a coleta e a
+  boca.
+- **Feito** (o LEIA-ME do protótipo, "A colher, na quarta revisão"): o corte da colher na superfície do caldo, por
+  trecho; as chaves com a pega fixa, a colher um pouco mais longa e a direção mudando só o que o gesto pede. A skill
+  `arte-personagens-fenda` registra a ocultação inteira como tentativa recusada.
+- **Conferido:** as fontes iguais ao desenho; o braço não toca a caneca; o ciclo gravado no jogo a 1920×945, quadro a
+  quadro; `conferir-encontro.mjs` nas duas janelas; a disputa da queda de braço igual, fora a haste da colher largada;
+  a suíte, o gabarito, o pyflakes e a fumaça.
+- **Parado aqui:** a avaliação do Jean.

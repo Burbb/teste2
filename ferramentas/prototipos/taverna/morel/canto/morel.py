@@ -331,54 +331,56 @@ def braco(S, E, W, corpo, extra=None):
 COLHER = [h("b4b6bc"), h("8a8c94"), h("5a5c64")]
 
 
-def colher(W, T):
-    """A colher de metal, rígida: o cabo do punho (`W`) à ponta (`T`) e a concha na ponta, com o mesmo número de pixels
-    em qualquer ângulo."""
-    # pixel a pixel, não por área: o cabo é uma linha limpa de 1 px (um pixel por passo no eixo maior, sem degraus
-    # dobrados) acesa, com a sombra de 1 px do lado de baixo; a concha, 3 pixels que continuam o cabo com a sombra e
-    # um bojo de 1 px. Rasterizar uma elipse e uma faixa de 2 px a cada ângulo mudava a forma
-    # quadro a quadro (a concha ora bloco, ora toco; o cabo em escada nas diagonais)
-    out = {}
+def colher(W, T, mergulha=None):
+    """A colher de metal, rígida: o cabo do ponto de pega (`W`) à ponta (`T`) e a concha na ponta. `mergulha(x, y)`:
+    onde fica a superfície do caldo; dali em diante, ao longo da colher, ela está submersa e não se desenha (a haste
+    até ali continua visível, saindo da mão e entrando na tigela)."""
+    # pixel a pixel, na ordem do cabo para a ponta: a haste numa linha de 1 px (um pixel por passo no eixo maior, com os
+    # degraus naturais da diagonal) acesa, com a sombra de 1 px do lado de baixo; a concha, 3 pixels que continuam a
+    # haste na mesma direção, com a sombra e um bojo de 1 px do lado da luz. Cada pedaço entra inteiro ou não entra:
+    # o corte no caldo é um corte da colher, não pixels soltos na borda dele
     L = math.dist(W, T)
     ux, uy = (T[0] - W[0]) / L, (T[1] - W[1]) / L
     deitada = abs(ux) >= abs(uy)
-    fim = L - 3.0                         # o cabo vai até o pescoço da concha
-    n = max(1, math.ceil(fim * max(abs(ux), abs(uy))))   # passos de no máximo 1 px: sem buraco no cabo
+    sombra = (0, 1) if deitada else (1, 0)
+    fim = L - 3.0                         # a haste vai até o pescoço da concha
+    n = max(1, math.ceil(fim * max(abs(ux), abs(uy))))   # passos de no máximo 1 px: sem buraco na haste
+    pedacos = []
     for k in range(n + 1):
         t = fim * k / n
         q = (math.floor(W[0] + ux * t), math.floor(W[1] + uy * t))
-        out[q] = COLHER[0]
-    for (x, y) in list(out):              # a sombra: embaixo do cabo deitado, do lado de fora (direito) do cabo em pé
-        q = (x, y + 1) if deitada else (x + 1, y)
-        if q not in out:
-            out[q] = COLHER[2]
-    # a concha continua o cabo na mesma direção (não deitada nem em pé à força: na diagonal ela entortava como um taco):
-    # 3 pixels ao longo, acesos, a sombra do mesmo lado da do cabo, e o bojo de 1 px do lado da luz no meio
-    sombra = (0, 1) if deitada else (1, 0)
+        pedacos.append([(q, COLHER[0]), ((q[0] + sombra[0], q[1] + sombra[1]), COLHER[2])])
     for a in (1, 2, 3):
         q = (math.floor(W[0] + ux * (fim + a)), math.floor(W[1] + uy * (fim + a)))
-        out[q] = COLHER[0] if a < 3 else COLHER[1]
-        out[(q[0] + sombra[0], q[1] + sombra[1])] = COLHER[2]
+        pedaco = [(q, COLHER[0] if a < 3 else COLHER[1]), ((q[0] + sombra[0], q[1] + sombra[1]), COLHER[2])]
         if a == 2:
-            out[(q[0] - sombra[0], q[1] - sombra[1])] = COLHER[1]
+            pedaco.append(((q[0] - sombra[0], q[1] - sombra[1]), COLHER[1]))
+        pedacos.append(pedaco)
+    out = {}
+    for pedaco in pedacos:
+        if mergulha and mergulha(*pedaco[0][0]):
+            break
+        for q, cor in pedaco:
+            if q not in out or cor == COLHER[0]:
+                out[q] = cor
     return out
 
 
-def na_tigela(x, y, dx=0, dy=0, funda=False):
-    """Se o pixel da colher fica escondido pela tigela (deslocada dx, dy): mergulhado no caldo, ou atrás da borda da
-    frente e do bojo (a colher está dentro da tigela: o que passaria por eles não aparece). `funda`: a ponta está no
-    caldo (a coleta, o repouso, a colher largada): a colher toda some na tigela, também o toco do cabo sobre a borda,
-    que de longe parecia a ponta apoiada para fora."""
+def no_caldo(x, y, dx=0, dy=0):
+    """Se o pixel cai na superfície do caldo da tigela (deslocada dx, dy)."""
+    u, v = (x + 0.5 - 170 - dx) / 22.5, (y + 0.5 - 72 - dy) / 5.0
+    return u * u + v * v <= 0.62
+
+
+def atras_da_borda(x, y, dx=0, dy=0):
+    """Se o pixel fica atrás da borda da frente ou do bojo da tigela (deslocada dx, dy). As bordas dos lados e a de lá
+    ficam atrás da colher: a haste passa por cima delas."""
     cx, cy = 170 + dx, 72 + dy
     u, v = (x + 0.5 - cx) / 22.5, (y + 0.5 - cy) / 5.0
-    if u * u + v * v <= (1.35 if funda else 0.62):
-        return True
-    if y < cy:
-        return False
-    if u * u + v * v <= 1:
+    if v > 0.35 and u * u + v * v <= 1:
         return True
     t = (y - cy) / 11                     # o bojo, como em objetos.tigela
-    return y < cy + 12 and abs(x + 0.5 - cx) < 22.5 * (max(0.0, 1 - t * t * 0.75)) ** 0.5
+    return cy + 1 <= y < cy + 12 and abs(x + 0.5 - cx) < 22.5 * (max(0.0, 1 - t * t * 0.75)) ** 0.5         and u * u + v * v > 1
 
 
 def mao(c, rx=5.0, ry=4.2):

@@ -13,7 +13,7 @@ do tempo e a reação ao pagamento continuarem as mesmas (recolher duas vezes, s
 colher cheia diante do peito, a boca, descer, repousar, mastigar, olhar)."""
 import math
 
-BRACO, ANTEBRACO, COLHER = 34.0, 28.0, 17.0
+BRACO, ANTEBRACO, COLHER = 34.0, 28.0, 20.0
 CA, SA = math.cos(math.radians(35)), math.sin(math.radians(35))
 OMBRO_Y = 44
 
@@ -46,20 +46,22 @@ def cotovelo(ombro, pulso, polo):
     return _add(_add(ombro, _mul(u, a)), _mul(lado, hh))
 
 
-# a boca no espaço (a da cabeça, com a cabeça descendo ao encontro da colher); a colher entra de frente e de baixo
+# a boca no espaço (a da cabeça, com a cabeça descendo ao encontro da colher); a colher chega de frente e um pouco de
+# baixo, a concha nos lábios
 BOCA = (171.0, 22.0, 6.0)
-_DC = (0.45, -0.5, -0.7)
+_DC = (0.55, -0.25, -0.8)
 _n = math.sqrt(_dot(_DC, _DC))
 # as chaves: o ombro na tela e a profundidade, o pulso no espaço, a direção da colher, o polo (o cotovelo para fora e
-# para baixo: na referência ele pousa ao lado da caneca)
+# para baixo: na referência ele pousa ao lado da caneca). A colher é rígida e a pega não desliza: o que muda entre as
+# chaves é só a direção, e só o que o gesto pede (a ponta para dentro do caldo na coleta, quase nivelada para carregar
+# a comida subindo, um ajuste curto para a boca); a mão fica afastada da borda o bastante para a haste aparecer até o
+# caldo
 CHAVES = {
-    # na tigela, a ponta da colher pega o caldo por dentro da boca dela (não na borda): o pulso junto da borda da
-    # esquerda e a colher descendo para dentro
-    "recolher": dict(S=(138, 44, -6), W=(143, 55, 17), T=(0.765, 0.294, 0.571), polo=(-1, 0.7, 0.3)),
-    "levantar": dict(S=(138, 44, -5), W=(140, 44, 14), T=(0.6, -0.45, 0.45), polo=(-1, 0.7, 0.3)),
+    "recolher": dict(S=(138, 44, -6), W=(139, 55, 17), T=(0.85, 0.45, 0.25), polo=(-1, 0.7, 0.3)),
+    "levantar": dict(S=(138, 44, -5), W=(146, 44, 14), T=(0.9, 0.0, -0.3), polo=(-1, 0.7, 0.3)),
     "boca": dict(S=(140, 42, -4), W=tuple(b - d / _n * COLHER for b, d in zip(BOCA, _DC)), T=_DC, polo=(-1, 0.8, 0.3)),
-    "retornar": dict(S=(138, 44, -5), W=(139, 47, 15), T=(0.6, -0.3, 0.45), polo=(-1, 0.7, 0.3)),
-    "repousar": dict(S=(138, 44, -6), W=(142, 56, 18), T=(0.765, 0.294, 0.571), polo=(-1, 0.7, 0.3)),
+    "retornar": dict(S=(138, 44, -5), W=(145, 47, 15), T=(0.9, 0.1, -0.2), polo=(-1, 0.7, 0.3)),
+    "repousar": dict(S=(138, 44, -6), W=(138, 56, 18), T=(0.85, 0.45, 0.25), polo=(-1, 0.7, 0.3)),
 }
 # a subida e a descida, cada uma uma curva só (a curva de Bézier quadrática pelas três chaves do trecho: a do meio puxa
 # a curva sem que a mão passe por ela, e a mão não faz gancho para um lado e depois para o outro); a fração na curva

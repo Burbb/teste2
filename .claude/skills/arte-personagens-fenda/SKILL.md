@@ -315,12 +315,20 @@ Jean):
   O objeto fica no apoio (no meio do tampo, não na beirada).
 - **Uma ferramenta pequena se desenha pixel a pixel, não por área** (o Jean, duas rodadas): rasterizar uma faixa de
   2 px e uma elipse na ponta a cada ângulo muda a forma quadro a quadro (a concha ora bloco, ora toco; o cabo em escada
-  nas diagonais). O que segura: o cabo como linha limpa de 1 px (um pixel por passo no eixo maior) com a sombra de 1 px
-  ao lado, e a ponta como um punhado fixo de pixels que continua o cabo na mesma direção (forçada na horizontal ou na
-  vertical, ela entorta como um taco). Confira a peça sozinha, ampliada, em todas as poses lado a lado.
-- **O que entra some:** a ponta no caldo e o toco do cabo sobre a borda quando a ponta está mergulhada (o toco parecia
-  a ponta apoiada para fora); atrás da borda da frente da tigela, nada; na boca, nada acima da linha dos lábios (a
-  concha entra, não sobe pela cara).
+  nas diagonais). O que segura: o cabo como linha de 1 px (um pixel por passo no eixo maior, com os degraus naturais da
+  diagonal) com a sombra de 1 px ao lado, e a ponta como um punhado fixo de pixels que continua o cabo na mesma direção
+  (forçada na horizontal ou na vertical, ela entorta como um taco). A folha da peça sozinha ajuda no diagnóstico, mas
+  não prova nada: confira na mão, dentro da tigela, no tamanho real e em movimento.
+- **Uma ferramenta rígida gira só o que o gesto pede** (o Jean): a colher que apontava para baixo na coleta e quase em
+  pé na boca girava uns 100° na tela e parecia se mexer sozinha. Com a pega fixa na mão, a direção muda pouco: a ponta
+  para dentro do caldo na coleta, quase nivelada subindo (carregando a comida), um ajuste curto para a boca. Uma colher
+  do tamanho certo (uns 0,7 do antebraço) e a mão um pouco afastada da borda deixam a haste à vista.
+- **O que entra se esconde por trecho, não inteiro** (o Jean): a colher se corta onde a haste atravessa a superfície
+  do caldo (`morel.colher(mergulha=)`: dali para a ponta não se desenha; a haste da mão até ali aparece, passando por
+  cima da borda), e o que ficaria atrás da borda da frente não aparece. **Tentativa recusada:** apagar a colher inteira
+  quando a ponta está no caldo (para esconder o toco do cabo sobre a borda) tirava a colher da mão; o certo é a haste
+  saindo da mão e entrando na tigela, a ponta escondida dentro. Na boca, nada acima da linha dos lábios (a concha chega
+  a eles, não sobe pela cara).
 - **Um gesto de ida é uma curva só:** com três chaves (sair, pausa, chegar) interpoladas em dois trechos retos, a mão
   fazia gancho (para um lado, depois para o outro) e o passo dobrava de um quadro ao seguinte; a curva de Bézier pelas
   três chaves, com as frações dando a facilidade, anda sem tranco.

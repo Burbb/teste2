@@ -106,17 +106,15 @@ def pose(p):
     for q, cor in MO.ombreira_direita(p["S"]).items():
         if q not in ante:
             dir_[q] = cor
-    # a mão em volta do cabo: o centro um pouco além do pulso, na direção da colher; a colher sai dela
-    # (a mão mais perto do pulso, para o cabo aparecer além dela; a ponta não muda: os contatos com a boca ficam). O
-    # que da colher cai no caldo está mergulhado: não se desenha (a ponta some na coleta e reaparece ao sair)
+    # a mão em volta do cabo, o ponto de pega fixo (o centro um pouco além do pulso, na direção da colher); a colher sai
+    # dela. Na tigela, só o que passa da superfície do caldo some (a concha e o fim da haste: `MO.colher(mergulha=)`),
+    # e o que ficaria atrás da borda da frente; a haste da mão até o caldo aparece
     d = p["dir_colher"]
     mao = (p["W"][0] + d[0] * 3, p["W"][1] + d[1] * 3)
-    colher = MO.colher((p["W"][0] + d[0] * 5, p["W"][1] + d[1] * 5), p["T"])
-    # e na boca a concha entra: nada da colher acima da linha da boca (a ponta não sobe pela cara; aberta, o cabo entra
-    # na fresta de baixo)
+    colher = MO.colher((p["W"][0] + d[0] * 5, p["W"][1] + d[1] * 5), p["T"], mergulha=MO.no_caldo)
+    # e na boca a concha chega aos lábios: nada da colher acima da linha da boca (não sobe pela cara)
     labio = MO.CABECA_POS[1] + dy + p["dyc"] + 23
-    funda = MO.na_tigela(int(p["T"][0]), int(p["T"][1]))
-    dir_.update({q: c for q, c in colher.items() if not MO.na_tigela(*q, funda=funda) and q[1] > labio})
+    dir_.update({q: c for q, c in colher.items() if not MO.atras_da_borda(*q) and q[1] > labio})
     dir_.update(MO.mao(mao, 6.5, 5.5))
     c["morel_braco"] = _img(dir_)
     jj = {}
