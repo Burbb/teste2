@@ -19,7 +19,9 @@ depois de as histórias deles estarem definidas na 9. Efeito na **etapa 6**: os 
 acampamento podem seguir quando pedidos (conferindo, lugar a lugar, se ficam na campanha); as cenas de acontecimentos
 (Caspar na praça e outros) esperam a 9. **As cenas dos eventos da estrada (etapa 7) também esperam a 9** (confirmado
 pelo Jean na mesma data). O estudo da etapa 8 está no [28](28-ETAPA8-HABILIDADES-TALENTOS-E-BUILDS.md) (pesquisa e
-propostas, revisão 2; a arquitetura está pendente de avaliação; nenhuma regra mudou).
+propostas, revisão 2; a arquitetura está pendente de avaliação; nenhuma regra mudou). **Rodada 3 (mesma data):** o
+protótipo X1 (montagem de builds e estrutura dos talentos) está em `ferramentas/prototipos/etapa8-builds/`, com a
+especificação na seção 15 do 28; o Revezamento foi recusado pelo Jean e o Esperar ficou como hipótese futura.
 
 ## Estado de referência — 29/10/2026
 
@@ -1498,7 +1500,10 @@ encontros, os requisitos para a etapa 9 e a tela, as decisões pendentes e um pr
 na revisão 2 (o Jean leu a primeira e pediu mais variedade de estilos), um vocabulário de produtos compartilhados
 (fichas, camadas, ossos, runas, ambiente) com uma árvore de regras por etiqueta, e as ameaças legíveis, as travas e
 duas intervenções na ordem dos turnos como módulos separados. **A arquitetura está pendente de avaliação do Jean**
-(seção 13 do 28); o protótipo proposto (seção 14) não foi criado.
+(seção 13 do 28). **Rodada 3:** o Jean recusou o Revezamento (e as variantes de trocar posições, doar a ação ou
+antecipar a vez de um aliado; Esperar fica como hipótese futura) e autorizou só o X1, implementado isolado em
+`ferramentas/prototipos/etapa8-builds/` (seção 15 do 28: cadeias por identidade, builds sem travas nem ambientes, o
+orçamento de 7 pontos nas duas estruturas). Nada entrou no jogo.
 
 **Decisão de Jean (19/10/2026):** produzir os ícones de habilidades e talentos junto da revisão dos respectivos
 sistemas e telas, evitando arte para conceitos prestes a mudar. O visual antigo do Grimório e da árvore não está

@@ -1,0 +1,177 @@
+/* PROTÓTIPO X1 da etapa 8 (31/10/2026; nada no jogo). Apresentação funcional e provisória: as cores e as fontes do
+   jogo (01-base.css, 11-tipografia.css), o resto daqui. Nada disto é a interface definitiva do Grimório. */
+:root { --linha: rgba(226, 189, 99, 0.18); --fundo-2: rgba(0, 0, 0, 0.28); }
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body { background: var(--fundo); color: var(--tinta); font-family: var(--texto); font-size: 15px; line-height: 1.35;
+  display: flex; flex-direction: column; overflow: hidden; }
+h1, h2 { font-family: var(--titulo); color: var(--ouro); font-weight: 400; margin: 0; }
+h1 { font-size: 32px; text-shadow: var(--contorno); }
+h1 span { font-family: var(--texto); font-size: 17px; color: var(--tinta-2); text-shadow: none; }
+h2 { font-size: 16px; margin: 10px 0 6px; letter-spacing: .02em; }
+h2 small { font-family: var(--texto); color: var(--tinta-3); font-size: 13px; }
+kbd { font-family: var(--num); font-size: 11px; color: var(--tinta-3); border: 1px solid #4a3c2c; padding: 0 3px; margin-left: 4px; }
+button { font: inherit; color: inherit; }
+.nota { color: var(--tinta-2); font-size: 14px; margin: 4px 0; max-width: 70ch; }
+.painel { background: var(--painel); border: 2px solid #4a3a24; padding: 8px 12px; min-height: 0; }
+.cabeca { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+
+#topo { display: flex; align-items: center; gap: 24px; padding: 6px 16px; border-bottom: 2px solid #4a3a24; background: var(--painel); }
+#abas { display: flex; gap: 4px; }
+#abas button, .botao-x, .alternar button, #exemplos button { background: var(--fundo-2); border: 2px solid #5a4630; padding: 4px 12px; cursor: pointer; text-decoration: none; color: var(--tinta); }
+#abas button.atual, .alternar button.atual { border-color: var(--ouro-2); color: var(--ouro); }
+#abas button:hover, .botao-x:hover, .alternar button:hover, #exemplos button:hover { border-color: var(--ouro-2); }
+.botao-x:disabled { opacity: .45; cursor: default; border-color: #3a2e20; }
+.botao-x.principal { border-color: var(--ouro-2); color: var(--ouro); font-weight: 600; }
+#build-topo { color: var(--tinta-2); font-size: 14px; margin-left: auto; }
+
+.tela { flex: 1; min-height: 0; padding: 8px; gap: 8px; }
+.tela[hidden] { display: none !important; }
+
+/* ---------------------------------------------------------------- montar */
+#montar { display: grid; grid-template-columns: minmax(300px, 1fr) minmax(420px, 1.5fr) minmax(320px, 1.1fr); }
+#montar > .painel { overflow-y: auto; }
+.alternar { display: flex; gap: 4px; flex-wrap: wrap; }
+#exemplos { display: flex; flex-wrap: wrap; gap: 4px; }
+#exemplos button { font-size: 14px; padding: 3px 8px; }
+#exemplos button small { color: var(--tinta-3); }
+#exemplos .frase { flex-basis: 100%; color: var(--tinta-2); font-size: 13px; margin: 2px 0 0; }
+.hab { border: 2px solid #3a2e20; background: var(--fundo-2); padding: 5px 8px; margin: 4px 0; cursor: pointer; display: block; width: 100%; text-align: left; }
+.hab.no-kit { border-color: var(--ouro-2); }
+.hab .nome { font-weight: 600; }
+.hab .custo { float: right; color: var(--tinta-2); font-size: 13px; }
+.hab .desc { font-size: 13.5px; color: var(--tinta-2); margin-top: 2px; }
+.hab.cheio:not(.no-kit) { opacity: .55; }
+.marca { display: inline-block; width: 14px; color: var(--ouro); }
+
+.linha-arvore { border-top: 1px solid var(--linha); padding-top: 4px; margin-top: 6px; }
+.linha-arvore > h3 { font-size: 13px; color: var(--tinta-2); font-weight: 600; margin: 2px 0 4px; }
+.linha-arvore > h3.falta { color: var(--sangue-2); }
+.nos { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 6px; }
+.no { border: 2px solid #3a2e20; background: var(--fundo-2); padding: 6px 8px; display: flex; flex-direction: column; gap: 3px; }
+.no.comprado { border-color: var(--ouro-2); }
+.no .t { display: flex; gap: 6px; align-items: baseline; }
+.no .tipo { font-size: 11px; padding: 0 4px; border: 1px solid #6a5434; color: var(--tinta-2); text-transform: uppercase; letter-spacing: .04em; }
+.no .tipo.R { color: var(--frio); border-color: var(--frio); }
+.no .tipo.V { color: var(--brasa); border-color: var(--brasa); }
+.no .tipo.P { color: var(--arcano); border-color: var(--arcano); }
+.no .nome { font-weight: 600; }
+.no .preco { margin-left: auto; font-size: 12.5px; color: var(--tinta-2); white-space: nowrap; }
+.no .texto { font-size: 13.5px; }
+.no .afeta { font-size: 12.5px; color: var(--bom); }
+.no .aviso { font-size: 12.5px; color: var(--brasa); }
+.no .controles { display: flex; align-items: center; gap: 6px; margin-top: auto; }
+.no .controles button { width: 28px; height: 24px; padding: 0; background: var(--fundo-2); border: 2px solid #5a4630; cursor: pointer; }
+.no .controles button:disabled { opacity: .35; cursor: default; }
+.no .controles .rank { min-width: 34px; text-align: center; font-family: var(--num); }
+.no .motivo { font-size: 12.5px; color: var(--tinta-3); text-align: right; }
+.grupo-versoes { margin: 6px 0; }
+.grupo-versoes > h4 { margin: 0 0 3px; font-size: 13px; color: var(--tinta-2); font-weight: 600; }
+#erros { color: var(--sangue-2); margin: 4px 0; padding-left: 18px; font-size: 14px; }
+
+#kit-final .hab { cursor: default; }
+#kit-final .versao { color: var(--brasa); font-size: 13px; }
+#kit-final ul { margin: 3px 0 0; padding-left: 16px; font-size: 13px; color: var(--bom); }
+#kit-final .vazio { color: var(--tinta-3); }
+.enc { border: 2px solid #3a2e20; background: var(--fundo-2); padding: 5px 8px; margin: 4px 0; cursor: pointer; display: block; width: 100%; text-align: left; }
+.enc.atual { border-color: var(--ouro-2); }
+.enc .nome { font-weight: 600; }
+.enc .resumo { font-size: 13px; color: var(--tinta-2); }
+.enc .fav { font-size: 12.5px; color: var(--tinta-3); }
+.linha-lutar { display: flex; align-items: center; gap: 12px; margin: 8px 0; position: sticky; bottom: -8px; background: var(--painel); padding: 6px 0; border-top: 1px solid var(--linha); }
+.linha-lutar input { width: 90px; background: var(--fundo-2); color: var(--tinta); border: 2px solid #5a4630; padding: 3px 6px; font: inherit; }
+#salvar-box textarea { width: 100%; background: var(--fundo-2); color: var(--tinta); border: 2px solid #5a4630; font: inherit; margin: 4px 0; }
+#salvar-box summary, #regras-box summary { cursor: pointer; color: var(--tinta-2); }
+#regras { font-size: 13.5px; padding-left: 18px; margin: 4px 0; }
+
+/* ---------------------------------------------------------------- luta */
+#luta { display: grid; grid-template-columns: 1fr 1fr minmax(340px, 0.9fr); grid-template-rows: auto 1fr auto;
+  grid-template-areas: "faixa faixa log" "grupo frente log" "doca doca log"; position: relative; }
+#faixa { grid-area: faixa; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 16px; }
+#luta-titulo { margin: 0; color: var(--tinta-2); }
+#luta-titulo b { color: var(--ouro); }
+#ordem { display: flex; gap: 4px; flex-wrap: wrap; }
+#ordem span { padding: 1px 6px; border: 1px solid #3a2e20; font-size: 13px; }
+#ordem .inimigo { color: #e6a99d; }
+#ordem .agiu { opacity: .45; }
+#ordem .atual { border-color: var(--ouro); color: var(--ouro); }
+#ordem .morto { text-decoration: line-through; opacity: .35; }
+#grupo { grid-area: grupo; overflow-y: auto; }
+#frente { grid-area: frente; overflow-y: auto; }
+#log-box { grid-area: log; display: flex; flex-direction: column; }
+#log { overflow-y: auto; flex: 1; font-size: 13.5px; }
+#doca { grid-area: doca; }
+
+.carta { border: 2px solid #3a2e20; background: var(--painel); padding: 6px 8px; margin-bottom: 6px; display: grid;
+  grid-template-columns: 36px 1fr auto; gap: 2px 8px; align-items: center; position: relative; }
+.carta.vez { border-color: var(--ouro); }
+.carta.morto { opacity: .4; }
+.carta.alvo { cursor: pointer; border-color: var(--frio); }
+.carta.alvo:hover { background: rgba(80, 120, 160, 0.15); }
+.carta .ret { grid-row: span 3; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; }
+.carta .ret img, .carta .ret canvas { image-rendering: pixelated; }
+.sem-retrato { font-family: var(--titulo); color: var(--ouro); font-size: 20px; }
+.carta .nome { font-weight: 600; }
+.carta .previsto { grid-row: span 2; font-family: var(--num); font-size: 22px; color: var(--ouro); text-align: right; }
+.carta .previsto small { display: block; font-size: 11px; color: var(--tinta-3); }
+.barra { height: 8px; background: #2a1d14; position: relative; margin: 1px 0; }
+.barra i { position: absolute; inset: 0 auto 0 0; background: var(--sangue); }
+.barra.rec i { background: var(--frio); }
+.vals { font-size: 12.5px; color: var(--tinta-2); font-family: var(--num); }
+.chips { grid-column: 2 / -1; display: flex; flex-wrap: wrap; gap: 3px; }
+.chip { font-size: 12px; padding: 0 5px; border: 1px solid #5a4630; background: var(--fundo-2); }
+.chip.guarda { color: var(--frio); border-color: var(--frio); }
+.chip.forca { color: var(--ouro); border-color: var(--ouro-2); }
+.chip.exposto { color: var(--sangue-2); border-color: var(--sangue-2); }
+.chip.queimadura, .chip.pavio, .chip.calor { color: var(--brasa); border-color: var(--brasa); }
+.chip.prep { color: #ffd0c8; border-color: var(--sangue-2); background: rgba(140, 30, 20, .35); font-weight: 600; }
+.chip.furia { color: #ffb3a8; border-color: var(--sangue); }
+
+#doca .quem { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+#doca .quem b { color: var(--ouro); }
+#doca .acoes { display: flex; flex-wrap: wrap; gap: 4px; }
+.acao { border: 2px solid #5a4630; background: var(--fundo-2); padding: 3px 8px; cursor: pointer; text-align: left; min-width: 130px; }
+.acao:hover:not(:disabled), .acao.escolhida { border-color: var(--ouro); }
+.acao:disabled { opacity: .45; cursor: default; }
+.acao .n { font-weight: 600; display: block; }
+.acao .v { color: var(--brasa); font-size: 12px; }
+.acao .p { font-size: 12px; color: var(--tinta-2); }
+.acao .m { font-size: 12px; color: var(--sangue-2); display: block; }
+.acao.ult { border-style: double; border-width: 3px; }
+/* altura reservada: passar o mouse nas ações não move os botões */
+#doca .explica { font-size: 13.5px; color: var(--tinta-2); margin: 4px 0 0; height: 7.6em; overflow-y: auto; max-width: 110ch; }
+#doca .explica ul { margin: 2px 0 0; padding-left: 16px; color: var(--bom); }
+
+.ev { padding: 1px 0; }
+.ev.t-rodada { color: var(--ouro); font-weight: 600; margin-top: 6px; border-top: 1px solid var(--linha); }
+.ev.t-acao { color: var(--tinta); margin-top: 3px; }
+.ev.t-acao.inimigo { color: #e6a99d; }
+.ev.t-dano, .ev.t-cura, .ev.t-acende, .ev.t-ficha, .ev.t-estado, .ev.t-recurso, .ev.t-detona, .ev.t-interrompe, .ev.t-resiste, .ev.t-apaga, .ev.t-perde, .ev.t-protege { color: var(--tinta-2); padding-left: 10px; }
+.ev.t-gatilho { color: var(--bom); }
+.ev.t-barrado { color: var(--tinta-3); font-style: italic; }
+.ev.t-prepara { color: #ffd0c8; font-weight: 600; }
+.ev.t-fim { color: var(--ouro); font-weight: 600; }
+.ev .cad { font-size: 11px; color: var(--frio); border: 1px solid var(--frio); padding: 0 3px; margin-right: 4px; font-style: normal; }
+
+#fim { position: absolute; inset: 40px 25% auto 25%; background: var(--painel); border: 3px solid var(--ouro-2); padding: 12px 16px; z-index: 5; max-height: calc(100% - 80px); overflow-y: auto; box-shadow: var(--sombra); }
+#fim h2 { font-size: 32px; text-shadow: var(--contorno); }
+#fim table { border-collapse: collapse; font-size: 14px; margin: 4px 0; }
+#fim td { padding: 1px 10px 1px 0; vertical-align: top; }
+#fim .botoes { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
+
+/* ---------------------------------------------------------------- registro */
+#registro { display: flex; }
+#registro > .painel { flex: 1; overflow: auto; }
+table.reg { border-collapse: collapse; font-size: 13.5px; width: 100%; }
+table.reg th { text-align: left; color: var(--ouro); font-weight: 600; border-bottom: 1px solid var(--linha); padding: 3px 6px; }
+table.reg td { border-bottom: 1px solid rgba(226, 189, 99, 0.08); padding: 3px 6px; vertical-align: top; }
+.vitoria { color: var(--bom); }
+.derrota { color: var(--sangue-2); }
+
+/* janelas menores (1280×720): a árvore embaixo da escolha, o registro da luta mais estreito */
+@media (max-width: 1500px) {
+  #montar { grid-template-columns: minmax(280px, 1fr) minmax(380px, 1.4fr); grid-auto-rows: max-content; overflow-y: auto; }
+  #montar > .painel { overflow: visible; min-height: auto; }
+  #m-build { grid-column: 1 / -1; }
+  #luta { grid-template-columns: 1fr 1fr minmax(280px, 0.8fr); }
+}

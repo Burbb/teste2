@@ -9060,3 +9060,27 @@ foi automatizado.
   ordem (Esperar, Revezamento) como módulos separados; cadeias limitadas por "uma vez por cadeia e por alvo".
 - **Nada do jogo mudou** (a 1.220.0 continua como está).
 - **Parado aqui:** a avaliação do Jean (seção 13 do 28) e a escolha dos experimentos do protótipo (seção 14).
+
+### 31/10/2026 (data do computador local) — Etapa 8: o protótipo X1 (montagem de builds)
+
+- **Pedido do Jean:** avançar para o X1 (montagem de builds e estrutura dos talentos), sem aprovar a arquitetura;
+  recusou o **Revezamento** e as variantes (trocar posições, doar a ação, antecipar a vez de um aliado); **Esperar**
+  fica como hipótese futura, fora do X1. Antes de implementar: definir a identidade das cadeias, tirar das builds a
+  dependência de travas e ambientes, fazer um orçamento que obrigue a escolher e adotar os critérios de avaliação dele
+  (trocar talentos entre encontros não é obrigatório; frequência de uso é indício, não reprovação).
+- **Feito:** a seção 15 do [28](28-ETAPA8-HABILIDADES-TALENTOS-E-BUILDS.md) (a especificação corrigida) e as marcas
+  do Revezamento recusado nas seções 1, 3, 5, 6, 10, 12, 13 e 14; o protótipo em
+  [`ferramentas/prototipos/etapa8-builds/`](../ferramentas/prototipos/etapa8-builds/LEIA-ME.md) (`demo.bat`, porta
+  8797): duas estruturas com 7 pontos (híbrida e de versões com princípios), Berserker e Piromante, nove exemplos
+  editáveis, cinco encontros com inimigos do jogo, a mesma semente para repetir, redistribuição gratuita e o registro
+  das escolhas, ações e cadeias (tela e JSON).
+- **Regras provisórias principais:** cadeia é tudo o que uma ação provoca; cada efeito acontece uma vez por (efeito,
+  dono, motivo) na cadeia; reações respondem só a golpes de ação; limites por rodada ficam escritos em quem os tem.
+  O Quebrador responde às preparações que o jogo já tem (Golpe Esmagador) e expõe; a Fornalha usa Estouro, Contágio,
+  Fornalha Interior e Queimar a Si Mesmo, sem Óleo.
+- **Conferido:** 28 testes do protótipo (montagem, as quatro cadeias pedidas, interações, repetição pela semente,
+  isolamento do jogo); um jogador automático em todas as builds e encontros (nada trava; lutas de 4 a 9 rodadas);
+  capturas em 1920×945 e 1280×720 (corrigidos a montagem sobreposta em 1280, a doca que andava com o mouse e o nó
+  espremido). O jogo não mudou (1.220.0): suíte, gabarito, pyflakes e fumaça.
+- **Parado aqui:** o Jean joga o X1 e avalia (seção 15.6 e as perguntas da 15.8). Depois: decidir a estrutura dos
+  talentos e se o X2 (intenção) ou o X3 (chefes) vêm.

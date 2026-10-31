@@ -5,6 +5,12 @@ arquitetura nem o protótipo; ampliar além das respostas a preparações inimig
 aprofundar a construção das builds e os talentos, rever a regra das cadeias, corrigir as contradições das
 demonstrações, separar a progressão desejada do capítulo provisório e redesenhar o protótipo.
 
+**Rodada 3 — 31/10/2026: o protótipo X1.** O Jean autorizou só o X1 (montagem de builds e estrutura dos talentos),
+com a arquitetura ainda pendente, e **recusou o Revezamento** e as variantes (trocar posições, doar a ação, antecipar a
+vez de um aliado); Esperar fica só como hipótese futura. A seção 15 traz a especificação corrigida que o protótipo usa
+(cadeias por identidade, builds independentes de travas e ambientes, orçamento) e as perguntas que o jogo precisa
+responder. O protótipo está em `ferramentas/prototipos/etapa8-builds/`.
+
 **Entrega de pesquisa e concepção: nada daqui muda regras, telas ou conteúdo do jogo.** O jogo integrado (1.220.0)
 continua como está. Os números são inventados para os exemplos funcionarem. **A arquitetura recomendada está pendente
 de avaliação do Jean**; nenhuma proposta deste documento é regra aprovada.
@@ -30,7 +36,8 @@ Como ler (cada seção diz a sua natureza):
 | 11 | Builds diante dos mesmos encontros | Simulação de design (números inventados) |
 | 12 | A campanha e a apresentação | Requisitos para a etapa 9 e a arte |
 | 13 | As decisões que precisam do Jean | Para avaliação |
-| 14 | O protótipo revisado | Proposta, não implementada |
+| 14 | O protótipo revisado | Proposta (o X1 foi implementado: seção 15) |
+| 15 | O X1 implementado: especificação corrigida | Regras provisórias do protótipo e perguntas abertas |
 | A | A primeira versão: o que foi substituído | Histórico |
 
 A pergunta que guia tudo: **essas combinações mudam o que o jogador percebe, planeja, arrisca e decide durante a luta,
@@ -50,7 +57,7 @@ da estrada (etapa 7) também esperam a 9.
 | 6 | Cenários dos lugares e entornos de acampamento | **Podem seguir** quando pedidos, conferindo, lugar a lugar, se ele continua na campanha |
 | 6 | Cenas de acontecimentos (Caspar na praça e outros) | **Esperam a etapa 9** definir as histórias |
 | 7 | Cenas dos eventos recorrentes da estrada | **Esperam a etapa 9** (confirmado pelo Jean) |
-| 8 | Sistemas, Grimório, árvore, ícones e animações | **Agora**, por este estudo. Ícones e telas esperam o sistema escolhido (decisão de 19/10/2026) |
+| 8 | Sistemas, Grimório, árvore, ícones e animações | **Agora**, por este estudo; o protótipo X1 está pronto para o Jean jogar (seção 15). Ícones e telas esperam o sistema escolhido (decisão de 19/10/2026) |
 | 9 | Campanha | Depois da 8. Recebe da 8 os requisitos de encontros e de progressão (seções 9 e 12) |
 
 ---
@@ -64,7 +71,7 @@ da estrada (etapa 7) também esperam a 9.
 | Centro da profundidade | Ameaças legíveis (intenção, relógio, travas) explicavam quase tudo | São **um módulo entre quatro estilos**: responder, construir, arriscar, sustentar a comitiva | Builds que constroem o próprio mecanismo funcionam contra inimigos que não preparam nada (seções 5 e 11) |
 | Talentos | Uma versão por habilidade e um ou dois princípios; números fora da árvore | **Árvore de regras por etiqueta**, com versões em poucas habilidades e números que disputam o orçamento | Versões são locais demais: não criam relações entre habilidades, e é isso que distingue builds da mesma especialização (seção 7) |
 | Vocabulário de combinação | Pares feitos um para o outro (Brasa → Combustão) | **Produtos compartilhados**: estados, fichas, corpos, runas, o ambiente da luta, que várias fontes produzem e várias consomem | Combinações que ninguém desenhou como par (seção 7.4) |
-| Ordem dos turnos | Manter fixa | **Reaberta.** Duas intervenções merecem teste (transferir a sua vez a um aliado; adiar a própria vez nesta rodada); mexer na posição de inimigos e gerar ações, não | O ganho e a perda de cada uma estão na seção 6 |
+| Ordem dos turnos | Manter fixa | **Reaberta.** Duas intervenções merecem teste (transferir a sua vez a um aliado; adiar a própria vez nesta rodada); mexer na posição de inimigos e gerar ações, não. **Depois: o Jean recusou o Revezamento; Esperar fica como hipótese futura** | O ganho e a perda de cada uma estão na seção 6 |
 | Cadeias de gatilhos | Profundidade 1: efeito disparado não dispara nada | **Uma vez por cadeia, por efeito e por alvo**; quem gera recurso ou vez, uma vez por rodada | A profundidade 1 proíbe justamente as reações em cadeia que fazem uma build (seção 8) |
 | Medida de dominância | Uma habilidade em mais da metade das ações | **A escolha depende do estado?** (alvo, momento, preparo, consequência) | Uma habilidade central pode concentrar decisões (seção 8.5) |
 | Progressão | Especialização e ultimate no nível 4 | **Separada do capítulo:** escolhas de build desde os primeiros níveis, aprofundadas por fases; o que depende da 9 está marcado | O capítulo vai crescer (seção 9) |
@@ -106,7 +113,8 @@ dos turnos para testar. Detalhes e concessões na seção 10.
 
 1. A estrutura dos talentos: árvore de regras por etiqueta, versões e princípios, ou selos.
 2. Quanto da intenção inimiga mostrar, e se ela entra antes ou depois dos talentos.
-3. Se a ordem dos turnos ganha as duas intervenções delimitadas.
+3. ~~Se a ordem dos turnos ganha as duas intervenções delimitadas.~~ Decidido: Revezamento recusado; Esperar fica
+   como hipótese futura, fora do X1.
 4. A regra das cadeias.
 5. As fases da progressão (o que vem cedo, o que vem com a especialização, o que a 9 decide).
 6. O protótipo: quais dos quatro experimentos, e em que ordem.
@@ -377,7 +385,7 @@ Traz: o alerta contra "manter no ponto ideal".
   ([Megami Tensei Wiki, Baton Pass](https://megatenwiki.com/wiki/Baton_Pass); [Ludo Guide](https://www.ludo.guide/guide/persona-5-royal/battle-mechanics), fãs).
 - **Lição:** passar uma ação é diferente de criar uma; o limite "não volta a quem já recebeu" corta as cadeias.
 - **Adaptação:** **Revezamento** (seção 6): você abre mão da sua vez e um aliado age agora; a vez dele, mais tarde,
-  continua sendo dele. Sem a ação extra de Persona.
+  continua sendo dele. Sem a ação extra de Persona. **Recusado pelo Jean (31/10/2026).**
 
 ### 3.20 Pathfinder 2e (Paizo): adiar a própria vez
 
@@ -434,7 +442,7 @@ as regras vêm antes; todas as demonstrações deste documento obedecem a elas. 
 | R4 | **Atrasar.** Uma preparação aceita **no máximo 2 atrasos**, de qualquer fonte (inclusive o abalado de R5); depois fica **inadiável** (o contorno vermelho). Atrasar uma inadiável não faz nada (a carta fica apagada na escolha de alvo) | A Canção adiada para sempre no exemplo da Tocaia |
 | R5 | **Perder a vez.** Inimigo comum: atordoado perde a próxima vez e a preparação em curso; depois fica Firme (como hoje). **Chefe: fica abalado**: se tem preparação adiável, ela atrasa 1 (conta no limite de R4); senão, se tem trava, perde uma; senão, a próxima ação dele sai com −25%. O chefe sempre age | Chefes travados ou imunes |
 | R6 | **Fichas.** Guarda (o próximo golpe recebido −50%), Força (o próximo golpe causado +50%), Exposto (o próximo golpe recebido +50%). Teto de 2 por tipo. Guarda e Exposto se anulam (uma de cada some); Força e Enfraquecido se anulam | Vocabulário comum (seções 5 e 7) |
-| R7 | **Cadeias.** Um efeito disparado por gatilho acontece **no máximo uma vez por cadeia para o mesmo alvo**; efeitos que dão recurso ou vez, **uma vez por rodada** por fonte. Uma reação não responde a outra reação ao mesmo golpe (a regra `respondido` de hoje) | A profundidade 1 da primeira versão (seção 8) |
+| R7 | **Cadeias.** Um efeito disparado por gatilho acontece **no máximo uma vez por cadeia para o mesmo alvo**; efeitos que dão recurso ou vez, **uma vez por rodada** por fonte. Uma reação não responde a outra reação ao mesmo golpe (a regra `respondido` de hoje). **No X1, refeita como identidade dos efeitos (seção 15.2)** | A profundidade 1 da primeira versão (seção 8) |
 | R8 | **Ambiente da luta.** Um ambiente de cada vez, criado por habilidade (névoa, óleo, água rasa...); o novo substitui o anterior; dura até ser substituído ou consumido. O clima continua valendo por baixo | Seção 5.2 |
 | R9 | **Ordem.** Fixa, salvo o que a seção 6 testar. Os exemplos que usam Revezamento ou Esperar dizem isso | — |
 | R10 | **Versões.** Uma habilidade leva uma versão de cada vez. Quem leva Estilhaço não tem a Lança de Gelo base (e não congela com ela) | O Pavio com Estilhaço tentando congelar |
@@ -528,8 +536,7 @@ mesmo tempo; o inimigo não precisa preparar nada para ela ter tensão.
 - **Elo de Vida (Paladino):** dois combatentes do seu lado dividem o dano que recebem (metade cada) por 3 rodadas.
   Decisão: com quem ligar o frágil. O Elo muda o valor das outras proteções (a seção 11 mostra o Proteger perdendo a
   vez para outra ação porque o Elo já repartia o golpe).
-- **Revezamento (qualquer classe, se a decisão 3 abrir):** você abre mão da sua vez e um aliado age agora; a vez dele
-  continua no lugar dela.
+- ~~**Revezamento**~~: Recusado pelo Jean (31/10/2026), com as variantes de trocar posições, doar a ação ou antecipar a vez de um aliado.
 - **Ordem da Fera e servos com versões:** o animal ou o servo como uma peça que a build molda (o urso que protege, o
   servo que paga).
 - **Transmutar (Mago arcano):** o próximo golpe de um aliado sai com o tipo de dano que você escolher (Morel batendo
@@ -611,7 +618,11 @@ o inimigo age quando a placa diz; é o caminho do Final Fantasy X, que acabou em
 
 **Gerar ações:** não recomendo fora de uma ultimate (uma vez por luta), e mesmo ali só com a R7.
 
-### 6.4 Recomendação (pendente)
+### 6.4 Recomendação (pendente) e a decisão do Jean
+
+**Decisão do Jean (31/10/2026): o Revezamento está recusado**, com as variantes de trocar posições, doar a ação ou
+antecipar a vez de um aliado; não serão implementados. **Esperar** (adiar a própria vez) fica só como hipótese futura,
+fora do X1. O texto abaixo é a recomendação da revisão 2, preservada como histórico.
 
 Testar **Esperar** e **Revezamento** como experimento separado do protótipo (seção 14, X4), com a regra de que quem
 recebe o Revezamento perde a vez dele na rodada. Manter a posição dos inimigos intocável, salvo pelo relógio das
@@ -878,8 +889,8 @@ que se aprovam separadamente.
 | Kit | 5 espaços + espaço da ultimate (os pontos por tier saem) | Sim | Decisão do Jean |
 | Intenção inimiga | Tipo e alvo para todos; números só nas preparações (R2) | **Sim** | Experimento X2 |
 | Travas e chefes abalados | R3 a R5 | **Sim** | Experimento X3 |
-| Ordem | Esperar e Revezamento (seção 6) | **Sim** | Experimento X4 |
-| Cadeias | R7 | Não | Núcleo |
+| Ordem | Revezamento recusado; Esperar, hipótese futura (seção 6.4) | Decidido | — |
+| Cadeias | R7, refeita como identidade dos efeitos (seção 15.2) | Não | Núcleo; em teste no X1 |
 | Progressão | Seção 9 | Depende da 9 | Primeira regra no nível 2: núcleo; o resto na 9 |
 | Equipamento | Itens que mudam regras de uma etiqueta (selos nos itens), números que saem da árvore | Sim | Depois do núcleo |
 | Comitiva | Produtos compartilhados; versões dos companheiros depois; fundir duplicatas (Proteger, Runa) | Parcial | Fundir: núcleo |
@@ -1075,7 +1086,7 @@ Uma habilidade sem pelo menos dois desses arquétipos onde ela fica disponível 
 | Postura (Fúria) | O contorno da carta em vermelho; "+50% causa e recebe" na dica |
 | Elo | Uma linha entre as duas cartas ligadas |
 | Reação armada | O ícone do gatilho e um fio pontilhado até o alvo |
-| Esperar e Revezamento | A placa da rodada mostra a posição nova com uma seta curva, "só nesta rodada" |
+| Esperar (hipótese futura) | A placa da rodada mostra a posição nova com uma seta curva, "só nesta rodada" |
 | Cadeia | Um número pequeno em cada elo ("cadeia 2") e a faixa "já aconteceu nesta cadeia" quando parar |
 
 Regras de leitura: uma camada por informação (sobre a carta, embaixo, entre cartas); os números na consulta, salvo
@@ -1091,16 +1102,16 @@ relógio, fichas e teto das moedas; caber a 1280×720; movimento reduzido sem as
 | 2 | Vocabulário de produtos | Fichas e camadas só; mais runas, ossos e ambiente | Fichas e camadas no núcleo; os outros três no protótipo, uma classe cada |
 | 3 | Intenção inimiga | Só preparações; tipo e alvo de todos; tudo com números | Tipo e alvo de todos, **como experimento separado** (X2) |
 | 4 | Chefes e controle | Resistência por sorteio; abalado e travas | Abalado e travas, **experimento separado** (X3) |
-| 5 | Ordem dos turnos | Fixa; Esperar e Revezamento; mais | Testar Esperar e Revezamento (X4); não mexer na posição de inimigos |
-| 6 | Cadeias | Profundidade 1; R7; limites por efeito | **R7** |
+| 5 | Ordem dos turnos | Fixa; Esperar e Revezamento; mais | **Decidido pelo Jean:** Revezamento recusado; Esperar, hipótese futura; a ordem continua fixa |
+| 6 | Cadeias | Profundidade 1; R7; limites por efeito | **Identidade dos efeitos** (seção 15.2), em teste no X1 |
 | 7 | Progressão | Seção 9 | Primeira regra no nível 2; especialização num marco da história, com a ultimate |
 | 8 | Kit | 8 pontos e 5 espaços; 5 espaços + ultimate à parte | 5 espaços + ultimate à parte |
 | 9 | Redundâncias atuais | Fundir ou manter | Fundir junto com o núcleo |
-| 10 | O cronômante | Especialização; escola; só conceito | Só conceito até X4 dizer se a ordem abre |
+| 10 | O cronômante | Especialização; escola; só conceito | Só conceito: sem Revezamento, a fantasia temporal fica no relógio das preparações (e no Esperar, se um dia entrar) |
 
 ---
 
-## 14. O protótipo revisado (proposta, não implementada)
+## 14. O protótipo revisado (proposta; o X1 foi implementado, seção 15)
 
 Isolado em `ferramentas/prototipos/etapa8-builds/`, no molde do `combate-atributos`. O jogo integrado não muda.
 
@@ -1113,10 +1124,10 @@ Cada um liga e desliga sozinho, para nenhum ser aprovado em pacote.
 | **X1** | Estrutura de talentos: T4 (regras por etiqueta + versões) contra T1 (versões + princípio) | A árvore usada na montagem | Encontros, inimigos, intenção |
 | **X2** | Intenção visível (tipo e alvo) contra a de hoje (só a preparação avisa) | A exibição e a escolha antecipada | Builds, talentos |
 | **X3** | Chefe abalado com travas contra resistência por sorteio | A regra do chefe | O resto |
-| **X4** | Esperar e Revezamento contra a ordem fixa | Os dois comandos | O resto |
+| ~~**X4**~~ | Retirado: Revezamento recusado pelo Jean; Esperar, hipótese futura | — | — |
 
 **Ordem sugerida:** X1 primeiro (é o que mais define a etapa 8 e não depende do inimigo), X2 com X1 ainda montado, X3 e
-X4 depois, se o Jean quiser.
+X4 depois, se o Jean quiser. **O X1 foi implementado (seção 15); o X4 saiu.**
 
 ### 14.2 Builds e montagem
 
@@ -1149,7 +1160,7 @@ Um quinto, sorteado entre os comuns do Vale, para não haver só encontros escol
 | X2 | Leitura e tempo por decisão | O Jean diz o que vem sem abrir fichas; decisões no tempo de hoje | Precisa abrir fichas; a luta fica lenta |
 | X2 | Efeito nas builds que constroem | Ajuda pouco ou ajuda no tempo de gastar | Atrapalha (leitura demais para quem não responde) |
 | X3 | O chefe age e a ameaça sai | O chefe age todas as vezes; a ameaça sai, enfraquecida ou atrasada | Chefe travado ou controle inútil |
-| X4 | Uso e clareza | Esperar e Revezamento aparecem em parte das lutas, por motivo | Nunca usados; ou sempre usados (vira rotina); ou a placa confunde |
+| ~~X4~~ | Retirado (Revezamento recusado) | — | — |
 | Todos | Laços e cadeias (R7) | Nenhum laço; cadeias finitas acontecem e são lidas | Laço, ou cadeia silenciosa que o Jean não entende |
 
 O registro grava, por rodada: o estado (vida, produtos, intenções), a ação, o alvo, e o que mudou; e, ao fim, a
@@ -1159,6 +1170,262 @@ montagem e as trocas.
 
 Âncora, Duplo, Engodo, Tocaia, runas, ossos, ambiente e Elo ficam para uma segunda rodada, se o X1 aprovar a estrutura.
 O Grimório visual e os ícones esperam o sistema. Nada entra no jogo.
+
+---
+
+## 15. O X1 implementado: especificação corrigida
+
+**Rodada 3 (31/10/2026).** O Jean autorizou o X1 (montagem de builds e estrutura dos talentos), sem aprovar a
+arquitetura. Pediu antes quatro ajustes: a regra das cadeias, a independência das builds em relação a sistemas de outros
+experimentos, um orçamento que obrigue a escolher e critérios de avaliação. Também recusou o Revezamento (seção 6.4).
+Esta seção é a especificação que o protótipo usa. **Os números são provisórios**, e nada daqui vale no jogo.
+
+Protótipo: [`ferramentas/prototipos/etapa8-builds/`](../ferramentas/prototipos/etapa8-builds/LEIA-ME.md) (`demo.bat`,
+http://127.0.0.1:8797/).
+
+### 15.1 O escopo implementado
+
+| Entra | Fica de fora |
+|---|---|
+| Duas estruturas com o mesmo orçamento: **híbrida** (regras por família de habilidades, versões em habilidades centrais, números) e **versões e princípios** | Intenção geral dos inimigos (X2); travas e chefe abalado (X3); ambientes (Óleo, Água rasa) |
+| Duas especializações (Berserker, Piromante), oito habilidades cada; o kit leva cinco, e a ultimate é fixa | Revezamento e variantes (recusados); Esperar (hipótese futura) |
+| Montagem livre: escolher nós, ranks e kit; ver o que cada nó muda nas habilidades equipadas; redistribuir de graça | Runas, ossos, Elo, Tocaia e as outras classes |
+| Nove exemplos (cinco na híbrida, quatro na de versões) como atalhos de montagem, todos editáveis | Grimório definitivo, ícones e animações |
+| Fichas (Guarda, Força, Exposto), o vocabulário mínimo para combinações entre personagens | Progressão por nível (o orçamento é fixo: 7 pontos) |
+| Cinco encontros com inimigos do jogo, simplificados: lobos, mercenário, bruxa, troll e um grupo sorteado | Equipamento, itens, fuga, ressurreição |
+| A mesma semente repete os sorteios dos inimigos; o registro guarda as escolhas, as ações e as cadeias | |
+
+As preparações que já existem no jogo entram como lá: o Golpe Esmagador do mercenário e do troll, avisado uma vez
+antes, interrompido por atordoamento; gigantes resistem metade das vezes; quem perde a vez fica Firme.
+
+### 15.2 Cadeias: a origem e a identidade de cada efeito
+
+A R7 ("um efeito por cadeia por alvo") era ambígua: "alvo" podia ser quem o efeito atinge ou aquilo de que ele trata.
+Se fosse quem é atingido, duas explosões no mesmo sobrevivente seriam barradas, e isso é justamente a cadeia que se
+quer. Ficou assim:
+
+- **Cadeia (a origem).** Tudo o que uma ação provoca, ou tudo o que o começo da vez de alguém provoca (os pingos, o
+  pavio). Cada cadeia tem um número, que aparece no registro.
+- **Identidade de uma ativação: (efeito, dono, motivo).** O motivo é aquilo de que o efeito trata. **Na mesma cadeia, a
+  mesma identidade acontece uma vez.**
+
+| Efeito | Dono | Motivo | Consequência |
+|---|---|---|---|
+| Estouro | Jean | o inimigo que morreu | Cada morto explode uma vez; dois mortos, duas explosões |
+| Fornalha Interior | Jean | o inimigo detonado ou que explodiu | O mesmo inimigo dá 1 Calor por cadeia, mesmo detonado e explodido |
+| Sangue Quente | Jean | o alvo do golpe | O Redemoinho em três lobos cura três vezes |
+| Calor Partilhado | Jean | o inimigo golpeado | Um golpe de aliado acende uma vez |
+| Revide, espinhos, escudos | quem responde | o atacante | Um revide por atacante por cadeia (e o Revide de Jean, uma vez por rodada) |
+| Peso do Golpe | Jean | o inimigo interrompido ou exposto | Uma Força por inimigo por cadeia |
+| Fôlego Rubro | Jean | Jean | Uma vez por cadeia; e a descrição limita a uma vez por rodada |
+
+**Uma regra de tipo, para as reações:** Revide, espinhos e escudos respondem a **golpes de ação**. O dano de um revide,
+de espinhos, da Queimadura e das explosões não provoca outra resposta. A identidade cobre o que essa regra deixasse
+passar.
+
+**Os limites por rodada ficam na descrição de quem os tem** ("Uma vez por rodada", no Revide e no Fôlego Rubro), não
+numa regra geral. A regra geral, para o jogador, cabe em duas frases, no quadro "Regras da luta" da montagem:
+"Cadeia é tudo o que uma ação provoca. Cada efeito acontece uma vez por motivo em cada cadeia: cada morto explode uma
+vez, cada inimigo dá 1 Calor, cada alvo cura uma vez o Sangue Quente." e "Revide, espinhos e escudos respondem a golpes
+de ação. O dano deles, da Queimadura e das explosões não provoca outra resposta."
+
+**As quatro demonstrações pedidas** (reproduzidas pelos testes, `testes/test_x1.py`, classe `Cadeias`; a Fornalha da
+híbrida com Fornalha Interior e Estouro):
+
+1. **Duas mortes, duas explosões no mesmo sobrevivente.** Lobo A (3 camadas, 5 de vida), Lobo B (2 camadas, 5 de
+   vida), Lobo C (300 de vida). A Combustão no A causa 33 e o mata; o A explode e causa 15 ao B, que cai e explode
+   (12 no C); a explosão do A continua e causa 15 ao C. **O C leva as duas.** A Fornalha dá 1 Calor pelo B e 1 pelo
+   A; a segunda tentativa pelo A (detonado e depois explodido) é barrada e aparece no registro como "já aconteceu
+   nesta cadeia".
+2. **Explosões que matam continuam a cadeia, e ela acaba.** Quatro ratos com 1 camada e 4 de vida: a Combustão mata o
+   primeiro, e cada explosão mata o próximo. Quatro explosões, 3 Calor (o teto) e vitória, numa cadeia de 8 efeitos.
+   Acaba porque cada inimigo morre uma vez.
+3. **Espinhos e revides não se respondem.** Um bandido de teste com espinhos (5) e revide (6), contra Jean com Revide:
+   o Golpe Pesado de Jean leva 5 de espinhos e 6 do revide do bandido; o Revide de Jean não responde a nenhum dos dois
+   (não são golpes de ação). Com a regra de tipo desligada (só no teste), o Revide de Jean responde, e a segunda volta
+   dos espinhos e do revide do bandido é barrada pela identidade: a cadeia termina com um de cada.
+4. **Cura e recurso não formam laço.** Um par artificial ("ser curado dá recurso" e "ganhar recurso cura"): a Prece de
+   Odette dispara um, que dispara o outro, e a segunda volta é barrada. No conteúdo real, o Fôlego Rubro dá 6 de
+   Vigor por cura uma vez por rodada; a segunda cura na rodada fica registrada como "já usado nesta rodada".
+
+**Execução** (`motor/combate.py`): cada ação abre uma cadeia; `disparar(efeito, dono, motivo)` guarda a identidade e
+recusa a repetida; os limites por rodada usam um conjunto que se limpa a cada rodada; uma rede de segurança
+(200 efeitos numa cadeia) para a luta com erro, para os testes acharem um defeito do motor. Na tela, cada efeito
+disparado mostra um selo com a cadeia e a posição dele (c14·2); o barrado aparece apagado, uma linha.
+
+**Uma diferença entre as estruturas apareceu aqui:** na de versões, a explosão é uma versão da Combustão (Combustão
+Estrondosa), e quem morre pela explosão não explode. As cadeias da Fornalha param em 4 efeitos; na híbrida, chegam a
+8 (seção 15.7).
+
+### 15.3 A independência do X1
+
+| Dependência na revisão 2 | Por que não serve ao X1 | Resolução |
+|---|---|---|
+| O Quebrador quebrava **travas** (X3) | Travas são do X3 | O Quebrador responde às **preparações do jogo** (Golpe Esmagador): o Golpe no Joelho atordoa quem prepara (certo, salvo gigante e Firme); a versão **Golpe que Desequilibra** interrompe sem atordoar, inclusive gigantes e Firmes. O princípio Peso do Golpe vale para interromper **ou expor** (Quebra-Guarda), e por isso também funciona contra quem não prepara nada |
+| A Fornalha usava **Óleo** (ambiente) | Ambientes ficam fora | A Fornalha detona cedo e encadeia: **Estouro** (quem morre em chamas explode), **Contágio** (a Combustão passa metade das camadas), **Fornalha Interior** (Calor) e **Queimar a Si Mesmo** (vida paga a falta de Mana) |
+| Exemplos com **intenção visível** (X2) | Intenção é do X2 | Nenhum. Só a preparação avisa, como hoje no jogo |
+| **Fichas** (R6) | Não estavam na lista de exclusões; são o vocabulário mínimo para uma build mudar o que os aliados fazem | Entram: Guarda, Força e Exposto, teto 2, Guarda e Exposto se anulam. Inimigos não as produzem neste protótipo |
+| **Fúria** (postura) | Nova, mas sem depender de outro experimento | Entra: Rugido entra; sair é livre na sua vez (+12 de Vigor e 1 Guarda) |
+
+Ficou uma dependência pequena e explícita: o **Quebrador rende menos onde ninguém prepara** (os lobos), o que é a
+desvantagem pretendida, não um defeito.
+
+### 15.4 O orçamento
+
+- **7 pontos**, nas duas estruturas.
+- **Híbrida:** número 1 ponto por nível (até 2), regra 2, versão 1. Três linhas: a 2 pede 2 pontos na linha 1; a 3 pede
+  4 nas linhas 1 e 2. Tirar um ponto que sustenta uma linha é recusado ("Sustenta a linha 2").
+- **Versões e princípios:** princípio 3, versão 1. Sem linhas nem números.
+- **Exclusões:** as versões da mesma habilidade.
+- **O que não cabe:** na híbrida, só as seis regras de cada especialização custam 12; na de versões, os dois princípios
+  e uma versão de cada habilidade com versão custam 12. Nas duas, comprar a regra forte é abrir mão de outra coisa.
+- **O que cada nó muda** aparece no próprio nó ("No seu kit: Brasa, Chuva de Brasas…", ou "Combustão não está no kit")
+  e em cada habilidade da coluna "A build" (a descrição da versão e uma linha por regra que vale para ela).
+- **Comparáveis:** o mesmo kit possível, o mesmo orçamento, quase o mesmo número de nós (11 e 11 no Berserker, 10 e 9
+  no Piromante). A diferença está no alcance: a regra vale para todas as habilidades de uma família (e para os golpes
+  dos aliados); a versão, para uma.
+
+**Berserker, híbrida**
+
+| Nó | Tipo | Custo | Linha | Exclui | O que faz |
+|---|---|---|---|---|---|
+| Couro Grosso | Número | 1 por ponto, até 2 | 1 | — | +12 de vida máxima por ponto. |
+| Braço Pesado | Número | 1 por ponto, até 2 | 1 | — | Seus golpes +8% por ponto. |
+| Sangue Quente | Regra | 2 | 1 | — | Na Fúria, cada golpe seu cura você em 15% do dano que causou (inclusive o Revide). |
+| Peso do Golpe | Regra | 2 | 1 | — | Quando você interrompe um golpe preparado ou deixa um inimigo Exposto, o próximo aliado na ordem ganha 1 Força. |
+| Golpe que Desequilibra | Versão | 1 | 2 | Golpe Pesado | Golpe Pesado: causa 110% do Poder e interrompe o golpe que o alvo prepara, sem atordoar (vale em gigantes e em quem está Firme). |
+| Golpe Acumulado | Versão | 1 | 2 | Golpe Pesado | Golpe Pesado: consome as Forças do grupo inteiro (as suas e as dos aliados): +50% por Força. |
+| Rugido Desafiador | Versão | 1 | 2 | Rugido | Rugido: além de entrar em Fúria, todos os inimigos miram você na próxima vez deles. |
+| Revide | Regra | 2 | 2 | — | Quando um inimigo golpeia você, você revida com 60% do Poder. Uma vez por rodada. Revide não responde a outro revide nem a espinhos. |
+| Sangue Frio | Regra | 2 | 2 | — | Sair da Fúria dá 1 Guarda também a cada aliado. |
+| Fôlego Rubro | Regra | 2 | 3 | — | Quando você é curado (por você ou por um aliado), ganha 6 de Vigor. Uma vez por rodada. |
+| Até o Fim | Regra | 2 | 3 | — | Com menos da metade da vida, seus golpes +30%. |
+
+**Piromante, híbrida**
+
+| Nó | Tipo | Custo | Linha | Exclui | O que faz |
+|---|---|---|---|---|---|
+| Chama Viva | Número | 1 por ponto, até 2 | 1 | — | Queimadura (pingos e detonações) +15% por ponto. |
+| Reserva Ardente | Número | 1 por ponto, até 2 | 1 | — | +12 de Mana máxima por ponto. |
+| Fogo Paciente | Regra | 2 | 1 | — | Uma Queimadura com 3 camadas não expira: pinga até ser detonada ou o alvo morrer. |
+| Calor Partilhado | Regra | 2 | 1 | — | Quando Morel ou Odette golpeia um inimigo em chamas, ele ganha 1 camada. |
+| Fornalha Interior | Regra | 2 | 1 | — | Cada inimigo que você detona ou que explode dá 1 Calor (até 3). Com 3, a próxima habilidade de fogo custa 0 e gasta o Calor. O mesmo inimigo dá 1 Calor por cadeia. |
+| Pavio Curto | Versão | 1 | 2 | Combustão | Combustão: em vez de detonar agora, acende um pavio. No começo da próxima vez do alvo, a Queimadura detona com +50%, com as camadas que ele tiver nesse momento. |
+| Contágio | Versão | 1 | 2 | Combustão | Combustão: depois de detonar, metade das camadas (arredondada para cima) passa ao outro inimigo com mais camadas (empate: o de menos vida). |
+| Estouro | Regra | 2 | 2 | — | Um inimigo que morre em chamas (ou detonado) explode: 6 + 3 por camada que tinha em dano de fogo a cada outro inimigo, que ganha 1 camada. Cada inimigo explode uma vez. |
+| Queimar a Si Mesmo | Regra | 2 | 3 | — | Sem Mana suficiente, as habilidades de fogo usam vida no lugar da que falta (1 por 1; fica com pelo menos 1). Com menos da metade da vida, o que você acende põe 1 camada a mais. |
+| Cinza Fria | Regra | 2 | 3 | — | Gelo num inimigo em chamas consome as camadas: 9 por camada em dano de gelo e +15% de chance de congelar por camada. |
+
+**Berserker, versões e princípios:** Sangue em Fúria (princípio: Sangue Quente com Sangue Frio), Peso do Golpe
+(princípio); versões Golpe que Desequilibra ou Golpe Acumulado; Rugido Desafiador ou Rugido Contido (entra em Fúria
+sem dano e ganha 1 Guarda); Escudo de Espinhos (o Erguer Escudo também fere o próximo inimigo que golpear o protegido,
+60% do Poder, uma vez); Provocação com Revide (até a sua próxima vez, você revida o primeiro golpe de cada inimigo com
+60% do Poder); Sede Rubra (a Sede de Sangue também devolve 6 de Vigor); Redemoinho Temerário (75% a cada
+inimigo, você fica Exposto); Quebra-Guarda Aberto (Exposto 2).
+
+**Piromante, versões e princípios:** Paciência (princípio: Fogo Paciente com Calor Partilhado), Voracidade
+(princípio: Calor ao detonar e vida paga a falta de Mana); versões Pavio Curto, Contágio ou Combustão Estrondosa (só o
+morto pela Combustão explode); Lança Térmica (a Cinza Fria só na Lança); Bola Pesada (2 camadas, custa 16); Chuva Densa
+(sem dano, 2 camadas em cada); Brasa Partilhada (o Calor Partilhado só no alvo da Brasa, até o fim da próxima rodada).
+
+**Os exemplos** (todos com os 7 pontos; servem de ponto de partida)
+
+| Exemplo | Estilos | Kit | Talentos |
+|---|---|---|---|
+| Fúria | arriscar | Rugido, Sede de Sangue, Redemoinho, Golpe Pesado, Erguer Escudo | Sangue Quente, Braço Pesado, Sangue Frio, Até o Fim |
+| Quebrador | responder e sustentar | Golpe Pesado, Golpe no Joelho, Quebra-Guarda, Provocar, Erguer Escudo | Peso do Golpe, Couro Grosso ×2, Golpe que Desequilibra, Revide |
+| Pavio | construir e esperar | Brasa, Chuva de Brasas, Combustão, Bola de Fogo, Lança de Gelo | Fogo Paciente, Calor Partilhado, Pavio Curto, Chama Viva ×2 |
+| Fornalha | construir e arriscar | Brasa, Chuva de Brasas, Combustão, Bola de Fogo, Barreira | Fornalha Interior, Estouro, Contágio, Queimar a Si Mesmo |
+| Choque Térmico | construir, híbrido | Brasa, Bola de Fogo, Lança de Gelo, Chuva de Brasas, Barreira | Fogo Paciente, Calor Partilhado, Reserva Ardente, Cinza Fria |
+| Fúria (versões) | arriscar | o mesmo da Fúria | Sangue em Fúria, Rugido Contido, Sede Rubra, Redemoinho Temerário, Escudo de Espinhos |
+| Quebrador (versões) | responder e sustentar | o mesmo do Quebrador | Peso do Golpe, Golpe que Desequilibra, Quebra-Guarda Aberto, Escudo de Espinhos, Provocação com Revide |
+| Pavio (versões) | construir e esperar | o mesmo do Pavio | Paciência, Pavio Curto, Bola Pesada, Chuva Densa, Lança Térmica |
+| Fornalha (versões) | construir e arriscar | o mesmo da Fornalha | Voracidade, Combustão Estrondosa, Chuva Densa, Bola Pesada, Brasa Partilhada |
+
+Um achado da montagem, já corrigido: na de versões, o kit do Quebrador só tinha três habilidades com versão, e o
+quarto ponto ia para o Rugido Desafiador sem o Rugido no kit (a tela avisava "Rugido não está no kit"). Ganhou uma
+versão do Provocar, a **Provocação com Revide**, o Revide local que espelha a regra da híbrida. **Numa estrutura de
+versões, cada habilidade sem versão é um ponto que não tem onde ser gasto**; um teste confere que nenhum exemplo tem nó
+parado.
+
+### 15.5 Regras provisórias do protótipo
+
+| Assunto | Valor |
+|---|---|
+| Grupo | Jean (Berserker: 64 de vida, 60 de Vigor; Piromante: 52 de vida, 60 de Mana; Poder 14), Morel (52, Poder 11: Atacar, Golpe Oportuno, Proteger), Odette (44, Poder 9: Bastão sagrado, Prece 18, Bênção dá 1 Força). O jogador escolhe as ações dos três |
+| Ordem | Fixa pela Agilidade (Morel 7, Piromante 6, Berserker 5, Odette 4; lobos e ratos 6, troll 1); no empate, o grupo antes |
+| Recurso | +6 no começo de cada vez; Atacar, Bastão e Defender devolvem mais 6; a reserva começa cheia |
+| Fichas | Guarda −50% e Exposto +50% no próximo golpe recebido; Força +50% na próxima ação que golpeia (todos os alvos, se for em área); teto 2; Guarda e Exposto se anulam |
+| Fúria | Causa e recebe +40% nos golpes; sair é livre na sua vez: +12 de Vigor e 1 Guarda |
+| Queimadura | Até 3 camadas; 3 por camada no começo da vez do alvo, por 3 vezes (acender renova); detonar: 40% do Poder + 9 por camada |
+| Atordoar | Perde a próxima vez e o golpe preparado; depois, Firme por 2 vezes dele; gigantes resistem metade das vezes |
+| Inimigos (vida, golpe) | Lobo 42/11, Bandido 48/12, Mercenário 80/13, Sapo-touro 62/12, Bruxa do Pântano 56/9 (magia 16), Troll 230/21 (fraco a fogo ×1,4), Rato 22/7. Habilidades sorteadas como no jogo (35%; mercenário e troll 45%); Golpe Esmagador ×2,2 |
+| Duração | Um jogador automático aleatório (só para conferir o motor) vence a maior parte das lutas em 4 a 9 rodadas, terminando com 30% a 70% da vida do grupo |
+
+### 15.6 Os critérios de avaliação (do Jean) e onde olhar
+
+Trocar talentos entre encontros não é condição de aprovação: manter a identidade da build e adaptar as ações durante a
+luta também vale. A frequência de uso de uma habilidade é indício para investigar, não reprovação.
+
+| Critério | Onde o protótipo ajuda |
+|---|---|
+| Existem alternativas plausíveis de montagem? | Montar sem exemplo; os nós dizem custo, alcance e o que falta |
+| Escolhas dentro da mesma especialização mudam a maneira de jogar? | Fúria × Quebrador; Pavio × Fornalha × Choque Térmico, no mesmo encontro e na mesma semente |
+| Dá para entender as interações e as consequências? | "A build" (cada habilidade com as regras que valem para ela), o registro da luta com as cadeias numeradas, o quadro "Regras da luta" |
+| A build oferece decisões durante a luta, inclusive nas desfavoráveis? | Os encontros dizem o que favorecem e desfavorecem; o registro JSON guarda o estado de cada decisão |
+| Experimentar outra combinação desperta interesse? | Redistribuir é de graça; "Repetir" usa a mesma semente |
+| Há uma compra ou sequência dominante que esvazia as demais? | A tabela do Registro (ações mais usadas, dano por fonte, vida no fim) entre montagens diferentes |
+
+### 15.7 O que foi verificado
+
+- **Testes do protótipo** (`testes/test_x1.py`, 28): exemplos válidos com 7 pontos e 5 habilidades; o orçamento, as
+  linhas, as exclusões e os motivos ("Falta 1 ponto", "Requer 2 pontos nas linhas anteriores", "Exclui Pavio Curto",
+  "Sustenta a linha 2"); o que cada nó muda no kit e os avisos de nó sem efeito; as quatro cadeias da 15.2; o Pavio
+  detonando com as camadas da hora; Fogo Paciente; Calor pagando o próximo fogo; vida pagando a falta de Mana; Peso do
+  Golpe e a previsão igual ao dano real; Desequilibra em gigante Firme; Golpe no Joelho interrompendo; Sangue Quente
+  por alvo e Fúria Cega seguindo uma vez; sair da Fúria sem gastar a ação; a Provocação com Revide uma vez por inimigo; nenhum
+  exemplo com nó parado; a mesma semente e as mesmas ações dando a mesma luta; o jogo não carrega a pasta.
+- **Jogador automático** (`ferramentas/simular.py 30`: 30 lutas por par, escolhas aleatórias com Odette curando quem
+  está abaixo da metade; "v" é a vida do grupo no fim, "e" a maior cadeia). Não mede qualidade de build; confere que
+  nada trava e que a luta tem pressão:
+
+| Build | Lobos | Mercenário | Bruxa | Troll | Sorteado |
+|---|---|---|---|---|---|
+| Fúria | 100%, 4,7 rodadas, v 57%, e 3 | 83%, 6,4, v 41% | 100%, 6,0, v 56% | 93%, 9,4, v 45% | 100%, 4,1, v 68% |
+| Quebrador | 100%, 4,8, v 57% | 96%, 6,6, v 50% | 100%, 6,4, v 57% | 100%, 8,9, v 60% | 100%, 3,9, v 71% |
+| Pavio | 96%, 5,2, v 60% | 83%, 6,3, v 38% | 93%, 6,1, v 48% | 96%, 6,8, v 48% | 100%, 4,2, v 71% |
+| Fornalha | 96%, 5,0, v 54%, e 6 | 83%, 6,3, v 32% | 90%, 5,7, v 40% | 96%, 8,8, v 41% | 100%, 4,3, v 66%, e 8 |
+| Choque Térmico | 96%, 5,5, v 56% | 83%, 6,9, v 35% | 90%, 6,7, v 46% | 100%, 7,8, v 52% | 100%, 4,5, v 69% |
+| Fúria (versões) | 100%, 5,1, v 58% | 83%, 7,2, v 38% | 93%, 6,7, v 51% | 76%, 9,7, v 38% | 100%, 4,2, v 69% |
+| Quebrador (versões) | 96%, 5,2, v 54% | 80%, 7,3, v 38% | 96%, 7,6, v 49% | 93%, 9,0, v 53% | 100%, 4,3, v 66% |
+| Pavio (versões) | 96%, 5,2, v 59% | 86%, 6,4, v 32% | 96%, 6,1, v 47% | 96%, 7,4, v 43% | 100%, 4,2, v 70% |
+| Fornalha (versões) | 96%, 5,5, v 53%, e 3 | 80%, 7,2, v 30% | 96%, 6,6, v 44% | 96%, 8,3, v 46% | 100%, 4,7, v 68%, e 4 |
+
+  Mesmo com escolhas aleatórias, o troll favorece o Quebrador (60% da vida no fim) e pesa contra a Fúria (45%, e 76% de
+  vitórias na versão de princípios); o mercenário é o encontro mais duro.
+- **Capturas** nas duas janelas (1920×945 e 1280×720) por `ferramentas/fotografar.mjs`: a montagem nas duas
+  estruturas, a luta com alvo escolhido, a Fúria contra o troll, o fim e o registro. Corrigidos no caminho: a montagem
+  sobreposta em 1280×720; a doca que andava ao passar o mouse nas ações (a explicação ganhou altura fixa; o roteiro
+  confere); o registro da luta herdando a moldura dos botões; o motivo do nó espremendo o nome.
+- **O jogo:** nada mudou (a 1.220.0); a suíte, o gabarito, o pyflakes e a fumaça passaram (ver o commit).
+
+### 15.8 O que a experiência jogável ainda precisa responder
+
+1. **As regras por família fazem builds diferentes, ou só números diferentes?** Pavio, Fornalha e Choque Térmico usam
+   quase o mesmo kit: o jeito de jogar muda?
+2. **A estrutura de versões chega perto?** Com o mesmo orçamento, as builds de versões ficam locais demais, ou ficam
+   mais fáceis de ler e boas o bastante? Na Fornalha, a Combustão Estrondosa encurta as cadeias: isso tira a graça?
+3. **O orçamento obriga a escolher, ou há uma compra óbvia?** Algum nó é imposto (todo mundo compra)? Algum nunca é
+   comprado?
+4. **Os limites das cadeias são entendidos?** O selo da cadeia e o "já aconteceu nesta cadeia" explicam, ou confundem?
+5. **As builds dão decisões na luta desfavorável?** A Fúria contra o troll (sair antes do Golpe Esmagador?), o Pavio
+   contra a bruxa que cura, o Quebrador contra os lobos.
+6. **As fichas entre personagens criam jogo de grupo?** Peso do Golpe e Bênção dando Força, Golpe Acumulado gastando
+   as Forças do grupo, Exposto e Guarda se anulando.
+7. **Controlar os três personagens pesa?** O protótipo segue o jogo (o jogador escolhe por todos); se a montagem do
+   herói some atrás das ações de Morel e Odette, isso é um achado.
+8. **Os números de teste atrapalham a leitura?** Se uma build parece forte ou fraca só pelo número, o ajuste é
+   numérico e não muda a avaliação da estrutura.
 
 ---
 
