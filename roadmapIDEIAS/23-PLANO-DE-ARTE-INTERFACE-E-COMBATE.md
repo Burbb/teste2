@@ -11,6 +11,15 @@ a passagem de sessão, em [00-COMECE-AQUI.md](00-COMECE-AQUI.md).
 Executar a entrega solicitada por Jean, apresentar a proposta quando previsto e registrar o que de fato entrou.
 Não iniciar todo o plano numa única tarefa. As etapas técnicas A–I e a validação E9 mantêm seus próprios critérios.
 
+## Encaminhamento de 31/10/2026: a etapa 8 antes da 9
+
+**Decisão do Jean:** a taverna integrada (1.220.0), a próxima frente é a **etapa 8** (habilidades, talentos, builds e
+Grimório como um sistema), antes da etapa 9 (expansão e reescrita da campanha). As **cenas de eventos** ficam para
+depois de as histórias deles estarem definidas na 9. Efeito na **etapa 6**: os cenários dos lugares e os entornos de
+acampamento podem seguir quando pedidos (conferindo, lugar a lugar, se ficam na campanha); as cenas de acontecimentos
+(Caspar na praça e outros) esperam a 9. A etapa 7 (eventos da estrada) segue a mesma lógica, a confirmar. O estudo da
+etapa 8 está no [28](28-ETAPA8-HABILIDADES-TALENTOS-E-BUILDS.md) (pesquisa e propostas; nenhuma regra mudou).
+
 ## Estado de referência — 29/10/2026
 
 - Produção **1.219.1** na branch `claude/tender-einstein-tx3tjl` (a comparação de peças na casa decimal delas).
@@ -1468,6 +1477,9 @@ Criar cenas para acontecimentos relevantes, como Caspar na praça. Antes de prod
 acontecimento será mantido na revisão da campanha. A futura história informa essa seleção sem exigir reescrever toda
 a campanha antes de melhorar os lugares existentes.
 
+**Desde 31/10/2026 (decisão do Jean):** as cenas de acontecimentos esperam a etapa 9 definir as histórias; os
+cenários dos lugares e os entornos de acampamento continuam disponíveis antes disso.
+
 ## 7. Eventos recorrentes da estrada
 
 Representar mercadores, viajantes vendendo objetos, pessoas feridas e outros eventos frequentes. Preferir
@@ -1475,6 +1487,13 @@ composições reutilizáveis com variações coerentes quando isso evitar trabal
 consequências; cenário interativo não precisa virar exploração por movimento.
 
 ## 8. Habilidades, Grimório, árvore de talentos, animações e liberdade de build
+
+**Agora (31/10/2026), antes da etapa 9.** O estudo do sistema conjunto está no
+[28](28-ETAPA8-HABILIDADES-TALENTOS-E-BUILDS.md): o diagnóstico da 1.220.0, a pesquisa, as possibilidades além de dano
+e cura (o cronômante incluído), talentos e habilidades juntos, as estruturas comparadas, builds diante dos mesmos
+encontros, os requisitos para a etapa 9 e a tela, as decisões pendentes e um protótipo pequeno proposto. Recomendação:
+ameaças inimigas legíveis (intenção, relógio e travas), versões por habilidade e princípios de especialização. Nada
+disso está aprovado; aguarda as decisões do Jean (seção 9 do 28).
 
 **Decisão de Jean (19/10/2026):** produzir os ícones de habilidades e talentos junto da revisão dos respectivos
 sistemas e telas, evitando arte para conceitos prestes a mudar. O visual antigo do Grimório e da árvore não está

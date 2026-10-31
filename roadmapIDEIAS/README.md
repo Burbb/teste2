@@ -64,6 +64,7 @@ Para uma nova conta ou sessão, começar por [00 — Comece aqui: continuidade](
 | [22-HISTORIA-ILSE-E-A-AGUA-RASCUNHO.md](22-HISTORIA-ILSE-E-A-AGUA-RASCUNHO.md) | Discussão futura de Ilse, água e responsabilidade da vila; rascunho, sem mudança de cânone |
 | [23-PLANO-DE-ARTE-INTERFACE-E-COMBATE.md](23-PLANO-DE-ARTE-INTERFACE-E-COMBATE.md) | Plano operacional atual: itens/ícones, clareza do combate, telas, serviços, cenários, habilidades e campanha; estados e próxima sequência |
 | [25-ETAPA4-REFORCO-E-ENCANTAMENTO.md](25-ETAPA4-REFORCO-E-ENCANTAMENTO.md) | Etapa 4: o reforço e os itens de hoje, a pesquisa de cinco sistemas, satisfação e expectativa, as arquiteturas, a proposta recomendada (base + essências), a jornada e o primeiro protótipo; decisões pendentes |
+| [28-ETAPA8-HABILIDADES-TALENTOS-E-BUILDS.md](28-ETAPA8-HABILIDADES-TALENTOS-E-BUILDS.md) | Etapa 8 do plano 23 (estudo, nada no jogo): o encaminhamento das etapas 6, 8 e 9, o diagnóstico das habilidades, talentos, kit e inimigos na 1.220.0, a pesquisa de catorze sistemas, as possibilidades além de dano e cura (o cronômante), versões por habilidade, as estruturas comparadas, builds diante dos mesmos encontros, os requisitos para a campanha e a tela, as decisões pendentes e o protótipo proposto |
 
 ## Estados e evidências
 

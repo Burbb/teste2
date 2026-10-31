@@ -9018,3 +9018,26 @@ foi automatizado.
   do encontro); o de texto, não.
 - **Conferido:** ver o commit (o roteiro do jogo real nas duas janelas, a suíte, o gabarito, o pyflakes, a fumaça).
 - **Parado aqui:** a avaliação do Jean no jogo.
+
+### 31/10/2026 (data do computador local) — Etapa 8: o estudo de habilidades, talentos, builds e Grimório
+
+- **Pedido do Jean:** mudar de frente para a etapa 8 do plano 23, como um sistema conjunto, **antes da etapa 9**
+  (campanha); as cenas de eventos ficam para depois de as histórias estarem definidas. Entrega de pesquisa e
+  concepção: nenhuma regra, tela ou conteúdo do jogo mudou; as artes aprovadas não foram reabertas.
+- **Encaminhamento registrado** no [23](23-PLANO-DE-ARTE-INTERFACE-E-COMBATE.md) e no [ROADMAP](../docs/ROADMAP.md):
+  a etapa 6 se divide (os lugares e os entornos de acampamento podem seguir; as cenas de acontecimentos esperam a 9); a
+  7 provavelmente segue a mesma lógica, a confirmar.
+- **Feito:** o [28](28-ETAPA8-HABILIDADES-TALENTOS-E-BUILDS.md), com o diagnóstico medido no código da 1.220.0 (o
+  catálogo, o kit, os talentos, os inimigos do Vale, o nível do fim do capítulo), a pesquisa de catorze referências com
+  links e limites, as possibilidades além de dano e cura (o cronômante: a Âncora, o relógio das preparações, o Duplo; a
+  Tocaia, o Ímpeto Temerário e outras), versões por habilidade com o que cada caminho perde, as estruturas comparadas,
+  oito builds em três encontros (com planos que falham), os requisitos para a etapa 9 e a leitura visual.
+- **Principais achados:** só 3 das 17 famílias do Vale avisam uma ação; o resto sorteia sem aviso, e por isso as
+  respostas (interromper, proteger, enganar) quase não têm o que responder. O catálogo tem 45 habilidades e cerca de dez
+  decisões distintas. 19 dos 34 talentos são só números; os que mudam o jogo ficam nos níveis 6 e 9, e o capítulo
+  termina perto do 4.
+- **Recomendação (não aprovada):** ameaças inimigas legíveis (intenção, relógio e travas; chefes abalados em vez de
+  atordoados), versões por habilidade e princípios de especialização, os bônus numéricos saindo da árvore; a ordem dos
+  turnos continua fixa (25, 3.5) e a fantasia temporal fica no relógio das preparações.
+- **Parado aqui:** as decisões do Jean (seção 9 do 28) e, se ele aprovar, o protótipo isolado da seção 10
+  (`ferramentas/prototipos/etapa8-builds/`, ainda não criado).
