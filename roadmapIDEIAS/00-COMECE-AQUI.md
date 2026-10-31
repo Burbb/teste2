@@ -8997,7 +8997,7 @@ foi automatizado.
 - **Pedido do Jean** (a colher fica como está; a queda de braço aprovada): os olhos igualados pareciam copiados e o
   olhar não se dirigia ao jogador; distinguir comendo (para a tigela) de olhando para nós, com o mínimo de pixels.
 - **Feito** (o LEIA-ME do protótipo, "O olhar"): um desenho de olhos por estado; comendo, a pálpebra baixada com o
-  escuro embaixo; olhando, a íris no meio, o branco baixo, a dobra da pálpebra; o olho da sombra diferente do da luz. O
+  escuro embaixo; olhando, a íris no meio, o branco baixo, a dobra da pálpebra; o branco do mesmo tom nos dois olhos (o Jean: apagado no olho da sombra, parecia faltar). O
   `olha` também vale nas 4 poses da queda de braço em que ele olha para nós.
 - **Conferido:** as fontes iguais ao desenho; o rosto gravado no jogo a 1920×945 no ciclo e na passagem para o olhar;
   `conferir-encontro.mjs` nas duas janelas (o pagamento e a queda); a suíte, o gabarito, o pyflakes e a fumaça.

@@ -42,7 +42,7 @@ PLACA = [h("8a8078"), h("6a6058"), h("4e4640"), h("34302c"), h("221e1b")]
 PELE = {"e": h("d8aa90"), "d": h("c09070"), "f": h("9a6c52"), "h": h("6c4a38"), "g": h("9a6656"), "x": h("b07a60")}
 PELO = {"a": h("6a4a30"), "b": h("4a3220"), "c": h("33231a"), "n": h("7a5a3a")}
 BARBA = {"l": h("3e2a1c"), "m": h("5a3e2a"), "i": h("2a1c14"), "o": h("20160f"), "n": h("6a4a30")}
-OLHO = {"j": h("20160f"), "w": h("d8c8b8"), "k": h("20160f"), "q": h("2a1c14"), "u": h("c8b4a0"), "v": h("a89080")}
+OLHO = {"j": h("20160f"), "w": h("d8c8b8"), "k": h("20160f"), "q": h("2a1c14"), "u": h("c8b4a0")}
 MADEIRA_ESPADA = [h("7a5034"), h("5a3a22"), h("3a2414"), h("24160c")]
 
 # ------------------------------------------------------------------ a cabeça
@@ -94,7 +94,7 @@ CABECA = [
 # (a curva para baixo de quem olha a tigela, não o traço reto de olho fechado)
 OLHOS_BAIXO = [(14, 5, "fjjf"), (15, 6, "hh"), (14, 18, "fjjj"), (15, 19, "hh")]
 # olhando para nós: a íris no meio do olho, o branco baixo dos lados, a dobra da pálpebra por cima
-OLHOS_OLHA = [(13, 6, "hh"), (14, 5, "ukku"), (13, 19, "hh"), (14, 18, "vkkh")]
+OLHOS_OLHA = [(13, 6, "hh"), (14, 5, "ukku"), (13, 19, "hh"), (14, 18, "ukku")]
 
 
 def _olhos(linhas, desenho):
@@ -110,8 +110,8 @@ def cabeca(variante="baixo", dy=0):
     linhas = [list(r) for r in CABECA]
     if variante == "olha":
         # olhando para nós (a câmera na altura dos olhos, de frente): a íris escura no meio de cada olho, o branco
-        # baixo dos dois lados, a dobra da pálpebra de cima em pele escura; o olho da sombra com o branco apagado e o
-        # canto de fora na sombra (não uma cópia do outro)
+        # baixo dos dois lados, a dobra da pálpebra de cima em pele escura; o branco do mesmo tom nos dois olhos (no da
+        # sombra, apagado ou trocado por sombra, ele parecia faltar)
         _olhos(linhas, OLHOS_OLHA)
     else:
         _olhos(linhas, OLHOS_BAIXO)
@@ -136,7 +136,7 @@ def cabeca(variante="baixo", dy=0):
     for y, linha in enumerate(linhas):
         for x, ch in enumerate(linha):
             cor = PELO.get(ch) if ch in "abc" else PELE.get(ch) if ch in "edxfhg" else \
-                BARBA.get(ch) if ch in "lmnio" else OLHO.get(ch) if ch in "jwkquv" else None
+                BARBA.get(ch) if ch in "lmnio" else OLHO.get(ch) if ch in "jwkqu" else None
             if cor is None:
                 continue
             out[(x0 + x, y0 + y + dy)] = cor

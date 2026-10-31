@@ -134,8 +134,8 @@ com o castiçal junto dela.
 **O olhar (o Jean):** igualados na rodada anterior, os olhos ficaram cópias um do outro, e o olhar não ia ao jogador
 (o olho aberto era escuro-branco-escuro-branco: a pupila do lado). Agora cada estado tem o seu desenho
 (`morel.OLHOS_BAIXO`, `OLHOS_OLHA`): comendo, a pálpebra baixada com o escuro embaixo do olho (para a tigela); olhando
-para nós, a íris no meio de cada olho, o branco baixo dos lados e a dobra da pálpebra por cima, o olho da sombra com o
-branco mais apagado. O mesmo `olha` serve à queda de braço (as 4 poses em que ele olha para nós). Antes e depois em
+para nós, a íris no meio de cada olho, o branco baixo dos lados e a dobra da pálpebra por cima, o branco do mesmo tom
+nos dois olhos (apagado no olho da sombra, parecia faltar). O mesmo `olha` serve à queda de braço (as 4 poses em que ele olha para nós). Antes e depois em
 `camadas/morel-canto/revisao-olhar.png`.
 
 **A colher, na quarta revisão (o Jean):** a terceira apagava a colher inteira quando a ponta entrava no caldo (recusado:
