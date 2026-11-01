@@ -9268,3 +9268,21 @@ foi automatizado.
 - **Conferido:** 18 testes das regras e da IA; o fluxo real no navegador nas duas janelas (preparação, andar, mirar,
   prévia = efeito, vezes de Morel e Odette, inimigos agindo, sem erros); 18 lutas sem tela. O Tático 1 ficou intacto.
 - **Seguiu direto** para a segunda entrega (o campo livre), sem esperar avaliação.
+
+### 01/11/2026 (data do computador local) — Etapa 8: o Campo Livre 6 (protótipo, nada no jogo)
+
+- **Pedido do Jean** (a segunda das duas entregas seguidas): expandir o Campo Livre 5 com um campo de casas, muros e
+  muralha que funcione no espaço, tropas avançadas misturadas às frágeis, Morel e Odette autônomos e heróis inimigos
+  fortes e inteligentes (Harg evoluído e um segundo, os dois juntos num encontro). Sem integração, sem destruição de
+  construções, sem vídeos.
+- **Feito (em teste, nada aprovado):** a rodada 6 no [30](30-ETAPA8-CAMPO-LIVRE.md) e o protótipo, versão **Campo Livre
+  6** (a v5 em `/v5/`): a vila (muralha com portão, torres e brecha, casas, muros baixos; colisão = desenho; casas e
+  muralha barram flechas e áreas; caminho pelos cantos); cavalaria (carga e reposicionamento), infantaria pesada
+  (escudo frontal, segura a carga), magos de batalha (área anunciada, escudo); Morel e Odette autônomos (proteção,
+  provocação, coleira; cura sem desperdício, Clarão); Harg com Investida Curta, combo, Fúria e proteção de Ardis; Ardis,
+  a Feiticeira de Guerra; três encontros novos; composições para os dois lados; seleção F3, F5, F6, F7.
+- **Conferido:** 52 testes da simulação (40 da v5 e 12 novos); o fluxo real no navegador nas duas janelas
+  (`conferir6.mjs`); batalhas sem tela com o jogador automático; o custo medido separado (simulação e desenho) em 4×.
+  O jogo não mudou. Sem vídeos.
+- **Parado aqui:** o Jean joga o Tático 2 (o 31) e o Campo Livre 6 e responde à seção 7 do 31 e à R6.7 do 30.
+

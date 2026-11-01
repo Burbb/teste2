@@ -1,7 +1,7 @@
 // PROTÓTIPO de campo livre da etapa 8 (nada no jogo): os números e os kits. Tudo de teste; as regras que usam estes
 // números estão em sim.js. Unidades: distância em pixels nativos (o campo é desenhado 1:1 e ampliado inteiro), tempo
 // em segundos, empurrão em px/s (a unidade desliza cerca de empurrão/9 px, ver ATRITO_EMPURRAO).
-export const VERSAO = "Campo Livre 5";
+export const VERSAO = "Campo Livre 6";
 
 export const CAMPO = { largura: 960, altura: 560, margem: 8 };
 export const ATRITO_EMPURRAO = 9;      // o empurrão perde velocidade a e^(-9t): desliza v/9 px
@@ -48,9 +48,48 @@ export const TIPOS = {
       danoHeroi: 30, empurrao: 220, cravado: 0.5, sequencia: 0.6 },
     carga: { recarga: 8, primeira: 5, reunir: 0.8, raioReunir: 70, max: 8, distancia: 150, distanciaMax: 210, vel: 170,
       largura: 10, dano: 16, danoHeroi: 30, empurrao: 230, ofegante: 0.9, vulneravel: 1.5, impeto: 2 },
-    presenca: 90, presencaRitmo: 0.75, presencaFirmeza: 0.5, derrota: { foge: 150, abala: 3 } },
+    presenca: 90, presencaRitmo: 0.75, presencaFirmeza: 0.5, derrota: { foge: 150, abala: 3 }, heroiInimigo: true,
+    // Campo Livre 6 (campo6.ajustarLider): a Investida Curta, a Fúria e o Rodopio logo depois da Arremetida
+    // (a Investida Curta só a partir de 120 px e a cada 7 s: com 90 px e 4 s, o jogador automático forte perdia o duelo sozinho)
+    dash: { vel: 300, dura: 0.28, min: 120, max: 220, recarga: 7 }, furia: { vida: 0.35, dura: 8, ritmo: 1.4 }, combo: true },
   // A outra: fica atrás da linha e fortalece quem está na aura (+50% de dano, ataca 25% mais rápido); derrubado,
   // abala os inimigos em volta por 2 s (recuam, não atacam).
+  // ---- Campo Livre 6: as tropas avançadas (campo6.js). Mudam o confronto, não só a vida.
+  // A cavalaria: chega rápido (64), carrega em linha a 165 px/s atropelando (7; 12 no herói), passa 46 px do ponto e
+  // precisa se reposicionar (1,8 s, 90 px para trás) antes da próxima carga (4,5 s). Empina 0,35 s antes de carregar.
+  // Bater num pesado (massa 5 ou mais) encerra a carga e a deixa atordoada 0,8 s. Parada, luta mal (dano 3).
+  cavaleiro: { nome: "Cavaleiro", papel: "perto", especial: true, raio: 5, vida: 34, vidaAliado: 38, vel: 64, massa: 4, dano: 3,
+    alcance: 3, preparo: 0.25, recarga: 1, vagas: 4, estica: 8, compromete: 0.6,
+    carga: { vel: 165, min: 55, max: 240, passa: 46, dano: 7, danoHeroi: 12, empurrao: 170, atordoa: 0.45, recarga: 4.5, recua: 90,
+      reposiciona: 1.8, prepara: 0.35, barrado: 0.8 } },
+  // A infantaria pesada: lenta (24), aguenta (56) e segura a linha: o golpe que vem da frente (do lado para onde ela
+  // olha) causa metade; empurra pouco (massa 5) e para a carga da cavalaria. De lado ou por trás, cai como os outros.
+  pesado: { nome: "Infantaria pesada", papel: "perto", raio: 4.5, vida: 56, vidaAliado: 64, vel: 24, massa: 5, dano: 4, alcance: 3,
+    preparo: 0.4, recarga: 1.4, vagas: 4, estica: 6, compromete: 0.6, escudoFrente: 0.5 },
+  // O mago de batalha: frágil (16), fica a até 140 px com visão, atrás da própria linha; a Bola de Batalha cai no ponto
+  // que pega mais gente, anunciada 0,9 s no chão (6; 16 no herói; empurra); a cada 9 s, se três ou mais dos seus estão
+  // lutando a até 60 px, põe neles um escudo que absorve 8 por 6 s.
+  magoBatalha: { nome: "Mago de batalha", papel: "longe", especial: true, raio: 3.5, vida: 16, vidaAliado: 20, vel: 30, massa: 1, dano: 1,
+    alcance: 140, ideal: 110, perto: 52, preparo: 0.4, recarga: 4.2, vagas: 3, flecha: 170, busca: 420, tiro: 0.85, posto: 90,
+    bola: { nome: "bolaBatalha", raio: 22, preparo: 0.9, dano: 6, danoHeroi: 16, empurrao: 130, atordoa: 0.3, cor: "fogo" },
+    escudo: { raio: 60, absorve: 8, dura: 6, recarga: 9 } },
+  // ---- Morel e Odette, autônomos (campo6.js): semi-heróis da comitiva, com mais vida e habilidades próprias.
+  morel: { nome: "Morel", papel: "perto", especial: true, companheiro: true, elite: true, raio: 5.5, vida: 240, vel: 58, massa: 6,
+    dano: 7, alcance: 4, preparo: 0.25, recarga: 0.8, vagas: 6, estica: 10, compromete: 0.6, escudoFrente: 0.6, coleira: 150,
+    golpeEscudo: { raio: 26, abertura: 150, dano: 9, empurrao: 210, atordoa: 0.6, recarga: 4, min: 3 },
+    provocar: { raio: 80, dura: 4, recarga: 12 } },
+  odette: { nome: "Odette", papel: "longe", especial: true, companheiro: true, elite: true, raio: 4.5, vida: 160, vel: 54, massa: 3,
+    dano: 2, alcance: 120, ideal: 100, perto: 40, preparo: 0.3, recarga: 1.2, vagas: 4, busca: 300, tiro: 0.9, posto: 80, atras: 42,
+    prece: { cura: 42, alcance: 150, recarga: 6, min: 30 }, bencao: { raio: 50, cura: 6, recarga: 9, min: 4, minFalta: 4 },
+    clarao: { raio: 40, atordoa: 1.4, dano: 4, recarga: 8, min: 2 }, luz: { alcance: 130, vel: 260, dano: 5, recarga: 1.1, cor: "luz" } },
+  // ---- Ardis, a Feiticeira de Guerra: o segundo herói inimigo (campo6.ardis). De longe e sempre em movimento.
+  ardis: { nome: "Ardis, a Feiticeira de Guerra", papel: "longe", especial: true, elite: true, heroiInimigo: true, raio: 5, vida: 600,
+    vel: 56, massa: 4, dano: 4, alcance: 170, ideal: 125, perto: 50, preparo: 0.4, recarga: 1.2, vagas: 6, busca: 400, tiro: 0.9,
+    posto: 100, firme: 2, reacao: 0.3, primeiras: { colunaCd: 3, correnteCd: 5, passoCd: 0, barreiraCd: 0, dardoCd: 0.5 },
+    dardo: { alcance: 190, vel: 240, dano: 6, danoHeroi: 11, recarga: 1.1, cor: "arcano" },
+    coluna: { nome: "coluna", alcance: 230, raio: 32, preparo: 0.9, dano: 14, danoHeroi: 26, empurrao: 200, atordoa: 0.4, recarga: 5.5, cor: "fogo" },
+    corrente: { preparo: 0.5, salto: 42, alvos: 6, dano: 8, danoHeroi: 14, recarga: 7 },
+    passo: { distancia: 130, recarga: 6 }, barreira: { absorve: 60, dura: 4, recarga: 20 } },
   estandarte: { nome: "Porta-estandarte", papel: "apoio", raio: 3.5, vida: 30, vel: 30, massa: 1.5, dano: 2,
     alcance: 3, preparo: 0.3, recarga: 1.2, vagas: 3, elite: true, aura: 70, auraDano: 1.3, auraRitmo: 0.85,
     abala: 120, abalaTempo: 2 },
@@ -262,7 +301,7 @@ export const CONTINGENTES = {
 // correr toda para ele (Campo Livre 4; na v3 as de fora defendiam e ficavam paradas). 4× é experimental (30, R3).
 export const ESCALAS = { 1: { nome: "1× (o encontro normal)" }, 2: { nome: "2×" }, 4: { nome: "4× (experimental)" } };
 export const ALA = 130;
-export const ESPECIAIS = ["lider", "campeao", "estandarte"];
+export const ESPECIAIS = ["lider", "campeao", "estandarte", "ardis"];
 
 // Os encontros. A batalha original continua igual (`original`, montada por CONTINGENTES e pelo código de antes); os
 // novos são blocos fixos: [tipo, quantos, x, y, colunas, grupo, leva]. Cada grupo acorda no tempo dele (`ativa`, em
@@ -328,6 +367,78 @@ export const ENCONTROS = {
     levas: [],
     ondas: { cada: 9, n: 60, ate: 100, lados: ["oeste", "norte", "leste", "sul"] },
   },
+  // ---- Campo Livre 6: os encontros novos (com Morel e Odette ao seu lado e a composição escolhida dos dois lados)
+  vila: {
+    nome: "A vila: a horda e a linha", cenario: "vila", companheiros: true, composicao: true,
+    descricao: "O exército da vila forma na estrada, diante do portão; ondas de soldados frágeis saem pelo portão, pela brecha, pela estrada do norte e pelo sul. As casas e a muralha barram flechas e magias.",
+    regra: "Ondas a cada 12 s até os 96 s; depois da última, com 20% dos inimigos de pé, o resto foge.",
+    heroi: [170, 276], linhaAliada: [214, 276], exercito: { x: 640, y: 276, grupo: "linha" },
+    grupos: { linha: { ativa: 5 }, portao: { ativa: 8 } },
+    inimigos: [["pesado", 6, 772, 276, 1, "portao"]],
+    levas: [],
+    ondas: { cada: 12, primeira: 10, n: 36, ate: 96, lados: ["portao", "norte", "brecha", "sul"],
+      pontos: { portao: [900, 276], norte: [485, 20], brecha: [900, 428], sul: [614, 540] } },
+  },
+  carga: {
+    nome: "A carga de cavalaria", cenario: "aberto", companheiros: true, composicao: true, escala: "grupos",
+    descricao: "Campo aberto. Duas alas de cavalaria inimiga carregam pelos flancos enquanto a infantaria avança pelo centro; aos 30 s, outra carga vem do norte. A infantaria pesada segura a carga; os cavaleiros que passam precisam dar a volta.",
+    regra: "Aos 30 s, mais uma ala chega pelo norte. Com 20% dos inimigos de pé, o resto foge.",
+    heroi: [230, 280], linhaAliada: [270, 280], exercito: { x: 640, y: 280, grupo: "centro" },
+    grupos: { centro: { ativa: 6 }, alaNorte: { ativa: 2 }, alaSul: { ativa: 4 }, norte: {} },
+    inimigos: [["cavaleiro", 16, 820, 110, 4, "alaNorte"], ["cavaleiro", 16, 820, 450, 4, "alaSul"],
+      ["cavaleiro", 18, 480, 16, 6, "norte", 1]],
+    levas: [{ id: 1, t: 30, quando: 0.3, x: 480, y: 16, aviso: "Outra ala de cavalaria carrega pelo norte." }],
+  },
+  herois: {
+    nome: "Harg e Ardis", cenario: "vila", companheiros: true, composicao: true,
+    descricao: "Harg, o Capitão, e Ardis, a Feiticeira de Guerra, lutam juntos diante do portão, com a tropa deles. Harg mergulha em você e nas suas tropas; Ardis bombardeia os grupos, some quando você chega perto e Harg vem protegê-la.",
+    regra: "Enquanto Harg ou Ardis estiverem de pé, ninguém foge. Aos 45 s, reforços saem pelo portão e pela brecha.",
+    heroi: [170, 276], linhaAliada: [214, 276], exercito: { x: 640, y: 276, grupo: "tropa" },
+    grupos: { tropa: { ativa: 4 }, herois: { ativa: 6 }, reforco: {} },
+    inimigos: [["lider", 1, 700, 250, 1, "herois"], ["ardis", 1, 740, 300, 1, "herois"], ["pesado", 6, 716, 276, 2, "herois"],
+      ["soldado", 20, 900, 276, 4, "reforco", 1], ["arqueiro", 8, 900, 428, 2, "reforco", 1]],
+    levas: [{ id: 1, t: 45, quando: 0.3, x: 900, y: 276, aviso: "Reforços saem pelo portão e pela brecha." }],
+  },
+};
+
+// ------------------------------------------------------------------------------------------------ Campo Livre 6
+// Os cenários. Cada construção é um retângulo no chão (a colisão) com a altura do desenho (`alto`). Regras: casas,
+// muralha e torres bloqueiam passagem, flechas, projéteis e áreas; o muro baixo bloqueia só a passagem (campo6.js).
+// A vila: os arredores de uma povoação fortificada. A muralha corre de norte a sul a leste (x 790), com o portão
+// entre as duas torres (72 px), uma brecha mais ao sul (48 px) e passagens nas duas pontas; casas dos dois lados da
+// estrada que sai do portão para o oeste; dois muros baixos; o campo aberto a oeste para as hordas.
+export const CENARIOS = {
+  aberto: { nome: "Campo aberto", obstaculos: [] },
+  vila: { nome: "Arredores da vila",
+    estradas: [{ x: 0, y: 258, w: 960, h: 36 }, { x: 470, y: 0, w: 30, h: 258 }, { x: 600, y: 294, w: 28, h: 266 }],
+    obstaculos: [
+      { tipo: "muralha", x: 790, y: 30, w: 18, h: 202, alto: 30 }, { tipo: "muralha", x: 790, y: 320, w: 18, h: 84, alto: 30 },
+      { tipo: "muralha", x: 790, y: 452, w: 18, h: 76, alto: 30 },
+      { tipo: "torre", x: 784, y: 214, w: 30, h: 26, alto: 42 }, { tipo: "torre", x: 784, y: 312, w: 30, h: 26, alto: 42 },
+      { tipo: "casa", x: 590, y: 64, w: 56, h: 40, alto: 26 }, { tipo: "casa", x: 672, y: 118, w: 48, h: 38, alto: 24 },
+      { tipo: "casa", x: 548, y: 170, w: 44, h: 34, alto: 22 }, { tipo: "casa", x: 686, y: 350, w: 52, h: 40, alto: 26 },
+      { tipo: "casa", x: 586, y: 404, w: 56, h: 38, alto: 24 }, { tipo: "casa", x: 520, y: 470, w: 46, h: 34, alto: 22 },
+      { tipo: "casa", x: 690, y: 464, w: 44, h: 34, alto: 22 },
+      { tipo: "casa", x: 858, y: 96, w: 64, h: 50, alto: 30 }, { tipo: "casa", x: 868, y: 412, w: 52, h: 44, alto: 28 },
+      { tipo: "muro", x: 420, y: 118, w: 96, h: 6, alto: 6 }, { tipo: "muro", x: 430, y: 446, w: 80, h: 6, alto: 6 },
+    ] },
+};
+
+// As composições dos exércitos (nos encontros novos), escolhidas antes da luta, uma para cada lado: [tipo, quantos,
+// profundidade atrás da frente, deslocamento em y, colunas]. Os soldados e arqueiros frágeis continuam em todas.
+export const COMPOSICOES = {
+  comum: { nome: "Comum (soldados e arqueiros)",
+    aliados: [["soldado", 30, 0, 0, 4], ["arqueiro", 12, 62, 0, 2]],
+    inimigos: [["soldado", 30, 0, 0, 4], ["veterano", 8, 52, 0, 2], ["arqueiro", 12, 106, 0, 2]] },
+  cavalaria: { nome: "Com cavalaria",
+    aliados: [["soldado", 22, 0, 0, 4], ["arqueiro", 12, 62, 0, 2], ["cavaleiro", 12, 20, -110, 3]],
+    inimigos: [["soldado", 24, 0, 0, 4], ["arqueiro", 10, 80, 0, 2], ["cavaleiro", 16, 30, -120, 4]] },
+  pesada: { nome: "Linha pesada e magos",
+    aliados: [["pesado", 12, 0, 0, 2], ["soldado", 16, 26, 0, 4], ["arqueiro", 10, 70, 0, 2], ["magoBatalha", 4, 92, 0, 1]],
+    inimigos: [["pesado", 14, 0, 0, 2], ["soldado", 16, 28, 0, 4], ["magoBatalha", 6, 70, 0, 2], ["arqueiro", 8, 96, 0, 2]] },
+  completa: { nome: "Completa (todos os tipos)",
+    aliados: [["pesado", 8, 0, 0, 2], ["soldado", 14, 24, 0, 4], ["arqueiro", 10, 66, 0, 2], ["magoBatalha", 4, 88, 0, 1], ["cavaleiro", 10, 20, -110, 3]],
+    inimigos: [["pesado", 10, 0, 0, 2], ["soldado", 18, 26, 0, 4], ["magoBatalha", 5, 70, 0, 1], ["arqueiro", 8, 94, 0, 2], ["cavaleiro", 14, 30, -120, 4]] },
 };
 
 // A horda: a tecla H (para testar batalhas maiores) e as ondas do encontro "A horda". `n`: a quantidade padrão da tecla;

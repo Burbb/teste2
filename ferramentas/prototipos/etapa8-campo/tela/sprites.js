@@ -14,6 +14,7 @@ const PALETA = {
   c: "#f3ead2", C: "#c9b78a",
   v: "#ece4cf", V: "#bfb196", X: "#2e3a52", Z: "#46577a",
   f: "#ffe08a", F: "#ff8a30", r: "#d2402c", R: "#8e2a22",
+  a: "#c9a0ff", A: "#8a5ad8",
 };
 export const EQUIPES = [
   { t: "#76a8ea", T: "#4778c2", u: "#2d4f8a" },   // aliados: azul
@@ -443,11 +444,294 @@ const MAGO = {
   ],
 };
 
+
+// ---- Campo Livre 6: Morel e Odette (a mesma grade do Tático 2), a cavalaria, a infantaria pesada, o mago de batalha e
+// Ardis. À mão, uma letra por pixel, virados para a direita.
+const MOREL = {
+  largura: 17, pe: 6, heroi: true,
+  parado: [
+    "......PPP........",
+    ".....PPPPP...w...",
+    ".....Psskp...w...",
+    ".....psSsp...w...",
+    "......ppp....w...",
+    "..bb.MhhhM..yYy..",
+    ".bBBbhhrhhMss....",
+    ".bByBhhhrhM......",
+    ".bBBbhhhhrM......",
+    "..bb.MhhhhM......",
+    "....MhhhhhM......",
+    "....MMhhhMM......",
+  ],
+  preparo: [
+    "........w........",
+    "......PPPw.......",
+    ".....PPPPPw......",
+    ".....Psskp.w.....",
+    ".....psSsp.yYy...",
+    "..bb..ppp..s.....",
+    ".bBBbMhhhMs......",
+    ".bByBhhrhhM......",
+    ".bBBbhhhrhM......",
+    "..bb.hhhhrM......",
+    "....MhhhhhM......",
+    "....MMhhhMM......",
+  ],
+  golpe: [
+    ".................",
+    "......PPP........",
+    ".....PPPPP.......",
+    ".....Psskp.......",
+    ".....psSsp.......",
+    "..bb..ppp........",
+    ".bBBbMhhhMssyYwww",
+    ".bByBhhrhhM..y...",
+    ".bBBbhhhrhM......",
+    "..bb.hhhhrM......",
+    "....MhhhhhM......",
+    "....MMhhhMM......",
+  ],
+};
+MOREL.recuo = MOREL.parado;
+
+const ODETTE = {
+  largura: 17, pe: 6, heroi: true,
+  parado: [
+    "......ccc....f...",
+    ".....cCccc..fFf..",
+    ".....csskc...f...",
+    ".....CsSsC...b...",
+    "....VcvvvcV..b...",
+    "...VvvvyvvvVsb...",
+    "...VvvvyvvvV.b...",
+    "...VvvyYyvvV.b...",
+    "...VvvvvvvvV.b...",
+    "...VvvvvvvvV.b...",
+    "...VXZZZZZXV.b...",
+    "...VVvvvvvVV.....",
+  ],
+  preparo: [
+    ".......ccc..fFf..",
+    "......cCccc.FfF..",
+    "......csskc..fb..",
+    "......CsSsC.sb...",
+    ".....VcvvvcVb....",
+    "....VvvvyvvvV....",
+    "....VvvvyvvvV....",
+    "....VvvyYyvvV....",
+    "....VvvvvvvvV....",
+    "....VvvvvvvvV....",
+    "....VXZZZZZXV....",
+    "....VVvvvvvVV....",
+  ],
+  golpe: [
+    "......ccc........",
+    ".....cCccc.......",
+    ".....csskc.......",
+    ".....CsSsC.......",
+    "....VcvvvcV......",
+    "...VvvvyvvvVssbfF",
+    "...VvvvyvvvV...Ff",
+    "...VvvyYyvvV.....",
+    "...VvvvvvvvV.....",
+    "...VvvvvvvvV.....",
+    "...VXZZZZZXV.....",
+    "...VVvvvvvVV.....",
+  ],
+};
+ODETTE.recuo = ODETTE.parado;
+
+// O cavaleiro: o cavalo (castanho, as pernas na própria grade, com as passadas) e o cavaleiro na cor da equipe, com a lança.
+const CAVALEIRO = {
+  largura: 19, pe: 9, semPernas: true,
+  parado: [
+    "........hh.........",
+    ".......hHHh....w...",
+    ".......sksh...w....",
+    "......tTttTs.w.....",
+    "......tTttT.w......",
+    "..b..BBtTTBBBBBb...",
+    ".bBbBbbbbbbbbbbBbB.",
+    "..B.Bbbbbbbbbbbb.Bk",
+    "....Bbbbbbbbbbb..BB",
+    "....bB......bB.....",
+    "....b.B.....b.B....",
+    "....B..B....B..B...",
+  ],
+  preparo: [
+    "........hh.....w...",
+    ".......hHHh...w....",
+    ".......sksh..w.....",
+    "......tTttTsw......",
+    "......tTttT........",
+    "..b..BBtTTBBBBBb...",
+    ".bBbBbbbbbbbbbbBbBk",
+    "..B.Bbbbbbbbbbbb.BB",
+    "....Bbbbbbbbbbb..B.",
+    "....bB.......B.B...",
+    "....b.B......B.....",
+    "....B..B...........",
+  ],
+  golpe: [
+    "........hh.........",
+    ".......hHHh........",
+    ".......sksh........",
+    "......tTttTssbbbbhh",
+    "......tTttT........",
+    "..b..BBtTTBBBBBb...",
+    ".bBbBbbbbbbbbbbBbB.",
+    "..B.Bbbbbbbbbbbb.Bk",
+    "....Bbbbbbbbbbb..BB",
+    "..bB..........bB...",
+    ".b..B........b..B..",
+    ".B...B.......B...B.",
+  ],
+};
+CAVALEIRO.recuo = CAVALEIRO.parado;
+CAVALEIRO.andarA = [...CAVALEIRO.parado.slice(0, 9), "...bB........bB....", "..b..B......b..B...", "..B...B.....B...B.."];
+CAVALEIRO.andarB = [...CAVALEIRO.parado.slice(0, 9), ".....bB....bB......", ".....bB....bB......", ".....BB....BB......"];
+
+// A infantaria pesada: o elmo fechado e o escudo grande na frente (o lado que segura o golpe).
+const PESADO = {
+  largura: 13, pe: 5,
+  parado: [
+    "....MMM......",
+    "...MhhhM.....",
+    "...MkkkM.....",
+    "...uHhHu.hh..",
+    "..uTTtTThHHh.",
+    ".uTtTtTThHyH.",
+    ".uTtTtTThHHh.",
+    "..uTTTTThHHh.",
+    "..uuTTTu.hh..",
+    "..uuTTTuu....",
+  ],
+  preparo: [
+    "...MMM.......",
+    "..MhhhM......",
+    "..MkkkM......",
+    "..uHhHu..hh..",
+    ".uTTtTT.hHHh.",
+    "uTtTtTT.hHyH.",
+    "uTtTtTT.hHHh.",
+    ".uTTTTT.hHHh.",
+    ".uuTTTu..hh..",
+    ".uuTTTuu.....",
+  ],
+  golpe: [
+    ".....MMM.....",
+    "....MhhhM....",
+    "....MkkkM....",
+    "....uHhHuhh..",
+    "...uTTtTThHHh",
+    "..uTtTtTThHyH",
+    "..uTtTtTThHHh",
+    "...uTTTTThHHh",
+    "...uuTTTu.hh.",
+    "...uuTTTuu...",
+  ],
+};
+PESADO.recuo = PESADO.parado;
+
+// O mago de batalha: o capuz e o manto na cor da equipe, o cajado com a brasa.
+const MAGO_BATALHA = {
+  largura: 13, pe: 5,
+  parado: [
+    "....TT...f...",
+    "...TttT.fFf..",
+    "...TsskT.f...",
+    "....sSs..b...",
+    "..tTtttTsb...",
+    ".tTttyttT.b..",
+    ".tTttyttT.b..",
+    ".tTttyttT.b..",
+    "..TtttttT....",
+    "..uuTTTuu....",
+  ],
+  preparo: [
+    "....TT..fFf..",
+    "...TttT.FfF..",
+    "...TsskTsfb..",
+    "....sSs..b...",
+    "..tTtttT.....",
+    ".tTttyttT....",
+    ".tTttyttT....",
+    ".tTttyttT....",
+    "..TtttttT....",
+    "..uuTTTuu....",
+  ],
+  golpe: [
+    "....TT.......",
+    "...TttT......",
+    "...TsskT.....",
+    "....sSs..fF..",
+    "..tTtttTsbfFf",
+    ".tTttyttT.fF.",
+    ".tTttyttT....",
+    ".tTttyttT....",
+    "..TtttttT....",
+    "..uuTTTuu....",
+  ],
+};
+MAGO_BATALHA.recuo = MAGO_BATALHA.parado;
+
+// Ardis, a Feiticeira de Guerra: cabelo branco, o manto violeta-escuro com o ouro, o cajado com a luz arcana; o
+// contorno escuro dos heróis inimigos (como o de Harg).
+const ARDIS = {
+  largura: 17, pe: 7, pernasLargura: true, contorno: "#2a0d36", cores: { t: "#6a3482", T: "#45205a", u: "#26102f" },
+  parado: [
+    "......www........",
+    ".....wwwww.......",
+    ".....wsskw...a...",
+    ".....wsSsw..aAa..",
+    "......tyt....a...",
+    "....tTtttTt..b...",
+    "...tTttyttTtsb...",
+    "...tTttyttT..b...",
+    "...tTtttttT..b...",
+    "..tTttttttTt.b...",
+    "..tTtTtttTtT.b...",
+    "..uuTTTTTTTuu....",
+  ],
+  preparo: [
+    "......www....aAa.",
+    ".....wwwww..aAaAa",
+    ".....wsskw...aAa.",
+    ".....wsSsw...sb..",
+    "......tyt...s.b..",
+    "....tTtttTtT..b..",
+    "...tTttyttTt.....",
+    "...tTttyttT......",
+    "...tTtttttT......",
+    "..tTttttttTt.....",
+    "..tTtTtttTtT.....",
+    "..uuTTTTTTTuu....",
+  ],
+  golpe: [
+    "......www........",
+    ".....wwwww.......",
+    ".....wsskw.......",
+    ".....wsSsw.......",
+    "......tyt........",
+    "....tTtttTtssbaAa",
+    "...tTttyttTt..aAa",
+    "...tTttyttT....a.",
+    "...tTtttttT......",
+    "..tTttttttTt.....",
+    "..tTtTtttTtT.....",
+    "..uuTTTTTTTuu....",
+  ],
+};
+ARDIS.recuo = ARDIS.parado;
+
 export const MODELOS = { soldado: SOLDADO, arqueiro: ARQUEIRO, veterano: VETERANO, estandarte: ESTANDARTE,
-  campeao: CAMPEAO, lider: LIDER, guerreiro: GUERREIRO, mago: MAGO };
+  campeao: CAMPEAO, lider: LIDER, guerreiro: GUERREIRO, mago: MAGO, morel: MOREL, odette: ODETTE, cavaleiro: CAVALEIRO,
+  pesado: PESADO, magoBatalha: MAGO_BATALHA, ardis: ARDIS };
 
 function montar(modelo, pose, pernas) {
   const tronco = modelo[pose];
+  // o cavalo traz as pernas na própria grade (e as passadas como poses)
+  if (modelo.semPernas) return tronco.map((l) => l.padEnd(modelo.largura, "."));
   const lp = modelo.heroi || modelo.pernasLargura ? PERNAS_HEROI[pernas] : PERNAS[pernas];
   const desl = modelo.pe - (modelo.heroi || modelo.pernasLargura ? 6 : 4);
   const linhas = tronco.map((l) => l.padEnd(modelo.largura, "."));
@@ -524,8 +808,8 @@ export function prepararSprites() {
       const cores = mod.cores || EQUIPES[eq], poses = {};
       const def = mod.pernas || "juntas";
       const quadros = {
-        parado: montar(mod, "parado", def), andarA: montar(mod, "parado", mod.pernas ? def : "abertas"),
-        andarB: montar(mod, "parado", mod.pernas ? def : "cruzadas"), preparo: montar(mod, "preparo", def),
+        parado: montar(mod, "parado", def), andarA: montar(mod, mod.andarA ? "andarA" : "parado", mod.pernas ? def : "abertas"),
+        andarB: montar(mod, mod.andarB ? "andarB" : "parado", mod.pernas ? def : "cruzadas"), preparo: montar(mod, "preparo", def),
         golpe: montar(mod, "golpe", mod.heroi ? "abertas" : def), recuo: montar(mod, "recuo", def),
       };
       for (const [pose, linhas] of Object.entries(quadros)) {

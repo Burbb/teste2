@@ -5,6 +5,7 @@
 import { CAMPO, TIPOS } from "./conteudo.js";
 import { dentro, formaDaAcao, alvoAssistido } from "./sim.js";
 import { pousarCorpos, NUMEROS } from "./efeitos.js";
+import { desenharEstradas, prediosOrdenados, temAtras, desenharPredio, desenharMagias, desenharCargas } from "./desenho6.js";
 
 export const BORDA = 70;   // o chão de fora do campo, que a câmera pode mostrar perto das bordas
 
@@ -140,7 +141,7 @@ function sombra(g, x, y, larg, cor = "rgba(10,14,8,0.32)") {
   g.fillRect(x - m + 1, y + 1, larg - 2, 1);
 }
 
-const LARGURA_SOMBRA = { soldado: 6, arqueiro: 6, veterano: 7, estandarte: 6, campeao: 11, lider: 12, heroi: 9 };
+const LARGURA_SOMBRA = { soldado: 6, arqueiro: 6, veterano: 7, estandarte: 6, campeao: 11, lider: 12, heroi: 9, cavaleiro: 10, pesado: 7, magoBatalha: 6, morel: 9, odette: 8, ardis: 9 };
 // a sombra tingida pela cor do lado: no meio do choque, o pé de cada um diz de que lado ele está
 const SOMBRA_LADO = ["rgba(20,40,110,0.5)", "rgba(110,16,16,0.5)"];
 
@@ -192,6 +193,7 @@ export function desenhar(g, s) {
   g.imageSmoothingEnabled = false;
   g.drawImage(s.chao, -cx - BORDA, -cy - BORDA);
   g.drawImage(E.marcas, -cx, -cy);
+  desenharEstradas(g, m, cx, cy);
   const h = m.heroi, rel = s.relogio;
   // a posição interpolada, com o tranco do acerto (heróis e ameaças: 1 px no golpe fraco, 2 no forte, na direção dele)
   const pos = (u) => {
@@ -300,6 +302,9 @@ export function desenhar(g, s) {
     avisos.push(u.acao.forma);
     pintarForma(g, u.acao.forma, cx, cy, `rgba(220,40,30,${0.12 + 0.3 * k})`, "rgba(255,90,70,0.95)");
   }
+  // Campo Livre 6: as magias anunciadas (magos de batalha, Ardis) e as cargas da cavalaria
+  desenharMagias(g, m, cx, cy, pintarForma, rel);
+  desenharCargas(g, m, cx, cy, rel);
   // o anel do líder inimigo, vermelho, como o dourado do herói
   if (m.lider && !m.lider.morto) {
     const [lx, ly] = pos(m.lider);
@@ -385,8 +390,12 @@ export function desenhar(g, s) {
   }
   for (const v of voadores) sombra(g, Math.round(v.x) - cx, Math.round(v.y) - cy, Math.max(3, 6 - Math.round(v.z / 8)));
   let iv = 0;
+  // as construções entram na mesma ordem de profundidade (pela base); translúcidas quando há alguém atrás delas
+  const predios = prediosOrdenados(m), translucido = new Map(predios.map((o) => [o, temAtras(m, o)]));
+  let ip = 0;
   for (const u of lista) {
     while (iv < voadores.length && voadores[iv].y < u.y) desenharVoador(g, Q, voadores[iv++], cx, cy);
+    while (ip < predios.length && predios[ip].y + predios[ip].h < u.y) { const o = predios[ip++]; desenharPredio(g, o, cx, cy, translucido.get(o) ? 0.62 : 1); }
     const [x, y] = pos(u);
     const sp = Q[tipoDe(u)][u.lado][poseTropa(u)];
     const img = u.flash > 0.03 ? (u.virado > 0 ? sp.bd : sp.be) : u.virado > 0 ? sp.d : sp.e;
@@ -394,8 +403,8 @@ export function desenhar(g, s) {
     // a vida só das ameaças (sempre) e do veterano (por 1,5 s depois de apanhar): os soldados comuns caem de uma vez
     // a vida: sempre nas ameaças; no veterano, só por 0,8 s depois de apanhar, curta, para o choque não virar barras
     if (u.def.elite || u.tipo === "veterano" && m.t - (u.ferido ?? -9) < 0.8) {
-      const grande = u.tipo === "campeao" || u.tipo === "lider", larg = u.tipo === "lider" ? 18 : grande ? 16 : 5;
-      barra(g, Math.round(x - larg / 2) - cx, Math.round(y - sp.ay) - cy - 4, larg, u.vida / u.vidaMax, "#e05a48", grande ? 2 : 1);
+      const grande = u.tipo === "campeao" || u.tipo === "lider" || u.def.heroiInimigo || u.def.companheiro, larg = u.tipo === "lider" || u.tipo === "ardis" ? 18 : grande ? 14 : 5;
+      barra(g, Math.round(x - larg / 2) - cx, Math.round(y - sp.ay) - cy - 4, larg, u.vida / u.vidaMax, u.lado === 0 ? "#6fbf5d" : "#e05a48", grande ? 2 : 1);
     }
     const topo = Math.round(y - sp.ay) - cy;
     // o Sangramento: uma gota por acúmulo (até 5), descendo
@@ -423,6 +432,7 @@ export function desenhar(g, s) {
     if (u.gelado > 0) { g.fillStyle = "#cfeeff"; g.fillRect(Math.round(x + 2) - cx, topo + 2, 1, 1); g.fillRect(Math.round(x - 3) - cx, topo + 5, 1, 1); }
   }
   while (iv < voadores.length) desenharVoador(g, Q, voadores[iv++], cx, cy);
+  while (ip < predios.length) { const o = predios[ip++]; desenharPredio(g, o, cx, cy, translucido.get(o) ? 0.62 : 1); }
 
   // ---- projéteis
   for (const p of m.proj) {
@@ -511,6 +521,9 @@ export function desenhar(g, s) {
       g.fillStyle = "#f0cb62"; g.fillRect(tx - 2, ty - 5, 5, 1); g.fillRect(tx - 1, ty - 4, 3, 1); g.fillRect(tx, ty - 3, 1, 1);
     }
   }
+
+  // Campo Livre 6: o herói atrás de uma construção: ela por cima dele, translúcida (ele não some e a ordem se lê)
+  if (!h.morto) for (const o of predios) if (h.y < o.y + o.h && h.y > o.y - o.alto - 14 && h.x > o.x - 8 && h.x < o.x + o.w + 8) desenharPredio(g, o, cx, cy, 0.45);
 
   // ---- os efeitos por cima
   for (const c of E.cortes) {

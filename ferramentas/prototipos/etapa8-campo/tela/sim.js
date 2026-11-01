@@ -5,8 +5,10 @@
 // O que está aqui: o herói (movimento com aceleração, a mira, as ações com preparo, contato e recuperação, o
 // adiantamento de comando), as tropas (alvo com vagas, aproximação, ataque, arqueiros que mantêm distância, ordens
 // coletivas), os projéteis, o fogo no chão, os empurrões e a separação dos corpos numa grade espacial.
-import { CAMPO, ATRITO_EMPURRAO, SEMENTE, TIPOS, HEROIS, ORDENS, CONTINGENTES, BATALHA, ENCONTROS, ESCALAS, ALA,
+import { CAMPO, ATRITO_EMPURRAO, SEMENTE, TIPOS, HEROIS, ORDENS, CONTINGENTES, BATALHA, ENCONTROS, ESCALAS, ALA, COMPOSICOES,
   ESPECIAIS, DESLOCA, HORDA, HABILIDADES, TALENTOS, ORCAMENTO, MONTAGENS, MONTAGEM_PADRAO, CADEIA, SANGUE } from "./conteudo.js";
+import { ligar, mundoAtual, prepararCenario, rumo, empurrarParaFora, bloqueado, primeiroBloqueio, dentroObstaculo,
+  pontoDaHabilidade, atualizarMagias, atualizarEspecial, ajustarLider, criarCompanheiros, blocosDaComposicao } from "./campo6.js";
 
 export const PASSO = 1 / 60;
 const GRAU = Math.PI / 180;
@@ -32,15 +34,17 @@ export function entradaVazia() {
 
 // ------------------------------------------------------------------------------------------------ o mundo
 export function criarMundo({ heroi = "guerreiro", quantidade = "normal", semente = SEMENTE, encontro = "original",
-  kit = {} } = {}) {
+  kit = {}, composicao = { aliados: "comum", inimigos: "comum" } } = {}) {
   const enc = ENCONTROS[encontro] || ENCONTROS.original;
-  if (!enc.original) return criarEncontro(enc, encontro, heroi, quantidade, semente, kit);
+  if (!enc.original) return criarEncontro(enc, encontro, heroi, quantidade, semente, kit, composicao);
   const m = {
     t: 0, rng: sorteio(semente), campo: CAMPO, proximoId: 1, unidades: [], lados: [[], []], centros: [null, null],
     proj: [], zonas: [], eventos: [], registro: [], fase: "formacao", resultado: null, fimEm: 0,
     ordem: { tipo: "acompanhar", x: 0, y: 0 }, quantidade, escala: escalaDe(quantidade), nomeHeroi: heroi,
-    stats: novasEstatisticas(), grupos: {}, selecao: new Set(), lider: null, encontro: "original",
+    stats: novasEstatisticas(), grupos: {}, selecao: new Set(), lider: null, encontro: "original", magias: [], projE: [], linhas: [],
   };
+  prepararCenario(m, "aberto");
+  mundoAtual(m);
   const c = CONTINGENTES.normal, k = m.escala;
   const cy = CAMPO.altura / 2;
   // os aliados à esquerda, virados para a direita; os inimigos à direita (nas escalas maiores, em alas)
@@ -174,27 +178,38 @@ function prepararHeroi(m, heroi, x, y, escolha) {
 }
 
 // Os encontros novos: blocos fixos (tipo, quantos, onde, colunas, grupo), grupos que acordam no tempo deles e levas.
-function criarEncontro(enc, nome, heroi, quantidade, semente, kit) {
+function criarEncontro(enc, nome, heroi, quantidade, semente, kit, composicao = {}) {
   const m = {
     t: 0, rng: sorteio(semente), campo: CAMPO, proximoId: 1, unidades: [], lados: [[], []], centros: [null, null],
     proj: [], zonas: [], eventos: [], registro: [], fase: "formacao", resultado: null, fimEm: 0,
     ordem: { tipo: "acompanhar", x: 0, y: 0 }, quantidade, escala: escalaDe(quantidade), nomeHeroi: heroi,
     stats: novasEstatisticas(), grupos: {}, selecao: new Set(), lider: null, encontro: nome, levas: [],
-    modoEscala: enc.escala || "alas",
+    modoEscala: enc.escala || "alas", magias: [], projE: [], linhas: [],
   };
+  // Campo Livre 6: o cenário (construções), a composição dos exércitos (nos encontros novos) e os companheiros
+  prepararCenario(m, enc.cenario || "aberto");
+  mundoAtual(m);
   const qtd = (b) => (ESPECIAIS.includes(b[0]) ? b[1] : b[1] * m.escala);
-  for (const b of enc.aliados) emAlas(m, 0, b[0], b[1], b[2], b[3], b[4] || 3, -1, m.escala);
+  const compA = COMPOSICOES[composicao.aliados] || COMPOSICOES.comum, compI = COMPOSICOES[composicao.inimigos] || COMPOSICOES.comum;
+  m.composicao = enc.composicao ? { aliados: composicao.aliados || "comum", inimigos: composicao.inimigos || "comum" } : null;
+  const aliados = enc.composicao ? blocosDaComposicao(compA.aliados, enc.linhaAliada[0], enc.linhaAliada[1], -1) : enc.aliados;
+  for (const b of aliados) emAlas(m, 0, b[0], b[1], b[2], b[3], b[4] || 3, -1, m.escala);
+  const exercito = enc.composicao && enc.exercito ? blocosDaComposicao(compI.inimigos, enc.exercito.x, enc.exercito.y, 1).map((b) => [...b, enc.exercito.grupo]) : [];
   for (const [g, def] of Object.entries(enc.grupos)) m.grupos[g] = { ativo: false, ativa: def.ativa ?? 0, posto: !!def.posto };
   const porLeva = { 0: [] };
-  for (const b of enc.inimigos) {
+  for (const b of [...exercito, ...enc.inimigos]) {
     const leva = b[6] || 0;
     if (leva) { (porLeva[leva] ||= []).push(b); continue; }
     criarBlocoInimigo(m, b);
   }
   for (const lv of enc.levas || []) m.levas.push({ ...lv, chegou: false, blocos: porLeva[lv.id] || [] });
   m.reforco = { chegou: m.levas.length === 0, comp: {} };
-  m.ondas = enc.ondas ? { ...enc.ondas, proxima: enc.ondas.cada, i: 0 } : null;
+  m.ondas = enc.ondas ? { ...enc.ondas, proxima: enc.ondas.primeira ?? enc.ondas.cada, i: 0 } : null;
   prepararHeroi(m, heroi, enc.heroi[0], enc.heroi[1], kit);
+  if (enc.companheiros) criarCompanheiros(m, enc.heroi[0], enc.heroi[1]);
+  // nos encontros novos (composições de blocos fixos, construções), a separação dos corpos roda antes da luta: cada um
+  // começa numa casa livre, fora das construções
+  if (enc.composicao) { for (let i = 0; i < 8; i++) separar(m); for (const u of m.unidades) { u.px = u.x; u.py = u.y; } }
   alasDefendem(m);
   limpar(m);
   m.stats.primeira = m.lados[1].length;
@@ -213,6 +228,7 @@ function criarBlocoInimigo(m, b) {
     u.grupo = b[5];
     if (g && g.posto) u.posto = { x: u.x, y: u.y };
     if (u.tipo === "lider") m.lider = u;
+    if (u.tipo === "ardis") m.ardis = u;
   }
 }
 
@@ -275,7 +291,7 @@ function chegarOnda(m) {
   const o = m.ondas;
   if (m.t < o.proxima || m.t > o.ate) return;
   const lado = o.lados[o.i % o.lados.length], cx = CAMPO.largura / 2, cy = CAMPO.altura / 2;
-  const p = { leste: [CAMPO.largura - 30, cy], oeste: [30, cy], norte: [cx, 40], sul: [cx, CAMPO.altura - 40] }[lado];
+  const p = (o.pontos && o.pontos[lado]) || { leste: [CAMPO.largura - 30, cy], oeste: [30, cy], norte: [cx, 40], sul: [cx, CAMPO.altura - 40] }[lado];
   o.i++;
   o.proxima += o.cada;
   hordaEm(m, p[0], p[1], o.n * m.escala);
@@ -331,6 +347,7 @@ export function passo(m, ent) {
   const dt = PASSO;
   if (m.fase === "fim") return;
   m.t += dt;
+  mundoAtual(m);
   if (m.fase === "formacao" && m.t >= BATALHA.formacao) {
     m.fase = "luta";
     m.eventos.push({ tipo: "avanco" });
@@ -344,6 +361,7 @@ export function passo(m, ent) {
   atualizarHeroi(m, m.heroi, ent || entradaVazia(), dt);
   for (const u of m.unidades) if (u !== m.heroi && !u.morto) atualizarUnidade(m, u, dt);
   atualizarProjeteis(m, dt);
+  atualizarMagias(m, dt);
   atualizarZonas(m, dt);
   mover(m, dt);
   separar(m);
@@ -407,7 +425,8 @@ export function pontoNoAlcance(h, mx, my, alcance) {
   const dx = mx - h.x, dy = my - h.y, d = Math.hypot(dx, dy);
   let x = mx, y = my;
   if (d > alcance) { x = h.x + (dx / d) * alcance; y = h.y + (dy / d) * alcance; }
-  return limitarAoCampo(x, y);
+  const q = pontoDaHabilidade(h.x, h.y, x, y);
+  return limitarAoCampo(q.x, q.y);
 }
 function limitarAoCampo(x, y) {
   const g = CAMPO.margem;
@@ -441,7 +460,7 @@ export function formaDaAcao(h, id, mx, my) {
     case "meteoros": return noPonto(k.area);
     case "piscar": {
       const d = Math.min(k.distancia, Math.max(30, Math.hypot(mx - h.x, my - h.y)));
-      const p = limitarAoCampo(h.x + Math.cos(ang) * d, h.y + Math.sin(ang) * d);
+      const p0 = limitarAoCampo(h.x + Math.cos(ang) * d, h.y + Math.sin(ang) * d), p = pontoDaHabilidade(h.x, h.y, p0.x, p0.y);
       return { tipo: "circulo", x: h.x, y: h.y, raio: k.raio, destino: p };
     }
     case "muralha": {
@@ -472,6 +491,11 @@ export function ferir(m, u, dano, fonte, o = {}) {
   // o Avanço de Escudo: os aliados perto do herói levam metade do dano enquanto o escudo está erguido
   const ea = h.acao;
   if (u.lado === 0 && u !== h && ea && ea.fase === "escudo" && dist2(u, h) <= h.kit.escudo.protege ** 2) dano *= h.kit.escudo.reducao;
+  // Campo Livre 6: o escudo na frente (infantaria pesada, Morel) reduz o golpe que vem do lado para onde ele olha; o
+  // escudo do mago e a barreira de Ardis absorvem; Ardis lembra quem a feriu (para escolher o duelo)
+  if (u.def.escudoFrente && fonte && fonte !== u && !o.sutil && (Math.sign(fonte.x - u.x) || 1) === u.virado) dano *= u.def.escudoFrente;
+  if (u.absorve > 0 && u.absorveAte > m.t) { const a = Math.min(u.absorve, dano); u.absorve -= a; dano -= a; if (dano <= 0) return 0; }
+  if (u.tipo === "ardis" && fonte === h) u.feridaPeloHeroi = m.t;
   // o Estilhaçar: o congelado (ou enregelado) que leva dano direto ou secundário de outro lançamento se estilhaça
   const doHeroi = fonte === h && u.lado === 1, tipoDano = o.tipoDano || (o.sutil ? "continuo" : "direto");
   let estilhaca = false;
@@ -566,6 +590,8 @@ function morrer(m, u, fonte, dx, dy, emp, forte, o = {}) {
   const vel = voa ? emp * 0.3 + 25 * m.rng() : 14 + 8 * m.rng();
   m.eventos.push({ tipo: "morte", id: u.id, unidade: u.tipo, lado: u.lado, x: u.x, y: u.y, dx, dy, vel,
     sobe: voa ? 55 + 35 * m.rng() : 18, voa, virado: u.virado });
+  if (u.def.companheiro) { registrar(m, `${u.def.nome} caiu e fica fora desta luta.`); m.eventos.push({ tipo: "companheiroCaiu", nome: u.def.nome }); }
+  if (u.tipo === "ardis") { registrar(m, "Ardis caiu."); m.eventos.push({ tipo: "liderCaiu", x: u.x, y: u.y }); }
   const h = m.heroi;
   if (u === h) {
     m.fimEm = m.t + BATALHA.derrotaDura;
@@ -628,6 +654,7 @@ function atingirArea(m, h, f, k, opts = {}) {
   let acertos = 0, abates = 0;
   for (const u of m.lados[1]) {
     if (u.morto || !dentro(f, u.x, u.y)) continue;
+    if (m.cenario.obs.length && bloqueado(m, f.x ?? h.x, f.y ?? h.y, u.x, u.y, true)) continue;
     let dx = u.x - (f.x ?? h.x), dy = u.y - (f.y ?? h.y);
     const d = Math.hypot(dx, dy);
     if (d < 0.5) { dx = Math.cos(h.mira); dy = Math.sin(h.mira); } else { dx /= d; dy /= d; }
@@ -1213,11 +1240,12 @@ function atualizarUnidade(m, u, dt) {
   if (u.firme) ritmo /= TIPOS.lider.presencaRitmo;
   if (u.inspirado > 0) ritmo /= u.inspiraRitmo || 1;
   if (u.gelado > 0) ritmo *= u.def.elite ? u.geloK.ritmoElite : u.geloK.ritmo;
+  if (u.furiaAte > m.t) ritmo *= u.def.furia.ritmo;
   if (u.recarga > 0) u.recarga -= dt * ritmo;
   if (u.congelado > 0) { u.congelado -= dt; u.vx = u.vy = 0; return; }
   // congelado pelo Frio Cortante: nem anda nem ataca até o gelo acabar (ou se estilhaçar)
   if (u.gelo > m.t) { u.vx = u.vy = 0; return; }
-  if (u.atordoado > 0) { u.atordoado -= dt; u.vx = u.vy = 0; return; }
+  if (u.atordoado > 0) { u.atordoado -= dt; u.vx = u.vy = 0; u.acaoA = null; u.galope = null; return; }
   if (u.ofegante > 0) { u.ofegante -= dt; u.vx = u.vy = 0; return; }
   const d = u.def;
   // a carga do líder: quem foi reunido espera parado, virado para a faixa; depois corre junto
@@ -1259,6 +1287,7 @@ function atualizarUnidade(m, u, dt) {
       }
     } else if (m.fase === "formacao" && !ameacaPerto(m, u, 70)) { u.vx = u.vy = 0; return; }
   }
+  if (u.def.especial && m.fase !== "fuga" && atualizarEspecial(m, u, dt)) return;
   if (u.tipo === "lider" && m.fase !== "fuga" && decidirLider(m, u, dt)) return;
   if (u.lado === 0) {
     const o = u.ordem;
@@ -1333,6 +1362,7 @@ function decidirLider(m, u, dt) {
   const dh = h.morto ? Infinity : Math.sqrt(dist2(u, h));
   if (u.provocado > 0) u.provocado -= dt;
   if (u.modoT > 0) u.modoT -= dt;
+  if (ajustarLider(m, u, dh, dt)) return true;
   // o herói chegando perto passa à frente da escolha (como uma provocação)
   if (!(u.modoT > 0) || u.modo !== "heroi" && dh <= d.foco.perto) escolherModoLider(m, u, dh);
   if (u.habIntervalo > 0) return false;   // as recargas correm em estados(), também enquanto ele golpeia ou cambaleia
@@ -1467,11 +1497,13 @@ function ameacaPerto(m, u, r) {
 }
 
 function andarPara(u, x, y, vel) {
-  const dx = x - u.x, dy = y - u.y, d = Math.hypot(dx, dy);
+  const d = Math.hypot(x - u.x, y - u.y);
   if (d < 1.5) { u.vx = u.vy = 0; return d; }
+  // com construções no caminho, o próximo canto do caminho (campo6.rumo); com a linha livre, o próprio ponto
+  const r = rumo(u, x, y), dx = r.x - u.x, dy = r.y - u.y, dr = Math.hypot(dx, dy) || 1;
   const v = Math.min(vel, d * 8);
-  u.vx = (dx / d) * v;
-  u.vy = (dy / d) * v;
+  u.vx = (dx / dr) * v;
+  u.vy = (dy / dr) * v;
   if (Math.abs(dx) > 0.3) u.virado = dx > 0 ? 1 : -1;
   return d;
 }
@@ -1513,6 +1545,7 @@ function alvoValido(m, u, c) {
 
 function escolherAlvo(m, u) {
   if (u.tipo === "lider") return alvoDoLider(m, u);
+  if (u.provocadoAte > m.t && u.provocador && !u.provocador.morto) return u.provocador;
   const o = u.lado === 0 ? u.ordem || m.ordem : null, longe = u.def.papel === "longe";
   if (o && o.alvoU && !o.encerrada) return alvoDaOrdem(m, u, o.alvoU);
   // sem coleira, quem atira procura até `busca` px
@@ -1669,8 +1702,10 @@ function corpoACorpo(m, u) {
         return;
       }
     }
-    // chegando perto, cada um abre um pouco para o seu lado: o grupo envolve o alvo em vez de fazer fila
+    // chegando perto, cada um abre um pouco para o seu lado: o grupo envolve o alvo em vez de fazer fila; longe e com
+    // uma construção no meio, vai pelo caminho (campo6.rumo)
     let ux = dx / dist, uy = dy / dist;
+    if (dist > 30) { const r = rumo(u, a.x, a.y), rx = r.x - u.x, ry = r.y - u.y, rn = Math.hypot(rx, ry) || 1; ux = rx / rn; uy = ry / rn; }
     if (dist < 30) {
       const s = (u.id % 2 ? 1 : -1) * 0.35;
       ux += -uy * s; uy += (dx / dist) * s;
@@ -1873,6 +1908,7 @@ function arqueiro(m, u) {
     }
   }
   const dist = Math.hypot(a.x - u.x, a.y - u.y);
+  if (dist <= d.alcance && bloqueado(m, u.x, u.y, a.x, a.y, true)) { andarPara(u, a.x, a.y, d.vel); return; }
   if (dist > d.alcance) {
     const n = dist || 1, r = d.alcance * d.tiro;
     let tx = a.x - ((a.x - u.x) / n) * r, ty = a.y - ((a.y - u.y) / n) * r;
@@ -1895,9 +1931,15 @@ function atualizarProjeteis(m, dt) {
   for (const p of m.proj) {
     if (p.tipo === "flecha") {
       p.t += dt;
-      const k = Math.min(1, p.t / p.dur);
+      const k = Math.min(1, p.t / p.dur), ox = p.x, oy = p.y;
       p.x = p.x0 + (p.x1 - p.x0) * k;
       p.y = p.y0 + (p.y1 - p.y0) * k;
+      if (m.cenario.obs.length && bloqueado(m, ox, oy, p.x, p.y, true)) {
+        const b = primeiroBloqueio(m, ox, oy, p.x, p.y) || { x: ox, y: oy };
+        m.eventos.push({ tipo: "flechaChao", x: b.x, y: b.y, ang: Math.atan2(p.y1 - p.y0, p.x1 - p.x0) });
+        m.stats.flechasParede = (m.stats.flechasParede || 0) + 1;
+        continue;
+      }
       // o Avanço de Escudo barra a flecha inimiga que cruza o arco vindo da frente
       const ha = m.heroi.acao;
       if (p.lado === 1 && ha && ha.fase === "escudo" && !m.heroi.morto && dentro(ha.forma, p.x, p.y) &&
@@ -1941,7 +1983,7 @@ function atualizarProjeteis(m, dt) {
           if (st) { st.acertos++; if (r === 2) st.abates++; }
           m.eventos.push({ tipo: "linhaAcerto", id: k.id, x: c.x, y: c.y });
         }
-        if (p.resta <= 0 || p.x < 0 || p.y < 0 || p.x > CAMPO.largura || p.y > CAMPO.altura) fim = true;
+        if (p.resta <= 0 || p.x < 0 || p.y < 0 || p.x > CAMPO.largura || p.y > CAMPO.altura || dentroObstaculo(m, p.x, p.y, 0, true)) fim = true;
       }
       if (fim && p.explode) {
         const E = k.explosao, f = { tipo: "circulo", x: p.x, y: p.y, raio: E.raio };
@@ -2160,9 +2202,10 @@ function separar(m) {
       }
     }
   }
-  const g = CAMPO.margem;
+  const g = CAMPO.margem, obs = m.cenario.obs.length;
   for (const u of us) {
     if (u.morto || u.fugindo) continue;
+    if (obs && !u.voando && !(u === h && heroiSolto)) empurrarParaFora(m, u);
     u.x = Math.max(g, Math.min(CAMPO.largura - g, u.x));
     u.y = Math.max(g, Math.min(CAMPO.altura - g, u.y));
   }
@@ -2202,6 +2245,7 @@ function verificarFim(m) {
   if (m.fase !== "luta" || !m.reforco.chegou) return;
   if (m.ondas && m.t <= m.ondas.ate) return;   // na horda, ninguém foge enquanto ainda vêm ondas
   if (m.lider && !m.lider.morto) return;   // enquanto o líder estiver de pé, a tropa dele não foge
+  if (m.ardis && !m.ardis.morto && !m.ardis.fugindo) return;
   if (m.lados[1].length <= Math.floor(m.stats.inimigos * BATALHA.fugaQuando)) {
     m.fase = "fuga";
     m.resultado = "vitoria";
@@ -2286,3 +2330,6 @@ export function resumo(m) {
     inimigosVivos, vida: Math.max(0, h.vida), recurso: h.recurso, encontro: m.encontro,
     inimigosPorVir: Math.max(0, m.stats.inimigos - inimigosVivos - m.stats.abatesHeroi - m.stats.abatesAliados - m.stats.fugiram) };
 }
+
+// Campo Livre 6: o que campo6.js usa daqui
+ligar({ ferir, andarPara, corpoACorpo, escolherAlvo, registrar, novaUnidade });

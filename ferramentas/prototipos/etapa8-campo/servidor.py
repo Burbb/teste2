@@ -24,6 +24,7 @@ JOGO = RAIZ / "rpg" / "web" / "static"
 TELA = AQUI / "tela"
 TELA_V1 = AQUI / "tela-v1"   # a primeira versão jogável (Campo Livre 1), congelada para comparar: /v1/
 TELA_V4 = AQUI / "tela-v4"   # o Campo Livre 4 (o básico antigo, Corte e Faísca), congelado para comparar: /v4/
+TELA_V5 = AQUI / "tela-v5"   # o Campo Livre 5 (o kit montado, antes das construções e das tropas novas): /v5/
 PORTA = int(os.environ.get("DEMO_PORTA", "8801"))
 VERSAO = re.search(r'VERSAO = "([^"]+)"', (TELA / "conteudo.js").read_text(encoding="utf-8")).group(1)
 mimetypes.add_type("text/javascript", ".js")
@@ -61,7 +62,7 @@ class Demo(BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(corpo)
             return
-        for nome, pasta in (("v1", TELA_V1), ("v4", TELA_V4)):
+        for nome, pasta in (("v1", TELA_V1), ("v4", TELA_V4), ("v5", TELA_V5)):
             if rota in (f"/{nome}", f"/{nome}/"):
                 return self._arquivo(pasta / "index.html")
             if rota.startswith(f"/{nome}/"):
@@ -108,6 +109,7 @@ def main():
     print(url, flush=True)
     print(f"a primeira versão (Campo Livre 1), para comparar: {url}v1/", flush=True)
     print(f"o Campo Livre 4 (o básico antigo), para comparar: {url}v4/", flush=True)
+    print(f"o Campo Livre 5 (antes das construções), para comparar: {url}v5/", flush=True)
     if not os.environ.get("DEMO_SEM_NAVEGADOR"):
         threading.Timer(0.5, lambda: webbrowser.open(url)).start()
     try:

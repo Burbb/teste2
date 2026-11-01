@@ -1,13 +1,158 @@
 # 30 — Etapa 8: o combate em campo livre (herói em tempo real e tropas pequenas)
 
-**31/10/2026 (rodada 1) e 01/11/2026 (rodadas 2 a 5).** A rodada 5 (Campo Livre 5: o kit montado antes da luta, com
-ataque principal, mobilidade, três comuns, uma ultimate e talentos) vem primeiro; depois a rodada 4 (Campo Livre 4: o
+**31/10/2026 (rodada 1) e 01/11/2026 (rodadas 2 a 6).** A rodada 6 (Campo Livre 6: o cenário com construções, as tropas
+avançadas, Morel e Odette autônomos e os heróis inimigos) vem primeiro; depois a rodada 5 (Campo Livre 5: o kit montado
+antes da luta, com ataque principal, mobilidade, três comuns, uma ultimate e talentos); depois a rodada 4 (Campo Livre 4: o
 ataque básico assistido, o impacto dos acertos, o Capitão perigoso, os arqueiros e as ordens, a horda e as intenções de
 progressão); depois a rodada 3 (Campo Livre 3: a câmera parada no modo de
 comando, o Capitão que enfrenta o herói, as escalas 1×, 2× e 4× e duas habilidades novas por herói); depois
 a rodada 2 (Campo Livre 2: números de dano, o líder inimigo, o modo de comando e a seleção, a leitura do choque, três
 encontros e quatro versões de habilidade); por fim as seções 0 a 14, a rodada 1 (Campo Livre 1). **A direção foi
 aprovada pelo Jean para continuar no protótipo, sem integração.**
+
+## Rodada 6 (01/11/2026): Campo Livre 6
+
+**O pedido do Jean** (ausente; segunda de duas entregas seguidas, depois do Tático 2, o [31](31-ETAPA8-TATICO-POR-TURNOS.md)):
+expandir o Campo Livre 5 sem perder o que funcionou (tropas miúdas, controle direto, o principal, explosões e números,
+tremor, recurso alto, montagem, seleção e câmera estável), com **um campo com casas, muros e uma muralha de castelo**
+que funcione no espaço, **tropas de categorias diferentes** (cavalaria, infantaria pesada, magos de batalha) misturadas
+às frágeis, **Morel e Odette como semi-heróis autônomos** e **heróis inimigos fortes e inteligentes** (Harg evoluído e
+um segundo arquétipo, os dois juntos num encontro). Sem integrar ao jogo, sem destruição de construções, sem vídeos.
+**Em teste.** A v5 fica congelada em `tela-v5/` (`/v5/`).
+
+| Seção | O que tem |
+|---|---|
+| R6.1 | O cenário: a vila, as regras das construções e o caminho |
+| R6.2 | As tropas avançadas |
+| R6.3 | Morel e Odette autônomos |
+| R6.4 | Os heróis inimigos: Harg evoluído e Ardis |
+| R6.5 | Os encontros, as composições e a escala |
+| R6.6 | Verificação e desempenho |
+| R6.7 | Decisões provisórias, limitações e o que avaliar |
+
+### R6.1. O cenário
+
+**A vila** (960 × 560 px, o mesmo campo): a muralha corre de norte a sul a leste (x 790), com o portão entre duas
+torres (72 px), uma brecha mais ao sul (48 px) e passagens nas duas pontas; dentro dela, duas construções do castelo;
+fora, sete casas dos dois lados da estrada que sai do portão para o oeste, a estrada do norte e a do sul, dois muros
+baixos; o terço oeste é campo aberto para as hordas. As ondas entram por quatro acessos (portão, brecha, norte, sul):
+não viram uma fila presa no portão.
+
+**As regras** (explícitas, em `campo6.js`): casas, muralha e torres barram passagem, flechas, projéteis e áreas (uma
+explosão não atinge quem está do outro lado de uma parede alta, a partir do centro dela); o muro baixo barra só a
+passagem (flechas e magias passam por cima). O ponto de uma habilidade do herói (e o salto do Capitão) para na primeira
+parede alta entre quem lança e o mouse; nenhum ponto cai dentro de uma construção. A colisão é o retângulo do desenho
+no chão: depois da separação dos corpos, quem ficou dentro sai pela borda mais perto (o empurrão perde força na parede).
+
+**O caminho:** com a linha livre, reto (os encontros antigos, sem construções, andam exatamente como antes); com uma
+construção no meio, pelo grafo dos cantos das construções (as distâncias entre todos os cantos calculadas uma vez por
+mapa). Cada unidade guarda o caminho e passa ao canto seguinte ao chegar; no máximo 40 recálculos por passo no campo
+todo.
+
+**O desenho:** cada construção ocupa no chão o retângulo da colisão e sobe para o norte (o telhado de barro, a parede de
+reboco e madeira; a muralha com o caminho de ronda e as ameias; as torres mais altas), na mesma ordem de profundidade
+dos corpos; fica translúcida quando há alguém atrás dela; o herói (desenhado por cima de todos, como antes) atrás de
+uma casa aparece com a casa translúcida por cima. Arte provisória, nas cores do jogo.
+
+### R6.2. As tropas avançadas
+
+| Tipo | O que muda no confronto | Números |
+|---|---|---|
+| **Cavalaria** | chega rápido; **empina 0,35 s** (a linha da carga aparece no chão) e carrega em linha atropelando cada um uma vez; **passa do ponto e precisa se reposicionar** (1,8 s, 90 px para trás e para o flanco) antes da próxima; parada, luta mal | vida 34, vel 64, carga a 165 px/s, 7 (12 no herói), recarga 4,5 s |
+| **Infantaria pesada** | **segura a linha**: o golpe de frente (do lado para onde ela olha) causa metade; empurra pouco; **para a carga** (o cavaleiro que bate nela fica atordoado 0,8 s); de lado ou por trás, cai como os outros | vida 56, vel 24, massa 5 |
+| **Mago de batalha** | fica atrás da linha com visão; a **Bola de Batalha** anunciada 0,9 s no ponto que pega mais gente; **escudo** (absorve 8) nos seus que lutam perto, a cada 9 s | vida 16, alcance 140, 6 (16 no herói) |
+
+Os soldados e os arqueiros frágeis continuam em todas as composições: a destruição em massa continua.
+
+### R6.3. Morel e Odette autônomos
+
+**Morel** (vida 240, escudo na frente): enfrenta os heróis inimigos perto de você (160 px) ou de Odette; senão, quem
+bate em Odette, quem está em você, o mais perto dentro da coleira. **Golpe de Escudo** (três ou mais colados, ou um
+herói inimigo): arco de 150°, empurra e atordoa. **Provocar** (você cercado por quatro, ou Odette por dois): a tropa
+inimiga a até 80 px o ataca por 4 s (os heróis inimigos não). **Coleira** de 150 px de você (ou do ponto da ordem);
+ferido (25%), recua para Odette.
+
+**Odette** (vida 160): a **Prece** (42) só em quem perdeu 30 ou mais (você, Morel ou ela), ao alcance e com visão, o
+mais ferido primeiro; a **Bênção** (6 em área) com quatro ou mais soldados feridos juntos; o **Clarão** (atordoa 1,4 s)
+com dois inimigos colados nela; no resto, a luz (5) no inimigo mais perto com visão; fica 42 px atrás de você, do lado
+oposto aos inimigos, e se afasta de quem chega.
+
+**Ordens:** `F7` seleciona os dois; Acompanhar, Atacar (coleira maior) e Defender aqui valem para eles. **Queda:** caído
+é fora desta luta (não é morte nem consequência na campanha); vitória e derrota seguem o herói; recomeçar traz os dois.
+
+### R6.4. Os heróis inimigos
+
+**Harg evoluído:** a **Investida Curta** (sem Arremetida e sem Carga prontas, com você a 120-220 px: avança ~85 px em
+0,28 s, a cada 7 s; não fica parado esperando recarga); o **Rodopio logo depois da Arremetida** quando cai com três ou
+mais dos nossos em volta; a **Fúria** (abaixo de 35%, uma vez: ataca 40% mais rápido por 8 s); com Ardis, **a
+proteção** (você a menos de 90 px dela: ele larga as tropas e vem atrás de você). **Calibrado:** com a Investida a cada
+4 s desde 90 px, o jogador automático forte perdia o duelo sozinho com o Guerreiro; com 7 s e 120 px, vence com 9 de
+vida. Ele continua o foco.
+
+**Ardis, a Feiticeira de Guerra** (vida 600): duela com você de longe (a 100-150 px, andando de lado, nunca parada) quando
+você está a até 180 px ou acabou de feri-la; senão, bombardeia os grupos. **Dardo Arcano** a cada 1,1 s; **Coluna de
+Fogo** (anunciada 0,9 s) no grupo mais denso, ou em você no duelo; **Corrente Arcana** (preparada 0,5 s, as mãos
+brilham) quando quatro ou mais dos nossos estão encadeados; **Passo Sombrio** quando você ou Morel chegam a 60 px, depois
+de **0,3 s de reação** (não lê comandos antes); **Barreira** (absorve 60) abaixo da metade. **Aberturas:** atordoada,
+perde o que preparava; a Coluna e a Corrente se anunciam; o Passo tem recarga de 6 s. Sozinha (Harg caído e quase
+ninguém da tropa), foge.
+
+### R6.5. Os encontros, as composições e a escala
+
+| Encontro | Onde | O que testa |
+|---|---|---|
+| A vila: a horda e a linha | vila | hordas frágeis por quatro acessos (ondas de 36 a cada 12 s até os 96 s) + a linha da vila (a composição) e a guarda do portão; magos atrás da linha pesada; luta perto das casas e da muralha |
+| A carga de cavalaria | campo aberto | duas alas de 16 cavaleiros pelos flancos e uma terceira (18) aos 30 s, com a infantaria no centro |
+| Harg e Ardis | vila | os dois heróis juntos, com a tropa deles e reforços aos 45 s; Morel e Odette ao seu lado |
+
+**As composições** (uma para cada lado, antes da luta): Comum (soldados e arqueiros), Com cavalaria, Linha pesada e
+magos, Completa. Valem nos três encontros novos; os antigos continuam iguais (e sem Morel e Odette). **Escala:** 1×, 2×
+e 4× (experimental); Morel, Odette e os heróis não se multiplicam. Antes da luta, a separação dos corpos roda algumas
+vezes: ninguém começa empilhado nem dentro de construção (conferido nas 108 combinações de encontro, escala e
+composições).
+
+### R6.6. Verificação e desempenho
+
+- **52 testes da simulação:** os 40 do Campo Livre 5 (dois ajustados: o laço "os encontros terminam" volta a cobrir
+  só os cinco encontros da v5, porque os novos têm teste próprio; o das escalas trata Morel e Odette como os especiais,
+  um de cada) e **12 novos**: ninguém dentro das construções (uma batalha de 40 s) e a saída pela borda mais perto; o
+  caminho contorna a casa e sai do castelo pelo portão; flechas, magias e pontos param na parede alta e o muro baixo
+  deixa o tiro passar; a carga atropela, passa e se reposiciona, e o pesado a segura; o golpe de frente no pesado causa
+  metade; o mago anuncia 0,9 s e acerta quem ficou; Morel (Golpe de Escudo, provocação, coleira); Odette (nenhuma cura
+  sem ferido, a cura no ferido, o Clarão); Ardis (não some antes de 0,3 s, some depois; a Coluna no grupo; foge
+  sozinha); Harg (a Investida Curta; vem proteger Ardis); a seleção por tipo e as ordens neles; os três encontros novos
+  terminam em vitória com o jogador automático forte, com o Guerreiro e com o Mago.
+- **No navegador** (`ferramentas/conferir6.mjs`, 1920 × 1080 e 1280 × 720): a escolha com os oito encontros e as
+  composições; a vila com as composições completas pela tela; os tipos novos no placar; `F3`, `F5`, `F6`, `F7`
+  selecionam; o modo de comando e Defender; Harg e Ardis com as duas barras lado a lado (acima da barra de
+  habilidades, longe do placar); o `/v5/` abre o Campo Livre 5; sem erros no console. Capturas: `capturas/cl6-*.png`.
+- **Batalhas sem tela** (`ferramentas/batalhas6.mjs`, jogador automático forte, 1×): todas as combinações de
+  encontro, composição (comum, completa) e herói vencem; a vila em ~99 s (as ondas vão até 96 s), a carga em 13 a
+  28 s, Harg e Ardis em 35 a 54 s (o herói termina com 28 a 142 de vida: os heróis inimigos pesam). Morel e Odette
+  sobrevivem em todas; Odette cura 20 a 400 por batalha, mais com tropa ferida junta.
+- **Desempenho, medido separado:** a simulação na vila em 4× (até 468 combatentes) custa 1,5 ms por passo em média;
+  94% dos passos abaixo de 4 ms; o pior é o primeiro (34 ms, o aquecimento do JIT) e, fora ele, dois passos acima de
+  12 ms em 100 s (quando a linha acorda). No navegador, a vila em 4×: 60 qps nas duas janelas, simulação 1,9 ms (p95 4,1),
+  desenho 3,8 ms (p95 6,2), quadros de 33 ms ocasionais. Nada foi reduzido.
+- **O jogo não mudou** (`rpg/` e `tests/` intocados); suíte, gabarito e pyflakes rodados nesta sessão (na entrega 1,
+  com o mesmo `rpg/`); a fumaça, reaproveitada. Sem vídeos.
+
+### R6.7. Decisões provisórias, limitações e o que avaliar
+
+**Provisório:** todos os números; o mapa da vila; a regra do muro baixo; a coleira de Morel; a calibração de Harg pelo
+jogador automático; a arte das construções e dos tipos novos (à mão, na grade de texto, sem o fluxo completo das
+skills de arte).
+
+**Limitações:** o caminho é pelos cantos (sem campo de fluxo): grupos grandes ainda se espremem nas aberturas por alguns
+segundos; a cavalaria nossa com Acompanhar só carrega perto de você (a coleira da ordem; com Atacar, carrega livre); o
+jogador automático não persegue Ardis (as batalhas medidas terminam pela fuga dela); as composições valem só nos
+encontros novos; a câmera em 3× mostra pouco da vila de uma vez (o Jean decide se quer outra ampliação); sem destruição
+de construções (fora do pedido).
+
+**Para o Jean avaliar:** (1) a vila funciona como campo de batalha (frentes, acessos, leitura atrás das casas)? (2) cada
+tipo novo muda o confronto (a carga e o reposicionamento, a linha pesada, os magos)? (3) Morel e Odette ajudam sem
+precisar de você? (4) Harg e Ardis parecem jogar (aproximação, sequência, proteção, reação), fortes mas com aberturas?
+(5) as composições dão batalhas diferentes?
 
 ## Rodada 5 (01/11/2026): Campo Livre 5
 

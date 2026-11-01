@@ -1,7 +1,7 @@
 # Protótipo de campo livre da etapa 8: o herói em tempo real no meio de tropas pequenas
 
-Jogável e isolado (01/11/2026, versão **Campo Livre 5**; a quarta, com o básico antigo (Corte e Faísca), fica
-congelada em `tela-v4/` e abre em `/v4/`; a primeira, **Campo Livre 1**, aprovada pelo Jean como direção, em `tela-v1/`
+Jogável e isolado (01/11/2026, versão **Campo Livre 6**; a quinta, antes das construções e das tropas novas, fica
+congelada em `tela-v5/` e abre em `/v5/`; a quarta, com o básico antigo (Corte e Faísca), em `tela-v4/` e `/v4/`; a primeira, **Campo Livre 1**, aprovada pelo Jean como direção, em `tela-v1/`
 e `/v1/`; os links estão na tela de escolha; a segunda está no commit `31ea8778` e a terceira no `298dc4bc`). **Não é integração:** o jogo não carrega nada desta pasta (um teste confere) e o combate do jogo não mudou. Os números são de teste. A pesquisa, as decisões, as medições, as
 limitações e o que esta direção mudaria no jogo estão no [30](../../../roadmapIDEIAS/30-ETAPA8-CAMPO-LIVRE.md). Os
 protótipos anteriores (`etapa8-builds`, `etapa8-tatico`) ficam como histórico.
@@ -11,7 +11,7 @@ protótipos anteriores (`etapa8-builds`, `etapa8-tatico`) ficam como histórico.
 Dê dois cliques em `demo.bat` (ou rode `python ferramentas/prototipos/etapa8-campo/servidor.py` na raiz). O servidor
 tenta a porta **8801**; se ela estiver ocupada, diz quem está nela e usa a próxima livre, e **abre o navegador na porta
 que de fato usou**. A versão aparece no terminal, no título da aba, no topo da escolha do herói e no selo da luta: se
-não aparecer "Campo Livre 5", não é esta entrega. Um `demo.bat` antigo ainda aberto segura a 8801 (e responde com o
+não aparecer "Campo Livre 6", não é esta entrega. Um `demo.bat` antigo ainda aberto segura a 8801 (e responde com o
 nome antigo em `/api/versao`, embora sirva os arquivos novos): feche a janela dele ou use a porta que o novo anunciar.
 `DEMO_PORTA` escolhe outra porta; `DEMO_SEM_NAVEGADOR=1` não abre o navegador.
 
@@ -27,7 +27,7 @@ nome antigo em `/api/versao`, embora sirva os arquivos novos): feche a janela de
 | `F` | a ultimate escolhida (sem custo; recarga de 30 s, pronta aos 8 s de luta) |
 | `1` `2` `3` | ordens: Acompanhar, Atacar, Defender (no ponto do mouse); valem para a **seleção** e, sem seleção, para todos; funcionam pausado. No modo de comando, `2` com o mouse num inimigo: **atacar este alvo** |
 | `Shift` segurado | **modo de comando**: o botão esquerdo arrastado seleciona tropas (não ataca); um clique numa tropa seleciona só ela, no vazio limpa; o botão direito **num inimigo manda atacar esse alvo** (mira vermelha nele; derrubado, voltam à ordem de antes) e **no chão manda defender ali**. Pausado, o mouse já está nesse modo. No comando, o mouse não mexe a câmera, a câmera fica parada durante o arrasto e o tremor se acalma; ao soltar, tudo volta suave |
-| `F1` `F2` `F4` | seleciona os soldados, os arqueiros, todas as tropas (`F3` fica indisponível: não há terceiro tipo); com `Ctrl`, soma |
+| `F1` `F2` `F3` `F5` `F6` `F7` `F4` | seleciona os soldados, os arqueiros, a cavalaria, a infantaria pesada, os magos de batalha, Morel e Odette, todos; com `Ctrl`, soma (o placar mostra só os tipos que existem na batalha) |
 | `X` | limpa a seleção |
 | `P` ou `Esc` | pausa (com as opções) |
 | `R` | recomeça a mesma batalha |
@@ -38,9 +38,35 @@ nome antigo em `/api/versao`, embora sirva os arquivos novos): feche a janela de
 Na escolha: o **encontro** (A primeira batalha, Grupos espalhados, Duas frentes, O Capitão e a retaguarda, A horda), o herói
 (`1` Guerreiro, `2` Mago), a **montagem** de cada um (três comuns, uma ultimate e talentos até 7 pontos; os atalhos
 "Montagens prontas" preenchem tudo e continuam editáveis; a tela rola quando a lista passa da altura da janela) e o
-**exército** (1×, 2× ou 4×, experimental; as quantidades reais aparecem logo abaixo); `Enter` luta. Opções (na escolha e na pausa): tremor da
+**exército** (1×, 2× ou 4×, experimental; as quantidades reais aparecem logo abaixo) e, nos encontros novos, a
+**composição** do seu exército e da do inimigo (Comum, Com cavalaria, Linha pesada e magos, Completa); `Enter` luta. Opções (na escolha e na pausa): tremor da
 câmera (0 a 150%, começa em 150%; 0 desliga), pausa no impacto, mostrar a área do botão direito, volume, o tamanho da
 horda da tecla H e mudo.
+
+## O que entrou no Campo Livre 6
+
+- **O cenário com construções** (os encontros novos na vila): a muralha de norte a sul com o portão entre duas torres,
+  uma brecha e passagens nas pontas; casas dos dois lados da estrada; muros baixos; o campo aberto a oeste. A colisão é
+  o retângulo do desenho no chão. **Regras:** casas, muralha e torres barram passagem, flechas, projéteis e áreas;
+  o muro baixo barra só a passagem. O ponto das habilidades do herói (e o salto do Capitão) para na primeira parede
+  alta. Quem anda contorna pelo caminho (o grafo dos cantos). A construção fica translúcida quando há alguém atrás; o
+  herói atrás de uma casa aparece por baixo dela, translúcida. O campo aberto continua (os encontros antigos e "A carga").
+- **Tropas avançadas:** a **cavalaria** (rápida; empina 0,35 s, carrega em linha atropelando, passa do ponto e precisa
+  se reposicionar; parada, luta mal); a **infantaria pesada** (lenta e resistente; o golpe de frente causa metade;
+  segura a carga); os **magos de batalha** (frágeis; a Bola de Batalha anunciada 0,9 s no ponto que pega mais gente;
+  escudo nos seus que lutam perto). Soldados e arqueiros frágeis continuam em todas as composições.
+- **Morel e Odette autônomos** (nos encontros novos): Morel enfrenta os heróis inimigos perto de você ou de Odette, abre
+  espaço com o Golpe de Escudo, provoca quem cerca você e não passa da coleira; Odette cura só quem perdeu vida de
+  verdade, cura em área os soldados feridos juntos, responde com o Clarão e fica atrás. Selecionáveis (`F7`), obedecem
+  às ordens gerais. **Caído** é fora desta luta (não é morte); recomeçar traz os dois; vitória e derrota seguem o herói.
+- **Heróis inimigos:** **Harg** ganhou a Investida Curta (sem esperar recarga), o Rodopio logo depois da Arremetida, a
+  Fúria abaixo de 35% e, com Ardis, a proteção dela. **Ardis, a Feiticeira de Guerra** (nova): de longe e sempre em
+  movimento; Dardo Arcano, Coluna de Fogo nos grupos (anunciada 0,9 s), Corrente Arcana (0,5 s), Passo Sombrio quando
+  você ou Morel chegam (depois de 0,3 s de reação), Barreira; atordoada, perde o que preparava; sozinha, foge.
+- **Encontros novos:** "A vila: a horda e a linha" (a linha da vila diante do portão e ondas pelo portão, pela brecha,
+  pelo norte e pelo sul), "A carga de cavalaria" (no campo aberto, duas alas e uma terceira aos 30 s) e "Harg e Ardis"
+  (os dois juntos, com a tropa deles, na vila). Escalas 1×, 2× e 4× (4×, experimental).
+- Medido e conferido na rodada 6 do [30](../../../roadmapIDEIAS/30-ETAPA8-CAMPO-LIVRE.md).
 
 ## O que entrou no Campo Livre 5
 
@@ -134,13 +160,17 @@ horda da tecla H e mudo.
 | `tela/desenho.js` | O desenho em pixels nativos; as áreas pintadas pela mesma função que decide quem é atingido |
 | `tela/sprites.js` | Os combatentes em grade de pixels, à mão (provisórios); `tela/folha.html` mostra a folha |
 | `tela/main.js`, `index.html`, `campo.css` | O laço, os comandos, a câmera, a HUD e as telas |
+| `tela/campo6.js` | Campo Livre 6, sem DOM: a geometria do cenário (colisão, linha de tiro, o ponto das habilidades), o caminho pelos cantos, as magias anunciadas, a cavalaria, o mago de batalha, Morel, Odette, Ardis e o que Harg ganhou |
+| `tela/desenho6.js` | O desenho das estradas, das construções (translúcidas com alguém atrás), das magias, dos dardos e das cargas |
 | `tela/textos.js` | O texto de regra de cada habilidade e o custo, a partir dos números do kit montado (a tela não calcula regra) |
 | `tela/som.js` | Sons sintetizados na hora (Web Audio), sem arquivos de terceiros |
 | `tela/robo.js` | O jogador automático (testes e medição): `?robo=1` (forte) ou `?robo=medio`; vê os avisos do Capitão com 0,15 s ou 0,35 s de atraso |
 | `servidor.py`, `demo.bat` | O lançador (porta livre, versão) |
-| `testes/sim.test.mjs` | 40 testes da simulação (Node); `testes/test_campo.py` roda-os e confere o isolamento |
-| `tela-v1/`, `tela-v4/` | O Campo Livre 1 e o 4 congelados, servidos em `/v1/` e `/v4/` para comparar |
+| `testes/sim.test.mjs`, `testes/campo6.test.mjs` | 40 testes da simulação e 12 do Campo Livre 6 (Node); `testes/test_campo.py` roda-os e confere o isolamento |
+| `tela-v1/`, `tela-v4/`, `tela-v5/` | O Campo Livre 1, o 4 e o 5 congelados, servidos em `/v1/`, `/v4/` e `/v5/` para comparar |
 | `ferramentas/simular.mjs` | Batalhas sem tela com o jogador automático, por escala e montagem (duração, abates, custo do passo) |
+| `ferramentas/batalhas6.mjs` | Os encontros novos sem tela, com o jogador automático: resultado, vidas, o que cada peça nova fez, o custo do passo |
+| `ferramentas/conferir6.mjs` | Playwright, Campo Livre 6: a escolha, a vila, os tipos no placar, a seleção por tecla, o comando, as barras de Harg e Ardis, o `/v5/`, o console |
 | `ferramentas/recursos.mjs` | O recurso no uso normal e no concentrado, por montagem: o menor valor e as esperas por recurso |
 | `ferramentas/contato.mjs` | Os ataques inimigos no herói do começo ao fim: acertos, erros (o herói saiu) e cancelados |
 | `ferramentas/cadeias.mjs` | O custo das cadeias (Estilhaçar, Brasa, Sangue) na horda 4×: o tempo do passo e as explosões |
@@ -150,7 +180,7 @@ horda da tecla H e mudo.
 | `ferramentas/conferir4.mjs` | Playwright, Campo Livre 4: atacar um alvo com teclado e mouse, o golpe no herói, a horda e o custo dela |
 | `ferramentas/medir.mjs` | Playwright, v2: resposta, pausa, seleção e ordens, desempenho, capturas, sequências e vídeos (os vídeos só quando o Jean pedir) |
 | `ferramentas/olhar.mjs` | Capturas rápidas de uma batalha em andamento |
-| `capturas/` | As da v5 (`cl5-*.png`: a escolha e o modo de comando nas duas janelas); as da v4 (`cl4-*.png`, `conferir4.json`); as da v3 (`cl3-*.png`, `conferir3.json`); as da v2 nas duas janelas, a seleção, as sequências e `medicao.json`; as da v1 em `campo-livre-1/` |
+| `capturas/` | As da v6 (`cl6-escolha-1920`, `cl6-vila-1920`, `cl6-carga-1920`, `cl6-herois-1920` e `-1280`); as da v5 (`cl5-*.png`: a escolha e o modo de comando nas duas janelas); as da v4 (`cl4-*.png`, `conferir4.json`); as da v3 (`cl3-*.png`, `conferir3.json`); as da v2 nas duas janelas, a seleção, as sequências e `medicao.json`; as da v1 em `campo-livre-1/` |
 | `videos/` | Os vídeos da v2 e, em `campo-livre-1/`, os da v1. **Vídeos novos só quando o Jean pedir** |
 
 ```
@@ -164,4 +194,5 @@ node ferramentas/prototipos/etapa8-campo/ferramentas/ordens.mjs forte
 Parâmetros de endereço (para testes e demonstração): `?heroi=mago&qtd=4&enc=horda&montagem=Fogo em cadeia&auto=1&robo=1`
 (`qtd`: 1, 2 ou 4; `enc`: original, espalhados, duasFrentes, capitao, horda; `montagem`: o nome de uma montagem pronta;
 `hab`: as três comuns e a ultimate, como `hab=lanca,campoGelo,raios,nevasca`; `tal`: os talentos, separados por
-vírgula, vazio para nenhum).
+vírgula, vazio para nenhum; `enc` também: vila, carga, herois; `compA` e `compI`: a composição dos dois lados, comum,
+cavalaria, pesada ou completa).

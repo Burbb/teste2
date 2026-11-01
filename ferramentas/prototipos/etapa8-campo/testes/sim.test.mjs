@@ -519,7 +519,8 @@ test("o Sangramento acumula e a Ruptura detona; o Anel prende; o Grito inspira",
 });
 test("os encontros novos terminam: vence com o herói, perde sem ele; nada vira NaN", () => {
   // a horda é de sobrevivência (pode-se perder para ela): tem o teste dela
-  for (const enc of Object.keys(ENCONTROS).filter((e) => e !== "horda")) {
+  // os encontros do Campo Livre 5 (os do 6, com construções e companheiros, têm os testes deles em campo6.test.mjs)
+  for (const enc of Object.keys(ENCONTROS).filter((e) => e !== "horda" && !ENCONTROS[e].companheiros)) {
     for (const [heroi, kit] of [["guerreiro", {}], ["mago", { bola: "incendiaria", muralha: "anel" }]]) {
       // o Capitão (Campo Livre 4) vence o jogador automático médio, que reage tarde e não recua: lá, o forte
       const m = criarMundo({ heroi, encontro: enc, kit }), ent = entradaVazia(), r = criarRobo({ nivel: enc === "capitao" ? "forte" : "medio" });
@@ -636,9 +637,11 @@ test("escalas: 2× e 4× multiplicam os comuns e não os especiais, dentro do ca
       const m = criarMundo({ encontro: enc, quantidade: String(k) }), ck = conta(m);
       for (const [chave, n] of Object.entries(c1)) {
         const tipo = chave.split(":")[1];
-        assert.equal(ck[chave], ESPECIAIS.includes(tipo) ? n : n * k, `${enc} ${k}× ${chave}`);
+        // Morel e Odette (Campo Livre 6) também não se multiplicam: são um de cada
+        assert.equal(ck[chave], ESPECIAIS.includes(tipo) || TIPOS[tipo].companheiro ? n : n * k, `${enc} ${k}× ${chave}`);
       }
-      assert.equal(m.stats.aliados, base.stats.aliados * k);
+      const comp = base.morel ? 2 : 0;
+      assert.equal(m.stats.aliados - comp, (base.stats.aliados - comp) * k);
       for (const u of m.unidades) {
         assert.ok(u.x >= CAMPO.margem && u.x <= CAMPO.largura - CAMPO.margem && u.y >= CAMPO.margem && u.y <= CAMPO.altura - CAMPO.margem, `${enc} ${k}×: fora do campo`);
         assert.equal(u.vidaMax, u.tipo === "heroi" ? HEROIS[m.nomeHeroi].vida : u.lado === 0 && u.def.vidaAliado || u.def.vida);

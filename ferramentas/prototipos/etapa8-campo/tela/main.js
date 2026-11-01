@@ -13,7 +13,7 @@
 // mouse fica parado); durante o arrasto, a câmera não se mexe nem para seguir o herói, e o retângulo seleciona
 // exatamente o que está mostrado; o tremor se acalma (a intensidade escolhida não muda). Ao sair, o olhar volta para o
 // mouse em ~0,5 s e o tremor volta em ~0,3 s, sem salto.
-import { VERSAO, HEROIS, ORDENS, IMPACTO, CAMPO, CONTINGENTES, ENCONTROS, TIPOS, HABILIDADES, TALENTOS, ORCAMENTO, MONTAGENS,
+import { VERSAO, HEROIS, ORDENS, IMPACTO, CAMPO, CONTINGENTES, ENCONTROS, TIPOS, HABILIDADES, TALENTOS, ORCAMENTO, MONTAGENS, COMPOSICOES,
   MONTAGEM_PADRAO, MARCAS } from "./conteudo.js";
 import { descricao, custoDe, rotulo, TECLAS_ESPACO } from "./textos.js";
 import { criarMundo, passo, entradaVazia, ordenar, resumo, sorteio, PASSO, selecionar, tropasDoTipo, montarKit as kitDoHeroi,
@@ -37,12 +37,16 @@ const chao = criarChao(sorteio(4242));
 const montagemDe = (heroi, nome = MONTAGEM_PADRAO[heroi]) => structuredClone(MONTAGENS[heroi][nome]);
 const PADRAO = { tremor: 150, pausa: true, volume: 50, mudo: false, areas: true, heroi: "guerreiro", quantidade: "1", horda: 60,
   encontro: "original", montagem: { guerreiro: montagemDe("guerreiro"), mago: montagemDe("mago") } };
+PADRAO.composicao = { aliados: "comum", inimigos: "comum" };
 const opcoes = structuredClone(PADRAO);
-try { Object.assign(opcoes, JSON.parse(localStorage.getItem("campo-livre-5-opcoes") || "{}")); } catch { /* sem armazenamento */ }
+try { Object.assign(opcoes, JSON.parse(localStorage.getItem("campo-livre-6-opcoes") || "{}")); } catch { /* sem armazenamento */ }
 if (url.get("heroi")) opcoes.heroi = url.get("heroi");
 if (url.get("qtd")) opcoes.quantidade = url.get("qtd");
 opcoes.quantidade = String(escalaDe(opcoes.quantidade));   // "normal" e "maior", guardados pela v2, viram 1 e 2
 if (url.get("enc")) opcoes.encontro = url.get("enc");
+// ?compA=completa&compI=pesada: as composições dos exércitos nos encontros novos (Campo Livre 6)
+if (url.get("compA") && COMPOSICOES[url.get("compA")]) opcoes.composicao = { ...opcoes.composicao, aliados: url.get("compA") };
+if (url.get("compI") && COMPOSICOES[url.get("compI")]) opcoes.composicao = { ...opcoes.composicao, inimigos: url.get("compI") };
 // ?montagem=Sangria: um atalho pelo nome; ?hab=lanca,campoGelo,raios,nevasca (três comuns e a ultimate) e ?tal=...
 if (url.get("montagem") && MONTAGENS[opcoes.heroi][url.get("montagem")]) opcoes.montagem[opcoes.heroi] = montagemDe(opcoes.heroi, url.get("montagem"));
 if (url.get("hab")) {
@@ -52,7 +56,7 @@ if (url.get("hab")) {
   if (ult) opcoes.montagem[opcoes.heroi].ultimate = ult;
 }
 if (url.get("tal") !== null) opcoes.montagem[opcoes.heroi].talentos = url.get("tal") ? url.get("tal").split(",") : [];
-function guardar() { try { localStorage.setItem("campo-livre-5-opcoes", JSON.stringify(opcoes)); } catch { /* idem */ } }
+function guardar() { try { localStorage.setItem("campo-livre-6-opcoes", JSON.stringify(opcoes)); } catch { /* idem */ } }
 
 // as teclas dos espaços do kit (o botão esquerdo é o principal, segurado; o botão direito, o primeiro espaço comum)
 const TECLA_ESPACO = { Space: "mobilidade", KeyQ: "h2", KeyE: "h3", KeyF: "ult" };
@@ -86,7 +90,7 @@ function mouseMundo() {
 // ------------------------------------------------------------------------------------------------ batalha
 function novaBatalha() {
   st.m = criarMundo({ heroi: opcoes.heroi, quantidade: opcoes.quantidade, encontro: opcoes.encontro,
-    kit: opcoes.montagem[opcoes.heroi] });
+    kit: opcoes.montagem[opcoes.heroi], composicao: opcoes.composicao });
   st.E = criarEfeitos(sorteio(77));
   st.ent = entradaVazia();
   st.robo = url.get("robo") ? criarRobo({ nivel: url.get("robo") === "medio" ? "medio" : "forte" }) : null;
@@ -143,13 +147,14 @@ function trazerHorda() {
   faixa(n ? `Uma horda de ${n} chega (H traz outra).` : "O campo já está cheio: nenhuma horda a mais.", 2);
 }
 
-const TIPO_POR_TECLA = { F1: "soldado", F2: "arqueiro", F3: null };
+// Campo Livre 6: um tipo por tecla; F7 seleciona Morel e Odette juntos (as ordens gerais valem para eles também)
+const TIPO_POR_TECLA = { F1: ["soldado"], F2: ["arqueiro"], F3: ["cavaleiro"], F5: ["pesado"], F6: ["magoBatalha"], F7: ["morel", "odette"] };
+const NOME_DA_TECLA = { F1: "Soldados", F2: "Arqueiros", F3: "Cavalaria", F5: "Pesados", F6: "Magos", F7: "Morel e Odette" };
 function selecionarTipo(tecla, somar) {
   if (tecla === "F4") { selecionar(st.m, tropasDoTipo(st.m, null), somar); atualizarSelecao(); return; }
-  const tipo = TIPO_POR_TECLA[tecla];
-  const ids = tipo ? tropasDoTipo(st.m, tipo) : [];
-  // F3 fica sem tipo: este exército só tem soldados e arqueiros (não se cria um terceiro só para a tecla)
-  if (!tipo || !ids.length) { faixa(`${tecla}: nenhuma tropa ${tipo ? `do tipo ${TIPOS[tipo].nome.toLowerCase()}` : "neste lugar (não há um terceiro tipo)"}.`, 2); return; }
+  const tipos = TIPO_POR_TECLA[tecla] || [];
+  const ids = tipos.flatMap((t) => tropasDoTipo(st.m, t));
+  if (!ids.length) { faixa(`${tecla}: ninguém do tipo ${NOME_DA_TECLA[tecla].toLowerCase()} nesta batalha.`, 2); return; }
   selecionar(st.m, ids, somar);
   atualizarSelecao();
 }
@@ -200,7 +205,8 @@ const teclasMov = { KeyW: "cima", ArrowUp: "cima", KeyS: "baixo", ArrowDown: "ba
 addEventListener("help", (e) => e.preventDefault());
 addEventListener("keydown", (e) => {
   iniciarSom();
-  if (/^F[1-4]$/.test(e.code)) e.preventDefault();
+  // F5 recarregaria a página, F6 iria à barra de endereço e F7 ligaria o cursor de texto: aqui, são seleção
+  if (/^F[1-7]$/.test(e.code)) e.preventDefault();
   if (e.code === "ShiftLeft" || e.code === "ShiftRight") { st.shift = true; st.ent.atacar = false; atualizarModo(); return; }
   if (e.code === "Tab") { e.preventDefault(); alternarPainel(); return; }
   if (e.code === "KeyM") { opcoes.mudo = !opcoes.mudo; ajustarSom(opcoes.volume / 100, opcoes.mudo); guardar(); sincronizarOpcoes(); return; }
@@ -217,7 +223,7 @@ addEventListener("keydown", (e) => {
     darOrdem({ Digit1: "acompanhar", Digit2: "atacar", Digit3: "defender" }[e.code]);
     return;
   }
-  if (/^F[1-4]$/.test(e.code)) { selecionarTipo(e.code, e.ctrlKey); return; }
+  if (/^F[1-7]$/.test(e.code)) { selecionarTipo(e.code, e.ctrlKey); return; }
   if (e.code === "KeyX") { selecionar(st.m, []); atualizarSelecao(); return; }
   if (e.code === "KeyH") { if (!e.repeat) trazerHorda(); return; }
   if (teclasMov[e.code]) { st.ent[teclasMov[e.code]] = true; e.preventDefault(); return; }
@@ -517,9 +523,11 @@ function atualizarSelecao() {
   if (!st.m) return;
   const m = st.m, tropas = m.lados[0].filter((u) => u !== m.heroi), sel = m.selecao;
   const conta = (tipo) => tropas.filter((u) => u.tipo === tipo).length, contaSel = (tipo) => tropas.filter((u) => u.tipo === tipo && sel.has(u.id)).length;
-  const tipos = [["F1", "soldado", "Soldados"], ["F2", "arqueiro", "Arqueiros"]];
-  $("#p-tipos").innerHTML = tipos.map(([k, t, nome]) => `<span class="${contaSel(t) ? "sel" : ""}"><kbd>${k}</kbd>${nome} ${conta(t)}</span>`).join("") +
-    `<span class="vazio" title="Não há um terceiro tipo de tropa"><kbd>F3</kbd>—</span><span><kbd>F4</kbd>Todos</span>`;
+  // só os tipos que existem nesta batalha (soldados e arqueiros sempre)
+  const tipos = [["F1", "soldado", "Soldados"], ["F2", "arqueiro", "Arqueiros"], ["F3", "cavaleiro", "Cavalaria"], ["F5", "pesado", "Pesados"],
+    ["F6", "magoBatalha", "Magos"], ["F7", "morel", "Morel"], ["F7", "odette", "Odette"]].filter(([, t], i) => i < 2 || conta(t));
+  $("#p-tipos").innerHTML = tipos.map(([k, t, nome]) => `<span class="${contaSel(t) ? "sel" : ""}"><kbd>${k}</kbd>${nome}${t === "morel" || t === "odette" ? "" : ` ${conta(t)}`}</span>`).join("") +
+    `<span><kbd>F4</kbd>Todos</span>`;
   $("#p-selecao").innerHTML = sel.size
     ? `Seleção: <b>${sel.size}</b> (${tipos.filter(([, t]) => contaSel(t)).map(([, t, nome]) => `${nome.toLowerCase()} ${contaSel(t)}`).join(", ")}) · <kbd>X</kbd> limpa`
     : "Sem seleção: as ordens valem para todos";
@@ -532,7 +540,8 @@ function atualizarHud() {
   const vida = Math.max(0, h.vida), rec = h.recurso;
   const chave = [Math.ceil(vida), Math.floor(rec), m.lados[0].length, m.lados[1].length, m.lider && Math.ceil(m.lider.vida),
     m.lider && (m.lider.acao ? m.lider.acao.tipo + m.lider.acao.fase : m.lider.ofegante > 0), m.lider && m.lider.modo,
-    m.lider && m.lider.firmeAte > m.t, m.reforco.chegou,
+    m.lider && m.lider.firmeAte > m.t, m.reforco.chegou, m.ardis && Math.ceil(m.ardis.vida), m.ardis && m.ardis.modo,
+    m.ardis && (m.ardis.acaoA ? m.ardis.acaoA.tipo : m.ardis.absorveAte > m.t), m.morel && Math.ceil(m.morel.vida), m.odette && Math.ceil(m.odette.vida),
     ...slots.map((s) => Math.ceil((h.cds[s.id] || 0) * 10))].join(",");
   if (st.faixaAte && st.relogio > st.faixaAte) { $("#faixa").classList.remove("ver"); st.faixaAte = 0; }
   if (golpeAte && st.relogio > golpeAte) { $("#golpe").style.opacity = "0"; golpeAte = 0; }   // some devagar (transição do CSS)
@@ -561,6 +570,20 @@ function atualizarHud() {
       : a && a.tipo === "rodopio" ? "Rodopio!" : l.firmeAte > m.t ? "Firme: golpe forte não o interrompe agora"
       : l.modo === "heroi" ? `Atrás de você · presença: ${firmes()} firmes` : `Nas suas tropas · presença: ${firmes()} firmes`;
   }
+  // Campo Livre 6: a barra de Ardis (ao lado da de Harg) e a vida de Morel e Odette, embaixo da ficha
+  const ar = m.ardis;
+  $("#chefe2").hidden = !ar;
+  if (ar) {
+    $("#chefe2 b").textContent = ar.def.nome;
+    $("#chefe2 .barra i").style.width = (100 * Math.max(0, ar.vida)) / ar.vidaMax + "%";
+    $("#chefe2 .barra span").textContent = ar.morto ? "caiu" : `${Math.ceil(ar.vida)}/${ar.vidaMax}`;
+    $("#chefe2 small").textContent = ar.morto ? "Caiu." : ar.acaoA && ar.acaoA.tipo === "corrente" ? "Prepara a Corrente Arcana!"
+      : ar.absorveAte > m.t ? "Barreira: absorve o dano" : ar.modo === "tropas" ? "Bombardeia as suas tropas" : "Duela com você, de longe";
+  }
+  document.body.classList.toggle("dois-chefes", !!(ar && m.lider));
+  const comp = [m.morel, m.odette].filter(Boolean);
+  $("#comp").hidden = !comp.length;
+  if (comp.length) $("#comp").innerHTML = comp.map((u) => `<div><b>${u.def.nome}</b><span class="barra"><i style="width:${(100 * Math.max(0, u.vida)) / u.vidaMax}%"></i><span>${u.morto ? "caiu" : `${Math.ceil(u.vida)}/${u.vidaMax}`}</span></span></div>`).join("");
   for (const s of slots) {
     const k = h.kit[s.id], cd = h.cds[s.id] || 0, falta = k.custo && rec < k.custo;
     const frac = k.recarga ? cd / k.recarga : 0;
@@ -720,7 +743,7 @@ function montarInicio() {
     b.type = "button";
     b.className = "encontro";
     b.dataset.enc = id;
-    b.innerHTML = `<b>${e.nome}</b>${e.original ? "a batalha do Campo Livre 1" : id === "capitao" ? "o líder e a retaguarda" : id === "horda" ? "ondas de gente, ao estilo musou" : id === "duasFrentes" ? "pressão dos dois lados" : "grupos longe uns dos outros"}`;
+    b.innerHTML = `<b>${e.nome}</b>${e.original ? "a batalha do Campo Livre 1" : id === "capitao" ? "o líder e a retaguarda" : id === "horda" ? "ondas de gente, ao estilo musou" : id === "duasFrentes" ? "pressão dos dois lados" : id === "vila" ? "casas, muralha, hordas e a linha pesada" : id === "carga" ? "cavalaria pelos flancos" : id === "herois" ? "dois heróis inimigos juntos" : "grupos longe uns dos outros"}`;
     b.addEventListener("click", () => escolherEncontro(id));
     $("#encontros").append(b);
   }
@@ -728,6 +751,12 @@ function montarInicio() {
   montarHerois();
   escolherHeroi(opcoes.heroi);
   $("#op-quantidade").value = opcoes.quantidade;
+  for (const lado of ["aliados", "inimigos"]) {
+    const el = $(`#op-comp-${lado}`);
+    el.innerHTML = Object.entries(COMPOSICOES).map(([id, c]) => `<option value="${id}">${c.nome}</option>`).join("");
+    el.value = opcoes.composicao[lado];
+    el.addEventListener("change", (e) => { opcoes.composicao = { ...opcoes.composicao, [lado]: e.target.value }; guardar(); st.fundo = null; contagem(); });
+  }
   $("#op-quantidade").addEventListener("change", (e) => { opcoes.quantidade = e.target.value; guardar(); st.fundo = null; contagem(); });
   contagem();
   $("#lutar").addEventListener("click", () => { iniciarSom(); novaBatalha(); });

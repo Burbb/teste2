@@ -27,7 +27,7 @@ class Isolamento(unittest.TestCase):
 @unittest.skipUnless(shutil.which("node"), "sem o Node no PATH")
 class Simulacao(unittest.TestCase):
     def test_os_testes_da_simulacao_passam(self):
-        r = subprocess.run(["node", "--test", str(AQUI / "sim.test.mjs")], capture_output=True, text=True,
+        r = subprocess.run(["node", "--test", str(AQUI / "sim.test.mjs"), str(AQUI / "campo6.test.mjs")], capture_output=True, text=True,
                            encoding="utf-8", timeout=600)
         self.assertEqual(r.returncode, 0, r.stdout[-4000:] + r.stderr[-2000:])
 

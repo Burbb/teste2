@@ -28,6 +28,8 @@
     <div id="p-ordens"></div>
   </div>
   <div id="chefe" hidden><b></b><div class="barra"><i></i><span></span></div><small></small></div>
+  <div id="chefe2" hidden><b></b><div class="barra"><i></i><span></span></div><small></small></div>
+  <div id="comp" hidden></div>
   <div id="kit"></div>
   <div id="faixa" aria-live="polite"></div>
   <div id="golpe" aria-hidden="true"></div>
@@ -47,7 +49,7 @@
     <div class="cabeca"><h1>Campo Livre <span id="versao-inicio"></span></h1>
       <button id="lutar" class="principal" type="button">Lutar <kbd>Enter</kbd></button></div>
     <p class="sub">Protótipo da etapa 8, separado do jogo. Escolha o encontro, o herói e as versões das habilidades; cada
-      encontro é sempre o mesmo. <a href="/v4/">Abrir o Campo Livre 4 (o básico antigo)</a> · <a href="/v1/">o Campo Livre 1</a></p>
+      encontro é sempre o mesmo. <a href="/v5/">Abrir o Campo Livre 5 (antes das construções)</a> · <a href="/v4/">o 4</a> · <a href="/v1/">o 1</a></p>
     <div id="encontros"></div>
     <p id="enc-info"></p>
     <div id="herois"></div>
@@ -59,6 +61,9 @@
           <option value="4">4× (experimental)</option>
         </select>
       </label>
+      <label>Seu exército <select id="op-comp-aliados"></select></label>
+      <label>Inimigo <select id="op-comp-inimigos"></select></label>
+      <span class="nota-comp">(as composições valem nos encontros novos: a vila, a carga e Harg e Ardis)</span>
     </div>
     <div class="opcoes" data-opcoes></div>
     <p id="contagem"></p>
@@ -67,7 +72,7 @@
       <span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> andar · mouse mira · botão esquerdo (segure): ataque principal · <kbd>Espaço</kbd> mobilidade</span>
       <span>Habilidades: botão direito, <kbd>Q</kbd>, <kbd>E</kbd> (as três comuns) · <kbd>F</kbd> ultimate · <kbd>H</kbd> traz uma horda</span>
       <span><kbd>1</kbd> Acompanhar · <kbd>2</kbd> Atacar · <kbd>3</kbd> Defender no ponto do mouse (para a seleção; sem seleção, para todos)</span>
-      <span><kbd>F1</kbd> soldados · <kbd>F2</kbd> arqueiros · <kbd>F4</kbd> todos · <kbd>X</kbd> limpa · <kbd>Ctrl</kbd> soma</span>
+      <span><kbd>F1</kbd> soldados · <kbd>F2</kbd> arqueiros · <kbd>F3</kbd> cavalaria · <kbd>F5</kbd> pesados · <kbd>F6</kbd> magos · <kbd>F7</kbd> Morel e Odette · <kbd>F4</kbd> todos · <kbd>X</kbd> limpa · <kbd>Ctrl</kbd> soma</span>
       <span><kbd>Shift</kbd> segurado: modo de comando (arraste com o botão esquerdo para selecionar; botão direito: num inimigo, atacar o alvo; no chão, Defender ali). Pausado, o mouse já comanda.</span>
       <span><kbd>P</kbd> ou <kbd>Esc</kbd> pausa · <kbd>R</kbd> recomeça · <kbd>Tab</kbd> registro · <kbd>M</kbd> som</span>
       <span class="nota">Golpe forte prende os pés na preparação; depois do contato, andar ou outra habilidade cortam a
@@ -79,7 +84,7 @@
 <section id="tela-pausa" class="tela leve" hidden>
   <div class="caixa estreita">
     <h2>Pausa</h2>
-    <p class="sub">Pausado, o mouse comanda: arraste para selecionar, <kbd>F1</kbd> <kbd>F2</kbd> <kbd>F4</kbd> por tipo,
+    <p class="sub">Pausado, o mouse comanda: arraste para selecionar, <kbd>F1</kbd>–<kbd>F7</kbd> por tipo,
       <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> as ordens, botão direito Defender ali.</p>
     <div class="opcoes" data-opcoes></div>
     <div class="botoes">

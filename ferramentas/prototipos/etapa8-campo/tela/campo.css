@@ -160,3 +160,21 @@ body.em-luta #faixa { top: 70px; }
 .hab small { display: block; font-family: var(--pixel); font-size: 11px; color: var(--tinta-2); }
 .hab.marcada .cab b { color: var(--ouro); }
 .hab .cab em { color: var(--vermelho); font-style: normal; }
+/* Campo Livre 6: a barra de Ardis ao lado da de Harg, a vida de Morel e Odette embaixo da ficha */
+#chefe2 { position: absolute; left: 50%; top: 8px; transform: translateX(-50%); width: 300px; padding: 4px 8px 5px; background: var(--fundo-hud); border: 1px solid #7a3aa0; text-align: center; }
+#chefe2 b { color: #d8b0ff; font-weight: 400; }
+#chefe2 .barra i { background: #9a5ad0; }
+#chefe2 small { display: block; color: var(--tinta-2); font-size: 11px; min-height: 13px; }
+body.dois-chefes #chefe { transform: translateX(calc(-100% - 4px)); }
+body.dois-chefes #chefe2 { transform: translateX(4px); }
+#comp { position: absolute; left: 10px; top: 112px; width: 210px; padding: 3px 8px 4px; background: var(--fundo-hud); border: 1px solid var(--linha-hud); font-size: 12px; }
+#comp div { display: flex; align-items: center; gap: 6px; margin: 2px 0; }
+#comp b { width: 46px; color: #bcd8ff; font-weight: 400; }
+#comp .barra { flex: 1; margin: 0; height: 10px; }
+#comp .barra i { background: #6fbf5d; }
+#comp .barra span { font-size: 9px; line-height: 8px; }
+.nota-comp { font-size: 11px; color: var(--tinta-3); }
+/* o placar cresceu com os tipos novos: com dois heróis inimigos (ou em janela estreita), as barras descem para cima da
+   barra de habilidades, longe do placar */
+body.dois-chefes #chefe, body.dois-chefes #chefe2 { top: auto; bottom: 76px; }
+@media (max-width: 1500px) { #chefe, #chefe2 { top: auto; bottom: 76px; } }
