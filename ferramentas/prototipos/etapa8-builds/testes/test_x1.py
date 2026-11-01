@@ -65,6 +65,8 @@ class Montagem(Base):
         for ex in C.EXEMPLOS:
             m = M.de_exemplo(ex["id"])
             self.assertEqual(M.erros(m), [], ex["id"])
+            if ex.get("comparacao"):
+                continue  # os equivalentes do protótipo tático: sem talentos
             self.assertIn(M.pontos_gastos(m), (C.PONTOS - 1, C.PONTOS), ex["id"])
             self.assertEqual(len(m["kit"]), C.ESPACOS, ex["id"])
             parados_ = [n["nome"] for n in M.estado_arvore(m) if n["rank"] and n["aviso"]]

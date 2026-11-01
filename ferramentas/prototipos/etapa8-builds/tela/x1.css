@@ -23,6 +23,7 @@ button { font: inherit; color: inherit; }
 #abas button:hover, .botao-x:hover, .alternar button:hover, #exemplos button:hover { border-color: var(--ouro-2); }
 .botao-x:disabled { opacity: .45; cursor: default; border-color: #3a2e20; }
 .botao-x.principal { border-color: var(--ouro-2); color: var(--ouro); font-weight: 600; }
+#versao { font-size: 13px; color: var(--bom); border: 1px solid var(--bom); padding: 1px 6px; }
 #build-topo { color: var(--tinta-2); font-size: 14px; margin-left: auto; }
 
 .tela { flex: 1; min-height: 0; padding: 8px; gap: 8px; }

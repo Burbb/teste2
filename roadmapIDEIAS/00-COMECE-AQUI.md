@@ -9108,3 +9108,28 @@ foi automatizado.
   ou use `DEMO_PORTA`.
 - **Parado aqui:** o Jean joga e avalia (seção 16.8). Desequilíbrios conhecidos na 16.7 (o Berserker mais folgado que
   o Piromante; a Fornalha contra o troll; o Invocador depende de quando sacrificar).
+
+### 31/10/2026 (data do computador local) — Etapa 8: o combate numa grade (estudo e protótipo tático)
+
+- **Pedido do Jean:** pausar a expansão do catálogo do X1 e investigar se um combate tático com movimento numa grade
+  (referência: Dofus, sem copiar tudo nem adotar isometria) abre builds mais interessantes, mantendo a apresentação
+  simples e o resto do jogo. Estudo e protótipo isolado; o combate do jogo não muda. Ordem dos turnos preservada;
+  Revezamento, doação de ações, troca de posições na ordem, antecipação e Esperar continuam fora; intenção, travas e
+  chefe abalado também.
+- **Feito:** o [29](29-ETAPA8-COMBATE-TATICO.md) (diagnóstico do combate atual, pesquisa com fontes, o que depende de
+  posição, economia e isometria, regras provisórias, economia comparada, fuga repetida, riscos, trabalho se seguirmos)
+  e o protótipo [`ferramentas/prototipos/etapa8-tatico/`](../ferramentas/prototipos/etapa8-tatico/LEIA-ME.md): arena
+  9 × 7 vista de cima, uma ação e PM por vez, visão, rocha e água, zona de controle, empurrões e puxões com colisão,
+  áreas que pegam aliados, chamas no chão, a Sentinela que fecha caminhos, golpes preparados como casas marcadas,
+  Berserker e Piromante com seis habilidades espaciais cada, talentos em pares, quatro encontros com os inimigos do X1 e
+  equivalentes nos cards, IA por papel (perto, longe, língua), registro de comandos e tempos.
+- **Achado principal:** com "andar depois de agir", recuar e atacar vencia com mais vida que lutar; a zona de controle
+  não resolvia. A regra padrão passou a "agir encerra o movimento", e a fuga deixou de dominar onde há inimigos à
+  distância ou que puxam; contra o troll lento e os lobos frágeis, ainda vence (resposta de conteúdo, pendente).
+- **Lançadores:** o tático e o X1 agora mostram a versão no topo e, se a porta estiver ocupada (a instância antiga do
+  X1 na 8797), dizem quem está nela e abrem o navegador na próxima livre. O X1 ganhou os exemplos "Comparar com o
+  tático".
+- **Conferido:** 26 testes do tático (visão, caminhos, zona, limites da vez, empurrões, colisões, ocupação depois de
+  mortes e invocações, prévia igual ao efeito, chão, preparos, IA sem ficar presa, fuga), 39 do X1, os jogadores
+  automáticos nas três variantes de regra, capturas nas duas janelas. O jogo não mudou (1.220.0).
+- **Parado aqui:** o Jean joga os dois protótipos e responde a pergunta central (seção 12 do 29).

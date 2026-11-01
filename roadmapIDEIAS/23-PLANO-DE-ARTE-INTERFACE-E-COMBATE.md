@@ -1507,7 +1507,10 @@ antecipar a vez de um aliado; Esperar fica como hipótese futura) e autorizou s�
 `ferramentas/prototipos/etapa8-builds/` (seção 15 do 28: cadeias por identidade, builds sem travas nem ambientes, o
 orçamento de 7 pontos nas duas estruturas). Depois, ampliado para descoberta: 32 habilidades, Sangramento, Frio e
 invocações como vocabulário compartilhado, 9 pontos sem ordem de compra, filtros e montagens salvas (seção 16 do 28).
-Nada entrou no jogo.
+Nada entrou no jogo. **Depois, a expansão do X1 foi pausada** para estudar o combate numa grade vista de cima (Dofus
+como referência): estudo [29](29-ETAPA8-COMBATE-TATICO.md) e protótipo `ferramentas/prototipos/etapa8-tatico/`, com a
+direção espacial em avaliação. Se ela seguir, a tela de luta, a IA, o catálogo e a arte das lutas mudam (seção 11 do
+29) e a etapa 9 depende disso.
 
 **Decisão de Jean (19/10/2026):** produzir os ícones de habilidades e talentos junto da revisão dos respectivos
 sistemas e telas, evitando arte para conceitos prestes a mudar. O visual antigo do Grimório e da árvore não está

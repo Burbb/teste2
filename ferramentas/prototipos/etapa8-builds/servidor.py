@@ -3,7 +3,9 @@ com a mesma semente, redistribuir à vontade e guardar o registro das escolhas, 
 
     python ferramentas/prototipos/etapa8-builds/servidor.py
 
-Abre em http://127.0.0.1:8797/ (porta em DEMO_PORTA). Uma luta por vez, na memória. O registro de cada luta terminada
+Tenta a porta 8797 (ou DEMO_PORTA); se ela estiver ocupada, diz quem está nela e usa a próxima livre, abrindo o
+navegador na porta certa (DEMO_SEM_NAVEGADOR=1 não abre): um servidor antigo não se passa pela versão nova. A versão
+aparece no terminal e no topo da página. Uma luta por vez, na memória. O registro de cada luta terminada
 ou abandonada e de cada montagem salva vai para uma pasta temporária nova a cada execução (DEMO_SAVES para fixar); a
 lista de montagens salvas da tela fica no navegador. Os saves do jogo não são lidos nem tocados. Os retratos são lidos
 de rpg/web/static (só leitura)."""
@@ -11,10 +13,13 @@ import json
 import mimetypes
 import os
 import pathlib
+import socket
 import sys
 import tempfile
 import threading
 import time
+import urllib.request
+import webbrowser
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import unquote, urlparse
 
@@ -52,7 +57,7 @@ def _guardar_luta(como):
 
 
 def catalogo():
-    return {"pontos": C.PONTOS, "espacos": C.ESPACOS, "estruturas": C.ESTRUTURAS, "tipos": C.NOME_TIPO,
+    return {"versao": C.VERSAO, "pontos": C.PONTOS, "espacos": C.ESPACOS, "estruturas": C.ESTRUTURAS, "tipos": C.NOME_TIPO,
             "fichas": C.FICHAS, "regras": C.REGRAS_LUTA, "funcoes": C.FUNCOES, "propriedades": C.PROPRIEDADES,
             "specs": {k: {"nome": v["spec"], "classe": v["classe"], "recurso": v["recurso"],
                           "ultimates": v["ultimates"]} for k, v in C.HEROI.items()},
@@ -109,6 +114,8 @@ class Demo(BaseHTTPRequestHandler):
         rota = unquote(urlparse(self.path).path)
         if rota in ("/", "/index.html"):
             return self._arquivo(TELA / "index.html")
+        if rota == "/api/versao":
+            return self._json(200, {"prototipo": "etapa8-builds", "versao": C.VERSAO})
         if rota == "/api/catalogo":
             return self._json(200, catalogo())
         if rota == "/api/registro":
@@ -173,16 +180,39 @@ class Demo(BaseHTTPRequestHandler):
         return self._json(200, {**r, "estado": cb.estado()})
 
 
-def servir(porta=PORTA):
-    srv = ThreadingHTTPServer(("127.0.0.1", porta), Demo)
-    srv.daemon_threads = True
-    return srv
+def _quem_esta(porta):
+    try:
+        with urllib.request.urlopen(f"http://127.0.0.1:{porta}/api/versao", timeout=1) as r:
+            d = json.loads(r.read())
+            return f"{d.get('prototipo')} · {d.get('versao')}"
+    except Exception:
+        return "outro programa ou uma versão antiga deste protótipo (sem /api/versao)"
+
+
+def _livre(porta):
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        return s.connect_ex(("127.0.0.1", porta)) != 0
+
+
+def servir(porta=PORTA, tentativas=11):
+    for p in range(porta, porta + tentativas):
+        if not _livre(p):
+            print(f"porta {p} ocupada por: {_quem_esta(p)}", flush=True)
+            continue
+        srv = ThreadingHTTPServer(("127.0.0.1", p), Demo)
+        srv.daemon_threads = True
+        return srv
+    raise SystemExit(f"nenhuma porta livre entre {porta} e {porta + tentativas - 1}")
 
 
 def main():
     srv = servir()
-    print(f"http://127.0.0.1:{srv.server_address[1]}/", flush=True)
+    url = f"http://127.0.0.1:{srv.server_address[1]}/"
+    print(f"Protótipo X1 · {C.VERSAO}", flush=True)
+    print(url, flush=True)
     print(f"registro da sessão em {PASTA}", flush=True)
+    if not os.environ.get("DEMO_SEM_NAVEGADOR"):
+        threading.Timer(0.5, lambda: webbrowser.open(url)).start()
     try:
         srv.serve_forever()
     except KeyboardInterrupt:

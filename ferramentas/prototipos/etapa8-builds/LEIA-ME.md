@@ -9,8 +9,11 @@ seções [15](../../../roadmapIDEIAS/28-ETAPA8-HABILIDADES-TALENTOS-E-BUILDS.md#
 
 ## Abrir
 
-Dê dois cliques em `demo.bat` (ou rode `python ferramentas/prototipos/etapa8-builds/servidor.py` na raiz). Abre em
-http://127.0.0.1:8797/ (outra porta: `DEMO_PORTA`). O registro vai para uma pasta temporária nova a cada execução
+Dê dois cliques em `demo.bat` (ou rode `python ferramentas/prototipos/etapa8-builds/servidor.py` na raiz). O servidor
+tenta a porta 8797; se ela estiver ocupada (por exemplo, por uma instância antiga), diz quem está nela, usa a próxima
+livre e abre o navegador na porta certa. A versão ("X1 rodada 2") aparece no topo da página (outra porta: `DEMO_PORTA`;
+sem abrir o navegador: `DEMO_SEM_NAVEGADOR=1`). Os exemplos "Comparar com o tático" trazem, em cards e sem talentos, os
+kits do [protótipo tático](../etapa8-tatico/LEIA-ME.md), para os mesmos encontros. O registro vai para uma pasta temporária nova a cada execução
 (`DEMO_SAVES` fixa uma); os saves do jogo não são lidos nem tocados. As montagens salvas na tela ficam no navegador
 (e também vão para o registro).
 

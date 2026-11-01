@@ -407,6 +407,8 @@
   // ---------------------------------------------------------------- início
   (async () => {
     CAT = await api("/api/catalogo");
+    $("#versao").textContent = CAT.versao;
+    document.title = `Etapa 8 · X1 · ${CAT.versao}`;
     $("#regras").innerHTML = CAT.regras.map((r) => `<li>${esc(r)}</li>`).join("");
     const salvo = ler("x1-montagem");
     const ex = CAT.exemplos.find((x) => x.id === "pavio");

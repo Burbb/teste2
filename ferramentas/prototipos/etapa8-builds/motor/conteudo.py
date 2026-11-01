@@ -15,6 +15,7 @@ versões, o mesmo efeito vem preso a uma habilidade ou junto de outro num princ�
 
 Valores de teste, não catálogo: servem para observar decisões, não para balancear a campanha."""
 
+VERSAO = "X1 rodada 2 · 31/10/2026"
 PONTOS = 9          # o orçamento de talentos
 ESPACOS = 5         # habilidades no kit, além da ultimate
 FICHA_TETO = 2      # Guarda, Força e Exposto
@@ -528,6 +529,20 @@ def _t1(base, nos):
                 frase="A mesma ideia com versões e princípios.", nos=nos)
 
 
+# Para comparar com o protótipo tático (etapa8-tatico): os equivalentes em cards dos kits de lá, sem talentos (lá, os
+# talentos são outros). Não usam o orçamento; servem só à comparação dos mesmos encontros.
+EXEMPLOS += [
+    dict(id="tatico_berserker", nome="Comparar com o tático", estrutura="t4", spec="berserker", estilo="comparação",
+         frase="O kit do Berserker do protótipo tático em cards: Golpe Pesado; Golpe no Joelho no lugar do Golpe de "
+               "Escudo; Quebra-Guarda no lugar da Corrente; Redemoinho; Provocar no lugar do Guarda-costas. Sem "
+               "talentos.", kit=["golpe_pesado", "joelho", "quebra_guarda", "redemoinho", "provocar"],
+         ultimate="furia_cega", nos={}, comparacao=True),
+    dict(id="tatico_piromante", nome="Comparar com o tático", estrutura="t4", spec="piromante", estilo="comparação",
+         frase="O kit do Piromante do protótipo tático em cards: Bola de Fogo, Chuva de Brasas, Combustão, Sentinela; "
+               "Escudo de Chamas no lugar da Muralha de Fogo (não há chão nos cards). Sem talentos.",
+         kit=["bola_fogo", "chuva", "combustao", "sentinela", "escudo_chamas"], ultimate="conflagracao", nos={},
+         comparacao=True),
+]
 EXEMPLOS += [
     _t1("furia", {"p_sangue": 1, "v_desesperada": 1, "v_sede_rubra": 1, "braco": 2, "folego_largo": 1, "v_contida": 1}),
     _t1("quebrador", {"p_comando": 1, "v_desequilibra": 1, "v_rancor": 1, "couro": 2, "folego_largo": 2}),

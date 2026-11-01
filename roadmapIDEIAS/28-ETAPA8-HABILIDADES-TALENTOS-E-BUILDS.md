@@ -15,6 +15,10 @@ responder. O protótipo está em `ferramentas/prototipos/etapa8-builds/`.
 Frio (que anula a Queimadura) e invocações como vocabulário compartilhado, talentos com caminhos concorrentes, 9
 pontos sem ordem de compra e a montagem com filtros e montagens salvas. Seção 16.
 
+**Depois (31/10/2026): a expansão do catálogo do X1 está pausada** para investigar o combate numa grade (referência:
+Dofus), no estudo [29](29-ETAPA8-COMBATE-TATICO.md) e no protótipo `ferramentas/prototipos/etapa8-tatico/`. O X1
+continua para comparação (exemplos "Comparar com o tático").
+
 **Entrega de pesquisa e concepção: nada daqui muda regras, telas ou conteúdo do jogo.** O jogo integrado (1.220.0)
 continua como está. Os números são inventados para os exemplos funcionarem. **A arquitetura recomendada está pendente
 de avaliação do Jean**; nenhuma proposta deste documento é regra aprovada.

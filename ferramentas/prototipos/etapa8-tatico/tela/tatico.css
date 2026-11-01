@@ -1,0 +1,141 @@
+/* PROTÓTIPO tático da etapa 8 (nada no jogo). Grade abstrata vista de cima, cores e fontes do jogo. Provisório: nada
+   disto é a interface definitiva. As cores das camadas da grade:
+   verde = onde a unidade da vez pode parar; azul = alcance da ação escolhida; contorno claro = alvo válido;
+   hachura cinza = no alcance, mas sem visão; vermelho = a área que a ação vai atingir; amarelo = aliado na área;
+   laranja = chamas no chão; listras vermelhas = casas marcadas por um golpe preparado. */
+:root { --linha: rgba(226, 189, 99, 0.18); --fundo-2: rgba(0, 0, 0, 0.28);
+  --casa: clamp(52px, min(calc((100vw - 470px) / 9), calc((100vh - 150px) / 7)), 104px); }
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body { background: var(--fundo); color: var(--tinta); font-family: var(--texto); font-size: 15px; line-height: 1.35;
+  display: flex; flex-direction: column; overflow: hidden; }
+h1, h2 { font-family: var(--titulo); color: var(--ouro); font-weight: 400; margin: 0; }
+h1 { font-size: 32px; text-shadow: var(--contorno); }
+h1 span { font-family: var(--texto); font-size: 17px; color: var(--tinta-2); text-shadow: none; }
+h2 { font-size: 16px; margin: 10px 0 6px; }
+h2 small { font-family: var(--texto); color: var(--tinta-3); font-size: 13px; }
+kbd { font-family: var(--num); font-size: 11px; color: var(--tinta-3); border: 1px solid #4a3c2c; padding: 0 3px; margin-left: 3px; }
+button { font: inherit; color: inherit; }
+.nota { color: var(--tinta-2); font-size: 14px; margin: 4px 0; }
+.painel { background: var(--painel); border: 2px solid #4a3a24; padding: 8px 12px; min-height: 0; overflow-y: auto; }
+.cabeca { display: flex; align-items: center; justify-content: space-between; }
+#topo { display: flex; align-items: center; gap: 20px; padding: 6px 16px; border-bottom: 2px solid #4a3a24; background: var(--painel); }
+#versao { font-size: 13px; color: var(--bom); border: 1px solid var(--bom); padding: 1px 6px; }
+#abas { display: flex; gap: 4px; }
+#abas button, .botao-x, .alternar button { background: var(--fundo-2); border: 2px solid #5a4630; padding: 4px 12px; cursor: pointer; color: var(--tinta); text-decoration: none; }
+#abas button.atual, .alternar button.atual { border-color: var(--ouro-2); color: var(--ouro); }
+.botao-x:disabled { opacity: .45; cursor: default; }
+.botao-x.principal { border-color: var(--ouro-2); color: var(--ouro); font-weight: 600; }
+#resumo-topo { margin-left: auto; color: var(--tinta-2); font-size: 14px; }
+.tela { flex: 1; min-height: 0; padding: 8px; gap: 8px; }
+.tela[hidden] { display: none !important; }
+
+/* preparar */
+#preparar { display: grid; grid-template-columns: 1fr 1.2fr 1fr; }
+.alternar { display: flex; gap: 4px; }
+.par { border: 1px solid var(--linha); padding: 4px 8px; margin: 4px 0; }
+.par h3 { margin: 0 0 2px; font-size: 13px; color: var(--tinta-2); }
+.par label { display: block; font-size: 13.5px; margin: 3px 0; cursor: pointer; }
+.par label b { color: var(--ouro); }
+#encontro { width: 100%; background: var(--fundo-2); color: var(--tinta); border: 2px solid #5a4630; padding: 3px 6px; font: inherit; }
+.regra { display: block; font-size: 13.5px; margin: 4px 0; }
+.linha-lutar { display: flex; align-items: center; gap: 12px; margin: 10px 0; }
+.linha-lutar input { width: 90px; background: var(--fundo-2); color: var(--tinta); border: 2px solid #5a4630; padding: 3px 6px; font: inherit; }
+.hab { border: 1px solid #3a2e20; background: var(--fundo-2); padding: 4px 8px; margin: 4px 0; }
+.hab .n { font-weight: 600; }
+.hab .c { float: right; color: var(--tinta-2); font-size: 13px; }
+.hab .a { font-size: 12.5px; color: var(--frio); }
+.hab .d { font-size: 13px; color: var(--tinta-2); }
+.hab .f { font-size: 12px; color: var(--tinta-3); }
+#regras { padding-left: 18px; }
+#regras li { margin: 3px 0; }
+
+/* luta */
+#luta { display: grid; grid-template-columns: auto minmax(340px, 1fr); grid-template-rows: auto 1fr;
+  grid-template-areas: "faixa lado" "campo lado"; position: relative; }
+#faixa { grid-area: faixa; display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: center; }
+#luta-titulo { margin: 0; color: var(--tinta-2); font-size: 14px; }
+#luta-titulo b { color: var(--ouro); }
+#ordem { display: flex; gap: 3px; flex-wrap: wrap; }
+#ordem span { padding: 0 5px; border: 1px solid #3a2e20; font-size: 12.5px; }
+#ordem .inimigo { color: #e6a99d; }
+#ordem .agiu { opacity: .45; }
+#ordem .atual { border-color: var(--ouro); color: var(--ouro); }
+#ordem .morto { text-decoration: line-through; opacity: .35; }
+#campo { grid-area: campo; display: flex; flex-direction: column; align-items: flex-start; min-height: 0; }
+#grade { display: grid; grid-template-columns: repeat(9, var(--casa)); grid-template-rows: repeat(7, var(--casa));
+  border: 2px solid #4a3a24; background: #15120e; user-select: none; }
+#legenda { font-size: 12.5px; color: var(--tinta-3); margin: 4px 0 0; max-width: calc(var(--casa) * 9); }
+.casa { position: relative; border: 1px solid rgba(226, 189, 99, 0.10); }
+.casa.rocha { background: repeating-linear-gradient(135deg, #4a443c 0 6px, #3a352f 6px 12px); border-color: #2a2622; }
+.casa.agua { background: repeating-linear-gradient(0deg, #1e3a52 0 5px, #24486a 5px 9px); }
+.casa.chamas { background: rgba(214, 102, 32, 0.38); box-shadow: inset 0 0 0 2px rgba(255, 140, 50, .55); }
+.casa.chamas::after { content: attr(data-chamas); position: absolute; right: 3px; top: 1px; font-size: 11px; color: #ffb070; }
+.casa.marcada { background-image: repeating-linear-gradient(45deg, rgba(200, 40, 30, .55) 0 5px, transparent 5px 10px); }
+.casa.mov { background-color: rgba(70, 150, 80, 0.22); cursor: pointer; }
+.casa.mov::before { content: attr(data-custo); position: absolute; left: 3px; top: 1px; font-size: 11px; color: #9ee0a6; }
+.casa.rota { background-color: rgba(90, 200, 100, 0.45); }
+.casa.alcance { background-color: rgba(70, 120, 200, 0.20); }
+.casa.semvisao { background-image: repeating-linear-gradient(45deg, rgba(160, 160, 160, .28) 0 3px, transparent 3px 8px); }
+.casa.alvo { box-shadow: inset 0 0 0 2px #9ec8ff; cursor: pointer; }
+.casa.area { background-color: rgba(220, 60, 50, 0.42) !important; }
+.casa.area-aliado { box-shadow: inset 0 0 0 3px #f2d14a; }
+.ficha { position: absolute; inset: 10%; border-radius: 50%; display: flex; flex-direction: column; align-items: center;
+  justify-content: center; border: 3px solid #888; background: #221c16; font-size: 11px; line-height: 1.1; overflow: hidden; }
+.ficha.aliado { border-color: var(--ouro); }
+.ficha.heroi { border-color: #ffe08a; box-shadow: 0 0 0 2px #7a5b1a; }
+.ficha.inimigo { border-color: #d0503c; }
+.ficha.invocacao { border-radius: 6px; border-color: var(--frio); background: #1c2a36; }
+.ficha.vez { box-shadow: 0 0 0 3px #fff4c0; }
+.ficha .ret { width: 60%; height: 50%; display: flex; align-items: center; justify-content: center; }
+.ficha .ret img, .ficha .ret canvas { width: 100%; height: 100%; image-rendering: pixelated; object-fit: contain; }
+.ficha .sigla { font-weight: 700; font-size: calc(var(--casa) * 0.2); color: var(--tinta); }
+.ficha .pv { position: absolute; left: 12%; right: 12%; bottom: 8%; height: 5px; background: #3a1d16; }
+.ficha .pv i { position: absolute; inset: 0 auto 0 0; background: var(--sangue); }
+.ficha .marcas { position: absolute; top: 4%; font-size: 10px; color: #ffb070; }
+.dano-prev { position: absolute; right: 2px; bottom: 2px; z-index: 2; font-family: var(--num); font-weight: 700; font-size: 13px;
+  color: #fff; background: rgba(160, 30, 20, .85); padding: 0 3px; }
+.dano-prev.aliado { background: rgba(160, 130, 20, .9); }
+
+#lado { grid-area: lado; display: flex; flex-direction: column; overflow: hidden; }
+#vez .quem { display: flex; align-items: center; gap: 8px; }
+#vez .quem b { color: var(--ouro); font-size: 16px; }
+#vez .vals { font-size: 13px; color: var(--tinta-2); }
+#vez .dica { font-size: 12.5px; color: var(--tinta-3); margin: 2px 0; }
+#acoes { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin: 6px 0; }
+.acao { border: 2px solid #5a4630; background: var(--fundo-2); padding: 3px 7px; text-align: left; cursor: pointer; }
+.acao.escolhida, .acao:hover:not(:disabled) { border-color: var(--ouro); }
+.acao:disabled { opacity: .45; cursor: default; }
+.acao .n { font-weight: 600; display: block; font-size: 14px; }
+.acao .p { font-size: 11.5px; color: var(--tinta-2); display: block; }
+.acao .m { font-size: 11.5px; color: var(--sangue-2); display: block; }
+.acao.encerrar { grid-column: 1 / -1; text-align: center; }
+#explica { font-size: 13px; color: var(--tinta-2); min-height: 5.5em; max-height: 8em; overflow-y: auto; border-top: 1px solid var(--linha); padding-top: 4px; }
+#explica ul { margin: 2px 0; padding-left: 16px; color: var(--bom); }
+#log { flex: 1; overflow-y: auto; font-size: 12.5px; min-height: 0; }
+.ev { padding: 0; }
+.ev.t-rodada { color: var(--ouro); font-weight: 600; margin-top: 4px; border-top: 1px solid var(--linha); }
+.ev.t-acao { color: var(--tinta); margin-top: 2px; }
+.ev.t-acao.inimigo, .ev.t-mover.inimigo { color: #e6a99d; }
+.ev.t-dano, .ev.t-cura, .ev.t-acende, .ev.t-ficha, .ev.t-estado, .ev.t-interrompe, .ev.t-resiste, .ev.t-perde, .ev.t-protege { color: var(--tinta-2); padding-left: 10px; }
+.ev.t-mover { color: var(--tinta-3); }
+.ev.t-gatilho { color: var(--bom); }
+.ev.t-prepara { color: #ffd0c8; font-weight: 600; }
+.ev.t-fim { color: var(--ouro); font-weight: 600; }
+#fim { position: absolute; inset: 30px 30% auto 10%; background: var(--painel); border: 3px solid var(--ouro-2); padding: 12px 16px; z-index: 5; max-height: calc(100% - 60px); overflow-y: auto; box-shadow: var(--sombra); }
+#fim h2 { font-size: 32px; text-shadow: var(--contorno); }
+#fim table { border-collapse: collapse; font-size: 14px; }
+#fim td { padding: 1px 12px 1px 0; }
+#fim .botoes { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
+table.reg { border-collapse: collapse; font-size: 13px; width: 100%; }
+table.reg th { text-align: left; color: var(--ouro); border-bottom: 1px solid var(--linha); padding: 3px 6px; }
+table.reg td { border-bottom: 1px solid rgba(226, 189, 99, 0.08); padding: 3px 6px; }
+.vitoria { color: var(--bom); }
+.derrota { color: var(--sangue-2); }
+
+@media (max-width: 1500px) {
+  #preparar { grid-template-columns: 1fr 1fr; grid-auto-rows: max-content; overflow-y: auto; }
+  #preparar > .painel { overflow: visible; }
+  #luta { grid-template-columns: auto minmax(300px, 1fr); }
+  .ficha .marcas { display: none; }
+}
