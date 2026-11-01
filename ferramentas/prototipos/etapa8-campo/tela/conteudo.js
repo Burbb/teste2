@@ -1,7 +1,7 @@
 // PROTÓTIPO de campo livre da etapa 8 (nada no jogo): os números e os kits. Tudo de teste; as regras que usam estes
 // números estão em sim.js. Unidades: distância em pixels nativos (o campo é desenhado 1:1 e ampliado inteiro), tempo
 // em segundos, empurrão em px/s (a unidade desliza cerca de empurrão/9 px, ver ATRITO_EMPURRAO).
-export const VERSAO = "Campo Livre 3";
+export const VERSAO = "Campo Livre 4";
 
 export const CAMPO = { largura: 960, altura: 560, margem: 8 };
 export const ATRITO_EMPURRAO = 9;      // o empurrão perde velocidade a e^(-9t): desliza v/9 px
@@ -12,31 +12,41 @@ export const SEMENTE = 20261031;       // a mesma batalha a cada repetição
 export const TIPOS = {
   soldado: { nome: "Soldado", papel: "perto", raio: 3.5, vida: 12, vidaAliado: 16, vel: 34, massa: 1, dano: 2, danoAliado: 2.5, alcance: 3,
     preparo: 0.28, recarga: 1.1, vagas: 3 },
+  // `busca`: até onde o arqueiro procura alvo quando nada o prende (ele avança até a distância de tiro, `alcance` ×
+  // `tiro`, sem passar dela); `posto`: o quanto a retaguarda de um encontro pode sair do posto para atirar.
   arqueiro: { nome: "Arqueiro", papel: "longe", raio: 3.5, vida: 7, vel: 32, massa: 1, dano: 2, alcance: 150,
-    ideal: 105, perto: 46, preparo: 0.45, recarga: 1.9, vagas: 3, flecha: 170 },
+    ideal: 105, perto: 46, preparo: 0.45, recarga: 1.9, vagas: 3, flecha: 170, busca: 420, tiro: 0.9, posto: 90 },
   // A ameaça que pede atenção: o golpe de machado se anuncia no chão (0,75 s), varre um arco e lança os soldados;
   // é interrompido pelos golpes fortes do herói. Resiste ao empurrão (massa) e ao atordoamento.
   // O inimigo resistente: aguenta um golpe forte (é empurrado e atordoado, não morre); pede dois ou um combo.
   veterano: { nome: "Veterano", papel: "perto", raio: 4, vida: 32, vel: 30, massa: 2, dano: 3, alcance: 3,
     preparo: 0.32, recarga: 1.2, vagas: 3 },
+  // `firme`: depois de ter uma preparação interrompida, por quantos segundos um golpe forte não o interrompe de novo
+  // (a reação visual continua): nenhuma ameaça fica presa numa sequência de interrupções.
   campeao: { nome: "Campeão", papel: "perto", raio: 6, vida: 220, vel: 30, massa: 6, dano: 6, danoHeroi: 28,
-    alcance: 22, abertura: 160, preparo: 0.75, recarga: 2.6, vagas: 7, elite: true, empurrao: 210 },
-  // O líder inimigo (os encontros novos). Enfrenta o herói: mira nele quando ele está a até 240 px ou acabou de
-  // feri-lo ou de derrubar alguém a até 200 px dele (e mantém a escolha por pelo menos 3 s; só larga com o herói a mais
-  // de 340 px). Repertório: o Machado (o golpe anunciado do campeão; com uma tropa nossa no caminho do herói, golpeia
-  // através dela), a Arremetida (marca um círculo onde o herói está e salta nele 0,8 s depois; dá para sair; ao cair,
-  // fica com o machado cravado 0,7 s, levando +50%), a Carga (reúne até 8 soldados por 0,9 s, marca a faixa e corre
-  // na direção do herói ou do grupo nosso mais denso; os reunidos chegam com ímpeto; depois, ofegante 1,2 s, levando
-  // +50%) e a Presença (a até 90 px, os soldados dele atacam mais rápido, são menos empurrados e não se abalam). Entre
-  // duas habilidades, pelo menos 2 s. Abre caminho entre os próprios soldados. Derrubado, a tropa a até 150 px foge e
-  // o resto se abala por 3 s.
-  lider: { nome: "Harg, o Capitão", papel: "perto", raio: 6.5, vida: 480, vel: 40, massa: 7, dano: 8, danoHeroi: 26,
-    alcance: 22, abertura: 150, preparo: 0.7, recarga: 2.4, vagas: 8, elite: true, lider: true, empurrao: 220,
-    foco: { raio: 240, solta: 340, minimo: 3, memoria: 5, abates: 200 }, intervalo: 2,
-    arremetida: { recarga: 7, primeira: 3, min: 40, max: 190, preparo: 0.75, adianta: 0.6, voo: 0.45, raio: 28, dano: 8, danoHeroi: 20,
-      empurrao: 200, cravado: 0.7 },
-    carga: { recarga: 9, primeira: 5, reunir: 0.9, raioReunir: 70, max: 8, distancia: 150, distanciaMax: 210, vel: 160,
-      largura: 10, dano: 14, danoHeroi: 22, empurrao: 230, ofegante: 1.2, vulneravel: 1.5, impeto: 2 },
+    alcance: 22, abertura: 160, preparo: 0.75, recarga: 2.6, vagas: 7, elite: true, empurrao: 210, firme: 2 },
+  // O líder inimigo (Campo Livre 4). Ameaça o herói e o campo. A escolha (`foco`), revista a cada 3 s no mínimo: duela
+  // com o herói quando ele está a até 150 px ou o feriu nos últimos 4 s; senão, vai no grupo nosso mais denso a até
+  // 170 px (4 ou mais a 40 px uns dos outros; arqueiro conta 1,5); senão, persegue o herói a até 320 px; senão, a tropa
+  // mais perto. Repertório: o Machado (arco de 160° anunciado 0,8 s, recarga 1,6 s: 30 no herói, 14 nas tropas; com
+  // uma tropa nossa entre ele e o herói, golpeia através dela), o Rodopio (círculo de 46 px anunciado 0,75 s quando 3
+  // ou mais dos nossos estão colados nele: 34 no herói, 14 nas tropas), a Arremetida (círculo no caminho do herói ou no
+  // meio do grupo, a até 220 px, salto 0,7 s depois: 30 no herói, 14 nas tropas; ao cair, 0,5 s com o machado cravado
+  // levando +50%, e o machado seguinte se anuncia em 0,6 s), a Carga (contra o herói ou o grupo; 16 nas tropas;
+  // ofegante 0,9 s depois) e a Presença (a até 90 px, os soldados dele atacam mais rápido, são menos empurrados e não se
+  // abalam). 14 nas tropas: dois golpes derrubam um soldado nosso, um derruba um arqueiro. Entre duas habilidades, pelo
+  // menos 1,5 s. Golpe fraco não o faz cambalear (reage, sem parar); golpe forte interrompe a preparação, e depois ele
+  // fica `firme` 2,5 s. Os soldados dele abrem caminho. Derrubado, a tropa a até 150 px foge, a retaguarda deixa o
+  // posto e o resto se abala por 3 s.
+  lider: { nome: "Harg, o Capitão", papel: "perto", raio: 6.5, vida: 500, vel: 54, massa: 7, dano: 14, danoHeroi: 30,
+    alcance: 26, abertura: 160, preparo: 0.8, recarga: 1.6, vagas: 8, elite: true, lider: true, empurrao: 240, firme: 2.5,
+    foco: { perto: 150, memoria: 4, minimo: 3, persegue: 320, abates: 200,
+      grupo: { alcance: 170, raio: 40, min: 4, arqueiro: 1.5 } }, intervalo: 1.5,
+    rodopio: { recarga: 5, primeira: 2, raio: 46, preparo: 0.75, min: 3, dano: 14, danoHeroi: 34, empurrao: 260 },
+    arremetida: { recarga: 6, primeira: 3, min: 40, max: 220, preparo: 0.7, adianta: 0.5, voo: 0.45, raio: 30, dano: 14,
+      danoHeroi: 30, empurrao: 220, cravado: 0.5, sequencia: 0.6 },
+    carga: { recarga: 8, primeira: 5, reunir: 0.8, raioReunir: 70, max: 8, distancia: 150, distanciaMax: 210, vel: 170,
+      largura: 10, dano: 16, danoHeroi: 30, empurrao: 230, ofegante: 0.9, vulneravel: 1.5, impeto: 2 },
     presenca: 90, presencaRitmo: 0.75, presencaFirmeza: 0.5, derrota: { foge: 150, abala: 3 } },
   // A outra: fica atrás da linha e fortalece quem está na aura (+50% de dano, ataca 25% mais rápido); derrubado,
   // abala os inimigos em volta por 2 s (recuam, não atacam).
@@ -52,10 +62,14 @@ export const HEROIS = {
     recurso: { nome: "Fúria", max: 100, inicial: 0, regen: 0, porAcerto: 1, porAbate: 1.5 },
     curaPorAbate: 0.5,
     kit: {
-      basico: { nome: "Corte", tecla: "Botão esquerdo", preparo: 0.07, rec: 0.2, raio: 22, abertura: 110, dano: 3,
-        empurrao: 25, atordoa: 0.15, mover: 0.6,
-        arremate: { cada: 3, janela: 0.9, dano: 8, raio: 26, abertura: 130, empurrao: 150, atordoa: 0.35, pausa: 25,
-          tremor: 0.12 } },
+      // O Corte: três golpes seguidos (3, 4 e o arremate de 9, que arremessa) num arco que pega um grupo pequeno. A
+      // assistência (`assist`): o golpe vira para o inimigo mais perto da direção do mouse a até `alcance` px (num cone
+      // de `cone`° para cada lado) e, se ele está um pouco além do arco, o herói dá um passo de até `estica` px na
+      // preparação (nunca para trás, nunca contra a direção em que o jogador anda, nunca através de quem está no meio).
+      basico: { nome: "Corte", tecla: "Botão esquerdo", preparo: 0.07, rec: 0.2, raio: 22, abertura: 120, dano: 3,
+        danos: [3, 4], empurrao: 25, atordoa: 0.15, mover: 0.6, assist: { alcance: 36, cone: 40, estica: 12 },
+        arremate: { cada: 3, janela: 0.9, dano: 9, raio: 28, abertura: 160, empurrao: 160, atordoa: 0.35, pausa: 30,
+          tremor: 0.14 } },
       varredura: { nome: "Varredura", tecla: "Botão direito", preparo: 0.2, rec: 0.28, recarga: 6, raio: 32,
         abertura: 220, dano: 13, empurrao: 190, atordoa: 0.5, pausa: 45, pausaPorAbate: 8, pausaMax: 90,
         tremor: 0.26, tremorPorAbate: 0.03, tremorMax: 0.5 },
@@ -69,8 +83,12 @@ export const HEROIS = {
     nome: "Mago", raio: 4.5, vida: 170, vel: 68, massa: 4, vagas: 7, critico: { chance: 0.1, mult: 1.5 },
     recurso: { nome: "Mana", max: 100, inicial: 100, regen: 7 },
     kit: {
+      // A Faísca: sai para o inimigo mais perto da direção do mouse dentro do alcance (cone de `assist.cone`°) e o
+      // persegue, virando no máximo `curva` rad/s; se ele morre no caminho, segue reto no último rumo e acerta só quem
+      // tocar até o fim do alcance (não procura outro). Sem ninguém no cone, vai reto para onde o mouse aponta. Quem
+      // leva uma Faísca fica com uma Fagulha por 3 s: o próximo golpe de habilidade do Mago nele causa +6 e a consome.
       basico: { nome: "Faísca", tecla: "Botão esquerdo", preparo: 0.05, rec: 0.22, vel: 300, alcance: 175, dano: 4,
-        empurrao: 50, atordoa: 0.12, mover: 0.75 },
+        empurrao: 50, atordoa: 0.12, mover: 0.75, assist: { cone: 15 }, curva: 14, fagulha: { duracao: 3, bonus: 6 } },
       bola: { nome: "Bola de Fogo", tecla: "Botão direito", custo: 30, recarga: 1.5, preparo: 0.18, rec: 0.2,
         alcance: 180, vel: 480, raio: 24, dano: 13, empurrao: 200, atordoa: 0.5, chao: { duracao: 2, tique: 3 },
         pausa: 50, pausaPorAbate: 6, pausaMax: 85, tremor: 0.3, tremorPorAbate: 0.03, tremorMax: 0.5 },
@@ -132,12 +150,21 @@ export const VARIANTES = {
   },
 };
 
-// As ordens coletivas das tropas aliadas (teclas 1, 2, 3).
+// As ordens das tropas aliadas (teclas 1, 2, 3; no modo de comando, o botão direito). Cada ordem tem uma âncora e uma
+// coleira: quem luta perto não se afasta mais que `coleira` px da âncora; quem atira, `coleiraLonge`, e escolhe alvos
+// até onde alcança de lá. Acompanhar: a âncora é o herói (os soldados em volta, os arqueiros atrás dele, do lado
+// oposto aos inimigos). Defender aqui: a âncora é o ponto (os soldados em volta, os arqueiros atrás). Atacar: sem
+// âncora; os soldados vão aos inimigos mais perto e os arqueiros avançam até a distância de tiro. Atacar um alvo (o
+// botão direito num inimigo, no modo de comando): todos os selecionados nele; quem luta perto e está trancado por outro
+// inimigo luta com ele; o alvo derrubado, fugido ou a mais de `coleiraAlvo` px de onde a ordem foi dada por `perdeAlvo`
+// s encerra a ordem, e cada um volta à ordem que tinha. Uma ordem com âncora longe (mais que a coleira + `desloca`)
+// faz a tropa ir até lá sem parar para lutar: é como tirar um grupo do caminho de uma ameaça.
 export const ORDENS = {
-  acompanhar: { nome: "Acompanhar", tecla: "1", engaja: 75, engajaHeroi: 100 },
-  atacar: { nome: "Atacar", tecla: "2" },
-  defender: { nome: "Defender aqui", tecla: "3", engaja: 85, coleira: 120 },
+  acompanhar: { nome: "Acompanhar", tecla: "1", coleira: 90, coleiraLonge: 50 },
+  atacar: { nome: "Atacar", tecla: "2", coleiraAlvo: 280, perdeAlvo: 2 },
+  defender: { nome: "Defender aqui", tecla: "3", coleira: 70, coleiraLonge: 25 },
 };
+export const DESLOCA = 30;
 
 // Os contingentes do encontro normal (1×): 42 aliados e 94 inimigos em duas levas (≈ 137 com o herói). A segunda leva
 // entra pela direita aos 30 s, ou antes, se a primeira cair a 20%: é ela que traz o campeão.
@@ -151,8 +178,8 @@ export const CONTINGENTES = {
 // frente (na vertical; os blocos da borda de cima ou de baixo, para os lados), a `ALA` px uma da outra, sem sair do
 // campo; nos grupos espalhados, cada grupo cresce no próprio lugar. Líder, campeão e porta-estandarte não se
 // multiplicam; a vida e o dano de cada um não mudam. Com 4×, as alas de fora (a mais de `BATALHA.alaPerto` do herói)
-// começam defendendo o próprio lugar e as de perto o acompanham: a linha fica inteira em vez de correr toda para ele.
-// 4× é experimental (o limite medido está no 30, R3).
+// começam com a ordem Atacar (lutam na frente delas) e as de perto o acompanham: a linha inteira entra na luta em vez de
+// correr toda para ele (Campo Livre 4; na v3 as de fora defendiam e ficavam paradas). 4× é experimental (30, R3).
 export const ESCALAS = { 1: { nome: "1× (o encontro normal)" }, 2: { nome: "2×" }, 4: { nome: "4× (experimental)" } };
 export const ALA = 130;
 export const ESPECIAIS = ["lider", "campeao", "estandarte"];
@@ -197,7 +224,7 @@ export const ENCONTROS = {
   },
   capitao: {
     nome: "O Capitão e a retaguarda",
-    descricao: "Uma linha de soldados protege Harg, o Capitão, e a guarda dele; atrás, uma retaguarda de 22 arqueiros atira do posto. Harg vem atrás de você: salta no círculo vermelho marcado no chão e reúne soldados para carregar pela faixa; um golpe forte na preparação desfaz os dois, e depois de cada um ele fica 1 s levando +50% de dano.",
+    descricao: "Uma linha de soldados protege Harg, o Capitão, e a guarda dele; atrás, uma retaguarda de 22 arqueiros. Harg enfrenta você quando você está perto ou o fere; longe, vai para as suas tropas (os arqueiros primeiro). Ele salta no círculo vermelho marcado no chão, gira o machado quando o cercam e carrega pela faixa; um golpe forte na preparação desfaz cada um, e logo depois ele fica firme por 2,5 s.",
     regra: "Enquanto Harg estiver de pé, ninguém foge. Se ele cair, a tropa a até 150 px dele foge do campo e o resto se abala por 3 s; a batalha continua até restarem 20%, e esses fogem. Aos 40 s chega um reforço pela direita.",
     heroi: [300, 280],
     aliados: [["soldado", 30, 262, 280, 4], ["arqueiro", 12, 200, 280, 2]],
@@ -208,10 +235,29 @@ export const ENCONTROS = {
       ["soldado", 12, 940, 160, 2, "reforco", 1]],
     levas: [{ id: 1, t: 40, quando: 0.15, x: 940, y: 160, aviso: "Um reforço do Capitão chega pela direita." }],
   },
+  // A horda (Campo Livre 4): ondas de gente frágil, ao estilo musou, para o herói derrubar em quantidade. Nas escalas
+  // 2× e 4×, cada onda também se multiplica.
+  horda: {
+    nome: "A horda",
+    descricao: "Você e as tropas no meio do campo; a cada 9 s, uma onda de 60 soldados comuns (um veterano a cada dez) chega por um lado (leste, norte, oeste, sul), durante 100 s.",
+    regra: "Enquanto vierem ondas, ninguém foge. Depois da última, com 20% dos inimigos de pé, o resto foge. Nas escalas 2× e 4×, as ondas também dobram ou quadruplicam (no máximo 1200 combatentes no campo).",
+    heroi: [480, 280],
+    aliados: [["soldado", 30, 486, 280, 5], ["arqueiro", 12, 480, 200, 6]],
+    grupos: { leste: { ativa: 2 } },
+    inimigos: [["soldado", 40, 820, 280, 4, "leste"], ["veterano", 4, 790, 280, 1, "leste"]],
+    levas: [],
+    ondas: { cada: 9, n: 60, ate: 100, lados: ["oeste", "norte", "leste", "sul"] },
+  },
 };
 
+// A horda: a tecla H (para testar batalhas maiores) e as ondas do encontro "A horda". `n`: a quantidade padrão da tecla;
+// `distancia`: a que distância do herói, na direção do mouse; `limite`: o máximo de combatentes no campo (medido:
+// ~660 a 60 qps; ~1400 a 53 qps com quadros de 33 ms, por isso 1200).
+export const HORDA = { n: 60, distancia: 220, limite: 1200, veteranos: 0.1 };
+
 export const BATALHA = {
-  alaPerto: 100,      // com 4×, as alas a até 100 px do herói (ao longo da frente) o acompanham; as outras defendem
+  reacaoAviso: 0.3,  // as nossas tropas saem de uma área anunciada de ameaça depois de 0,3 s dela no chão
+  alaPerto: 100,      // com 4×, as alas a até 100 px do herói (ao longo da frente) o acompanham; as outras atacam
   formacao: 2.5,      // os inimigos esperam em formação antes de avançar
   fugaQuando: 0.2,    // com 20% ou menos dos inimigos de pé, o resto foge
   fugaDura: 2.5,      // depois disso, a vitória

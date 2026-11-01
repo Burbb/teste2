@@ -3,7 +3,7 @@
   "erros": [],
   "camera": {
     "sem_shift_mouse_desloca_px": 157.38,
-    "com_shift_mouse_desloca_px": 0.06,
+    "com_shift_mouse_desloca_px": 0.05,
     "com_shift_calma_final": 0,
     "arrasto_camera_mexeu_px": 0,
     "arrasto_calma": 0,
@@ -16,7 +16,7 @@
     "golpe_varreduras": 1,
     "golpe_basicos_durante_shift": 0,
     "golpe_shift_camera_px": 4.21,
-    "golpe_saida_maior_passo_px": 5.16,
+    "golpe_saida_maior_passo_px": 5.13,
     "pausado_camera_px": 0,
     "pausado_selecionados": 42,
     "pausa_saida_maior_passo_px": 2.89,

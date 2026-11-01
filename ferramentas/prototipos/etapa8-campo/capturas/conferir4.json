@@ -1,0 +1,62 @@
+{
+  "alvo": {
+    "arqueiros": 12,
+    "noAlvo": 12,
+    "soldadosNoAlvo": 0,
+    "placar": "1Acompanhar302Atacar03Defender aqui0Alvo: veterano12",
+    "faixa": "Atacar veterano: 12 selecionados. Derrubado, voltam à ordem de antes.",
+    "depois": {
+      "comAlvo": 0,
+      "ordens": [
+        "acompanhar"
+      ],
+      "registro": [
+        "Ordem de atacar Veterano encerrada: derrubado."
+      ]
+    }
+  },
+  "golpe": {
+    "vida": 221,
+    "golpe": {
+      "ang": 0.008844831040783261,
+      "t": 0.06666666666666667,
+      "dur": 0.6499999999999999,
+      "forca": 1,
+      "sem": false
+    },
+    "borda": "ver dir",
+    "numeros": [
+      30
+    ],
+    "dano": 30
+  },
+  "erros": [],
+  "horda": [
+    {
+      "janela": "1920×945",
+      "combatentes_max": 661,
+      "qps": 59.7,
+      "quadro_p95": 16.7,
+      "quadro_max": 33.4,
+      "sim_media": 2.11,
+      "sim_p95": 5.2,
+      "desenho_media": 2.8,
+      "desenho_p95": 4.8,
+      "derrubados_heroi": 566,
+      "maior_golpe": 81
+    },
+    {
+      "janela": "1280×720",
+      "combatentes_max": 660,
+      "qps": 59.41,
+      "quadro_p95": 16.8,
+      "quadro_max": 50,
+      "sim_media": 2.37,
+      "sim_p95": 5.1,
+      "desenho_media": 2.51,
+      "desenho_p95": 4.9,
+      "derrubados_heroi": 412,
+      "maior_golpe": 87
+    }
+  ]
+}

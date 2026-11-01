@@ -1,10 +1,280 @@
 # 30 — Etapa 8: o combate em campo livre (herói em tempo real e tropas pequenas)
 
-**31/10/2026 (rodada 1) e 01/11/2026 (rodadas 2 e 3).** A rodada 3 (Campo Livre 3: a câmera parada no modo de
-comando, o Capitão que enfrenta o herói, as escalas 1×, 2× e 4× e duas habilidades novas por herói) vem primeiro; depois
+**31/10/2026 (rodada 1) e 01/11/2026 (rodadas 2 a 4).** A rodada 4 (Campo Livre 4: o ataque básico assistido, o
+impacto dos acertos, o Capitão perigoso, os arqueiros e as ordens, a horda e as intenções de progressão) vem primeiro;
+depois a rodada 3 (Campo Livre 3: a câmera parada no modo de
+comando, o Capitão que enfrenta o herói, as escalas 1×, 2× e 4× e duas habilidades novas por herói); depois
 a rodada 2 (Campo Livre 2: números de dano, o líder inimigo, o modo de comando e a seleção, a leitura do choque, três
 encontros e quatro versões de habilidade); por fim as seções 0 a 14, a rodada 1 (Campo Livre 1). **A direção foi
 aprovada pelo Jean para continuar no protótipo, sem integração.**
+
+## Rodada 4 (01/11/2026): Campo Livre 4
+
+**O pedido do Jean** (depois de jogar a v3, que ele aprovou como direção: "batalhas maiores ficaram mais divertidas"):
+preservar o protagonista poderoso varrendo tropas e melhorar quatro pontos, nesta ordem: o ataque básico (prazeroso e
+assistido, útil mesmo com o recurso cheio), o impacto dos acertos (sincronizado, a direção e o peso do golpe no herói,
+reação visual separada da interrupção), o Capitão (forte, rápido, perigoso para o herói e para o campo, com preparação
+legível e janelas de resposta) e a utilidade das tropas e ordens (arqueiros que participam, ordens distintas, atacar um
+alvo). Durante a rodada, acrescentou: **um modo com muito mais tropa, ou poder acrescentar quantidades maiores para
+testar, pela sensação de destruir várias tropas, "pique Dynasty Warriors, só que de cima"**. Também pediu para registrar
+intenções de progressão (R4.7), sem implementar campanha. Vídeos só sob pedido (nenhum nesta rodada).
+
+**Em teste nesta rodada (nada aprovado ainda).** A v1 continua em `/v1/`; a v2 está em `31ea8778` e a v3 em `298dc4bc`.
+
+| Seção | O que tem |
+|---|---|
+| R4.1 | O ataque básico assistido |
+| R4.2 | O impacto: sincronia, reação e interrupção, o golpe no herói |
+| R4.3 | O Capitão: o que travava e o que mudou |
+| R4.4 | Os arqueiros e as alas |
+| R4.5 | As ordens |
+| R4.6 | A horda (o pedido do meio da rodada) |
+| R4.7 | Progressão: intenções registradas (não implementado) |
+| R4.8 | Verificação: o que foi conferido agora e o que foi reaproveitado |
+| R4.9 | Limitações conhecidas e o que precisa da avaliação do Jean |
+
+### R4.1. O ataque básico assistido
+
+**A assistência** (`alvoAssistido` em `sim.js`, a mesma função que desenha a marca): o alvo é o inimigo vivo mais perto
+da direção do mouse, dentro do alcance, num cone (Faísca: 15° para cada lado, até 175 px; Corte: 40°, até 36 px); entre
+dois quase na mesma direção, o mais perto. Sem ninguém no cone, o golpe sai para onde o mouse aponta. **A tela marca o
+alvo** com dois cantos claros no pé (só fora do modo de comando).
+
+- **Faísca:** sai para o alvo e o persegue, virando no máximo 14 rad/s (anda até 30 px a mais pela curva). **Se o alvo
+  cai no caminho, ela segue reta no último rumo e só acerta quem tocar até o fim do alcance; nunca procura outro alvo**
+  (que poderia estar longe, fora do que o jogador apontou).
+- **Corte:** vira para o alvo; se ele está além de 70% do arco, o herói dá **um passo de até 12 px na preparação
+  (0,07 s)**, parando antes de encostar. **Nunca** para trás (o alvo está no cone do mouse), nunca contra a direção em que
+  o jogador anda (o passo some se as teclas apontam para o outro lado), nunca através de quem está no meio (o golpe vai
+  nesse, sem passo). No máximo 12 px a cada 0,27 s (≈ 44 px/s, menos que andar, 72): não vira transporte. O passo
+  termina no contato (sem deslizar além). Segurar o botão continua repetindo.
+- **A função de cada um**, poucas e coerentes: **o Corte** ficou um combo de 3, 4 e o arremate de 9 (era 3, 3, 8) num
+  arco um pouco mais largo (120°; o arremate, 160° e 28 px), o que derruba um pequeno grupo de soldados no terceiro
+  golpe; **a Faísca** deixa uma **Fagulha** por 3 s (um pontinho laranja no alvo): o próximo golpe de habilidade do Mago
+  nele (Bola, Corrente, Piscar, Gelo ao surgir) causa +6 e a consome. É o motivo para atirar mesmo com a Mana cheia:
+  faíscas antes de uma Bola num veterano (32 de vida) o derrubam (4 + 13 + 6 + o fogo). O recurso continua subindo
+  como antes (a Fúria por acerto), agora como recompensa a mais.
+
+### R4.2. O impacto: sincronia, reação e interrupção, o golpe no herói
+
+**A sincronia, conferida:** no mesmo passo em que um golpe acerta (o contato da arma, a chegada do projétil, o pouso),
+saem juntos o dano na vida, o evento do número (o mesmo valor que saiu da vida), o clarão no alvo, a faísca do acerto e
+o som; a barra de vida e o número aparecem no quadro seguinte. Nenhum caminho novo desta rodada mudou isso (os testes
+de "número = vida que saiu" continuam, e há um novo para o herói).
+
+**Reação visual separada da interrupção mecânica:**
+- **Tranco:** todo acerto em herói e em ameaça (o Capitão, o campeão, o porta-estandarte) dá um tranco de 1 px (fraco)
+  ou 2 px (forte) na direção do golpe, por 0,08 a 0,12 s, **só no desenho**: o Capitão reage a uma faísca sem parar.
+- **Firme:** uma ameaça que tem uma preparação interrompida fica **firme** por 2,5 s (o campeão, 2 s): nesse tempo o
+  golpe forte só a faz reagir ("firme" escrito sobre ela, o anel do Capitão fica claro e a barra dele diz "Firme"). Nada
+  de cadeia de interrupções. Medido: com uma Bola de Fogo a cada recarga por 10 s, o Capitão fica atordoado menos de 20%
+  do tempo (teste).
+- **Os soldados** continuam recuando, estremecendo, caindo e sendo arremessados como antes.
+
+**O golpe no herói** (direção e peso, sem mais tremor): uma **marca vermelha no anel do herói, do lado de quem bateu**
+(mais longa e grossa quanto mais pesou, some em 0,35 a 0,65 s); o **número vermelho** do dano que ele levou, nos golpes
+de 6 ou mais (o valor que saiu da vida); nos golpes de 15 ou mais, a **borda da tela do lado do golpe fica vermelha** por
+um instante (some em 0,3 s) e toca o choque. O tremor e os controles dele não mudaram, e o modo de comando continua
+estável (R4.8).
+
+### R4.3. O Capitão: o que travava e o que mudou
+
+**A investigação, antes de mexer** (v3, `ferramentas/lider.mjs` com o tempo por estado, jogador automático médio):
+
+| v3 | Vivo | A menos de 40 px do herói | Onde o tempo foi |
+|---|---|---|---|
+| contra o Guerreiro | 48 s | 42 s | **parado 23 s** (ao lado do herói, esperando a recarga de 2,4 s do machado), machado 10 s, atordoado 4 s, andando 6 s |
+| contra o Mago | 40 s | 2 s | andando 15 s, **cravado/ofegante 8 s**, reunir e carga 7 s, arremetida e no ar 6 s, machado 1 s |
+
+Ou seja: perto do Guerreiro ele esperava mais do que batia; longe do Mago passava o tempo andando e se recuperando; e o
+dano era baixo (26 no machado, 20 na Arremetida). Contra as tropas, mirava o herói 92 a 97% do tempo (o foco da v3), o
+que deixava o campo livre para elas.
+
+**O que mudou** (números em `conteudo.js`, regras em `sim.js`, `decidirLider`):
+- **A escolha (foco revisto):** duela com o herói quando ele está a até 150 px ou o feriu nos últimos 4 s (o herói
+  chegando perto passa à frente da escolha, como uma provocação); senão, vai no **grupo nosso mais denso a até 170 px**
+  (4 ou mais a 40 px uns dos outros; **arqueiro vale 1,5**); senão, persegue o herói a até 320 px; senão, a tropa mais
+  perto. Cada escolha dura pelo menos 3 s (1 s quando não há grupo para atacar). A barra diz "Atrás de você" ou "Nas
+  suas tropas", e a faixa avisa quando muda.
+- **Mais rápido e mais forte:** andar 40 → 54 (o herói anda 68 a 72: alcançar exige as habilidades); machado 30 no
+  herói (era 26), arco de 160° e 36 px, **recarga 1,6 s** (era 2,4), anunciado 0,8 s.
+- **Rodopio (novo):** quando 3 ou mais dos nossos estão colados nele (o herói conta 2), um círculo de 46 px anunciado
+  0,75 s: 34 no herói, 14 nas tropas. Abre caminho e pune quem se amontoa em volta dele, também enquanto persegue.
+- **Arremetida** mais longa (até 220 px, recarga 6 s, 0,7 s anunciada, 30 no herói) e **também no meio de um grupo**
+  das nossas tropas (os arqueiros recuam do machado, não de um salto). Ao cair, 0,5 s cravado (+50%) e **o machado
+  seguinte se anuncia em 0,6 s** (o golpe de sequência).
+- **Carga** a cada 8 s (30 no herói, 16 nas tropas), ofegante 0,9 s depois (era 1,2).
+- **Nas tropas:** 14 por golpe: dois derrubam um soldado nosso, um derruba um arqueiro. Vida 480 → 500.
+- **Mantido:** a preparação de tudo anunciada no chão (nada corrige a direção depois de marcado; a Arremetida mira o
+  caminho do herói no começo e fica), golpe fraco não o faz cambalear, golpe forte interrompe (com a janela firme
+  depois), os soldados dele abrem caminho, o machado através da tropa no caminho do herói.
+
+| v4, três sementes | Resultado | Capitão vivo | A < 40 px | Parado | Machado (no herói) | Rodopio | Arremetida (no herói) | Dano no herói | Dano nas tropas |
+|---|---|---|---|---|---|---|---|---|---|
+| Guerreiro, jogador forte | 3 vitórias, vida 140 a 205 | 43 a 55 s | 30 a 36 s | 15 a 20 s | 13 a 14 (0 a 1) | 4 a 5 | 2 a 3 (1 a 2) | 30 a 94 | 450 a 520 |
+| Mago, jogador forte | 3 vitórias, vida 80 a 140 | 36 a 40 s | 3 a 5 s | 1 a 3 s | 1 a 2 (0) | 2 | 5 a 6 (1 a 3) | 30 a 90 | 340 a 410 |
+| Guerreiro, jogador médio | **2 derrotas**, 1 vitória (vida 23) | 31 a 55 s | 23 a 46 s | — | 9 a 19 (4) | 2 a 3 (1 a 2) | 1 a 3 (1 a 2) | 218 a 248 | 310 a 340 |
+| Mago, jogador médio | 3 vitórias, vida 110 a 170 | 36 a 48 s | 0,5 a 11 s | — | 1 a 6 (0) | 1 | 5 a 6 (0 a 1) | 0 a 30 | 240 a 340 |
+
+O jogador médio vê os avisos com 0,35 s de atraso e não recua; contra ele, o Capitão vence o Guerreiro. Isso é de
+propósito (o pedido: um adversário capaz de enfrentar o protagonista), mas é o primeiro ponto para o Jean avaliar
+(R4.9). O jogador automático agora desvia quando está dentro do arco desenhado (antes, só a 34 px do centro, menos que
+o alcance novo).
+
+### R4.4. Os arqueiros e as alas
+
+**A investigação:** medindo "arqueiro sem alvo e parado" (o tempo entre um tiro e outro não conta), só a **retaguarda
+do Capitão** ficava parada: 42% do tempo em 1× e **71% em 4×** na v3 (ela só mirava quem estivesse a até 180 px do posto,
+e a frente luta a 200 a 270 px dele). Os outros arqueiros tinham alvo, mas duas regras os seguravam: os inimigos
+"voltavam para trás da linha" quando o alvo estava longe (em 4×, as alas de fora iam para o meio e esperavam), e os
+nossos, acompanhando o herói, só miravam a até 75 px deles mesmos.
+
+**O que mudou:** o arqueiro **avança até a distância de tiro** (90% do alcance, na linha do alvo) **sem passar dela e
+sem sair da coleira** (a da ordem, ou o posto); procura alvo até 420 px quando nada o prende; recua de quem chega perto
+(também dentro da coleira; encurralado na beira dela, fica e atira). A retaguarda pode **sair até 90 px do posto** para
+alcançar a frente e, com o Capitão derrubado, deixa o posto. Em 4×, as alas de fora começam com **Atacar** (lutam na
+frente delas) em vez de Defender (que as deixava paradas esperando).
+
+| Sem alvo e parados (5 a 40 s, jogador médio) | v3, retaguarda | v4, retaguarda | Tiros por arqueiro × minuto (retaguarda) |
+|---|---|---|---|
+| O Capitão, 1× | 42% | 25% | 14 → 18 |
+| O Capitão, 4× | 71% | 40% | 11 → 16 |
+
+Nos outros encontros e nas nossas tropas, 0 a 2% nas duas versões. A retaguarda ainda espera quando a luta está a mais
+de 240 px do posto: é a função dela (proteger o fundo), agora sem ficar fora da batalha inteira.
+
+### R4.5. As ordens
+
+**Antes de acrescentar ordens, as três ficaram distintas** (cada uma com uma âncora e uma coleira; `ORDENS` em
+`conteudo.js`, `ancoraDe` e `alvoValido` em `sim.js`):
+
+| Ordem | Âncora | Quem luta perto | Quem atira | Para quê |
+|---|---|---|---|---|
+| **1 Acompanhar** (o padrão) | o herói | luta com quem está a até 90 px do herói | fica 30 px atrás do herói (do lado oposto aos inimigos) e atira em quem alcança de lá (até 50 px dela + o alcance) | avançar junto, arqueiros atrás da infantaria |
+| **2 Atacar** | nenhuma | vai aos inimigos mais perto | avança até a distância de tiro do alvo | a luta livre, a linha inteira |
+| **3 Defender aqui** | o ponto | luta com quem chega a até 70 px do ponto | fica 30 px atrás do ponto e atira em quem alcança dali | segurar uma ala, preservar uma posição |
+| **Atacar um alvo** (novo) | o alvo | vai nele; trancado por um inimigo colado no caminho, luta com esse; com o alvo cheio (vagas), luta com quem está a 30 px dele | atira só nele, avançando até o alcance | concentrar fogo no porta-estandarte, no Capitão, num veterano |
+
+- **Ir sem parar:** uma ordem cuja âncora está longe (mais que a coleira + 30 px) faz a tropa ir até lá **sem parar para
+  lutar** até chegar perto (60% da coleira). É como tirar um grupo do caminho de uma ameaça.
+- **Atacar um alvo** (no modo de comando, com Shift ou pausado): **botão direito num inimigo** (no vazio continua sendo
+  "Defender ali") ou **2 com o mouse num inimigo**. Vale para a seleção (sem seleção, para todos). Na tela: uma **mira
+  vermelha** em volta do alvo, e no placar "Alvo: porta-estandarte 12". **Quando acaba:** o alvo derrubado ou fugido, ou
+  mais de 280 px longe de onde a ordem foi dada por 2 s, encerra a ordem para o grupo todo, e **cada um volta à ordem que
+  tinha**; a faixa diz o motivo.
+- **As tropas sabem ler o chão:** dentro de uma área anunciada pelo Capitão ou pelo campeão (o arco, o círculo, a
+  faixa) há 0,3 s ou mais, saem dela, deixando o que faziam (mais devagar que o herói: nem todas escapam). Sem isso, o
+  Capitão matava quase todo o exército que acompanhava o herói no duelo.
+- **Preservado:** F1/F2 por tipo, F4 todos (F3 continua sem tipo), o arrasto, a câmera parada com Shift, as ordens só
+  para os selecionados, o controle direto do herói.
+
+**As consequências, medidas** (`ferramentas/ordens.mjs`: a mesma batalha e o mesmo jogador automático forte, só as
+ordens mudam; um roteiro dá as ordens como uma pessoa daria). Na primeira batalha o herói faz quase tudo e as ordens mudam
+pouco (0 a 7 perdas em qualquer caso). No Capitão, elas decidem:
+
+| O Capitão, jogador forte | Guerreiro: resultado · perdas de 42 · arqueiros vivos | Mago: resultado · perdas · arqueiros vivos |
+|---|---|---|
+| Sem ordens (acompanham) | derrota (o herói caiu aos 51 s) · 39 · 3 | vitória · 26 · 7 |
+| Atacar aos 6 s (o padrão do jogador automático) | vitória · 30 · 12 | vitória · 20 · 10 |
+| Os arqueiros no Capitão | vitória · 38 · 4 | vitória · 21 · 12 |
+| Quem está perto dele recua quando ele chega | vitória · 31 · 8 | vitória · 40 · 2 |
+| O exército segura um ponto a 250 px dele enquanto ele duela com o herói | derrota · 34 · 8 | **vitória · 1 · 12** |
+
+Leitura: **mandar as tropas para longe do duelo salva o exército** quando o herói segura o Capitão (o Mago: 1 perda);
+com o Guerreiro automático, que larga o Capitão para ir aos grupos, a mesma ordem coloca o ponto no meio do exército
+inimigo e piora. **Não há ordem mágica; há consequências**, a favor e contra, e depender delas não é obrigatório (Atacar
+sozinho já vence). Os números variam bastante de uma estratégia para outra porque a batalha é caótica (uma semente):
+comparam consequências, não medem a dificuldade para uma pessoa.
+
+**O que as tropas fazem além de derrubar** continua no fim da batalha (inimigos ocupados, dano que seguraram, flechas,
+e agora "flechas barradas" e o dano do Capitão nelas). **Mudança honesta:** com o herói parado e as tropas sozinhas, na
+primeira batalha elas derrubam 4 ou 5 (eram 11 na v3), porque os arqueiros inimigos agora avançam e atiram e o Acompanhar
+segura os soldados perto do herói; com Atacar elas aguentam mais (47 s contra 38) e ocupam quase o dobro.
+
+### R4.6. A horda (o pedido do meio da rodada)
+
+- **A tecla H** (em qualquer encontro, também pausado): uma **horda de inimigos comuns** (um veterano a cada dez) entra
+  em bloco **na direção do mouse**, a 220 px do herói (ou na borda), já lutando. A quantidade fica nas opções ("Horda (H)",
+  de 20 a 200, começa em 60). Os inimigos chamados entram na contagem da vitória.
+- **O encontro "A horda":** o herói e as tropas no meio do campo; a cada 9 s, por 100 s, uma onda de 60 (× a escala:
+  120 em 2×, 240 em 4×) chega por um lado (oeste, norte, leste, sul). Enquanto vêm ondas, ninguém foge. É o modo "muita
+  gente frágil para derrubar de uma vez".
+- **Limite:** no máximo **1200 combatentes** no campo (a tecla avisa quando o campo está cheio). Medido no navegador
+  (Chromium sem janela, desenho na CPU, o computador do Jean):
+
+| Situação | Combatentes | Qps | Quadro p95 / máx. | Simulação média / p95 | Desenho média / p95 |
+|---|---|---|---|---|---|
+| Horda 4× + 3 × H, 1920×945 | 661 | 59,7 | 16,7 / 33 ms | 2,1 / 5,2 ms | 2,8 / 4,8 ms |
+| Horda 4× + 3 × H, 1280×720 | 660 | 59,4 | 16,8 / 50 ms | 2,4 / 5,1 ms | 2,5 / 4,9 ms |
+| Horda 4× + 12 × H de 200 (antes do limite) | 1406 | 53 | 33 / 67 ms | 5,1 / 14 ms | 4,9 / 7,8 ms |
+
+  Por isso o limite ficou em 1200 (não medido exatamente nesse ponto; entre os dois acima).
+- **A sensação:** o Guerreiro automático derruba 580 a 620 na horda em 1× e cerca de 2500 em 4×, com até 86 (1×) e 159
+  (4×) num golpe só (o Salto Esmagador); em 20 s de horda 4× no navegador, 412 a 566. O Mago automático pode perder (é de
+  sobrevivência). Captura: `capturas/cl4-horda-4x-1920.png`.
+
+### R4.7. Progressão: intenções registradas (não implementado)
+
+Pedido do Jean para orientar o design futuro, sem implementar campanha, recrutamento, economia nem heróis novos, e sem
+fixar uma curva antes de estudar a campanha:
+
+- **Batalhas massivas são parte importante da experiência.**
+- **O começo já deve permitir atingir vários soldados com habilidades** (o herói nasce capaz de golpes em área).
+- **A progressão pode aumentar** a quantidade, a diversidade, a resistência de algumas tropas e a presença de heróis
+  aliados e inimigos.
+- **Soldados frágeis continuam existindo nas batalhas avançadas** (a sensação de varrer gente não some com o progresso).
+- **Veteranos, elites e heróis** são quem oferece resistência e confronto mais prolongado.
+- **Nem toda batalha precisa ser maior que a anterior:** confrontos menores e intensos também têm lugar.
+
+### R4.8. Verificação: o que foi conferido agora e o que foi reaproveitado
+
+**Conferido nesta rodada:**
+- **37 testes da simulação** (`node --test testes/sim.test.mjs`): os 27 da v3 (sete ajustados à mudança de regra, cada
+  um explicado no próprio teste: a horda fora do laço "todo encontro é vencido" (ela é de sobrevivência), a escolha do Capitão no lugar do foco, as alas de fora atacando em 4×, o grupo nosso
+  entrando na lista antes da escolha do Capitão, os grupos espalhados vencíveis só pelas tropas perdendo mais de um terço,
+  o Capitão vencido pelo jogador forte, as tropas sozinhas conferidas com Atacar) e mais 10: a assistência (o da frente e
+  não o do lado; nada fora do cone; a Faísca persegue; o alvo cai e ela não troca de alvo), o Corte (o passo de até
+  12 px; nenhum passo andando para trás, através de quem está no meio, ou para trás do herói; o combo 3, 4, 9), a
+  Fagulha (+6 uma vez), o golpe no herói (o valor = a vida que saiu, a direção, o tranco), o Capitão firme (a segunda
+  interrupção na janela não acontece; depois dela, volta; uma chuva de Bolas o deixa atordoado menos de 20% do tempo),
+  o Capitão nas tropas (escolhe os arqueiros longe do herói e derruba ao menos metade), os arqueiros dos dois lados
+  atirando (85% ou mais dos que existiram 15 s, em 1×, 2× e 4×; a retaguarda dentro do posto), as ordens (arqueiros atrás
+  da infantaria no Acompanhar; Defender longe vai sem parar e segura), atacar um alvo (só nele; derrubado, voltam à ordem
+  de antes; longe por 2 s, encerra) e a horda (dentro do campo, na contagem, o limite, as ondas no tempo).
+- **No navegador** (`ferramentas/conferir4.mjs` e `conferir3.mjs camera`): a ordem de atacar um alvo com teclado e mouse
+  de verdade (pausado, F2, botão direito num veterano: os 12 arqueiros nele, os soldados não, o placar "Alvo: veterano
+  12"; derrubado, todos de volta a Acompanhar na hora); o golpe do Capitão no herói (30 de dano, o número 30, a borda
+  direita, a marca no anel do lado dele); a horda nas duas janelas e perto do limite; **a câmera e o modo de comando de
+  novo, sem regressão** (os mesmos números da R3.1: 0,05 px com Shift, 0 px no arrasto, a seleção igual ao retângulo, 0
+  golpes, maior passo de 7 px ao sair). Sem erros no console.
+- **Batalhas sem tela:** `lider.mjs` (forte e médio, 1×), `ordens.mjs` (as cinco estratégias), as comparações com a v3
+  (contribuição das tropas, arqueiros parados) e a horda em 1× e 4×.
+- **O jogo não mudou** (`rpg/` e `tests/` intocados): suíte, gabarito e pyflakes rodados de novo nesta rodada; a fumaça,
+  reaproveitada.
+
+**Reaproveitado:** o custo do 4× nos encontros normais (R3.3; a horda mediu mais que isso), a resposta comparada com a v1
+(o laço não mudou), as capturas da escolha e das habilidades da v3. **Sem vídeos.**
+
+**Capturas** (`capturas/cl4-*.png`): `cl4-alvo-ordem-1920` (a ordem dada, a mira vermelha, o placar),
+`cl4-golpe-no-heroi-1920` (o golpe do Capitão: a marca, o número, a borda) e `cl4-horda-4x-1920`.
+
+### R4.9. Limitações conhecidas e o que precisa da avaliação do Jean
+
+- **O Capitão vence o jogador automático médio com o Guerreiro** (2 de 3) e destrói tropas que ficam em volta do duelo
+  (240 a 520 de dano nelas por batalha). É o pedido, mas o ponto de equilíbrio para uma pessoa só se descobre jogando.
+  Os números a mexer: `danoHeroi` (30), `recarga` do machado (1,6 s), `rodopio`, `foco.grupo`.
+- **As tropas derrubam menos que na v3** nos encontros comuns (o herói assistido derruba mais rápido, os arqueiros
+  inimigos agora atiram, o Capitão caça tropas). As ordens mudam o resultado, mas só no Capitão de forma clara.
+- **A retaguarda do Capitão ainda espera** quando a luta está longe do posto (40% do tempo em 4×).
+- **A horda acima de ~700 combatentes** perde fluidez (1400: 53 qps, quadros de 33 ms); o limite está em 1200.
+- **A Fagulha e o passo do Corte** não foram medidos por uma pessoa: o passo pode parecer "puxar" o herói; o cone de 40°
+  é o número a mexer (`assist.cone`).
+- **O porta-estandarte, atrás da linha, quase nunca está na tela** quando o herói está na frente: a ordem de atacar um
+  alvo exige vê-lo (rolar a câmera não existe neste protótipo).
+- **Para o Jean avaliar:** (1) o básico ficou prazeroso? a marca do alvo ajuda ou atrapalha? o passo do Corte parece
+  natural? (2) dá para sentir cada acerto, e saber de onde veio e quanto pesou o golpe no herói? (3) o Capitão está forte
+  na medida, com janelas para responder? ele te alcança e ameaça o campo? (4) as ordens (principalmente atacar um alvo e
+  Defender longe) fazem diferença perceptível? (5) a horda e a tecla H dão a sensação de destruir exércitos?
 
 ## Rodada 3 (01/11/2026): Campo Livre 3
 

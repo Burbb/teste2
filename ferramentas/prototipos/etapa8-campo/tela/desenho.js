@@ -3,7 +3,7 @@
 // As áreas (os avisos do campeão, a preparação do herói, a prévia, os cortes) são pintadas pixel a pixel com a mesma
 // função `dentro` que decide quem é atingido: o que aparece é exatamente o que acerta.
 import { CAMPO, TIPOS } from "./conteudo.js";
-import { dentro, formaDaAcao } from "./sim.js";
+import { dentro, formaDaAcao, alvoAssistido } from "./sim.js";
 import { pousarCorpos, NUMEROS } from "./efeitos.js";
 
 export const BORDA = 70;   // o chão de fora do campo, que a câmera pode mostrar perto das bordas
@@ -114,7 +114,8 @@ const DIGITOS = {
   6: ["111", "100", "111", "101", "111"], 7: ["111", "001", "010", "010", "010"], 8: ["111", "101", "111", "101", "111"],
   9: ["111", "101", "111", "001", "111"], "!": ["1", "1", "1", "0", "1"],
 };
-const COR_NUMERO = { normal: "#ffffff", forte: "#ffd84a", critico: "#ff8a3a", fogo: "#ffa45a", sangue: "#ff6060" };
+const COR_NUMERO = { normal: "#ffffff", forte: "#ffd84a", critico: "#ff8a3a", fogo: "#ffa45a", sangue: "#ff6060",
+  sofrido: "#ff4040" };
 
 export function numeroPixel(g, texto, x, y, cor, esc = 1) {
   const pts = [];
@@ -192,7 +193,11 @@ export function desenhar(g, s) {
   g.drawImage(s.chao, -cx - BORDA, -cy - BORDA);
   g.drawImage(E.marcas, -cx, -cy);
   const h = m.heroi, rel = s.relogio;
-  const pos = (u) => [u.px + (u.x - u.px) * alfa, u.py + (u.y - u.py) * alfa];
+  // a posição interpolada, com o tranco do acerto (heróis e ameaças: 1 px no golpe fraco, 2 no forte, na direção dele)
+  const pos = (u) => {
+    const t = u.tranco, o = t ? (t.forte ? 2 : 1) * Math.min(1, t.t / 0.08) : 0;
+    return [u.px + (u.x - u.px) * alfa + (t ? Math.round(t.dx * o) : 0), u.py + (u.y - u.py) * alfa + (t ? Math.round(t.dy * o) : 0)];
+  };
 
   // ---- o chão: fogo, aura do estandarte, ordem, avisos, prévias
   for (const z of m.zonas) {
@@ -273,15 +278,41 @@ export function desenhar(g, s) {
     if (u.acao.tipo === "reunir") k = 1 - Math.max(0, u.acao.t) / u.def.carga.reunir;
     else if (u.acao.tipo === "carga") k = 1;
     else if (u.acao.tipo === "arremetida") k = u.acao.fase === "voo" ? 1 : 1 - Math.max(0, u.acao.t) / u.def.arremetida.preparo;
-    else k = 1 - Math.max(0, u.acao.t) / u.def.preparo;
+    else if (u.acao.tipo === "rodopio") k = 1 - Math.max(0, u.acao.t) / u.def.rodopio.preparo;
+    else k = 1 - Math.max(0, u.acao.t) / (u.acao.preparo || u.def.preparo);
     avisos.push(u.acao.forma);
     pintarForma(g, u.acao.forma, cx, cy, `rgba(220,40,30,${0.12 + 0.3 * k})`, "rgba(255,90,70,0.95)");
   }
   // o anel do líder inimigo, vermelho, como o dourado do herói
   if (m.lider && !m.lider.morto) {
     const [lx, ly] = pos(m.lider);
-    pintarForma(g, { tipo: "circulo", x: Math.round(lx), y: Math.round(ly), raio: 9 }, cx, cy, null, "rgba(255,70,50,0.8)", 0);
+    // firme (logo depois de ser interrompido): o anel fica claro, sinal de que agora o golpe forte não o segura
+    const firme = m.lider.firmeAte > m.t;
+    pintarForma(g, { tipo: "circulo", x: Math.round(lx), y: Math.round(ly), raio: 9 }, cx, cy, null, firme ? "rgba(255,220,200,0.9)" : "rgba(255,70,50,0.8)", 0);
     pintarForma(g, { tipo: "circulo", x: Math.round(lx), y: Math.round(ly), raio: m.lider.def.presenca }, cx, cy, null, "rgba(230,80,60,0.16)", 5);
+  }
+  // os alvos das ordens de atacar um alvo: uma mira vermelha em volta de cada um
+  const focos = new Set();
+  for (const u of m.lados[0]) if (u.ordem && u.ordem.alvoU && !u.ordem.encerrada && !u.ordem.alvoU.morto) focos.add(u.ordem.alvoU);
+  for (const a of focos) {
+    const [fx, fy] = pos(a), r = Math.round(a.raio + 5 + (Math.floor(rel * 4) % 2)), x = Math.round(fx) - cx, y = Math.round(fy) - 3 - cy;
+    g.fillStyle = "#15121a";
+    for (const [sx, sy] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) { g.fillRect(x + sx * r - 1, y + sy * r - 1, 3, 3); }
+    g.fillStyle = "#ff4a3a";
+    for (const [sx, sy] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) {
+      g.fillRect(x + sx * r - (sx > 0 ? 2 : 0), y + sy * r, 3, 1);
+      g.fillRect(x + sx * r, y + sy * r - (sy > 0 ? 2 : 0), 1, 3);
+    }
+  }
+  // o alvo do ataque básico (a assistência): dois cantos claros no pé de quem o golpe vai pegar
+  if (s.alvoBasico && !h.morto && s.mouse) {
+    const a = alvoAssistido(m, h, s.mouse.x, s.mouse.y);
+    if (a) {
+      const [ax, ay] = pos(a), x = Math.round(ax) - cx, y = Math.round(ay) - cy, r = Math.round(a.raio) + 2;
+      g.fillStyle = "#fff6dc";
+      g.fillRect(x - r, y + 1, 2, 1); g.fillRect(x - r, y, 1, 1);
+      g.fillRect(x + r - 1, y + 1, 2, 1); g.fillRect(x + r, y, 1, 1);
+    }
   }
   // a preparação do herói e os pontos de chegada
   const a = h.acao;
@@ -353,6 +384,7 @@ export function desenhar(g, s) {
     if (u.sangra) { g.fillStyle = "#c8282a"; g.fillRect(Math.round(x + 2) - cx, topo + 3 + (Math.floor(rel * 6 + u.id) % 4), 1, 1); }
     if (u.inspirado > 0 && Math.floor(rel * 5 + u.id) % 3 === 0) { g.fillStyle = "#ffe08a"; g.fillRect(Math.round(x - 2) - cx, topo + 1, 1, 1); }
     if (u.reuniao) { g.fillStyle = "#ff5a48"; g.fillRect(Math.round(x) - cx, topo - 4, 1, 2); g.fillRect(Math.round(x) - cx, topo - 1, 1, 1); }
+    if (u.fagulha > m.t) { g.fillStyle = Math.floor(rel * 8 + u.id) % 2 ? "#ffb15a" : "#fff1c4"; g.fillRect(Math.round(x - 1) - cx, topo - 2, 1, 1); }
     if ((u.atordoado > 0.15 || u.ofegante > 0) && (u.def.elite || u.tipo === "veterano")) {
       const t = rel * 8, top = Math.round(y - sp.ay) - cy - 2;
       g.fillStyle = "#f0cb62";
@@ -403,6 +435,18 @@ export function desenhar(g, s) {
     const sp = Q[h.nomeHeroi][0][poseHeroi(h)];
     const z = Math.round(h.z || 0);
     if (!h.morto) sombra(g, Math.round(x) - cx, Math.round(y) - cy, 9);
+    // o golpe que o herói levou: um arco vermelho no chão, do lado de quem bateu, mais longo e grosso quanto mais pesou
+    const gh = E.golpeHeroi;
+    if (gh && !h.morto && !gh.sem) {
+      const k = 1 - gh.t / gh.dur, meia = 0.45 + 0.7 * gh.forca, n = 10 + Math.round(10 * gh.forca);
+      g.fillStyle = `rgba(255,${Math.round(70 - 40 * gh.forca)},50,${(0.5 + 0.5 * gh.forca) * k})`;
+      for (let i = 0; i <= n; i++) {
+        const a = gh.ang - meia + (2 * meia * i) / n;
+        for (let r = 0; r < (gh.forca > 0.5 ? 2 : 1); r++) {
+          g.fillRect(Math.round(x + Math.cos(a) * (10 + r)) - cx, Math.round(y + Math.sin(a) * (10 + r) * 0.8) - cy, 1, 1);
+        }
+      }
+    }
     let img = h.virado > 0 ? sp.d : sp.e;
     if (h.flash > 0.03 && !h.morto) img = h.virado > 0 ? sp.bd : sp.be;
     if (h.invul > 0 && h.acao && h.acao.id === "investida") {

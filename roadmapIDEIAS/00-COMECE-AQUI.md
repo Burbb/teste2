@@ -9211,3 +9211,26 @@ foi automatizado.
   cada habilidade nova; batalhas sem tela em 1×, 2× e 4× com todos os kits; o Capitão em 1× e 4×. O jogo não mudou:
   suíte (804), gabarito e pyflakes; a fumaça, reaproveitada. Sem vídeos.
 - **Parado aqui:** o Jean joga a v3 e responde a R3.6 do 30.
+
+### 01/11/2026 (data do computador local) — Etapa 8: o Campo Livre 4 (protótipo, nada no jogo)
+
+- **Aprovado pelo Jean:** a direção da v3 ("batalhas maiores ficaram mais divertidas"); preservar o protagonista poderoso
+  varrendo tropas. **Pedido do meio da rodada:** um modo com muito mais tropa, ou poder acrescentar quantidades maiores
+  para testar ("pique Dynasty Warriors, só que de cima").
+- **Feito (em teste, nada aprovado):** a rodada 4 no [30](30-ETAPA8-CAMPO-LIVRE.md) e o protótipo, versão **Campo Livre
+  4**: o **básico assistido** (o inimigo mais perto da mira, marcado no pé; a Faísca persegue sem trocar de alvo e deixa
+  uma Fagulha de +6 para a próxima habilidade; o Corte dá um passo curto, nunca para trás nem através da multidão, combo
+  3/4/9); o **impacto** (tranco visual sem parar, ameaça firme 2,5 s depois de interrompida, o golpe no herói com a
+  direção no anel, o número vermelho e a borda da tela); o **Capitão** investigado (na v3 passava 23 de 48 s parado ao
+  lado do Guerreiro e 8 s cravado contra o Mago) e refeito (54 de velocidade, machado de 30 a cada 1,6 s, Rodopio,
+  Arremetida também nas tropas, golpe de sequência; duela perto, caça tropas longe, arqueiros primeiro); os **arqueiros**
+  avançando até a distância de tiro (a retaguarda parada caiu de 71% para 40% do tempo em 4×); as **ordens** com âncora e
+  coleira distintas, a ida sem parar, as tropas saindo das áreas anunciadas e o novo **atacar um alvo** (botão direito ou
+  2 num inimigo, no modo de comando); a **horda** (tecla H, encontro "A horda", até 1200 combatentes); as **intenções de
+  progressão** registradas (R4.7), sem campanha.
+- **Conferido:** 37 testes da simulação; no navegador, atacar um alvo com teclado e mouse, o golpe no herói, a horda nas
+  duas janelas e perto do limite, e a câmera/modo de comando sem regressão; o Capitão, as ordens e os arqueiros sem tela,
+  comparados com a v3. O jogo não mudou: suíte, gabarito e pyflakes; a fumaça, reaproveitada. Sem vídeos.
+- **Ponto a avaliar primeiro:** o Capitão vence o jogador automático médio com o Guerreiro (de propósito, mas o equilíbrio
+  para uma pessoa só jogando).
+- **Parado aqui:** o Jean joga a v4 e responde a R4.9 do 30.

@@ -63,16 +63,17 @@ export function pensar(r, m, ent) {
   ent.mx = perto.x; ent.my = perto.y;
   // os avisos do Capitão só são vistos depois de um tempo de reação (uma pessoa não sai no mesmo quadro)
   const reacao = r.nivel === "medio" ? 0.35 : 0.15, viu = (e, total) => total - e.acao.t >= reacao;
-  // o golpe do campeão anunciado em cima do herói: sair dele
+  // o golpe do campeão (ou o machado do Capitão) anunciado com o herói dentro do arco desenhado: sair dele
   for (const e of ini) {
-    if (e.acao && e.acao.forma && (e.tipo === "campeao" || e.tipo === "lider" && !e.acao.tipo && viu(e, e.def.preparo)) &&
-        (h.x - e.x) ** 2 + (h.y - e.y) ** 2 < 34 * 34) {
+    if (e.acao && e.acao.forma && (e.tipo === "campeao" || e.tipo === "lider" && !e.acao.tipo && viu(e, e.acao.preparo || e.def.preparo)) &&
+        dentro({ ...e.acao.forma, raio: e.acao.forma.raio + 3 }, h.x, h.y)) {
       andar(ent, h.x - e.x, h.y - e.y);
       return;
     }
-    // o círculo da Arremetida do Capitão com o herói dentro: sair dele, para longe do centro
-    if (e.tipo === "lider" && e.acao && e.acao.tipo === "arremetida" && e.acao.fase === "preparo" && viu(e, e.def.arremetida.preparo) &&
-        dentro(e.acao.forma, h.x, h.y)) {
+    // os círculos do Capitão (a Arremetida, o Rodopio) com o herói dentro: sair, para longe do centro
+    const circulo = e.tipo === "lider" && e.acao && (e.acao.tipo === "arremetida" && e.acao.fase === "preparo" &&
+      viu(e, e.def.arremetida.preparo) || e.acao.tipo === "rodopio" && viu(e, e.def.rodopio.preparo));
+    if (circulo && dentro({ ...e.acao.forma, raio: e.acao.forma.raio + 3 }, h.x, h.y)) {
       const f = e.acao.forma, dx = h.x - f.x, dy = h.y - f.y;
       andar(ent, Math.abs(dx) + Math.abs(dy) > 0.5 ? dx : 1, dy);
       return;

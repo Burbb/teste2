@@ -83,6 +83,12 @@ function marcaRachada(E, x, y, raio) {
 // anterior entra no mesmo número, que se renova; parado mais que isso, o próximo começa outro.
 export const NUMEROS = { vida: 0.7, somaContinuo: 0.6, maximo: 70 };
 function numeroDeDano(E, e) {
+  if (e.sofrido) {
+    // o dano que o herói levou: vermelho, em cima dele, só dos golpes que pesam (o valor que saiu da vida)
+    E.numeros.push({ id: -1, x: e.x + (E.rng() - 0.5) * 4, y: e.y - 16, dx: e.dx || 0, valor: e.valor, tipo: "sofrido", t: 0,
+      ultimo: 0, continuo: null });
+    return;
+  }
   if (e.sutil) {
     const j = E.numeros.find((n) => n.id === e.id && n.continuo === e.elemento && n.t - n.ultimo < NUMEROS.somaContinuo);
     if (j) { j.valor += e.valor; j.ultimo = j.t; j.t = Math.min(j.t, 0.15); j.ultimo = j.t; return; }
@@ -97,7 +103,27 @@ function numeroDeDano(E, e) {
 export function receber(E, eventos, m) {
   for (const e of eventos) {
     switch (e.tipo) {
-      case "dano": numeroDeDano(E, e); break;
+      case "dano":
+        numeroDeDano(E, e);
+        if (e.fagulha) brasas(E, e.x, e.y - 4, 8, 40);   // a Fagulha consumida: um estouro de brasas no alvo
+        break;
+      case "heroiAtingido": {
+        // de onde veio e quanto pesou: a marca vermelha no anel do herói, do lado de quem bateu; o número dos golpes
+        // fortes; o som do impacto nos pesados (o tremor dos golpes do Capitão continua com o golpe dele)
+        const forca = Math.min(1, e.valor / 30);
+        E.golpeHeroi = { ang: Math.atan2(-(e.dy || 0), -(e.dx || 0)), t: 0, dur: 0.35 + 0.3 * forca, forca, sem: !e.dx && !e.dy };
+        if (e.valor >= 6) numeroDeDano(E, { ...e, sofrido: true });
+        if (e.valor >= 15) E.sons.push("choque");
+        break;
+      }
+      case "liderRodopio":
+        E.cortes.push({ forma: e.forma, t: 0, dur: 0.2, forte: true, inimigo: true });
+        E.aneis.push({ x: e.x, y: e.y, r0: 8, r1: e.raio + 4, t: 0, dur: 0.3, cor: "#ff8a78" });
+        poeira(E, e.x, e.y, 16, 60);
+        tremer(E, e.heroi ? 0.4 : 0.15);
+        E.sons.push("varredura");
+        break;
+      case "resiste": E.mensagens.push({ texto: "firme", t: 0, x: e.x, y: e.y - 20 }); break;
       case "carga": tremer(E, 0.2); poeira(E, e.x, e.y, 12, 40); E.sons.push("investida"); break;
       case "liderSalto": poeira(E, e.x, e.y, 10, 35); E.sons.push("investida"); break;
       case "liderPouso":
@@ -211,6 +237,7 @@ export function receber(E, eventos, m) {
       case "decolagem": E.sons.push("investida"); poeira(E, e.x, e.y, 10, 35); break;
       case "abalo": E.aneis.push({ x: e.x, y: e.y, r0: 8, r1: e.raio, t: 0, dur: 0.5, cor: "#f0cb62" }); E.sons.push("trompa"); break;
       case "reforco": E.sons.push("trompa"); break;
+      case "horda": E.sons.push("trompa"); poeira(E, e.x, e.y, 14, 40); break;
       case "ordem": E.ordem = { tipo: e.ordem, x: e.x, y: e.y, t: 0 }; E.sons.push("ordem"); break;
     }
   }
@@ -257,6 +284,7 @@ export function avancar(E, dt) {
   E.particulas = E.particulas.filter((p) => p.vida < p.max);
   if (E.particulas.length > 900) E.particulas.splice(0, E.particulas.length - 900);
   for (const lista of [E.cortes, E.aneis, E.explosoes, E.mensagens, E.numeros, E.raios]) for (const c of lista) c.t += dt;
+  if (E.golpeHeroi) { E.golpeHeroi.t += dt; if (E.golpeHeroi.t >= E.golpeHeroi.dur) E.golpeHeroi = null; }
   E.raios = E.raios.filter((c) => c.t < c.dur);
   E.numeros = E.numeros.filter((n) => n.t < NUMEROS.vida);
   E.cortes = E.cortes.filter((c) => c.t < c.dur);

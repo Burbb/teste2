@@ -1,8 +1,8 @@
 # Protótipo de campo livre da etapa 8: o herói em tempo real no meio de tropas pequenas
 
-Jogável e isolado (01/11/2026, versão **Campo Livre 3**; a primeira, **Campo Livre 1**, aprovada pelo Jean como
+Jogável e isolado (01/11/2026, versão **Campo Livre 4**; a primeira, **Campo Livre 1**, aprovada pelo Jean como
 direção, fica congelada em `tela-v1/` e abre em `/v1/`, com o link na tela de escolha; a segunda está no commit
-`31ea8778`). **Não é integração:** o jogo não carrega nada desta pasta (um teste confere) e o combate do jogo não mudou. Os números são de teste. A pesquisa, as decisões, as medições, as
+`31ea8778` e a terceira no `298dc4bc`). **Não é integração:** o jogo não carrega nada desta pasta (um teste confere) e o combate do jogo não mudou. Os números são de teste. A pesquisa, as decisões, as medições, as
 limitações e o que esta direção mudaria no jogo estão no [30](../../../roadmapIDEIAS/30-ETAPA8-CAMPO-LIVRE.md). Os
 protótipos anteriores (`etapa8-builds`, `etapa8-tatico`) ficam como histórico.
 
@@ -11,7 +11,7 @@ protótipos anteriores (`etapa8-builds`, `etapa8-tatico`) ficam como histórico.
 Dê dois cliques em `demo.bat` (ou rode `python ferramentas/prototipos/etapa8-campo/servidor.py` na raiz). O servidor
 tenta a porta **8801**; se ela estiver ocupada, diz quem está nela e usa a próxima livre, e **abre o navegador na porta
 que de fato usou**. A versão aparece no terminal, no título da aba, no topo da escolha do herói e no selo da luta: se
-não aparecer "Campo Livre 3", não é esta entrega. Um `demo.bat` antigo ainda aberto segura a 8801 (e responde com o
+não aparecer "Campo Livre 4", não é esta entrega. Um `demo.bat` antigo ainda aberto segura a 8801 (e responde com o
 nome antigo em `/api/versao`, embora sirva os arquivos novos): feche a janela dele ou use a porta que o novo anunciar.
 `DEMO_PORTA` escolhe outra porta; `DEMO_SEM_NAVEGADOR=1` não abre o navegador.
 
@@ -21,23 +21,42 @@ nome antigo em `/api/versao`, embora sirva os arquivos novos): feche a janela de
 |---|---|
 | `W` `A` `S` `D` (ou as setas) | andar |
 | mouse | mirar (golpes e magias saem na direção ou no ponto do mouse) |
-| botão esquerdo (segurar repete) | ataque básico: Corte (Guerreiro), Faísca (Mago) |
+| botão esquerdo (segurar repete) | ataque básico: Corte (Guerreiro), Faísca (Mago); vai no inimigo mais perto da mira (dois cantos claros no pé dele mostram qual) |
 | botão direito | Varredura (Guerreiro), Bola de Fogo (Mago) |
 | `Espaço` | Investida (Guerreiro), Piscar (Mago) |
 | `Q` (ou `E`) | Salto Esmagador (Guerreiro, com 100 de Fúria), Muralha de Fogo (Mago) |
-| `1` `2` `3` | ordens: Acompanhar, Atacar, Defender (no ponto do mouse); valem para a **seleção** e, sem seleção, para todos; funcionam pausado |
-| `Shift` segurado | **modo de comando**: o botão esquerdo arrastado seleciona tropas (não ataca); um clique numa tropa seleciona só ela, no vazio limpa; o botão direito manda a seleção (ou todos) defender ali. Pausado, o mouse já está nesse modo. No comando, o mouse não mexe a câmera, a câmera fica parada durante o arrasto e o tremor se acalma; ao soltar, tudo volta suave |
+| `1` `2` `3` | ordens: Acompanhar, Atacar, Defender (no ponto do mouse); valem para a **seleção** e, sem seleção, para todos; funcionam pausado. No modo de comando, `2` com o mouse num inimigo: **atacar este alvo** |
+| `Shift` segurado | **modo de comando**: o botão esquerdo arrastado seleciona tropas (não ataca); um clique numa tropa seleciona só ela, no vazio limpa; o botão direito **num inimigo manda atacar esse alvo** (mira vermelha nele; derrubado, voltam à ordem de antes) e **no chão manda defender ali**. Pausado, o mouse já está nesse modo. No comando, o mouse não mexe a câmera, a câmera fica parada durante o arrasto e o tremor se acalma; ao soltar, tudo volta suave |
 | `F1` `F2` `F4` | seleciona os soldados, os arqueiros, todas as tropas (`F3` fica indisponível: não há terceiro tipo); com `Ctrl`, soma |
 | `X` | limpa a seleção |
 | `P` ou `Esc` | pausa (com as opções) |
 | `R` | recomeça a mesma batalha |
 | `Tab` | registro e diagnóstico (recolhidos por padrão) |
 | `M` | som |
+| `H` | **traz uma horda** de inimigos comuns na direção do mouse (a quantidade nas opções; até 1200 combatentes no campo) |
 
-Na escolha: o **encontro** (A primeira batalha, Grupos espalhados, Duas frentes, O Capitão e a retaguarda), o herói
+Na escolha: o **encontro** (A primeira batalha, Grupos espalhados, Duas frentes, O Capitão e a retaguarda, A horda), o herói
 (`1` Guerreiro, `2` Mago), a **versão** de cada habilidade (a original continua como opção) e o **exército** (1×, 2× ou
 4×, experimental; as quantidades reais aparecem logo abaixo); `Enter` luta. Opções (na escolha e na pausa): tremor da
-câmera (0 a 150%, começa em 150%; 0 desliga), pausa no impacto, mostrar a área do botão direito, volume e mudo.
+câmera (0 a 150%, começa em 150%; 0 desliga), pausa no impacto, mostrar a área do botão direito, volume, o tamanho da
+horda da tecla H e mudo.
+
+## O que entrou no Campo Livre 4
+
+- **O básico assistido:** vai no inimigo mais perto da mira; a Faísca o persegue (se ele cai, segue reta, sem trocar de
+  alvo) e deixa uma **Fagulha** (+6 no próximo golpe de habilidade nele); o Corte dá um passo curto (até 12 px, nunca
+  para trás nem através de quem está no meio) e ficou um combo de 3, 4 e 9.
+- **O impacto:** tranco visual em heróis e ameaças em todo acerto, sem parar ninguém; a ameaça interrompida fica firme
+  2,5 s; o golpe no herói mostra de onde veio (marca no anel), quanto tirou (número vermelho) e, se pesou, a borda da
+  tela daquele lado.
+- **O Capitão perigoso:** mais rápido (54), machado de 30 a cada 1,6 s, o **Rodopio** quando o cercam, a Arremetida
+  também no meio das tropas, o golpe de sequência depois dela; duela com o herói perto e, longe, vai nas tropas (os
+  arqueiros primeiro).
+- **Arqueiros e ordens:** os arqueiros avançam até a distância de tiro (a retaguarda sai até 90 px do posto); as três
+  ordens ficaram distintas (âncora e coleira), uma ordem longe vai sem parar para lutar, as tropas saem das áreas
+  anunciadas, e o novo **atacar um alvo**.
+- **A horda:** a tecla H e o encontro "A horda" (ondas de 60 × a escala a cada 9 s).
+- Tudo medido e conferido na rodada 4 do [30](../../../roadmapIDEIAS/30-ETAPA8-CAMPO-LIVRE.md).
 
 ## O que entrou no Campo Livre 3
 
@@ -94,14 +113,16 @@ câmera (0 a 150%, começa em 150%; 0 desliga), pausa no impacto, mostrar a áre
 | `tela/som.js` | Sons sintetizados na hora (Web Audio), sem arquivos de terceiros |
 | `tela/robo.js` | O jogador automático (testes e medição): `?robo=1` (forte) ou `?robo=medio`; vê os avisos do Capitão com 0,15 s ou 0,35 s de atraso |
 | `servidor.py`, `demo.bat` | O lançador (porta livre, versão) |
-| `testes/sim.test.mjs` | 27 testes da simulação (Node); `testes/test_campo.py` roda-os e confere o isolamento |
+| `testes/sim.test.mjs` | 37 testes da simulação (Node); `testes/test_campo.py` roda-os e confere o isolamento |
 | `tela-v1/` | O Campo Livre 1 congelado, servido em `/v1/` para comparar |
 | `ferramentas/simular.mjs` | Batalhas sem tela com o jogador automático, por escala e kit (duração, abates, custo do passo) |
-| `ferramentas/lider.mjs` | O comportamento do Capitão sem tela: foco, trocas de alvo, distância, habilidades e o que acertam, dano |
+| `ferramentas/lider.mjs` | O comportamento do Capitão sem tela: onde gasta o tempo, a escolha, as habilidades e o que acertam, o dano |
+| `ferramentas/ordens.mjs` | A mesma batalha com estratégias de ordens diferentes: as consequências (perdas, arqueiros vivos, resultado) |
 | `ferramentas/conferir3.mjs` | Playwright, Campo Livre 3: a câmera no comando, o custo do 4×, a escolha e um quadro de cada habilidade nova |
+| `ferramentas/conferir4.mjs` | Playwright, Campo Livre 4: atacar um alvo com teclado e mouse, o golpe no herói, a horda e o custo dela |
 | `ferramentas/medir.mjs` | Playwright, v2: resposta, pausa, seleção e ordens, desempenho, capturas, sequências e vídeos (os vídeos só quando o Jean pedir) |
 | `ferramentas/olhar.mjs` | Capturas rápidas de uma batalha em andamento |
-| `capturas/` | As da v3 (`cl3-*.png`, `conferir3.json`); as da v2 nas duas janelas, a seleção, as sequências e `medicao.json`; as da v1 em `campo-livre-1/` |
+| `capturas/` | As da v4 (`cl4-*.png`, `conferir4.json`); as da v3 (`cl3-*.png`, `conferir3.json`); as da v2 nas duas janelas, a seleção, as sequências e `medicao.json`; as da v1 em `campo-livre-1/` |
 | `videos/` | Os vídeos da v2 e, em `campo-livre-1/`, os da v1. **Vídeos novos só quando o Jean pedir** |
 
 ```
@@ -109,7 +130,9 @@ node --test ferramentas/prototipos/etapa8-campo/testes/sim.test.mjs
 python -m unittest discover -s ferramentas/prototipos/etapa8-campo/testes -t ferramentas/prototipos/etapa8-campo
 node ferramentas/prototipos/etapa8-campo/ferramentas/simular.mjs 1 4 forte
 node ferramentas/prototipos/etapa8-campo/ferramentas/lider.mjs ambos 1 medio
+node ferramentas/prototipos/etapa8-campo/ferramentas/ordens.mjs forte
 ```
 
-Parâmetros de endereço (para testes e demonstração): `?heroi=mago&qtd=4&enc=capitao&kit=raios,gelo&auto=1&robo=1`
-(`qtd`: 1, 2 ou 4; `kit`: sangrenta, grito, escudo, turbilhao, incendiaria, anel, raios, gelo).
+Parâmetros de endereço (para testes e demonstração): `?heroi=mago&qtd=4&enc=horda&kit=raios,gelo&auto=1&robo=1`
+(`qtd`: 1, 2 ou 4; `enc`: original, espalhados, duasFrentes, capitao, horda; `kit`: sangrenta, grito, escudo,
+turbilhao, incendiaria, anel, raios, gelo).

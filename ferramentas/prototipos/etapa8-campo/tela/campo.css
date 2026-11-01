@@ -137,3 +137,10 @@ body.em-luta #faixa { top: 70px; }
   .linha-opcoes, .opcoes { margin-top: 6px; }
   #enc-info { font-size: 13px; margin-bottom: 6px; }
 }
+/* o golpe pesado no herói: a borda do lado de onde veio, vermelha, por um instante (não treme nada) */
+#golpe { position: fixed; inset: 0; pointer-events: none; opacity: 0; transition: opacity 0.3s ease-out; }
+#golpe.esq { background: linear-gradient(to right, rgba(200, 20, 20, 0.45), transparent 14%); }
+#golpe.dir { background: linear-gradient(to left, rgba(200, 20, 20, 0.45), transparent 14%); }
+#golpe.cima { background: linear-gradient(to bottom, rgba(200, 20, 20, 0.45), transparent 18%); }
+#golpe.baixo { background: linear-gradient(to top, rgba(200, 20, 20, 0.45), transparent 18%); }
+#p-ordens .foco { color: #ff8a78; }
