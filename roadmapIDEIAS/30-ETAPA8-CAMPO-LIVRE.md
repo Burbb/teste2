@@ -1,9 +1,209 @@
 # 30 — Etapa 8: o combate em campo livre (herói em tempo real e tropas pequenas)
 
-**31/10/2026 (rodada 1) e 01/11/2026 (rodada 2).** A rodada 2 (Campo Livre 2: números de dano, o líder inimigo, o
-modo de comando e a seleção, a leitura do choque, três encontros e quatro versões de habilidade) está logo abaixo, antes
-das seções 0 a 14, que são a rodada 1 (Campo Livre 1). **A direção foi aprovada pelo Jean para continuar no protótipo,
-sem integração.**
+**31/10/2026 (rodada 1) e 01/11/2026 (rodadas 2 e 3).** A rodada 3 (Campo Livre 3: a câmera parada no modo de
+comando, o Capitão que enfrenta o herói, as escalas 1×, 2× e 4× e duas habilidades novas por herói) vem primeiro; depois
+a rodada 2 (Campo Livre 2: números de dano, o líder inimigo, o modo de comando e a seleção, a leitura do choque, três
+encontros e quatro versões de habilidade); por fim as seções 0 a 14, a rodada 1 (Campo Livre 1). **A direção foi
+aprovada pelo Jean para continuar no protótipo, sem integração.**
+
+## Rodada 3 (01/11/2026): Campo Livre 3
+
+**O pedido do Jean** (depois de jogar a v2): a câmera não pode andar com o mouse enquanto ele comanda com Shift; o
+Capitão tem de enfrentar o herói de verdade (inclusive o Mago que mantém distância), com preparação legível e chance de
+esquiva, sem perseguição perfeita, teletransporte sem aviso, controle permanente nem imunidade; escalas de exército para
+teste (1×, 2× e 4×, este experimental), com as quantidades à vista antes da luta; duas habilidades alternativas por
+herói, com funções novas, sem aumentar a barra. Preservar o que ele gostou (resposta, tropas miúdas, herói muito mais
+forte, golpes amplos, explosões, arremessos, números, tremor máximo, seleção, campo simples). **Vídeos só quando ele
+pedir**; capturas pontuais; nada de repetir baterias sem mudança.
+
+**Em teste nesta rodada (nada aprovado ainda).** A v1 continua em `/v1/`; a v2 está no commit `31ea8778`.
+
+| Seção | O que tem |
+|---|---|
+| R3.1 | A câmera no modo de comando |
+| R3.2 | O Capitão: o que estava errado e o repertório novo |
+| R3.3 | As escalas do exército |
+| R3.4 | As habilidades novas |
+| R3.5 | Verificação: o que foi conferido agora e o que foi reaproveitado |
+| R3.6 | Limitações conhecidas e o que precisa da avaliação do Jean |
+
+### R3.1. A câmera no modo de comando
+
+- **A causa:** a câmera segue o herói olhando até 110 px para o lado do mouse; com Shift, mover o mouse para arrastar
+  também mexia esse olhar, e o retângulo (desenhado na tela) passava a cobrir outro pedaço do campo durante o arrasto.
+- **Agora:** com Shift segurado (ou pausado), **o olhar para o lado do mouse fica parado** onde estava; a câmera
+  continua acompanhando o herói se ele andar (WASD). **Durante o arrasto a câmera não se mexe de jeito nenhum**: o
+  retângulo mostrado é exatamente a região selecionada. **O tremor se acalma** no modo de comando (vai a zero em ~0,1 s;
+  a intensidade escolhida nas opções não muda, e o tremor volta em ~0,3 s ao sair). Ao soltar o Shift (ou despausar), o
+  olhar **volta para o mouse em ~0,5 s**, suavizado, em vez de pular.
+- **Ataques:** no modo de comando o botão esquerdo nunca ataca (já era assim); o golpe que já tinha começado (uma
+  Varredura) termina normalmente, e nada novo sai até o próximo clique fora do comando.
+- **Medido** (`ferramentas/conferir3.mjs camera`, teclado e mouse de verdade, tremor 150% com trauma no máximo o tempo
+  todo, 1280×720):
+
+| Situação | Resultado |
+|---|---|
+| Sem Shift, o mouse atravessa a tela | a câmera anda 157 px (a referência) |
+| Com Shift, o mesmo movimento | a câmera anda 0,06 px; tremor a 0 |
+| Arrasto com Shift | a câmera anda 0 px; o tremor fica em 0; a seleção é exatamente o conjunto dentro do retângulo; 0 golpes |
+| Soltar o Shift | o olhar volta 159 px, com o maior passo de 7 px por quadro (o mouse comum, sem Shift, dá 9) |
+| Shift no meio da Varredura | a Varredura sai e acerta; 0 ataques básicos; a câmera anda 4 px (o resto da suavização) |
+| Pausado | a câmera anda 0 px com o mouse; o arrasto seleciona; ao continuar, maior passo de 3 px |
+
+### R3.2. O Capitão: o que estava errado e o repertório novo
+
+**A investigação antes de mexer** (`ferramentas/lider.mjs`: três sementes, jogador automático forte, "O Capitão",
+v2 de antes da mudança). O Capitão escolhia o alvo como um soldado comum (distância + fila), com só um pequeno desconto
+para o herói, e reavaliava a cada 0,3 a 0,6 s; andava a 32 (o herói anda a 68 a 72); a Carga ia sempre no grupo nosso
+mais denso; e as faíscas do Mago (atordoamento curto, a 4 por segundo) o mantinham cambaleando.
+
+| v2 (vida 380) | Mira o herói | Trocas de alvo | Distância média | Machado (no herói) | Carga (no herói) |
+|---|---|---|---|---|---|
+| contra o Guerreiro | 33 a 43% do tempo | 13 a 25 por minuto | 173 a 220 px | 5 a 7 (1 ou 2) | 1 ou 2 (0) |
+| contra o Mago | 20 a 32% | 15 a 20 por minuto | 172 a 208 px | 4 ou 5 (0) | 1 ou 2 (0); nunca chegou a 40 px dele |
+
+**O repertório agora** (números em `conteudo.js`, regras em `sim.js`, `decidirLider`):
+
+| | Como funciona | Como responder |
+|---|---|---|
+| **Foco** | Mira no herói quando ele está a até 240 px, **ou quando o herói o fere ou derruba alguém a até 200 px dele** (por 5 s); mantém a escolha por pelo menos 3 s e só larga com o herói a mais de 340 px. A barra dele diz "Atrás de você" ou "Com as tropas"; ao ligar, a faixa avisa "vem atrás de você" | Afastar-se de verdade, ou enfrentá-lo |
+| **Machado** (o de antes) | O arco anunciado no chão por 0,7 s. **Se uma tropa nossa está entre ele e o herói, ele golpeia através dela** em vez de parar para duelar com ela | Sair do arco; um golpe forte na preparação interrompe |
+| **Arremetida** (nova: alcançar) | Marca um **círculo vermelho de 28 px** no caminho do herói (onde ele estaria com 60% da preparação andando como anda) a 40 a 190 px; **0,75 s depois** salta (0,45 s no ar, por cima de quem estiver no caminho) e cai: 20 no herói, 8 nos soldados, arremessa. Recarga 7 s | Sair do círculo, mudar de direção ou parar; um golpe forte na preparação interrompe; ao cair, fica **0,7 s com o machado cravado, levando +50%** |
+| **Carga** (melhorada: pressionar e comandar) | Com o foco no herói, a faixa vai **na direção dele** (um pouco à frente, 0,3 s) e passa 30 px além, até 210 px; reúne até 8 soldados por 0,9 s, que correm junto e chegam com ímpeto. Sem o foco, vai no nosso grupo mais denso, como antes. Recarga 9 s | Sair da faixa; um golpe forte na reunião a desfaz; depois, ofegante 1,2 s, levando +50% |
+| **Presença** (a de antes) | A até 90 px, os soldados dele atacam 33% mais rápido, são menos empurrados e não se abalam | Tirá-lo de perto da tropa |
+
+- **Ritmo:** pelo menos 2 s entre duas habilidades; as recargas correm também enquanto ele golpeia ou cambaleia (antes
+  só corriam quando ele estava livre). Na prática, uma habilidade a cada 4 a 5 s.
+- **Obstáculos:** os soldados dele abrem caminho (como os nossos para o herói); as tropas nossas no caminho levam o
+  machado. Nas medições, nenhum tempo travado.
+- **Diferença dos comuns, sem imunidade:** golpe fraco (faísca, corte básico) **não o faz cambalear nem estremecer**;
+  golpe forte o atordoa (reduzido, como as outras ameaças) e interrompe as preparações. No ar, a Arremetida não para.
+- **Vida 380 → 480:** com o foco, ele passa a batalha no alcance do herói e caía em ~30 s contra o Mago; com 480 o duelo
+  dura o mesmo que antes (abaixo). Dano e velocidade de golpe não mudaram; andar passou de 32 para 40 (o herói segue
+  bem mais rápido).
+
+| Agora (vida 480), três sementes | Mira o herói | Trocas | Vivo | Arremetidas (no herói) | Cargas (no herói) | Machados (no herói) | Dano dele no herói |
+|---|---|---|---|---|---|---|---|
+| Guerreiro, jogador forte | 95 a 96% | 0 | 48 a 55 s | 4 (1 a 3) | 1 ou 2 (0 ou 1) | 12 a 13 (1 ou 2) | 72 a 94 |
+| Mago, jogador forte | 93% | 0 | 34 a 39 s | 3 ou 4 (1 a 3) | 2 a 4 (0 ou 1) | 1 a 7 (0) | 20 a 82 |
+| Guerreiro, jogador médio | 93 a 95% | 0 | 35 a 48 s | 1 a 3 (0 a 2) | 0 | 9 a 13 (7) | 182 a 222 |
+| Mago, jogador médio | 92 a 93% | 0 | 36 a 41 s | 3 a 5 (1 a 4) | 2 a 4 (0) | 1 a 4 (0) | 20 a 80 |
+
+O jogador automático vê os avisos do Capitão com 0,15 s (forte) ou 0,35 s (médio) de atraso, como uma pessoa; mesmo
+assim desvia de quase tudo, então os números de dano são um piso. O médio, que encara o Guerreiro de frente, leva 7
+machadadas por batalha (≈ 200 de 260). Em 4× o comportamento é o mesmo (mira 93 a 97%, 0 trocas, 4 a 7 Arremetidas).
+
+### R3.3. As escalas do exército
+
+Na escolha, **Exército: 1× (o encontro normal), 2× ou 4× (experimental)**, e logo abaixo as quantidades reais, contadas
+no mesmo mundo que a batalha usa ("Aliados 168 · Inimigos 281: 233 no começo e 48 depois. Capitão, campeão e
+porta-estandarte continuam um só."). Parâmetro de endereço: `?qtd=1|2|4` ("normal" e "maior", da v2, valem 1 e 2).
+
+- **O que multiplica:** só os comuns (soldados, veteranos, arqueiros, dos dois lados e das levas). Capitão, campeão e
+  porta-estandarte ficam um só; ninguém ganha vida ou dano.
+- **Onde ficam:** cada bloco se repete em **alas** a 130 px uma da outra, ao longo da frente (na vertical; os blocos da
+  borda de cima ou de baixo, para os lados), e o conjunto é empurrado para dentro do campo se uma ala sairia. A linha
+  fica mais longa, não mais grossa no mesmo ponto; a distância entre os exércitos não muda (sem caminhada a mais). Nos
+  grupos espalhados, cada grupo cresce no próprio lugar (alas atravessariam os outros grupos). O campo continua 960 × 560
+  e os sprites do mesmo tamanho.
+- **Com 4×,** as alas aliadas longe do herói (mais de 100 px) **começam defendendo o próprio lugar** e as de perto o
+  acompanham: a linha fica inteira em vez de correr toda para ele. O placar mostra ("Acompanhar 84 · Defender aqui 84");
+  F4 e 1 trazem todos.
+- A 1× é exatamente a v2: as quatro batalhas do jogador automático deram os mesmos números da tabela da R2.7.
+
+| Encontro | 1× aliados / inimigos | 2× | 4× |
+|---|---|---|---|
+| A primeira batalha | 42 / 94 | 84 / 186 | 168 / 370 |
+| Grupos espalhados | 42 / 67 | 84 / 133 | 168 / 265 |
+| Duas frentes | 42 / 64 | 84 / 126 | 168 / 250 |
+| O Capitão e a retaguarda | 42 / 71 | 84 / 141 | 168 / 281 |
+
+**Custo no navegador, 4×** (`conferir3.mjs escalas`; Chromium 130 sem janela, desenho na CPU, o computador do Jean;
+20 s de batalha com o jogador automático forte, já no choque):
+
+| Janela | Herói · encontro · kit | Combatentes (máx.) | Qps | Quadro p95 / máx. | Simulação média / p95 | Desenho média / p95 | Números ao mesmo tempo (máx.) |
+|---|---|---|---|---|---|---|---|
+| 1920×945 | Guerreiro · primeira batalha · Escudo + Turbilhão | 386 | 60 | 16,8 / 16,8 ms | 0,82 / 1,8 ms | 1,29 / 2,6 ms | 70 (o teto) |
+| 1920×945 | Mago · Capitão · Raios + Gelo | 401 | 60 | 16,7 / 16,8 ms | 1,28 / 1,6 ms | 1,17 / 2,1 ms | 10 |
+| 1280×720 | Guerreiro · primeira batalha · Escudo + Turbilhão | 386 | 60 | 16,7 / 16,8 ms | 0,77 / 1,4 ms | 1,21 / 2,4 ms | 70 (o teto) |
+| 1280×720 | Mago · Capitão · Raios + Gelo | 401 | 60 | 16,7 / 16,8 ms | 1,28 / 1,6 ms | 1,20 / 2,2 ms | 10 |
+
+As linhas do Mago foram medidas antes do ajuste da Corrente de Raios (R3.4: 8 alvos, depois 12); a diferença no custo do quadro é desprezível e não foi medida de novo. No Node, o passo de 4× custa 0,8 a 1,6 ms (`simular.mjs 1 4`). **O limite real de 4× é de leitura, não de
+desempenho:** numa área que derruba 30 a 40 de uma vez, os números batem no teto de 70 e os mais velhos somem antes do
+tempo, e duas mensagens "N derrubados" se sobrepõem. A quantidade escolhida nunca é reduzida.
+
+### R3.4. As habilidades novas
+
+Escolhidas na tela inicial como as versões da v2 (um botão por versão em cada tecla); a barra continua com quatro
+botões. As descrições na tela seguem a skill `texto-regras-fenda`, com os números de `conteudo.js`.
+
+| Herói · tecla | Nova | O que faz | Função |
+|---|---|---|---|
+| Guerreiro · Espaço (no lugar da Investida ou do Grito) | **Avanço de Escudo** | Por 2,5 s, anda a 70% com o escudo virado para o mouse: barra as flechas inimigas que cruzam o arco (30 px, 150°) vindo da frente, empurra quem está nele (2 de dano na primeira vez) e os aliados a até 50 px levam metade do dano. Outra habilidade o encerra. Recarga 9 s | Avançar com as tropas atrás, contra a retaguarda de arqueiros |
+| Guerreiro · Q (no lugar do Salto) | **Turbilhão** | 50 de Fúria (o Salto custa 100). Prende os pés 0,35 s puxando os inimigos comuns a até 70 px para perto (o campeão e o Capitão, não) e golpeia o monte: 9 de dano num círculo de 30 px, arremessa e atordoa | Juntar para o golpe seguinte (Varredura, arremate) |
+| Mago · botão direito (no lugar da Bola) | **Corrente de Raios** | 16 de Mana, recarga 1 s. Um raio na direção do mouse (faixa de 170 px) pega o primeiro inimigo e salta para o mais perto ainda não atingido (até 48 px), até 12 alvos: 14 de dano, 1 a menos por salto, no mínimo 7; arremessa quem cai | Linhas, grupos esparsos, a fila que avança; sem chão em chamas |
+| Mago · Q (no lugar da Muralha ou do Anel) | **Campo de Gelo** | 35 de Mana, recarga 9 s. Um círculo de 44 px no ponto do mouse (até 170 px) por 5 s: ao surgir, 5 de dano e atordoa 0,3 s; dentro, os inimigos andam a 35% e atacam com 50% da frequência (campeão e Capitão, 60% e 75%) | Segurar uma região: frear a carga, um flanco, a linha que chega |
+
+Ajuste feito durante a rodada: a primeira Corrente (10 de dano, 8 alvos, 22 de Mana) não derrubava um soldado (12 de
+vida) e o jogador automático perdia com ela em 2× e 4×; ficou com 14, 12 alvos e 16 de Mana, o que deixa o dano por
+Mana perto do da Bola, com outro alcance. Com o kit novo, o jogador automático vence os 12 encontros × escalas.
+
+| Encontro, 1× | Original | Escudo + Turbilhão | Original (Mago) | Raios + Gelo |
+|---|---|---|---|---|
+| A primeira batalha | 24 s · herói 70 / tropas 12 | 17 s · 84 / 0 · flechas no herói 9 (nas tropas 0) | 25 s · 72 / 11 | 21 s · 68 / 21 |
+| Grupos espalhados | 42 s · 29 / 29 | 43 s · 21 / 35 | 37 s · 44 / 15 | 33 s · 38 / 24 |
+| Duas frentes | 23 s · 41 / 16 | 25 s · 35 / 18 | 32 s · 40 / 12 | 26 s · 34 / 21 |
+| O Capitão | 54 s · 45 / 25 | 42 s · 55 / 16 | 39 s · 16 / 44 | 39 s · 13 / 48 |
+
+(`node ferramentas/simular.mjs 1 1`; derrubados pelo herói / pelas tropas. Em 4×, a mesma tabela em `simular.mjs 1 4`:
+todos vencem; o Mago na primeira batalha leva ~100 s e perde as 168 tropas com qualquer kit.)
+
+### R3.5. Verificação: o que foi conferido agora e o que foi reaproveitado
+
+**Conferido nesta rodada:**
+- **27 testes da simulação** (`node --test testes/sim.test.mjs`): os 22 da v2 e mais 5: o Capitão (foco estável por
+  3 s mesmo com o herói a 300 px depois de feri-lo; o círculo da Arremetida no herói; quem sai não apanha, quem fica
+  leva os 20; o machado cravado; um golpe forte interrompe), o caminho (os soldados dele não o empurram; o machado
+  atravessa a tropa nossa no caminho), as escalas (contagem exata por tipo nos quatro encontros, especiais um só, vida
+  igual, ninguém fora do campo nem a menos de 3 px de outro, alas de fora defendendo só em 4×), 4× até o fim sem NaN com
+  o passo médio abaixo de 6 ms, e as quatro habilidades (flecha da frente barrada e a de trás não, aliado com metade do
+  dano, puxão sem o campeão, a Fúria gasta, a corrente com 12 alvos e o dano de cada salto = vida que saiu, o gelo
+  deixando o passo abaixo da metade).
+- **No navegador** (`conferir3.mjs`): a câmera (R3.1), o custo do 4× nas duas janelas (R3.3), a escolha com as
+  quantidades nas duas janelas, e um quadro pausado de cada habilidade nova e da Arremetida. Sem erros no console.
+- **Batalhas sem tela:** `simular.mjs` em 1×, 2× e 4× com os três kits de cada herói (todas vencidas com o herói);
+  `lider.mjs` em 1× e 4×, jogador forte e médio.
+- **O jogo não mudou** (`rpg/` e `tests/` intocados): suíte, gabarito e pyflakes rodados de novo nesta rodada; a fumaça
+  da interface do jogo, reaproveitada (nada da interface do jogo mudou desde a última passagem).
+
+**Reaproveitado da v2, sem repetir:** a resposta comparada com a v1 (o laço e o controle não mudaram), as conferências de
+seleção e ordens por tipo (o código delas não mudou; o arrasto foi conferido de novo com a câmera parada), o desempenho
+de 1× e 2× da R2.8. **Sem vídeos e sem folhas quadro a quadro** nesta rodada.
+
+**Capturas** (`capturas/cl3-*.png`): `cl3-escolha-1920` e `-1280` (a escolha com 4× e os kits novos),
+`cl3-4x-1920-9s` (o choque em 4×, um Turbilhão de 37), `cl3-arremetida-1920` (o círculo marcado no caminho do Mago),
+`cl3-escudo`, `cl3-turbilhao`, `cl3-raios`, `cl3-gelo` (recortes 1280×720).
+
+### R3.6. Limitações conhecidas e o que precisa da avaliação do Jean
+
+- **O Capitão foi medido contra um jogador automático que desvia de quase tudo;** para uma pessoa, a Arremetida que
+  mira o caminho (60% da preparação) pode pegar mais do que o esperado. Se parecer injusta, o número a mexer é
+  `arremetida.adianta` (0 = mira onde o herói está) ou `preparo`.
+- **Ele bate bastante nas tropas** (50 a 360 de dano nelas por batalha em 1×), porque o machado atravessa quem está no
+  caminho do herói: é o pedido ("não ficar ocupado com um soldado"), mas as tropas sentem.
+- **Turbilhão + Varredura é muito forte:** na primeira batalha, 17 s e quase todos os derrubados são do herói. Está de
+  acordo com o pedido de não enfraquecer o herói; avaliar se tira o papel das tropas.
+- **O jogador automático quase não usa o Campo de Gelo** (foge antes de juntar cinco perto), então o gelo não foi medido
+  em batalha, só nos testes e na captura.
+- **4× é experimental:** 60 qps, mas o teto de 70 números e as mensagens sobrepostas nas mortes em massa; o Mago perde
+  todas as tropas na primeira batalha em 4×. Nada foi reduzido em silêncio.
+- **A câmera, no comando, ainda acompanha o herói se ele andar** (fora do arrasto); se atrapalhar, dá para pará-la de
+  todo enquanto o Shift está apertado.
+- **Arte provisória:** o escudo e o gelo são formas pintadas no chão; o Capitão no ar é o mesmo sprite, levantado.
+- **Para o Jean avaliar:** (1) segurar Shift e arrastar ficou estável, com o tremor no máximo? a volta ao soltar é
+  suave? (2) o Capitão agora te enfrenta de verdade, com o Guerreiro e com o Mago? dá para ler e desviar a Arremetida e a
+  Carga? ele ficou forte demais ou de menos? (3) as batalhas 2× e 4× ficam legíveis, e os comandos respondem bem nelas?
+  (4) as quatro habilidades novas mudam o jeito de jogar? alguma é forte ou fraca demais?
 
 Rodada 1. Pedido do Jean: depois de jogar o protótipo tático (o [29](29-ETAPA8-COMBATE-TATICO.md)) e gostar do
 ganho espacial, **investigar direto o combate em campo livre**: controle direto do herói, em tempo real, no meio de

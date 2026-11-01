@@ -1,13 +1,17 @@
 // Batalhas sem tela, com o jogador automático, em todos os encontros: resultado, duração, vida, abates do herói e das
 // tropas e o que as tropas fizeram além de matar (inimigos ocupados, dano que seguraram, flechas que receberam).
-// Uso: node ferramentas/simular.mjs [repetições] [normal|maior] [forte|medio]
+// Uso: node ferramentas/simular.mjs [repetições] [1|2|4] [forte|medio]
 import { criarMundo, passo, entradaVazia, resumo } from "../tela/sim.js";
 import { criarRobo, pensar } from "../tela/robo.js";
 import { ENCONTROS } from "../tela/conteudo.js";
 
-const n = Number(process.argv[2] || 1), qtd = process.argv[3] || "normal", nivel = process.argv[4] || "forte";
-const KITS = { guerreiro: [["original", {}], ["sangrenta+grito", { varredura: "sangrenta", investida: "grito" }]],
-  mago: [["original", {}], ["incendiaria+anel", { bola: "incendiaria", muralha: "anel" }]] };
+const n = Number(process.argv[2] || 1), qtd = process.argv[3] || "1", nivel = process.argv[4] || "forte";
+const KITS = {
+  guerreiro: [["original", {}], ["sangrenta+grito", { varredura: "sangrenta", investida: "grito" }],
+    ["escudo+turbilhao", { investida: "escudo", salto: "turbilhao" }]],
+  mago: [["original", {}], ["incendiaria+anel", { bola: "incendiaria", muralha: "anel" }],
+    ["raios+gelo", { bola: "raios", muralha: "gelo" }]],
+};
 
 function rodar(heroi, encontro, kit, robo, semente) {
   const m = criarMundo({ heroi, quantidade: qtd, semente, encontro, kit });

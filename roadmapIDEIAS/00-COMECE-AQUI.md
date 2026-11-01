@@ -9190,3 +9190,24 @@ foi automatizado.
   os arquivos novos do disco; feche-o antes de abrir de novo (o novo usa a próxima porta livre e diz qual).
 - **Parado aqui:** o Jean joga e responde a R2.9 do 30.
 
+### 01/11/2026 (data do computador local) — Etapa 8: o Campo Livre 3 (protótipo, nada no jogo)
+
+- **Retomada em conta nova:** o Campo Livre 2 inteiro estava sem commit (código, `tela-v1/`, documentação, capturas e
+  vídeos); registrado como estava, depois de rodar os 22 testes, em `31ea8778`. Ficaram fora os arquivos temporários
+  da medição (`capturas/_*.txt`) e dois arquivos alheios em `ferramentas/arte/referencias/`.
+- **Preferência do Jean (permanente):** **vídeos só quando ele pedir**; nada de folhas extensas quadro a quadro como
+  entrega padrão; capturas pontuais quando ajudam a investigar ou mostrar um problema; não repetir suítes e medições sem
+  mudança que justifique; dizer o que foi conferido agora e o que foi reaproveitado.
+- **Feito (em teste, nada aprovado):** a rodada 3 no [30](30-ETAPA8-CAMPO-LIVRE.md) e o protótipo, versão **Campo Livre
+  3**: a câmera parada no modo de comando (o mouse não a mexe, o arrasto a congela, o tremor se acalma sem mudar a
+  opção, a volta é suave); **Harg, o Capitão**, investigado antes (mirava o herói 20 a 43% do tempo, trocava de alvo 13 a
+  25 vezes por minuto, nunca alcançava o Mago) e refeito: foco estável no herói, **Arremetida** (círculo no caminho do
+  herói, salto 0,75 s depois, machado cravado ao cair), Carga na direção do herói, machado através da tropa no caminho,
+  firme contra golpe fraco, vida 480; **escalas 1×, 2× e 4×** (experimental) com as quantidades reais na escolha, os
+  comuns em alas, os especiais um só, as alas de fora defendendo em 4×; **quatro habilidades novas** (Avanço de Escudo e
+  Turbilhão no Guerreiro; Corrente de Raios e Campo de Gelo no Mago), escolhidas como as versões, sem mudar a barra.
+- **Conferido:** 27 testes da simulação; no navegador, a câmera no comando (entrando, saindo, durante a Varredura e
+  pausado, com o tremor no máximo), o custo do 4× nas duas janelas (60 qps), a escolha nas duas janelas e um quadro de
+  cada habilidade nova; batalhas sem tela em 1×, 2× e 4× com todos os kits; o Capitão em 1× e 4×. O jogo não mudou:
+  suíte (804), gabarito e pyflakes; a fumaça, reaproveitada. Sem vídeos.
+- **Parado aqui:** o Jean joga a v3 e responde a R3.6 do 30.

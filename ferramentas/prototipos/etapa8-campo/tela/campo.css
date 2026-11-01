@@ -128,6 +128,7 @@ body.em-luta #faixa { top: 70px; }
 .cabeca { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
 #lutar { margin-top: 0; }
 #linha-tropas { float: left; margin-right: 18px; }
+#contagem { clear: both; margin: 6px 0 0; font-family: var(--pixel); font-size: 12px; color: var(--tinta); }
 .controles { clear: both; }
 @media (max-height: 760px) {
   .caixa .sub { margin: 2px 0 6px; font-size: 14px; }

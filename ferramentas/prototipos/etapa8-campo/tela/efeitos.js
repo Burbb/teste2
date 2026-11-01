@@ -8,7 +8,7 @@ export function criarEfeitos(sorteio) {
   const marcas = document.createElement("canvas");
   marcas.width = CAMPO.largura;
   marcas.height = CAMPO.altura;
-  return { voadores: [], particulas: [], cortes: [], aneis: [], explosoes: [], avisos: [], marcas, numeros: [],
+  return { voadores: [], particulas: [], cortes: [], aneis: [], explosoes: [], avisos: [], marcas, numeros: [], raios: [],
     gm: marcas.getContext("2d"), trauma: 0, chute: { x: 0, y: 0 }, pausaPedida: 0, rng: sorteio, mensagens: [],
     sons: [], ordem: null };
 }
@@ -99,6 +99,15 @@ export function receber(E, eventos, m) {
     switch (e.tipo) {
       case "dano": numeroDeDano(E, e); break;
       case "carga": tremer(E, 0.2); poeira(E, e.x, e.y, 12, 40); E.sons.push("investida"); break;
+      case "liderSalto": poeira(E, e.x, e.y, 10, 35); E.sons.push("investida"); break;
+      case "liderPouso":
+        E.aneis.push({ x: e.x, y: e.y, r0: 6, r1: e.raio + 6, t: 0, dur: 0.35, cor: "#ff8a78" });
+        poeira(E, e.x, e.y, 20, 60);
+        marcaRachada(E, e.x, e.y, e.raio);
+        tremer(E, e.heroi ? 0.45 : 0.2);
+        E.sons.push("aterrissa");
+        break;
+      case "bloqueio": faiscas(E, e.x, e.y - 4, e.dx, e.dy, 3, "#d8f4ff"); E.sons.push("bloqueio"); break;
       case "fimCarga": poeira(E, e.x, e.y, 10, 35); E.sons.push("aterrissa"); break;
       case "liderCaiu":
         E.aneis.push({ x: e.x, y: e.y, r0: 8, r1: e.raio, t: 0, dur: 0.7, cor: "#ff6a4a" });
@@ -122,19 +131,31 @@ export function receber(E, eventos, m) {
       case "inicio":
         if (e.id === "basico" && e.heroi === "guerreiro") E.sons.push(e.arremate ? "corteForte" : "corte");
         else if (e.id === "varredura" || e.id === "salto") E.sons.push("preparo");
+        else if (e.id === "investida" && e.variante === "escudo") E.sons.push("escudo");
         else if (e.id === "investida") { E.sons.push("investida"); poeira(E, m.heroi.x, m.heroi.y, 6, 25); }
         break;
       case "contato": {
         const forte = e.id !== "basico" || e.arremate;
         if (e.forma && e.forma.tipo === "arco") E.cortes.push({ forma: e.forma, t: 0, dur: forte ? 0.16 : 0.09, forte });
-        if (e.id === "salto") {
+        if (e.turbilhao) {
+          // o Turbilhão: o giro em volta do herói e a poeira do monte que ele juntou
+          E.cortes.push({ forma: e.forma, t: 0, dur: 0.18, forte: true });
+          E.aneis.push({ x: e.x, y: e.y, r0: e.puxa, r1: e.raio, t: 0, dur: 0.2, cor: "#e9dcb8" });
+          poeira(E, e.x, e.y, 16, 55);
+          E.sons.push("varredura");
+        } else if (e.id === "salto") {
           E.aneis.push({ x: e.x, y: e.y, r0: 6, r1: e.raio + 6, t: 0, dur: 0.35, cor: "#e9dcb8" });
           poeira(E, e.x, e.y, 26, 70);
           marcaRachada(E, e.x, e.y, e.raio);
           E.sons.push("aterrissa");
         }
         if (e.id === "investida") { E.aneis.push({ x: e.x, y: e.y, r0: 4, r1: e.raio, t: 0, dur: 0.2, cor: "#e9dcb8" }); poeira(E, e.x, e.y, 8, 40); }
-        if (e.id === "bola") {
+        if (e.raios) {
+          // a Corrente de Raios: o traço que salta de alvo em alvo e uma faísca em cada um
+          E.raios.push({ pontos: e.pontos, t: 0, dur: 0.24, semente: Math.floor(E.rng() * 1000) });
+          for (const p of e.pontos.slice(1)) faiscas(E, p.x, p.y, 0, -1, 3, "#d8f4ff");
+          E.sons.push("raio");
+        } else if (e.id === "bola") {
           E.explosoes.push({ x: e.x, y: e.y, raio: e.raio, t: 0, dur: 0.32 });
           brasas(E, e.x, e.y, 22, 70);
           fumaca(E, e.x, e.y, 6, e.raio);
@@ -147,7 +168,15 @@ export function receber(E, eventos, m) {
           E.aneis.push({ x: e.x1, y: e.y1, r0: 10, r1: 2, t: 0, dur: 0.18, cor: "#fff1c4" });
           E.sons.push("piscar");
         }
-        if (e.id === "muralha" || e.id === "anel") E.sons.push("fogo");
+        if (e.gelo) {
+          E.aneis.push({ x: e.x, y: e.y, r0: 6, r1: e.raio, t: 0, dur: 0.3, cor: "#d8f4ff" });
+          for (let i = 0; i < 18; i++) {
+            const a = E.rng() * Math.PI * 2, r = Math.sqrt(E.rng()) * e.raio;
+            E.particulas.push({ x: e.x + Math.cos(a) * r, y: e.y + Math.sin(a) * r * 0.8, z: 1, vx: 0, vy: 0, vz: 18 + E.rng() * 20,
+              vida: 0, max: 0.35 + E.rng() * 0.25, cor: E.rng() < 0.5 ? "#ffffff" : "#9fd8ff", tam: 1, g: 60, atrito: 2 });
+          }
+          E.sons.push("gelo");
+        } else if (e.id === "muralha" || e.id === "anel") E.sons.push("fogo");
         if (e.id === "grito") { E.aneis.push({ x: e.x, y: e.y, r0: 6, r1: e.raio, t: 0, dur: 0.4, cor: "#f0cb62" }); E.sons.push("trompa"); }
         if (e.id === "varredura") E.sons.push("varredura");
         if (e.tremor) tremer(E, e.tremor, Math.cos(e.dir || 0), Math.sin(e.dir || 0));
@@ -227,7 +256,8 @@ export function avancar(E, dt) {
   }
   E.particulas = E.particulas.filter((p) => p.vida < p.max);
   if (E.particulas.length > 900) E.particulas.splice(0, E.particulas.length - 900);
-  for (const lista of [E.cortes, E.aneis, E.explosoes, E.mensagens, E.numeros]) for (const c of lista) c.t += dt;
+  for (const lista of [E.cortes, E.aneis, E.explosoes, E.mensagens, E.numeros, E.raios]) for (const c of lista) c.t += dt;
+  E.raios = E.raios.filter((c) => c.t < c.dur);
   E.numeros = E.numeros.filter((n) => n.t < NUMEROS.vida);
   E.cortes = E.cortes.filter((c) => c.t < c.dur);
   E.aneis = E.aneis.filter((c) => c.t < c.dur);

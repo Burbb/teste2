@@ -4,7 +4,7 @@
 // doze estalos empilhados.
 let ctx = null, mestre = null, ruido = null, volume = 0.5, mudo = false;
 const ultimo = {};
-const INTERVALO = { acerto: 0.05, impacto: 0.06, dor: 0.12, faisca: 0.05, aviso: 0.2, choque: 0.1 };
+const INTERVALO = { acerto: 0.05, impacto: 0.06, dor: 0.12, faisca: 0.05, aviso: 0.2, choque: 0.1, bloqueio: 0.06 };
 
 export function iniciarSom() {
   if (ctx) { if (ctx.state === "suspended") ctx.resume(); return; }
@@ -72,5 +72,9 @@ export function tocar(nome) {
     case "choque": tom(t, 0.12, 200, 80, 0.4, "square"); chiado(t, 0.08, 1200, 1, 0.3); break;
     case "trompa": tom(t, 0.7, 147, 140, 0.18, "sawtooth"); tom(t, 0.7, 220, 210, 0.08, "sawtooth"); break;
     case "ordem": tom(t, 0.08, 660, 660, 0.08, "square"); tom(t + 0.09, 0.08, 880, 880, 0.08, "square"); break;
+    case "raio": chiado(t, 0.14, 4200, 0.6, 0.3, "highpass"); tom(t, 0.1, 1800, 300, 0.1, "square"); break;
+    case "gelo": chiado(t, 0.3, 5200, 2, 0.22, "bandpass", 2200); tom(t, 0.2, 1400, 900, 0.06, "triangle"); break;
+    case "escudo": tom(t, 0.12, 330, 300, 0.2, "square"); chiado(t, 0.1, 1800, 2, 0.2); break;
+    case "bloqueio": tom(t, 0.05, 1500, 1100, 0.12, "square"); break;
   }
 }
