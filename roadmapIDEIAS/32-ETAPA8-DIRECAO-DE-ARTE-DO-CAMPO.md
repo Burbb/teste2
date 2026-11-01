@@ -5,6 +5,14 @@ para o mesmo trecho, comparáveis no protótipo (Campo Livre 7, `ferramentas/pro
 regras. A arte atual continua lá como terceira opção. O que foi feito no comportamento (navegação, alvos, investida,
 controles, provocações) está na rodada 7 do [30](30-ETAPA8-CAMPO-LIVRE.md).
 
+**Seção 0. A decisão do Jean (01/11/2026, depois de jogar):** a **sóbria** é a base visual do campo livre. A sombria
+foi a favorita como imagem parada, mas ficou carregada de textura e prejudicou a leitura quando a batalha começou; fica
+como referência e comparação (`F8`), sem ser desenvolvida em paralelo. A violência preferida é a **intensa** (o padrão do
+Campo Livre 8, respeitando o que o jogador já escolheu). A escala menor (15 para 14 px) quase não aparece e não substitui
+o redesenho dos personagens: os modelos novos estão no [33](33-ETAPA8-HARG-E-OS-MODELOS-DOS-HEROIS.md). O padrão sóbrio
+está registrado na skill `arte-cenas-fenda` ("Campo Livre: o padrão sóbrio"), e as fontes do cenário sóbrio que faltavam
+estão em `arte/fontes/cenario-sobrio/`.
+
 | Seção | O que tem |
 |---|---|
 | 1 | O pedido e o que ficou fixo |

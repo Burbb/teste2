@@ -9308,3 +9308,23 @@ foi automatizado.
   violência, os pesos da escolha de alvo e os números de controle.
 - **Parado aqui:** o Jean joga a vila, Harg e Ardis e o portão e responde à R7.7 do 30 e à seção 9 do 32 (inclusive o
   uso da perspectiva no resto do jogo).
+
+### 01/11/2026 (data do computador local) — Etapa 8: o Campo Livre 8, a sóbria como base, os modelos novos e Harg reconstruído (protótipo, nada no jogo)
+
+- **Avaliação do Jean (jogando o 7):** escolheu a direção **sóbria** como base (a sombria foi a favorita parada, mas
+  pesou na leitura em combate: fica como referência); prefere a violência **intensa**; a escala menor quase não aparece e
+  não substitui o redesenho. O problema principal: enfrentar um herói inimigo interrompia a diversão de varrer hordas.
+- **Pedido:** consolidar a sóbria nas skills e nas fontes; redesenhar Guerreiro, Mago, Morel, Odette e o herói inimigo;
+  reconstruir o confronto com Harg (estudo de chefes, com Elden Ring entre as referências), com treino isolado e batalha.
+- **Feito (em teste):** o [33](33-ETAPA8-HARG-E-OS-MODELOS-DOS-HEROIS.md), a seção 0 do 32 e a rodada 8 do 30; a versão
+  **Campo Livre 8** (a 7 em `/v7/`): a sóbria, a violência intensa e os modelos novos como padrão; a seção "Campo Livre: o
+  padrão sóbrio" na `arte-cenas-fenda` e o método confirmado na `arte-personagens-fenda`; as fontes do cenário sóbrio
+  (`arte/fontes/cenario-sobrio/`) e dos modelos novos (`arte/fontes/novos/`); a folha comparável; Harg reconstruído
+  (Talho, Varredura Longa, Martelada, Investida pela linha, Rodopio, Rugido; sequências; fase 2; postura e quebra; as
+  aberturas; a confirmação de acerto); o treino e "Harg entra na batalha".
+- **Conferido:** 77 testes da simulação (9 novos); o confronto sem tela com o jogador automático (quem esquiva de lado
+  vence o treino; quem só recua perde); o fluxo real no navegador nas duas janelas (`conferir8.mjs`); a guerra a 2× a 60
+  qps. O jogo não mudou: a suíte, o gabarito e o pyflakes; a fumaça, reaproveitada. Sem vídeos.
+- **Aprovado:** a direção sóbria e a violência intensa como preferência. **Hipóteses:** os modelos novos, o repertório,
+  os tempos e a postura de Harg.
+- **Parado aqui:** o Jean joga o treino e a guerra (com `F9` para comparar os modelos) e responde à seção 8 do 33.

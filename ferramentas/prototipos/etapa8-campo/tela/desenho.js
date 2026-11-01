@@ -2,7 +2,8 @@
 // pela ampliação inteira; o CSS amplia sem suavizar). Só lê: o mundo (sim.js), os efeitos (efeitos.js) e as opções.
 // As áreas (os avisos do campeão, a preparação do herói, a prévia, os cortes) são pintadas pixel a pixel com a mesma
 // função `dentro` que decide quem é atingido: o que aparece é exatamente o que acerta.
-import { CAMPO, TIPOS } from "./conteudo.js";
+import { CAMPO, TIPOS, HARG8 } from "./conteudo.js";
+const G8 = HARG8.golpes;
 import { dentro, formaDaAcao, alvoAssistido } from "./sim.js";
 import { pousarCorpos, NUMEROS } from "./efeitos.js";
 import { desenharEstradas, prediosOrdenados, temAtras, desenharPredio, desenharMagias, desenharCargas } from "./desenho6.js";
@@ -117,7 +118,7 @@ const DIGITOS = {
   9: ["111", "101", "111", "001", "111"], "!": ["1", "1", "1", "0", "1"],
 };
 const COR_NUMERO = { normal: "#ffffff", forte: "#ffd84a", critico: "#ff8a3a", fogo: "#ffa45a", sangue: "#ff6060",
-  sofrido: "#ff4040" };
+  sofrido: "#ff4040", abertura: "#ffe46a" };
 
 export function numeroPixel(g, texto, x, y, cor, esc = 1) {
   const pts = [];
@@ -147,6 +148,13 @@ const LARGURA_SOMBRA = { soldado: 6, arqueiro: 6, veterano: 7, estandarte: 6, ca
 const SOMBRA_LADO = ["rgba(20,40,110,0.5)", "rgba(110,16,16,0.5)"];
 
 function poseTropa(u) {
+  // Campo Livre 8: Harg pelo tempo do golpe (a preparação, o contato, o machado preso na abertura, de joelhos na quebra)
+  const s = u.h8;
+  if (s) {
+    if (s.quebrado > 0) return "recuo";
+    const g = s.golpe;
+    if (g) return g.etapa === "preparo" ? "preparo" : g.etapa === "exec" || g.total - g.t < 0.18 ? "golpe" : G8[g.id].abertura === true ? "recuo" : "parado";
+  }
   if (u.atordoado > 0 || u.congelado > 0) return "recuo";
   if (u.mostra > 0) return "golpe";
   if (u.acao) return u.acao.t > 0.08 ? "preparo" : "golpe";
@@ -305,6 +313,21 @@ export function desenhar(g, s) {
     avisos.push(u.acao.forma);
     pintarForma(g, u.acao.forma, cx, cy, `rgba(220,40,30,${0.12 + 0.3 * k})`, "rgba(255,90,70,0.95)");
   }
+  // Campo Livre 8: os golpes de Harg reconstruído: a forma do golpe enchendo na preparação (a onda da fase 2, tracejada,
+  // em volta), por baixo e de novo por cima dos corpos; na fase 2, o anel vermelho pulsando no chão; a abertura, dourada
+  for (const u of m.lados[1]) {
+    const h8 = u.h8;
+    if (!h8 || u.morto) continue;
+    const gp = h8.golpe;
+    if (gp && gp.etapa === "preparo") {
+      const k = 1 - Math.max(0, gp.t) / G8[gp.id].preparo;
+      if (gp.onda) pintarForma(g, gp.onda, cx, cy, null, "rgba(255,150,110,0.7)", 3);
+      avisos.push(gp.forma);
+      pintarForma(g, gp.forma, cx, cy, `rgba(220,40,30,${0.1 + 0.36 * k})`, "rgba(255,90,70,0.95)");
+    }
+    if (h8.fase === 2 && !h8.quebrado) pintarForma(g, { tipo: "circulo", x: Math.round(u.x), y: Math.round(u.y), raio: 11 + (Math.floor(rel * 6) % 2) }, cx, cy, null, "rgba(255,70,50,0.7)", 0);
+    if (h8.quebrado > 0 || m.t < (h8.abertoAte || 0)) pintarForma(g, { tipo: "circulo", x: Math.round(u.x), y: Math.round(u.y), raio: 13 }, cx, cy, "rgba(255,220,100,0.14)", "rgba(255,226,120,0.95)", 0);
+  }
   // Campo Livre 7: a Investida Curta (a faixa enchendo na preparação), o Brado (o anel) e o Grilhão (as mãos de Ardis)
   for (const u of m.lados[1]) {
     if (u.morto) continue;
@@ -452,6 +475,10 @@ export function desenhar(g, s) {
       g.fillRect(Math.round(x - Math.cos(t) * 4) - cx, top - Math.round(Math.sin(t) * 1), 1, 1);
     }
     if (u.abalado > 0) { g.fillStyle = "#ffffff"; g.fillRect(Math.round(x) - cx, Math.round(y - sp.ay) - cy - 4, 1, 2); }
+    if (u.h8 && !u.h8.quebrado && u.h8.postura / HARG8.postura.max >= 0.7 && Math.floor(rel * 10 + u.id) % 3 === 0) {
+      g.fillStyle = "#ffe08a";
+      g.fillRect(Math.round(x - 4 + ((Math.floor(rel * 13) * 5) % 9)) - cx, Math.round(y - sp.ay + 2 + ((Math.floor(rel * 11) * 3) % 7)) - cy, 1, 1);
+    }
     if (u.gelado > 0) { g.fillStyle = "#cfeeff"; g.fillRect(Math.round(x + 2) - cx, topo + 2, 1, 1); g.fillRect(Math.round(x - 3) - cx, topo + 5, 1, 1); }
   }
   while (iv < voadores.length) desenharVoador(g, Q, voadores[iv++], cx, cy);
@@ -632,7 +659,7 @@ export function desenhar(g, s) {
     g.globalAlpha = k > 0.72 ? Math.max(0, (1 - k) / 0.28) : 1;
     const cor = n.t < 0.05 && (n.tipo === "critico" || n.tipo === "forte") ? "#ffffff" : COR_NUMERO[n.tipo];
     numeroPixel(g, String(Math.round(n.valor)) + (n.tipo === "critico" ? "!" : ""), n.x + n.dx * 4 * k - cx, n.y - sobe - cy,
-      cor, n.tipo === "critico" ? 2 : 1);
+      cor, n.tipo === "critico" || n.tipo === "abertura" ? 2 : 1);
   }
   g.globalAlpha = 1;
   if (m.lider && !m.lider.morto && !liderCoberto) {

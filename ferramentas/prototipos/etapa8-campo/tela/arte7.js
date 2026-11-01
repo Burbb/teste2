@@ -324,6 +324,10 @@ function arvoreEm(g, px, P, bx, by, r, arte, semente) {
   }
 }
 
+/** A construção (ou árvore) pintada numa tela nova, sem guardar: o montador das fontes em Aseprite (arte/) a usa. */
+export function predioPintado(o, arte) { return pintarPredio(o, arte); }
+export { TEXTURA, C as CORES_CENARIO };
+
 /** Quem está atrás desta construção (ou debaixo da copa): a tela desenha a silhueta por cima dela. */
 export function cobre(o, u) {
   if (o.tipo === "arvore") {

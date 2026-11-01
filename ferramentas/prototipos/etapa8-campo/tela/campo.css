@@ -111,6 +111,17 @@ button.principal { border-color: var(--ouro); color: var(--ouro); }
 #chefe b { color: #ff8a78; font-weight: 400; }
 #chefe .barra i { background: #d0463a; }
 #chefe small { display: block; color: var(--tinta-2); font-size: 11px; min-height: 13px; }
+/* Campo Livre 8: o dano recente (o trecho claro que escorre atrás da vida) e a postura de Harg (cheia, ele quebra) */
+#chefe .barra { position: relative; }
+#chefe .barra em { position: absolute; left: 0; top: 0; bottom: 0; background: #ffe2c8; }
+#chefe .barra i { position: relative; }
+#chefe .postura { height: 4px; margin: 2px 0 1px; background: #2a2622; border: 1px solid #5a4a2a; }
+#chefe .postura i { display: block; height: 100%; background: #c9a24a; }
+#chefe .postura.perto i { background: #ffe08a; }
+#chefe .postura.firme i { background: #7a6a50; }
+#chefe.quebrado { border-color: #ffe08a; }
+#chefe.aberto { border-color: #ffd84a; }
+#chefe.fase2 b { color: #ff5a48; }
 body.em-luta #faixa { top: 70px; }
 #encontros { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 6px; }
 .encontro { text-align: left; border: 1px solid var(--linha-hud); background: rgba(0, 0, 0, 0.25); padding: 6px 8px; cursor: pointer; font-family: var(--pixel); font-size: 12px; color: var(--tinta-2); }

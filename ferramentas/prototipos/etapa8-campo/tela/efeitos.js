@@ -170,7 +170,7 @@ function numeroDeDano(E, e) {
     const j = E.numeros.find((n) => n.id === e.id && n.continuo === e.elemento && n.t - n.ultimo < NUMEROS.somaContinuo);
     if (j) { j.valor += e.valor; j.ultimo = j.t; j.t = Math.min(j.t, 0.15); j.ultimo = j.t; return; }
   }
-  const tipo = e.sutil ? e.elemento || "fogo" : e.critico ? "critico" : e.forte ? "forte" : "normal";
+  const tipo = e.abertura && !e.sutil ? "abertura" : e.sutil ? e.elemento || "fogo" : e.critico ? "critico" : e.forte ? "forte" : "normal";
   E.numeros.push({ id: e.id, x: e.x + (E.rng() - 0.5) * 6, y: e.y - 13, dx: e.dx || 0, valor: e.valor, tipo, t: 0, ultimo: 0,
     continuo: e.sutil ? e.elemento : null });
   if (E.numeros.length > NUMEROS.maximo) E.numeros.splice(0, E.numeros.length - NUMEROS.maximo);
@@ -182,6 +182,13 @@ export function receber(E, eventos, m) {
     switch (e.tipo) {
       case "dano":
         numeroDeDano(E, e);
+        // Campo Livre 8: em Harg, cada acerto confirma (faíscas e o som de impacto, sem pará-lo); na abertura ou com a
+        // postura quebrada, a confirmação forte: o anel dourado, brasas e um tremor curto
+        if (e.chefe) {
+          faiscas(E, e.x, e.y - 5, e.dx || 0, e.dy || 0, e.abertura ? 7 : 4, e.abertura ? "#ffe08a" : "#fff6d0");
+          E.sons.push("impacto");
+          if (e.abertura) { E.aneis.push({ x: e.x, y: e.y - 3, r0: 4, r1: 16, t: 0, dur: 0.22, cor: "#ffd84a" }); tremer(E, 0.16, e.dx || 0, e.dy || 0); }
+        }
         if (e.fagulha) brasas(E, e.x, e.y - 4, 8, 40);   // a Fagulha consumida: um estouro de brasas no alvo
         break;
       case "heroiAtingido": {
@@ -340,6 +347,27 @@ export function receber(E, eventos, m) {
         break;
       }
       case "congela": gelo(E, e.x, e.y, 6, 5); break;
+      case "hargContato":
+        if (e.forma && e.forma.tipo === "arco") E.cortes.push({ forma: e.forma, t: 0, dur: 0.16, forte: true, inimigo: true });
+        if (e.forma && e.forma.tipo === "circulo") { E.aneis.push({ x: e.forma.x, y: e.forma.y, r0: 6, r1: e.forma.raio + 4, t: 0, dur: 0.28, cor: "#ff8a78" }); marcaRachada(E, e.forma.x, e.forma.y, e.forma.raio); poeira(E, e.forma.x, e.forma.y, 18, 60); }
+        if (e.onda) E.aneis.push({ x: e.onda.x, y: e.onda.y, r0: e.forma.raio, r1: e.onda.raio, t: 0, dur: 0.35, cor: "#ffb08a" });
+        if (e.golpe === "investida") poeira(E, e.x, e.y, 14, 50);
+        tremer(E, e.heroi ? 0.4 : 0.12 + Math.min(0.2, (e.mortos || 0) * 0.03));
+        E.sons.push(e.golpe === "martelada" || e.golpe === "rugido" ? "aterrissa" : "golpeAmeaca");
+        if (e.mortos >= 4) E.mensagens.push({ texto: `${e.mortos} derrubados`, t: 0, x: e.x, y: e.y - 22 });
+        break;
+      case "hargExec": if (e.golpe === "investida") { E.sons.push("investida"); poeira(E, e.x, e.y, 10, 40); } break;
+      case "hargQuebra":
+        E.aneis.push({ x: e.x, y: e.y - 4, r0: 4, r1: 30, t: 0, dur: 0.45, cor: "#ffe08a" });
+        brasas(E, e.x, e.y - 6, 24, 70);
+        E.mensagens.push({ texto: "postura quebrada", t: 0, x: e.x, y: e.y - 26 });
+        tremer(E, 0.5); E.pausaPedida = Math.max(E.pausaPedida, 90); E.sons.push("choque");
+        break;
+      case "hargFase":
+        E.aneis.push({ x: e.x, y: e.y, r0: 6, r1: 64, t: 0, dur: 0.5, cor: "#ff5a48" });
+        E.mensagens.push({ texto: "fúria", t: 0, x: e.x, y: e.y - 26 });
+        tremer(E, 0.35); E.sons.push("trompa");
+        break;
       case "estilhaca": gelo(E, e.x, e.y, 10, 6); break;
       case "flechaChao": {
         const g = E.gm;

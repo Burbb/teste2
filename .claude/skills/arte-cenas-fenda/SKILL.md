@@ -1,6 +1,6 @@
 ---
 name: arte-cenas-fenda
-description: Construir, revisar, avaliar ou integrar um interior (cenário interno de um lugar: a forja, a curandeira, o templo, a taverna, uma casa, uma loja) ou outro ambiente de cena, e os personagens animados dentro dele, em The Unquiet (Crônicas da Fenda), no quadro de cima das cenas (telas/cenas.js, telas/cena-forja.js), do levantamento do lugar à candidata no protótipo e à integração. Use sempre que a tarefa for um interior novo ou refeito, um personagem de cena trabalhando (o ferreiro, a curandeira, o taverneiro, os fregueses), a animação de uma atividade, a comparação de candidatas de ambiente ou a consolidação da fonte em Aseprite de uma cena, mesmo que o Jean não cite a skill. Não serve para ícones e itens (arte-itens-fenda e as skills de cada objeto), retratos de carta nem regras de serviço.
+description: Construir, revisar, avaliar ou integrar um interior (cenário interno de um lugar: a forja, a curandeira, o templo, a taverna, uma casa, uma loja) ou outro ambiente de cena, e os personagens animados dentro dele, em The Unquiet (Crônicas da Fenda), no quadro de cima das cenas (telas/cenas.js, telas/cena-forja.js), do levantamento do lugar à candidata no protótipo e à integração. Use sempre que a tarefa for um interior novo ou refeito, um personagem de cena trabalhando (o ferreiro, a curandeira, o taverneiro, os fregueses), a animação de uma atividade, a comparação de candidatas de ambiente ou a consolidação da fonte em Aseprite de uma cena, mesmo que o Jean não cite a skill. Também o cenário do campo de batalha do Campo Livre (o protótipo da etapa 8, a vista de cima com as construções em três quartos): a seção "Campo Livre: o padrão sóbrio". Não serve para ícones e itens (arte-itens-fenda e as skills de cada objeto), retratos de carta nem regras de serviço.
 ---
 
 # Interiores e personagens animados de cena
@@ -342,6 +342,52 @@ canto e uns 23 na borda, os blocos de 7 a 36 px pela profundidade, a travessa vi
 
 **Ainda hipótese** (espera a avaliação do Jean): se a convergência forte lê como o canto de uma sala pequena, ou pede o
 canto mais para a esquerda (fugas mais suaves); se a mesa encostada lê bem com o castiçal junto dela.
+
+## Campo Livre: o padrão sóbrio (01/11/2026)
+
+O campo de batalha do protótipo de campo livre (`ferramentas/prototipos/etapa8-campo/`) não é um interior: é a vista de
+cima com as construções e os corpos em três quartos, com centenas de miniaturas de 13 a 19 px, áreas de habilidade,
+números de dano e sangue ao mesmo tempo. O Jean escolheu a candidata **sóbria** como base (`roadmapIDEIAS/32`, seção
+0): a evolução contida do minimalismo. A **sombria** ficou como referência: foi a favorita como imagem parada, mas a
+densidade de textura dela pesou na leitura quando a batalha começou. Isso não proíbe detalhe: proíbe detalhe que compete
+com a ação. Três camadas, para não confundir regra com gosto:
+
+**Princípios gerais (valem para qualquer direção do campo):**
+- **Uma projeção para tudo** (Slynyrd, *Pixelblog 3*): cada construção ocupa no chão o retângulo da colisão e sobe para o
+  norte; nada de isometria. Uniformidade vale mais que realismo.
+- **Uma luz para tudo**, de um canto de cima: as faces, as copas e as sombras no chão concordam.
+- **Hierarquia de contraste:** o chão é o de menos contraste; as construções, médio; as miniaturas, mais; os avisos de
+  perigo, os números e os efeitos, o máximo (saturados). O que fica no chão (sangue, corpos, marcas) fica abaixo dos
+  vivos e dos avisos, escurecido e dessaturado (um corpo nunca parece alguém de pé).
+- **Densidade de textura baixa onde a ação acontece:** textura em grupos pequenos e espaçados, com espaço vazio entre
+  as texturas cheias (Slynyrd, *Pixelblog 20*). Áreas tranquilas (o gramado liso, a estrada) destacam a luta.
+- **Quem está atrás aparece:** a construção alta fica inteira, e quem está atrás dela (ou debaixo de uma copa) aparece
+  em silhueta na cor da equipe por cima; sem deixar o cenário translúcido o tempo todo.
+- **Conferir com a batalha, não com a cena vazia:** hordas, habilidades em área, números de dano e o sangue da violência
+  intensa, nas duas janelas, em movimento. Uma direção que só funciona parada não serve.
+
+**Os parâmetros deste estilo (a sóbria; os valores em `tela/arte7.js` e `tela/sprites7.js`):**
+- **Perspectiva:** a de cima, com as alturas para o norte (casa 22 a 30 px, muralha 30, torre 42).
+- **Luz:** do noroeste; as sombras no chão para o sudeste (4 px das construções; a elipse das copas deslocada).
+- **Paleta e contraste:** o verde-oliva acinzentado do campo (`#56664a`, fora `#3e4a37`), a textura dois tons ao lado
+  (`#4e5d43`, `#62735a`); as equipes azul-aço (`#6e95c9`, `#4b6fa3`, `#2f4a73`) e ferrugem (`#c45f4f`, `#963f35`,
+  `#612a26`); os heróis com contorno e a cor mais clara do campo.
+- **Densidade:** a textura de 16 × 16 com 28 pixels marcados (de 256), espelhada a cada quadro; 14 manchas grandes; 300 tufos;
+  46 pedras; poucas flores apagadas. Na sombria eram 22 manchas e 380 tufos, mais lama: foi o que pesou.
+- **Materiais:** reboco claro e madeira (os esteios e a viga do meio), a base de pedra, a telha de barro em fileiras com
+  a cumeeira clara e o lado direito na sombra, a chaminé de pedra; a pedra da muralha em blocos com as juntas
+  desencontradas, as ameias nas bordas do caminho de ronda, a quina da direita na sombra.
+- **Terreno e vegetação:** a terra batida da estrada com a beira pontilhada e dois sulcos; as copas em seis feixes
+  sombreados como esferas (o claro em cima à esquerda), o tronco listrado (Slynyrd, *Pixelblog 44*).
+- **Sobreposição:** a silhueta (azul `#9cc6ff`, vermelho `#ff8a78`, o herói claro) a 55% por cima da construção.
+- **Sangue, corpos e marcas:** o sangue `rgba(132,24,24,0.85)` e o escuro `rgba(84,14,16,0.85)`; o borrifo na direção do
+  golpe, a poça embaixo do corpo, o rastro do arrasto, as armas caídas, a queimadura das explosões, tudo na camada de
+  marcas do chão; a violência começa na intensa (a preferência do Jean) e continua ajustável.
+
+**Exemplos:** `capturas/cl7-amostra-sobria-1920.png` (o trecho da povoação), `capturas/cl8-guerra-1920.png` (a guerra
+com a violência intensa e Harg quebrado: o campo devastado, os avisos e os números legíveis); as fontes em
+`arte/fontes/cenario-sobrio/` (a textura do chão em três camadas, a casa, os trechos da muralha, a torre, o muro, as
+árvores), refeitas por `arte/montar_cenario.mjs` a partir dos motivos de `arte7.js` (por enquanto a autoridade).
 
 ## Erros que aconteceram na forja (e como evitá-los)
 

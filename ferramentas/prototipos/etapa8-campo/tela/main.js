@@ -22,6 +22,7 @@ import { criarEfeitos, receber, avancar, VIOLENCIA } from "./efeitos.js";
 import { ARTES, ESCALAS } from "./sprites7.js";
 import { criarChao7 } from "./arte7.js";
 import { estadoControle } from "./campo7.js";
+import { estadoHarg8 } from "./campo8.js";
 import { prepararSprites } from "./sprites.js";
 import { criarChao, desenhar, BORDA } from "./desenho.js";
 import { criarRobo, pensar } from "./robo.js";
@@ -51,10 +52,22 @@ const montagemDe = (heroi, nome = MONTAGEM_PADRAO[heroi]) => structuredClone(MON
 const PADRAO = { tremor: 150, pausa: true, volume: 50, mudo: false, areas: true, heroi: "guerreiro", quantidade: "1", horda: 60,
   encontro: "original", montagem: { guerreiro: montagemDe("guerreiro"), mago: montagemDe("mago") } };
 PADRAO.composicao = { aliados: "comum", inimigos: "comum" };
-// Campo Livre 7: a aparência (o estudo de arte), a escala do seu herói e a violência (só o que fica no chão)
-Object.assign(PADRAO, { arte: "atual", escala: "atual", violencia: 2 });
+// Campo Livre 7: a aparência (o estudo de arte), a escala do seu herói e a violência (só o que fica no chão).
+// Campo Livre 8: a sóbria é a base (a escolha do Jean; a atual e a sombria continuam no F8 para comparar), a violência
+// começa na intensa e os modelos dos heróis começam nos novos (a candidata). O que o jogador já escolheu continua: a
+// violência guardada no Campo Livre 7 vale, salvo o 2 (o padrão de antes, que o jogo gravava sem ninguém escolher).
+Object.assign(PADRAO, { arte: "sobria", escala: "novo", violencia: 3 });
 const opcoes = structuredClone(PADRAO);
-try { Object.assign(opcoes, JSON.parse(localStorage.getItem("campo-livre-7-opcoes") || "{}")); } catch { /* sem armazenamento */ }
+try {
+  const salvas = localStorage.getItem("campo-livre-8-opcoes");
+  if (salvas) Object.assign(opcoes, JSON.parse(salvas));
+  else {
+    const v7 = JSON.parse(localStorage.getItem("campo-livre-7-opcoes") || "{}");
+    delete v7.arte; delete v7.escala;
+    if (v7.violencia === 2) delete v7.violencia;
+    Object.assign(opcoes, v7);
+  }
+} catch { /* sem armazenamento */ }
 // ?arte=sombria&escala=menor&violencia=3: o estudo de arte direto
 if (ARTES[url.get("arte")]) opcoes.arte = url.get("arte");
 if (ESCALAS[url.get("escala")]) opcoes.escala = url.get("escala");
@@ -77,7 +90,7 @@ if (url.get("hab")) {
   if (ult) opcoes.montagem[opcoes.heroi].ultimate = ult;
 }
 if (url.get("tal") !== null) opcoes.montagem[opcoes.heroi].talentos = url.get("tal") ? url.get("tal").split(",") : [];
-function guardar() { try { localStorage.setItem("campo-livre-7-opcoes", JSON.stringify(opcoes)); } catch { /* idem */ } }
+function guardar() { try { localStorage.setItem("campo-livre-8-opcoes", JSON.stringify(opcoes)); } catch { /* idem */ } }
 
 // as teclas dos espaços do kit (o botão esquerdo é o principal, segurado; o botão direito, o primeiro espaço comum)
 const TECLA_ESPACO = { Space: "mobilidade", KeyQ: "h2", KeyE: "h3", KeyF: "ult" };
@@ -86,7 +99,7 @@ const TECLA_ESPACO = { Space: "mobilidade", KeyQ: "h2", KeyE: "h3", KeyF: "ult" 
 const st = {
   tela: "inicio", m: null, E: null, ent: entradaVazia(), robo: null, pausado: false, acumulado: 0,
   pausaAte: 0, refratarioAte: 0, cam: { x: 0, y: 0 }, escala: 2, W: 640, H: 360, mouseTela: { x: 320, y: 180 },
-  relogio: 0, ultimo: performance.now(), faixaAte: 0, shift: false, arrasto: null,
+  relogio: 0, ultimo: performance.now(), faixaAte: 0, shift: false, arrasto: null, vistos8: new Set(), chip: null,
   olhar: { x: 0, y: 0 }, retorno: 0, calma: 1, estavaComando: false,
   diag: { quadros: [], sim: [], desenho: [], passos: 0, pausas: 0, pausaMs: 0 },
 };
@@ -114,6 +127,7 @@ function novaBatalha() {
     kit: opcoes.montagem[opcoes.heroi], composicao: opcoes.composicao });
   st.E = criarEfeitos(sorteio(77));
   st.ent = entradaVazia();
+  st.vistos8 = new Set(); st.chip = null;
   st.robo = url.get("robo") ? criarRobo({ nivel: url.get("robo") === "medio" ? "medio" : "forte" }) : null;
   st.acumulado = 0;
   st.pausaAte = st.refratarioAte = 0;
@@ -453,6 +467,10 @@ function eventoNaTela(ev) {
   else if (ev.tipo === "aviso" && ev.grilhao) faixa("Ardis prepara o Grilhão Arcano: desvie do projétil roxo (imobiliza).", 1.4);
   else if (ev.tipo === "aviso" && ev.lider && ev.reunidos !== undefined) faixa(`${TIPOS.lider.nome} reúne ${ev.reunidos} para a carga${ev.heroi ? " contra você" : ""}: saia da faixa ou interrompa com um golpe forte.`, 2.2);
   if (ev.tipo === "liderFoco") faixa(ev.texto || (ev.modo === "heroi" ? `${TIPOS.lider.nome} vem atrás de você.` : `${TIPOS.lider.nome} vai para as suas tropas.`), 1.8);
+  // Campo Livre 8: Harg reconstruído. Cada golpe se explica na primeira vez que aparece na batalha (o treino ensina)
+  if (ev.tipo === "aviso" && ev.h8 && !st.vistos8.has(ev.h8)) { st.vistos8.add(ev.h8); faixa(EXPLICA8[ev.h8], 2.6); }
+  if (ev.tipo === "hargQuebra") faixa(`A postura de ${TIPOS.lider.nome} quebrou: ${numero(ev.dura)} s de joelhos, levando +50%. Bata agora.`, 2.2);
+  if (ev.tipo === "hargFase") faixa(`${TIPOS.lider.nome} entra em fúria: sequências de três golpes, pausas mais curtas e a Martelada solta uma onda.`, 3);
   if (ev.tipo === "desafio") faixa(`Morel desafia: o herói inimigo vai atrás dele por ${numero(Math.round(ev.dura * 10) / 10)} s.`, 1.8);
   if (ev.tipo === "firme" && ev.heroi) faixa("Firme: este controle não pegou (proteção contra repetição).", 1.4);
   if (ev.tipo === "alvoEncerrado") faixa(`${ev.nome}: ${ev.motivo === "derrubado" ? "derrubado" : ev.motivo === "fugiu" ? "fugiu" : "longe demais"}. Quem o atacava volta à ordem de antes.`, 2.2);
@@ -507,6 +525,14 @@ function fim() {
 
 // ------------------------------------------------------------------------------------------------ HUD
 function numero(v) { return String(v).replace(".", ","); }
+const EXPLICA8 = {
+  talho: "Talho: o golpe curto de Harg. Saia do arco (para trás e para o lado) ou bata antes que ele feche.",
+  varredura: "Varredura Longa: o arco vai longe e alcança quem só recua. Passe para o lado de trás dele ou use a mobilidade.",
+  martelada: "Martelada: o golpe final. Saia do círculo; depois o machado fica preso e ele leva +50% (a abertura).",
+  investida: "Investida: ele atravessa a infantaria pela faixa e para no primeiro herói. Saia da faixa; depois ele fica aberto.",
+  rodopio: "Rodopio: o giro contra quem o cerca. Saia do círculo.",
+  rugido: "Rugido: Harg vai mudar de fase.",
+};
 const FOCO = { heroi: "Atrás de você", morel: "Enfrenta Morel", odette: "Atrás de Odette", tropas: "Nas suas tropas" };
 
 // Os espaços do kit na barra: o principal, a mobilidade, as três comuns e a ultimate, com a tecla, o nome e o custo
@@ -585,10 +611,21 @@ function atualizarHud() {
     m.ardis && (m.ardis.acaoA ? m.ardis.acaoA.tipo : m.ardis.absorveAte > m.t), m.morel && Math.ceil(m.morel.vida), m.odette && Math.ceil(m.odette.vida),
     estadoControle(m, h).map((c) => c.texto).join("|"), m.lider && (m.lider.dash7 ? m.lider.dash7.fase : m.lider.brado7 ? "brado" : ""),
     m.lider && m.lider.focoU && m.lider.focoU.id, m.lider && m.lider.provocacao && m.lider.provocacao.ate > m.t, m.morel && m.morel.posturaAte > m.t,
+    m.lider && m.lider.h8 && JSON.stringify(estadoHarg8(m, m.lider)),
     ...slots.map((s) => Math.ceil((h.cds[s.id] || 0) * 10))].join(",");
   if (st.faixaAte && st.relogio > st.faixaAte) { $("#faixa").classList.remove("ver"); st.faixaAte = 0; }
   if (golpeAte && st.relogio > golpeAte) { $("#golpe").style.opacity = "0"; golpeAte = 0; }   // some devagar (transição do CSS)
   if (vida < ultimaVida - 4) { const b = $("#ficha .vida"); b.classList.remove("apanhou"); void b.offsetWidth; b.classList.add("apanhou"); }
+  // Campo Livre 8: o dano recente em Harg escorre atrás da vida (o trecho claro), depois de 0,35 s parado
+  const lc = m.lider;
+  if (lc && lc.h8) {
+    const v = Math.max(0, lc.vida), c = st.chip || (st.chip = { v, desde: st.relogio });
+    if (v > c.v) c.v = v;
+    if (v < c.v - 0.5 && st.relogio - c.desde > 0.35) c.v = Math.max(v, c.v - lc.vidaMax * 0.5 * (1 / 60));
+    if (Math.abs(v - (c.ultimo ?? v)) > 0.01) c.desde = st.relogio;
+    c.ultimo = v;
+    $("#chefe .barra em").style.width = (100 * c.v) / lc.vidaMax + "%";
+  }
   ultimaVida = vida;
   if (chave === ultimoHud) return;
   ultimoHud = chave;
@@ -614,6 +651,19 @@ function atualizarHud() {
       : l.brado7 ? "Vai bradar!" : l.firmeAte > m.t ? "Firme: golpe forte não o interrompe agora"
       : l.provocacao && l.provocacao.ate > m.t ? `Provocado por Morel: ${numero((Math.ceil((l.provocacao.ate - m.t) * 10) / 10).toFixed(1))} s`
       : `${FOCO[l.modo] || FOCO.heroi} · presença: ${firmes()} firmes`;
+    // Campo Livre 8: o estado de Harg vem pronto do motor (o golpe em curso, a abertura, a quebra, a firmeza, a fase)
+    const e8 = l.h8 && !l.morto ? estadoHarg8(m, l) : null;
+    $("#chefe .postura").hidden = !e8;
+    if (e8) {
+      $("#chefe small").textContent = `${e8.texto} · ${FOCO[l.modo] || FOCO.heroi}`;
+      const pb = $("#chefe .postura");
+      pb.querySelector("i").style.width = (100 * e8.postura) + "%";
+      pb.classList.toggle("perto", e8.postura >= 0.7 && !e8.firme);
+      pb.classList.toggle("firme", e8.firme);
+      $("#chefe").classList.toggle("quebrado", e8.quebrado);
+      $("#chefe").classList.toggle("aberto", e8.aberto);
+      $("#chefe").classList.toggle("fase2", e8.fase === 2);
+    }
   }
   // Campo Livre 6: a barra de Ardis (ao lado da de Harg) e a vida de Morel e Odette, embaixo da ficha
   const ar = m.ardis;
@@ -794,7 +844,7 @@ function montarInicio() {
     b.type = "button";
     b.className = "encontro";
     b.dataset.enc = id;
-    b.innerHTML = `<b>${e.nome}</b>${e.original ? "a batalha do Campo Livre 1" : id === "capitao" ? "o líder e a retaguarda" : id === "horda" ? "ondas de gente, ao estilo musou" : id === "duasFrentes" ? "pressão dos dois lados" : id === "vila" ? "casas, muralha, hordas e a linha pesada" : id === "carga" ? "cavalaria pelos flancos" : id === "herois" ? "dois heróis inimigos juntos" : id === "amostra" ? "estudo de arte: muralha, portão, casa e árvores" : "grupos longe uns dos outros"}`;
+    b.innerHTML = `<b>${e.nome}</b>${e.original ? "a batalha do Campo Livre 1" : id === "capitao" ? "o líder e a retaguarda" : id === "horda" ? "ondas de gente, ao estilo musou" : id === "duasFrentes" ? "pressão dos dois lados" : id === "vila" ? "casas, muralha, hordas e a linha pesada" : id === "carga" ? "cavalaria pelos flancos" : id === "herois" ? "dois heróis inimigos juntos" : id === "amostra" ? "estudo de arte: muralha, portão, casa e árvores" : id === "duelo" ? "só você e Harg: os golpes, a postura, as aberturas" : id === "guerra" ? "as hordas, e Harg entra pelo portão" : "grupos longe uns dos outros"}`;
     b.addEventListener("click", () => escolherEncontro(id));
     $("#encontros").append(b);
   }

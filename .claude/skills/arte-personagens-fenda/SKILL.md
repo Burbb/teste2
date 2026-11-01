@@ -364,8 +364,28 @@ para reaproveitar:
   etiqueta): `ferramentas/prototipos/etapa8-campo/arte/montar.mjs`. A grade continua a autoridade enquanto o estudo não
   for aprovado.
 
-**Ainda hipótese:** qual direção (sóbria ou sombria) segue, se o herói menor vale a troca e se a silhueta lê melhor que a
-transparência: tudo espera o Jean jogar a amostra.
+**A avaliação do Jean (01/11/2026):** a direção sóbria segue; a sombria fica como referência. O herói menor (15 para
+14 px) quase não aparece: **diminuir não substitui o redesenho**. Os heróis do Campo Livre 7 eram, no fundo, troca de
+paleta.
+
+**O método confirmado no redesenho dos cinco heróis (Campo Livre 8, `roadmapIDEIAS/33`, seção 6; os modelos ainda
+esperam a aprovação artística):**
+1. **Levante o que o jogo já estabelece** de cada um (os retratos e as figuras em `rpg/web/static/retratos.js`): Morel, o
+   cabelo e a barba castanhos, as ombreiras, a túnica vermelha, a espada; Odette, a touca branca, o véu escuro roído, a
+   cruz amarela. A miniatura leva dois ou três desses traços, não todos.
+2. **Uma ideia de silhueta por personagem, que nenhum outro tem:** a espada em diagonal do Guerreiro, o chapéu de ponta
+   dobrada e o cajado alto do Mago, o escudo redondo na frente de Morel, a touca e o véu de Odette, os chifres e o
+   machado de Harg. Confira a silhueta numa cor só antes de colorir.
+3. **A escala fica** (17 × 15; Harg 19 × 15). Crescer só com uma necessidade de leitura demonstrada no tamanho do jogo.
+4. **A grade inteira por pose, com as pernas** (`semPernas`): a passada e a base do golpe mudam com o corpo (o pé da frente
+   avança no golpe, o peso vai para trás no preparo).
+5. **Poucas poses que contam a ação:** parado, duas passadas, preparo (a arma recolhida para trás: a antecipação),
+   golpe (a arma esticada na direção do efeito, no mesmo passo do contato), recuo (o tranco); o caído é o recuo girado.
+6. **A arma aponta para o efeito:** a pose de golpe e o corte (ou a explosão) aparecem no mesmo passo; a arma na pose
+   fica do lado do arco.
+7. **A folha comparável antes do jogo** (o modelo antigo e o novo, as poses lado a lado, no tamanho real sobre o chão e
+   ampliados: `arte/folha.py`), **depois o jogo** (a troca `F9` no meio da luta). A fonte `.aseprite` sai em lote da
+   grade (`arte/montar.mjs`).
 
 ## Erros que já aconteceram
 

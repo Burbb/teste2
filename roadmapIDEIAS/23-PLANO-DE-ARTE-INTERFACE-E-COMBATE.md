@@ -36,7 +36,8 @@ horda) estão registradas; a rodada 5 (Campo Livre 5: o kit montado antes da lut
 construções, tropas avançadas, Morel e Odette autônomos, Harg e Ardis) estão em teste (rodadas 5 e 6 do 30); a rodada 7
 (Campo Livre 7: navegação, alvos dos heróis inimigos, controles e provocações) também, com o **estudo de direção de arte do
 campo** (o [32](32-ETAPA8-DIRECAO-DE-ARTE-DO-CAMPO.md): duas direções, sóbria e sombria, numa amostra jogável, a escala do
-herói, a carnificina; nada aprovado). O **Tático 2** (o [31](31-ETAPA8-TATICO-POR-TURNOS.md), combate por turnos em
+herói, a carnificina); o Jean escolheu a **sóbria** como base, e a rodada 8 (o [33](33-ETAPA8-HARG-E-OS-MODELOS-DOS-HEROIS.md))
+redesenhou os heróis e reconstruiu Harg, em teste. O **Tático 2** (o [31](31-ETAPA8-TATICO-POR-TURNOS.md), combate por turnos em
 losangos inspirado em Dofus) fica como histórico.
 
 ## Estado de referência — 29/10/2026

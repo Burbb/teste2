@@ -4,6 +4,7 @@
 // pele, como nas figuras de cena. Sem contorno escuro nos soldados (a sombra no chão e o valor separam do piso); o
 // herói tem contorno, a cor mais clara do campo e um anel no chão.
 import { PALETAS, EQUIPES_ARTE, CORES_ARTE, MODELOS_SOMBRIOS, MODELOS_MENORES } from "./sprites7.js";
+import { MODELOS_NOVOS } from "./sprites8.js";
 
 export const PALETA = {
   k: "#1c1a24", K: "#34303c",
@@ -812,6 +813,7 @@ export function prepararSprites({ arte = "atual", escala = "atual" } = {}) {
   const modelos = { ...MODELOS };
   if (arte === "sombria") Object.assign(modelos, MODELOS_SOMBRIOS);
   if (escala === "menor") Object.assign(modelos, MODELOS_MENORES);
+  if (escala === "novo") Object.assign(modelos, MODELOS_NOVOS);   // Campo Livre 8: os modelos novos dos heróis
   for (const [tipo, mod] of Object.entries(modelos)) {
     Q[tipo] = [];
     for (let eq = 0; eq < 2; eq++) {

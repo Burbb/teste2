@@ -19,7 +19,9 @@ export const ARTES = {
   sobria: { nome: "Sóbria (o minimalismo, mais contido)" },
   sombria: { nome: "Sombria (mais detalhe, mais escura)" },
 };
-export const ESCALAS = { atual: { nome: "Atual" }, menor: { nome: "Seu herói menor" } };
+// Campo Livre 8: a escala virou a escolha dos modelos dos heróis (F9): os novos (a candidata do 8, sprites8.js), os do
+// Campo Livre 7 e o herói menor do estudo do 7 (a diferença de 15 para 14 px quase não aparece: não substitui o redesenho)
+export const ESCALAS = { novo: { nome: "Modelos novos (candidata)" }, atual: { nome: "Modelos do Campo Livre 7" }, menor: { nome: "Herói menor (estudo do 7)" } };
 
 // As paletas trocam o valor de cada letra (a grade não muda).
 export const PALETAS = {

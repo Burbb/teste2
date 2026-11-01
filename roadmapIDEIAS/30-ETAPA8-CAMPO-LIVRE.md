@@ -1,6 +1,7 @@
 # 30 — Etapa 8: o combate em campo livre (herói em tempo real e tropas pequenas)
 
-**31/10/2026 (rodada 1) e 01/11/2026 (rodadas 2 a 7).** A rodada 7 (Campo Livre 7: a navegação, a escolha de alvo dos
+**31/10/2026 (rodada 1) e 01/11/2026 (rodadas 2 a 8).** A rodada 8 (Campo Livre 8: Harg como o confronto principal e os
+modelos novos dos heróis, no [33](33-ETAPA8-HARG-E-OS-MODELOS-DOS-HEROIS.md)) vem primeiro; depois a rodada 7 (Campo Livre 7: a navegação, a escolha de alvo dos
 heróis inimigos, a investida rápida, os controles e as provocações; o estudo de arte, com a amostra jogável e a
 carnificina, está no [32](32-ETAPA8-DIRECAO-DE-ARTE-DO-CAMPO.md)) vem primeiro; depois a rodada 6 (Campo Livre 6: o
 cenário com construções, as tropas avançadas, Morel e Odette autônomos e os heróis inimigos); depois a rodada 5 (Campo Livre 5: o kit montado
@@ -11,6 +12,16 @@ comando, o Capitão que enfrenta o herói, as escalas 1×, 2× e 4× e duas habi
 a rodada 2 (Campo Livre 2: números de dano, o líder inimigo, o modo de comando e a seleção, a leitura do choque, três
 encontros e quatro versões de habilidade); por fim as seções 0 a 14, a rodada 1 (Campo Livre 1). **A direção foi
 aprovada pelo Jean para continuar no protótipo, sem integração.**
+
+## Rodada 8 (01/11/2026): Campo Livre 8
+
+**O pedido do Jean:** três entregas: consolidar a direção sóbria (a escolhida; a sombria fica como referência), redesenhar
+as miniaturas dos heróis e reconstruir o confronto com um herói inimigo (Harg), porque enfrentá-lo interrompia a diversão
+de varrer hordas. **Em teste; os modelos e o confronto esperam a avaliação.** A v7 fica em `tela-v7/` (`/v7/`). Tudo está
+no [33](33-ETAPA8-HARG-E-OS-MODELOS-DOS-HEROIS.md): o estudo de confrontos com chefes (observação, explicação de
+desenvolvedor, hipótese), o repertório e o ritmo do novo Harg (Talho, Varredura Longa, Martelada, Investida, Rodopio,
+Rugido; as sequências; a fase 2), a postura e a confirmação de acerto, o treino e a guerra, os modelos novos dos cinco
+heróis, as medições e o que avaliar. A decisão da arte está na seção 0 do [32](32-ETAPA8-DIRECAO-DE-ARTE-DO-CAMPO.md).
 
 ## Rodada 7 (01/11/2026): Campo Livre 7
 
