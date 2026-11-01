@@ -8,6 +8,10 @@ espacial está em avaliação**: nada aqui é decisão.
 > **Depois (31/10/2026):** o Jean jogou este protótipo, gostou do ganho espacial e escolheu seguir para o **campo livre
 > em tempo real** (o [30](30-ETAPA8-CAMPO-LIVRE.md)). Este estudo e o protótipo tático ficam preservados como histórico,
 > sem expansão nesta rodada.
+>
+> **01/11/2026:** o Jean pediu um estudo de Dofus mais fundo e uma luta tática completa; ela está no
+> [31](31-ETAPA8-TATICO-POR-TURNOS.md) e no protótipo Tático 2 (`ferramentas/prototipos/etapa8-tatico2/`). Este Tático 1
+> fica como está, para comparar.
 
 Ligações: o [28](28-ETAPA8-HABILIDADES-TALENTOS-E-BUILDS.md) (o X1 e os sistemas de builds), o
 [plano 23](23-PLANO-DE-ARTE-INTERFACE-E-COMBATE.md) (etapa 8) e a [continuidade](00-COMECE-AQUI.md). Protótipo:

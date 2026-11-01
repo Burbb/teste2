@@ -1,0 +1,1 @@
+{ "private": true, "type": "module", "description": "Protótipo tático por turnos (nada no jogo): os .js de tela/ são módulos ES, no navegador e no Node." }

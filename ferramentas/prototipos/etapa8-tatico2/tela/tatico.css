@@ -1,0 +1,122 @@
+/* PROTÓTIPO tático por turnos da etapa 8 (nada no jogo). A arena no meio; em cima, a ordem dos turnos; embaixo, a
+   ficha de quem está na vez e a barra de habilidades. Cores e fontes do jogo (01-base.css, 11-tipografia.css), no
+   mesmo vocabulário visual do campo livre. */
+@font-face { font-family: "Pixeloid Sans"; src: url(/static/fontes/pixeloid-sans.ttf) format("truetype"); font-display: swap; }
+:root { --fundo-hud: rgba(14, 12, 16, 0.82); --linha-hud: rgba(226, 189, 99, 0.28); --azul: #8bb8f0; --vermelho: #f08a78; --verde: #9bd67e; }
+* { box-sizing: border-box; }
+body { background: #23301f; font-size: 15px; line-height: 1.35; user-select: none; }
+#arena { position: fixed; left: 0; top: 0; image-rendering: pixelated; }
+kbd { font-family: var(--pixel); font-size: 10px; padding: 0 3px; border: 1px solid rgba(255, 255, 255, 0.25); color: var(--tinta-2); margin-left: 4px; }
+
+/* ---- HUD da luta */
+#hud { position: fixed; inset: 0; pointer-events: none; font-family: var(--pixel); font-size: 13px; color: var(--tinta); }
+#ordem { position: absolute; left: 50%; top: 8px; transform: translateX(-50%); display: flex; gap: 4px; pointer-events: auto; }
+#ordem .vez { width: 46px; padding: 2px 2px 3px; background: var(--fundo-hud); border: 1px solid var(--linha-hud); text-align: center; }
+#ordem .vez canvas { display: block; margin: 0 auto; image-rendering: pixelated; }
+#ordem .vez.aliado { border-bottom: 2px solid var(--azul); }
+#ordem .vez.inimigo { border-bottom: 2px solid var(--vermelho); }
+#ordem .vez.atual { border-color: var(--ouro); background: rgba(240, 203, 98, 0.16); }
+#ordem .vez.morto { opacity: 0.3; }
+#ordem .vez i { display: block; height: 3px; margin-top: 2px; background: #3a2626; }
+#ordem .vez i b { display: block; height: 100%; background: #6fbf5d; }
+#ordem .vez.inimigo i b { background: #d65a48; }
+#rodada { position: absolute; left: 10px; top: 10px; padding: 3px 8px; background: var(--fundo-hud); border: 1px solid var(--linha-hud); color: var(--tinta-2); }
+#ficha { position: absolute; left: 10px; bottom: 10px; width: 250px; padding: 6px 9px; background: var(--fundo-hud); border: 1px solid var(--linha-hud); pointer-events: auto; }
+#ficha .nome { color: var(--ouro); }
+#ficha .nome small { color: var(--tinta-2); margin-left: 6px; }
+#ficha .pontos { display: flex; gap: 10px; margin: 4px 0 2px; }
+#ficha .pontos span { color: var(--tinta-2); }
+#ficha .pontos b { color: #fff; font-weight: 400; font-size: 15px; }
+#ficha .pontos .pa b { color: #8ec5ff; }
+#ficha .pontos .pm b { color: var(--verde); }
+#ficha .vida { position: relative; height: 12px; background: #2a1e1e; border: 1px solid #000; }
+#ficha .vida i { position: absolute; inset: 0 auto 0 0; background: #6fbf5d; }
+#ficha .vida span { position: absolute; inset: 0; text-align: center; font-size: 10px; line-height: 10px; color: #fff; text-shadow: 1px 1px 0 #000; }
+.estados { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 4px; }
+.estados span { font-size: 11px; padding: 0 4px; border: 1px solid rgba(255, 255, 255, 0.2); color: var(--tinta-2); }
+.estados span.ruim { border-color: rgba(240, 138, 120, 0.6); color: #ffb0a0; }
+.estados span.bom { border-color: rgba(139, 184, 240, 0.6); color: #bcd8ff; }
+#barra { position: absolute; left: 50%; bottom: 10px; transform: translateX(-50%); display: flex; gap: 5px; pointer-events: auto; }
+#barra .hab { position: relative; width: 128px; padding: 4px 7px 5px; background: var(--fundo-hud); border: 1px solid var(--linha-hud); cursor: pointer; text-align: left; font: inherit; color: var(--tinta); }
+#barra .hab .tecla { color: var(--tinta-3); font-size: 11px; }
+#barra .hab .nome { display: block; line-height: 1.15; }
+#barra { align-items: stretch; }
+#barra .hab .custo { display: block; font-size: 11px; color: #8ec5ff; white-space: nowrap; }
+#barra .hab.mirando { border-color: var(--ouro); background: rgba(240, 203, 98, 0.16); }
+#barra .hab.indisponivel { opacity: 0.45; cursor: default; }
+#barra .hab .motivo { display: block; font-size: 10px; color: var(--vermelho); white-space: nowrap; }
+#botoes-luta { position: absolute; right: 10px; bottom: 10px; display: flex; flex-direction: column; gap: 4px; pointer-events: auto; align-items: stretch; }
+#botoes-luta button { padding: 4px 9px; background: var(--fundo-hud); border: 1px solid var(--linha-hud); color: var(--tinta-2); font: inherit; font-size: 12px; cursor: pointer; text-align: left; }
+#encerrar { color: var(--ouro) !important; border-color: rgba(240, 203, 98, 0.7) !important; }
+#encerrar:disabled { opacity: 0.4; cursor: default; }
+#dica, #info { position: absolute; padding: 7px 10px; background: rgba(14, 12, 16, 0.94); border: 1px solid var(--linha-hud); font-size: 12px; color: var(--tinta-2); }
+#dica { left: 50%; bottom: 74px; transform: translateX(-50%); width: 420px; }
+#dica b, #info b { color: var(--ouro); font-weight: 400; }
+#dica .regra { color: #8ec5ff; margin: 2px 0 4px; }
+#dica p, #info p { margin: 3px 0 0; font-family: var(--texto); font-size: 14px; color: var(--tinta); }
+#dica .motivo { color: var(--vermelho); }
+#info { right: 10px; top: 76px; width: 270px; }
+#info .linha { color: var(--tinta-2); }
+#info .estado { margin-top: 4px; font-family: var(--texto); font-size: 13px; color: var(--tinta-2); }
+#info .estado b { font-family: var(--pixel); font-size: 12px; }
+#registro { position: absolute; right: 10px; top: 76px; width: 300px; max-height: 55vh; overflow: auto; padding: 6px 10px; background: var(--fundo-hud); border: 1px solid var(--linha-hud); pointer-events: auto; }
+#registro h2 { font-size: 12px; color: var(--ouro); margin: 0 0 4px; font-weight: 400; font-family: var(--pixel); }
+#registro ol { margin: 0; padding: 0; list-style: none; font-size: 12px; color: var(--tinta-2); }
+#registro li small { color: var(--tinta-3); margin-right: 5px; }
+#faixa { position: absolute; left: 50%; top: 74px; transform: translateX(-50%); padding: 4px 12px; background: var(--fundo-hud); border: 1px solid var(--linha-hud); color: var(--ouro); opacity: 0; transition: opacity 0.2s; white-space: nowrap; }
+#faixa.ver { opacity: 1; }
+#selo { position: fixed; left: 50%; bottom: 0; transform: translateX(-50%); font-family: var(--pixel); font-size: 10px; color: rgba(255, 255, 255, 0.35); pointer-events: none; }
+body.em-luta #selo { bottom: auto; top: 0; left: 10px; transform: none; top: 38px; }
+
+/* ---- telas */
+.tela { position: fixed; inset: 0; display: flex; align-items: safe center; justify-content: safe center; background: rgba(10, 9, 12, 0.62); padding: 16px; overflow: auto; }
+.caixa { background: rgba(18, 15, 20, 0.95); border: 1px solid var(--linha-hud); padding: 16px 20px; max-width: 1100px; width: 100%; }
+.caixa.estreita { max-width: 520px; }
+.caixa h1 { font-family: var(--titulo); color: var(--ouro); font-weight: 400; font-size: 32px; margin: 0; }
+.caixa h1 span { font-family: var(--pixel); font-size: 14px; color: var(--tinta-2); }
+.caixa h2 { font-family: var(--titulo); color: var(--ouro); font-weight: 400; font-size: 22px; margin: 12px 0 4px; }
+.caixa h2 small { font-family: var(--pixel); font-size: 12px; color: var(--tinta-2); }
+.cabeca { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.sub { color: var(--tinta-2); margin: 4px 0 6px; }
+.sub a { color: var(--tinta-2); }
+#encontros, #classes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.cartao { text-align: left; border: 1px solid var(--linha-hud); background: rgba(0, 0, 0, 0.25); padding: 6px 9px; cursor: pointer; font-family: var(--pixel); font-size: 12px; color: var(--tinta-2); }
+.cartao b { display: block; color: var(--tinta); font-weight: 400; font-size: 13px; }
+.cartao.escolhido { border-color: var(--ouro); background: rgba(240, 203, 98, 0.08); }
+.cartao p { margin: 2px 0 0; font-family: var(--texto); font-size: 14px; }
+.classe { display: flex; gap: 8px; align-items: center; }
+.classe canvas { width: 34px; height: 30px; image-rendering: pixelated; flex: none; }
+#montagem { display: grid; grid-template-columns: 1.6fr 1fr; gap: 14px; margin-top: 8px; }
+#montagem h3, #companheiros h3 { margin: 4px 0; font-family: var(--pixel); font-size: 12px; font-weight: 400; color: var(--ouro); }
+#montagem .atalhos { font-family: var(--pixel); font-size: 12px; color: var(--tinta-2); }
+#montagem .atalhos button { font: inherit; background: #1b171d; color: var(--tinta); border: 1px solid var(--linha-hud); cursor: pointer; padding: 1px 6px; margin-left: 4px; }
+.item { position: relative; padding: 3px 0 3px 22px; }
+.item button.marca { position: absolute; left: 0; top: 4px; width: 16px; height: 16px; padding: 0; font-size: 11px; line-height: 14px; background: #1b171d; color: var(--tinta); border: 1px solid var(--linha-hud); cursor: pointer; }
+.item button.marca:disabled { opacity: 0.35; cursor: default; }
+.item .cab { display: flex; justify-content: space-between; gap: 8px; font-family: var(--pixel); font-size: 12px; }
+.item .cab b { color: var(--tinta); font-weight: 400; }
+.item.marcado .cab b { color: var(--ouro); }
+.item .cab span { color: #8ec5ff; white-space: nowrap; }
+.item .cab em { color: var(--vermelho); font-style: normal; }
+.item p { margin: 1px 0 0; font-size: 14px; color: var(--tinta-2); }
+.item small { font-family: var(--pixel); font-size: 11px; color: var(--tinta-3); }
+#companheiros { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+#companheiros .item { padding-left: 0; }
+.controles { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 12px 0 0; font-family: var(--pixel); font-size: 12px; color: var(--tinta-2); }
+.controles b { color: var(--ouro); font-weight: 400; width: 100%; }
+.controles .nota { width: 100%; font-family: var(--texto); font-size: 14px; }
+.botoes { display: flex; gap: 8px; margin-top: 14px; }
+button.principal, .botoes button { padding: 6px 16px; border: 1px solid var(--linha-hud); background: #241d18; cursor: pointer; font-family: var(--pixel); font-size: 14px; color: var(--tinta); }
+button.principal { border-color: var(--ouro); color: var(--ouro); }
+@media (max-height: 760px) {
+  .caixa { padding: 10px 14px; }
+  .caixa h2 { font-size: 19px; margin-top: 8px; }
+  .item p, .cartao p { font-size: 12.5px; line-height: 1.25; }
+  #dica { width: 380px; }
+}
+/* janelas estreitas: a barra encolhe para não encostar na ficha nem nos botões */
+@media (max-width: 1500px) {
+  #ficha { width: 214px; }
+  #barra .hab { width: 116px; padding: 3px 6px 4px; }
+  #barra { gap: 4px; }
+}

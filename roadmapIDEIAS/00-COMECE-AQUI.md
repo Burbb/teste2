@@ -9252,3 +9252,19 @@ foi automatizado.
   sem tela. O jogo não mudou: suíte (804), gabarito e pyflakes; a fumaça, reaproveitada. Sem vídeos.
 - **Ponto a avaliar primeiro:** as tropas quase não participam nos encontros comuns (o herói vence em 11 a 26 s).
 - **Parado aqui:** o Jean joga a v5 e responde a R5.6 do 30.
+
+### 01/11/2026 (data do computador local) — Etapa 8: o Tático 2, combate por turnos inspirado em Dofus (protótipo, nada no jogo)
+
+- **Pedido do Jean** (ausente; duas entregas seguidas, esta é a primeira): estudar Dofus (principal) e BG3
+  (complemento) e entregar uma luta tática jogável em losangos, com o herói, Morel e Odette controlados pelo jogador
+  contra cinco inimigos; sem Revezamento, doação de ações nem troca na ordem. As duas direções (tático e campo livre)
+  seguem em avaliação.
+- **Feito (em teste, nada aprovado):** o [31](31-ETAPA8-TATICO-POR-TURNOS.md) (pesquisa com fontes e versões, regras
+  escolhidas, adaptadas e deixadas de fora, representação, kits, IA, verificação) e o protótipo
+  `ferramentas/prototipos/etapa8-tatico2/` (**Tático 2**, porta 8807): PA e PM em qualquer ordem, alcance e linha de
+  visão, bloqueio determinístico, áreas, empurrar e puxar com colisão, chão em chamas e barris (de BG3), armadilhas,
+  golpe preparado; Guerreiro, Mago e Arqueiro com 10 habilidades, 6 no kit, 2 de 5 talentos e duas montagens prontas
+  cada; Morel e Odette com kits próprios; três encontros de cinco inimigos com IA; prévia exata antes de confirmar.
+- **Conferido:** 18 testes das regras e da IA; o fluxo real no navegador nas duas janelas (preparação, andar, mirar,
+  prévia = efeito, vezes de Morel e Odette, inimigos agindo, sem erros); 18 lutas sem tela. O Tático 1 ficou intacto.
+- **Seguiu direto** para a segunda entrega (o campo livre), sem esperar avaliação.
