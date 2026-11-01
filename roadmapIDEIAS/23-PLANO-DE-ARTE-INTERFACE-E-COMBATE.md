@@ -21,7 +21,9 @@ acampamento podem seguir quando pedidos (conferindo, lugar a lugar, se ficam na 
 pelo Jean na mesma data). O estudo da etapa 8 está no [28](28-ETAPA8-HABILIDADES-TALENTOS-E-BUILDS.md) (pesquisa e
 propostas, revisão 2; a arquitetura está pendente de avaliação; nenhuma regra mudou). **Rodada 3 (mesma data):** o
 protótipo X1 (montagem de builds e estrutura dos talentos) está em `ferramentas/prototipos/etapa8-builds/`, com a
-especificação na seção 15 do 28; o Revezamento foi recusado pelo Jean e o Esperar ficou como hipótese futura.
+especificação na seção 15 do 28; o Revezamento foi recusado pelo Jean e o Esperar ficou como hipótese futura. Na
+rodada seguinte, o X1 foi ampliado para descoberta (16 habilidades por personagem, Sangramento, Frio e invocações,
+talentos com caminhos concorrentes, 9 pontos sem ordem de compra; seção 16 do 28).
 
 ## Estado de referência — 29/10/2026
 
@@ -1503,7 +1505,9 @@ duas intervenções na ordem dos turnos como módulos separados. **A arquitetura
 (seção 13 do 28). **Rodada 3:** o Jean recusou o Revezamento (e as variantes de trocar posições, doar a ação ou
 antecipar a vez de um aliado; Esperar fica como hipótese futura) e autorizou só o X1, implementado isolado em
 `ferramentas/prototipos/etapa8-builds/` (seção 15 do 28: cadeias por identidade, builds sem travas nem ambientes, o
-orçamento de 7 pontos nas duas estruturas). Nada entrou no jogo.
+orçamento de 7 pontos nas duas estruturas). Depois, ampliado para descoberta: 32 habilidades, Sangramento, Frio e
+invocações como vocabulário compartilhado, 9 pontos sem ordem de compra, filtros e montagens salvas (seção 16 do 28).
+Nada entrou no jogo.
 
 **Decisão de Jean (19/10/2026):** produzir os ícones de habilidades e talentos junto da revisão dos respectivos
 sistemas e telas, evitando arte para conceitos prestes a mudar. O visual antigo do Grimório e da árvore não está

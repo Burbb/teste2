@@ -1,18 +1,20 @@
 """O combate do protótipo X1 (nada no jogo): ordem fixa por Agilidade, uma vez por rodada para cada combatente, o grupo
 inteiro (Jean, Morel e Odette) nas mãos do jogador, os inimigos sorteando como no jogo.
 
-A regra das cadeias (seção 15.2 do 28)
---------------------------------------
-- Uma **cadeia** é tudo o que uma ação provoca (ou o começo da vez de alguém: pingos, pavio). Cada cadeia tem um número.
-- Um efeito disparado (Estouro, Revide, Fornalha, Sangue Quente, Fôlego...) tem uma **identidade**: (efeito, dono,
-  motivo). O motivo é aquilo de que o efeito trata: o morto que explode, o atacante que leva o revide, o inimigo que
-  deu o Calor, o alvo que curou o Sangue Quente. **Na mesma cadeia, a mesma identidade acontece uma vez.**
-  - Duas mortes são dois motivos: duas explosões, mesmo que atinjam o mesmo sobrevivente.
-  - Uma explosão que mata abre um motivo novo: a cadeia continua, e acaba porque cada inimigo morre uma vez.
-- **Reações (Revide, espinhos, Escudo de Chamas) respondem a golpes de ação**; o dano de uma reação, de espinhos, de
-  Queimadura e de explosão não é golpe de ação. Por isso espinhos e revides não se respondem.
-- **Limites por rodada** ficam escritos na descrição de quem os tem (Revide, Fôlego Rubro: uma vez por rodada).
+A regra das cadeias (seções 15.2 e 16.5 do 28)
+----------------------------------------------
+- Uma **cadeia** é tudo o que uma ação provoca (ou o começo e o fim da vez de alguém: pingos, pavio, invocações).
+- Um efeito disparado tem uma **identidade**: (efeito, dono, motivo). O motivo é aquilo de que o efeito trata: o morto
+  que explode, o atacante que leva o revide, a invocação que caiu. **Na mesma cadeia, a mesma identidade acontece uma
+  vez.** Duas mortes são dois motivos (duas explosões); uma explosão que mata abre um motivo novo, e a cadeia acaba
+  porque cada combatente cai uma vez.
+- **Reações (Revide, espinhos, escudos, a Sentinela) respondem a golpes de ação**; o dano de uma reação, das camadas e
+  das explosões não é golpe de ação.
+- **Limites por rodada** ficam escritos na descrição de quem os tem (Revide, Fôlego Rubro).
 - `LIMITE_ELOS` é só uma rede de segurança: uma cadeia maior que isso é defeito do motor e para a luta com erro.
+
+O vocabulário: fichas (Guarda, Força, Exposto), camadas nos inimigos (Queimadura, Sangramento, Frio; Queimadura e Frio
+se anulam), invocações (sem vez; agem no fim da vez de quem as chamou; efeito ao cair) e a Fúria.
 
 Os números de dano, cura e previsão saem de `conta` (a mesma conta para a tela e para o golpe)."""
 import random
@@ -49,12 +51,16 @@ class Combatente:
         self.fichas = {"guarda": 0, "forca": 0, "exposto": 0}
         self.estados = {}
         self.queima = None                      # {"camadas": n, "pingos": n}
-        self.detonadas = 0                      # camadas detonadas no golpe que está em curso (para o Estouro)
+        self.sangra = None                      # {"camadas": n, "pingos": n}
+        self.frio = 0
+        self.detonadas = 0                      # camadas consumidas no golpe em curso (Estouro, Banho de Sangue)
+        self.abertas = 0
         self.calor = 0
         self.prep = None                        # golpe preparado: {"nome", "mult"}
         self.ult_usada = False
         self.efeitos = {}
         self.cura_rodada = -99
+        self.invocacao, self.dono, self.tipo_inv, self.desfeita = None, None, None, False
 
     @property
     def vivo(self):
@@ -72,7 +78,8 @@ class Combate:
         if encontro not in C.ENCONTROS:
             raise ValueError("encontro desconhecido")
         self.montagem = {"estrutura": montagem["estrutura"], "spec": montagem["spec"], "kit": list(montagem["kit"]),
-                         "nos": dict(montagem["nos"]), "nome": montagem.get("nome") or "Livre"}
+                         "ultimate": M.ultimate(montagem), "nos": dict(montagem["nos"]),
+                         "nome": montagem.get("nome") or "Livre"}
         self.encontro = encontro
         enc = C.ENCONTROS[encontro]
         self.semente = enc["semente"] if semente is None else int(semente)
@@ -83,9 +90,9 @@ class Combate:
         spec = montagem["spec"]
         ef = M.efeitos(montagem)
         hd = dict(C.HEROI[spec])
-        hd["kit"] = ["atacar"] + list(montagem["kit"]) + [hd["ultimate"], "defender"]
+        hd["kit"] = ["atacar"] + list(montagem["kit"]) + [self.montagem["ultimate"], "defender"]
         hd["vida"] += 12 * ef.get("couro", 0)
-        hd["recurso_max"] += 12 * ef.get("reserva", 0)
+        hd["recurso_max"] += 12 * ef.get("recurso_extra", 0)
         self.heroi = self._novo("heroi", hd["nome"], "aliado", hd)
         self.heroi.efeitos = ef
         for cid, d in C.COMPANHEIROS.items():
@@ -99,14 +106,15 @@ class Combate:
             self._novo(f"{t}#{vistos[t]}", nome, "inimigo", d)
         for cid, mods in (inicio or {}).items():
             self._aplicar_inicio(self.c[cid], mods)
-        ordem = list(self.c.values())
-        self.ordem = sorted(ordem, key=lambda x: -x.agi)  # estável: no empate, o grupo antes e na ordem de criação
+        self.ordem = sorted(self.c.values(), key=lambda x: -x.agi)  # estável: no empate, o grupo antes
         self.rodada, self.idx = 1, -1
         self.eventos, self.decisoes = [], []
         self.cadeia, self.n_cadeia, self.profundidade = None, 0, 0
         self.cadeias = []
         self.rodada_feitos = set()
         self.fim, self.aguardando, self.turno_id = None, None, 0
+        self.hid_atual = None
+        self.n_invocadas = 0
         self.gatilhos_extra = []                 # testes: funções (cb, evento, alvo, valor)
         self.reacoes_respondem_reacoes = False   # testes: desliga a regra de tipo para conferir a de identidade
         self.dano_por_causa, self.dano_recebido, self.cura_total = {}, 0, 0
@@ -128,6 +136,10 @@ class Combate:
             c.vida = mods["vida"]
         if "camadas" in mods:
             c.queima = {"camadas": mods["camadas"], "pingos": C.PINGOS}
+        if "sangra" in mods:
+            c.sangra = {"camadas": mods["sangra"], "pingos": C.PINGOS}
+        if "frio" in mods:
+            c.frio = mods["frio"]
         if "recurso" in mods:
             c.recurso = mods["recurso"]
         if mods.get("parado"):
@@ -142,6 +154,13 @@ class Combate:
 
     def vivos(self, lado):
         return [x for x in self.c.values() if x.lado == lado and x.vivo]
+
+    def grupo(self):
+        """Os aliados que têm vez (sem as invocações)."""
+        return [x for x in self.vivos("aliado") if not x.invocacao]
+
+    def invocacoes(self, dono=None):
+        return [x for x in self.vivos("aliado") if x.invocacao and (dono is None or x.dono == dono.id)]
 
     # ------------------------------------------------------------ registro
     def ev(self, tipo, texto, **extra):
@@ -185,7 +204,12 @@ class Combate:
         return True
 
     # ------------------------------------------------------------ a conta
-    def conta(self, fonte, alvo, base, tipo, extra=1.0, forca=1.0):
+    def _frio_penetrante(self):
+        h = self.heroi
+        return h.ef("frio_penetrante") or (h.ef("sentinela_cortante") and any(
+            x.tipo_inv == "sentinela" for x in self.invocacoes(h)))
+
+    def conta(self, fonte, alvo, base, tipo, extra=1.0, forca=1.0, hid=None):
         """O dano de um golpe (sem gastar nada) e as partes da conta, para a tela e para o registro."""
         m, partes = extra * forca, []
         if forca != 1.0:
@@ -199,17 +223,26 @@ class Combate:
             m *= 0.7
             partes.append("Enfraquecido −30%")
         if "furia" in fonte.estados:
-            m *= 1.4
-            partes.append("Fúria +40%")
+            f = 1.6 if fonte.ef("furia_sem_freio") else 1.4
+            m *= f
+            partes.append(f"Fúria +{round((f - 1) * 100)}%")
         if fonte.ef("braco"):
             m *= 1 + 0.08 * fonte.ef("braco")
-            partes.append(f"Braço Pesado +{8 * fonte.ef('braco')}%")
-        if fonte.ef("ate_o_fim") and fonte.vida < fonte.vida_max / 2:
+            partes.append(f"golpes +{8 * fonte.ef('braco')}%")
+        if fonte.vida < fonte.vida_max / 2 and (fonte.ef("ate_o_fim") or (fonte.ef("desesperada") and
+                                                                         hid == "furia_cega")):
             m *= 1.3
             partes.append("Até o Fim +30%")
         if "furia" in alvo.estados:
-            m *= 1.4
-            partes.append("alvo na Fúria +40%")
+            f = 1.2 if alvo.ef("furia_contida") else 1.4
+            m *= f
+            partes.append(f"alvo na Fúria +{round((f - 1) * 100)}%")
+        if "cerrado" in alvo.estados:
+            m *= 0.7
+            partes.append("Cerrar os Dentes −30%")
+        if alvo.frio and alvo.lado == "inimigo" and self._frio_penetrante():
+            m *= 1 + 0.1 * alvo.frio
+            partes.append(f"Frio Penetrante +{10 * alvo.frio}%")
         r = alvo.res.get(tipo, 1.0)
         if r != 1.0:
             m *= r
@@ -222,29 +255,32 @@ class Combate:
             partes.append("Exposto +50%")
         return max(1, round(base * m)), partes
 
-    def golpe(self, fonte, alvo, base, tipo, causa, reacao=False, extra=1.0, forca=1.0, rotulo=None):
+    def golpe(self, fonte, alvo, base, tipo, causa, reacao=False, extra=1.0, forca=1.0, rotulo=None, area=False,
+              hid=None):
         if not alvo.vivo:
             return 0
-        dano, partes = self.conta(fonte, alvo, base, tipo, extra, forca)
+        dano, partes = self.conta(fonte, alvo, base, tipo, extra, forca, hid)
         if alvo.fichas["guarda"]:
             alvo.fichas["guarda"] -= 1
         elif alvo.fichas["exposto"]:
             alvo.fichas["exposto"] -= 1
         self._perder_vida(alvo, dano, fonte, causa, golpe=True, reacao=reacao, rotulo=rotulo, partes=partes,
-                          tipo=tipo)
+                          tipo=tipo, area=area)
         return dano
 
-    def _perder_vida(self, alvo, dano, fonte, causa, golpe=False, reacao=False, rotulo=None, partes=(), tipo="fogo"):
+    def _perder_vida(self, alvo, dano, fonte, causa, golpe=False, reacao=False, rotulo=None, partes=(), tipo="fogo",
+                     area=False):
         em_chamas = alvo.queima is not None
+        sangrava = alvo.sangra is not None
         alvo.vida = max(0, alvo.vida - dano)
-        direto = golpe or causa in ("estouro", "pavio", "espinhos", "escudo_espinhos", "cinza_fria")
+        direto = golpe or causa in ("estouro", "pavio", "espinhos", "escudo_espinhos", "cinza_fria", "fatuo")
         quem = f"{fonte.nome} → {alvo.nome}" if direto and fonte and fonte is not alvo else alvo.nome
         self.ev("dano", f"{rotulo or causa}: {quem}, {dano} de {C.TIPOS.get(tipo, tipo)}"
                         + (f" ({', '.join(partes)})" if partes else "") + ("" if alvo.vivo else ". Cai."),
                 alvo=alvo.id, valor=dano, causa=causa, golpe=golpe, reacao=reacao)
         if fonte and fonte.lado == "aliado" and alvo.lado == "inimigo":
             self.dano_por_causa[causa] = self.dano_por_causa.get(causa, 0) + dano
-        if alvo.lado == "aliado":
+        if alvo.lado == "aliado" and not alvo.invocacao:
             self.dano_recebido += dano
         h = self.heroi
         if golpe and fonte is h and "furia" in h.estados and h.ef("sangue_quente"):
@@ -253,22 +289,33 @@ class Combate:
         if not alvo.vivo:
             self._morreu(alvo, fonte, causa)
             return
-        if golpe and fonte and fonte.lado == "aliado" and fonte is not h and alvo.lado == "inimigo" and em_chamas and (
-                h.ef("partilhado") or "marca_partilhada" in alvo.estados):
-            self.disparar("partilhado", h, alvo, lambda: self.acender(alvo, 1, fonte, "partilhado"),
-                          f"Calor Partilhado: {fonte.nome} acende {alvo.nome}")
+        if golpe and fonte is h and not area and sangrava and h.ef("fio_cortante") and alvo.lado == "inimigo":
+            self.disparar("fio_cortante", h, alvo, lambda: self.sangrar(alvo, 1, h, "fio_cortante"),
+                          f"Fio Cortante ({alvo.nome})")
+        if golpe and fonte and fonte.lado == "aliado" and alvo.lado == "inimigo" and not reacao:
+            if fonte is not h and em_chamas and (h.ef("partilhado") or "marca_partilhada" in alvo.estados):
+                self.disparar("partilhado", h, alvo, lambda: self.acender(alvo, 1, fonte, "partilhado"),
+                              f"Calor Partilhado: {fonte.nome} acende {alvo.nome}")
+            if "flamejante" in fonte.estados and alvo.vivo:
+                self.disparar("arma_flamejante", fonte, alvo, lambda: self.acender(alvo, 1, h, "arma_flamejante"),
+                              f"Arma Flamejante: {fonte.nome} acende {alvo.nome}")
         if golpe and fonte and fonte.vivo and (not reacao or self.reacoes_respondem_reacoes):
             self._reagir(alvo, fonte)
 
     def _reagir(self, alvo, fonte):
-        """Quem foi golpeado responde (Revide, espinhos, Escudo de Espinhos, Escudo de Chamas)."""
+        """Quem foi golpeado responde (Revide, espinhos, escudos, Cerrar os Dentes, a Sentinela)."""
         h = self.heroi
-        if alvo is h and "rancor" in h.estados and fonte.lado == "inimigo" and fonte.id not in h.estados["rancor"]:
-            h.estados["rancor"].add(fonte.id)
+        if alvo.lado == fonte.lado:
+            return
+        if alvo is h and "cerrado" in h.estados:
+            self.disparar("cerrar", h, fonte, lambda: self.ganhar_recurso(h, 5, "cerrar_dentes"),
+                          f"Cerrar os Dentes: +5 de Vigor ({fonte.nome})")
+        if alvo is h and "rancor" in h.estados and fonte.id not in h.estados["rancor"]["ja"]:
+            h.estados["rancor"]["ja"].append(fonte.id)
             self.disparar("revide", h, fonte,
                           lambda: self.golpe(h, fonte, h.poder * 0.6, "fisico", "revide", reacao=True, rotulo="Revide"),
                           f"Provocação com Revide contra {fonte.nome}")
-        elif alvo is h and h.ef("revide") and fonte.lado == "inimigo":
+        elif alvo is h and h.ef("revide"):
             self.disparar("revide", h, fonte,
                           lambda: self.golpe(h, fonte, h.poder * 0.6, "fisico", "revide", reacao=True, rotulo="Revide"),
                           f"Revide contra {fonte.nome}", por_rodada=True)
@@ -277,7 +324,7 @@ class Combate:
                           lambda: self._perder_vida(fonte, alvo.espinhos, alvo, "espinhos", rotulo="Espinhos",
                                                     tipo="fisico"),
                           f"Espinhos de {alvo.nome}")
-        if "espinhos_escudo" in alvo.estados and fonte.lado != alvo.lado and fonte.vivo:
+        if "espinhos_escudo" in alvo.estados and fonte.vivo:
             v = alvo.estados.pop("espinhos_escudo")["valor"]
             self.disparar("escudo_espinhos", h, fonte,
                           lambda: self._perder_vida(fonte, v, alvo, "escudo_espinhos", rotulo="Escudo de Espinhos",
@@ -286,6 +333,9 @@ class Combate:
         if "chamas" in alvo.estados and fonte.lado == "inimigo" and fonte.vivo:
             self.disparar("escudo_chamas", h, fonte, lambda: self.acender(fonte, 1, h, "escudo_chamas"),
                           f"Escudo de Chamas acende {fonte.nome}")
+        if alvo.tipo_inv == "sentinela" and fonte.vivo:
+            self.disparar("sentinela", alvo, fonte, lambda: self.resfriar(fonte, 1, h, "sentinela"),
+                          f"A Sentinela esfria {fonte.nome}")
         if alvo.revida and fonte.vivo and alvo.lado == "inimigo":
             self.disparar("revide_inimigo", alvo, fonte,
                           lambda: self.golpe(alvo, fonte, alvo.revida, "fisico", "revide", reacao=True,
@@ -294,13 +344,23 @@ class Combate:
 
     def _morreu(self, alvo, fonte, causa):
         camadas = max(alvo.queima["camadas"] if alvo.queima else 0, alvo.detonadas)
-        alvo.queima, alvo.prep, alvo.estados, alvo.detonadas = None, None, {}, 0
+        feridas = max(alvo.sangra["camadas"] if alvo.sangra else 0, alvo.abertas)
+        alvo.queima, alvo.sangra, alvo.frio, alvo.prep, alvo.estados = None, None, 0, None, {}
+        alvo.detonadas = alvo.abertas = 0
         alvo.fichas = {"guarda": 0, "forca": 0, "exposto": 0}
         h = self.heroi
-        if alvo.lado == "inimigo":
+        if alvo.invocacao:
+            self._invocacao_caiu(alvo, causa == "sacrificio")
+        elif alvo.lado == "inimigo":
             if camadas and (h.ef("estouro") or (h.ef("estrondosa") and causa == "combustao")):
                 self.disparar("estouro", h, alvo, lambda: self._explodir(alvo, camadas),
                               f"Estouro: {alvo.nome} explode ({camadas} camada{'s' if camadas > 1 else ''})")
+            if feridas and h.ef("banho_sangue"):
+                def banho():
+                    for e in self.vivos("inimigo"):
+                        self.sangrar(e, feridas, h, "banho_sangue", substitui=True)
+                self.disparar("banho_sangue", h, alvo, banho,
+                              f"Banho de Sangue: as {feridas} camadas de {alvo.nome} passam aos outros")
             if causa == "furia_cega":
                 resto = self.vivos("inimigo")
                 if resto:
@@ -313,7 +373,7 @@ class Combate:
 
     def _explodir(self, morto, camadas):
         base = 6 + 3 * camadas
-        for e in [x for x in self.vivos("inimigo")]:
+        for e in list(self.vivos("inimigo")):
             if not e.vivo:
                 continue
             d = max(1, round(base * e.res.get("fogo", 1.0)))
@@ -335,21 +395,156 @@ class Combate:
         if not self.vivos("inimigo"):
             self.fim = "vitoria"
             self.ev("fim", "Vitória.")
-        elif not self.vivos("aliado"):
+        elif not self.grupo():
             self.fim = "derrota"
             self.ev("fim", "Derrota.")
 
-    # ------------------------------------------------------------ fogo
-    def acender(self, alvo, n, fonte, causa):
+    # ------------------------------------------------------------ invocações
+    def invocar(self, dono, tipo):
+        for x in self.invocacoes(dono):
+            if x.tipo_inv == tipo:
+                x.vida, x.desfeita = 0, True
+                self.ev("estado", f"{x.nome} anterior se desfaz (sem efeito).")
+        d = C.INVOCACOES[tipo]
+        self.n_invocadas += 1
+        inv = self._novo(f"{tipo}#{self.n_invocadas}", d["nome"], "aliado", dict(d, retrato=tipo))
+        inv.invocacao, inv.dono, inv.tipo_inv = True, dono.id, tipo
+        self.ev("estado", f"{dono.nome} invoca {inv.nome} ({inv.vida} de vida).", alvo=inv.id)
+        if tipo == "sentinela":
+            for e in self.vivos("inimigo"):
+                e.estados["provocado"] = {"por": inv.id}
+            self.ev("estado", "Os inimigos miram a Sentinela na próxima vez deles.")
+        return inv
+
+    def sacrificar(self, inv):
+        self.ev("acao", f"{inv.nome} é sacrificado.", ator=inv.id)
+        inv.vida = 0
+        self._morreu(inv, self.heroi, "sacrificio")
+
+    def _invocacao_caiu(self, inv, sacrificada):
+        dono = self.c[inv.dono]
+        x = 2 if sacrificada else 1
+        if inv.tipo_inv == "fogo_fatuo":
+            def explode():
+                for e in list(self.vivos("inimigo")):
+                    if e.vivo:
+                        self._perder_vida(e, max(1, round(8 * x * e.res.get("fogo", 1.0))), inv, "fatuo",
+                                          rotulo="Explosão do Fogo-fátuo")
+            self.disparar("invocacao_cai", dono, inv, explode,
+                          f"O Fogo-fátuo explode{' em dobro' if x > 1 else ''}")
+        elif inv.tipo_inv == "sentinela":
+            def estilhaca():
+                for e in list(self.vivos("inimigo")):
+                    self.resfriar(e, x, dono, "sentinela_cai")
+            self.disparar("invocacao_cai", dono, inv, estilhaca,
+                          f"A Sentinela se estilhaça{' em dobro' if x > 1 else ''}: Frio em cada inimigo")
+        if dono.ef("elo_elemental"):
+            def elo():
+                self.ganhar_recurso(dono, 12, "elo_elemental")
+                self.dar_ficha(dono, "forca", fonte=dono)
+            self.disparar("elo_elemental", dono, inv, elo, f"Elo Elemental ({inv.nome})")
+
+    def _passivas_invocacoes(self, dono):
+        """No fim da vez de quem as chamou, na ordem em que foram chamadas."""
+        invs = self.invocacoes(dono)
+        if not invs:
+            return
+        self._nova_cadeia(f"Fim da vez de {dono.nome}: invocações")
+        for inv in invs:
+            if not inv.vivo or self.fim:
+                continue
+            inimigos = self.vivos("inimigo")
+            if inv.tipo_inv == "estandarte":
+                if dono.ef("estandarte_sangrento"):
+                    alvos = [e for e in inimigos if "morto-vivo" not in e.tracos]
+                    if alvos:
+                        t = min(alvos, key=lambda e: ((e.sangra or {}).get("camadas", 0), e.vida))
+                        self.ev("acao", f"O Estandarte aponta {t.nome}.", ator=inv.id)
+                        self.sangrar(t, 1, dono, "estandarte")
+                else:
+                    g = self.grupo()
+                    t = min(g, key=lambda a: (a.fichas["forca"], self.ordem.index(a)))
+                    self.ev("acao", f"O Estandarte inspira {t.nome}.", ator=inv.id)
+                    self.dar_ficha(t, "forca", fonte=inv)
+            elif inv.tipo_inv == "fogo_fatuo" and inimigos:
+                cam = lambda e: (e.queima or {}).get("camadas", 0)  # noqa: E731
+                if dono.ef("fatuo_faminto"):
+                    cand = [e for e in inimigos if cam(e) < C.CAMADAS_TETO] or inimigos
+                    t = max(cand, key=lambda e: (cam(e), -e.vida))
+                else:
+                    t = min(inimigos, key=lambda e: (cam(e), e.vida))
+                self.ev("acao", f"O Fogo-fátuo voa até {t.nome}.", ator=inv.id)
+                self.acender(t, 1, dono, "fogo_fatuo")
+
+    # ------------------------------------------------------------ camadas: fogo, frio, sangue
+    def acender(self, alvo, n, fonte, causa, hid=None):
         if not alvo.vivo:
             return
         h = self.heroi
         if fonte is h and h.ef("queimar") and h.vida < h.vida_max / 2:
             n += 1
+        if alvo.frio:
+            if h.ef("vapor") or (h.ef("bola_vapor") and hid == "bola_fogo"):
+                f, alvo.frio = alvo.frio, 0
+                self.ev("estado", f"Vapor: o Frio de {alvo.nome} vira Exposto.", alvo=alvo.id)
+                self.dar_ficha(alvo, "exposto", min(f, 2), fonte=h)
+            else:
+                tira = min(n, alvo.frio)
+                alvo.frio -= tira
+                n -= tira
+                self.ev("estado", f"O fogo derrete {tira} Frio de {alvo.nome}.", alvo=alvo.id)
+        if n <= 0:
+            return
         c0 = alvo.queima["camadas"] if alvo.queima else 0
         c = min(C.CAMADAS_TETO, c0 + n)
         alvo.queima = {"camadas": c, "pingos": C.PINGOS}
         self.ev("acende", f"{alvo.nome}: Queimadura {c0} → {c}.", alvo=alvo.id, causa=causa)
+
+    def resfriar(self, alvo, n, fonte, causa, hid=None):
+        if not alvo.vivo:
+            return
+        h = self.heroi
+        if alvo.queima:
+            if h.ef("cinza_fria") or (h.ef("lanca_termica") and hid == "lanca"):
+                c, alvo.queima = alvo.queima["camadas"], None
+                d = max(1, round(C.DETONA_CAMADA * c * alvo.res.get("gelo", 1.0)))
+                self.disparar("cinza_fria", h, alvo,
+                              lambda: self._perder_vida(alvo, d, h, "cinza_fria", rotulo="Cinza Fria", tipo="gelo"),
+                              f"Cinza Fria: {c} camada{'s' if c > 1 else ''} de {alvo.nome} viram gelo")
+                if not alvo.vivo:
+                    return
+                n += c
+            else:
+                tira = min(n, alvo.queima["camadas"])
+                alvo.queima["camadas"] -= tira
+                n -= tira
+                if alvo.queima["camadas"] <= 0:
+                    alvo.queima = None
+                self.ev("estado", f"O gelo apaga {tira} camada{'s' if tira > 1 else ''} de {alvo.nome}.",
+                        alvo=alvo.id)
+        if n <= 0:
+            return
+        f0 = alvo.frio
+        alvo.frio = min(C.CAMADAS_TETO, alvo.frio + n)
+        self.ev("estado", f"{alvo.nome}: Frio {f0} → {alvo.frio}.", alvo=alvo.id, causa=causa)
+        if alvo.frio >= C.CAMADAS_TETO:
+            if self.atordoar(alvo, 1.0, "Congelado", fonte):
+                alvo.frio = 0
+            else:
+                alvo.frio = C.CAMADAS_TETO - 1
+
+    def sangrar(self, alvo, n, fonte, causa, substitui=False):
+        if not alvo.vivo:
+            return
+        if "morto-vivo" in alvo.tracos:
+            self.ev("resiste", f"{alvo.nome} não sangra.", alvo=alvo.id)
+            return
+        c0 = alvo.sangra["camadas"] if alvo.sangra else 0
+        c = min(C.CAMADAS_TETO, max(c0, n) if substitui else c0 + n)
+        if c == c0 and substitui:
+            return
+        alvo.sangra = {"camadas": c, "pingos": C.PINGOS}
+        self.ev("acende", f"{alvo.nome}: Sangramento {c0} → {c}.", alvo=alvo.id, causa=causa)
 
     def chama_viva(self):
         return 1 + 0.15 * self.heroi.ef("chama_viva")
@@ -394,6 +589,9 @@ class Combate:
         h = self.heroi
         if ficha == "exposto" and ganhou and fonte is h and alvo.lado == "inimigo" and h.ef("peso_golpe"):
             self.disparar("peso_golpe", h, alvo, self._peso_do_golpe, f"Peso do Golpe ({alvo.nome} Exposto)")
+        if ficha == "guarda" and ganhou and fonte is h and alvo is not h and (
+                h.ef("escudeiro") or (h.ef("escudo_duplo") and self.hid_atual == "erguer_escudo")):
+            self.disparar("escudeiro", h, alvo, lambda: self.dar_ficha(h, "guarda"), f"Escudeiro ({alvo.nome})")
         return ganhou
 
     def _proximo_aliado(self):
@@ -436,13 +634,25 @@ class Combate:
         self.interromper(alvo, por)
         return True
 
+    def entrar_furia(self, c):
+        if "furia" in c.estados:
+            return
+        c.estados["furia"] = {"vezes": 0}
+        self.ev("estado", "Jean entra em Fúria.")
+        if c.ef("grito_contagiante"):
+            def grito():
+                for a in self.grupo():
+                    if a is not c:
+                        self.dar_ficha(a, "forca", fonte=c)
+            self.disparar("grito_contagiante", c, c, grito, "Grito Contagiante")
+
     def curar(self, alvo, n, fonte, causa):
         if not alvo.vivo or n <= 0:
             return 0
         real = min(n, alvo.vida_max - alvo.vida)
         alvo.vida += real
         self.ev("cura", f"{causa_nome(causa)}: {alvo.nome} +{real} de vida.", alvo=alvo.id, valor=real)
-        if alvo.lado == "aliado":
+        if alvo.lado == "aliado" and not alvo.invocacao:
             self.cura_total += real
         h = self.heroi
         if alvo is h and h.ef("folego") and real > 0:
@@ -494,10 +704,13 @@ class Combate:
     def _comeco_da_vez(self, c):
         self._nova_cadeia(f"Começo da vez de {c.nome}")
         h = self.heroi
+        for k in ("rancor", "cerrado", "muralha"):  # valem até a próxima vez de quem os usou
+            c.estados.pop(k, None)
         for x in self.c.values():  # o Proteger de Morel acaba na próxima vez dele
             if x.estados.get("protegido", {}).get("por") == c.id:
                 del x.estados["protegido"]
-        c.estados.pop("rancor", None)  # a Provocação com Revide vale até a próxima vez de quem provocou
+        if "pavio" in c.estados or c.queima or c.sangra or "veneno" in c.estados:
+            self.ev("inicio", f"Começo da vez de {c.nome}:", alvo=c.id)
         if "pavio" in c.estados:
             p = c.estados.pop("pavio")
             self.detonar(c, "pavio", golpe=False, extra=p["mult"], rotulo="Pavio Curto")
@@ -514,25 +727,39 @@ class Combate:
                 if c.queima["pingos"] <= 0:
                     c.queima = None
                     self.ev("apaga", f"A Queimadura de {c.nome} apaga.", alvo=c.id)
-        for est, rotulo in (("sangramento", "Sangramento"), ("veneno", "Veneno")):
-            s = c.estados.get(est)
-            if s:
-                self._perder_vida(c, s["valor"], None, est, rotulo=rotulo, tipo="fisico")
-                if not c.vivo or self.fim:
-                    return
-                s["pingos"] -= 1
-                if s["pingos"] <= 0:
-                    del c.estados[est]
+        if c.sangra:
+            d = C.PINGO_CAMADA * c.sangra["camadas"]
+            self._perder_vida(c, d, h if c.lado == "inimigo" else None, "sangramento", rotulo="Sangramento",
+                              tipo="fisico")
+            if not c.vivo or self.fim:
+                return
+            if c.sangra:
+                c.sangra["pingos"] -= 1
+                if c.sangra["pingos"] <= 0:
+                    c.sangra = None
+                    self.ev("apaga", f"O Sangramento de {c.nome} fecha.", alvo=c.id)
+        s = c.estados.get("veneno")
+        if s:
+            self._perder_vida(c, s["valor"], None, "veneno", rotulo="Veneno", tipo="fisico")
+            if not c.vivo or self.fim:
+                return
+            s["pingos"] -= 1
+            if s["pingos"] <= 0:
+                del c.estados["veneno"]
         if c.lado == "aliado" and c.recurso_max:
             self.ganhar_recurso(c, C.REGEN, "regen")
 
     def _fim_da_vez(self, c):
-        for k in ("fortalecido", "enfraquecido", "firme"):
+        for k in ("fortalecido", "enfraquecido", "firme", "flamejante"):
             s = c.estados.get(k)
             if s:
                 s["vezes"] -= 1
                 if s["vezes"] <= 0:
                     del c.estados[k]
+        if "furia" in c.estados:
+            c.estados["furia"]["vezes"] += 1
+        if c is self.heroi and not self.fim:
+            self._passivas_invocacoes(c)
 
     def _fim_da_rodada(self):
         self.rodada += 1
@@ -553,8 +780,11 @@ class Combate:
         vivos = self.vivos("aliado")
         alvo = self.rng_ia.choice(vivos)  # sorteia sempre, para a sequência ser a mesma com ou sem provocação
         p = e.estados.pop("provocado", None)
-        if p and self.c[p["por"]].vivo:
+        if p and p["por"] in self.c and self.c[p["por"]].vivo:
             alvo = self.c[p["por"]]
+        h = self.heroi
+        if "muralha" in h.estados and h.vivo:
+            alvo = h
         prot = alvo.estados.get("protegido")
         if prot and self.c[prot["por"]].vivo:
             self.ev("protege", f"{self.c[prot['por']].nome} entra na frente de {alvo.nome}.")
@@ -611,22 +841,22 @@ class Combate:
             self.ev("acao", f"{e.nome}: Cura em {a.nome}.", ator=e.id)
             self.curar(a, round(a.vida_max * 0.25), e, "cura_inimiga")
             return
-        if h == "maldicao":
-            self.ev("acao", f"{e.nome}: Maldição em {alvo.nome}.", ator=e.id)
-            alvo.estados["enfraquecido"] = {"vezes": 3}
-            self.ev("estado", f"{alvo.nome} fica Enfraquecido (−30%) por 3 vezes.", alvo=alvo.id)
+        if h in ("maldicao", "grito_terror"):
+            vezes = 3 if h == "maldicao" else 2
+            self.ev("acao", f"{e.nome}: {nome} em {alvo.nome}.", ator=e.id)
+            alvo.estados["enfraquecido"] = {"vezes": vezes}
+            self.ev("estado", f"{alvo.nome} fica Enfraquecido (−30%) por {vezes} vezes.", alvo=alvo.id)
             return
         self.ev("acao", f"{e.nome}: {nome} em {alvo.nome}.", ator=e.id)
-        if h == "bola_fogo":
-            self.golpe(e, alvo, e.magia * 1.3, "fogo", "inimigo", rotulo="Bola de Fogo")
+        if h in ("bola_fogo", "bola_sombra"):
+            self.golpe(e, alvo, e.magia * 1.3, "fogo" if h == "bola_fogo" else "sombra", "inimigo", rotulo=nome)
             return
-        mult = {"mordida": 1.0, "golpe_sujo": 1.1, "veneno": 0.8, "agarrar": 0.8}[h]
+        mult = {"mordida": 1.0, "golpe_sujo": 1.1, "veneno": 0.8, "agarrar": 0.8, "investida": 1.3}[h]
         self.golpe(e, alvo, e.poder * mult, e.tipo_golpe, "inimigo", rotulo=nome)
         if not alvo.vivo or self.fim:
             return
         if h == "mordida" and self.rng_sorte.random() < 0.7:
-            alvo.estados["sangramento"] = {"valor": 2, "pingos": 3}
-            self.ev("estado", f"{alvo.nome} sangra (2 por turno, 3 turnos).", alvo=alvo.id)
+            self.sangrar(alvo, 1, e, "mordida")
         elif h == "veneno":
             alvo.estados["veneno"] = {"valor": 2, "pingos": 3}
             self.ev("estado", f"{alvo.nome} fica envenenado (2 por turno, 3 turnos).", alvo=alvo.id)
@@ -635,14 +865,19 @@ class Combate:
             self.ev("estado", f"{alvo.nome} fica Enfraquecido (−30%) por 2 vezes.", alvo=alvo.id)
         elif h == "agarrar":
             self.atordoar(alvo, 0.4, "Preso", e)
+        elif h == "investida":
+            self.atordoar(alvo, 0.25, "Atordoado", e)
 
     # ------------------------------------------------------------ as ações do grupo
+    def _custo_base(self, c, hid):
+        return M.custo_habilidade(c.efeitos, hid) if c is self.heroi else C.HABILIDADES[hid]["custo"]
+
     def custo(self, c, hid):
         """(custo em recurso, custo em vida, rótulo) da ação agora, ou None se não dá para pagar."""
         h = C.HABILIDADES[hid]
+        custo = self._custo_base(c, hid)
         if c is not self.heroi:
-            return (h["custo"], 0, f"{h['custo']} de {c.recurso_nome}" if h["custo"] else "")
-        custo = M.custo_habilidade(c.efeitos, hid)
+            return (custo, 0, f"{custo} de {c.recurso_nome}" if custo else "")
         fogo = "fogo" in h["etiquetas"]
         if fogo and c.calor >= 3 and custo:
             return (0, 0, "Grátis: 3 Calor")
@@ -652,9 +887,6 @@ class Combate:
         if fogo and c.ef("pagar_vida") and c.vida > falta:
             return (c.recurso, falta, f"{c.recurso} de {c.recurso_nome} + {falta} de vida")
         return None
-
-    def _custo_base(self, c, hid):
-        return M.custo_habilidade(c.efeitos, hid) if c is self.heroi else C.HABILIDADES[hid]["custo"]
 
     def motivo(self, c, hid):
         h = C.HABILIDADES[hid]
@@ -669,23 +901,26 @@ class Combate:
     def alvos(self, c, hid):
         a = C.HABILIDADES[hid]["alvo"]
         if a in ("inimigo", "inimigos"):
-            return [x.id for x in self.vivos("inimigo")]
+            out = [x.id for x in self.vivos("inimigo")]
+            if hid == "combustao" and c.ef("sacrificio"):
+                out += [x.id for x in self.invocacoes(c)]
+            return out
         if a == "aliado":
             return [x.id for x in self.vivos("aliado")]
         if a == "aliado_outro":
-            return [x.id for x in self.vivos("aliado") if x is not c]
+            return [x.id for x in self.grupo() if x is not c]
         return [c.id]
 
     def _forca_prevista(self, c, hid):
         if hid == "golpe_pesado" and c.ef("acumulado"):
-            return 1 + 0.5 * sum(x.fichas["forca"] for x in self.vivos("aliado"))
+            return 1 + 0.5 * sum(x.fichas["forca"] for x in self.grupo())
         return 1.5 if c.fichas["forca"] else 1.0
 
     def _gastar_forca(self, c, hid):
         f = self._forca_prevista(c, hid)
         if hid == "golpe_pesado" and c.ef("acumulado"):
-            n = sum(x.fichas["forca"] for x in self.vivos("aliado"))
-            for x in self.vivos("aliado"):
+            n = sum(x.fichas["forca"] for x in self.grupo())
+            for x in self.grupo():
                 x.fichas["forca"] = 0
             if n:
                 self.ev("ficha", f"Golpe Acumulado consome {n} Força{'s' if n > 1 else ''} do grupo.")
@@ -693,35 +928,46 @@ class Combate:
             c.fichas["forca"] -= 1
         return f
 
+    def _tipo_de(self, c, hid):
+        if "flamejante" in c.estados and hid in ("atacar", "oportuno", "bastao"):
+            return "fogo"
+        return C.HABILIDADES[hid].get("tipo", "fisico")
+
     def _golpe_de(self, c, hid, alvo):
         """(base, tipo, extra) do golpe principal da ação, ou None se ela não golpeia agora."""
         h = C.HABILIDADES[hid]
+        if alvo.lado == "aliado":
+            return None
         if hid == "combustao" and c.ef("pavio"):
             return None
         if hid in ("combustao", "conflagracao"):
             return (self.base_detonacao(alvo), "fogo", 1.0)
+        if hid == "abrir_feridas":
+            return (c.poder * 0.4 + C.FERIDA_CAMADA * (alvo.sangra or {}).get("camadas", 0), "fisico", 1.0)
+        if hid == "escudo_alto":
+            return (c.poder * 0.3 + 12 * c.fichas["guarda"], "fisico", 1.0)
         if hid == "chuva" and c.ef("chuva_densa"):
-            return None
-        if hid == "rugido" and c.ef("contido"):
             return None
         if "mult" not in h:
             return None
         mult = h["mult"]
         if hid == "golpe_pesado" and c.ef("desequilibra"):
             mult = 1.1
-        if hid == "redemoinho" and c.ef("temerario"):
-            mult = 0.75
+        if hid == "redemoinho" and c.ef("redemoinho_sangrento"):
+            mult = 0.45
         extra = 1.0
         if hid == "oportuno" and ("atordoado" in alvo.estados or alvo.prep):
             extra = 1.6
-        return (c.poder * mult, h.get("tipo", "fisico"), extra)
+        if hid == "lanca" and c.ef("estilhaco") and alvo.estados.get("atordoado", {}).get("rotulo") == "Congelado":
+            extra = 2.0
+        return (c.poder * mult, self._tipo_de(c, hid), extra)
 
     def previsao(self, c, hid, alvo):
         g = self._golpe_de(c, hid, alvo)
         if not g:
             return None
-        dano, _ = self.conta(c, alvo, g[0], g[1], g[2], self._forca_prevista(c, hid))
-        if hid == "lanca" and c.ef("cinza_fria") and alvo.queima:
+        dano, _ = self.conta(c, alvo, g[0], g[1], g[2], self._forca_prevista(c, hid), hid)
+        if hid == "lanca" and alvo.queima and (c.ef("cinza_fria") or c.ef("lanca_termica")):
             return f"{dano} + {round(C.DETONA_CAMADA * alvo.queima['camadas'] * alvo.res.get('gelo', 1.0))}"
         return str(dano)
 
@@ -746,12 +992,21 @@ class Combate:
                         "ultimate": bool(h.get("ultimate"))})
         return out
 
+    def motivo_sair_furia(self):
+        h = self.heroi
+        if self.aguardando != "heroi" or "furia" not in h.estados:
+            return "Jean não está na Fúria"
+        if h.ef("furia_sem_freio") and h.estados["furia"]["vezes"] < 2:
+            return f"Fúria Sem Freio: sai depois de 2 vezes ({h.estados['furia']['vezes']}/2)"
+        return None
+
     def pode_sair_furia(self):
         return self.aguardando == "heroi" and "furia" in self.heroi.estados
 
     def sair_furia(self):
-        if not self.pode_sair_furia():
-            return {"ok": False, "motivo": "Jean não está na Fúria"}
+        mot = self.motivo_sair_furia()
+        if mot:
+            return {"ok": False, "motivo": mot}
         h = self.heroi
         self._nova_cadeia("Jean sai da Fúria")
         del h.estados["furia"]
@@ -759,7 +1014,7 @@ class Combate:
         self.ganhar_recurso(h, 12, "sair_furia")
         self.dar_ficha(h, "guarda", fonte=h)
         if h.ef("sangue_frio"):
-            for a in self.vivos("aliado"):
+            for a in self.grupo():
                 if a is not h:
                     self.dar_ficha(a, "guarda", fonte=h)
         self.decisoes.append({"rodada": self.rodada, "ator": h.id, "acao": "sair_furia", "alvo": None,
@@ -796,100 +1051,136 @@ class Combate:
         self.ev("acao", f"{c.nome}: {C.HABILIDADES[acao]['nome']}"
                         + (f" em {self.c[alvo].nome}" if alvo and alvo != c.id else "")
                         + (f" ({rotulo})" if rotulo else "") + ".", ator=c.id)
-        self._executar(c, acao, self.c[alvo] if alvo else None)
+        self.hid_atual = acao
+        try:
+            self._executar(c, acao, self.c[alvo] if alvo else None)
+        finally:
+            self.hid_atual = None
         if not self.fim:
             self._fim_da_vez(c)
             self.aguardando = None
             self._avancar()
         return {"ok": True}
 
+    def _bater(self, c, hid, alvo, forca, rotulo=None, area=False):
+        g = self._golpe_de(c, hid, alvo)
+        return self.golpe(c, alvo, g[0], g[1], hid, extra=g[2], forca=forca, rotulo=rotulo or C.HABILIDADES[hid]["nome"],
+                          area=area, hid=hid)
+
     def _executar(self, c, hid, alvo):
         nome = C.HABILIDADES[hid]["nome"]
-        if hid in ("atacar", "bastao"):
-            g = self._golpe_de(c, hid, alvo)
-            self.golpe(c, alvo, g[0], g[1], hid, forca=self._gastar_forca(c, hid), rotulo=nome)
-            self.ganhar_recurso(c, C.BASICO_GANHA, "basico")
+        if hid in ("atacar", "bastao", "oportuno", "golpe_pesado", "quebra_guarda", "joelho", "sede", "talho",
+                   "furia_cega", "bola_fogo", "brasa"):
+            d = self._bater(c, hid, alvo, self._gastar_forca(c, hid),
+                            nome + (" (Desequilibra)" if hid == "golpe_pesado" and c.ef("desequilibra") else ""))
+            if hid in ("atacar", "bastao"):
+                self.ganhar_recurso(c, C.BASICO_GANHA, "basico")
+            elif hid == "golpe_pesado" and c.ef("desequilibra") and alvo.vivo:
+                self.interromper(alvo, c)
+            elif hid == "joelho" and alvo.vivo:
+                self.atordoar(alvo, 1.0 if alvo.prep else 0.4, "Atordoado", c)
+            elif hid == "quebra_guarda" and alvo.vivo:
+                self.dar_ficha(alvo, "exposto", 1, fonte=c)
+            elif hid == "sede":
+                self.curar(c, round(d * 0.4), c, "sede")
+                if c.ef("sede_rubra"):
+                    self.ganhar_recurso(c, 6, "sede_rubra")
+            elif hid == "talho":
+                self.sangrar(alvo, 1, c, "talho")
+            elif hid in ("bola_fogo", "brasa"):
+                self.acender(alvo, 2 if hid == "bola_fogo" and c.ef("bola_pesada") else 1, c, hid, hid=hid)
         elif hid == "defender":
             self.dar_ficha(c, "guarda", fonte=c)
             self.ganhar_recurso(c, C.BASICO_GANHA, "basico")
-        elif hid == "golpe_pesado":
-            g = self._golpe_de(c, hid, alvo)
-            self.golpe(c, alvo, g[0], g[1], hid, forca=self._gastar_forca(c, hid),
-                       rotulo=nome + (" (Desequilibra)" if c.ef("desequilibra") else ""))
-            if c.ef("desequilibra") and alvo.vivo:
-                self.interromper(alvo, c)
-        elif hid == "joelho":
-            g = self._golpe_de(c, hid, alvo)
-            self.golpe(c, alvo, g[0], g[1], hid, forca=self._gastar_forca(c, hid), rotulo=nome)
-            if alvo.vivo:
-                self.atordoar(alvo, 1.0 if alvo.prep else 0.4, "Atordoado", c)
-        elif hid == "quebra_guarda":
-            g = self._golpe_de(c, hid, alvo)
-            self.golpe(c, alvo, g[0], g[1], hid, forca=self._gastar_forca(c, hid), rotulo=nome)
-            if alvo.vivo:
-                self.dar_ficha(alvo, "exposto", 2 if c.ef("aberto") else 1, fonte=c)
         elif hid in ("erguer_escudo", "barreira"):
             self.dar_ficha(alvo, "guarda", fonte=c)
-            if hid == "erguer_escudo" and c.ef("escudo_espinhos"):
-                alvo.estados["espinhos_escudo"] = {"valor": round(c.poder * 0.6)}
-                self.ev("estado", f"{alvo.nome} fica com o Escudo de Espinhos ({round(c.poder * 0.6)}).")
         elif hid == "provocar":
             for e in self.vivos("inimigo"):
                 e.estados["provocado"] = {"por": c.id}
             self.ev("estado", "Todos os inimigos miram Jean na próxima vez deles.")
             self.dar_ficha(c, "guarda", fonte=c)
             if c.ef("provoca_revide"):
-                c.estados["rancor"] = set()
+                c.estados["rancor"] = {"ja": []}
                 self.ev("estado", "Até a próxima vez de Jean, ele revida o primeiro golpe de cada inimigo.")
+        elif hid == "grito_guerra":
+            for a in self.grupo():
+                if a is not c:
+                    self.dar_ficha(a, "forca", fonte=c)
+        elif hid == "escudo_alto":
+            n = c.fichas["guarda"]
+            forca = self._gastar_forca(c, hid)
+            g = self._golpe_de(c, hid, alvo)
+            c.fichas["guarda"] = 0
+            if n:
+                self.ev("ficha", f"Escudo Alto consome {n} Guarda{'s' if n > 1 else ''}.")
+            self.golpe(c, alvo, g[0], g[1], hid, forca=forca, rotulo=nome, hid=hid)
         elif hid == "rugido":
-            if c.ef("contido"):
-                self.dar_ficha(c, "guarda", fonte=c)
-            else:
-                g = self._golpe_de(c, hid, alvo)
-                self.golpe(c, alvo, g[0], g[1], hid, forca=self._gastar_forca(c, hid), rotulo=nome)
+            self._bater(c, hid, alvo, self._gastar_forca(c, hid))
             if c.vivo:
-                c.estados["furia"] = {}
-                self.ev("estado", "Jean entra em Fúria (causa e recebe +40%).")
+                self.entrar_furia(c)
             if c.ef("desafiador"):
                 for e in self.vivos("inimigo"):
                     e.estados["provocado"] = {"por": c.id}
                 self.ev("estado", "Todos os inimigos miram Jean na próxima vez deles.")
-        elif hid == "sede":
-            g = self._golpe_de(c, hid, alvo)
-            d = self.golpe(c, alvo, g[0], g[1], hid, forca=self._gastar_forca(c, hid), rotulo=nome)
-            self.curar(c, round(d * 0.4), c, "sede")
-            if c.ef("sede_rubra"):
-                self.ganhar_recurso(c, 6, "sede_rubra")
         elif hid == "redemoinho":
-            g0 = C.HABILIDADES[hid]
             forca = self._gastar_forca(c, hid)
-            for e in self.vivos("inimigo"):
+            for e in list(self.vivos("inimigo")):
                 if e.vivo:
-                    g = self._golpe_de(c, hid, e)
-                    self.golpe(c, e, g[0], g[1], hid, forca=forca, rotulo=g0["nome"])
-            if c.ef("temerario") and c.vivo:
-                self.dar_ficha(c, "exposto", fonte=c)
-        elif hid == "furia_cega":
+                    self._bater(c, hid, e, forca, area=True)
+                    if c.ef("redemoinho_sangrento"):
+                        self.sangrar(e, 1, c, "redemoinho")
+        elif hid == "abrir_feridas":
+            camadas = (alvo.sangra or {}).get("camadas", 0)
+            forca = self._gastar_forca(c, hid)
             g = self._golpe_de(c, hid, alvo)
-            self.golpe(c, alvo, g[0], g[1], hid, forca=self._gastar_forca(c, hid), rotulo=nome)
-        elif hid in ("bola_fogo", "brasa"):
-            g = self._golpe_de(c, hid, alvo)
-            self.golpe(c, alvo, g[0], g[1], hid, forca=self._gastar_forca(c, hid), rotulo=nome)
-            self.acender(alvo, 2 if hid == "bola_fogo" and c.ef("bola_pesada") else 1, c, hid)
-            if hid == "brasa" and c.ef("brasa_partilhada") and alvo.vivo:
-                alvo.estados["marca_partilhada"] = {"ate": self.rodada + 1}
+            alvo.sangra, alvo.abertas = None, camadas
+            if camadas:
+                self.ev("detona", f"Abrir Feridas: abre {camadas} camada{'s' if camadas > 1 else ''} em {alvo.nome}.",
+                        alvo=alvo.id)
+            self.golpe(c, alvo, g[0], g[1], hid, forca=forca, rotulo=nome, hid=hid)
+            alvo.abertas = 0
+            if c.ef("hemorragia") and camadas:
+                self.curar(c, 5 * camadas, c, "hemorragia")
+        elif hid == "cerrar_dentes":
+            c.estados["cerrado"] = {}
+            self.ev("estado", "Jean cerra os dentes: recebe −30% e ganha 5 de Vigor por golpe até a próxima vez dele.")
+        elif hid == "estandarte":
+            self.invocar(c, "estandarte")
+        elif hid == "muralha_viva":
+            c.estados["muralha"] = {}
+            self.ev("estado", "Até a próxima vez de Jean, todos os golpes contra o grupo vêm para ele.")
+            self.dar_ficha(c, "guarda", 2, fonte=c)
+        elif hid == "lanca":
+            congelado = alvo.estados.get("atordoado", {}).get("rotulo") == "Congelado"
+            prep = bool(alvo.prep)
+            self._bater(c, hid, alvo, self._gastar_forca(c, hid),
+                        nome + (" (Estilhaço)" if c.ef("estilhaco") and congelado else ""))
+            if alvo.vivo and not c.ef("estilhaco"):
+                self.resfriar(alvo, 2 if prep else 1, c, "lanca", hid="lanca")
+        elif hid == "nevasca":
+            forca = self._gastar_forca(c, hid)
+            for e in list(self.vivos("inimigo")):
+                if e.vivo:
+                    self._bater(c, hid, e, forca, area=True)
+                    self.resfriar(e, 1, c, "nevasca", hid="nevasca")
+        elif hid == "inverno":
+            for e in list(self.vivos("inimigo")):
+                self.resfriar(e, 2, c, "inverno", hid="inverno")
+            for a in self.vivos("aliado"):
+                self.dar_ficha(a, "guarda", fonte=c)
         elif hid == "chuva":
             densa = c.ef("chuva_densa")
             forca = 1.0 if densa else self._gastar_forca(c, hid)
-            for e in self.vivos("inimigo"):
+            for e in list(self.vivos("inimigo")):
                 if not e.vivo:
                     continue
                 if not densa:
-                    g = self._golpe_de(c, hid, e)
-                    self.golpe(c, e, g[0], g[1], hid, forca=forca, rotulo=nome)
-                self.acender(e, 2 if densa else 1, c, hid)
+                    self._bater(c, hid, e, forca, area=True)
+                self.acender(e, 2 if densa else 1, c, hid, hid=hid)
         elif hid == "combustao":
-            if c.ef("pavio"):
+            if alvo.lado == "aliado":
+                self.sacrificar(alvo)
+            elif c.ef("pavio"):
                 alvo.estados["pavio"] = {"mult": 1.5}
                 self.ev("estado", f"{alvo.nome}: pavio aceso (detona no começo da próxima vez dele, +50%).",
                         alvo=alvo.id)
@@ -900,36 +1191,44 @@ class Combate:
                     if outros:
                         t = max(outros, key=lambda x: ((x.queima or {}).get("camadas", 0), -x.vida))
                         n = (camadas + 1) // 2
-                        self.ev("estado", f"Contágio: {n} camada{'s' if n > 1 else ''} passa{'m' if n > 1 else ''} "
-                                          f"para {t.nome}.")
-                        c0 = (t.queima or {}).get("camadas", 0)
-                        t.queima = {"camadas": min(C.CAMADAS_TETO, c0 + n), "pingos": C.PINGOS}
+                        self.ev("estado", f"Contágio: {n} camada{'s' if n > 1 else ''} para {t.nome}.")
+                        self.acender(t, n, c, "contagio")
         elif hid == "conflagracao":
             forca = self._gastar_forca(c, hid)
-            for e in self.vivos("inimigo"):
+            for e in list(self.vivos("inimigo")):
                 if e.vivo:
                     self.detonar(e, "conflagracao", forca=forca, rotulo=nome)
-        elif hid == "lanca":
-            g = self._golpe_de(c, hid, alvo)
-            camadas = alvo.queima["camadas"] if (c.ef("cinza_fria") and alvo.queima) else 0
-            self.golpe(c, alvo, g[0], g[1], hid, forca=self._gastar_forca(c, hid), rotulo=nome)
-            if camadas and alvo.vivo:
-                def cinza():
-                    alvo.queima = None
-                    d = max(1, round(C.DETONA_CAMADA * camadas * alvo.res.get("gelo", 1.0)))
-                    self._perder_vida(alvo, d, c, "cinza_fria", rotulo="Cinza Fria", tipo="gelo")
-                self.disparar("cinza_fria", c, alvo, cinza, f"Cinza Fria consome {camadas} camadas de {alvo.nome}")
-            if alvo.vivo:
-                self.atordoar(alvo, 0.35 + 0.15 * camadas, "Congelado", c)
+            if c.ef("sacrificio"):
+                for inv in self.invocacoes(c):
+                    self.sacrificar(inv)
+        elif hid == "alastrar":
+            camadas = (alvo.queima or {}).get("camadas", 0)
+            if not camadas:
+                self.ev("estado", f"{alvo.nome} não está em chamas: nada se alastra.")
+            else:
+                alvo.queima = None
+                self.ev("estado", f"As {camadas} camadas de {alvo.nome} se alastram.")
+                for e in list(self.vivos("inimigo")):
+                    if e is not alvo:
+                        falta = camadas - (e.queima or {}).get("camadas", 0)
+                        if falta > 0:
+                            self.acender(e, falta, c, "alastrar")
         elif hid == "escudo_chamas":
             self.dar_ficha(alvo, "guarda", fonte=c)
             alvo.estados["chamas"] = {"ate": self.rodada + 1}
             self.ev("estado", f"{alvo.nome} fica com o Escudo de Chamas até o fim da próxima rodada.")
+        elif hid == "arma_flamejante":
+            alvo.estados["flamejante"] = {"vezes": 1}
+            self.ev("estado", f"Até o fim da próxima vez de {alvo.nome}, os golpes dele são de fogo e acendem.")
+        elif hid == "fogo_fatuo":
+            self.invocar(c, "fogo_fatuo")
+        elif hid == "sentinela":
+            self.invocar(c, "sentinela")
+        elif hid == "sobrecarga":
+            self.dar_ficha(c, "forca", 2, fonte=c)
+            self.dar_ficha(c, "exposto", 2, fonte=c)
         elif hid == "meditar":
             self.ganhar_recurso(c, 24, "meditar")
-        elif hid == "oportuno":
-            g = self._golpe_de(c, hid, alvo)
-            self.golpe(c, alvo, g[0], g[1], hid, extra=g[2], forca=self._gastar_forca(c, hid), rotulo=nome)
         elif hid == "proteger":
             alvo.estados["protegido"] = {"por": c.id}
             self.ev("estado", f"Morel protege {alvo.nome} até a próxima vez dele.")
@@ -947,11 +1246,12 @@ class Combate:
         return {"rodada": self.rodada, "ator": c.id, "acao": acao, "alvo": alvo,
                 "disponiveis": [a["id"] for a in self.acoes() if a["disponivel"]],
                 "grupo": {x.id: {"vida": x.vida, "recurso": x.recurso, "fichas": dict(x.fichas)}
-                          for x in self.c.values() if x.lado == "aliado"},
+                          for x in self.vivos("aliado")},
                 "heroi": {"calor": h.calor, "furia": "furia" in h.estados},
-                "inimigos": {x.id: {"vida": x.vida, "camadas": (x.queima or {}).get("camadas", 0),
+                "inimigos": {x.id: {"vida": x.vida, "queimadura": (x.queima or {}).get("camadas", 0),
+                                    "sangramento": (x.sangra or {}).get("camadas", 0), "frio": x.frio,
                                     "prep": bool(x.prep), "fichas": dict(x.fichas)}
-                             for x in self.c.values() if x.lado == "inimigo" and x.vivo}}
+                             for x in self.vivos("inimigo")}}
 
     def _estados_tela(self, x):
         out = []
@@ -961,29 +1261,39 @@ class Combate:
                         + (" · não expira" if fixa else f" · {x.queima['pingos']} turnos"),
                         "dica": f"Pinga {round(C.PINGO_CAMADA * x.queima['camadas'] * self.chama_viva() * x.res.get('fogo', 1.0))} "
                                 "de fogo no começo da vez dele."})
+        if x.sangra:
+            out.append({"id": "sangramento", "texto": f"Sangramento {x.sangra['camadas']} · {x.sangra['pingos']} turnos",
+                        "dica": f"Pinga {C.PINGO_CAMADA * x.sangra['camadas']} no começo da vez dele."})
+        if x.frio:
+            out.append({"id": "frio", "texto": f"Frio {x.frio}/3", "dica": "Com 3, congela: perde a próxima vez e o "
+                                                                              "golpe preparado."})
         if x.prep:
             out.append({"id": "prep", "texto": f"Prepara: {x.prep['nome']}",
                         "dica": f"Sai na próxima vez dele: {round(x.poder * x.prep['mult'])} de dano antes de "
-                                "Guarda e Fúria. Atordoar interrompe."})
-        nomes = {"furia": ("Fúria", "Causa e recebe +40%."),
+                                "Guarda e Fúria. Atordoar ou congelar interrompe."})
+        nomes = {"furia": ("Fúria", "Causa e recebe mais nos golpes."),
                  "atordoado": (None, "Perde a próxima vez."),
                  "firme": ("Firme", "Não pode ser atordoado, congelado nem preso."),
                  "fortalecido": ("Fortalecido", "Golpes +30%."),
                  "enfraquecido": ("Enfraquecido", "Golpes −30%."),
-                 "sangramento": ("Sangrando", "Perde vida no começo da vez."),
                  "veneno": ("Envenenado", "Perde vida no começo da vez."),
-                 "provocado": ("Provocado", "Mira Jean na próxima vez."),
+                 "provocado": ("Provocado", "Mira quem provocou na próxima vez."),
                  "protegido": ("Protegido", "Os golpes vêm para Morel."),
                  "pavio": ("Pavio aceso", "Detona no começo da próxima vez dele, +50%."),
                  "chamas": ("Escudo de Chamas", "Quem o golpear ganha 1 camada."),
                  "espinhos_escudo": ("Escudo de Espinhos", "O próximo inimigo que o golpear leva dano."),
                  "marca_partilhada": ("Brasa Partilhada", "Golpes de Morel e Odette acendem 1 camada."),
-                 "rancor": ("Revida", "Revida o primeiro golpe de cada inimigo até a próxima vez dele.")}
+                 "rancor": ("Revida", "Revida o primeiro golpe de cada inimigo até a próxima vez dele."),
+                 "cerrado": ("Dentes cerrados", "Recebe −30%; cada golpe recebido dá 5 de Vigor."),
+                 "muralha": ("Muralha Viva", "Todos os golpes contra o grupo vêm para ele."),
+                 "flamejante": ("Arma Flamejante", "Golpes de fogo que acendem 1 camada.")}
         for k, v in x.estados.items():
             if k in nomes:
                 rot, dica = nomes[k]
                 rot = rot or v.get("rotulo", "Atordoado")
-                if "vezes" in v:
+                if k == "furia":
+                    rot += f" · {v['vezes']} vez{'es' if v['vezes'] != 1 else ''}"
+                elif isinstance(v, dict) and "vezes" in v:
                     rot += f" · {v['vezes']}"
                 out.append({"id": k, "texto": rot, "dica": dica})
         return out
@@ -1000,9 +1310,11 @@ class Combate:
                              "recurso": x.recurso, "recurso_max": x.recurso_max, "recurso_nome": x.recurso_nome,
                              "fichas": dict(x.fichas), "estados": self._estados_tela(x), "vivo": x.vivo,
                              "calor": x.calor if x is self.heroi and x.ef("fornalha") else None,
-                             "retrato": x.retrato, "res": x.res}
-                            for x in self.c.values()],
+                             "retrato": x.retrato, "res": x.res, "invocacao": bool(x.invocacao),
+                             "dono": self.c[x.dono].nome if x.dono else None}
+                            for x in self.c.values() if not (x.invocacao and not x.vivo)],
             "acoes": self.acoes(), "pode_sair_furia": self.pode_sair_furia(),
+            "motivo_sair_furia": self.motivo_sair_furia() if self.pode_sair_furia() else None,
             "eventos": self.eventos, "resumo": self.resumo() if self.fim else None,
         }
 
@@ -1012,8 +1324,9 @@ class Combate:
             k = f"{self.c[d['ator']].nome}: {C.HABILIDADES[d['acao']]['nome'] if d['acao'] in C.HABILIDADES else 'Sair da Fúria'}"
             usos[k] = usos.get(k, 0) + 1
         maiores = sorted(self.cadeias, key=lambda x: -x["elos"])[:3]
-        return {"fim": self.fim, "rodadas": self.rodada if self.fim != "vitoria" else self.rodada,
-                "vida_grupo": {x.nome: f"{x.vida}/{x.vida_max}" for x in self.c.values() if x.lado == "aliado"},
+        return {"fim": self.fim, "rodadas": self.rodada,
+                "vida_grupo": {x.nome: f"{x.vida}/{x.vida_max}" for x in self.c.values()
+                               if x.lado == "aliado" and not x.invocacao},
                 "dano_por_causa": {causa_nome(k): v for k, v in sorted(self.dano_por_causa.items(), key=lambda kv: -kv[1])},
                 "dano_recebido": self.dano_recebido, "cura": self.cura_total,
                 "usos": dict(sorted(usos.items(), key=lambda kv: -kv[1])),
@@ -1031,11 +1344,14 @@ _CAUSAS = {"atacar": "Atacar", "bastao": "Bastão", "golpe_pesado": "Golpe Pesad
            "quebra_guarda": "Quebra-Guarda", "rugido": "Rugido", "sede": "Sede de Sangue", "redemoinho": "Redemoinho",
            "furia_cega": "Fúria Cega", "furia_cega_seguimento": "Fúria Cega (segue)", "bola_fogo": "Bola de Fogo",
            "brasa": "Brasa", "chuva": "Chuva de Brasas", "combustao": "Combustão", "conflagracao": "Conflagração",
-           "lanca": "Lança de Gelo", "oportuno": "Golpe Oportuno", "queimadura": "Queimadura", "pavio": "Pavio Curto",
-           "estouro": "Estouro", "revide": "Revide", "espinhos": "Espinhos", "escudo_espinhos": "Escudo de Espinhos",
-           "cinza_fria": "Cinza Fria", "sangue_quente": "Sangue Quente", "prece": "Prece", "regenerar": "Regenerar",
-           "cura_inimiga": "Cura", "folego": "Fôlego Rubro", "sair_furia": "Sair da Fúria", "meditar": "Meditar",
-           "sede_rubra": "Sede Rubra", "sangramento": "Sangramento", "veneno": "Veneno"}
+           "lanca": "Lança de Gelo", "nevasca": "Nevasca", "oportuno": "Golpe Oportuno", "queimadura": "Queimadura",
+           "pavio": "Pavio Curto", "estouro": "Estouro", "revide": "Revide", "espinhos": "Espinhos",
+           "escudo_espinhos": "Escudo de Espinhos", "cinza_fria": "Cinza Fria", "sangue_quente": "Sangue Quente",
+           "prece": "Prece", "regenerar": "Regenerar", "cura_inimiga": "Cura", "folego": "Fôlego Rubro",
+           "sair_furia": "Sair da Fúria", "meditar": "Meditar", "sede_rubra": "Sede Rubra", "sangramento": "Sangramento",
+           "veneno": "Veneno", "talho": "Talho", "abrir_feridas": "Abrir Feridas", "escudo_alto": "Escudo Alto",
+           "fatuo": "Fogo-fátuo", "hemorragia": "Hemorragia", "elo_elemental": "Elo Elemental",
+           "cerrar_dentes": "Cerrar os Dentes"}
 
 
 def causa_nome(k):

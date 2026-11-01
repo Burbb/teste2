@@ -1,5 +1,6 @@
 /* PROTÓTIPO X1 da etapa 8 (31/10/2026; nada no jogo). A tela só desenha: a validação da montagem, o que cada talento
-   muda, as previsões de dano e as cadeias vêm prontas do motor (motor/), pelo servidor. */
+   muda, a descrição efetiva das habilidades, as previsões de dano e as cadeias vêm prontas do motor (motor/), pelo
+   servidor. As montagens salvas ficam no navegador (localStorage) e vão também para o registro do servidor. */
 (() => {
   "use strict";
   const $ = (s) => document.querySelector(s);
@@ -13,6 +14,8 @@
   const pontos = (n) => `${n} ponto${n === 1 ? "" : "s"}`;
 
   let CAT = null, M = null, FICHA = null, ENC = "lobos", E = null, SEL = null, VER = null, TELA = "montar";
+  let FILTRO = { funcao: "", prop: "", kit: false };
+  let SALVAS = ler("x1-salvas") || [];
 
   const retrato = (o, lado = 32) => {
     let h = "";
@@ -34,94 +37,152 @@
     guardar("x1-montagem", M);
     guardar("x1-encontro", ENC);
     FICHA = await api("/api/montagem", { montagem: M });
+    M.ultimate = FICHA.montagem.ultimate;
     desenharMontar();
   }
 
+  const editada = (nome) => (nome.endsWith("(editada)") || nome === "Livre" ? nome : nome + " (editada)");
+
   function trocar(campo, valor) {
     if (M[campo] === valor) return;
-    M = { ...M, [campo]: valor, nos: {}, nome: "Livre" };
-    if (campo === "spec") M.kit = [];
+    M = { ...M, [campo]: valor, nos: {}, nome: "Livre", salva: null };
+    if (campo === "spec") { M.kit = []; M.ultimate = null; }
     atualizarMontagem();
   }
 
+  function passa(item) {
+    if (FILTRO.funcao && !(item.funcao || []).includes(FILTRO.funcao)) return false;
+    if (FILTRO.prop && !(item.props || []).includes(FILTRO.prop)) return false;
+    return true;
+  }
+
   function desenharMontar() {
-    const est = CAT.estruturas, spec = CAT.specs[M.spec];
+    const est = CAT.estruturas;
     $("#estruturas").innerHTML = Object.entries(est).map(([k, v]) =>
       `<button data-est="${k}" class="${k === M.estrutura ? "atual" : ""}">${esc(v.nome)}</button>`).join("");
     $("#estrutura-frase").textContent = est[M.estrutura].frase;
     $("#specs").innerHTML = Object.entries(CAT.specs).map(([k, v]) =>
       `<button data-spec="${k}" class="${k === M.spec ? "atual" : ""}">${esc(v.nome)} <small>(${esc(v.classe)})</small></button>`).join("");
+    if (document.activeElement !== $("#nome")) $("#nome").value = M.nome;
+    desenharSalvas();
     const exs = CAT.exemplos.filter((x) => x.estrutura === M.estrutura && x.spec === M.spec);
     $("#exemplos").innerHTML = exs.map((x) =>
       `<button data-ex="${x.id}" title="${esc(x.frase)}">${esc(x.nome)} <small>· ${esc(x.estilo)}</small></button>`).join("") +
-      `<button data-ex="" title="Kit e talentos vazios">Vazia</button>` +
-      (exs.find((x) => x.nome === M.nome) ? `<p class="frase">${esc(exs.find((x) => x.nome === M.nome).frase)}</p>` : "");
-    // o kit
-    const cheio = M.kit.length >= CAT.espacos;
-    $("#kit-titulo").innerHTML = `Kit · ${M.kit.length}/${CAT.espacos} <small>(e a ultimate: ${esc(spec.ultimate)})</small>`;
-    $("#pool").innerHTML = FICHA.pool.map((h) =>
-      `<button class="hab ${h.no_kit ? "no-kit" : ""} ${cheio ? "cheio" : ""}" data-hab="${h.id}" aria-pressed="${h.no_kit}">` +
-      `<span class="marca">${h.no_kit ? "✓" : ""}</span><span class="nome">${esc(h.nome)}</span>` +
-      `<span class="custo">${h.custo ? `${h.custo} de ${esc(spec.recurso)}` : "Grátis"}</span>` +
-      `<div class="desc">${esc(h.desc)}</div></button>`).join("");
-    // a árvore
-    $("#arvore-titulo").innerHTML = `Talentos · ${FICHA.pontos}/${FICHA.orcamento} pontos <small>(${esc(est[M.estrutura].nome)})</small>`;
-    const erros = FICHA.erros.filter((e) => !e.startsWith("Kit"));
-    $("#erros").hidden = !erros.length;
-    $("#erros").innerHTML = erros.map((e) => `<li>${esc(e)}</li>`).join("");
-    $("#arvore").innerHTML = M.estrutura === "t4" ? arvoreHibrida() : arvoreVersoes();
-    // a build
-    const kit = FICHA.kit.length ? FICHA.kit : null;
-    $("#kit-final").innerHTML = kit ? kit.map((h) =>
-      `<div class="hab"><span class="nome">${esc(h.nome)}</span>${h.versao ? ` <span class="versao">· ${esc(h.versao)}</span>` : ""}` +
-      `${h.ultimate ? ' <small>· Ultimate · 1 vez por luta</small>' : ""}` +
-      `<span class="custo">${h.custo ? `${h.custo} de ${esc(spec.recurso)}` : "Grátis"}</span>` +
-      `<div class="desc">${esc(h.desc)}</div>${h.notas.length ? `<ul>${h.notas.map((n) => `<li>${esc(n)}</li>`).join("")}</ul>` : ""}</div>`).join("")
-      : `<p class="vazio">${esc(FICHA.erros.join(" · ") || "Escolha as habilidades.")}</p>`;
-    $("#encontros").innerHTML = Object.entries(CAT.encontros).map(([k, v]) =>
-      `<button class="enc ${k === ENC ? "atual" : ""}" data-enc="${k}"><span class="nome">${esc(v.nome)}</span>` +
-      `<div class="resumo">${esc(v.resumo)}</div><div class="fav">Favorece: ${esc(v.favorece)} · Desfavorece: ${esc(v.desfavorece)}</div></button>`).join("");
+      `<button data-ex="" title="Kit e talentos vazios">Vazia</button>`;
+    // o encontro
+    if (!$("#encontro").options.length) {
+      $("#encontro").innerHTML = Object.entries(CAT.encontros).map(([k, v]) => `<option value="${k}">${esc(v.nome)}</option>`).join("");
+    }
+    $("#encontro").value = ENC;
+    const en = CAT.encontros[ENC];
+    $("#encontro-desc").innerHTML = `${esc(en.resumo)}<br><small>Favorece: ${esc(en.favorece)} · Desfavorece: ${esc(en.desfavorece)}</small>`;
     const pronto = FICHA.valida && M.kit.length === CAT.espacos;
     $("#lutar").disabled = !pronto;
     $("#lutar").title = pronto ? "" : (M.kit.length < CAT.espacos ? `Escolha ${CAT.espacos - M.kit.length} habilidade(s) a mais` : FICHA.erros.join("; "));
-    $("#build-topo").textContent = `${M.nome} · ${CAT.specs[M.spec].nome} · ${est[M.estrutura].nome} · ${FICHA.pontos}/${FICHA.orcamento} pontos`;
+    desenharRepertorio();
+    desenharArvore();
+    $("#build-topo").textContent = `${M.nome} · ${CAT.specs[M.spec].nome} · ${est[M.estrutura].nome} · ${FICHA.pontos}/${FICHA.orcamento} pontos · kit ${M.kit.length}/${CAT.espacos}`;
+  }
+
+  function desenharFiltros() {
+    const chip = (tipo, v, rotulo) => `<button class="chip-f ${FILTRO[tipo] === v ? "atual" : ""}" data-filtro="${tipo}" data-valor="${esc(v)}">${esc(rotulo)}</button>`;
+    $("#filtros").innerHTML =
+      `<div class="linha-f"><span>Função</span>${chip("funcao", "", "Todas")}${CAT.funcoes.map((f) => chip("funcao", f, f)).join("")}</div>` +
+      `<div class="linha-f"><span>Propriedade</span>${chip("prop", "", "Todas")}${CAT.propriedades.map((p) => chip("prop", p, p)).join("")}</div>` +
+      `<div class="linha-f"><label><input type="checkbox" id="so-kit" ${FILTRO.kit ? "checked" : ""}> Só o que está no kit</label>` +
+      `<span class="nota">A propriedade filtra também os talentos.</span></div>`;
+  }
+
+  function cartaHabilidade(h, ult) {
+    const cheio = !h.no_kit && !ult && M.kit.length >= CAT.espacos;
+    const recurso = CAT.specs[M.spec].recurso;
+    const origem = h.origem === "classe" ? FICHA.classe : FICHA.spec_nome;
+    return `<button class="hab ${h.no_kit ? "no-kit" : ""} ${cheio ? "cheio" : ""} ${ult ? "ult" : ""}" data-${ult ? "ult" : "hab"}="${h.id}" data-hab-id="${h.id}" aria-pressed="${h.no_kit}">` +
+      `<span class="marca">${h.no_kit ? "✓" : ""}</span><span class="nome">${esc(h.nome)}</span>${h.versao ? ` <span class="versao">· ${esc(h.versao)}</span>` : ""}` +
+      `<span class="custo">${h.custo ? `${h.custo} de ${esc(recurso)}` : "Grátis"}</span>` +
+      `<div class="meta">${esc(origem)}${ult ? " · Ultimate · 1 vez por luta" : ""}${h.funcao.length ? " · " + esc(h.funcao.join(", ")) : ""}</div>` +
+      `<div class="desc">${esc(h.desc)}</div>${h.notas.length ? `<ul>${h.notas.map((n) => `<li>${esc(n)}</li>`).join("")}</ul>` : ""}</button>`;
+  }
+
+  function desenharRepertorio() {
+    desenharFiltros();
+    const rep = FICHA.repertorio, ults = CAT.specs[M.spec].ultimates;
+    $("#kit-titulo").innerHTML = `Repertório de ${esc(FICHA.spec_nome)} · kit ${M.kit.length}/${CAT.espacos} <small>(14 habilidades e 2 ultimates; leve 5 e 1 ultimate)</small>`;
+    const kit = rep.filter((h) => h.no_kit);
+    $("#kit-faixa").innerHTML = `<span>No kit:</span> ${kit.map((h) => `<b data-hab-id="${h.id}">${esc(h.nome)}${h.versao ? ` (${esc(h.versao)})` : ""}</b>`).join(" · ") || "<i>nada</i>"}`;
+    const normais = rep.filter((h) => !ults.includes(h.id) && passa(h) && (!FILTRO.kit || h.no_kit));
+    const finais = rep.filter((h) => ults.includes(h.id) && passa(h) && (!FILTRO.kit || h.no_kit));
+    $("#pool").innerHTML = `<div class="grade-hab">${normais.map((h) => cartaHabilidade(h, false)).join("")}</div>` +
+      (finais.length ? `<h3 class="sub">Ultimate (escolha uma)</h3><div class="grade-hab">${finais.map((h) => cartaHabilidade(h, true)).join("")}</div>` : "") +
+      (!normais.length && !finais.length ? "<p class='nota'>Nada com esse filtro.</p>" : "");
   }
 
   function cartaNo(n) {
     const preco = n.ranks > 1 ? `${pontos(n.custo)} por nível · até ${n.ranks}` : pontos(n.custo);
-    let motivo = "";
-    if (!n.pode_mais && n.rank < n.ranks && n.motivo_mais) motivo = n.motivo_mais;
-    if (n.rank && !n.pode_menos && n.motivo_menos) motivo = n.motivo_menos;
-    const afeta = n.afeta.length ? `<div class="afeta">No seu kit: ${esc(n.afeta.join(", "))}</div>` : "";
-    return `<div class="no ${n.rank ? "comprado" : ""}" data-no="${n.id}">` +
+    const motivo = !n.pode_mais && n.rank < n.ranks && n.motivo_mais ? n.motivo_mais : "";
+    const alc = n.alcance.length || n.outros.length
+      ? `<div class="afeta">Afeta: ${n.alcance.map((h) => h.no_kit ? `<b>${esc(h.nome)}</b>` : `<span class="fora">${esc(h.nome)}</span>`).join(", ")}${n.outros.length ? (n.alcance.length ? "; " : "") + esc(n.outros.join("; ")) : ""}</div>` : "";
+    return `<div class="no ${n.rank ? "comprado" : ""}" data-no="${n.id}" data-afeta="${esc(n.alcance.map((h) => h.id).join(" "))}">` +
       `<div class="t"><span class="tipo ${n.tipo}">${esc(n.nome_tipo)}</span><span class="nome">${esc(n.nome)}</span></div>` +
-      `<div class="texto">${esc(n.texto)}</div>${n.aviso ? `<div class="aviso">${esc(n.aviso)}</div>` : afeta}` +
+      `<div class="texto">${esc(n.texto)}</div>${alc}${n.aviso ? `<div class="aviso">${esc(n.aviso)}</div>` : ""}` +
+      (M.estrutura === "t1" && n.equivale && n.tipo !== "N" ? `<div class="equivale">Na híbrida: ${esc(n.equivale)}</div>` : "") +
       `<div class="controles"><button data-menos="${n.id}" ${n.pode_menos ? "" : "disabled"} aria-label="Tirar um ponto de ${esc(n.nome)}">−</button>` +
       `<span class="rank">${n.rank}/${n.ranks}</span><button data-mais="${n.id}" ${n.pode_mais ? "" : "disabled"} aria-label="Pôr um ponto em ${esc(n.nome)}">+</button>` +
       `<span class="preco">${preco}</span></div>${motivo ? `<div class="motivo">${esc(motivo)}</div>` : ""}</div>`;
   }
 
-  function arvoreHibrida() {
-    const arv = FICHA.arvore, req = CAT.requisito_linha;
-    let html = "";
-    for (const linha of [1, 2, 3]) {
-      const nos = arv.filter((n) => n.linha === linha);
-      const antes = arv.filter((n) => n.linha < linha).reduce((s, n) => s + n.custo * n.rank, 0);
-      const r = req[linha];
-      const rotulo = linha === 1 ? "Linha 1" : `Linha ${linha} · requer ${r} pontos ${linha === 2 ? "na linha 1" : "nas linhas 1 e 2"} (${antes}/${r})`;
-      html += `<div class="linha-arvore"><h3 class="${antes < r ? "falta" : ""}">${rotulo}</h3><div class="nos">${nos.map(cartaNo).join("")}</div></div>`;
+  function desenharArvore() {
+    const est = CAT.estruturas;
+    $("#arvore-titulo").innerHTML = `Talentos · ${FICHA.pontos}/${FICHA.orcamento} pontos <small>(${esc(est[M.estrutura].nome)})</small>`;
+    const erros = FICHA.erros.filter((e) => !e.startsWith("Kit"));
+    $("#erros").hidden = !erros.length;
+    $("#erros").innerHTML = erros.map((e) => `<li>${esc(e)}</li>`).join("");
+    const arv = FICHA.arvore.filter((n) => !FILTRO.prop || n.props.includes(FILTRO.prop) || n.rank);
+    const grupo = (titulo, nos) => (nos.length ? `<div class="linha-arvore"><h3>${titulo}</h3><div class="nos">${nos.map(cartaNo).join("")}</div></div>` : "");
+    let html;
+    if (M.estrutura === "t4") {
+      html = grupo("Regras · 2 pontos · valem para todas as habilidades com a propriedade", arv.filter((n) => n.tipo === "R")) +
+        grupo("Versões · 1 ponto · mudam o papel de uma habilidade", arv.filter((n) => n.tipo === "V")) +
+        grupo("Números · 1 ponto por nível", arv.filter((n) => n.tipo === "N"));
+    } else {
+      html = grupo("Princípios · 3 pontos · dois efeitos juntos", arv.filter((n) => n.tipo === "P")) +
+        grupo("Versões · 1 ponto · uma por habilidade", arv.filter((n) => n.tipo === "V")) +
+        grupo("Números · 1 ponto por nível", arv.filter((n) => n.tipo === "N"));
     }
-    return html;
+    $("#arvore").innerHTML = (FILTRO.prop ? `<p class="nota">Mostrando os talentos com ${esc(FILTRO.prop)} (e os já comprados).</p>` : "") + html;
   }
 
-  function arvoreVersoes() {
-    const arv = FICHA.arvore;
-    const princ = arv.filter((n) => n.tipo === "P");
-    const porHab = {};
-    for (const n of arv.filter((x) => x.tipo === "V")) (porHab[n.versao] ||= []).push(n);
-    return `<div class="linha-arvore"><h3>Princípios · 3 pontos cada</h3><div class="nos">${princ.map(cartaNo).join("")}</div></div>` +
-      `<div class="linha-arvore"><h3>Versões · 1 ponto · uma por habilidade</h3>${Object.entries(porHab).map(([h, nos]) =>
-        `<div class="grupo-versoes"><h4>${esc(h)}</h4><div class="nos">${nos.map(cartaNo).join("")}</div></div>`).join("")}</div>`;
+  function desenharSalvas() {
+    const minhas = SALVAS.filter((s) => s.montagem.spec === M.spec && s.montagem.estrutura === M.estrutura);
+    const outras = SALVAS.length - minhas.length;
+    $("#salvas").innerHTML = (minhas.length ? `<ul class="salvas">${minhas.map((s) =>
+      `<li class="${s.id === M.salva ? "atual" : ""}"><button class="link" data-abrir="${s.id}" title="Abrir para editar">${esc(s.nome)}</button>` +
+      `<small>${s.hora}</small><button class="mini" data-dup="${s.id}" title="Duplicar">⧉</button><button class="mini" data-apagar="${s.id}" title="Apagar da lista">×</button></li>`).join("")}</ul>`
+      : "<p class='nota'>Nenhuma montagem salva desta especialização e estrutura.</p>") +
+      (outras ? `<p class="nota">${outras} salva${outras > 1 ? "s" : ""} em outra especialização ou estrutura.</p>` : "");
+  }
+
+  function salvar(nova) {
+    const nome = ($("#nome").value || "Sem nome").trim();
+    const hora = new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+    const dados = { estrutura: M.estrutura, spec: M.spec, kit: [...M.kit], ultimate: M.ultimate, nos: { ...M.nos }, nome };
+    let id = M.salva;
+    if (nova || !id || !SALVAS.find((s) => s.id === id)) {
+      id = "s" + Date.now();
+      SALVAS.push({ id, nome: nova && M.salva ? nome + " (cópia)" : nome, hora, montagem: dados });
+    } else {
+      Object.assign(SALVAS.find((s) => s.id === id), { nome, hora, montagem: dados });
+    }
+    const s = SALVAS.find((x) => x.id === id);
+    M = { ...M, nome: s.nome, salva: id };
+    guardar("x1-salvas", SALVAS);
+    api("/api/salvar", { montagem: s.montagem, nota: "" });
+    $("#salvo").textContent = `Salva: ${s.nome}.`;
+    atualizarMontagem();
+  }
+
+  function realcar(ids, ligar) {
+    for (const id of ids) for (const el of document.querySelectorAll(`[data-hab-id="${id}"]`)) el.classList.toggle("realce", ligar);
   }
 
   // ---------------------------------------------------------------- luta
@@ -163,8 +224,8 @@
     const alvo = SEL && SEL.alvos.includes(o.id);
     const prev = alvo && SEL.previsao && SEL.previsao[o.id];
     const pv = Math.max(0, o.vida) / o.vida_max * 100;
-    return `<div class="carta ${o.vivo ? "" : "morto"} ${E.aguardando === o.id ? "vez" : ""} ${alvo ? "alvo" : ""}" data-alvo="${alvo ? o.id : ""}">` +
-      `<span class="ret">${retrato(o)}</span><span class="nome">${esc(o.nome)}</span>` +
+    return `<div class="carta ${o.vivo ? "" : "morto"} ${o.invocacao ? "invocada" : ""} ${E.aguardando === o.id ? "vez" : ""} ${alvo ? "alvo" : ""}" data-alvo="${alvo ? o.id : ""}">` +
+      `<span class="ret">${o.invocacao ? `<span class="sem-retrato">${esc(o.nome[0])}</span>` : retrato(o)}</span><span class="nome">${esc(o.nome)}${o.invocacao ? ` <small>· invocação de ${esc(o.dono)}</small>` : ""}</span>` +
       (prev ? `<span class="previsto">${esc(prev)}<small>previsto</small></span>` : "<span></span>") +
       `<div><div class="barra"><i style="width:${pv}%"></i></div>` +
       (o.recurso_max ? `<div class="barra rec"><i style="width:${o.recurso / o.recurso_max * 100}%"></i></div>` : "") +
@@ -172,26 +233,31 @@
       `<div class="chips">${chips(o)}</div></div>`;
   }
 
+  function explica(a) {
+    return a ? `<b>${esc(a.nome)}</b>${a.versao ? ` (${esc(a.versao)})` : ""}: ${esc(a.desc)}${a.notas && a.notas.length ? `<ul>${a.notas.map((n) => `<li>${esc(n)}</li>`).join("")}</ul>` : ""}` : "";
+  }
+
   function desenharLuta() {
     if (!E) { $("#luta-titulo").textContent = "Nenhuma luta. Monte a build e escolha Lutar."; return; }
     const est = CAT.estruturas[E.montagem.estrutura].nome, spec = CAT.specs[E.montagem.spec].nome;
     $("#luta-titulo").innerHTML = `<b>${esc(E.encontro_nome)}</b> · semente ${E.semente} · Rodada ${E.rodada} · ${esc(E.montagem.nome)} (${esc(spec)}, ${esc(est)})`;
     $("#ordem").innerHTML = E.ordem.map((x) =>
-      `<span class="${x.lado} ${x.agiu ? "agiu" : ""} ${x.atual ? "atual" : ""} ${x.vivo ? "" : "morto"}">${esc(x.nome)}</span>`).join("");
+      `<span class="${x.lado} ${x.agiu ? "agiu" : ""} ${x.atual ? "atual" : ""} ${x.vivo ? "" : "morto"}">${esc(x.nome)}</span>`).join("") +
+      (E.combatentes.some((o) => o.invocacao) ? `<span class="nota-ordem">Invocações agem no fim da vez de Jean</span>` : "");
     $("#grupo").innerHTML = E.combatentes.filter((o) => o.lado === "aliado").map(carta).join("");
     $("#frente").innerHTML = E.combatentes.filter((o) => o.lado === "inimigo").map(carta).join("");
-    // a doca
     const quem = E.combatentes.find((o) => o.id === E.aguardando);
     if (quem && !E.fim) {
-      const ver = VER || SEL;
+      const furia = E.pode_sair_furia
+        ? ` <button class="botao-x" id="sair-furia" ${E.motivo_sair_furia ? "disabled" : ""} title="Não gasta a ação">Sair da Fúria (+12 de Vigor e 1 Guarda) <kbd>F</kbd></button>${E.motivo_sair_furia ? ` <span class="m">${esc(E.motivo_sair_furia)}</span>` : ""}`
+        : "";
       $("#doca").innerHTML = `<div class="quem">${retrato(quem)}<b>${esc(quem.nome)}</b>` +
-        (SEL ? `<span>${esc(SEL.nome)}: escolha o alvo (clique na carta). <kbd>Esc</kbd> cancela.</span>` : "<span>Escolha a ação (ou o número).</span>") +
-        (E.pode_sair_furia ? ` <button class="botao-x" id="sair-furia" title="Não gasta a ação">Sair da Fúria (+12 de Vigor e 1 Guarda) <kbd>F</kbd></button>` : "") +
+        (SEL ? `<span>${esc(SEL.nome)}: escolha o alvo (clique na carta). <kbd>Esc</kbd> cancela.</span>` : "<span>Escolha a ação (ou o número).</span>") + furia +
         `</div><div class="acoes">${E.acoes.map((a, i) =>
           `<button class="acao ${a.ultimate ? "ult" : ""} ${SEL && SEL.id === a.id ? "escolhida" : ""}" data-acao="${a.id}" ${a.disponivel ? "" : "disabled"}>` +
           `<span class="n">${i + 1}. ${esc(a.nome)}</span>${a.versao ? `<span class="v">${esc(a.versao)}</span> ` : ""}` +
           `<span class="p">${esc(a.pagamento || "Grátis")}${a.ultimate ? " · 1 vez por luta" : ""}</span>${a.motivo ? `<span class="m">${esc(a.motivo)}</span>` : ""}</button>`).join("")}</div>` +
-        `<div class="explica">${ver ? `<b>${esc(ver.nome)}</b>${ver.versao ? ` (${esc(ver.versao)})` : ""}: ${esc(ver.desc)}${ver.notas && ver.notas.length ? `<ul>${ver.notas.map((n) => `<li>${esc(n)}</li>`).join("")}</ul>` : ""}` : ""}</div>`;
+        `<div class="explica">${explica(VER || SEL)}</div>`;
     } else {
       $("#doca").innerHTML = E.fim ? "" : "<p class='nota'>Os inimigos agem.</p>";
     }
@@ -202,8 +268,8 @@
   function desenharLog() {
     const log = $("#log");
     log.innerHTML = E.eventos.map((e) => {
-      const inimigo = e.tipo === "acao" && e.ator && e.ator.includes("#");
-      const cad = e.tipo === "gatilho" || e.tipo === "barrado" ? `<span class="cad" title="Cadeia ${e.cadeia}${e.elo ? `, elo ${e.elo}` : ""}">c${e.cadeia}${e.elo ? "·" + e.elo : ""}</span>` : "";
+      const inimigo = e.tipo === "acao" && e.ator && e.ator.includes("#") && !/^(fogo_fatuo|sentinela|estandarte)#/.test(e.ator);
+      const cad = e.tipo === "gatilho" || e.tipo === "barrado" ? `<span class="cad" title="Cadeia ${e.cadeia}${e.elo ? `, efeito ${e.elo}` : ""}">c${e.cadeia}${e.elo ? "·" + e.elo : ""}</span>` : "";
       return `<div class="ev t-${e.tipo} ${inimigo ? "inimigo" : ""}" style="margin-left:${(e.nivel || 0) * 14}px">${cad}${esc(e.texto)}</div>`;
     }).join("");
     log.scrollTop = log.scrollHeight;
@@ -241,10 +307,10 @@
           `<td>${esc(Object.entries(s.vida_grupo).map(([k, v]) => `${k} ${v}`).join(" · "))}</td><td>${s.dano_recebido}</td><td>${s.cura}</td>` +
           `<td>${mc ? `${mc.elos} (${esc(mc.rotulo)})` : "—"}</td><td>${esc(Object.entries(s.usos).slice(0, 4).map(([k, v]) => `${k} ×${v}`).join("; "))}</td></tr>`;
       }).join("") + "</table>" : "<p class='nota'>Nenhuma luta ainda.</p>";
-    $("#montagens").innerHTML = r.montagens.length ? `<table class="reg"><tr><th>Hora</th><th>Build</th><th>Kit</th><th>Talentos</th><th>Nota</th></tr>` +
+    $("#montagens").innerHTML = r.montagens.length ? `<table class="reg"><tr><th>Hora</th><th>Build</th><th>Kit</th><th>Talentos</th></tr>` +
       r.montagens.slice().reverse().map((x) => `<tr><td>${x.hora}</td><td>${esc(x.montagem.nome)}<br><small>${esc(nomeSpec(x.montagem.spec))} · ${esc(nomeEst(x.montagem.estrutura))}</small></td>` +
-        `<td>${esc(x.montagem.kit.join(", "))}</td><td>${esc(Object.entries(x.montagem.nos).map(([k, v]) => v > 1 ? `${k} ×${v}` : k).join(", "))}</td><td>${esc(x.nota)}</td></tr>`).join("") + "</table>"
-      : "<p class='nota'>Nenhuma montagem salva.</p>";
+        `<td>${esc(x.montagem.kit.join(", "))} · ${esc(x.montagem.ultimate || "")}</td><td>${esc(Object.entries(x.montagem.nos).map(([k, v]) => v > 1 ? `${k} ×${v}` : k).join(", "))}</td></tr>`).join("") + "</table>"
+      : "<p class='nota'>Nenhuma montagem salva nesta sessão do servidor.</p>";
   }
 
   // ---------------------------------------------------------------- eventos
@@ -255,30 +321,43 @@
     if (d.tela) return mostrar(d.tela);
     if (d.est) return trocar("estrutura", d.est);
     if (d.spec) return trocar("spec", d.spec);
+    if (d.filtro) { FILTRO = { ...FILTRO, [d.filtro]: d.valor }; return desenharMontar(); }
     if (d.ex !== undefined) {
       const x = CAT.exemplos.find((e) => e.id === d.ex);
-      M = x ? { estrutura: x.estrutura, spec: x.spec, kit: [...x.kit], nos: { ...x.nos }, nome: x.nome }
-        : { ...M, kit: [], nos: {}, nome: "Livre" };
+      M = x ? { estrutura: x.estrutura, spec: x.spec, kit: [...x.kit], ultimate: x.ultimate, nos: { ...x.nos }, nome: x.nome, salva: null }
+        : { ...M, kit: [], nos: {}, nome: "Livre", salva: null };
       return atualizarMontagem();
     }
+    if (d.abrir || d.dup) {
+      const s = SALVAS.find((x) => x.id === (d.abrir || d.dup));
+      if (!s) return;
+      M = { ...s.montagem, kit: [...s.montagem.kit], nos: { ...s.montagem.nos }, nome: s.nome, salva: d.abrir ? s.id : null };
+      if (d.dup) { $("#nome").value = s.nome + " (cópia)"; M.nome = s.nome + " (cópia)"; return salvar(true); }
+      return atualizarMontagem();
+    }
+    if (d.apagar) {
+      SALVAS = SALVAS.filter((x) => x.id !== d.apagar);
+      if (M.salva === d.apagar) M.salva = null;
+      guardar("x1-salvas", SALVAS);
+      return desenharMontar();
+    }
+    if (t.id === "salvar") return salvar(false);
+    if (t.id === "duplicar") return salvar(true);
+    if (d.ult) { M = { ...M, ultimate: d.ult, nome: editada(M.nome) }; return atualizarMontagem(); }
     if (d.hab) {
       const kit = M.kit.includes(d.hab) ? M.kit.filter((h) => h !== d.hab) : (M.kit.length < CAT.espacos ? [...M.kit, d.hab] : M.kit);
-      M = { ...M, kit, nome: M.nome.endsWith("(editada)") || M.nome === "Livre" ? M.nome : M.nome + " (editada)" };
+      M = { ...M, kit, nome: editada(M.nome) };
       return atualizarMontagem();
     }
     if (d.mais || d.menos) {
       const id = d.mais || d.menos, nos = { ...M.nos };
       nos[id] = (nos[id] || 0) + (d.mais ? 1 : -1);
       if (nos[id] <= 0) delete nos[id];
-      M = { ...M, nos, nome: M.nome.endsWith("(editada)") || M.nome === "Livre" ? M.nome : M.nome + " (editada)" };
+      M = { ...M, nos, nome: editada(M.nome) };
       return atualizarMontagem();
     }
-    if (d.enc) { ENC = d.enc; return atualizarMontagem(); }
-    if (t.id === "zerar") { M = { ...M, nos: {}, nome: M.nome === "Livre" ? "Livre" : M.nome.replace(/ \(editada\)$/, "") + " (editada)" }; return atualizarMontagem(); }
+    if (t.id === "zerar") { M = { ...M, nos: {}, nome: editada(M.nome) }; return atualizarMontagem(); }
     if (t.id === "lutar") return lutar();
-    if (t.id === "salvar") {
-      return api("/api/salvar", { montagem: M, nota: $("#nota").value }).then((r) => { $("#salvo").textContent = `Salva (${r.n}).`; $("#nota").value = ""; });
-    }
     if (d.acao) return escolher(E.acoes.find((a) => a.id === d.acao));
     if (d.alvo && SEL) return agir(SEL.id, d.alvo);
     if (t.id === "sair-furia") return api("/api/sair_furia", {}).then((r) => { E = r.estado; desenharLuta(); });
@@ -287,14 +366,28 @@
     if (t.id === "voltar") return mostrar("montar");
     if (t.id === "ver-log") { $("#fim").hidden = true; return; }
   });
+  document.addEventListener("change", (ev) => {
+    if (ev.target.id === "so-kit") { FILTRO = { ...FILTRO, kit: ev.target.checked }; desenharMontar(); }
+    if (ev.target.id === "encontro") { ENC = ev.target.value; atualizarMontagem(); }
+    if (ev.target.id === "nome") { M = { ...M, nome: ev.target.value.trim() || "Sem nome" }; guardar("x1-montagem", M); }
+  });
+  // passar o mouse num talento acende as habilidades que ele muda; numa habilidade, os talentos que a mudam
   document.addEventListener("mouseover", (ev) => {
+    const no = ev.target.closest("[data-no]");
+    const hab = ev.target.closest("[data-hab-id]");
+    for (const el of document.querySelectorAll(".realce")) el.classList.remove("realce");
+    if (no) realcar(no.dataset.afeta.split(" ").filter(Boolean), true);
+    if (hab && TELA === "montar") {
+      for (const n of document.querySelectorAll("[data-no]")) if (n.dataset.afeta.split(" ").includes(hab.dataset.habId)) n.classList.add("realce");
+    }
     const b = ev.target.closest("[data-acao]");
-    if (!b || !E) return;
-    const a = E.acoes.find((x) => x.id === b.dataset.acao);
-    if (a && a !== VER) { VER = a; const ex = document.querySelector("#doca .explica"); if (ex) ex.innerHTML = `<b>${esc(a.nome)}</b>${a.versao ? ` (${esc(a.versao)})` : ""}: ${esc(a.desc)}${a.notas.length ? `<ul>${a.notas.map((n) => `<li>${esc(n)}</li>`).join("")}</ul>` : ""}`; }
+    if (b && E) {
+      const a = E.acoes.find((x) => x.id === b.dataset.acao);
+      if (a && a !== VER) { VER = a; const ex = document.querySelector("#doca .explica"); if (ex) ex.innerHTML = explica(a); }
+    }
   });
   document.addEventListener("keydown", (ev) => {
-    if (ev.target.matches("input, textarea")) return;
+    if (ev.target.matches("input, textarea, select")) return;
     const k = ev.key.toLowerCase();
     if (k === "m") return mostrar("montar");
     if (k === "l") return mostrar("luta");
@@ -303,7 +396,7 @@
     if (TELA !== "luta" || !E) return;
     if (ev.key === "Escape") { SEL = null; return desenharLuta(); }
     if (k === "r" && E.fim) return lutar(E.semente);
-    if (k === "f" && E.pode_sair_furia) return api("/api/sair_furia", {}).then((r) => { E = r.estado; desenharLuta(); });
+    if (k === "f" && E.pode_sair_furia && !E.motivo_sair_furia) return api("/api/sair_furia", {}).then((r) => { E = r.estado; desenharLuta(); });
     const n = Number(ev.key);
     if (n >= 1 && n <= 9) {
       if (SEL) { const alvo = SEL.alvos[n - 1]; if (alvo) return agir(SEL.id, alvo); return; }
@@ -316,8 +409,9 @@
     CAT = await api("/api/catalogo");
     $("#regras").innerHTML = CAT.regras.map((r) => `<li>${esc(r)}</li>`).join("");
     const salvo = ler("x1-montagem");
-    M = salvo && CAT.specs[salvo.spec] && CAT.estruturas[salvo.estrutura] ? salvo
-      : { estrutura: "t4", spec: "piromante", kit: [...CAT.exemplos[2].kit], nos: { ...CAT.exemplos[2].nos }, nome: CAT.exemplos[2].nome };
+    const ex = CAT.exemplos.find((x) => x.id === "pavio");
+    M = salvo && CAT.specs[salvo.spec] && CAT.estruturas[salvo.estrutura] && salvo.ultimate !== undefined ? salvo
+      : { estrutura: "t4", spec: "piromante", kit: [...ex.kit], ultimate: ex.ultimate, nos: { ...ex.nos }, nome: ex.nome, salva: null };
     const enc = ler("x1-encontro");
     if (enc && CAT.encontros[enc]) ENC = enc;
     await atualizarMontagem();

@@ -11,6 +11,10 @@ vez de um aliado); Esperar fica só como hipótese futura. A seção 15 traz a e
 (cadeias por identidade, builds independentes de travas e ambientes, orçamento) e as perguntas que o jogo precisa
 responder. O protótipo está em `ferramentas/prototipos/etapa8-builds/`.
 
+**Rodada 4 — 31/10/2026: o X1 ampliado.** O repertório subiu para 16 habilidades por personagem, com Sangramento,
+Frio (que anula a Queimadura) e invocações como vocabulário compartilhado, talentos com caminhos concorrentes, 9
+pontos sem ordem de compra e a montagem com filtros e montagens salvas. Seção 16.
+
 **Entrega de pesquisa e concepção: nada daqui muda regras, telas ou conteúdo do jogo.** O jogo integrado (1.220.0)
 continua como está. Os números são inventados para os exemplos funcionarem. **A arquitetura recomendada está pendente
 de avaliação do Jean**; nenhuma proposta deste documento é regra aprovada.
@@ -38,6 +42,7 @@ Como ler (cada seção diz a sua natureza):
 | 13 | As decisões que precisam do Jean | Para avaliação |
 | 14 | O protótipo revisado | Proposta (o X1 foi implementado: seção 15) |
 | 15 | O X1 implementado: especificação corrigida | Regras provisórias do protótipo e perguntas abertas |
+| 16 | O X1 ampliado: repertório para descobrir | Rodada 2 do X1: 32 habilidades, sistemas compartilhados, talentos, matriz, limitações |
 | A | A primeira versão: o que foi substituído | Histórico |
 
 A pergunta que guia tudo: **essas combinações mudam o que o jogador percebe, planeja, arrisca e decide durante a luta,
@@ -57,7 +62,7 @@ da estrada (etapa 7) também esperam a 9.
 | 6 | Cenários dos lugares e entornos de acampamento | **Podem seguir** quando pedidos, conferindo, lugar a lugar, se ele continua na campanha |
 | 6 | Cenas de acontecimentos (Caspar na praça e outros) | **Esperam a etapa 9** definir as histórias |
 | 7 | Cenas dos eventos recorrentes da estrada | **Esperam a etapa 9** (confirmado pelo Jean) |
-| 8 | Sistemas, Grimório, árvore, ícones e animações | **Agora**, por este estudo; o protótipo X1 está pronto para o Jean jogar (seção 15). Ícones e telas esperam o sistema escolhido (decisão de 19/10/2026) |
+| 8 | Sistemas, Grimório, árvore, ícones e animações | **Agora**, por este estudo; o protótipo X1, ampliado na rodada 2, está pronto para o Jean jogar (seções 15 e 16). Ícones e telas esperam o sistema escolhido (decisão de 19/10/2026) |
 | 9 | Campanha | Depois da 8. Recebe da 8 os requisitos de encontros e de progressão (seções 9 e 12) |
 
 ---
@@ -1175,6 +1180,9 @@ O Grimório visual e os ícones esperam o sistema. Nada entra no jogo.
 
 ## 15. O X1 implementado: especificação corrigida
 
+*Revista pela seção 16 (rodada 2 do X1): o orçamento passou a 9 pontos, as linhas saíram, o repertório cresceu e os
+exemplos mudaram. A regra das cadeias (15.2) e a independência (15.3) continuam valendo.*
+
 **Rodada 3 (31/10/2026).** O Jean autorizou o X1 (montagem de builds e estrutura dos talentos), sem aprovar a
 arquitetura. Pediu antes quatro ajustes: a regra das cadeias, a independência das builds em relação a sistemas de outros
 experimentos, um orçamento que obrigue a escolher e critérios de avaliação. Também recusou o Revezamento (seção 6.4).
@@ -1426,6 +1434,272 @@ luta também vale. A frequência de uso de uma habilidade é indício para inves
    herói some atrás das ações de Morel e Odette, isso é um achado.
 8. **Os números de teste atrapalham a leitura?** Se uma build parece forte ou fraca só pelo número, o ajuste é
    numérico e não muda a avaliação da estrutura.
+
+---
+
+## 16. O X1 ampliado: repertório para descobrir
+
+**Rodada 2 do X1 (31/10/2026).** O Jean jogou o X1 e notou que, com poucas habilidades e exemplos prontos, estava
+testando as combinações que eu tinha concebido, não descobrindo as dele. Pediu cerca de 30 habilidades concentradas
+nas duas especializações, talentos suficientes para caminhos concorrentes e híbridos, poucos sistemas compartilhados,
+montagem legível (filtros, alcance dos talentos, descrição efetiva, montagens salvas) e estruturas comparáveis.
+**Continua só no protótipo; nada no jogo. Os números são de teste.** Ficam fora: Revezamento e variantes, Esperar,
+intenção geral, travas, chefe abalado, arte final.
+
+### 16.1 O que entrou e o que ficou de fora
+
+**Por personagem:** 16 habilidades (14 e duas ultimates à escolha), das quais o kit leva 5 e uma ultimate. São 32 no
+total, divididas meio a meio entre a classe e a especialização. Talentos com 9 pontos:
+
+| | Habilidades | Talentos na híbrida | Talentos na de versões |
+|---|---|---|---|
+| Berserker (Jean, Guerreiro) | 7 do Guerreiro, 7 do Berserker, 2 ultimates | 21: 12 regras, 6 versões, 3 números | 18: 3 princípios, 12 versões, 3 números |
+| Piromante (Jean, Mago) | 5 do Mago, 9 do Piromante, 2 ultimates | 19: 10 regras, 6 versões, 3 números | 16: 3 princípios, 10 versões, 3 números |
+
+Morel e Odette continuam com o kit fixo (o protótipo avalia o herói).
+
+**Os sistemas compartilhados** (poucos, com várias aplicações):
+
+| Sistema | O que é | Quem produz | Quem consome, converte ou aproveita |
+|---|---|---|---|
+| Fichas (já existiam) | Guarda, Força, Exposto; teto 2; Guarda e Exposto se anulam | Erguer Escudo, Barreira, Provocar, Grito de Guerra, Estandarte, Quebra-Guarda, Sobrecarga, Inverno, Bênção, Defender | Escudo Alto (consome Guardas), Golpe Acumulado (Forças do grupo), qualquer golpe (Força, Exposto), Escudeiro, Peso do Golpe, Vapor (Frio vira Exposto) |
+| Queimadura (já existia) | Camadas de fogo no inimigo; pingam | Brasa, Bola de Fogo, Chuva, Escudo de Chamas, Arma Flamejante, Fogo-fátuo, Estouro, Calor Partilhado | Combustão, Conflagração, Alastrar (transfere), Contágio, Cinza Fria (converte em gelo e Frio), Estouro, Fornalha |
+| Sangramento (novo para o herói) | O mesmo formato para o corte; mortos-vivos não sangram | Talho, Redemoinho Sangrento, Estandarte Sangrento, Fio Cortante; também as mordidas dos inimigos, no herói | Abrir Feridas, Hemorragia, Banho de Sangue |
+| Frio (novo) | Camadas de gelo; não pinga; **com 3, congela** (perde a vez e o golpe preparado). **Anula a Queimadura** e é anulado por ela | Lança (2 em quem prepara), Nevasca, Sentinela, Inverno | Congelar (responder a preparações em duas ações), Estilhaço, Frio Penetrante, Vapor |
+| Invocações (novo) | Aliados sem vez: agem no fim da vez de Jean, os inimigos podem golpeá-las, têm um efeito ao cair; chamar de novo troca sem efeito | Estandarte de Guerra, Fogo-fátuo, Sentinela de Gelo | Sacrifício (a Combustão as detona e o efeito sai dobrado), Elo Elemental (Mana e Força quando caem), Erguer Escudo, Barreira, Prece |
+| Fúria (já existia) | Postura: causa e recebe mais | Rugido | Sangue Quente, Sangue Frio, Grito Contagiante, Fúria Contida ou Sem Freio, Muralha Viva |
+
+**Ficaram de fora, de propósito:** runas (seriam um terceiro motor de construção só do Piromante, que já tem
+Queimadura, Frio e invocações); ossos (o Necromante não está no X1); elos (o Paladino não está no X1, e o Elo de Vida é
+uma decisão de comitiva que o kit fixo de Odette e Morel não testaria); ambientes (excluídos pelo Jean na rodada 1).
+
+**A anulação entre Queimadura e Frio** é a decisão de design mais visível desta rodada: misturar fogo e gelo, sem
+talento, desperdiça; com Cinza Fria ou Vapor, a mistura vira conversão. É o mesmo princípio das fichas opostas, aplicado
+a camadas, e foi o que deu ao Piromante uma build híbrida que não é só "as duas coisas".
+
+### 16.2 A matriz do repertório
+
+Feita antes de implementar e usada para cortar redundâncias (o fim desta subseção diz o que saiu). "Produz", "consome" e "modifica"
+falam do vocabulário compartilhado (16.1).
+
+**Berserker** (G = do Guerreiro, a classe; B = da especialização)
+
+| Habilidade | Função e decisão principal | Produz / consome / modifica | Relação com outras | Diferença da mais parecida | Vale escolher quando · outra é melhor quando |
+|---|---|---|---|---|---|
+| Golpe Pesado (G) | Dano num alvo; a referência simples | — | Base de duas versões (interromper; gastar as Forças do grupo) | — | Precisa de dano confiável · quando outra coisa já mata ou quando o alvo está preparando |
+| Golpe no Joelho (G) | Responder: atordoar quem prepara | Interrompe; atordoa | Peso do Golpe; Golpe Oportuno de Morel | Desequilibra (versão) interrompe sem atordoar e vale em Firmes | Inimigos que preparam · enxames (40% de chance só) |
+| Quebra-Guarda (G) | Abrir o alvo para o próximo golpe | Produz Exposto | Peso do Golpe; qualquer golpe grande de aliado | Talho também prepara o alvo, mas com dano no tempo | Um aliado vai bater forte em seguida · ninguém aproveita o Exposto |
+| Erguer Escudo (G) | Proteger um aliado (ou invocação) agora | Produz Guarda | Escudo Alto (consome as suas); Escudeiro | Provocar protege todos puxando os golpes; Erguer Escudo protege um sem atrair | Um aliado frágil está na mira · os golpes vêm espalhados |
+| Provocar (G) | Puxar todos os golpes para você | Modifica a mira; produz Guarda | Revide; Cerrar os Dentes; Escudo Alto | Muralha Viva (ultimate) dura a rodada inteira e dá 2 Guarda | Você aguenta e quer revidar · você está fraco |
+| Grito de Guerra (G) | Fortalecer o grupo para a próxima ação de cada um | Produz Força (aliados) | Golpe Acumulado; Estandarte | Bênção (Odette) dá a um; o Grito a todos, menos você | Morel e Odette vão golpear · o grupo precisa curar ou defender |
+| Escudo Alto (G) | Converter defesa em dano | Consome as suas Guardas | Erguer Escudo, Provocar, Defender, Escudeiro, Sangue Frio | Golpe Pesado não pede preparo; o Escudo Alto rende com 2 Guardas | Você juntou Guarda e o perigo passou · você ainda precisa da Guarda |
+| Rugido (B) | Entrar em Fúria | Produz Fúria | Sangue Quente, Sangue Frio, Grito Contagiante | — (é a porta da Fúria) | O dano que vem é pequeno ou espalhado · um golpe preparado vai cair em você |
+| Sede de Sangue (B) | Bater e se curar | Cura | Fôlego Rubro; Sangue Quente | Sangue Quente cura em todo golpe, só na Fúria | Você está ferido e quer continuar batendo · Odette pode curar mais |
+| Redemoinho (B) | Dano em todos | Área | Redemoinho Sangrento (versão); Sangue Quente cura por alvo | Grito de Guerra também é "para todos", mas de apoio | Três ou mais inimigos · um alvo só |
+| Talho (B) | Começar o Sangramento barato | Produz Sangramento | Abrir Feridas; Fio Cortante; Banho de Sangue | Quebra-Guarda prepara o próximo golpe; o Talho prepara o tempo | Luta longa, inimigo vivo · mortos-vivos (não sangram) |
+| Abrir Feridas (B) | Cobrar o Sangramento de uma vez | Consome Sangramento | Talho, Redemoinho Sangrento, Fio Cortante, Estandarte Sangrento | Combustão (Piromante) é o mesmo verbo para o fogo | O alvo tem 2 ou 3 camadas · camadas que ainda vão pingar muito |
+| Cerrar os Dentes (B) | Segurar o golpe e transformar dano em Vigor | Modifica o dano recebido; produz Vigor | Provocar; Fúria (recebe mais, ganha o mesmo) | Defender dá 1 Guarda; Cerrar dura a rodada e paga por golpe | Vários inimigos vão bater em você · só um golpe forte vem (Guarda é melhor) |
+| Estandarte de Guerra (B) | Invocação que fortalece o grupo toda vez sua | Invocação; produz Força | Golpe Acumulado; vira alvo dos inimigos | Grito de Guerra dá tudo agora; o Estandarte, um por vez, enquanto durar | Luta longa · luta curta ou inimigos de área |
+| Fúria Cega (ult.) | Golpe enorme que pode seguir | — | Até o Fim | Muralha Viva é defensiva | Fechar a luta · sobreviver a uma rodada |
+| Muralha Viva (ult.) | Uma rodada em que tudo vem para você | Modifica a mira; Guarda 2 | Revide, Cerrar os Dentes, Escudo Alto | Provocar dura uma vez de cada inimigo; a Muralha pega até golpe preparado contra outro | Um aliado vai cair · você está fraco |
+
+**Piromante** (M = do Mago, a classe; P = da especialização)
+
+| Habilidade | Função e decisão principal | Produz / consome / modifica | Relação com outras | Diferença da mais parecida | Vale escolher quando · outra é melhor quando |
+|---|---|---|---|---|---|
+| Bola de Fogo (M) | Dano de fogo e uma camada | Produz Queimadura | Base de versões (2 camadas; Vapor) | Brasa acende pelo mesmo efeito com metade do dano e do custo | Precisa de dano agora · quer só acender barato |
+| Brasa (P) | Acender barato | Produz Queimadura | Tudo que detona ou espalha | Bola de Fogo | Construir camadas economizando Mana · já tem camadas e quer cobrar |
+| Chuva de Brasas (P) | Acender todos | Produz Queimadura (área) | Estouro, Conflagração, Alastrar | Alastrar espalha o que já existe num alvo; a Chuva começa do zero | Vários inimigos sem fogo · um alvo só |
+| Combustão (P) | Cobrar as camadas de um alvo | Consome Queimadura | Base de versões (pavio, contágio); Sacrifício | Conflagração (ultimate) cobra de todos, uma vez | Um alvo com 2 ou 3 camadas · camadas ainda novas (pingam mais) |
+| Alastrar (P) | Transferir: as camadas de um alvo passam para todos os outros | Transfere Queimadura | Fogo Paciente (3 camadas fixas em todos); Estouro | Contágio (versão) passa metade para um só; a Chuva acende 1 em todos | Um alvo bem aceso e outros limpos · inimigo único |
+| Lança de Gelo (M) | Gelo num alvo; Frio para congelar (2 em quem prepara) | Produz Frio | Nevasca, Sentinela, Estilhaço, Cinza Fria | Golpe no Joelho (Berserker) atordoa na hora; a Lança constrói até 3 | Responder a uma preparação em duas ações · fogo no alvo (anula) |
+| Nevasca (M) | Frio em todos | Produz Frio (área) | Inverno, Frio Penetrante | Chuva de Brasas, o mesmo gesto com o outro estado | Vários inimigos, você joga de gelo · eles estão em chamas (apaga) |
+| Barreira (M) | Proteger um aliado ou invocação | Produz Guarda | Sentinela; Sobrecarga (anula Exposto) | Escudo de Chamas também pune quem golpeia | Proteção simples e barata · quer punir o atacante |
+| Escudo de Chamas (P) | Proteger e acender quem golpeia | Produz Guarda; produz Queimadura (por reação) | Estouro; Calor Partilhado | Barreira | Inimigos que batem muito · inimigos que conjuram (golpeiam pouco) |
+| Arma Flamejante (P) | Transformar o golpe de um aliado em fogo que acende | Modifica o tipo do aliado; produz Queimadura | Calor Partilhado (soma), troll (fraco a fogo) | Bênção (Odette) só aumenta; a Arma muda o tipo e acende | Morel vai bater várias vezes · aliados vão curar ou defender |
+| Fogo-fátuo (P) | Invocação que acende a cada vez sua; explode ao cair | Invocação; produz Queimadura | Fornalha, Estouro, Sacrifício, Elo Elemental | Chuva acende tudo agora; o fátuo, um por vez, sem gastar a ação | Luta longa · luta curta ou inimigos de área |
+| Sentinela de Gelo (P) | Invocação que puxa os golpes e esfria quem a golpeia | Invocação; modifica a mira; produz Frio | Lança, Nevasca, Frio Penetrante, Sacrifício | Barreira protege um; a Sentinela atrai e se oferece | Um golpe preparado vai cair num aliado frágil · inimigos que batem em área |
+| Sobrecarga (P) | Arriscar: 2 Forças agora, 2 Exposto em você | Produz Força; produz Exposto (você) | Combustão, Conflagração, Bola de Fogo | Meditar recupera Mana sem risco | Fechar a luta em duas ações · inimigos que vão bater em você |
+| Meditar (M) | Recuperar Mana | Recurso | Fornalha (Calor), Queimar a Si Mesmo | Sobrecarga troca recurso por risco | Sem Mana numa luta longa · há um alvo a cobrar agora |
+| Conflagração (ult.) | Cobrar as camadas de todos | Consome Queimadura (área) | Estouro, Fornalha, Sacrifício | Inverno é controle | Vários inimigos acesos · gelo dominando a luta |
+| Inverno (ult.) | 2 Frio em todos e 1 Guarda em cada aliado | Produz Frio; produz Guarda | Nevasca, Lança: um passo para congelar todos | Conflagração é dano | Muitos preparando ou batendo forte · já estão quase mortos |
+
+**O que saiu na conferência:** Ímpeto Temerário (antecipa a própria vez; perto demais do que o Jean recusou); Golpe
+Temerário (Golpe Pesado com Exposto em você: só número e um estado, a Sobrecarga e a Fúria já cobrem o risco); Canalizar
+(Meditar adiado: mesma decisão); Elemental de Brasa (segunda invocação de fogo que bateria: um botão a mais sem decisão
+nova); Grito de Terror do herói (Enfraquecer: os inimigos não têm Força para enfraquecer e o efeito seria só número).
+
+### 16.3 Os talentos e o orçamento
+
+- **9 pontos**, nas duas estruturas. Regra 2, versão 1, número 1 por nível (até 2), princípio 3.
+- **Sem linhas nem pré-requisitos.** A rodada 1 tinha linhas na híbrida (a 2 pedia 2 pontos na 1); com o repertório
+  maior, elas viravam uma sequência de compras antes de experimentar, e eram um limite que só a híbrida tinha. Saíram.
+- **Caminhos concorrentes por exclusão:** as versões da mesma habilidade; Fogo Paciente ou Fornalha Interior (o ritmo
+  do fogo: lento ou rápido); Fúria Contida ou Fúria Sem Freio (o modo da Fúria). Na de versões, Paciência ou
+  Voracidade.
+- **Não cabe tudo:** na híbrida, só as regras de uma especialização custam 20 (Piromante) a 24 (Berserker); com 9
+  pontos, levam-se de três a quatro regras e abre-se mão das outras.
+- **Mais de uma maneira de desenvolver a mesma habilidade central:** a Combustão (Pavio, Contágio; e, por regras,
+  Estouro, Fornalha, Sacrifício); o Golpe Pesado (Desequilibra, Acumulado; Até o Fim, Fio Cortante); o Rugido
+  (Desafiador; Contida ou Sem Freio; Sangue Quente, Grito Contagiante); a Lança (Estilhaço, que a vira em cobrança; ou
+  Cinza Fria e Frio Penetrante, que a mantêm construindo).
+- **Relações por propriedade, não por par:** Estouro vale para qualquer morte em chamas (inclusive a explosão do
+  Fogo-fátuo); Escudeiro, para qualquer Guarda que Jean dá a outro (Erguer Escudo e Sangue Frio); Fio Cortante, para qualquer golpe num alvo que sangra (as mordidas dos lobos não, as do herói sim); Frio
+  Penetrante, para o dano de todo o grupo.
+
+**A equivalência entre as estruturas.** As duas têm o mesmo repertório, os mesmos números e as mesmas versões; cada
+regra da híbrida aparece na de versões, presa a uma habilidade ou junto de outra num princípio:
+
+| Na híbrida (regra, 2) | Na de versões |
+|---|---|
+| Sangue Quente; Sangue Frio | Sangue em Fúria (princípio, 3, os dois) |
+| Peso do Golpe; Grito Contagiante | Comando (princípio, 3, os dois) |
+| Fio Cortante; Banho de Sangue | Carnificina (princípio, 3, os dois) |
+| Fúria Contida; Fúria Sem Freio | Rugido Contido; Rugido Sem Freio (versões do Rugido) |
+| Escudeiro | Escudo Duplo (versão do Erguer Escudo) |
+| Revide | Provocação com Revide (versão do Provocar) |
+| Fôlego Rubro | Sede Rubra (versão da Sede de Sangue) |
+| Até o Fim | Fúria Desesperada (versão da Fúria Cega) |
+| Fogo Paciente; Calor Partilhado | Paciência (princípio, 3, os dois) |
+| Fornalha Interior; Queimar a Si Mesmo | Voracidade (princípio, 3, os dois) |
+| Elo Elemental; Sacrifício | Elementalista (princípio, 3, os dois) |
+| Estouro | Combustão Estrondosa (versão da Combustão: só o morto pela Combustão explode) |
+| Cinza Fria | Lança Térmica (versão da Lança) |
+| Vapor | Bola de Vapor (versão da Bola de Fogo) |
+| Frio Penetrante | Sentinela Cortante (versão da Sentinela: vale enquanto ela está de pé) |
+
+**As diferenças, explícitas** (para não atribuir ao formato o que veio do conteúdo):
+1. **Alcance:** a regra vale para todas as habilidades com a propriedade; a versão, para uma.
+2. **Preço:** na de versões, um efeito local custa 1 ponto, e um princípio dá dois efeitos por 3; na híbrida, cada
+   efeito custa 2. A de versões compra mais efeitos com o mesmo orçamento, cada um mais estreito.
+3. **Exclusões a mais na de versões:** uma versão por habilidade. Rugido Contido, Rugido Sem Freio e Rugido
+   Desafiador disputam o mesmo Rugido; na híbrida, Desafiador combina com Contida ou Sem Freio. Bola Pesada e Bola de
+   Vapor disputam a Bola; Estilhaço e Lança Térmica, a Lança; Pavio, Contágio e Estrondosa, a Combustão.
+4. **Cadeias mais curtas na de versões:** a Combustão Estrondosa não encadeia (quem morre pela explosão não explode),
+   e a Lança Térmica não converte o gelo da Nevasca nem do Inverno.
+5. **Princípios empacotam:** quem quer Sangue Quente sem Sangue Frio paga os dois.
+
+### 16.4 Maneiras de jogar que o conjunto permite
+
+Os exemplos (nove na híbrida, seis na de versões) são atalhos; nenhum usa mais de metade do repertório, e há
+combinações sem exemplo.
+
+| Maneira | Como se monta (ingredientes, não receita) | Decisão que aparece na luta |
+|---|---|---|
+| Fúria (arriscar) | Rugido; Sangue Quente; Contida ou Sem Freio | Ficar ou sair antes do golpe preparado; sair dá Guarda ao grupo com Sangue Frio |
+| Quebrador (responder) | Golpe no Joelho; Desequilibra; Peso do Golpe; Quebra-Guarda | Interromper agora ou expor para Morel; quem recebe a Força |
+| Carniceiro (construir corte) | Talho; Fio Cortante; Abrir Feridas; Banho de Sangue | Cobrar as feridas ou deixar pingar; em quem abrir antes de matar, para o Banho espalhar |
+| Bastião (sustentar e converter) | Erguer Escudo; Escudeiro; Provocar; Cerrar os Dentes; Escudo Alto | Gastar a Guarda no Escudo Alto ou segurá-la para o golpe que vem |
+| Comandante (sustentar) | Grito de Guerra; Estandarte; Golpe Acumulado; Grito Contagiante | Espalhar Força ou juntar tudo num Golpe Acumulado |
+| Pavio (construir fogo lento) | Brasa; Fogo Paciente; Calor Partilhado; Arma Flamejante; Pavio Curto | Quando acender o pavio; quem acende antes de ele estourar |
+| Fornalha (construir e arriscar) | Fornalha Interior; Estouro; Contágio; Alastrar; Queimar a Si Mesmo | Detonar quem vai morrer, para a explosão continuar; pagar com vida |
+| Geada (responder com construção) | Lança; Nevasca; Sentinela; Frio Penetrante; Inverno | Congelar quem prepara (2 Frio na Lança) ou espalhar Frio para o grupo bater mais |
+| Choque Térmico (híbrido) | Fogo e gelo; Cinza Fria e/ou Vapor | Em que ordem: acender e depois converter em gelo, ou esfriar e abrir com fogo |
+| Invocador (construir e sacrificar) | Fogo-fátuo; Sentinela; Sacrifício; Elo Elemental; Estouro | Quando sacrificar: a explosão dobrada, a Mana, a Força |
+
+**Combinações para demonstrar** (pontos de partida, não as únicas):
+- **Escudeiro + Erguer Escudo + Escudo Alto:** cada escudo dado a Odette também vira Guarda em Jean, e o Escudo Alto
+  transforma as Guardas de Jean em dano. Um Bastião que também bate.
+- **Grito de Guerra + Golpe Acumulado:** Morel e Odette ganham Força; Jean as consome todas num golpe só (+100%). Ou
+  elas usam as próprias: a decisão é de quem é a Força.
+- **Fio Cortante + Banho de Sangue + Redemoinho Sangrento:** o Redemoinho abre 1 em todos; os golpes num alvo só
+  sobem; quando um morre com 3, os outros ficam com 3.
+- **Sentinela + Frio Penetrante + Morel:** a Sentinela puxa o golpe e esfria quem bate; com 2 Frio, o golpe de Morel
+  sai +20%.
+- **Fogo-fátuo + Estouro + Sacrifício:** a Combustão no próprio fátuo causa 16 em cada inimigo; quem estava em chamas e
+  cai explode, e a cadeia segue.
+- **Vapor + Nevasca + Bola de Fogo:** Nevasca põe Frio em todos; a Bola converte o Frio de um em 2 Exposto e acende.
+- **Arma Flamejante + Calor Partilhado:** o golpe de Morel acende 2 camadas de uma vez.
+
+### 16.5 Cadeias com o repertório novo
+
+A regra da 15.2 continua igual (identidade por efeito, dono e motivo; reações só a golpes de ação; limites por rodada
+escritos em quem os tem). O que entrou e como ela cobre:
+
+| Situação | Como acaba |
+|---|---|
+| **Mortes simultâneas** (a Conflagração mata quatro ratos de uma vez, com Estouro) | Cada morte é um motivo: quatro explosões; o Calor para no teto (3); a cadeia termina porque cada um cai uma vez |
+| **Invocação que cai e explode** (o Fogo-fátuo, golpeado ou sacrificado) | A queda é um motivo (a invocação); a explosão pode matar inimigos em chamas, que explodem (Estouro), cada um uma vez |
+| **Invocação trocada** (chamar de novo) | Desfaz a anterior **sem efeito** e sem Elo Elemental: não dá para chamar e trocar para gerar explosão ou Mana |
+| **Geração de recurso** (Elo Elemental, Cerrar os Dentes, Fôlego Rubro, Fornalha) | Elo: uma vez por invocação que cai. Cerrar: uma vez por golpe recebido (por atacante, na cadeia dele). Fôlego: uma vez por rodada. Fornalha: um Calor por inimigo por cadeia, teto 3 |
+| **Banho de Sangue** | Passa as camadas do morto (também as abertas pelo golpe que o matou); não causa dano, então não encadeia mortes |
+| **Grito Contagiante** | Só ao **entrar** em Fúria: Rugir já em Fúria não dá Força de novo |
+| **Escudeiro** | Dar Guarda a outro dá 1 a Jean; dar a si mesmo não dispara |
+| **Sentinela** | Responde a golpes de ação (o revide e as explosões não esfriam ninguém) |
+
+### 16.6 O que foi verificado
+
+- **39 testes** (`testes/test_x1.py`): o repertório (16 por personagem, descrições sem repetir); os 15 exemplos
+  válidos, sem nó parado; não cabe tudo; sem ordem de compra; a equivalência entre as estruturas (os mesmos números,
+  cada regra da híbrida com o seu par na de versões, cada bandeira de efeito presente nas duas); exclusões e motivos;
+  alcance e descrição efetiva; a ultimate escolhida; as cadeias da 15.2; mortes simultâneas; Banho de Sangue também
+  nas feridas abertas; mortos-vivos não sangram; o Fogo-fátuo (passiva, queda, Elo, troca sem efeito, Sacrifício em
+  dobro, cadeia de Estouros a partir da explosão dele); a Sentinela (atrai e esfria); congelar interrompe e Firme
+  segura o Frio; anulação entre fogo e frio; Cinza Fria e Vapor; versões locais valendo só na sua habilidade; Frio
+  Penetrante na previsão e no dano; Alastrar; Arma Flamejante com Calor Partilhado; Grito Contagiante uma vez e Fúria
+  Sem Freio; Escudeiro e Escudo Alto; Muralha Viva; Cerrar os Dentes; Estandarte e Estandarte Sangrento; Fio Cortante
+  (e não em área); as interações da rodada 1; a mesma semente dando a mesma luta; o jogo não carrega a pasta.
+- **Jogador automático** (`ferramentas/simular.py 30`; escolhas aleatórias, Odette cura quem está abaixo da metade):
+  nenhuma luta trava; maior cadeia observada: 8 efeitos (Fornalha). "v" é a vida do grupo no fim.
+
+| Exemplo | Lobos | Mercenário | Bruxa | Troll | Cultista | Sorteado |
+|---|---|---|---|---|---|---|
+| Fúria | 100%, v 57% | 86%, v 48% | 100%, v 58% | 86%, v 42% | 90%, v 50% | 100%, v 70% |
+| Quebrador | 100%, v 51% | 96%, v 48% | 96%, v 52% | 96%, v 54% | 96%, v 50% | 100%, v 67% |
+| Carniceiro | 100%, v 59% | 93%, v 54% | 93%, v 56% | 93%, v 47% | 100%, v 52% | 100%, v 69% |
+| Bastião | 100%, v 53% | 83%, v 41% | 100%, v 47% | 86%, v 48% | 96%, v 48% | 100%, v 67% |
+| Pavio | 93%, v 52% | 73%, v 32% | 86%, v 41% | 86%, v 37% | 80%, v 38% | 93%, v 65% |
+| Fornalha | 93%, v 48% | 70%, v 31% | 93%, v 44% | 60%, v 23% | 76%, v 36% | 96%, v 66% |
+| Geada | 90%, v 55% | 80%, v 35% | 86%, v 47% | 93%, v 49% | 83%, v 46% | 100%, v 65% |
+| Invocador | 83%, v 43% | 66%, v 27% | 83%, v 41% | 73%, v 36% | 80%, v 38% | 93%, v 60% |
+| Choque Térmico | 90%, v 56% | 76%, v 34% | 93%, v 48% | 100%, v 54% | 83%, v 44% | 100%, v 69% |
+
+  As de versões ficaram perto das híbridas (a Fornalha de versões, 73% contra o troll; o Quebrador de versões, 80%
+  contra o mercenário).
+- **Capturas** nas duas janelas (`ferramentas/fotografar.mjs`): a montagem nas duas estruturas, com filtro e realce,
+  a luta, a Fúria contra o troll, o Invocador com as duas invocações, o fim e o registro. Corrigidos no caminho: os
+  cartões do repertório centralizados na vertical; os pingos do começo de uma vez aparecendo como se fossem
+  consequência da invocação (agora há a linha "Começo da vez de…"); a Sentinela cortada em 1280×720 (as cartas das
+  invocações ficaram compactas).
+
+### 16.7 Limitações e desequilíbrios conhecidos
+
+**Números** (ajustáveis sem mudar a estrutura):
+- Com escolhas aleatórias, o **Berserker termina com mais vida** que o Piromante em quase todo encontro (50% a 60%
+  contra 30% a 50%). Pode ser o Poder igual com vida maior, ou o Piromante depender mais de ordem de ações.
+- A **Fornalha contra o troll** é a pior combinação medida (60%, v 23%): esperado (ninguém mais morre para explodir),
+  mas forte demais como desvantagem.
+- O **Invocador** sai fraco com escolhas aleatórias, porque o valor dele está em quando sacrificar; o jogador
+  automático não sabe. Não dá para concluir nada antes de você jogar.
+- O **Frio contra gigantes**: congelar resiste metade das vezes e, resistindo, o Frio fica em 2. Contra o troll, a
+  Geada vai bem (93%) pelo dano e pela Sentinela, não pelo congelar.
+
+**Estrutura** (o que muda a decisão, não o número):
+- **Custo:** a Sobrecarga custa 6 e dá 2 Força; se ela entrar em todo kit do Piromante, o preço está baixo ou o
+  Exposto em si pesa pouco.
+- **Duração:** a Arma Flamejante dura até o fim da próxima vez do aliado. Morel age antes de Jean (Agilidade 7 contra
+  5 ou 6), então a Arma posta nele vale na vez dele da rodada seguinte; em Odette, que age depois, vale na mesma
+  rodada. Conferir se isso se lê na luta.
+- **Frequência:** as invocações agem toda vez sua; o Estandarte dá uma Força por vez. Se o grupo viver com Força, o
+  Golpe Acumulado pode virar obrigatório no Comandante.
+- **Princípios empacotam:** na de versões, quem quer só metade de um princípio paga os dois efeitos.
+- **Morel e Odette fixos:** as builds de apoio (Comandante, Pavio, Geada) dependem de como você usa os dois; o
+  protótipo não muda os kits deles.
+- **O jogador automático** escolhe ao acaso: serve para achar travamentos e lutas impossíveis, não para medir builds.
+
+### 16.8 Hipóteses pendentes (o que a experiência precisa responder)
+
+1. **Descobrir:** ao abrir a montagem, você enxerga combinações que não estão nos exemplos? Os filtros e o realce
+   (passar o mouse num talento acende as habilidades que ele muda, e vice-versa) ajudam a achá-las?
+2. **Escolher:** 16 habilidades para 5 espaços e 9 pontos para 16 a 21 talentos obrigam a abrir mão de coisas boas
+   sem virar uma sequência óbvia?
+3. **Vocabulário:** Queimadura, Sangramento e Frio (com a anulação), as fichas e as invocações se aprendem rápido, ou
+   é coisa demais para o começo?
+4. **Estruturas:** com o mesmo conteúdo, as regras por propriedade (híbrida) dão mais descoberta que as versões presas
+   a uma habilidade e os princípios? A de versões, por ser mais barata por efeito, compensa?
+5. **Desfavoráveis:** uma build mantém decisões quando o encontro é contra ela (o Carniceiro contra os esqueletos, a
+   Fornalha contra o troll, a Fúria contra o sapo), sem precisar trocar toda a montagem?
+6. **Vontade de voltar:** depois de uma luta, você quer montar outra combinação? Qual e por quê.
 
 ---
 

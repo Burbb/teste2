@@ -9084,3 +9084,27 @@ foi automatizado.
   espremido). O jogo não mudou (1.220.0): suíte, gabarito, pyflakes e fumaça.
 - **Parado aqui:** o Jean joga o X1 e avalia (seção 15.6 e as perguntas da 15.8). Depois: decidir a estrutura dos
   talentos e se o X2 (intenção) ou o X3 (chefes) vêm.
+
+### 31/10/2026 (data do computador local) — Etapa 8: o X1 ampliado para descoberta
+
+- **Pedido do Jean:** com poucas habilidades e exemplos prontos, ele testava as combinações que eu concebi. Pediu cerca
+  de 30 habilidades nas duas especializações (kit limitado), talentos com caminhos concorrentes e híbridos, poucos
+  sistemas compartilhados, uma matriz do repertório antes de implementar, montagem legível (filtros, alcance dos
+  talentos, descrição efetiva, salvar e duplicar), estruturas comparáveis e atenção a recurso, mortes simultâneas,
+  invocações e efeitos repetidos. Continuam fora: Revezamento, Esperar, intenção, travas, chefe abalado, arte.
+- **Feito:** a seção 16 do [28](28-ETAPA8-HABILIDADES-TALENTOS-E-BUILDS.md) (a matriz, os sistemas, a equivalência entre
+  as estruturas, as maneiras de jogar, as limitações e as hipóteses); o protótipo
+  ([`ferramentas/prototipos/etapa8-builds/`](../ferramentas/prototipos/etapa8-builds/LEIA-ME.md)) com 16 habilidades
+  por personagem (14 e duas ultimates à escolha), Sangramento, Frio (com 3 congela; anula a Queimadura) e invocações
+  (Estandarte, Fogo-fátuo, Sentinela), talentos com 9 pontos e sem ordem de compra (Berserker 21 na híbrida e 18 na de
+  versões; Piromante 19 e 16), exclusões que formam caminhos (o ritmo do fogo, o modo da Fúria), 15 exemplos, um sexto
+  encontro (o cultista e dois esqueletos, que não sangram), filtros, realce entre talentos e habilidades e montagens
+  salvas.
+- **Conferido:** 39 testes do protótipo; o jogador automático em 15 exemplos e 6 encontros (nada trava; maior cadeia,
+  8 efeitos); capturas nas duas janelas (corrigidos os cartões centralizados, o registro sem o começo da vez e a
+  Sentinela cortada em 1280×720). O jogo não mudou (1.220.0).
+- **Aviso de ambiente:** uma instância antiga do servidor do protótipo, aberta numa rodada anterior, pode continuar na
+  porta 8797; se o `demo.bat` mostrar a montagem antiga (7 pontos), feche os processos `python ... servidor.py` antigos
+  ou use `DEMO_PORTA`.
+- **Parado aqui:** o Jean joga e avalia (seção 16.8). Desequilíbrios conhecidos na 16.7 (o Berserker mais folgado que
+  o Piromante; a Fornalha contra o troll; o Invocador depende de quando sacrificar).

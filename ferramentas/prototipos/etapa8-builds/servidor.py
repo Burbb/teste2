@@ -4,8 +4,9 @@ com a mesma semente, redistribuir à vontade e guardar o registro das escolhas, 
     python ferramentas/prototipos/etapa8-builds/servidor.py
 
 Abre em http://127.0.0.1:8797/ (porta em DEMO_PORTA). Uma luta por vez, na memória. O registro de cada luta terminada
-ou abandonada e de cada montagem salva vai para uma pasta temporária nova a cada execução (DEMO_SAVES para fixar); os
-saves do jogo não são lidos nem tocados. Os retratos são lidos de rpg/web/static (só leitura)."""
+ou abandonada e de cada montagem salva vai para uma pasta temporária nova a cada execução (DEMO_SAVES para fixar); a
+lista de montagens salvas da tela fica no navegador. Os saves do jogo não são lidos nem tocados. Os retratos são lidos
+de rpg/web/static (só leitura)."""
 import json
 import mimetypes
 import os
@@ -52,9 +53,9 @@ def _guardar_luta(como):
 
 def catalogo():
     return {"pontos": C.PONTOS, "espacos": C.ESPACOS, "estruturas": C.ESTRUTURAS, "tipos": C.NOME_TIPO,
-            "requisito_linha": C.REQUISITO_LINHA, "fichas": C.FICHAS, "regras": C.REGRAS_LUTA,
+            "fichas": C.FICHAS, "regras": C.REGRAS_LUTA, "funcoes": C.FUNCOES, "propriedades": C.PROPRIEDADES,
             "specs": {k: {"nome": v["spec"], "classe": v["classe"], "recurso": v["recurso"],
-                          "ultimate": C.HABILIDADES[v["ultimate"]]["nome"]} for k, v in C.HEROI.items()},
+                          "ultimates": v["ultimates"]} for k, v in C.HEROI.items()},
             "exemplos": C.EXEMPLOS,
             "encontros": {k: {"nome": v["nome"], "semente": v["semente"], "resumo": v["resumo"],
                               "favorece": v["favorece"], "desfavorece": v["desfavorece"],
@@ -71,7 +72,7 @@ def _montagem(corpo):
     m = corpo.get("montagem") or {}
     return {"estrutura": m.get("estrutura", "t4"), "spec": m.get("spec", "piromante"),
             "kit": [str(h) for h in m.get("kit", [])][:8], "nos": {str(k): int(v) for k, v in m.get("nos", {}).items()},
-            "nome": str(m.get("nome") or "Livre")[:60]}
+            "ultimate": m.get("ultimate"), "nome": str(m.get("nome") or "Livre")[:60]}
 
 
 class Demo(BaseHTTPRequestHandler):

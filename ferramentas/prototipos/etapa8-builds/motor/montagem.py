@@ -1,9 +1,9 @@
-"""A montagem de uma build no protótipo X1: o kit (5 das 8 habilidades da especialização, mais a ultimate fixa) e os
-talentos (7 pontos numa das duas estruturas). Valida o orçamento, os ranks, as linhas e as exclusões, diz o que cada
-nó muda nas habilidades equipadas e entrega ao combate as bandeiras de efeito.
+"""A montagem de uma build no protótipo X1: o kit (5 das 14 habilidades da especialização e uma das duas ultimates) e os
+talentos (9 pontos numa das duas estruturas). Valida o orçamento, os ranks e as exclusões, diz o que cada nó muda em
+cada habilidade do repertório e entrega ao combate as bandeiras de efeito.
 
 Uma montagem é um dicionário: {"estrutura": "t4"|"t1", "spec": "berserker"|"piromante", "kit": [...],
-"nos": {id: rank}, "nome": opcional}."""
+"ultimate": id, "nos": {id: rank}, "nome": opcional}. Não há ordem de compra (sem linhas)."""
 from . import conteudo as C
 
 
@@ -15,16 +15,24 @@ def no_por_id(m):
     return {n["id"]: n for n in arvore(m)}
 
 
+def ultimate(m):
+    ults = C.HEROI[m["spec"]]["ultimates"]
+    return m.get("ultimate") if m.get("ultimate") in ults else ults[0]
+
+
+def repertorio(m):
+    """As habilidades que a especialização pode levar: as 14 e as duas ultimates."""
+    return C.POOL[m["spec"]] + C.HEROI[m["spec"]]["ultimates"]
+
+
+def equipadas(m):
+    return list(m["kit"]) + [ultimate(m)]
+
+
 def pontos_gastos(m, nos=None):
     idx = no_por_id(m)
     nos = m["nos"] if nos is None else nos
     return sum(idx[i]["custo"] * r for i, r in nos.items() if i in idx)
-
-
-def _pontos_ate(m, nos, linha):
-    """Pontos gastos nas linhas anteriores a `linha`."""
-    idx = no_por_id(m)
-    return sum(idx[i]["custo"] * r for i, r in nos.items() if i in idx and idx[i].get("linha", 1) < linha)
 
 
 def erros(m, nos=None):
@@ -41,6 +49,8 @@ def erros(m, nos=None):
         out.append("Habilidade de outra especialização no kit")
     if len(kit) > C.ESPACOS:
         out.append(f"Kit com {len(kit)} habilidades: o limite é {C.ESPACOS}")
+    if m.get("ultimate") and m["ultimate"] not in C.HEROI[m["spec"]]["ultimates"]:
+        out.append("Ultimate de outra especialização")
     idx = no_por_id(m)
     for i, r in nos.items():
         if i not in idx:
@@ -52,11 +62,6 @@ def erros(m, nos=None):
     gasto = pontos_gastos(m, nos)
     if gasto > C.PONTOS:
         out.append(f"{gasto} pontos gastos: o orçamento é {C.PONTOS}")
-    for i in nos:
-        n = idx[i]
-        req = C.REQUISITO_LINHA.get(n.get("linha", 1), 0)
-        if req and _pontos_ate(m, nos, n["linha"]) < req:
-            out.append(f"{n['nome']}: a linha {n['linha']} pede {req} pontos nas linhas anteriores")
     grupos = {}
     for i in nos:
         g = idx[i].get("exclui")
@@ -64,7 +69,7 @@ def erros(m, nos=None):
             grupos.setdefault(g, []).append(idx[i]["nome"])
     for nomes in grupos.values():
         if len(nomes) > 1:
-            out.append(f"Versões da mesma habilidade: {' e '.join(nomes)}")
+            out.append(f"Não combinam: {' e '.join(nomes)}")
     return out
 
 
@@ -78,126 +83,124 @@ def efeitos(m):
     return out
 
 
-def _etiquetas_kit(m):
+def _etiquetas(hids):
     tags = set()
-    for h in m["kit"] + [C.HEROI[m["spec"]]["ultimate"], "atacar"]:
+    for h in hids:
         tags.update(C.HABILIDADES[h]["etiquetas"])
     return tags
 
 
-def afeta_no_kit(m, n):
-    """Os nomes das habilidades do kit (com a ultimate e o Atacar) que o nó muda, ou o alcance quando não depende do kit."""
+def _muda(n, hid):
+    """Se o nó muda a habilidade."""
     if n.get("versao"):
-        return [C.HABILIDADES[n["versao"]]["nome"]] if n["versao"] in m["kit"] else []
-    nomes = []
-    for h in m["kit"] + [C.HEROI[m["spec"]]["ultimate"], "atacar"]:
-        if set(C.HABILIDADES[h]["etiquetas"]) & set(n["afeta"]):
-            nomes.append(C.HABILIDADES[h]["nome"])
+        return n["versao"] == hid
+    return bool(set(C.HABILIDADES[hid]["etiquetas"]) & set(n["afeta"]))
+
+
+def alcance(m, n):
+    """O que o nó muda: as habilidades do repertório (com a marca de quais estão equipadas) e o que não depende do kit."""
+    eq = equipadas(m)
+    habs = [{"id": h, "nome": C.HABILIDADES[h]["nome"], "no_kit": h in eq or h == "atacar"}
+            for h in repertorio(m) + ["atacar"] if _muda(n, h)]
+    outros = []
     if "aliados" in n["afeta"]:
-        nomes.append("golpes de Morel e Odette")
+        outros.append("golpes de Morel e Odette")
     if "recebe" in n["afeta"]:
-        nomes.append("golpes que você recebe")
-    if "sempre" in n["afeta"] and not nomes:
-        nomes.append("você")
-    return nomes
+        outros.append("golpes que você recebe")
+    if "sempre" in n["afeta"]:
+        outros.append("você")
+    return habs, outros
 
 
 def aviso_no(m, n):
     """O que deixa o nó sem efeito com o kit de agora (uma linha), ou None."""
-    if n.get("versao") and n["versao"] not in m["kit"]:
+    eq = equipadas(m)
+    if n.get("versao") and n["versao"] not in eq:
         return f"{C.HABILIDADES[n['versao']]['nome']} não está no kit"
     req = n.get("requer_etiqueta")
-    if req and req not in _etiquetas_kit(m):
+    if req and req not in _etiquetas(eq):
         return "Só funciona na Fúria: Rugido não está no kit"
-    if not n.get("versao") and not afeta_no_kit(m, n):
+    habs, outros = alcance(m, n)
+    if not n.get("versao") and not outros and not any(h["no_kit"] for h in habs):
         return "Nada no kit usa isto agora"
     return None
 
 
 def estado_arvore(m):
-    """Cada nó com o que a tela precisa: rank, custo, se dá para comprar ou tirar mais um ponto e por quê."""
+    """Cada nó com o que a tela precisa: rank, custo, alcance, e se dá para pôr ou tirar um ponto (e por quê)."""
     idx = no_por_id(m)
     gasto = pontos_gastos(m)
     out = []
     for n in arvore(m):
         r = m["nos"].get(n["id"], 0)
-        mais = dict(m["nos"], **{n["id"]: r + 1})
-        menos = dict(m["nos"])
-        if r > 1:
-            menos[n["id"]] = r - 1
-        else:
-            menos.pop(n["id"], None)
-        pode_mais, motivo_mais = True, ""
+        pode_mais, motivo = True, ""
         if r >= n["ranks"]:
-            pode_mais, motivo_mais = False, "No máximo"
+            pode_mais, motivo = False, "No máximo"
         elif gasto + n["custo"] > C.PONTOS:
             falta = gasto + n["custo"] - C.PONTOS
-            pode_mais, motivo_mais = False, f"Falta{'m' if falta > 1 else ''} {falta} ponto{'s' if falta > 1 else ''}"
-        else:
-            req = C.REQUISITO_LINHA.get(n.get("linha", 1), 0)
-            if req and _pontos_ate(m, m["nos"], n["linha"]) < req:
-                pode_mais, motivo_mais = False, f"Requer {req} pontos nas linhas anteriores"
-            elif n.get("exclui"):
-                rival = next((idx[i]["nome"] for i in m["nos"] if i != n["id"] and idx[i].get("exclui") == n["exclui"]),
-                             None)
-                if rival:
-                    pode_mais, motivo_mais = False, f"Exclui {rival}"
-        pode_menos, motivo_menos = r > 0, ""
-        if r > 0 and erros(m, menos):
-            linhas = sorted({idx[i]["linha"] for i in menos if idx[i].get("linha", 1) > n.get("linha", 1)
-                             and C.REQUISITO_LINHA[idx[i]["linha"]] > _pontos_ate(m, menos, idx[i]["linha"])})
-            pode_menos = False
-            motivo_menos = f"Sustenta a linha {linhas[0]}" if linhas else "Sustenta outro talento"
+            pode_mais, motivo = False, f"Falta{'m' if falta > 1 else ''} {falta} ponto{'s' if falta > 1 else ''}"
+        elif n.get("exclui"):
+            rival = next((idx[i]["nome"] for i in m["nos"] if i != n["id"] and idx[i].get("exclui") == n["exclui"]),
+                         None)
+            if rival:
+                pode_mais, motivo = False, f"Não combina com {rival}"
+        habs, outros = alcance(m, n)
+        props = set(n["props"])
+        for h in habs:
+            props.update(C.HABILIDADES[h["id"]]["props"])
         out.append({"id": n["id"], "nome": n["nome"], "tipo": n["tipo"], "nome_tipo": C.NOME_TIPO[n["tipo"]],
-                    "custo": n["custo"], "ranks": n["ranks"], "rank": r, "linha": n.get("linha"),
-                    "texto": n["texto"], "versao": C.HABILIDADES[n["versao"]]["nome"] if n.get("versao") else None,
-                    "afeta": afeta_no_kit(m, n), "aviso": aviso_no(m, n),
-                    "pode_mais": pode_mais and not erros(m, mais), "motivo_mais": motivo_mais,
-                    "pode_menos": pode_menos, "motivo_menos": motivo_menos})
+                    "custo": n["custo"], "ranks": n["ranks"], "rank": r, "texto": n["texto"],
+                    "versao": C.HABILIDADES[n["versao"]]["nome"] if n.get("versao") else None,
+                    "alcance": habs, "outros": outros, "aviso": aviso_no(m, n), "equivale": n.get("equivale"),
+                    "props": sorted(props, key=C.PROPRIEDADES.index), "pode_mais": pode_mais, "motivo_mais": motivo,
+                    "pode_menos": r > 0})
     return out
 
 
 def custo_habilidade(m_efeitos, hid):
-    h = C.HABILIDADES[hid]
     for flag, (alvo, custo) in C.VERSAO_CUSTO.items():
         if alvo == hid and m_efeitos.get(flag):
             return custo
-    return h["custo"]
+    return C.HABILIDADES[hid]["custo"]
+
+
+def descrever(m, hid):
+    """A habilidade como a montagem a deixa: a descrição (a da versão, se houver) e uma linha por regra que vale para
+    ela."""
+    idx = no_por_id(m)
+    ef = efeitos(m)
+    h = C.HABILIDADES[hid]
+    desc, versao, notas = h["desc"], None, []
+    for i, r in m["nos"].items():
+        n = idx[i]
+        if n.get("versao") == hid:
+            desc, versao = n["nota"], n["nome"]
+        elif not n.get("versao") and _muda(n, hid):
+            notas.append(n["nota"] if n["tipo"] != "N" else f"{n['nome']} ×{r}: {n['texto'][0].lower()}{n['texto'][1:]}")
+    return {"id": hid, "nome": h["nome"], "versao": versao, "custo": custo_habilidade(ef, hid),
+            "ultimate": bool(h.get("ultimate")), "alvo": h["alvo"], "tipo": C.TIPOS.get(h.get("tipo")), "desc": desc,
+            "notas": notas, "funcao": h["funcao"], "props": h["props"], "origem": h["origem"],
+            "no_kit": hid in equipadas(m)}
 
 
 def kit_descrito(m):
-    """As habilidades equipadas como a montagem as deixa: a descrição (a da versão, se houver) e as linhas das regras
-    que valem para cada uma."""
-    idx = no_por_id(m)
-    ef = efeitos(m)
-    out = []
-    for hid in m["kit"] + [C.HEROI[m["spec"]]["ultimate"]]:
-        h = C.HABILIDADES[hid]
-        desc, versao, notas = h["desc"], None, []
-        for i in m["nos"]:
-            n = idx[i]
-            if n.get("versao") == hid:
-                desc, versao = n["nota"], n["nome"]
-            elif not n.get("versao") and set(h["etiquetas"]) & set(n["afeta"]):
-                notas.append(n["nota"] if n["tipo"] != "N" else f"{n['nome']} ×{m['nos'][i]}: {n['texto']}")
-        out.append({"id": hid, "nome": h["nome"], "versao": versao, "custo": custo_habilidade(ef, hid),
-                    "ultimate": bool(h.get("ultimate")), "alvo": h["alvo"], "tipo": C.TIPOS.get(h.get("tipo")),
-                    "desc": desc, "notas": notas})
-    return out
+    return [descrever(m, h) for h in equipadas(m)]
 
 
 def ficha(m):
     """Tudo o que a tela de montagem mostra, de uma vez."""
     e = erros(m)
-    return {"montagem": m, "erros": e, "valida": not e, "pontos": pontos_gastos(m) if not any(
-        "desconhecid" in x for x in e) else 0, "orcamento": C.PONTOS, "espacos": C.ESPACOS,
-            "arvore": estado_arvore(m) if not any("desconhecid" in x for x in e) else [],
+    base = not any("desconhecid" in x for x in e)
+    heroi = C.HEROI[m["spec"]]
+    return {"montagem": dict(m, ultimate=ultimate(m)), "erros": e, "valida": not e,
+            "pontos": pontos_gastos(m) if base else 0, "orcamento": C.PONTOS, "espacos": C.ESPACOS,
+            "arvore": estado_arvore(m) if base else [],
             "kit": kit_descrito(m) if not e else [],
-            "pool": [{"id": h, "nome": C.HABILIDADES[h]["nome"], "custo": C.HABILIDADES[h]["custo"],
-                      "desc": C.HABILIDADES[h]["desc"], "no_kit": h in m["kit"]} for h in C.POOL[m["spec"]]]}
+            "repertorio": [descrever(m, h) for h in repertorio(m)] if base else [],
+            "classe": heroi["classe"], "spec_nome": heroi["spec"]}
 
 
 def de_exemplo(eid):
     ex = next(x for x in C.EXEMPLOS if x["id"] == eid)
-    return {"estrutura": ex["estrutura"], "spec": ex["spec"], "kit": list(ex["kit"]), "nos": dict(ex["nos"]),
-            "nome": ex["nome"]}
+    return {"estrutura": ex["estrutura"], "spec": ex["spec"], "kit": list(ex["kit"]), "ultimate": ex["ultimate"],
+            "nos": dict(ex["nos"]), "nome": ex["nome"]}

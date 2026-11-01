@@ -29,9 +29,27 @@
     <p id="estrutura-frase" class="nota"></p>
     <h2>Especialização</h2>
     <div id="specs" class="alternar"></div>
-    <h2>Exemplos <small>(carregam kit e talentos; tudo continua editável)</small></h2>
+    <h2>Montagem</h2>
+    <div class="linha-nome"><input id="nome" maxlength="40" aria-label="Nome da montagem">
+      <button id="salvar" class="botao-x" title="Grava esta montagem na lista (por cima, se ela veio da lista)">Salvar</button>
+      <button id="duplicar" class="botao-x" title="Grava uma cópia com outro nome">Duplicar</button></div>
+    <p id="salvo" class="nota"></p>
+    <div id="salvas"></div>
+    <h2>Exemplos <small>(atalhos; tudo continua editável)</small></h2>
     <div id="exemplos"></div>
-    <h2 id="kit-titulo">Kit</h2>
+    <details id="regras-box"><summary>Regras da luta</summary><ul id="regras"></ul></details>
+    <h2>Encontro</h2>
+    <select id="encontro" aria-label="Encontro"></select>
+    <p id="encontro-desc" class="nota"></p>
+    <div class="linha-lutar">
+      <label>Semente <input id="semente" type="number" min="0" step="1" title="Vazio: a semente fixa do encontro. A mesma semente repete os sorteios dos inimigos"></label>
+      <button id="lutar" class="botao-x principal">Lutar <kbd>Enter</kbd></button>
+    </div>
+  </section>
+  <section id="m-repertorio" class="painel">
+    <div class="cabeca"><h2 id="kit-titulo">Repertório</h2></div>
+    <div id="filtros"></div>
+    <div id="kit-faixa"></div>
     <div id="pool"></div>
   </section>
   <section id="m-arvore" class="painel">
@@ -39,21 +57,6 @@
       <button id="zerar" class="botao-x" title="Tira todos os pontos (no protótipo, redistribuir é de graça)">Redistribuir</button></div>
     <ul id="erros" hidden></ul>
     <div id="arvore"></div>
-  </section>
-  <section id="m-build" class="painel">
-    <details id="regras-box"><summary>Regras da luta</summary><ul id="regras"></ul></details>
-    <h2>A build</h2>
-    <div id="kit-final"></div>
-    <h2>Encontro</h2>
-    <div id="encontros"></div>
-    <div class="linha-lutar">
-      <label>Semente <input id="semente" type="number" min="0" step="1" title="Vazio: a semente fixa do encontro. A mesma semente repete os sorteios dos inimigos"></label>
-      <button id="lutar" class="botao-x principal">Lutar <kbd>Enter</kbd></button>
-    </div>
-    <details id="salvar-box"><summary>Salvar a montagem no registro</summary>
-      <textarea id="nota" rows="2" placeholder="Por que esta montagem (opcional)"></textarea>
-      <button id="salvar" class="botao-x">Salvar</button> <span id="salvo"></span>
-    </details>
   </section>
 </main>
 

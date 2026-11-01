@@ -17,6 +17,14 @@ for (const [w, h] of [[1920, 945], [1280, 720]]) {
   await p.click('[data-ex="fornalha"]');
   await p.waitForTimeout(250);
   await p.screenshot({ path: `${saida}/montar-${w}.png` });
+  // um filtro e o realce de um talento
+  await p.click('[data-filtro="prop"][data-valor="Queimadura"]');
+  await p.waitForTimeout(200);
+  await p.hover('[data-no="estouro"]');
+  await p.waitForTimeout(150);
+  await p.screenshot({ path: `${saida}/montar-filtro-${w}.png` });
+  await p.click('[data-filtro="prop"][data-valor=""]');
+  await p.waitForTimeout(150);
   await p.click('[data-est="t1"]');
   await p.waitForTimeout(250);
   await p.click('[data-ex="fornalha_t1"]');
@@ -26,7 +34,7 @@ for (const [w, h] of [[1920, 945], [1280, 720]]) {
   await p.waitForTimeout(200);
   await p.click('[data-ex="fornalha"]');
   await p.waitForTimeout(200);
-  await p.click('[data-enc="lobos"]');
+  await p.selectOption("#encontro", "lobos");
   await p.waitForTimeout(200);
   await p.click("#lutar");
   await p.waitForSelector(".acao");
@@ -63,7 +71,7 @@ for (const [w, h] of [[1920, 945], [1280, 720]]) {
   await p.waitForTimeout(200);
   await p.click('[data-ex="furia"]');
   await p.waitForTimeout(200);
-  await p.click('[data-enc="troll"]');
+  await p.selectOption("#encontro", "troll");
   await p.waitForTimeout(200);
   await p.screenshot({ path: `${saida}/montar-berserker-${w}.png` });
   await p.fill("#semente", "7");
@@ -80,6 +88,24 @@ for (const [w, h] of [[1920, 945], [1280, 720]]) {
   const depois = await p.$eval(".acoes", (e) => e.getBoundingClientRect().top);
   if (antes !== depois) erros.push(`${w}: a doca andou ${depois - antes}px com o mouse`);
   await p.screenshot({ path: `${saida}/luta-furia-${w}.png` });
+  // o Invocador: o Fogo-fátuo e a Sentinela no grupo, contra os lobos
+  await p.click('[data-tela="montar"]');
+  await p.click('[data-spec="piromante"]');
+  await p.waitForTimeout(200);
+  await p.click('[data-ex="invocador"]');
+  await p.waitForTimeout(200);
+  await p.selectOption("#encontro", "lobos");
+  await p.waitForTimeout(150);
+  await p.fill("#semente", "3");
+  await p.click("#lutar");
+  await p.waitForSelector(".acao");
+  for (const id of ["atacar", "fogo_fatuo", "bastao", "atacar", "sentinela"]) {
+    await p.waitForTimeout(150);
+    await p.click(`[data-acao="${id}"]:not([disabled])`, { timeout: 3000 }).catch(() => {});
+    if (await p.$(".carta.alvo")) await p.click(".carta.alvo");
+  }
+  await p.waitForTimeout(200);
+  await p.screenshot({ path: `${saida}/luta-invocador-${w}.png` });
   await p.close();
 }
 await navegador.close();

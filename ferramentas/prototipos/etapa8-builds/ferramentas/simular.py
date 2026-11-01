@@ -23,11 +23,14 @@ def escolher(cb, rng):
     elif c.id == "morel":
         a = rng.choice([a for a in acoes if a["id"] in ("atacar", "oportuno")])
     else:
-        if cb.pode_sair_furia() and c.vida < c.vida_max * 0.4:
+        if cb.pode_sair_furia() and not cb.motivo_sair_furia() and c.vida < c.vida_max * 0.4:
             cb.sair_furia()
         uteis = [a for a in acoes if a["id"] != "defender"]
         a = rng.choice(uteis)
-    alvo = rng.choice(a["alvos"]) if a["alvo"] in ("inimigo", "aliado", "aliado_outro") else None
+    alvos = a["alvos"]
+    if a["alvo"] == "inimigo":  # não sacrifica as próprias invocações por acaso
+        alvos = [x for x in alvos if cb.c[x].lado == "inimigo"] or alvos
+    alvo = rng.choice(alvos) if a["alvo"] in ("inimigo", "aliado", "aliado_outro") else None
     return a["id"], alvo
 
 
@@ -42,11 +45,11 @@ def partida(m, enc, semente, rng):
 
 def main():
     n = int(sys.argv[1]) if len(sys.argv) > 1 else 30
-    print(f"{'build':22} " + " ".join(f"{e:>19}" for e in C.ENCONTROS))
+    print(f"{'build':22} " + " ".join(f"{e:>19}" for e in C.ENCONTROS if not e.startswith("_")))
     for ex in C.EXEMPLOS:
         m = M.de_exemplo(ex["id"])
         linha = []
-        for enc in C.ENCONTROS:
+        for enc in [e for e in C.ENCONTROS if not e.startswith("_")]:
             v, rod, elos, sobra = 0, 0, 0, 0
             for s in range(n):
                 cb = partida(m, enc, 1000 + s, random.Random(s))
