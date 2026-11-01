@@ -1,0 +1,188 @@
+/* PROTÓTIPO de campo livre da etapa 8 (nada no jogo). O campo ocupa a janela inteira; a HUD fica nas bordas, pequena,
+   e o registro e o diagnóstico ficam recolhidos (Tab). Cores e fontes do jogo (01-base.css, 11-tipografia.css). */
+@font-face { font-family: "Pixeloid Sans"; src: url(/static/fontes/pixeloid-sans.ttf) format("truetype"); font-display: swap; }
+:root { --fundo-hud: rgba(14, 12, 16, 0.72); --linha-hud: rgba(226, 189, 99, 0.28); --azul: #8bb8f0; --vermelho: #f08a78; }
+* { box-sizing: border-box; }
+body { background: #2a3a26; font-size: 15px; line-height: 1.35; user-select: none; }
+#campo { position: fixed; left: 0; top: 0; cursor: none; image-rendering: pixelated; }
+body.menu #campo { cursor: default; }
+
+/* ---- HUD */
+#hud { position: fixed; inset: 0; pointer-events: none; font-family: var(--pixel); font-size: 13px; }
+#ficha, #placar, #kit .slot, #faixa, #painel, #abrir-painel { background: var(--fundo-hud); border: 1px solid var(--linha-hud); }
+#ficha { position: absolute; left: 10px; top: 10px; padding: 6px 8px; width: 220px; }
+#ficha b { color: var(--ouro); font-weight: 400; }
+.barra { position: relative; height: 14px; margin-top: 4px; background: #2a1e1e; border: 1px solid #000; }
+.barra i { position: absolute; left: 0; top: 0; bottom: 0; background: #6fbf5d; }
+/* a vida que acabou de sair: um rastro claro que alcança a barra depois de 0,3 s */
+.barra em { position: absolute; left: 0; top: 0; bottom: 0; background: #f0c8a0; transition: width 0.45s ease-in 0.3s; }
+.barra.recurso i { background: #d9a440; }
+.barra.recurso.mana i { background: #5b8fd8; }
+.barra span { position: absolute; inset: 0; text-align: center; font-size: 11px; line-height: 12px; color: #fff; text-shadow: 1px 1px 0 #000; }
+.barra.apanhou { animation: apanhou 0.25s steps(2); }
+@keyframes apanhou { 50% { background: #8a2a20; } }
+#placar { position: absolute; right: 10px; top: 10px; padding: 6px 8px; text-align: right; }
+#placar b { font-weight: 400; color: var(--tinta); }
+.azul { color: var(--azul); } .vermelho { color: var(--vermelho); }
+#p-ordens { margin-top: 3px; display: flex; gap: 4px; justify-content: flex-end; }
+#p-ordens span { padding: 0 5px; border: 1px solid transparent; color: var(--tinta-2); }
+#p-ordens span.atual { border-color: var(--azul); color: #fff; }
+#p-ordens kbd { margin: 0 3px 0 0; }
+#kit { position: absolute; left: 50%; bottom: 10px; transform: translateX(-50%); display: flex; gap: 6px; }
+/* cada espaço na largura do próprio texto (o custo inteiro, sem corte); os curtos ficam no mínimo */
+#kit .slot { position: relative; min-width: 124px; padding: 5px 7px 6px; overflow: hidden; }
+#kit .slot.ultimate { border-color: var(--ouro); }
+#kit .slot .tecla { color: var(--tinta-2); font-size: 11px; }
+#kit .slot .nome { color: var(--tinta); display: block; white-space: nowrap; }
+#kit .slot .custo { font-size: 11px; color: var(--tinta-2); display: block; white-space: nowrap; }
+#kit .slot .custo.falta { color: var(--vermelho); }
+#kit .slot .espera { position: absolute; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.62); }
+#kit .slot .segundos { position: absolute; right: 6px; top: 4px; color: #fff; }
+#kit .slot.pronto { border-color: rgba(240, 203, 98, 0.7); }
+#kit .slot.acendeu { animation: acendeu 0.3s steps(3); }
+@keyframes acendeu { 33% { background: rgba(240, 203, 98, 0.45); } }
+#faixa { position: absolute; left: 50%; top: 10px; transform: translateX(-50%); padding: 4px 12px; color: var(--ouro);
+  opacity: 0; transition: opacity 0.2s; white-space: nowrap; }
+#faixa.ver { opacity: 1; }
+#abrir-painel { position: absolute; right: 10px; bottom: 10px; pointer-events: auto; padding: 3px 8px; font-family: var(--pixel); font-size: 12px; color: var(--tinta-2); cursor: pointer; }
+#painel { position: absolute; right: 10px; bottom: 40px; width: 330px; max-height: 60vh; overflow: auto; padding: 6px 10px; pointer-events: auto; }
+#painel h2 { font-family: var(--pixel); font-size: 12px; color: var(--ouro); margin: 6px 0 3px; font-weight: 400; }
+#registro { margin: 0; padding: 0; list-style: none; font-size: 12px; color: var(--tinta-2); }
+#registro li { padding: 1px 0; }
+#registro time { color: var(--tinta-3); margin-right: 6px; }
+#diag { margin: 0; font-size: 11px; color: var(--tinta-2); white-space: pre-wrap; font-family: var(--pixel); }
+#selo { position: fixed; left: 50%; bottom: 0; transform: translateX(-50%); font-family: var(--pixel); font-size: 10px;
+  color: rgba(255, 255, 255, 0.35); pointer-events: none; padding-bottom: 1px; }
+body.menu #selo, body.em-luta #selo { bottom: auto; top: 0; }
+body.em-luta #faixa { top: 30px; }
+
+/* ---- telas por cima do campo */
+.tela { position: fixed; inset: 0; display: flex; align-items: safe center; justify-content: safe center; background: rgba(10, 9, 12, 0.6); padding: 16px; overflow: auto; }
+.tela.leve { background: rgba(10, 9, 12, 0.18); align-items: flex-start; justify-content: flex-start; padding: 90px 10px 10px; pointer-events: none; }
+.tela.leve .caixa { pointer-events: auto; max-width: 400px; }
+.caixa { background: rgba(18, 15, 20, 0.94); border: 1px solid var(--linha-hud); padding: 18px 22px; max-width: 1040px; width: 100%; box-shadow: var(--sombra); }
+.caixa.estreita, #tela-fim .caixa { max-width: 560px; }
+.caixa h1 { font-family: var(--titulo); color: var(--ouro); font-weight: 400; font-size: 32px; margin: 0; }
+.caixa h1 span { font-family: var(--pixel); font-size: 14px; color: var(--tinta-2); }
+.caixa h2 { font-family: var(--titulo); color: var(--ouro); font-weight: 400; font-size: 24px; margin: 0 0 4px; }
+.sub { color: var(--tinta-2); margin: 4px 0 12px; }
+#herois { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.heroi { text-align: left; border: 1px solid var(--linha-hud); background: rgba(0, 0, 0, 0.25); padding: 10px 12px; cursor: pointer; }
+.heroi.escolhido { border-color: var(--ouro); background: rgba(240, 203, 98, 0.08); }
+.heroi h3 { margin: 0 0 6px; font-family: var(--titulo); font-weight: 400; font-size: 22px; color: var(--ouro); display: flex; align-items: center; gap: 10px; }
+.heroi h3 canvas { width: 45px; height: 54px; }
+.heroi .info { font-family: var(--pixel); font-size: 12px; color: var(--tinta-2); margin-bottom: 6px; }
+.hab { margin: 6px 0; }
+.hab .cab { display: flex; justify-content: space-between; gap: 8px; font-family: var(--pixel); font-size: 12px; }
+.hab .cab b { color: var(--tinta); font-weight: 400; }
+.hab .cab span { color: var(--tinta-2); white-space: nowrap; }
+.hab p { margin: 1px 0 0; font-size: 14px; color: var(--tinta-2); }
+.linha-opcoes, .opcoes { display: flex; flex-wrap: wrap; gap: 8px 18px; margin: 12px 0 0; font-family: var(--pixel); font-size: 12px; color: var(--tinta-2); align-items: center; }
+.opcoes label, .linha-opcoes label { display: flex; align-items: center; gap: 6px; }
+select, input[type=range] { accent-color: #d9a440; }
+select { background: #1b171d; color: var(--tinta); border: 1px solid var(--linha-hud); font: inherit; }
+.controles { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 12px 0; font-family: var(--pixel); font-size: 12px; color: var(--tinta-2); }
+.controles b { color: var(--ouro); font-weight: 400; width: 100%; }
+.controles .nota { width: 100%; font-family: var(--texto); font-size: 14px; }
+.botoes { display: flex; gap: 8px; margin-top: 14px; }
+button.principal, .botoes button, #lutar { padding: 6px 16px; border: 1px solid var(--linha-hud); background: #241d18; cursor: pointer; font-family: var(--pixel); font-size: 14px; }
+button.principal { border-color: var(--ouro); color: var(--ouro); }
+#lutar { margin-top: 4px; }
+#fim-tabela { border-collapse: collapse; font-family: var(--pixel); font-size: 12px; margin-top: 8px; }
+#fim-tabela th, #fim-tabela td { padding: 2px 12px 2px 0; text-align: right; }
+#fim-tabela th:first-child, #fim-tabela td:first-child { text-align: left; }
+#fim-tabela th { color: var(--tinta-3); font-weight: 400; }
+
+@media (max-height: 760px) {
+  .caixa { padding: 12px 16px; }
+  .hab p { font-size: 13px; }
+  .hab { margin: 4px 0; }
+  .controles { margin: 8px 0; }
+}
+
+/* ---- Campo Livre 2: o modo de comando, a seleção, o Capitão, os encontros e as versões das habilidades */
+#modo { position: absolute; left: 10px; top: 88px; padding: 2px 8px; background: var(--fundo-hud); border: 1px solid var(--linha-hud); color: var(--tinta-2); font-size: 12px; }
+#modo.comando { border-color: #bff4ff; color: #bff4ff; }
+#p-tipos, #p-selecao { margin-top: 3px; display: flex; gap: 6px; justify-content: flex-end; font-size: 12px; color: var(--tinta-2); }
+#p-tipos span.vazio { color: var(--tinta-3); }
+#p-tipos span.sel, #p-selecao b { color: #bff4ff; font-weight: 400; }
+#p-ordens span small { color: var(--tinta-3); margin-left: 3px; }
+#chefe { position: absolute; left: 50%; top: 8px; transform: translateX(-50%); width: 300px; padding: 4px 8px 5px; background: var(--fundo-hud); border: 1px solid #a8362a; text-align: center; }
+#chefe b { color: #ff8a78; font-weight: 400; }
+#chefe .barra i { background: #d0463a; }
+#chefe small { display: block; color: var(--tinta-2); font-size: 11px; min-height: 13px; }
+body.em-luta #faixa { top: 70px; }
+#encontros { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 6px; }
+.encontro { text-align: left; border: 1px solid var(--linha-hud); background: rgba(0, 0, 0, 0.25); padding: 6px 8px; cursor: pointer; font-family: var(--pixel); font-size: 12px; color: var(--tinta-2); }
+.encontro b { display: block; color: var(--tinta); font-weight: 400; font-size: 13px; }
+.encontro.escolhido { border-color: var(--ouro); background: rgba(240, 203, 98, 0.08); }
+#enc-info { margin: 0 0 10px; font-size: 14px; color: var(--tinta-2); }
+#enc-info b { color: var(--ouro); font-weight: 400; }
+.versoes { display: inline-flex; gap: 2px; margin-left: 6px; }
+.versoes button { font-family: var(--pixel); font-size: 11px; padding: 0 5px; border: 1px solid var(--linha-hud); background: #1b171d; color: var(--tinta-2); cursor: pointer; }
+.versoes button.atual { border-color: var(--ouro); color: var(--ouro); }
+.sub a { color: var(--tinta-2); }
+@media (max-height: 760px) {
+  .hab p { font-size: 12.5px; line-height: 1.25; }
+  .encontro { padding: 4px 6px; }
+  .heroi { padding: 6px 10px; }
+  .heroi h3 { font-size: 18px; margin-bottom: 2px; }
+  .heroi h3 canvas { width: 30px; height: 36px; }
+}
+.cabeca { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+#lutar { margin-top: 0; }
+#linha-tropas { float: left; margin-right: 18px; }
+#contagem { clear: both; margin: 6px 0 0; font-family: var(--pixel); font-size: 12px; color: var(--tinta); }
+.controles { clear: both; }
+@media (max-height: 760px) {
+  .caixa .sub { margin: 2px 0 6px; font-size: 14px; }
+  .controles { font-size: 11px; gap: 2px 12px; margin: 6px 0 0; }
+  .controles .nota { font-size: 12.5px; }
+  .linha-opcoes, .opcoes { margin-top: 6px; }
+  #enc-info { font-size: 13px; margin-bottom: 6px; }
+}
+/* o golpe pesado no herói: a borda do lado de onde veio, vermelha, por um instante (não treme nada) */
+#golpe { position: fixed; inset: 0; pointer-events: none; opacity: 0; transition: opacity 0.3s ease-out; }
+#golpe.esq { background: linear-gradient(to right, rgba(200, 20, 20, 0.45), transparent 14%); }
+#golpe.dir { background: linear-gradient(to left, rgba(200, 20, 20, 0.45), transparent 14%); }
+#golpe.cima { background: linear-gradient(to bottom, rgba(200, 20, 20, 0.45), transparent 18%); }
+#golpe.baixo { background: linear-gradient(to top, rgba(200, 20, 20, 0.45), transparent 18%); }
+#p-ordens .foco { color: #ff8a78; }
+/* a montagem na tela de escolha (Campo Livre 5): os atalhos, os grupos, a marca de escolhida e os talentos */
+.heroi .atalhos { font-family: var(--pixel); font-size: 12px; color: var(--tinta-2); margin: 4px 0 6px; }
+.heroi .atalhos button, .hab button.marca { font: inherit; background: #1b171d; color: var(--tinta); border: 1px solid var(--linha-hud); cursor: pointer; }
+.heroi .atalhos button { padding: 1px 6px; margin-left: 4px; }
+.heroi .grupo h4 { margin: 8px 0 2px; font-family: var(--pixel); font-size: 12px; font-weight: 400; color: var(--ouro); }
+.hab { position: relative; }
+.hab button.marca { position: absolute; left: 0; top: 1px; width: 16px; height: 16px; padding: 0; line-height: 14px; font-size: 11px; }
+.hab button.marca:disabled { opacity: 0.4; cursor: default; }
+.hab:has(button.marca) { padding-left: 22px; }
+.hab small { display: block; font-family: var(--pixel); font-size: 11px; color: var(--tinta-2); }
+.hab.marcada .cab b { color: var(--ouro); }
+.hab .cab em { color: var(--vermelho); font-style: normal; }
+/* Campo Livre 6: a barra de Ardis ao lado da de Harg, a vida de Morel e Odette embaixo da ficha */
+#chefe2 { position: absolute; left: 50%; top: 8px; transform: translateX(-50%); width: 300px; padding: 4px 8px 5px; background: var(--fundo-hud); border: 1px solid #7a3aa0; text-align: center; }
+#chefe2 b { color: #d8b0ff; font-weight: 400; }
+#chefe2 .barra i { background: #9a5ad0; }
+#chefe2 small { display: block; color: var(--tinta-2); font-size: 11px; min-height: 13px; }
+body.dois-chefes #chefe { transform: translateX(calc(-100% - 4px)); }
+body.dois-chefes #chefe2 { transform: translateX(4px); }
+#comp { position: absolute; left: 10px; top: 112px; width: 210px; padding: 3px 8px 4px; background: var(--fundo-hud); border: 1px solid var(--linha-hud); font-size: 12px; }
+#comp div { display: flex; align-items: center; gap: 6px; margin: 2px 0; }
+#comp b { width: 46px; color: #bcd8ff; font-weight: 400; }
+#comp .barra { flex: 1; margin: 0; height: 10px; }
+#comp .barra i { background: #6fbf5d; }
+#comp .barra span { font-size: 9px; line-height: 8px; }
+.nota-comp { font-size: 11px; color: var(--tinta-3); }
+/* o placar cresceu com os tipos novos: com dois heróis inimigos (ou em janela estreita), as barras descem para cima da
+   barra de habilidades, longe do placar */
+body.dois-chefes #chefe, body.dois-chefes #chefe2 { top: auto; bottom: 76px; }
+@media (max-width: 1500px) { #chefe, #chefe2 { top: auto; bottom: 76px; } }
+
+/* Campo Livre 7: os controles em você (o texto pronto do motor), embaixo da ficha */
+#cc { position: absolute; left: 240px; top: 10px; display: flex; flex-direction: column; gap: 2px; max-width: 330px; font-size: 12px; }
+#cc span { padding: 1px 6px; background: var(--fundo-hud); border: 1px solid #ff8a78; color: #ffd0c8; }
+#cc .lento { border-color: #8fc8ff; color: #cfe6ff; }
+#cc .imobilizado { border-color: #b89aff; color: #e0d0ff; }
+#cc .protecao { border-color: var(--linha-hud); color: var(--tinta-2); }
+#cc .protecao.firme { border-color: #f0cb62; color: #f0cb62; }

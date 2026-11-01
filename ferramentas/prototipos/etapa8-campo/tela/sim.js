@@ -11,6 +11,7 @@ import { ligar, mundoAtual, prepararCenario, rumo, empurrarParaFora, bloqueado, 
   pontoDaHabilidade, atualizarMagias, atualizarEspecial, ajustarLider, criarCompanheiros, blocosDaComposicao } from "./campo6.js";
 import { desvioAte, inacessivel, posicaoUtil, mundoDaNav } from "./navegacao.js";
 import { ligar7, registrarGolpe, escolherFoco, precisaRever, provocadorAoAlcance, interromperPreparo, escudada } from "./campo7.js";
+import { ligar8, harg8, prepararHarg8, posturaHarg8, converterControles8 } from "./campo8.js";
 
 export const PASSO = 1 / 60;
 const GRAU = Math.PI / 180;
@@ -186,7 +187,7 @@ function criarEncontro(enc, nome, heroi, quantidade, semente, kit, composicao = 
     proj: [], zonas: [], eventos: [], registro: [], fase: "formacao", resultado: null, fimEm: 0,
     ordem: { tipo: "acompanhar", x: 0, y: 0 }, quantidade, escala: escalaDe(quantidade), nomeHeroi: heroi,
     stats: novasEstatisticas(), grupos: {}, selecao: new Set(), lider: null, encontro: nome, levas: [],
-    modoEscala: enc.escala || "alas", magias: [], projE: [], linhas: [],
+    modoEscala: enc.escala || "alas", magias: [], projE: [], linhas: [], harg8: !!enc.harg8,
   };
   // Campo Livre 6: o cenário (construções), a composição dos exércitos (nos encontros novos) e os companheiros
   prepararCenario(m, enc.cenario || "aberto");
@@ -335,6 +336,7 @@ function novaUnidade(m, lado, tipo, x, y) {
     recarga: m.rng() * 0.6, atordoado: 0, congelado: 0, flash: 0, virado: lado === 0 ? 1 : -1, passo: m.rng() * 10,
     abalado: 0, mostra: 0, fugindo: false, saiu: false, morto: false, atacantes: 0, aura: false, slot: 0,
   };
+  if (tipo === "lider" && m.harg8) prepararHarg8(u);   // Campo Livre 8: Harg reconstruído (campo8.js)
   m.unidades.push(u);
   return u;
 }
@@ -524,12 +526,14 @@ export function ferir(m, u, dano, fonte, o = {}) {
   const antes = u.vida;
   u.vida -= dano;
   registrarGolpe(m, u, fonte, dano);   // a memória de quem feriu quem (a escolha de alvo dos heróis inimigos)
+  if (u.h8) posturaHarg8(m, u, fonte, dano, o);   // Campo Livre 8: a postura de Harg
   u.flash = o.sutil ? 0.04 : o.forte ? 0.09 : 0.06;
   u.ferido = m.t;
   if (u === h) m.stats.danoSofrido += dano;
   else if (u.lado === 0) m.stats.danoTropas += dano;
   // o número na tela é o dano que saiu da vida: o mesmo valor, uma vez por acerto (o contínuo também, por tique)
   if (fonte === h && u.lado === 1 && dano > 0) m.eventos.push({ tipo: "dano", id: u.id, x: u.x, y: u.y, valor: dano, dx, dy,
+    chefe: !!u.h8, abertura: !!(u.h8 && (u.h8.quebrado > 0 || m.t < (u.h8.abertoAte || 0))),
     forte: !!o.forte, critico: !!o.critico, sutil: !!o.sutil, elemento: o.elemento || null, morte: u.vida <= 0, antes,
     estilhaca, secundario: tipoDano === "secundario" });
   // o herói atingido: a direção do golpe (de quem bateu para ele) e o valor que saiu da vida, para a tela mostrar
@@ -1251,6 +1255,7 @@ function atualizarUnidade(m, u, dt) {
   if (u.mostra > 0) u.mostra -= dt;
   estados(m, u, dt);
   if (u.morto) return;
+  if (u.h8) converterControles8(m, u);   // Campo Livre 8: em Harg, os controles enchem a postura em vez de prendê-lo
   let ritmo = 1;
   if (u.aura) ritmo /= TIPOS.estandarte.auraRitmo;
   if (u.firme) ritmo /= TIPOS.lider.presencaRitmo;
@@ -1375,6 +1380,7 @@ function acordar(m, u) {
 // Arremetida, a que estiver pronta e couber na distância. Com as tropas: a Carga no grupo escolhido. Devolve true quando
 // começou uma habilidade.
 function decidirLider(m, u, dt) {
+  if (u.h8) return harg8(m, u, dt);   // Campo Livre 8: o confronto reconstruído
   const d = u.def, h = m.heroi;
   const dh = h.morto ? Infinity : Math.sqrt(dist2(u, h));
   if (u.provocado > 0) u.provocado -= dt;
@@ -2388,3 +2394,4 @@ export function resumo(m) {
 // Campo Livre 6: o que campo6.js usa daqui
 ligar({ ferir, andarPara, corpoACorpo, escolherAlvo, registrar, novaUnidade });
 ligar7({ ferir, registrar });
+ligar8({ ferir, andarPara, registrar, dentro });

@@ -63,6 +63,36 @@ export function pensar(r, m, ent) {
   ent.mx = perto.x; ent.my = perto.y;
   // os avisos do Capitão só são vistos depois de um tempo de reação (uma pessoa não sai no mesmo quadro)
   const reacao = r.nivel === "medio" ? 0.35 : 0.15, viu = (e, total) => total - e.acao.t >= reacao;
+  // Campo Livre 8: os golpes de Harg reconstruído. Com o herói dentro do aviso (visto depois do tempo de reação), o
+  // forte sai para o lado da direção do golpe; o médio recua em linha reta (o erro comum, que a Varredura e a Investida
+  // castigam). Na abertura (a recuperação comprometida) ou com a postura quebrada, os dois vão nele e batem.
+  const l = m.lider;
+  if (l && l.h8 && !l.morto) {
+    const g = l.h8.golpe;
+    if (g && g.etapa === "preparo" && g.total - g.t >= reacao) {
+      const f = r.nivel === "forte" && g.onda ? g.onda : g.forma;
+      const largo = f.tipo === "faixa" ? { ...f, largura: f.largura + 4 } : { ...f, raio: f.raio + 4 };
+      if (dentro(largo, h.x, h.y)) {
+        if (r.nivel === "forte") {
+          const px = -Math.sin(g.dir), py = Math.cos(g.dir), lado = (h.x - l.x) * px + (h.y - l.y) * py >= 0 ? 1 : -1;
+          andar(ent, px * lado - Math.cos(g.dir) * 0.3, py * lado - Math.sin(g.dir) * 0.3);
+        } else andar(ent, h.x - l.x, h.y - l.y);
+        ent.mx = l.x; ent.my = l.y;
+        return;
+      }
+    }
+    const dl = Math.hypot(l.x - h.x, l.y - h.y);
+    if ((l.h8.quebrado > 0 || m.t < (l.h8.abertoAte || 0)) && dl < 120) {
+      ent.mx = l.x; ent.my = l.y;
+      if (h.nomeHeroi === "guerreiro") { if (dl > 18) andar(ent, l.x - h.x, l.y - h.y); else andar(ent, 0, 0); ent.atacar = dl < 60; }
+      else { andar(ent, 0, 0); ent.atacar = dl < h.kit.bola.alcance; }
+      for (const slot of ["h1", "h2", "h3", "ult"]) {
+        const id = h.slots[slot], k = h.kit[id];
+        if (k && h.cds[id] <= 0 && (!k.custo || h.recurso >= k.custo) && (k.alcance || 60) >= dl) { ent.apertos.push(id); break; }
+      }
+      return;
+    }
+  }
   // o golpe do campeão (ou o machado do Capitão) anunciado com o herói dentro do arco desenhado: sair dele
   for (const e of ini) {
     if (e.acao && e.acao.forma && (e.tipo === "campeao" || e.tipo === "lider" && !e.acao.tipo && viu(e, e.acao.preparo || e.def.preparo)) &&

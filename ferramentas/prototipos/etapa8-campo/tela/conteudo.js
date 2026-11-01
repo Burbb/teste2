@@ -1,7 +1,7 @@
 // PROTÓTIPO de campo livre da etapa 8 (nada no jogo): os números e os kits. Tudo de teste; as regras que usam estes
 // números estão em sim.js. Unidades: distância em pixels nativos (o campo é desenhado 1:1 e ampliado inteiro), tempo
 // em segundos, empurrão em px/s (a unidade desliza cerca de empurrão/9 px, ver ATRITO_EMPURRAO).
-export const VERSAO = "Campo Livre 7";
+export const VERSAO = "Campo Livre 8";
 
 export const CAMPO = { largura: 960, altura: 560, margem: 8 };
 export const ATRITO_EMPURRAO = 9;      // o empurrão perde velocidade a e^(-9t): desliza v/9 px
@@ -412,6 +412,30 @@ export const ENCONTROS = {
       ["cavaleiro", 18, 480, 16, 6, "norte", 1]],
     levas: [{ id: 1, t: 30, quando: 0.3, x: 480, y: 16, aviso: "Outra ala de cavalaria carrega pelo norte." }],
   },
+  // Campo Livre 8: Harg reconstruído (campo8.js). O treino: só você e ele, para entender os golpes, os acertos e as
+  // aberturas. A guerra: as hordas frágeis e o seu exército, e Harg entrando pelo portão aos 18 s.
+  duelo: {
+    nome: "Treino: Harg, o Capitão", cenario: "povoado", harg8: true,
+    descricao: "Só você e Harg, do lado de fora da muralha, entre as árvores. Para conhecer os golpes dele (o aviso no chão, a execução, a recuperação), quebrar a postura e aproveitar as aberturas.",
+    regra: "Treino: sem tropas. R recomeça a qualquer momento.",
+    heroi: [400, 300], aliados: [],
+    grupos: { harg: { ativa: 1.5 } },
+    inimigos: [["lider", 1, 520, 300, 1, "harg"]],
+    levas: [],
+  },
+  guerra: {
+    nome: "Harg entra na batalha", cenario: "povoado", companheiros: true, harg8: true,
+    descricao: "O seu exército diante do portão contra ondas de soldados frágeis. Aos 18 s, Harg entra pelo portão com a guarda: ele atravessa a sua linha, ameaça Odette e os arqueiros, e disputa o espaço com você e Morel.",
+    regra: "Ondas a cada 10 s até os 100 s. Enquanto Harg estiver de pé, ninguém foge; derrubado, a tropa perto dele foge.",
+    heroi: [380, 280],
+    aliados: [["soldado", 28, 336, 280, 5], ["arqueiro", 12, 286, 280, 2], ["pesado", 6, 400, 240, 2], ["cavaleiro", 6, 330, 360, 3]],
+    grupos: { frente: { ativa: 3 }, harg: {} },
+    inimigos: [["soldado", 30, 520, 280, 5, "frente"], ["arqueiro", 8, 540, 180, 2, "frente"],
+      ["lider", 1, 760, 280, 1, "harg", 1], ["pesado", 4, 790, 280, 2, "harg", 1]],
+    levas: [{ id: 1, t: 18, quando: 0, x: 760, y: 280, aviso: "Harg, o Capitão, entra pelo portão com a guarda." }],
+    ondas: { cada: 10, primeira: 8, n: 34, ate: 100, lados: ["portao", "norte", "sul"],
+      pontos: { portao: [800, 280], norte: [600, 14], sul: [600, 546] } },
+  },
   // Campo Livre 7: a amostra de arte, jogável. O mesmo conteúdo nas três aparências (F8 troca) e nas duas escalas do
   // seu herói (F9); as regras não mudam entre elas.
   amostra: {
@@ -510,6 +534,49 @@ export const BATALHA = {
   reavaliar: [0.3, 0.6],   // de quanto em quanto tempo cada unidade reavalia o alvo (sorteado no intervalo)
   custoFila: 22,      // quanto "pesa", na escolha do alvo, cada atacante que já está nele
   danoNoHeroi: 1.5,   // as tropas batem 50% mais forte no herói (ele precisa sentir quando fica cercado)
+};
+
+// Campo Livre 8: Harg como o confronto principal (campo8.js), nos encontros com `harg8`. O estudo e as razões estão no 33.
+// Cada golpe tem três tempos: a preparação (`preparo` s, com o aviso no chão; ele vira para o alvo só na primeira parte,
+// `rastreia`, e no máximo `giro` rad/s; depois a direção fica), a execução (o avanço de `avanco` px em `exec` s; o
+// contato no fim) e a recuperação (`recupera` s parado; com `abertura`, ele leva +50% de dano e o dobro de postura).
+// `dano` é nas tropas (o bastante para derrubar um soldado comum), `danoHeroi` em você e em Morel e Odette.
+export const HARG8 = {
+  vida: 1700, vel: 56, velPressao: 64,
+  golpes: {
+    // o golpe simples, que mantém a pressão: rápido, curto, um arco na frente
+    talho: { nome: "Talho", preparo: 0.42, rastreia: 0.55, giro: 3.2, exec: 0.08, avanco: 16, forma: "arco", raio: 30, abertura: 130,
+      dano: 18, danoHeroi: 15, empurrao: 170, recupera: 0.32 },
+    // a varredura longa: alcança quem só recua (cresce para a frente no avanço); quem entra ou sai para o lado escapa
+    varredura: { nome: "Varredura Longa", preparo: 0.6, rastreia: 0.45, giro: 2.6, exec: 0.12, avanco: 30, forma: "arco", raio: 52,
+      abertura: 150, dano: 18, danoHeroi: 22, empurrao: 230, recupera: 0.5 },
+    // o golpe final comprometido: a martelada no chão à frente; depois, o machado preso (a abertura grande)
+    martelada: { nome: "Martelada", preparo: 0.78, rastreia: 0.35, giro: 2.2, exec: 0.1, avanco: 10, forma: "circulo", distancia: 22,
+      raio: 30, dano: 24, danoHeroi: 32, empurrao: 260, recupera: 1.25, abertura: true,
+      onda: { raio: 74, dano: 12, danoHeroi: 12, empurrao: 180 } },
+    // a carga pela linha: atravessa a infantaria (derruba e empurra quem está na faixa) e para no primeiro herói, num
+    // pesado, numa parede ou no fim do alcance; depois, a abertura curta
+    investida: { nome: "Investida", preparo: 0.48, rastreia: 0.3, giro: 2, vel: 560, alcance: 210, min: 70, max: 200, largura: 11,
+      dano: 18, danoHeroi: 20, empurrao: 240, recupera: 0.65, abertura: true, recarga: 6 },
+    // contra concentrações: o giro do machado em volta dele quando a nossa tropa o cerca
+    rodopio: { nome: "Rodopio", preparo: 0.6, rastreia: 0, giro: 0, exec: 0.1, avanco: 0, forma: "circulo", distancia: 0, raio: 46,
+      dano: 18, danoHeroi: 24, empurrao: 250, recupera: 0.55, recarga: 5, min: 4 },
+    // a passagem para a fase 2: o rugido empurra a tropa nossa em volta (não atordoa ninguém)
+    rugido: { nome: "Rugido", preparo: 0.8, rastreia: 0, giro: 0, exec: 0.05, avanco: 0, forma: "circulo", distancia: 0, raio: 64,
+      dano: 4, danoHeroi: 0, empurrao: 220, recupera: 0.4 },
+  },
+  // as sequências reconhecíveis, por fase; entre elas, a pressão (ele anda até você) ou um passo de lado
+  sequencias: {
+    1: [["talho", "talho"], ["talho", "martelada"], ["varredura"], ["talho"]],
+    2: [["talho", "talho", "martelada"], ["varredura", "talho", "martelada"], ["talho", "varredura"], ["varredura", "martelada"]],
+  },
+  pausa: { 1: [0.7, 1.1], 2: [0.4, 0.7] },
+  fase2: 0.55,   // abaixo de 55% da vida: o rugido e a fase 2 (sequências mais longas, a onda da Martelada)
+  // A postura: enche com o que ele leva (o seu dano vale inteiro; o de Morel e Odette, 60%; o das tropas, 25%; o contínuo,
+  // metade; golpe forte +6; um controle +20; na abertura, o dobro) e esvazia `regen`/s depois de `espera` s sem levar
+  // nada. Cheia: Harg quebra (`quebra` s ajoelhado, leva +50%, perde o que fazia); depois fica `firme` s ganhando só 35%.
+  postura: { max: 160, regen: 14, espera: 2, forte: 6, controle: 20, quebra: 2.2, firme: 7, firmeFator: 0.35,
+    fontes: { heroi: 1, companheiro: 0.6, tropa: 0.25 }, continuo: 0.5, aberto: 2 },
 };
 
 // Campo Livre 7: os controles (CC) e a proteção contra repetição. Cada controle forte (atordoamento, imobilização,

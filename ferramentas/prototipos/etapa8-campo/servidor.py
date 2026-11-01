@@ -26,6 +26,7 @@ TELA_V1 = AQUI / "tela-v1"   # a primeira versão jogável (Campo Livre 1), cong
 TELA_V4 = AQUI / "tela-v4"   # o Campo Livre 4 (o básico antigo, Corte e Faísca), congelado para comparar: /v4/
 TELA_V5 = AQUI / "tela-v5"   # o Campo Livre 5 (o kit montado, antes das construções e das tropas novas): /v5/
 TELA_V6 = AQUI / "tela-v6"   # o Campo Livre 6 (a vila, antes da navegação nova, do CC e do estudo de arte): /v6/
+TELA_V7 = AQUI / "tela-v7"   # o Campo Livre 7 (o Harg de antes, as três aparências, os modelos atuais): /v7/
 PORTA = int(os.environ.get("DEMO_PORTA", "8801"))
 VERSAO = re.search(r'VERSAO = "([^"]+)"', (TELA / "conteudo.js").read_text(encoding="utf-8")).group(1)
 mimetypes.add_type("text/javascript", ".js")
@@ -63,7 +64,7 @@ class Demo(BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(corpo)
             return
-        for nome, pasta in (("v1", TELA_V1), ("v4", TELA_V4), ("v5", TELA_V5), ("v6", TELA_V6)):
+        for nome, pasta in (("v1", TELA_V1), ("v4", TELA_V4), ("v5", TELA_V5), ("v6", TELA_V6), ("v7", TELA_V7)):
             if rota in (f"/{nome}", f"/{nome}/"):
                 return self._arquivo(pasta / "index.html")
             if rota.startswith(f"/{nome}/"):

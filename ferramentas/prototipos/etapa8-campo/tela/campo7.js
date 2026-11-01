@@ -11,6 +11,7 @@
 // inacessível, um golpe forte de outro, a provocação); quem já é o alvo ganha `inercia` (não troca por um pixel).
 import { CONTROLE } from "./conteudo.js";
 import { bloqueado, distCaminho, dentroObstaculo, inacessivel } from "./navegacao.js";
+import { controleHarg8 } from "./campo8.js";
 
 let S = null;    // as funções de sim.js (ferir, registrar)
 export function ligar7(h) { S = h; }
@@ -65,6 +66,8 @@ export function registrarApoio(m, quem, v) { quem.apoioV = somar(quem.apoioV, v,
  */
 export function aplicarControle(m, alvo, tipo, dura, fonte, extra = {}) {
   if (!alvo || alvo.morto) return 0;
+  // Campo Livre 8: Harg não fica preso; o controle enche a postura dele (a lentidão e a provocação valem como sempre)
+  if (alvo.h8 && tipo !== "lento" && tipo !== "provocacao") { controleHarg8(m, alvo); return 0; }
   const C = CONTROLE, t = m.t;
   if (tipo === "lento") {
     const f = extra.fator;

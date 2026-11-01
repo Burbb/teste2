@@ -519,8 +519,9 @@ test("o Sangramento acumula e a Ruptura detona; o Anel prende; o Grito inspira",
 });
 test("os encontros novos terminam: vence com o herói, perde sem ele; nada vira NaN", () => {
   // a horda é de sobrevivência (pode-se perder para ela): tem o teste dela
-  // os encontros do Campo Livre 5 (os do 6, com construções e companheiros, têm os testes deles em campo6.test.mjs)
-  for (const enc of Object.keys(ENCONTROS).filter((e) => e !== "horda" && !ENCONTROS[e].companheiros)) {
+  // os encontros do Campo Livre 5 (os do 6, com construções e companheiros, têm os testes deles em campo6.test.mjs; os do
+  // 8, com Harg reconstruído, em campo8.test.mjs)
+  for (const enc of Object.keys(ENCONTROS).filter((e) => e !== "horda" && !ENCONTROS[e].companheiros && !ENCONTROS[e].harg8)) {
     for (const [heroi, kit] of [["guerreiro", {}], ["mago", { bola: "incendiaria", muralha: "anel" }]]) {
       // o Capitão (Campo Livre 4) vence o jogador automático médio, que reage tarde e não recua: lá, o forte
       const m = criarMundo({ heroi, encontro: enc, kit }), ent = entradaVazia(), r = criarRobo({ nivel: enc === "capitao" ? "forte" : "medio" });
@@ -631,7 +632,8 @@ test("escalas: 2× e 4× multiplicam os comuns e não os especiais, dentro do ca
     for (const u of m.unidades) if (u !== m.heroi) c[`${u.lado}:${u.tipo}`] = (c[`${u.lado}:${u.tipo}`] || 0) + 1;
     return c;
   };
-  for (const enc of Object.keys(ENCONTROS)) {
+  // o treino do Campo Livre 8 não tem tropa para multiplicar (a guerra, sim, mas tem os testes dela em campo8.test.mjs)
+  for (const enc of Object.keys(ENCONTROS).filter((e) => !ENCONTROS[e].harg8)) {
     const base = criarMundo({ encontro: enc, quantidade: "1" }), c1 = conta(base);
     for (const k of [2, 4]) {
       const m = criarMundo({ encontro: enc, quantidade: String(k) }), ck = conta(m);

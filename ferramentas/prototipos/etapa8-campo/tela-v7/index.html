@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Campo Livre 1 · protótipo da etapa 8</title>
+<!-- PROTÓTIPO de campo livre da etapa 8 (nada no jogo): o herói em tempo real, controlado direto, no meio de tropas
+     pequenas. A batalha roda em sim.js (passo fixo de 60 Hz); o desenho em desenho.js e efeitos.js; os comandos, a
+     câmera, a pausa de impacto e a HUD em main.js. Paleta e fontes do jogo (rpg/web/static, só leitura). -->
+<link rel="stylesheet" href="/static/css/01-base.css">
+<link rel="stylesheet" href="/static/css/11-tipografia.css">
+<link rel="stylesheet" href="campo.css">
+</head>
+<body>
+<canvas id="campo" aria-label="Campo de batalha"></canvas>
+
+<div id="hud" hidden>
+  <div id="ficha">
+    <b id="h-nome"></b>
+    <div class="barra vida" title="Vida"><em></em><i></i><span></span></div>
+    <div class="barra recurso"><i></i><span></span></div>
+  </div>
+  <div id="cc" hidden></div>
+  <div id="modo"></div>
+  <div id="placar">
+    <div><span class="azul">Aliados <b id="p-aliados"></b></span> · <span class="vermelho">Inimigos <b id="p-inimigos"></b></span></div>
+    <div id="p-tipos"></div>
+    <div id="p-selecao"></div>
+    <div id="p-ordens"></div>
+  </div>
+  <div id="chefe" hidden><b></b><div class="barra"><i></i><span></span></div><small></small></div>
+  <div id="chefe2" hidden><b></b><div class="barra"><i></i><span></span></div><small></small></div>
+  <div id="comp" hidden></div>
+  <div id="kit"></div>
+  <div id="faixa" aria-live="polite"></div>
+  <div id="golpe" aria-hidden="true"></div>
+  <button id="abrir-painel" type="button">Registro <kbd>Tab</kbd></button>
+  <aside id="painel" hidden>
+    <h2>Registro</h2>
+    <ol id="registro"></ol>
+    <h2>Diagnóstico</h2>
+    <pre id="diag"></pre>
+  </aside>
+</div>
+
+<div id="selo"></div>
+
+<section id="tela-inicio" class="tela">
+  <div class="caixa">
+    <div class="cabeca"><h1>Campo Livre <span id="versao-inicio"></span></h1>
+      <button id="lutar" class="principal" type="button">Lutar <kbd>Enter</kbd></button></div>
+    <p class="sub">Protótipo da etapa 8, separado do jogo. Escolha o encontro, o herói e as versões das habilidades; cada
+      encontro é sempre o mesmo. <a href="/v6/">Abrir o Campo Livre 6 (antes da navegação nova e do estudo de arte)</a> · <a href="/v5/">o 5</a> · <a href="/v4/">o 4</a> · <a href="/v1/">o 1</a></p>
+    <div id="encontros"></div>
+    <p id="enc-info"></p>
+    <div id="herois"></div>
+    <div class="linha-opcoes" id="linha-tropas">
+      <label>Exército
+        <select id="op-quantidade">
+          <option value="1">1× (o encontro normal)</option>
+          <option value="2">2×</option>
+          <option value="4">4× (experimental)</option>
+        </select>
+      </label>
+      <label>Seu exército <select id="op-comp-aliados"></select></label>
+      <label>Inimigo <select id="op-comp-inimigos"></select></label>
+      <span class="nota-comp">(as composições valem nos encontros novos: a vila, a carga e Harg e Ardis)</span>
+    </div>
+    <div class="opcoes" data-opcoes></div>
+    <p id="contagem"></p>
+    <div class="controles">
+      <b>Controles</b>
+      <span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> andar · mouse mira · botão esquerdo (segure): ataque principal · <kbd>Espaço</kbd> mobilidade</span>
+      <span>Habilidades: botão direito, <kbd>Q</kbd>, <kbd>E</kbd> (as três comuns) · <kbd>F</kbd> ultimate · <kbd>H</kbd> traz uma horda</span>
+      <span><kbd>1</kbd> Acompanhar · <kbd>2</kbd> Atacar · <kbd>3</kbd> Defender no ponto do mouse (para a seleção; sem seleção, para todos)</span>
+      <span><kbd>F1</kbd> soldados · <kbd>F2</kbd> arqueiros · <kbd>F3</kbd> cavalaria · <kbd>F5</kbd> pesados · <kbd>F6</kbd> magos · <kbd>F7</kbd> Morel e Odette · <kbd>F4</kbd> todos · <kbd>X</kbd> limpa · <kbd>Ctrl</kbd> soma</span>
+      <span>Estudo de arte: <kbd>F8</kbd> aparência (atual, sóbria, sombria) · <kbd>F9</kbd> escala do seu herói · <kbd>V</kbd> violência (só o que fica no chão; a luta não muda)</span>
+      <span><kbd>Shift</kbd> segurado: modo de comando (arraste com o botão esquerdo para selecionar; botão direito: num inimigo, atacar o alvo; no chão, Defender ali). Pausado, o mouse já comanda.</span>
+      <span><kbd>P</kbd> ou <kbd>Esc</kbd> pausa · <kbd>R</kbd> recomeça · <kbd>Tab</kbd> registro · <kbd>M</kbd> som</span>
+      <span class="nota">Golpe forte prende os pés na preparação; depois do contato, andar ou outra habilidade cortam a
+        recuperação. Uma habilidade apertada até 0,2 s antes da hora sai quando der.</span>
+    </div>
+  </div>
+</section>
+
+<section id="tela-pausa" class="tela leve" hidden>
+  <div class="caixa estreita">
+    <h2>Pausa</h2>
+    <p class="sub">Pausado, o mouse comanda: arraste para selecionar, <kbd>F1</kbd>–<kbd>F7</kbd> por tipo,
+      <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> as ordens, botão direito Defender ali.</p>
+    <div class="opcoes" data-opcoes></div>
+    <div class="botoes">
+      <button id="continuar" class="principal" type="button">Continuar <kbd>P</kbd></button>
+      <button data-recomecar type="button">Recomeçar <kbd>R</kbd></button>
+      <button data-trocar type="button">Trocar herói</button>
+    </div>
+  </div>
+</section>
+
+<section id="tela-fim" class="tela" hidden>
+  <div class="caixa">
+    <h1 id="fim-titulo"></h1>
+    <p id="fim-resumo" class="sub"></p>
+    <table id="fim-tabela"></table>
+    <div class="botoes">
+      <button data-recomecar class="principal" type="button">Repetir <kbd>R</kbd></button>
+      <button data-trocar type="button">Trocar herói</button>
+    </div>
+  </div>
+</section>
+
+<script src="/static/sprites-dados.js"></script>
+<script src="/static/sprites.js"></script>
+<script type="module" src="main.js"></script>
+</body>
+</html>
