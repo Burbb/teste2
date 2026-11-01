@@ -178,3 +178,11 @@ body.dois-chefes #chefe2 { transform: translateX(4px); }
    barra de habilidades, longe do placar */
 body.dois-chefes #chefe, body.dois-chefes #chefe2 { top: auto; bottom: 76px; }
 @media (max-width: 1500px) { #chefe, #chefe2 { top: auto; bottom: 76px; } }
+
+/* Campo Livre 7: os controles em você (o texto pronto do motor), embaixo da ficha */
+#cc { position: absolute; left: 240px; top: 10px; display: flex; flex-direction: column; gap: 2px; max-width: 330px; font-size: 12px; }
+#cc span { padding: 1px 6px; background: var(--fundo-hud); border: 1px solid #ff8a78; color: #ffd0c8; }
+#cc .lento { border-color: #8fc8ff; color: #cfe6ff; }
+#cc .imobilizado { border-color: #b89aff; color: #e0d0ff; }
+#cc .protecao { border-color: var(--linha-hud); color: var(--tinta-2); }
+#cc .protecao.firme { border-color: #f0cb62; color: #f0cb62; }

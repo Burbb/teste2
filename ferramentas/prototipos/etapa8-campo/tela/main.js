@@ -18,7 +18,10 @@ import { VERSAO, HEROIS, ORDENS, IMPACTO, CAMPO, CONTINGENTES, ENCONTROS, TIPOS,
 import { descricao, custoDe, rotulo, TECLAS_ESPACO } from "./textos.js";
 import { criarMundo, passo, entradaVazia, ordenar, resumo, sorteio, PASSO, selecionar, tropasDoTipo, montarKit as kitDoHeroi,
   talentosValidos, escalaDe, inimigoEm, chamarHorda } from "./sim.js";
-import { criarEfeitos, receber, avancar } from "./efeitos.js";
+import { criarEfeitos, receber, avancar, VIOLENCIA } from "./efeitos.js";
+import { ARTES, ESCALAS } from "./sprites7.js";
+import { criarChao7 } from "./arte7.js";
+import { estadoControle } from "./campo7.js";
 import { prepararSprites } from "./sprites.js";
 import { criarChao, desenhar, BORDA } from "./desenho.js";
 import { criarRobo, pensar } from "./robo.js";
@@ -28,8 +31,18 @@ const $ = (s) => document.querySelector(s);
 const $$ = (s) => [...document.querySelectorAll(s)];
 const url = new URLSearchParams(location.search);
 const canvas = $("#campo"), g = canvas.getContext("2d", { alpha: false });
-const Q = prepararSprites();
-const chao = criarChao(sorteio(4242));
+// Campo Livre 7: as imagens e o chão de cada aparência do estudo de arte (e de cada escala do herói), feitos na primeira
+// vez que aparecem; trocar (F8, F9) não mexe na batalha
+const sprites = new Map(), chaos = new Map();
+function Qatual() {
+  const k = `${opcoes.arte}|${opcoes.escala}`;
+  if (!sprites.has(k)) sprites.set(k, prepararSprites({ arte: opcoes.arte, escala: opcoes.escala }));
+  return sprites.get(k);
+}
+function chaoAtual() {
+  if (!chaos.has(opcoes.arte)) chaos.set(opcoes.arte, opcoes.arte === "atual" ? criarChao(sorteio(4242)) : criarChao7(opcoes.arte, sorteio(4242), BORDA));
+  return chaos.get(opcoes.arte);
+}
 
 // ------------------------------------------------------------------------------------------------ opções
 // o tremor começa no máximo (150%), a intensidade de que o Jean gostou; 0 desliga
@@ -38,8 +51,16 @@ const montagemDe = (heroi, nome = MONTAGEM_PADRAO[heroi]) => structuredClone(MON
 const PADRAO = { tremor: 150, pausa: true, volume: 50, mudo: false, areas: true, heroi: "guerreiro", quantidade: "1", horda: 60,
   encontro: "original", montagem: { guerreiro: montagemDe("guerreiro"), mago: montagemDe("mago") } };
 PADRAO.composicao = { aliados: "comum", inimigos: "comum" };
+// Campo Livre 7: a aparência (o estudo de arte), a escala do seu herói e a violência (só o que fica no chão)
+Object.assign(PADRAO, { arte: "atual", escala: "atual", violencia: 2 });
 const opcoes = structuredClone(PADRAO);
-try { Object.assign(opcoes, JSON.parse(localStorage.getItem("campo-livre-6-opcoes") || "{}")); } catch { /* sem armazenamento */ }
+try { Object.assign(opcoes, JSON.parse(localStorage.getItem("campo-livre-7-opcoes") || "{}")); } catch { /* sem armazenamento */ }
+// ?arte=sombria&escala=menor&violencia=3: o estudo de arte direto
+if (ARTES[url.get("arte")]) opcoes.arte = url.get("arte");
+if (ESCALAS[url.get("escala")]) opcoes.escala = url.get("escala");
+if (url.get("violencia") && VIOLENCIA[Number(url.get("violencia"))]) opcoes.violencia = Number(url.get("violencia"));
+if (!ARTES[opcoes.arte]) opcoes.arte = "atual";
+if (!ESCALAS[opcoes.escala]) opcoes.escala = "atual";
 if (url.get("heroi")) opcoes.heroi = url.get("heroi");
 if (url.get("qtd")) opcoes.quantidade = url.get("qtd");
 opcoes.quantidade = String(escalaDe(opcoes.quantidade));   // "normal" e "maior", guardados pela v2, viram 1 e 2
@@ -56,7 +77,7 @@ if (url.get("hab")) {
   if (ult) opcoes.montagem[opcoes.heroi].ultimate = ult;
 }
 if (url.get("tal") !== null) opcoes.montagem[opcoes.heroi].talentos = url.get("tal") ? url.get("tal").split(",") : [];
-function guardar() { try { localStorage.setItem("campo-livre-6-opcoes", JSON.stringify(opcoes)); } catch { /* idem */ } }
+function guardar() { try { localStorage.setItem("campo-livre-7-opcoes", JSON.stringify(opcoes)); } catch { /* idem */ } }
 
 // as teclas dos espaços do kit (o botão esquerdo é o principal, segurado; o botão direito, o primeiro espaço comum)
 const TECLA_ESPACO = { Space: "mobilidade", KeyQ: "h2", KeyE: "h3", KeyF: "ult" };
@@ -206,7 +227,9 @@ addEventListener("help", (e) => e.preventDefault());
 addEventListener("keydown", (e) => {
   iniciarSom();
   // F5 recarregaria a página, F6 iria à barra de endereço e F7 ligaria o cursor de texto: aqui, são seleção
-  if (/^F[1-7]$/.test(e.code)) e.preventDefault();
+  if (/^F[1-9]$/.test(e.code)) e.preventDefault();
+  // Campo Livre 7: F8 troca a aparência, F9 a escala do seu herói, V a violência (no meio da luta, sem mudar a luta)
+  if (e.code === "F8" || e.code === "F9" || e.code === "KeyV" && st.tela === "luta") { trocarArte(e.code); return; }
   if (e.code === "ShiftLeft" || e.code === "ShiftRight") { st.shift = true; st.ent.atacar = false; atualizarModo(); return; }
   if (e.code === "Tab") { e.preventDefault(); alternarPainel(); return; }
   if (e.code === "KeyM") { opcoes.mudo = !opcoes.mudo; ajustarSom(opcoes.volume / 100, opcoes.mudo); guardar(); sincronizarOpcoes(); return; }
@@ -377,7 +400,8 @@ function quadro(agora) {
     st.estavaComando = comando;
     st.calma += ((comando ? 0 : 1) - st.calma) * (1 - Math.exp(-(comando ? 25 : 8) * dtReal));
     const tr = tremor();
-    desenhar(g, { m, E, Q, chao, cam: { x: st.cam.x + tr.x, y: st.cam.y + tr.y }, W: st.W, H: st.H,
+    E.violencia = opcoes.violencia; E.arte = opcoes.arte;
+    desenhar(g, { m, E, Q: Qatual(), chao: chaoAtual(), arte: opcoes.arte, cam: { x: st.cam.x + tr.x, y: st.cam.y + tr.y }, W: st.W, H: st.H,
       alfa: agora < st.pausaAte || st.pausado ? 1 : Math.min(1, st.acumulado / PASSO), opcoes, mouse: st.robo ? { x: st.ent.mx, y: st.ent.my } : mouseMundo(),
       relogio: st.relogio, pausado: st.pausado, semMira: true, alvoBasico: st.tela === "luta" && !emComando() });
     if (st.tela === "luta") desenharMira();
@@ -389,7 +413,7 @@ function quadro(agora) {
     // atrás da escolha do herói, o campo parado com os dois exércitos
     if (!st.fundo) st.fundo = { m: criarMundo({ heroi: opcoes.heroi, quantidade: opcoes.quantidade, encontro: opcoes.encontro }), E: criarEfeitos(sorteio(1)) };
     const m = st.fundo.m, c = m.centros[1] || m.heroi;
-    desenhar(g, { m, E: st.fundo.E, Q, chao, cam: { x: (m.heroi.x + c.x) / 2 - st.W / 2, y: c.y - st.H / 2 }, W: st.W, H: st.H, alfa: 1,
+    desenhar(g, { m, E: st.fundo.E, Q: Qatual(), chao: chaoAtual(), arte: opcoes.arte, cam: { x: (m.heroi.x + c.x) / 2 - st.W / 2, y: c.y - st.H / 2 }, W: st.W, H: st.H, alfa: 1,
       opcoes: { ...opcoes, areas: false }, mouse: null, relogio: st.relogio, semMira: true });
   }
   requestAnimationFrame(quadro);
@@ -424,14 +448,30 @@ function eventoNaTela(ev) {
   if (ev.tipo === "reforco") faixa(ev.texto || "A segunda leva chega pela direita, com o campeão.", 3.5);
   if (ev.tipo === "liderCaiu") faixa(`${TIPOS.lider.nome} caiu: ${ev.fogem} fogem; os outros se abalam.`, 3.5);
   if (ev.tipo === "aviso" && ev.lider && ev.arremetida) faixa(`${TIPOS.lider.nome} vai saltar no círculo vermelho: saia dele ou interrompa com um golpe forte.`, 1.6);
-  else if (ev.tipo === "aviso" && ev.lider) faixa(`${TIPOS.lider.nome} reúne ${ev.reunidos} para a carga${ev.heroi ? " contra você" : ""}: saia da faixa ou interrompa com um golpe forte.`, 2.2);
-  if (ev.tipo === "liderFoco") faixa(ev.modo === "heroi" ? `${TIPOS.lider.nome} vem atrás de você.` : `${TIPOS.lider.nome} vai para as suas tropas.`, 1.8);
+  else if (ev.tipo === "aviso" && ev.investida) faixa(`${TIPOS.lider.nome} vai investir pela faixa: saia dela. Depois ele fica parado e leva +50%.`, 1.4);
+  else if (ev.tipo === "aviso" && ev.brado) faixa(`${TIPOS.lider.nome} vai bradar: saia do anel ou da vista dele, ou o seu ataque principal vai nele por ${numero(TIPOS.lider.brado.dura)} s.`, 1.6);
+  else if (ev.tipo === "aviso" && ev.grilhao) faixa("Ardis prepara o Grilhão Arcano: desvie do projétil roxo (imobiliza).", 1.4);
+  else if (ev.tipo === "aviso" && ev.lider && ev.reunidos !== undefined) faixa(`${TIPOS.lider.nome} reúne ${ev.reunidos} para a carga${ev.heroi ? " contra você" : ""}: saia da faixa ou interrompa com um golpe forte.`, 2.2);
+  if (ev.tipo === "liderFoco") faixa(ev.texto || (ev.modo === "heroi" ? `${TIPOS.lider.nome} vem atrás de você.` : `${TIPOS.lider.nome} vai para as suas tropas.`), 1.8);
+  if (ev.tipo === "desafio") faixa(`Morel desafia: o herói inimigo vai atrás dele por ${numero(Math.round(ev.dura * 10) / 10)} s.`, 1.8);
+  if (ev.tipo === "firme" && ev.heroi) faixa("Firme: este controle não pegou (proteção contra repetição).", 1.4);
   if (ev.tipo === "alvoEncerrado") faixa(`${ev.nome}: ${ev.motivo === "derrubado" ? "derrubado" : ev.motivo === "fugiu" ? "fugiu" : "longe demais"}. Quem o atacava volta à ordem de antes.`, 2.2);
   if (ev.tipo === "heroiAtingido" && ev.valor >= 15) golpeNaTela(ev);
   if (ev.tipo === "fuga") faixa("Os inimigos que restam fogem.", 2.5);
   if (ev.tipo === "abalo") faixa("O porta-estandarte caiu: os inimigos em volta recuam.", 2.5);
   if (ev.tipo === "ordem") marcarOrdem();
   if (ev.tipo === "morte" && ev.lado === 0) atualizarSelecao();
+}
+
+function trocarArte(tecla) {
+  const prox = (obj, atual) => { const k = Object.keys(obj); return k[(k.indexOf(atual) + 1) % k.length]; };
+  if (tecla === "F8") opcoes.arte = prox(ARTES, opcoes.arte);
+  else if (tecla === "F9") opcoes.escala = prox(ESCALAS, opcoes.escala);
+  else opcoes.violencia = (opcoes.violencia + 1) % VIOLENCIA.length;
+  guardar();
+  sincronizarOpcoes();
+  faixa(tecla === "F8" ? `Aparência: ${ARTES[opcoes.arte].nome} (F8)` : tecla === "F9" ? `Escala: ${ESCALAS[opcoes.escala].nome} (F9)`
+    : `Violência: ${VIOLENCIA[opcoes.violencia].nome} (V)`, 1.6);
 }
 
 function faixa(texto, s) {
@@ -467,6 +507,7 @@ function fim() {
 
 // ------------------------------------------------------------------------------------------------ HUD
 function numero(v) { return String(v).replace(".", ","); }
+const FOCO = { heroi: "Atrás de você", morel: "Enfrenta Morel", odette: "Atrás de Odette", tropas: "Nas suas tropas" };
 
 // Os espaços do kit na barra: o principal, a mobilidade, as três comuns e a ultimate, com a tecla, o nome e o custo
 let slots = [];
@@ -542,6 +583,8 @@ function atualizarHud() {
     m.lider && (m.lider.acao ? m.lider.acao.tipo + m.lider.acao.fase : m.lider.ofegante > 0), m.lider && m.lider.modo,
     m.lider && m.lider.firmeAte > m.t, m.reforco.chegou, m.ardis && Math.ceil(m.ardis.vida), m.ardis && m.ardis.modo,
     m.ardis && (m.ardis.acaoA ? m.ardis.acaoA.tipo : m.ardis.absorveAte > m.t), m.morel && Math.ceil(m.morel.vida), m.odette && Math.ceil(m.odette.vida),
+    estadoControle(m, h).map((c) => c.texto).join("|"), m.lider && (m.lider.dash7 ? m.lider.dash7.fase : m.lider.brado7 ? "brado" : ""),
+    m.lider && m.lider.focoU && m.lider.focoU.id, m.lider && m.lider.provocacao && m.lider.provocacao.ate > m.t, m.morel && m.morel.posturaAte > m.t,
     ...slots.map((s) => Math.ceil((h.cds[s.id] || 0) * 10))].join(",");
   if (st.faixaAte && st.relogio > st.faixaAte) { $("#faixa").classList.remove("ver"); st.faixaAte = 0; }
   if (golpeAte && st.relogio > golpeAte) { $("#golpe").style.opacity = "0"; golpeAte = 0; }   // some devagar (transição do CSS)
@@ -567,8 +610,10 @@ function atualizarHud() {
     $("#chefe small").textContent = l.morto ? "A tropa perto dele fugiu; ninguém mais segura o resto." : a && a.tipo === "reunir" ? `Reúne ${a.reunidos.length} para a carga!`
       : a && a.tipo === "carga" ? "Carga!" : a && a.tipo === "arremetida" ? (a.fase === "voo" ? "Salta!" : "Vai saltar no círculo!")
       : l.ofegante > 0 ? (l.cravado > 0 ? "Machado cravado: leva +50% de dano" : "Ofegante: leva +50% de dano")
-      : a && a.tipo === "rodopio" ? "Rodopio!" : l.firmeAte > m.t ? "Firme: golpe forte não o interrompe agora"
-      : l.modo === "heroi" ? `Atrás de você · presença: ${firmes()} firmes` : `Nas suas tropas · presença: ${firmes()} firmes`;
+      : a && a.tipo === "rodopio" ? "Rodopio!" : l.dash7 ? (l.dash7.fase === "preparo" ? "Vai investir!" : l.dash7.fase === "exec" ? "Investe!" : "Parado depois da investida: leva +50%")
+      : l.brado7 ? "Vai bradar!" : l.firmeAte > m.t ? "Firme: golpe forte não o interrompe agora"
+      : l.provocacao && l.provocacao.ate > m.t ? `Provocado por Morel: ${numero((Math.ceil((l.provocacao.ate - m.t) * 10) / 10).toFixed(1))} s`
+      : `${FOCO[l.modo] || FOCO.heroi} · presença: ${firmes()} firmes`;
   }
   // Campo Livre 6: a barra de Ardis (ao lado da de Harg) e a vida de Morel e Odette, embaixo da ficha
   const ar = m.ardis;
@@ -578,9 +623,15 @@ function atualizarHud() {
     $("#chefe2 .barra i").style.width = (100 * Math.max(0, ar.vida)) / ar.vidaMax + "%";
     $("#chefe2 .barra span").textContent = ar.morto ? "caiu" : `${Math.ceil(ar.vida)}/${ar.vidaMax}`;
     $("#chefe2 small").textContent = ar.morto ? "Caiu." : ar.acaoA && ar.acaoA.tipo === "corrente" ? "Prepara a Corrente Arcana!"
-      : ar.absorveAte > m.t ? "Barreira: absorve o dano" : ar.modo === "tropas" ? "Bombardeia as suas tropas" : "Duela com você, de longe";
+      : ar.acaoA && ar.acaoA.tipo === "grilhao" ? "Prepara o Grilhão!" : ar.absorveAte > m.t ? "Barreira: absorve o dano"
+      : ar.provocacao && ar.provocacao.ate > m.t ? "Provocada por Morel" : ar.modo === "tropas" ? "Bombardeia as suas tropas"
+      : ar.modo === "odette" ? "Mira Odette, de longe" : ar.modo === "morel" ? "Mira Morel, de longe" : "Duela com você, de longe";
   }
   document.body.classList.toggle("dois-chefes", !!(ar && m.lider));
+  // os controles em você (o texto vem pronto do motor: campo7.estadoControle)
+  const cc = estadoControle(m, h);
+  $("#cc").hidden = !cc.length;
+  $("#cc").innerHTML = cc.map((c) => `<span class="${c.id}${c.firme ? " firme" : ""}">${c.texto}</span>`).join("");
   const comp = [m.morel, m.odette].filter(Boolean);
   $("#comp").hidden = !comp.length;
   if (comp.length) $("#comp").innerHTML = comp.map((u) => `<div><b>${u.def.nome}</b><span class="barra"><i style="width:${(100 * Math.max(0, u.vida)) / u.vidaMax}%"></i><span>${u.morto ? "caiu" : `${Math.ceil(u.vida)}/${u.vidaMax}`}</span></span></div>`).join("");
@@ -685,7 +736,7 @@ function montarHerois() {
     b.className = "heroi" + (opcoes.heroi === id ? " escolhido" : "");
     b.dataset.heroi = id;
     b.tabIndex = 0;
-    const sp = Q[id][0].parado.d, c = document.createElement("canvas");
+    const sp = Qatual()[id][0].parado.d, c = document.createElement("canvas");
     c.width = sp.width; c.height = sp.height;
     c.getContext("2d").drawImage(sp, 0, 0);
     const cat = HABILIDADES[id], linha = (k, escolhivel, marcado, tecla) =>
@@ -743,7 +794,7 @@ function montarInicio() {
     b.type = "button";
     b.className = "encontro";
     b.dataset.enc = id;
-    b.innerHTML = `<b>${e.nome}</b>${e.original ? "a batalha do Campo Livre 1" : id === "capitao" ? "o líder e a retaguarda" : id === "horda" ? "ondas de gente, ao estilo musou" : id === "duasFrentes" ? "pressão dos dois lados" : id === "vila" ? "casas, muralha, hordas e a linha pesada" : id === "carga" ? "cavalaria pelos flancos" : id === "herois" ? "dois heróis inimigos juntos" : "grupos longe uns dos outros"}`;
+    b.innerHTML = `<b>${e.nome}</b>${e.original ? "a batalha do Campo Livre 1" : id === "capitao" ? "o líder e a retaguarda" : id === "horda" ? "ondas de gente, ao estilo musou" : id === "duasFrentes" ? "pressão dos dois lados" : id === "vila" ? "casas, muralha, hordas e a linha pesada" : id === "carga" ? "cavalaria pelos flancos" : id === "herois" ? "dois heróis inimigos juntos" : id === "amostra" ? "estudo de arte: muralha, portão, casa e árvores" : "grupos longe uns dos outros"}`;
     b.addEventListener("click", () => escolherEncontro(id));
     $("#encontros").append(b);
   }
@@ -770,12 +821,15 @@ function montarInicio() {
       <label><input type="checkbox" data-op="areas"> Mostrar a área do botão direito</label>
       <label>Som <input type="range" min="0" max="100" step="10" data-op="volume"> <span data-ver="volume"></span></label>
       <label>Horda (H) <input type="range" min="20" max="200" step="20" data-op="horda"> <span data-ver="horda"></span></label>
-      <label><input type="checkbox" data-op="mudo"> Mudo (M)</label>`;
+      <label><input type="checkbox" data-op="mudo"> Mudo (M)</label>
+      <label>Aparência (F8) <select data-op="arte">${Object.entries(ARTES).map(([k, a]) => `<option value="${k}">${a.nome}</option>`).join("")}</select></label>
+      <label>Escala (F9) <select data-op="escala">${Object.entries(ESCALAS).map(([k, a]) => `<option value="${k}">${a.nome}</option>`).join("")}</select></label>
+      <label>Violência (V) <select data-op="violencia">${VIOLENCIA.map((v, i) => `<option value="${i}">${v.nome}</option>`).join("")}</select></label>`;
   }
   for (const el of $$("[data-op]")) {
     el.addEventListener("input", () => {
       const k = el.dataset.op;
-      opcoes[k] = el.type === "checkbox" ? el.checked : Number(el.value);
+      opcoes[k] = el.type === "checkbox" ? el.checked : el.tagName === "SELECT" && k !== "violencia" ? el.value : Number(el.value);
       ajustarSom(opcoes.volume / 100, opcoes.mudo);
       guardar();
       sincronizarOpcoes();
@@ -787,7 +841,7 @@ function montarInicio() {
 function sincronizarOpcoes() {
   for (const el of $$("[data-op]")) {
     const v = opcoes[el.dataset.op];
-    if (el.type === "checkbox") el.checked = !!v; else el.value = v;
+    if (el.type === "checkbox") el.checked = !!v; else el.value = String(v);
   }
   for (const el of $$("[data-ver]")) {
     const v = opcoes[el.dataset.ver];

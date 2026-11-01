@@ -1,7 +1,9 @@
 # 30 — Etapa 8: o combate em campo livre (herói em tempo real e tropas pequenas)
 
-**31/10/2026 (rodada 1) e 01/11/2026 (rodadas 2 a 6).** A rodada 6 (Campo Livre 6: o cenário com construções, as tropas
-avançadas, Morel e Odette autônomos e os heróis inimigos) vem primeiro; depois a rodada 5 (Campo Livre 5: o kit montado
+**31/10/2026 (rodada 1) e 01/11/2026 (rodadas 2 a 7).** A rodada 7 (Campo Livre 7: a navegação, a escolha de alvo dos
+heróis inimigos, a investida rápida, os controles e as provocações; o estudo de arte, com a amostra jogável e a
+carnificina, está no [32](32-ETAPA8-DIRECAO-DE-ARTE-DO-CAMPO.md)) vem primeiro; depois a rodada 6 (Campo Livre 6: o
+cenário com construções, as tropas avançadas, Morel e Odette autônomos e os heróis inimigos); depois a rodada 5 (Campo Livre 5: o kit montado
 antes da luta, com ataque principal, mobilidade, três comuns, uma ultimate e talentos); depois a rodada 4 (Campo Livre 4: o
 ataque básico assistido, o impacto dos acertos, o Capitão perigoso, os arqueiros e as ordens, a horda e as intenções de
 progressão); depois a rodada 3 (Campo Livre 3: a câmera parada no modo de
@@ -9,6 +11,183 @@ comando, o Capitão que enfrenta o herói, as escalas 1×, 2× e 4× e duas habi
 a rodada 2 (Campo Livre 2: números de dano, o líder inimigo, o modo de comando e a seleção, a leitura do choque, três
 encontros e quatro versões de habilidade); por fim as seções 0 a 14, a rodada 1 (Campo Livre 1). **A direção foi
 aprovada pelo Jean para continuar no protótipo, sem integração.**
+
+## Rodada 7 (01/11/2026): Campo Livre 7
+
+**O pedido do Jean:** continuar o campo livre (a direção em desenvolvimento; o Tático 2 fica como histórico) em duas
+frentes: **a inteligência e a navegação das unidades** (primeiro) e **um estudo de direção de arte com uma amostra
+jogável** (o [32](32-ETAPA8-DIRECAO-DE-ARTE-DO-CAMPO.md)). Preservar o que funciona (miniaturas, controle fluido,
+destruição em massa, habilidades e combinações, impacto, números, tremor máximo, seleção, ordens, câmera estável no
+comando). Sem vídeos, sem integrar, sem declarar a arte aprovada. **Em teste.** A v6 fica congelada em `tela-v6/`
+(`/v6/`).
+
+| Seção | O que tem |
+|---|---|
+| R7.1 | A navegação: a causa e a correção |
+| R7.2 | A escolha de alvo dos heróis inimigos |
+| R7.3 | A Investida Curta em três tempos |
+| R7.4 | Os controles (CC) e a proteção contra repetição |
+| R7.5 | As provocações: o Desafio de Morel e o Brado de Harg |
+| R7.6 | Verificação e desempenho |
+| R7.7 | Decisões provisórias, limitações e o que avaliar |
+
+### R7.1. A navegação
+
+**A causa** (medida, não suposta): Morel e Odette esbarravam na muralha por dois defeitos. (1) A separação dos corpos
+deixa o centro de quem encosta numa parede exatamente a um raio dela, e a conta de visão dos cantos usava uma folga igual
+ao raio: a linha que saía dali já "tocava" a parede crescida, **nenhum canto era visível** e a regra de reserva ("sem
+caminho, vá reto") empurrava a unidade contra a pedra, a cada recálculo. Odette ficou 19 s seguidos no canto entre a
+muralha e a torre (vila, Mago, jogador automático). (2) Quem lutava perto ia **reto ao alvo a menos de 30 px**, mesmo
+com a muralha (18 px) no meio. Morel ainda escolhia alvos do outro lado da muralha (pela linha reta) e voltava pela
+coleira, indo e vindo.
+
+**A correção** separa quatro problemas (`tela/navegacao.js`, a geometria e o caminho, antes em `campo6.js`):
+- **A rota pelo cenário:** a folga de quem anda é 1,5 px menor que o corpo; o caminho pelo grafo dos cantos é guardado
+  inteiro e seguido canto a canto, pulando o canto quando o seguinte já se vê; um destino dentro de uma construção vira o
+  ponto livre mais perto; quem luta perto usa a rota sempre que a linha está bloqueada, a qualquer distância.
+- **Contornar outras unidades:** a cada 0,5 s, quem quer andar e não andou 20% do que devia está travado; contra uma
+  parede, refaz a rota na hora; na multidão, desvia 0,4 s para o lado livre (só nos cenários com construções: no campo
+  aberto a separação dos corpos já resolvia, e as tropas de posto não saem da coleira por um desvio).
+- **Alcançar uma posição útil:** quem atira ou ajuda procura um ponto com visão do alvo, no alcance, que se alcança pelo
+  caminho mais curto e longe do perigo (`posicaoUtil`): o arqueiro sem visão acha um ponto de tiro; o mago de batalha e
+  Ardis também; **Odette procura um ponto de onde vê e alcança quem protege** (você; caído você, Morel), a 24 a 70 px,
+  do lado de lá em relação aos inimigos e, com Morel junto, de onde veja os dois; nunca tenta encostar em ninguém através
+  de uma parede. Quem luta perto escolhe o alvo pelo custo do caminho (a muralha no meio pesa o desvio), e Morel só conta
+  quem alcança pelo caminho sem sair da coleira. As vagas do anel em volta da ordem que cairiam dentro de uma casa vão
+  para o outro lado.
+- **Reconhecer o inacessível:** um destino fechado (sem canto à vista, ou sem ligação com os daqui) e dois segundos
+  travado apesar dos recálculos marcam o ponto como inacessível por 2,5 s; quem escolhe o alvo ou a posição o evita, e a
+  tropa que chegou à vaga possível para em vez de empurrar.
+
+Ninguém atravessa construção nem é teleportado. **Antes e depois** (`ferramentas/navegacao-diag.mjs`, o tempo somado de
+quem ficou contra uma parede querendo andar, e os episódios de mais de 1 s de Morel e Odette, com o jogador automático):
+
+| Batalha | Antes | Depois |
+|---|---|---|
+| vila, Guerreiro | arqueiros 5,5 s, soldados 4,3, cavalaria 2,6, Morel 3,2 (um episódio de 3 s) | soldados 5,9, arqueiros 1,6, cavalaria 0,7; Morel e Odette: nenhum episódio |
+| vila, Mago | soldados 22,1 s, **Odette 22,7** (19 s seguidos), arqueiros 16,6, cavalaria 10,2 | soldados 8,9, cavalaria 1,1; Morel 0,1; Odette 0 |
+| Harg e Ardis, Guerreiro | cavalaria 6,1 s, Ardis 5,0, arqueiros 4,2 | arqueiros 1,3, cavalaria 1,3, Morel 1,6 (nenhum episódio de 1 s) |
+| Harg e Ardis, Mago | **arqueiros 37,1 s** | arqueiros 1,8, Ardis 0,8 |
+
+O que sobra nos soldados é a multidão encostada nas casas durante a luta (centenas de soldados somados), não alguém
+preso. **Conferido nos testes:** Odette colada no canto da muralha sai pelo portão e chega a uma posição com visão de
+você; Morel não fica na pedra por um inimigo do outro lado; o arqueiro sem visão acha um ponto de tiro e atira; 30
+soldados passam pelo portão, mudam de ordem no meio do caminho, chegam (90% ou mais) e voltam pelo portão, ninguém 2 s
+preso; o meio de uma caixa fechada é reconhecido como inacessível.
+
+### R7.2. A escolha de alvo dos heróis inimigos
+
+Nos encontros com Morel e Odette, Harg e Ardis escolhem entre **você, Morel, Odette e as tropas** por uma avaliação
+(`campo7.escolherFoco`), com pesos por herói (`focoIA` em `conteudo.js`):
+- **alcance real:** o tempo de chegar pelo caminho (não pela linha reta); quem é inalcançável fica fora;
+- **dano e pressão recebidos:** quanto cada um o feriu e feriu a tropa dele por perto (a até 160 px), numa memória que
+  cai pela metade a cada 3 s;
+- **suporte:** quanto cada um curou ou protegeu há pouco (Odette; os magos);
+- **vulnerabilidade:** a vida perdida e estar sozinho (ninguém do lado dele a 40 px);
+- **concentração:** o grupo mais denso das nossas tropas (os arqueiros e os magos pesam 1,5);
+- **oportunidade:** a habilidade pronta que alcança (a Arremetida, a Investida, a Carga no grupo; a Coluna e o Grilhão
+  de Ardis);
+- **proteger Ardis** (Harg): quem a fere ou está a 90 px dela vale mais.
+
+**Estabilidade:** uma escolha dura no mínimo 2 s e é revista a cada 0,8 a 1,2 s (sorteado); o alvo de agora ganha um
+bônus de inércia; antes do mínimo, só uma mudança relevante a revê (o alvo caiu ou ficou inacessível, um golpe de 18 ou
+mais de outro, a provocação). Um ruído pequeno no valor evita a reação perfeita. **Só o que está no campo:** posições,
+caminhos e o que já aconteceu; nada do que o jogador vai apertar.
+
+**Você atrai e perde atenção:** ferir o herói inimigo ou derrubar a tropa dele por perto sobe o seu valor; recuar e parar
+de bater deixa a memória cair e a distância pesar, e quem está batendo nele (Morel, as tropas) assume. A perseguição
+continua: você é o alvo de base mais alto e quem mais pressiona. **Medido** (Harg e Ardis, jogador automático forte,
+`ferramentas/alvos7.mjs`): Harg em você 51 a 88% do tempo, em Morel 9 a 17%, nas tropas até 33%, em Odette até 7%; Ardis
+em você 36 a 55%, em Odette 31 a 59%, nas tropas até 15%; 1 a 6 trocas por luta, a menor a 1,0 a 2,6 s da anterior. O
+jogador automático bate muito em Harg, por isso ele fica tanto em você; jogando de outro jeito, a divisão muda.
+
+### R7.3. A Investida Curta em três tempos
+
+Antes, a Investida de Harg era só um deslocamento a 300 px/s. Agora (`investida7`):
+- **preparação legível, 0,35 s:** ele para e se abaixa, e a faixa vermelha aparece no chão na direção marcada (com o
+  aviso na faixa da tela);
+- **execução rápida, 520 px/s, até 190 px:** em linha reta, **sem corrigir a direção**; para no primeiro que atinge, na
+  parede ou ao fim do alcance; quem atinge leva o dano (20 em você), é empurrado e, se for herói, perde a preparação do
+  golpe que fazia;
+- **recuperação, 0,55 s:** parado, levando +50% de dano (a abertura para responder).
+
+A Arremetida ficou mais rápida na execução (o voo de 0,45 para 0,32 s), com a mesma preparação (0,7 s), e fica cravada
+mais tempo depois do pouso (0,5 para 0,7 s). Nada mais foi acelerado.
+
+### R7.4. Os controles e a proteção contra repetição
+
+| Efeito | Quem | Função |
+|---|---|---|
+| Interrupção (perde a preparação e segura 0,25 s) | Harg, na Investida | castiga quem prepara um golpe na frente dele |
+| Empurrão | Harg (Investida, Rodopio), cavalaria, pesados | tira do lugar |
+| Atordoamento curto (0,45 s) | a carga da cavalaria em heróis | a derrubada; antes, 0,18 s |
+| Imobilização (1 s: não anda nem usa a mobilidade; ataca e lança) | Ardis, o Grilhão Arcano (as mãos brilham 0,45 s; o projétil roxo é lento e se desvia) | prende no lugar, sem tirar o controle das armas |
+| Lentidão (30 a 40%) | a Bola dos magos de batalha (2 s) e a Escudada dos pesados (1,5 s, colado na frente deles) | atrasa; nos heróis, no lugar do atordoamento da Bola |
+| Provocação | Harg (o Brado) e Morel (o Desafio) | R7.5 |
+
+**A proteção** (`CONTROLE`): nos heróis (o seu, Morel, Odette, Harg, Ardis), cada controle forte conta numa janela de 6
+s: o primeiro vale inteiro, o segundo 60%, o terceiro 30%; o quarto não pega ("Firme") até a janela fechar (ela se renova
+a cada controle que pega). A lentidão não conta nem acumula (vale a mais forte). As tropas comuns não têm proteção. **Na
+tela:** os controles em você aparecem ao lado da ficha com o tempo e o efeito ("Lento (−30%) 1,7 s", "Imobilizado 0,6 s:
+não anda", "Proteção: o próximo controle dura 60% (4,2 s)", "Firme: controles não pegam por 3,1 s"); no campo, correntes
+nos pés de quem está imobilizado e dois traços azuis em quem está lento. **Os heróis inimigos não ficaram imunes:** a
+mesma proteção vale para eles, e os golpes fortes do herói continuam interrompendo como antes (com o "firme" de 2 a 2,5
+s que já existia). **Medido:** nas batalhas com o jogador automático, o herói ficou sob controle 0,6 a 3,0 s por luta
+(1,4 a 8,4% do tempo), o trecho mais longo 1,0 s (o Grilhão inteiro); o teste confere no máximo 1,3 s seguidos e 15% do
+tempo em quatro batalhas.
+
+### R7.5. As provocações
+
+**O Desafio de Morel** (num herói inimigo): só quando Harg ou Ardis pressionam você ou Odette (a até 80 px do alvo dele,
+ou ferindo há pouco, ou com o protegido abaixo da metade da vida), à vista e a até 110 px de Morel, e Morel com mais de
+35% de vida; o herói inimigo passa a mirar Morel por 3 s (com a proteção), e Morel ergue o escudo (leva 75% do dano)
+nesse tempo. Recarga de 15 s. Sem pressão, Morel não gasta (o teste confere). A provocação da tropa (a de antes) agora
+só pega quem Morel vê. **Na tela:** a linha tracejada clara de quem foi desafiado até Morel, o "!" em cima com o tempo,
+o arco do escudo na frente de Morel, a barra do herói inimigo ("Provocado por Morel 2,1 s").
+
+**O Brado de Harg** (em você): quando você está derrubando a tropa dele por perto (ou ferindo Ardis) e não está batendo
+nele, à vista e a até 118 px, com recarga de 15 s; a preparação se anuncia num anel de 130 px por 0,45 s (sair do anel
+ou da vista dele evita). Provocado por 2,5 s (com a proteção):
+- **o que muda:** só o **ataque principal**: a Varredura vira para Harg (a assistência o escolhe, mesmo com o mouse em
+  outro) e a Bola cai nele, **se ele estiver ao alcance (64 px para a Varredura, o da Bola) e à vista**;
+- **fora do alcance ou sem visão:** o principal sai para onde o mouse aponta, **sem assistência**: a provocação não puxa
+  você nem atravessa paredes, e o movimento é sempre seu;
+- **Harg caído:** a provocação acaba na hora;
+- **as outras habilidades** (o botão direito, `Q`, `E`, `F`, a mobilidade) seguem a mira de sempre.
+
+**Na tela:** a linha tracejada vermelha de você até Harg, o "!" vermelho em cima de você com o tempo, e o texto ao lado
+da ficha: "Provocado por Harg 2,2 s: o ataque principal vai nele".
+
+### R7.6. Verificação e desempenho
+
+- **Testes da simulação:** 68 (os 52 de antes, um deles reescrito porque a regra mudou de propósito: a proteção de
+  Ardis agora é parte da avaliação; e 16 novos em `testes/campo7.test.mjs`: a rota, Morel e a muralha, o ponto de
+  tiro, o grupo no portão com mudança de ordem, o inacessível, atrair e perder a atenção, a inércia, a divisão de alvos
+  nas batalhas, a Investida nos três tempos, a Investida que acerta e interrompe, a proteção 100/60/30/firme, imobilizado
+  e lento, o tempo máximo sob controle, o Brado no principal, o Brado na hora certa, o Desafio só com pressão).
+- **Batalhas sem tela** com o jogador automático forte (`batalhas6.mjs`, 1×): todas vitórias; a vila em 97 a 99 s, a
+  carga em 13 a 22 s, Harg e Ardis em 36 a 58 s, a amostra do portão em 28 a 38 s; a simulação a 0,2 a 0,5 ms por passo.
+- **No navegador** (`ferramentas/conferir7.mjs`, 1920 × 1080 e 1280 × 720): a escolha (nove encontros, as opções novas),
+  a seleção por tipo, o modo de comando com Defender e a câmera estável (0 px de deslocamento em relação ao herói com o
+  mouse andando no comando), a amostra com as trocas `F8`, `F9` e `V` no meio da luta, a provocação e a lentidão na HUD,
+  o Campo Livre 6 em `/v6/`, nenhum erro no console. O custo na vila a 2× com a aparência sombria e a violência intensa:
+  57 qps, simulação 1,7 ms, desenho 4,2 a 4,3 ms (o 32 tem o detalhe).
+
+### R7.7. Decisões provisórias, limitações e o que avaliar
+
+**Provisório:** todos os números (os pesos da escolha, a janela e os fatores da proteção, os tempos da Investida, do
+Brado e do Desafio); o desvio na multidão; a regra do ponto inacessível.
+
+**Limitações:** o caminho continua pelos cantos das construções (sem campo de fluxo); a multidão ainda se encosta nas
+casas na luta; a escolha de alvo e os controles novos valem nos encontros com Morel e Odette (os antigos seguem as regras
+de antes, para não mudar o que já foi avaliado); o jogador automático não reage ao Grilhão nem ao Brado (os números de
+controle são do que ele aguenta, não de um jogador); a Escudada e a derrubada da cavalaria também pegam Morel e Odette.
+
+**Para o Jean avaliar, jogando a vila, a carga, Harg e Ardis e o portão:** (1) Morel e Odette acham as passagens e as
+posições úteis? (2) os heróis inimigos trocam de alvo por motivos que dá para perceber? Você consegue atrair Harg e
+perdê-lo recuando enquanto Morel segura? (3) a Investida lê na preparação e assusta na execução? A recuperação dá tempo
+de responder? (4) o Brado: o que muda no seu ataque fica claro? Incomoda ou cria decisão? (5) os controles e a proteção
+(o texto ao lado da ficha) ficam compreensíveis, sem tirar o controle por muito tempo?
 
 ## Rodada 6 (01/11/2026): Campo Livre 6
 

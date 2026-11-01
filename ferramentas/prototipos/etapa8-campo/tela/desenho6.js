@@ -65,6 +65,12 @@ export function desenharPredio(g, o, cx, cy, alfa = 1) {
     for (let j = ty + 3; j < ty + telhadoA; j += 4) g.fillRect(x - 2, j, w + 4, 1);
     g.fillStyle = COR.telha[2]; g.fillRect(x - 2, ty, w + 4, 2);
     g.fillStyle = COR.madeira[1]; g.fillRect(x - 2, ty + telhadoA - 1, w + 4, 1);
+  } else if (o.tipo === "arvore") {
+    // Campo Livre 7 (só a amostra tem árvores): na aparência atual, a copa redonda simples, no mesmo tom do campo
+    const bx = x + Math.floor(w / 2), by = y + h, r = o.copa || 12;
+    g.fillStyle = COR.madeira[0]; g.fillRect(bx - 1, by - 8, 3, 8);
+    g.fillStyle = "#3f5a34"; g.beginPath(); g.ellipse(bx, by - 8 - r * 0.6, r, r * 0.85, 0, 0, Math.PI * 2); g.fill();
+    g.fillStyle = "#56774a"; g.beginPath(); g.ellipse(bx - r * 0.25, by - 8 - r * 0.85, r * 0.55, r * 0.45, 0, 0, Math.PI * 2); g.fill();
   } else if (o.tipo === "muro") {
     // o muro baixo de pedra solta: só o alto dele, com as pedras
     g.fillStyle = COR.pedra[1]; g.fillRect(x, y - a + h, w, a);
@@ -100,7 +106,9 @@ export function desenharMagias(g, m, cx, cy, pintarForma, rel) {
   }
   for (const p of m.projE || []) {
     const x = Math.round(p.x) - cx, y = Math.round(p.y) - cy - 6;
-    const c1 = p.cor === "luz" ? "#fff2b0" : "#c9a0ff", c2 = p.cor === "luz" ? "#ffe08a" : "#8a5ad8";
+    const c1 = p.cor === "luz" ? "#fff2b0" : p.cor === "grilhao" ? "#f0e6ff" : "#c9a0ff", c2 = p.cor === "luz" ? "#ffe08a" : "#8a5ad8";
+    // o Grilhão: os elos atrás da ponta (ele imobiliza; desvie)
+    if (p.cor === "grilhao") { g.fillStyle = "#9a6cff"; for (let i = 4; i <= 10; i += 3) g.fillRect(Math.round(x - p.dx * i), Math.round(y - p.dy * i), 1, 1); }
     g.fillStyle = c2; g.fillRect(Math.round(x - p.dx * 3), Math.round(y - p.dy * 3), 2, 2);
     g.fillStyle = c1; g.fillRect(x - 1, y - 1, 3, 3);
   }

@@ -33,8 +33,11 @@ preservado como histórico, sem expansão nesta rodada; **a integração ao jogo
 rodada 3 (Campo Livre 3: câmera estável no comando, o Capitão que enfrenta o herói, escalas 1×/2×/4×, quatro habilidades
 novas) e a rodada 4 (Campo Livre 4: básico assistido, impacto, o Capitão perigoso, arqueiros e ordens com alvo, a
 horda) estão registradas; a rodada 5 (Campo Livre 5: o kit montado antes da luta, com talentos) e a rodada 6 (Campo Livre 6: a vila com
-construções, tropas avançadas, Morel e Odette autônomos, Harg e Ardis) estão em teste (rodadas 5 e 6 do 30). Em paralelo, o **Tático 2** (o [31](31-ETAPA8-TATICO-POR-TURNOS.md)): combate por turnos em losangos inspirado em Dofus,
-também em avaliação.
+construções, tropas avançadas, Morel e Odette autônomos, Harg e Ardis) estão em teste (rodadas 5 e 6 do 30); a rodada 7
+(Campo Livre 7: navegação, alvos dos heróis inimigos, controles e provocações) também, com o **estudo de direção de arte do
+campo** (o [32](32-ETAPA8-DIRECAO-DE-ARTE-DO-CAMPO.md): duas direções, sóbria e sombria, numa amostra jogável, a escala do
+herói, a carnificina; nada aprovado). O **Tático 2** (o [31](31-ETAPA8-TATICO-POR-TURNOS.md), combate por turnos em
+losangos inspirado em Dofus) fica como histórico.
 
 ## Estado de referência — 29/10/2026
 

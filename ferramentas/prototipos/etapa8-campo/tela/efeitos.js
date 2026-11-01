@@ -10,7 +10,65 @@ export function criarEfeitos(sorteio) {
   marcas.height = CAMPO.altura;
   return { voadores: [], particulas: [], cortes: [], aneis: [], explosoes: [], avisos: [], marcas, numeros: [], raios: [],
     gm: marcas.getContext("2d"), trauma: 0, chute: { x: 0, y: 0 }, pausaPedida: 0, rng: sorteio, mensagens: [],
-    sons: [], ordem: null };
+    sons: [], ordem: null, pecas: [], violencia: 2, arte: "atual" };
+}
+
+// ------------------------------------------------------------------------------------------------ a carnificina
+// Campo Livre 7: a batalha deixa marcas, só na tela (nada disto muda a luta). `E.violencia` (0 desligada, 1 contida,
+// 2 normal, 3 intensa) multiplica o sangue e decide o desmembramento; os corpos, as armas caídas e as queimaduras ficam
+// em qualquer nível. Tudo vai para a camada de marcas do chão (E.marcas), desenhada embaixo dos vivos e dos avisos: uma
+// mancha nunca cobre uma ameaça nem parece alguém de pé. Cada gota e cada peça é carimbada uma vez, ao pousar.
+export const VIOLENCIA = [
+  { nome: "Desligada", sangue: 0, poca: 0, pedaco: 0 },
+  { nome: "Contida", sangue: 0.5, poca: 0.6, pedaco: 0 },
+  { nome: "Normal", sangue: 1, poca: 1, pedaco: 0.3 },
+  { nome: "Intensa", sangue: 1.6, poca: 1.4, pedaco: 0.6 },
+];
+const SANGUE_COR = { atual: ["rgba(150,22,24,0.85)", "rgba(96,14,16,0.85)"], sobria: ["rgba(132,24,24,0.85)", "rgba(84,14,16,0.85)"],
+  sombria: ["rgba(110,18,18,0.9)", "rgba(66,10,12,0.9)"] };
+const corSangue = (E, k = 0) => (SANGUE_COR[E.arte] || SANGUE_COR.atual)[k];
+const nivel = (E) => VIOLENCIA[E.violencia] || VIOLENCIA[2];
+
+// gotas que saem na direção do golpe e mancham o chão onde caem
+function borrifo(E, x, y, dx, dy, n, forca = 50) {
+  n = Math.round(n * nivel(E).sangue);
+  for (let i = 0; i < n; i++) {
+    const a = Math.atan2(dy || E.rng() - 0.5, dx || E.rng() - 0.5) + (E.rng() - 0.5) * 0.9, v = forca * (0.4 + E.rng() * 0.8);
+    E.particulas.push({ x, y, z: 4, vx: Math.cos(a) * v, vy: Math.sin(a) * v * 0.7, vz: 6 + E.rng() * 16, vida: 0, max: 1.2,
+      cor: E.rng() < 0.6 ? "#b8201f" : "#7a1416", tam: 1, g: 90, atrito: 2.5, mancha: true });
+  }
+}
+
+// a poça embaixo de um corpo: um borrão irregular, mais escuro no meio
+function poca(E, x, y, r) {
+  r *= nivel(E).poca;
+  if (r < 1) return;
+  const g = E.gm;
+  for (let i = 0; i < r * r * 2.2; i++) {
+    const a = E.rng() * Math.PI * 2, d = Math.pow(E.rng(), 0.7) * r;
+    g.fillStyle = corSangue(E, d < r * 0.5 ? 1 : 0);
+    g.fillRect(Math.round(x + Math.cos(a) * d * 1.4), Math.round(y + Math.sin(a) * d * 0.8), 1, 1);
+  }
+}
+
+// as peças que caem de quem morre: a arma, o elmo; no golpe forte, às vezes a cabeça ou um braço. [cor, x, y]
+const PECAS = {
+  espada: [["#c8ccd2", 0, 0], ["#c8ccd2", 1, 0], ["#c8ccd2", 2, 0], ["#6a4521", 3, 0]],
+  lanca: [["#6a4521", 0, 0], ["#6a4521", 1, 0], ["#6a4521", 2, 0], ["#6a4521", 3, 0], ["#c8ccd2", 4, 0]],
+  arco: [["#7a5734", 0, 0], ["#7a5734", 1, 1], ["#7a5734", 2, 1], ["#7a5734", 3, 0]],
+  elmo: [["#8a8e98", 0, 0], ["#8a8e98", 1, 0], ["#5d6170", 0, 1], ["#5d6170", 1, 1]],
+  cabeca: [["#c99a7a", 0, 0], ["#c99a7a", 1, 0], ["#8a8e98", 0, -1], ["#8f6249", 1, 1]],
+  braco: [["#8f6249", 0, 0], ["#c99a7a", 1, 0], ["#5d6170", 2, 0]],
+};
+const ARMA_DE = { soldado: "espada", veterano: "espada", arqueiro: "arco", pesado: "lanca", cavaleiro: "lanca", estandarte: "lanca", magoBatalha: "lanca" };
+function peca(E, forma, x, y, dx, dy, forca, sangra) {
+  const a = Math.atan2(dy, dx) + (E.rng() - 0.5) * 1.2, v = forca * (0.5 + E.rng() * 0.7);
+  E.pecas.push({ forma, x, y, z: 6, vx: Math.cos(a) * v, vy: Math.sin(a) * v * 0.7, vz: 30 + E.rng() * 40, giro: E.rng() < 0.5 ? 1 : 3, sangra, t: 0 });
+}
+function carimbar(E, p) {
+  const g = E.gm, q = p.giro % 2;
+  for (const [cor, i, j] of PECAS[p.forma]) { g.fillStyle = cor; g.fillRect(Math.round(p.x + (q ? j : i)), Math.round(p.y + (q ? i : j)), 1, 1); }
+  if (p.sangra) poca(E, p.x + 1, p.y + 1, 1.6);
 }
 
 const COR_EQUIPE = [["#76a8ea", "#4778c2"], ["#de6a58", "#ad4237"]];
@@ -163,6 +221,8 @@ export function receber(E, eventos, m) {
       case "acerto": {
         if (e.forte) faiscas(E, e.x, e.y - 4, e.dx, e.dy, 3);
         else faiscas(E, e.x, e.y - 4, e.dx, e.dy, 2, "#ffffff");
+        // o golpe fraco só respinga na violência intensa: o chão fica com borrifos na direção dos golpes, não pontilhado
+        borrifo(E, e.x, e.y - 3, e.dx, e.dy, e.forte ? 4 : E.violencia >= 3 ? 1 : 0, e.forte ? 60 : 35);
         if (!(e.lado === 0 && e.alvo === "heroi")) E.sons.push(e.forte ? "impacto" : "acerto");
         break;
       }
@@ -172,6 +232,16 @@ export function receber(E, eventos, m) {
           vy: e.dy * e.vel * 0.8, vz: e.sobe, t: 0, girando: voa, quiques: voa ? 1 : 0, virado: e.virado,
           giroDir: e.dx >= 0 ? 1 : -1 });
         if (voa) poeira(E, e.x, e.y, 3, 20);
+        // a carnificina: o sangue na direção do golpe, a arma (às vezes o elmo) caindo e, no golpe forte, às vezes a
+        // cabeça ou um braço (só nas tropas comuns e no nível de violência que pede)
+        const dx = e.dx || 0, dy = e.dy || 0, arma = ARMA_DE[e.unidade];
+        borrifo(E, e.x, e.y - 3, dx, dy, voa ? 8 : 4, voa ? 80 : 45);
+        if (arma && E.rng() < 0.7) peca(E, arma, e.x, e.y - 3, dx, dy, 30 + (e.vel || 0) * 0.4, false);
+        if (arma && arma !== "arco" && E.rng() < 0.25) peca(E, "elmo", e.x, e.y - 6, dx, dy, 25, false);
+        if (voa && arma && e.unidade !== "cavaleiro" && E.rng() < nivel(E).pedaco) {
+          peca(E, E.rng() < 0.5 ? "cabeca" : "braco", e.x, e.y - 6, dx, dy, 70 + (e.vel || 0) * 0.5, true);
+          borrifo(E, e.x, e.y - 6, dx, dy, 6, 90);
+        }
         break;
       }
       case "inicio":
@@ -264,8 +334,8 @@ export function receber(E, eventos, m) {
         const cor = e.de === "estilhacar" ? "gelo" : e.de === "ignicao" ? null : "sangue";
         E.explosoes.push({ x: e.x, y: e.y, raio: e.raio, t: 0, dur: 0.26, cor });
         if (cor === "gelo") gelo(E, e.x, e.y, 8, e.raio * 0.6);
-        else if (cor === "sangue") sangue(E, e.x, e.y, 8);
-        else brasas(E, e.x, e.y, 10, 50);
+        else if (cor === "sangue") { sangue(E, e.x, e.y, 8); poca(E, e.x, e.y, 3); }
+        else { brasas(E, e.x, e.y, 10, 50); marcaQueimada(E, e.x, e.y, e.raio * 0.8); }   // as magias de fogo também queimam o chão
         E.sons.push(cor === "gelo" ? "gelo" : "explosao");
         break;
       }
@@ -322,7 +392,8 @@ export function avancar(E, dt) {
       fica.push(v);
       continue;
     }
-    // no chão: desliza um pouco e vira marca
+    // no chão: desliza um pouco e vira marca; o arrasto deixa um rastro curto de sangue
+    if (Math.hypot(v.vx, v.vy) > 8 && nivel(E).sangue > 0) { E.gm.fillStyle = corSangue(E, 0); E.gm.fillRect(Math.round(v.x), Math.round(v.y - 1), 1, 1); }
     v.x += v.vx * dt; v.y += v.vy * dt;
     const a = Math.exp(-12 * dt);
     v.vx *= a; v.vy *= a;
@@ -335,8 +406,21 @@ export function avancar(E, dt) {
     p.vx *= Math.exp(-p.atrito * dt); p.vy *= Math.exp(-p.atrito * dt);
     p.vz -= p.g * dt;
     p.x += p.vx * dt; p.y += p.vy * dt; p.z += p.vz * dt;
-    if (p.z < 0) { p.z = 0; p.vz = 0; p.vx *= 0.5; p.vy *= 0.5; }
+    if (p.z < 0) {
+      // a gota de sangue que pousa vira mancha (e sai das partículas)
+      if (p.mancha) { E.gm.fillStyle = corSangue(E, p.cor === "#7a1416" ? 1 : 0); E.gm.fillRect(Math.round(p.x), Math.round(p.y), 1, 1); p.vida = p.max; }
+      p.z = 0; p.vz = 0; p.vx *= 0.5; p.vy *= 0.5;
+    }
   }
+  const pecasNoAr = [];
+  for (const p of E.pecas) {
+    p.vz -= 220 * dt; p.x += p.vx * dt; p.y += p.vy * dt; p.z += p.vz * dt;
+    if (p.sangra && E.rng() < 0.3) E.particulas.push({ x: p.x, y: p.y, z: p.z, vx: 0, vy: 0, vz: 0, vida: 0, max: 1, cor: "#b8201f", tam: 1, g: 90, atrito: 1, mancha: true });
+    if (p.z <= 0) { carimbar(E, p); continue; }
+    if ((p.t += dt) > 0.1) { p.t = 0; p.giro++; }
+    pecasNoAr.push(p);
+  }
+  E.pecas = pecasNoAr;
   E.particulas = E.particulas.filter((p) => p.vida < p.max);
   if (E.particulas.length > 900) E.particulas.splice(0, E.particulas.length - 900);
   for (const lista of [E.cortes, E.aneis, E.explosoes, E.mensagens, E.numeros, E.raios]) for (const c of lista) c.t += dt;
@@ -372,6 +456,7 @@ export function pousarCorpos(E, Q, todos) {
     const tipo = v.tipo === "heroi" ? null : v.tipo;
     if (!tipo || !Q[tipo]) continue;
     const s = Q[tipo][v.eq].caido;
+    poca(E, v.x, v.y - 1, v.girando ? 3.2 : 2.4);   // a poça embaixo do corpo, antes dele
     g.save();
     // o corpo no chão: apagado e escuro, para não se ler como alguém de pé (feito uma vez por sprite e guardado: o
     // filtro a cada corpo pesava quando uma área derrubava quinze de uma vez)

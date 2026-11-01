@@ -345,6 +345,28 @@ Jean):
   que chegou, e o depois fica (sem voltar a uma atividade que o encontro já encerrou). Repetir no painel é um reinício
   declarado, separado da sequência.
 
+## Miniaturas de campo (o Campo Livre, 01/11/2026; estudo sem avaliação artística)
+
+As tropas e os heróis do campo livre têm 13 a 15 px de altura; o método das figuras de cena (juntas, cinemática,
+mangas) não cabe aí. O que o estudo de direção de arte (`roadmapIDEIAS/32-ETAPA8-DIRECAO-DE-ARTE-DO-CAMPO.md`) mostrou,
+para reaproveitar:
+- **A identidade vem da silhueta, da paleta, da arma e de poucas poses**, não do tamanho (Slynyrd, *Pixelblog 47*): o
+  elmo de aba e o tabardo da equipe no soldado, o capuz e o arco no arqueiro, o escudo grande no pesado, os chifres e o
+  machado em Harg. O herói se destaca pelo contraste, pelo contorno e por um marcador (o anel e a seta), não por crescer.
+- **Uma escala menor se redesenha à mão**, pose por pose, na mesma estrutura (o herói menor tem 1 linha de tronco e 2
+  colunas a menos); reduzir a grade por fórmula estraga a forma.
+- **A mesma estrutura de poses em todas as direções de arte** (parado, duas passadas pelas pernas, preparo, golpe, recuo;
+  caído girado): trocar a paleta ou redesenhar o tronco não muda o código nem o tempo das poses, e a comparação fica
+  justa.
+- **Quem está atrás de uma construção alta aparece em silhueta** por cima dela (a forma numa cor por equipe), em vez de
+  a construção ficar translúcida; a hipótese está em avaliação.
+- **A fonte .aseprite de uma miniatura** pode sair em lote da grade (uma camada por equipe, um quadro por pose com a
+  etiqueta): `ferramentas/prototipos/etapa8-campo/arte/montar.mjs`. A grade continua a autoridade enquanto o estudo não
+  for aprovado.
+
+**Ainda hipótese:** qual direção (sóbria ou sombria) segue, se o herói menor vale a troca e se a silhueta lê melhor que a
+transparência: tudo espera o Jean jogar a amostra.
+
 ## Erros que já aconteceram
 
 | Erro | Causa | O que fazer |

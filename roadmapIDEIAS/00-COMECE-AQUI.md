@@ -9286,3 +9286,25 @@ foi automatizado.
   O jogo não mudou. Sem vídeos.
 - **Parado aqui:** o Jean joga o Tático 2 (o 31) e o Campo Livre 6 e responde à seção 7 do 31 e à R6.7 do 30.
 
+
+### 01/11/2026 (data do computador local) — Etapa 8: o Campo Livre 7, navegação e comportamento, e o estudo de arte (protótipo, nada no jogo)
+
+- **Pedido do Jean:** continuar o campo livre (a direção em desenvolvimento; o Tático 2 fica como histórico) em duas
+  frentes: a inteligência e a navegação (Morel e Odette esbarrando na muralha; heróis inimigos que escolhem alvos com
+  motivo; a investida rápida com preparação legível; CC com proteção contra repetição; a provocação de Morel e a de um
+  herói inimigo) e um estudo de direção de arte mais sóbrio, sombrio e brutal, com uma amostra jogável, a escala
+  miniatura preservada e a carnificina. Sem vídeos, sem integrar, sem declarar a arte aprovada.
+- **Feito (em teste):** a rodada 7 do [30](30-ETAPA8-CAMPO-LIVRE.md) e o [32](32-ETAPA8-DIRECAO-DE-ARTE-DO-CAMPO.md); a
+  versão **Campo Livre 7** (a v6 em `/v6/`): a causa da muralha medida e corrigida (a rota, o desvio, a posição útil, o
+  inacessível); a escolha de alvo de Harg e Ardis por avaliação de campo; a Investida em três tempos; interrupção,
+  empurrão, derrubada, imobilização e lentidão, com a proteção 100/60/30/firme; o Desafio de Morel e o Brado de Harg (só
+  o ataque principal, ao alcance e à vista); o encontro "O portão da povoação" com as aparências atual, sóbria e sombria
+  (`F8`), o herói menor (`F9`), a silhueta atrás das construções e a carnificina ajustável (`V`); as fontes em Aseprite
+  das miniaturas do estudo (`arte/fontes/`, em lote). A skill `arte-personagens-fenda` ganhou a seção das miniaturas.
+- **Conferido:** 68 testes da simulação (16 novos); batalhas sem tela (todas vitórias); o fluxo real no navegador nas
+  duas janelas (`conferir7.mjs`); o custo na vila 2× com a sombria e a violência intensa (57 qps). O jogo não mudou: a
+  suíte, o gabarito e o pyflakes; a fumaça, reaproveitada. Sem vídeos.
+- **Aprovado:** nada desta rodada. **Hipóteses:** as duas direções, a escala menor, a silhueta, o nível padrão de
+  violência, os pesos da escolha de alvo e os números de controle.
+- **Parado aqui:** o Jean joga a vila, Harg e Ardis e o portão e responde à R7.7 do 30 e à seção 9 do 32 (inclusive o
+  uso da perspectiva no resto do jogo).

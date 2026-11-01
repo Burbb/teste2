@@ -3,7 +3,9 @@
 // (parado, duas passadas, preparo, golpe, recuo; caído é o recuo girado 90°, exato na grade). As mãos são pontinhos de
 // pele, como nas figuras de cena. Sem contorno escuro nos soldados (a sombra no chão e o valor separam do piso); o
 // herói tem contorno, a cor mais clara do campo e um anel no chão.
-const PALETA = {
+import { PALETAS, EQUIPES_ARTE, CORES_ARTE, MODELOS_SOMBRIOS, MODELOS_MENORES } from "./sprites7.js";
+
+export const PALETA = {
   k: "#1c1a24", K: "#34303c",
   h: "#d2d5db", H: "#959aa6", M: "#5d6170",
   s: "#e6b089", S: "#b97c55",
@@ -15,6 +17,7 @@ const PALETA = {
   v: "#ece4cf", V: "#bfb196", X: "#2e3a52", Z: "#46577a",
   f: "#ffe08a", F: "#ff8a30", r: "#d2402c", R: "#8e2a22",
   a: "#c9a0ff", A: "#8a5ad8",
+  g: "#9a9ca3", G: "#666a73", n: "#5e4a36", N: "#3b2e22", o: "#e3d8bd",   // Campo Livre 7 (sprites7.js): malha, couro, osso
 };
 export const EQUIPES = [
   { t: "#76a8ea", T: "#4778c2", u: "#2d4f8a" },   // aliados: azul
@@ -728,7 +731,7 @@ export const MODELOS = { soldado: SOLDADO, arqueiro: ARQUEIRO, veterano: VETERAN
   campeao: CAMPEAO, lider: LIDER, guerreiro: GUERREIRO, mago: MAGO, morel: MOREL, odette: ODETTE, cavaleiro: CAVALEIRO,
   pesado: PESADO, magoBatalha: MAGO_BATALHA, ardis: ARDIS };
 
-function montar(modelo, pose, pernas) {
+export function montar(modelo, pose, pernas) {
   const tronco = modelo[pose];
   // o cavalo traz as pernas na própria grade (e as passadas como poses)
   if (modelo.semPernas) return tronco.map((l) => l.padEnd(modelo.largura, "."));
@@ -743,7 +746,7 @@ function montar(modelo, pose, pernas) {
   return linhas;
 }
 
-function pintar(linhas, cores, branco) {
+function pintar(linhas, cores, branco, paleta = PALETA) {
   const w = linhas[0].length, h = linhas.length;
   const c = document.createElement("canvas");
   c.width = w; c.height = h;
@@ -751,7 +754,7 @@ function pintar(linhas, cores, branco) {
   for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
     const ch = linhas[y][x];
     if (ch === "." || ch === undefined) continue;
-    g.fillStyle = branco || cores[ch] || PALETA[ch] || "#f0f";
+    g.fillStyle = branco || cores[ch] || paleta[ch] || PALETA[ch] || "#f0f";
     g.fillRect(x, y, 1, 1);
   }
   return c;
@@ -795,17 +798,24 @@ function girar(c, quartos) {
   return o;
 }
 
+// a silhueta de quem está atrás de uma construção (Campo Livre 7): a forma numa cor só
+const SILHUETA = ["#9cc6ff", "#ff8a78"];
+
 /**
  * Todas as imagens prontas: Q[tipo][equipe][pose] = { d, e, branco_d, branco_e, ax, ay } (direita, esquerda, as
  * versões brancas do clarão de acerto e o ponto do pé). Poses: parado, andarA, andarB, preparo, golpe, recuo; e
- * caido (o recuo girado), giro0..giro3 (o corpo arremessado girando).
+ * caido (o recuo girado), giro0..giro3 (o corpo arremessado girando). Campo Livre 7: `arte` ("atual", "sobria",
+ * "sombria") e `escala` ("atual", "menor") escolhem as grades e a paleta do estudo (sprites7.js); `sd`/`se`, a silhueta.
  */
-export function prepararSprites() {
-  const Q = {};
-  for (const [tipo, mod] of Object.entries(MODELOS)) {
+export function prepararSprites({ arte = "atual", escala = "atual" } = {}) {
+  const Q = {}, paleta = PALETAS[arte] || PALETA, equipes = EQUIPES_ARTE[arte] || EQUIPES;
+  const modelos = { ...MODELOS };
+  if (arte === "sombria") Object.assign(modelos, MODELOS_SOMBRIOS);
+  if (escala === "menor") Object.assign(modelos, MODELOS_MENORES);
+  for (const [tipo, mod] of Object.entries(modelos)) {
     Q[tipo] = [];
     for (let eq = 0; eq < 2; eq++) {
-      const cores = mod.cores || EQUIPES[eq], poses = {};
+      const cores = (CORES_ARTE[arte] && CORES_ARTE[arte][tipo]) || mod.cores || equipes[eq], poses = {};
       const def = mod.pernas || "juntas";
       const quadros = {
         parado: montar(mod, "parado", def), andarA: montar(mod, mod.andarA ? "andarA" : "parado", mod.pernas ? def : "abertas"),
@@ -813,11 +823,11 @@ export function prepararSprites() {
         golpe: montar(mod, "golpe", mod.heroi ? "abertas" : def), recuo: montar(mod, "recuo", def),
       };
       for (const [pose, linhas] of Object.entries(quadros)) {
-        let img = pintar(linhas, cores), br = pintar(linhas, cores, "#ffffff");
+        let img = pintar(linhas, cores, null, paleta), br = pintar(linhas, cores, "#ffffff"), sil = pintar(linhas, cores, SILHUETA[eq]);
         let ax = mod.pe + 0.5, ay = linhas.length;
         const borda = mod.heroi ? "#16131c" : mod.contorno;
-        if (borda) { img = contornar(img, borda); br = contornar(br, borda); ax += 1; ay += 1; }
-        poses[pose] = { d: img, e: espelhar(img), bd: br, be: espelhar(br), ax, ay, w: img.width, h: img.height };
+        if (borda) { img = contornar(img, borda); br = contornar(br, borda); sil = contornar(sil, SILHUETA[eq]); ax += 1; ay += 1; }
+        poses[pose] = { d: img, e: espelhar(img), bd: br, be: espelhar(br), sd: sil, se: espelhar(sil), ax, ay, w: img.width, h: img.height };
       }
       const r = poses.recuo;
       for (let q = 0; q < 4; q++) {

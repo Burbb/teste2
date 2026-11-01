@@ -6,6 +6,7 @@ import { CAMPO, TIPOS } from "./conteudo.js";
 import { dentro, formaDaAcao, alvoAssistido } from "./sim.js";
 import { pousarCorpos, NUMEROS } from "./efeitos.js";
 import { desenharEstradas, prediosOrdenados, temAtras, desenharPredio, desenharMagias, desenharCargas } from "./desenho6.js";
+import { desenharEstradas7, desenharLuzes7, desenharPredio7, cobre } from "./arte7.js";
 
 export const BORDA = 70;   // o chão de fora do campo, que a câmera pode mostrar perto das bordas
 
@@ -188,13 +189,15 @@ function texto(g, s, x, y, cor) {
 /** Desenha um quadro. `s`: { m, E, Q, chao, cam: {x, y}, W, H, alfa, opcoes, mouse: {x, y}, relogio, pausado } */
 export function desenhar(g, s) {
   const { m, E, Q, cam, W, H, alfa, opcoes } = s;
-  const cx = Math.round(cam.x), cy = Math.round(cam.y);
+  const cx = Math.round(cam.x), cy = Math.round(cam.y), arte = s.arte || "atual", nova = arte !== "atual";
   pousarCorpos(E, Q);
   g.imageSmoothingEnabled = false;
   g.drawImage(s.chao, -cx - BORDA, -cy - BORDA);
-  g.drawImage(E.marcas, -cx, -cy);
-  desenharEstradas(g, m, cx, cy);
   const h = m.heroi, rel = s.relogio;
+  // Campo Livre 7: nas direções novas do estudo, a estrada vai embaixo das marcas (o sangue fica nela) e a luz das tochas
+  // por cima do chão; na atual, como antes
+  if (nova) { desenharEstradas7(g, m, cx, cy, arte); g.drawImage(E.marcas, -cx, -cy); desenharLuzes7(g, m, cx, cy, arte, rel); }
+  else { g.drawImage(E.marcas, -cx, -cy); desenharEstradas(g, m, cx, cy); }
   // a posição interpolada, com o tranco do acerto (heróis e ameaças: 1 px no golpe fraco, 2 no forte, na direção dele)
   const pos = (u) => {
     const t = u.tranco, o = t ? (t.forte ? 2 : 1) * Math.min(1, t.t / 0.08) : 0;
@@ -302,6 +305,24 @@ export function desenhar(g, s) {
     avisos.push(u.acao.forma);
     pintarForma(g, u.acao.forma, cx, cy, `rgba(220,40,30,${0.12 + 0.3 * k})`, "rgba(255,90,70,0.95)");
   }
+  // Campo Livre 7: a Investida Curta (a faixa enchendo na preparação), o Brado (o anel) e o Grilhão (as mãos de Ardis)
+  for (const u of m.lados[1]) {
+    if (u.morto) continue;
+    const D = u.dash7;
+    if (D && D.fase === "preparo") {
+      const k = 1 - Math.max(0, D.t) / u.def.investida7.preparo;
+      const f = { tipo: "faixa", x1: u.x, y1: u.y, x2: u.x + D.dx * D.comp, y2: u.y + D.dy * D.comp, largura: u.def.investida7.largura };
+      avisos.push(f);
+      pintarForma(g, f, cx, cy, `rgba(220,40,30,${0.12 + 0.35 * k})`, "rgba(255,90,70,0.95)");
+    }
+    if (u.brado7) {
+      const k = 1 - Math.max(0, u.brado7.t) / u.def.brado.preparo, f = { tipo: "circulo", x: u.x, y: u.y, raio: u.def.brado.raio };
+      pintarForma(g, f, cx, cy, `rgba(255,170,60,${0.05 + 0.12 * k})`, "rgba(255,190,90,0.9)", 3);
+    }
+    if (u.acaoA && u.acaoA.tipo === "grilhao") {
+      pintarForma(g, { tipo: "circulo", x: u.x, y: u.y - 4, raio: 4 + Math.floor(rel * 12) % 2 }, cx, cy, "rgba(170,120,255,0.35)", "rgba(220,200,255,0.95)");
+    }
+  }
   // Campo Livre 6: as magias anunciadas (magos de batalha, Ardis) e as cargas da cavalaria
   desenharMagias(g, m, cx, cy, pintarForma, rel);
   desenharCargas(g, m, cx, cy, rel);
@@ -391,11 +412,13 @@ export function desenhar(g, s) {
   for (const v of voadores) sombra(g, Math.round(v.x) - cx, Math.round(v.y) - cy, Math.max(3, 6 - Math.round(v.z / 8)));
   let iv = 0;
   // as construções entram na mesma ordem de profundidade (pela base); translúcidas quando há alguém atrás delas
-  const predios = prediosOrdenados(m), translucido = new Map(predios.map((o) => [o, temAtras(m, o)]));
+  // (nas direções novas, opacas: quem está atrás aparece em silhueta, depois)
+  const predios = prediosOrdenados(m), translucido = nova ? null : new Map(predios.map((o) => [o, temAtras(m, o)]));
+  const predio = (o) => (nova ? desenharPredio7(g, o, cx, cy, arte, rel) : desenharPredio(g, o, cx, cy, translucido.get(o) ? 0.62 : 1));
   let ip = 0;
   for (const u of lista) {
     while (iv < voadores.length && voadores[iv].y < u.y) desenharVoador(g, Q, voadores[iv++], cx, cy);
-    while (ip < predios.length && predios[ip].y + predios[ip].h < u.y) { const o = predios[ip++]; desenharPredio(g, o, cx, cy, translucido.get(o) ? 0.62 : 1); }
+    while (ip < predios.length && predios[ip].y + predios[ip].h < u.y) predio(predios[ip++]);
     const [x, y] = pos(u);
     const sp = Q[tipoDe(u)][u.lado][poseTropa(u)];
     const img = u.flash > 0.03 ? (u.virado > 0 ? sp.bd : sp.be) : u.virado > 0 ? sp.d : sp.e;
@@ -432,7 +455,24 @@ export function desenhar(g, s) {
     if (u.gelado > 0) { g.fillStyle = "#cfeeff"; g.fillRect(Math.round(x + 2) - cx, topo + 2, 1, 1); g.fillRect(Math.round(x - 3) - cx, topo + 5, 1, 1); }
   }
   while (iv < voadores.length) desenharVoador(g, Q, voadores[iv++], cx, cy);
-  while (ip < predios.length) { const o = predios[ip++]; desenharPredio(g, o, cx, cy, translucido.get(o) ? 0.62 : 1); }
+  while (ip < predios.length) predio(predios[ip++]);
+  // Campo Livre 7: quem está atrás de uma construção alta ou debaixo de uma copa aparece em silhueta (azul os nossos,
+  // vermelho os inimigos) por cima dela; a construção continua inteira
+  const coberto = (u) => nova && predios.some((o) => o.alto > 8 && cobre(o, u) && u.y < o.y + o.h);
+  if (nova) {
+    g.globalAlpha = 0.55;
+    for (const u of lista) {
+      if (u === m.lider || !coberto(u)) continue;
+      const [x, y] = pos(u), sp = Q[tipoDe(u)][u.lado][poseTropa(u)];
+      g.drawImage(u.virado > 0 ? sp.sd : sp.se, Math.round(x - (u.virado > 0 ? sp.ax : sp.w - sp.ax)) - cx, Math.round(y - sp.ay - (u.z || 0)) - cy);
+    }
+    g.globalAlpha = 1;
+  }
+  // as peças que voam de quem morre (a arma, o elmo, às vezes um pedaço), até pousarem nas marcas
+  for (const p of E.pecas || []) {
+    g.fillStyle = p.forma === "cabeca" || p.forma === "braco" ? "#c99a7a" : "#b8bcc4";
+    g.fillRect(Math.round(p.x) - cx, Math.round(p.y - p.z) - cy, 2, p.giro % 2 ? 1 : 2);
+  }
 
   // ---- projéteis
   for (const p of m.proj) {
@@ -477,10 +517,13 @@ export function desenhar(g, s) {
     }
   }
 
+  const liderCoberto = m.lider && !m.lider.morto && coberto(m.lider);
   if (m.lider && !m.lider.morto) {
     const l = m.lider, [x, y] = pos(l), sp = Q.lider[1][poseTropa(l)], z = Math.round(l.z || 0);
-    const img = l.flash > 0.03 ? (l.virado > 0 ? sp.bd : sp.be) : l.virado > 0 ? sp.d : sp.e;
+    const img = liderCoberto ? (l.virado > 0 ? sp.sd : sp.se) : l.flash > 0.03 ? (l.virado > 0 ? sp.bd : sp.be) : l.virado > 0 ? sp.d : sp.e;
+    if (liderCoberto) g.globalAlpha = 0.7;
     g.drawImage(img, Math.round(x - (l.virado > 0 ? sp.ax : sp.w - sp.ax)) - cx, Math.round(y - sp.ay - z) - cy);
+    g.globalAlpha = 1;
     barra(g, Math.round(x - 9) - cx, Math.round(y - sp.ay - z) - cy - 4, 18, l.vida / l.vidaMax, "#e05a48", 2);
   }
   // os avisos de novo, só a borda, por cima dos corpos: o golpe preparado não se esconde atrás da multidão
@@ -522,8 +565,18 @@ export function desenhar(g, s) {
     }
   }
 
-  // Campo Livre 6: o herói atrás de uma construção: ela por cima dele, translúcida (ele não some e a ordem se lê)
-  if (!h.morto) for (const o of predios) if (h.y < o.y + o.h && h.y > o.y - o.alto - 14 && h.x > o.x - 8 && h.x < o.x + o.w + 8) desenharPredio(g, o, cx, cy, 0.45);
+  // Campo Livre 6: o herói atrás de uma construção: ela por cima dele, translúcida (ele não some e a ordem se lê).
+  // Campo Livre 7, nas direções novas: ela por cima, inteira, e a silhueta clara dele por cima dela
+  let heroiCoberto = false;
+  if (!h.morto && !nova) for (const o of predios) if (h.y < o.y + o.h && h.y > o.y - o.alto - 14 && h.x > o.x - 8 && h.x < o.x + o.w + 8) desenharPredio(g, o, cx, cy, 0.45);
+  if (!h.morto && nova) for (const o of predios) if (o.alto > 8 && cobre(o, h) && h.y < o.y + o.h) { desenharPredio7(g, o, cx, cy, arte, rel); heroiCoberto = true; }
+  if (heroiCoberto) {
+    const [x, y] = pos(h), sp = Q[h.nomeHeroi][0][poseHeroi(h)];
+    g.globalAlpha = 0.8;
+    g.drawImage(h.virado > 0 ? sp.bd : sp.be, Math.round(x - (h.virado > 0 ? sp.ax : sp.w - sp.ax)) - cx, Math.round(y - sp.ay - Math.round(h.z || 0)) - cy);
+    g.globalAlpha = 1;
+  }
+  marcasDeControle(g, m, pos, Q, tipoDe, cx, cy, rel);
 
   // ---- os efeitos por cima
   for (const c of E.cortes) {
@@ -582,11 +635,11 @@ export function desenhar(g, s) {
       cor, n.tipo === "critico" ? 2 : 1);
   }
   g.globalAlpha = 1;
-  if (m.lider && !m.lider.morto) {
+  if (m.lider && !m.lider.morto && !liderCoberto) {
     const l = m.lider, [x, y] = pos(l), sp = Q.lider[1][poseTropa(l)];
     g.drawImage(l.virado > 0 ? sp.d : sp.e, Math.round(x - (l.virado > 0 ? sp.ax : sp.w - sp.ax)) - cx, Math.round(y - sp.ay - (l.z || 0)) - cy);
   }
-  if (!h.morto) {
+  if (!h.morto && !heroiCoberto) {
     const [x, y] = pos(h), sp = Q[h.nomeHeroi][0][poseHeroi(h)];
     g.drawImage(h.virado > 0 ? sp.d : sp.e, Math.round(x - (h.virado > 0 ? sp.ax : sp.w - sp.ax)) - cx, Math.round(y - sp.ay - Math.round(h.z || 0)) - cy);
   }
@@ -606,6 +659,38 @@ export function desenhar(g, s) {
     g.fillRect(x - 4, y - 1, 9, 3); g.fillRect(x - 1, y - 4, 3, 9);
     g.fillStyle = "#fff6dc";
     g.fillRect(x - 3, y, 2, 1); g.fillRect(x + 2, y, 2, 1); g.fillRect(x, y - 3, 1, 2); g.fillRect(x, y + 2, 1, 2);
+  }
+}
+
+// Campo Livre 7: os controles à vista. A provocação: uma linha tracejada de quem está provocado até quem provocou e um
+// "!" em cima, com o tempo que falta numa barrinha; imobilizado: correntes em volta dos pés; lento: dois traços azuis
+// atrás dos pés; Morel com o escudo erguido (o Desafio): um arco claro na frente dele.
+function marcasDeControle(g, m, pos, Q, tipoDe, cx, cy, rel) {
+  for (const u of m.unidades) {
+    if (u.morto || !(u === m.heroi || u.def.elite)) continue;
+    const [x, y] = pos(u), sx = Math.round(x) - cx, sy = Math.round(y) - cy;
+    const sp = Q[tipoDe(u)][u.lado].parado, topo = Math.round(y - sp.ay) - cy;
+    const p = u.provocacao;
+    if (p && p.ate > m.t && p.por && !p.por.morto) {
+      const [px, py] = pos(p.por), n = Math.max(1, Math.floor(Math.hypot(px - x, py - y) / 4)), cor = u === m.heroi ? "#ff6a4a" : "#bcd8ff";
+      g.fillStyle = cor;
+      for (let i = 1; i < n; i++) if ((i + Math.floor(rel * 8)) % 2) g.fillRect(Math.round(x + ((px - x) * i) / n) - cx, Math.round(y - 4 + ((py - y) * i) / n) - cy, 1, 1);
+      g.fillStyle = "#15121a"; g.fillRect(sx - 2, topo - 15, 5, 8);
+      g.fillStyle = cor; g.fillRect(sx, topo - 14, 1, 4); g.fillRect(sx, topo - 9, 1, 1);
+      const k = Math.max(0, (p.ate - m.t) / (p.total || 1));
+      g.fillStyle = "#15121a"; g.fillRect(sx - 5, topo - 6, 11, 2);
+      g.fillStyle = cor; g.fillRect(sx - 4, topo - 6 + 0, Math.max(1, Math.round(9 * k)), 1);
+    }
+    if (u.imobAte > m.t) {
+      g.fillStyle = Math.floor(rel * 6) % 2 ? "#e0d0ff" : "#9a6cff";
+      for (let i = 0; i < 10; i++) { const a = (i / 10) * Math.PI * 2; if (i % 2) g.fillRect(Math.round(sx + Math.cos(a) * 6), Math.round(sy + Math.sin(a) * 3), 1, 1); }
+    }
+    if (u.lentoAte > m.t) { g.fillStyle = "#8fc8ff"; g.fillRect(sx - 6, sy - 1, 2, 1); g.fillRect(sx - 7, sy + 1, 2, 1); }
+    if (u.posturaAte > m.t) {
+      g.fillStyle = "#e9f2ff";
+      const v = u.virado || 1;
+      for (let j = -5; j <= 2; j++) g.fillRect(sx + v * (7 - Math.abs(j + 1) * 0.3 | 0), sy - 4 + j, 1, 1);
+    }
   }
 }
 
