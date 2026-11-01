@@ -10,7 +10,7 @@ export function criarEfeitos(sorteio) {
   marcas.height = CAMPO.altura;
   return { voadores: [], particulas: [], cortes: [], aneis: [], explosoes: [], avisos: [], marcas, numeros: [], raios: [],
     gm: marcas.getContext("2d"), trauma: 0, chute: { x: 0, y: 0 }, pausaPedida: 0, rng: sorteio, mensagens: [],
-    sons: [], ordem: null, pecas: [], violencia: 2, arte: "atual" };
+    sons: [], ordem: null, pecas: [], violencia: 2, arte: "atual", lampejos: [], correntes: [] };
 }
 
 // ------------------------------------------------------------------------------------------------ a carnificina
@@ -348,6 +348,13 @@ export function receber(E, eventos, m) {
       }
       case "congela": gelo(E, e.x, e.y, 6, 5); break;
       case "hargContato":
+        // Campo Livre 9: o estouro de cada forma exata (a faixa da Estocada, os anéis, a cruz, o leque); o anel do
+        // Terremoto racha o chão e levanta poeira na borda
+        for (const f of e.formas || (e.forma && e.forma.tipo === "faixa" ? [e.forma] : [])) {
+          E.lampejos.push({ forma: f, t: 0, dur: f.tipo === "anel" ? 0.22 : 0.16 });
+          if (f.tipo === "anel") { poeira(E, f.x + f.raio * 0.7, f.y, 6, 40); poeira(E, f.x - f.raio * 0.7, f.y, 6, 40); marcaRachada(E, f.x, f.y, f.raio * 0.5); }
+        }
+        if (e.formas && e.quem === "general") tremer(E, e.heroi ? 0.5 : 0.25);
         if (e.forma && e.forma.tipo === "arco") E.cortes.push({ forma: e.forma, t: 0, dur: 0.16, forte: true, inimigo: true });
         if (e.forma && e.forma.tipo === "circulo") { E.aneis.push({ x: e.forma.x, y: e.forma.y, r0: 6, r1: e.forma.raio + 4, t: 0, dur: 0.28, cor: "#ff8a78" }); marcaRachada(E, e.forma.x, e.forma.y, e.forma.raio); poeira(E, e.forma.x, e.forma.y, 18, 60); }
         if (e.onda) E.aneis.push({ x: e.onda.x, y: e.onda.y, r0: e.forma.raio, r1: e.onda.raio, t: 0, dur: 0.35, cor: "#ffb08a" });
@@ -356,7 +363,37 @@ export function receber(E, eventos, m) {
         E.sons.push(e.golpe === "martelada" || e.golpe === "rugido" ? "aterrissa" : "golpeAmeaca");
         if (e.mortos >= 4) E.mensagens.push({ texto: `${e.mortos} derrubados`, t: 0, x: e.x, y: e.y - 22 });
         break;
-      case "hargExec": if (e.golpe === "investida") { E.sons.push("investida"); poeira(E, e.x, e.y, 10, 40); } break;
+      case "hargExec":
+        if (e.golpe === "investida" || e.golpe === "salto") { E.sons.push("investida"); poeira(E, e.x, e.y, 10, 40); }
+        break;
+      // ---- Campo Livre 9: a guerra nova
+      case "puxao": {
+        // a corrente fica entre ele e quem foi puxado enquanto a pessoa está presa
+        const fonte = m.unidades.find((u) => u.id === e.fonte), alvo = m.unidades.find((u) => u.id === e.id);
+        E.correntes.push({ fonte, alvo, t: 0, dur: 0.5 });
+        poeira(E, e.de.x, e.de.y, 6, 30); poeira(E, e.para.x, e.para.y, 8, 40);
+        E.sons.push("bloqueio");
+        break;
+      }
+      case "recuo9": fumaca(E, e.de.x, e.de.y, 6, 6); fumaca(E, e.para.x, e.para.y, 4, 5); E.sons.push("piscar"); break;
+      case "pavio9": E.sons.push("fogo"); break;
+      case "barril9": E.mensagens.push({ texto: "barril caído", t: 0, x: e.x, y: e.y - 14 }); E.sons.push("aviso"); break;
+      case "cura9": if (e.valor >= 3) E.mensagens.push({ texto: `+${Math.round(e.valor)}`, t: 0, x: e.x, y: e.y - 22 }); break;
+      case "congela9": gelo(E, e.x, e.y, 10, 6); E.sons.push("gelo"); break;
+      case "veneno9":
+        E.particulas.push({ x: e.x + (E.rng() - 0.5) * 6, y: e.y, z: 6, vx: 0, vy: 0, vz: 10, vida: 0, max: 0.4, cor: "#8fe06a", tam: 1, g: 30, atrito: 2 });
+        break;
+      case "heroi9Entra": case "general9Entra":
+        E.aneis.push({ x: e.x, y: e.y, r0: 6, r1: e.tipo === "general9Entra" ? 70 : 34, t: 0, dur: 0.6, cor: "#ff6a4a" });
+        tremer(E, e.tipo === "general9Entra" ? 0.5 : 0.2); E.sons.push("trompa");
+        break;
+      case "general9Vem": E.sons.push("trompa"); break;
+      case "pelotao9": poeira(E, e.x, e.y, 14, 40); break;
+      case "heroi9Caiu":
+        E.aneis.push({ x: e.x, y: e.y, r0: 8, r1: e.general ? 90 : 40, t: 0, dur: 0.7, cor: "#ffd84a" });
+        E.mensagens.push({ texto: "caiu", t: 0, x: e.x, y: e.y - 24 });
+        tremer(E, e.general ? 0.6 : 0.35); E.pausaPedida = Math.max(E.pausaPedida, e.general ? 140 : 80); E.sons.push("trompa");
+        break;
       case "hargQuebra":
         E.aneis.push({ x: e.x, y: e.y - 4, r0: 4, r1: 30, t: 0, dur: 0.45, cor: "#ffe08a" });
         brasas(E, e.x, e.y - 6, 24, 70);
@@ -451,7 +488,9 @@ export function avancar(E, dt) {
   E.pecas = pecasNoAr;
   E.particulas = E.particulas.filter((p) => p.vida < p.max);
   if (E.particulas.length > 900) E.particulas.splice(0, E.particulas.length - 900);
-  for (const lista of [E.cortes, E.aneis, E.explosoes, E.mensagens, E.numeros, E.raios]) for (const c of lista) c.t += dt;
+  for (const lista of [E.cortes, E.aneis, E.explosoes, E.mensagens, E.numeros, E.raios, E.lampejos, E.correntes]) for (const c of lista) c.t += dt;
+  E.lampejos = E.lampejos.filter((c) => c.t < c.dur);
+  E.correntes = E.correntes.filter((c) => c.t < c.dur);
   if (E.golpeHeroi) { E.golpeHeroi.t += dt; if (E.golpeHeroi.t >= E.golpeHeroi.dur) E.golpeHeroi = null; }
   E.raios = E.raios.filter((c) => c.t < c.dur);
   E.numeros = E.numeros.filter((n) => n.t < NUMEROS.vida);

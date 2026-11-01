@@ -114,7 +114,7 @@ button.principal { border-color: var(--ouro); color: var(--ouro); }
 /* Campo Livre 8: o dano recente (o trecho claro que escorre atrás da vida) e a postura de Harg (cheia, ele quebra) */
 #chefe .barra { position: relative; }
 #chefe .barra em { position: absolute; left: 0; top: 0; bottom: 0; background: #ffe2c8; }
-#chefe .barra i { position: relative; }
+#chefe .barra i { position: absolute; }   /* por cima do dano recente (o em vem antes) */
 #chefe .postura { height: 4px; margin: 2px 0 1px; background: #2a2622; border: 1px solid #5a4a2a; }
 #chefe .postura i { display: block; height: 100%; background: #c9a24a; }
 #chefe .postura.perto i { background: #ffe08a; }
@@ -197,3 +197,43 @@ body.dois-chefes #chefe, body.dois-chefes #chefe2 { top: auto; bottom: 76px; }
 #cc .imobilizado { border-color: #b89aff; color: #e0d0ff; }
 #cc .protecao { border-color: var(--linha-hud); color: var(--tinta-2); }
 #cc .protecao.firme { border-color: #f0cb62; color: #f0cb62; }
+
+/* Campo Livre 9: a guerra nova. As barras de cima servem aos heróis da guerra e ao General (as duas iguais: o dano
+   recente, a postura, as etiquetas das variações com o símbolo e o nome); o General, mais largo e com a borda dupla */
+#chefe2 .barra { position: relative; }
+#chefe2 .barra em { position: absolute; left: 0; top: 0; bottom: 0; background: #ffe2c8; }
+#chefe2 .barra i { position: absolute; }
+#chefe2 .postura { height: 4px; margin: 2px 0 1px; background: #2a2622; border: 1px solid #5a4a2a; }
+#chefe2 .postura i { display: block; height: 100%; background: #c9a24a; }
+#chefe2 .postura.perto i { background: #ffe08a; }
+#chefe2 .postura.firme i { background: #7a6a50; }
+#chefe2:not(.ardis9) { border-color: #a8362a; }
+#chefe2:not(.ardis9) b { color: #ff8a78; }
+#chefe2:not(.ardis9) .barra i { background: #d0463a; }
+#chefe2.quebrado { border-color: #ffe08a; }
+#chefe2.aberto { border-color: #ffd84a; }
+#chefe .vars, #chefe2 .vars { display: flex; justify-content: center; flex-wrap: wrap; gap: 2px 8px; font-size: 11px; color: var(--tinta-2); }
+#chefe .vars:empty, #chefe2 .vars:empty { display: none; }
+.var9 { display: inline-flex; align-items: center; gap: 3px; }
+img.marca9 { width: 14px; height: 14px; image-rendering: pixelated; vertical-align: -2px; }
+#chefe.general { width: 380px; border: 3px double #d0463a; }
+#chefe.general b { color: #ff6a50; font-size: 15px; }
+#p-guerra { margin-bottom: 3px; text-align: right; font-family: var(--pixel); font-size: 12px; color: var(--ouro); }
+#p-guerra.limpar, #p-guerra.vem { color: #ffb0a0; }
+#p-guerra.general { color: #ff6a50; }
+#cc .veneno { border-color: #8fe06a; color: #d8ffc8; }
+.guerra9 { margin: 6px 0 10px; font-size: 13px; color: var(--tinta-2); text-align: left; }
+.guerra9 > div { margin: 4px 0; }
+.guerra9 b { color: var(--tinta); font-weight: 400; }
+.guerra9 ul { margin: 2px 0 0 0; padding-left: 4px; list-style: none; }
+.guerra9 li { margin: 1px 0; }
+.guerra9 li img.marca9 { margin-right: 4px; }
+.guerra9 p { margin: 4px 0; }
+#enc-info .vars9 { display: block; margin-top: 4px; font-size: 12px; }
+#enc-info .vars9 > span { margin-right: 10px; white-space: nowrap; cursor: help; }
+#enc-info .vars9 img.marca9 { margin-right: 3px; }
+#chefe.ardis9 { border-color: #7a3aa0; }
+#chefe.ardis9 b { color: #d8b0ff; }
+#chefe.ardis9 .barra i { background: #9a5ad0; }
+/* a faixa de avisos desce para baixo da barra de cima (nas janelas largas, em que a barra fica no topo) */
+@media (min-width: 1501px) { body.em-luta.com-chefe:not(.dois-chefes) #faixa { top: 104px; } }

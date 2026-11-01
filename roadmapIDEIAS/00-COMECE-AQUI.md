@@ -9328,3 +9328,31 @@ foi automatizado.
 - **Aprovado:** a direção sóbria e a violência intensa como preferência. **Hipóteses:** os modelos novos, o repertório,
   os tempos e a postura de Harg.
 - **Parado aqui:** o Jean joga o treino e a guerra (com `F9` para comparar os modelos) e responde à seção 8 do 33.
+
+### 01/11/2026 (data do computador local) — Etapa 8: o Campo Livre 9, a guerra nova e o General (protótipo, nada no jogo)
+
+- **Avaliação do Jean (jogando o 8):** os duelos com os heróis inimigos continuavam demorados e pouco divertidos.
+- **Aprovado (a direção):** heróis inimigos comuns frágeis e letais; variações sorteadas (uma ou duas por herói, com
+  Inabalável imune a controle e empurrão, pedido explícito); mais tropas nas ondas; sem fuga automática; depois de todos
+  os inimigos previstos, o General, maior e muito mais forte, como confronto final; a vitória é a queda dele. Substitui o
+  objetivo do 33 (o duelo prolongado).
+- **Feito (em teste):** o [34](34-ETAPA8-A-GUERRA-E-O-GENERAL.md) e a rodada 9 do 30; a versão **Campo Livre 9** (a 8 em
+  `/v8/`): "A guerra" (o encontro inicial) e "Treino: os heróis e o General"; o sorteio por guerra (`R` sorteia outra,
+  `T` repete a mesma, `?sorteio=N`), as opções na chave própria do 9; Harg (320), Ardis (200) e Vesna (nova, 200); seis
+  variações; lanceiro, besteiro, furioso, cão e sapador (o barril caído fere os dois lados); o General (Ceifa, Estocada,
+  Correntes, Terremoto, Salto, Brado Gélido, Cruz de Lâminas; postura e aberturas); na tela, todos os estágios no chão, as
+  cargas, a corrente, os símbolos das variações (forma e cor), as barras dos heróis e do General, a linha da guerra, as
+  setas para os últimos inimigos, as transições e o painel da guerra na pausa e no fim.
+- **Corrigido pela causa:** o contato dos golpes da máquina de Harg passou a usar o aviso mostrado (antes, o golpe
+  acertava até 30 px adiante do aviso; o avanço do Talho ficou nos 13 px que de fato andava); a Estocada (0,3 → 0,4 s) e
+  o Salto (segue você só no começo, 0,45 s no ar, círculo de 56) não tinham saída a pé para ninguém; um cão prendia
+  Odette num canto e o General nunca vinha (ela agora revida encurralada); a parte vermelha da barra de cima não aparecia
+  desde o 8. O robô de medição errava os anéis e parava de desviar na execução (corrigido; era a maior parte das derrotas
+  do Mago).
+- **Conferido:** 85 testes da simulação (8 novos, os 77 de antes sem alteração); a guerra sem tela em 8 sorteios (Guerreiro
+  forte 8/8, médio 0/8; Mago forte 7/8, médio 6/8; General de 55 a 89 s com o exército); a tabela de saídas golpe a golpe;
+  o fluxo real no navegador nas duas janelas (`conferir9.mjs`, console sem erros, 58 qps). O jogo não mudou: a suíte, o
+  gabarito e o pyflakes; a fumaça, reaproveitada. Sem vídeos.
+- **Provisório:** todos os números, as figuras das tropas novas, de Vesna e do General, os símbolos.
+- **Parado aqui:** o Jean joga a guerra e o treino e responde à seção 9 do 34 (o Terremoto colado exigir a mobilidade é
+  a questão principal).

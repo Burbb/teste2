@@ -57,8 +57,8 @@ export function pensar(r, m, ent) {
   let perto = null, dp = Infinity;
   for (const e of ini) { const q = (e.x - h.x) ** 2 + (e.y - h.y) ** 2; if (q < dp) { dp = q; perto = e; } }
   dp = Math.sqrt(dp);
-  const g = r.grupo || { x: perto.x, y: perto.y, n: 1 };
-  const dg = Math.hypot(g.x - h.x, g.y - h.y);
+  let g = r.grupo || { x: perto.x, y: perto.y, n: 1 };
+  let dg = Math.hypot(g.x - h.x, g.y - h.y);
   const vida = h.vida / h.vidaMax;
   ent.mx = perto.x; ent.my = perto.y;
   // os avisos do Capitão só são vistos depois de um tempo de reação (uma pessoa não sai no mesmo quadro)
@@ -66,17 +66,55 @@ export function pensar(r, m, ent) {
   // Campo Livre 8: os golpes de Harg reconstruído. Com o herói dentro do aviso (visto depois do tempo de reação), o
   // forte sai para o lado da direção do golpe; o médio recua em linha reta (o erro comum, que a Varredura e a Investida
   // castigam). Na abertura (a recuperação comprometida) ou com a postura quebrada, os dois vão nele e batem.
-  const l = m.lider;
-  if (l && l.h8 && !l.morto) {
+  // Campo Livre 9: o mesmo para todos com a máquina de golpes (Harg, Vesna, o General): os golpes em estágios (os anéis,
+  // a cruz, o leque) contam só os estágios que ainda não estouraram; nas faixas, sai para o lado da faixa. A esquiva
+  // continua na execução (o contato vem no fim dela). Nos anéis (o Terremoto), o forte vai para a beira de dentro do
+  // anel em que está e entra no anel de dentro logo que ele estoura; no anel do meio, sai com a mobilidade (a pé não dá
+  // tempo); no último, sai por fora se a beira de fora estiver mais perto. O médio só se afasta.
+  for (const l of ini) {
+    if (!l.h8 || l.morto) continue;
     const g = l.h8.golpe;
-    if (g && g.etapa === "preparo" && g.total - g.t >= reacao) {
-      const f = r.nivel === "forte" && g.onda ? g.onda : g.forma;
-      const largo = f.tipo === "faixa" ? { ...f, largura: f.largura + 4 } : { ...f, raio: f.raio + 4 };
-      if (dentro(largo, h.x, h.y)) {
-        if (r.nivel === "forte") {
+    if (g && (g.etapa === "preparo" && g.total - g.t >= reacao || g.etapa === "exec")) {
+      const fs = g.formasEstagio;
+      if (fs && fs.every((e) => e.length === 1 && e[0].tipo === "anel")) {
+        const c = fs[0][0], dx = h.x - c.x || 1, dy = h.y - c.y, d = Math.hypot(dx, dy), e = g.etapa === "exec" ? g.estagio : 0;
+        const k = fs.findIndex((a, j) => j >= e && d >= a[0].r0 - 3 && d <= a[0].raio + 3);
+        if (k >= 0) {
+          const a = fs[k][0];
+          let sai = 1;
+          if (r.nivel === "forte") {
+            if (k === e) sai = k > 0 ? -1 : 1;
+            else if (k === fs.length - 1 && a.raio - d < d - a.r0) sai = 1;
+            else sai = d - a.r0 > 5 ? -1 : 0;
+            const mob = h.slots.mobilidade;
+            // perto do estouro (a invulnerabilidade da Investida cobre os últimos 0,25 s)
+            if (k === 0 && h.cds[mob] <= 0 && !h.acao && g.etapa === "preparo" && g.t <= 0.2) { ent.mx = h.x + (dx / d) * 120; ent.my = h.y + (dy / d) * 120; ent.apertos.push(mob); return; }
+          }
+          andar(ent, sai * dx, sai * dy);
+          ent.mx = l.x; ent.my = l.y;
+          return;
+        }
+      }
+      const pendentes = g.formasEstagio ? g.formasEstagio.slice(g.etapa === "exec" ? g.estagio : 0).flat() : [r.nivel === "forte" && g.onda ? g.onda : g.forma];
+      const largo = (f) => f.tipo === "faixa" ? { ...f, largura: f.largura + 4 } : { ...f, raio: f.raio + 4, r0: Math.max(0, (f.r0 || 0) - 4) };
+      const f = pendentes.find((f) => dentro(largo(f), h.x, h.y));
+      if (f) {
+        // Harg (o do 8 e o frágil): como no Campo Livre 8 (o forte sai para o lado da direção do golpe; o médio recua)
+        if (!l.h8.cfg.stats) {
+          if (r.nivel === "forte") {
+            const px = -Math.sin(g.dir), py = Math.cos(g.dir), lado = (h.x - l.x) * px + (h.y - l.y) * py >= 0 ? 1 : -1;
+            andar(ent, px * lado - Math.cos(g.dir) * 0.3, py * lado - Math.sin(g.dir) * 0.3);
+          } else andar(ent, h.x - l.x, h.y - l.y);
+        } else if (f.tipo === "anel") {
+          const fora = g.etapa === "exec" && g.estagio > 0 && r.nivel === "forte";
+          andar(ent, (fora ? -1 : 1) * (h.x - f.x || 1), (fora ? -1 : 1) * (h.y - f.y));
+        } else if (f.tipo === "faixa") {
+          const ux = f.x2 - f.x1, uy = f.y2 - f.y1, lado = (h.x - f.x1) * -uy + (h.y - f.y1) * ux >= 0 ? 1 : -1;
+          if (r.nivel === "forte") andar(ent, -uy * lado, ux * lado); else andar(ent, h.x - l.x, h.y - l.y);
+        } else if (r.nivel === "forte" && f.tipo === "arco") {
           const px = -Math.sin(g.dir), py = Math.cos(g.dir), lado = (h.x - l.x) * px + (h.y - l.y) * py >= 0 ? 1 : -1;
           andar(ent, px * lado - Math.cos(g.dir) * 0.3, py * lado - Math.sin(g.dir) * 0.3);
-        } else andar(ent, h.x - l.x, h.y - l.y);
+        } else andar(ent, h.x - f.x || h.x - l.x, h.y - f.y || h.y - l.y);
         ent.mx = l.x; ent.my = l.y;
         return;
       }
@@ -92,6 +130,14 @@ export function pensar(r, m, ent) {
       }
       return;
     }
+  }
+  // as cargas no chão (o barril do sapador, o rastro explosivo): sair do círculo
+  // (e, no Campo Livre 9, as magias anunciadas: a Coluna de Ardis, a Bola dos magos de batalha)
+  const circulos = [...((m.g9 && m.g9.cargas) || []), ...(m.g9 ? (m.magias || []).filter((z) => z.lado === 1) : [])];
+  for (const c of circulos) {
+    if ((h.x - c.x) ** 2 + (h.y - c.y) ** 2 > (c.raio + 4) ** 2 || c.t < reacao) continue;
+    andar(ent, h.x - c.x || 1, h.y - c.y);
+    return;
   }
   // o golpe do campeão (ou o machado do Capitão) anunciado com o herói dentro do arco desenhado: sair dele
   for (const e of ini) {
@@ -118,7 +164,11 @@ export function pensar(r, m, ent) {
     if (h.nomeHeroi === "guerreiro" && dl < 30 && h.cds.varredura <= 0) { ent.mx = e.x; ent.my = e.y; ent.atacar = true; return; }
     if (dentro(e.acao.forma, h.x, h.y)) { andar(ent, -Math.sin(e.acao.dir), Math.cos(e.acao.dir)); return; }
   }
-  const aliados = m.centros[0];
+  // Campo Livre 9: um herói inimigo a até 220 px vira o alvo (o grupo e o mais perto passam a ser ele)
+  let alvoHeroi = null;
+  for (const e of ini) if (e.heroi9 && !e.morto && Math.hypot(e.x - h.x, e.y - h.y) < (alvoHeroi ? Math.hypot(alvoHeroi.x - h.x, alvoHeroi.y - h.y) : 220)) alvoHeroi = e;
+  if (alvoHeroi) { g = { x: alvoHeroi.x, y: alvoHeroi.y, n: 8 }; perto = alvoHeroi; dp = Math.hypot(perto.x - h.x, perto.y - h.y); dg = dp; }
+  const aliados = m.lados[0].length > 1 ? m.centros[0] : null;   // sozinho (o treino), não há para onde recuar
   // decide uma habilidade a cada 0,25 s, como quem olha o campo, e não a cada quadro
   const decide = m.t >= (r.decisao || 0);
   if (decide) r.decisao = m.t + (r.nivel === "medio" ? 0.6 : 0.25);

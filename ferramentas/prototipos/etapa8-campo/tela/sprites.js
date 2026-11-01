@@ -5,6 +5,7 @@
 // herói tem contorno, a cor mais clara do campo e um anel no chão.
 import { PALETAS, EQUIPES_ARTE, CORES_ARTE, MODELOS_SOMBRIOS, MODELOS_MENORES } from "./sprites7.js";
 import { MODELOS_NOVOS } from "./sprites8.js";
+import { MODELOS_9 } from "./sprites9.js";
 
 export const PALETA = {
   k: "#1c1a24", K: "#34303c",
@@ -810,7 +811,7 @@ const SILHUETA = ["#9cc6ff", "#ff8a78"];
  */
 export function prepararSprites({ arte = "atual", escala = "atual" } = {}) {
   const Q = {}, paleta = PALETAS[arte] || PALETA, equipes = EQUIPES_ARTE[arte] || EQUIPES;
-  const modelos = { ...MODELOS };
+  const modelos = { ...MODELOS, ...MODELOS_9 };   // Campo Livre 9: as tropas novas, Vesna e o General (sprites9.js)
   if (arte === "sombria") Object.assign(modelos, MODELOS_SOMBRIOS);
   if (escala === "menor") Object.assign(modelos, MODELOS_MENORES);
   if (escala === "novo") Object.assign(modelos, MODELOS_NOVOS);   // Campo Livre 8: os modelos novos dos heróis

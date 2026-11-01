@@ -1,6 +1,7 @@
 # 30 — Etapa 8: o combate em campo livre (herói em tempo real e tropas pequenas)
 
-**31/10/2026 (rodada 1) e 01/11/2026 (rodadas 2 a 8).** A rodada 8 (Campo Livre 8: Harg como o confronto principal e os
+**31/10/2026 (rodada 1) e 01/11/2026 (rodadas 2 a 9).** A rodada 9 (Campo Livre 9: a guerra nova, com heróis frágeis e
+letais, variações sorteadas, tropas novas e o General, no [34](34-ETAPA8-A-GUERRA-E-O-GENERAL.md)) vem primeiro; depois a rodada 8 (Campo Livre 8: Harg como o confronto principal e os
 modelos novos dos heróis, no [33](33-ETAPA8-HARG-E-OS-MODELOS-DOS-HEROIS.md)) vem primeiro; depois a rodada 7 (Campo Livre 7: a navegação, a escolha de alvo dos
 heróis inimigos, a investida rápida, os controles e as provocações; o estudo de arte, com a amostra jogável e a
 carnificina, está no [32](32-ETAPA8-DIRECAO-DE-ARTE-DO-CAMPO.md)) vem primeiro; depois a rodada 6 (Campo Livre 6: o
@@ -12,6 +13,17 @@ comando, o Capitão que enfrenta o herói, as escalas 1×, 2× e 4× e duas habi
 a rodada 2 (Campo Livre 2: números de dano, o líder inimigo, o modo de comando e a seleção, a leitura do choque, três
 encontros e quatro versões de habilidade); por fim as seções 0 a 14, a rodada 1 (Campo Livre 1). **A direção foi
 aprovada pelo Jean para continuar no protótipo, sem integração.**
+
+## Rodada 9 (01/11/2026): Campo Livre 9
+
+**A avaliação do Jean (jogando o 8):** os duelos com os heróis inimigos continuavam demorados e pouco divertidos. **A
+direção aprovada:** heróis comuns frágeis e letais (confrontos rápidos no meio da guerra), variações sorteadas, mais
+tropas nas ondas, sem fuga automática e, depois de todos os inimigos previstos, o General, maior e muito mais forte; a
+vitória é a queda dele. Substitui o objetivo do 33 (cada herói comum como um duelo prolongado). **Em teste; os números,
+as figuras novas e o General esperam a avaliação.** A v8 fica em `tela-v8/` (`/v8/`). Tudo está no
+[34](34-ETAPA8-A-GUERRA-E-O-GENERAL.md): a guerra, as variações, as tropas, o General e os tempos dele, a leitura na tela
+(o aviso que é exatamente o que acerta, os estágios, as cargas, a corrente, os símbolos), a chegada do General, a
+investigação do Mago (o robô errava os anéis; a Estocada e o Salto não tinham saída a pé), as medições e as questões.
 
 ## Rodada 8 (01/11/2026): Campo Livre 8
 

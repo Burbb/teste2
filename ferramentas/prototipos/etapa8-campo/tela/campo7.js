@@ -66,6 +66,8 @@ export function registrarApoio(m, quem, v) { quem.apoioV = somar(quem.apoioV, v,
  */
 export function aplicarControle(m, alvo, tipo, dura, fonte, extra = {}) {
   if (!alvo || alvo.morto) return 0;
+  // Campo Livre 9: o herói inimigo inabalável não fica preso por nada (nem lento, nem provocado)
+  if (alvo.inabalavel) { m.eventos.push({ tipo: "firme", id: alvo.id, x: alvo.x, y: alvo.y, cc: tipo, heroi: false }); return 0; }
   // Campo Livre 8: Harg não fica preso; o controle enche a postura dele (a lentidão e a provocação valem como sempre)
   if (alvo.h8 && tipo !== "lento" && tipo !== "provocacao") { controleHarg8(m, alvo); return 0; }
   const C = CONTROLE, t = m.t;
@@ -135,6 +137,9 @@ export function estadoControle(m, u) {
     l.push({ id: "provocacao", texto: u === m.heroi ? `Provocado por ${nome} ${num(p.ate - t)} s: o ataque principal vai nele` :
       `Provocado por ${nome} ${num(p.ate - t)} s`, resta: p.ate - t, total: p.total });
   }
+  // Campo Livre 9: o veneno das variações (as doses e o tempo que falta)
+  const v = u.veneno9;
+  if (v && v.ate > t && v.doses > 0) l.push({ id: "veneno", texto: `Envenenado ×${v.doses} ${num(v.ate - t)} s`, resta: v.ate - t, total: 3 });
   const r = u.resCC;
   if (r && r.ate > t && r.n > 0) {
     const f = CONTROLE.fatores[Math.min(r.n, CONTROLE.fatores.length - 1)];

@@ -2,7 +2,8 @@
 // telas. A batalha avança em passos fixos de 1/60 s (sim.js); o desenho interpola entre dois passos. A pausa de
 // impacto para a simulação e os efeitos por alguns milissegundos; os comandos apertados nesse meio-tempo esperam e
 // saem no passo seguinte. Parâmetros de URL (para testes, medição e vídeos):
-// ?heroi=mago&qtd=maior&enc=capitao&kit=sangrenta,grito&auto=1&robo=1.
+// ?heroi=mago&qtd=maior&enc=capitao&kit=sangrenta,grito&auto=1&robo=1; na guerra e no treino (Campo Livre 9), ?sorteio=N
+// começa pela guerra de número N.
 //
 // O modo de comando (Campo Livre 2): com Shift segurado, ou com o jogo pausado, o botão esquerdo deixa de atacar e
 // arrasta um retângulo que seleciona tropas; o direito manda a seleção defender o ponto. F1/F2 selecionam por tipo,
@@ -14,7 +15,7 @@
 // exatamente o que está mostrado; o tremor se acalma (a intensidade escolhida não muda). Ao sair, o olhar volta para o
 // mouse em ~0,5 s e o tremor volta em ~0,3 s, sem salto.
 import { VERSAO, HEROIS, ORDENS, IMPACTO, CAMPO, CONTINGENTES, ENCONTROS, TIPOS, HABILIDADES, TALENTOS, ORCAMENTO, MONTAGENS, COMPOSICOES,
-  MONTAGEM_PADRAO, MARCAS } from "./conteudo.js";
+  MONTAGEM_PADRAO, MARCAS, VARIACOES } from "./conteudo.js";
 import { descricao, custoDe, rotulo, TECLAS_ESPACO } from "./textos.js";
 import { criarMundo, passo, entradaVazia, ordenar, resumo, sorteio, PASSO, selecionar, tropasDoTipo, montarKit as kitDoHeroi,
   talentosValidos, escalaDe, inimigoEm, chamarHorda } from "./sim.js";
@@ -23,6 +24,8 @@ import { ARTES, ESCALAS } from "./sprites7.js";
 import { criarChao7 } from "./arte7.js";
 import { estadoControle } from "./campo7.js";
 import { estadoHarg8 } from "./campo8.js";
+import { estado9, chefes9, resumo9, variacoesDe } from "./campo9.js";
+import { imagemMarca } from "./marcas9.js";
 import { prepararSprites } from "./sprites.js";
 import { criarChao, desenhar, BORDA } from "./desenho.js";
 import { criarRobo, pensar } from "./robo.js";
@@ -50,23 +53,21 @@ function chaoAtual() {
 // a montagem de cada herói (as três comuns, a ultimate e os talentos), começando pela montagem padrão
 const montagemDe = (heroi, nome = MONTAGEM_PADRAO[heroi]) => structuredClone(MONTAGENS[heroi][nome]);
 const PADRAO = { tremor: 150, pausa: true, volume: 50, mudo: false, areas: true, heroi: "guerreiro", quantidade: "1", horda: 60,
-  encontro: "original", montagem: { guerreiro: montagemDe("guerreiro"), mago: montagemDe("mago") } };
+  encontro: "guerra9", montagem: { guerreiro: montagemDe("guerreiro"), mago: montagemDe("mago") } };
 PADRAO.composicao = { aliados: "comum", inimigos: "comum" };
 // Campo Livre 7: a aparência (o estudo de arte), a escala do seu herói e a violência (só o que fica no chão).
 // Campo Livre 8: a sóbria é a base (a escolha do Jean; a atual e a sombria continuam no F8 para comparar), a violência
 // começa na intensa e os modelos dos heróis começam nos novos (a candidata). O que o jogador já escolheu continua: a
 // violência guardada no Campo Livre 7 vale, salvo o 2 (o padrão de antes, que o jogo gravava sem ninguém escolher).
+// Campo Livre 9: as opções têm a chave própria (as do 8 não são lidas: encontro, montagens e escalas de antes não valem
+// aqui) e a guerra é o encontro inicial.
 Object.assign(PADRAO, { arte: "sobria", escala: "novo", violencia: 3 });
+const CHAVE_OPCOES = "campo-livre-9-opcoes";
 const opcoes = structuredClone(PADRAO);
 try {
-  const salvas = localStorage.getItem("campo-livre-8-opcoes");
-  if (salvas) Object.assign(opcoes, JSON.parse(salvas));
-  else {
-    const v7 = JSON.parse(localStorage.getItem("campo-livre-7-opcoes") || "{}");
-    delete v7.arte; delete v7.escala;
-    if (v7.violencia === 2) delete v7.violencia;
-    Object.assign(opcoes, v7);
-  }
+  const salvas = JSON.parse(localStorage.getItem(CHAVE_OPCOES) || "{}");
+  Object.assign(opcoes, salvas);
+  if (!ENCONTROS[opcoes.encontro]) opcoes.encontro = PADRAO.encontro;
 } catch { /* sem armazenamento */ }
 // ?arte=sombria&escala=menor&violencia=3: o estudo de arte direto
 if (ARTES[url.get("arte")]) opcoes.arte = url.get("arte");
@@ -90,7 +91,7 @@ if (url.get("hab")) {
   if (ult) opcoes.montagem[opcoes.heroi].ultimate = ult;
 }
 if (url.get("tal") !== null) opcoes.montagem[opcoes.heroi].talentos = url.get("tal") ? url.get("tal").split(",") : [];
-function guardar() { try { localStorage.setItem("campo-livre-8-opcoes", JSON.stringify(opcoes)); } catch { /* idem */ } }
+function guardar() { try { localStorage.setItem(CHAVE_OPCOES, JSON.stringify(opcoes)); } catch { /* idem */ } }
 
 // as teclas dos espaços do kit (o botão esquerdo é o principal, segurado; o botão direito, o primeiro espaço comum)
 const TECLA_ESPACO = { Space: "mobilidade", KeyQ: "h2", KeyE: "h3", KeyF: "ult" };
@@ -100,6 +101,10 @@ const st = {
   tela: "inicio", m: null, E: null, ent: entradaVazia(), robo: null, pausado: false, acumulado: 0,
   pausaAte: 0, refratarioAte: 0, cam: { x: 0, y: 0 }, escala: 2, W: 640, H: 360, mouseTela: { x: 320, y: 180 },
   relogio: 0, ultimo: performance.now(), faixaAte: 0, shift: false, arrasto: null, vistos8: new Set(), chip: null,
+  // Campo Livre 9: a última guerra montada (para T repetir: o mesmo sorteio, o mesmo herói, a mesma montagem), as
+  // explicações já mostradas nesta sessão (as variações e os golpes novos se explicam uma vez, não a cada guerra) e o
+  // dano recente de cada barra de cima
+  ultima: null, vistos9: new Set(), chips: new Map(),
   olhar: { x: 0, y: 0 }, retorno: 0, calma: 1, estavaComando: false,
   diag: { quadros: [], sim: [], desenho: [], passos: 0, pausas: 0, pausaMs: 0 },
 };
@@ -122,12 +127,20 @@ function mouseMundo() {
 }
 
 // ------------------------------------------------------------------------------------------------ batalha
-function novaBatalha() {
-  st.m = criarMundo({ heroi: opcoes.heroi, quantidade: opcoes.quantidade, encontro: opcoes.encontro,
-    kit: opcoes.montagem[opcoes.heroi], composicao: opcoes.composicao });
+// Campo Livre 9: na guerra e no treino (`sortido`), cada batalha sorteia um número (as ondas, a ordem dos heróis, as
+// variações e o acaso da luta saem dele); `repetir` usa o da última, com o mesmo herói e a mesma montagem.
+const urlSorteio = Number(url.get("sorteio")) || null;
+function novoSorteio() { return 10000 + Math.floor(Math.random() * 90000); }
+function novaBatalha(repetir = false) {
+  const enc = ENCONTROS[opcoes.encontro], u = repetir && st.ultima;
+  const conf = u ? structuredClone(u) : { heroi: opcoes.heroi, quantidade: opcoes.quantidade, encontro: opcoes.encontro,
+    kit: structuredClone(opcoes.montagem[opcoes.heroi]), composicao: { ...opcoes.composicao } };
+  if (!u && enc.sortido) conf.sorteio = st.ultima === null && urlSorteio ? urlSorteio : novoSorteio();
+  st.ultima = structuredClone(conf);
+  st.m = criarMundo(conf.sorteio ? { ...conf, semente: conf.sorteio } : conf);
   st.E = criarEfeitos(sorteio(77));
   st.ent = entradaVazia();
-  st.vistos8 = new Set(); st.chip = null;
+  st.vistos8 = new Set(); st.chip = null; st.chips = new Map();
   st.robo = url.get("robo") ? criarRobo({ nivel: url.get("robo") === "medio" ? "medio" : "forte" }) : null;
   st.acumulado = 0;
   st.pausaAte = st.refratarioAte = 0;
@@ -141,7 +154,13 @@ function novaBatalha() {
   mostrar("luta");
   ultimaVida = h.vida;
   st.arrasto = null;
-  faixa(`${ENCONTROS[opcoes.encontro].nome}. Shift: modo de comando · F1 F2 F4 seleção · 1 2 3 ordens`, 4);
+  const sorteado = st.m.g9 ? ` Guerra nº ${st.m.g9.sorteio}${repetir ? " (repetida)" : ""}.` : "";
+  faixa(`${ENCONTROS[conf.encontro].nome}.${sorteado} Shift: modo de comando · F1 F2 F4 seleção · 1 2 3 ordens`, 4);
+  $("#selo").textContent = `${VERSAO} · protótipo da etapa 8, nada no jogo${st.m.g9 ? ` · guerra nº ${st.m.g9.sorteio}` : ""}`;
+  for (const b of $$("[data-repetir]")) b.hidden = !st.m.g9;
+  for (const b of $$("[data-recomecar]")) b.innerHTML = st.m.g9 ? "Nova guerra <kbd>R</kbd>" : b.closest("#tela-fim") ? "Repetir <kbd>R</kbd>" : "Recomeçar <kbd>R</kbd>";
+  $("#pausa-guerra").hidden = !st.m.g9;
+  if (st.m.g9) $("#pausa-guerra").innerHTML = painelGuerra(st.m, false);
 }
 
 /** O modo de comando está ligado: Shift segurado ou o jogo pausado. */
@@ -230,6 +249,7 @@ function pausar(sim) {
   if (st.tela !== "luta") return;
   st.pausado = sim ?? !st.pausado;
   st.ent.atacar = false;
+  if (st.pausado && st.m.g9) $("#pausa-guerra").innerHTML = painelGuerra(st.m, false);
   mostrar("luta");
   atualizarModo();
 }
@@ -254,6 +274,7 @@ addEventListener("keydown", (e) => {
     return;
   }
   if (e.code === "KeyR") { e.preventDefault(); novaBatalha(); return; }
+  if (e.code === "KeyT" && st.ultima && st.m && st.m.g9) { e.preventDefault(); novaBatalha(true); return; }
   if (st.tela === "fim") { if (e.code === "Enter") novaBatalha(); return; }
   if (e.code === "KeyP" || e.code === "Escape" || e.code === "Pause") { pausar(); return; }
   if (e.code === "Digit1" || e.code === "Digit2" || e.code === "Digit3") {
@@ -468,9 +489,30 @@ function eventoNaTela(ev) {
   else if (ev.tipo === "aviso" && ev.lider && ev.reunidos !== undefined) faixa(`${TIPOS.lider.nome} reúne ${ev.reunidos} para a carga${ev.heroi ? " contra você" : ""}: saia da faixa ou interrompa com um golpe forte.`, 2.2);
   if (ev.tipo === "liderFoco") faixa(ev.texto || (ev.modo === "heroi" ? `${TIPOS.lider.nome} vem atrás de você.` : `${TIPOS.lider.nome} vai para as suas tropas.`), 1.8);
   // Campo Livre 8: Harg reconstruído. Cada golpe se explica na primeira vez que aparece na batalha (o treino ensina)
-  if (ev.tipo === "aviso" && ev.h8 && !st.vistos8.has(ev.h8)) { st.vistos8.add(ev.h8); faixa(EXPLICA8[ev.h8], 2.6); }
-  if (ev.tipo === "hargQuebra") faixa(`A postura de ${TIPOS.lider.nome} quebrou: ${numero(ev.dura)} s de joelhos, levando +50%. Bata agora.`, 2.2);
-  if (ev.tipo === "hargFase") faixa(`${TIPOS.lider.nome} entra em fúria: sequências de três golpes, pausas mais curtas e a Martelada solta uma onda.`, 3);
+  // Campo Livre 9: os golpes de Vesna e do General também; na guerra, cada explicação aparece uma vez na sessão
+  if (ev.tipo === "aviso" && ev.h8) {
+    const chave = `${ev.quem}:${ev.h8}`, texto = ev.quem === "lider" ? EXPLICA8[ev.h8] : (EXPLICA9[ev.quem] || {})[ev.h8];
+    const vistos = st.m.g9 ? st.vistos9 : st.vistos8;
+    if (texto && !vistos.has(chave)) { vistos.add(chave); faixa(texto, 2.6); }
+  }
+  if (ev.tipo === "hargQuebra") faixa(`A postura ${artigoDe(ev.nome || TIPOS.lider.nome)} quebrou: ${numero(ev.dura)} s de joelhos, levando +50%. Bata agora.`, 2.2);
+  if (ev.tipo === "hargFase") faixa(ev.quem === "general" ? "O General brada: a fase 2 começa (a Cruz de Lâminas, sequências mais longas, pausas mais curtas)."
+    : `${TIPOS.lider.nome} entra em fúria: sequências de três golpes, pausas mais curtas e a Martelada solta uma onda.`, 3);
+  if (ev.tipo === "pelotao9") faixa(`Onda: ${ev.nome.toLowerCase()} (${ev.n}).`, 1.6);
+  if (ev.tipo === "heroi9Entra") {
+    // a primeira vez de cada variação nesta sessão: a regra inteira; depois, só os nomes
+    const novas = ev.variacoes.filter((v) => !st.vistos9.has("var:" + v));
+    novas.forEach((v) => st.vistos9.add("var:" + v));
+    faixa(`${ev.nome} entra na batalha: ${novas.length ? novas.map((v) => VARIACOES[v].explica).join(" ") : ev.nomes.join(", ") + "."}`, novas.length ? 5 : 2.6);
+    $("#pausa-guerra").innerHTML = painelGuerra(st.m, false);
+  }
+  if (ev.tipo === "heroi9Caiu" && !ev.general) {
+    const e9 = estado9(st.m);
+    faixa(`${ev.nome} caiu (${e9.herois.caidos} de ${e9.herois.total}).`, 2.2);
+  }
+  if (ev.tipo === "general9Vem") faixa("O campo ficou vazio. O General atravessa o portão.", 3);
+  if (ev.tipo === "general9Entra") faixa(`${ev.nome}: áreas enormes e golpes rápidos, sempre anunciados no chão. Derrube-o para vencer.`, 3.5);
+  if (ev.tipo === "heroi9Caiu" && ev.general) faixa(`${ev.nome} caiu. Vitória.`, 3);
   if (ev.tipo === "desafio") faixa(`Morel desafia: o herói inimigo vai atrás dele por ${numero(Math.round(ev.dura * 10) / 10)} s.`, 1.8);
   if (ev.tipo === "firme" && ev.heroi) faixa("Firme: este controle não pegou (proteção contra repetição).", 1.4);
   if (ev.tipo === "alvoEncerrado") faixa(`${ev.nome}: ${ev.motivo === "derrubado" ? "derrubado" : ev.motivo === "fugiu" ? "fugiu" : "longe demais"}. Quem o atacava volta à ordem de antes.`, 2.2);
@@ -502,7 +544,9 @@ function faixa(texto, s) {
 function fim() {
   if (st.tela !== "luta") return;
   const r = resumo(st.m), vit = r.resultado === "vitoria";
-  $("#fim-titulo").textContent = vit ? "Vitória" : "Derrota";
+  $("#fim-titulo").textContent = st.m.g9 ? (vit ? "Vitória: o General caiu" : "Derrota") : vit ? "Vitória" : "Derrota";
+  $("#fim-guerra").hidden = !st.m.g9;
+  if (st.m.g9) $("#fim-guerra").innerHTML = painelGuerra(st.m, true);
   const min = Math.floor(r.t / 60), seg = Math.floor(r.t % 60).toString().padStart(2, "0");
   $("#fim-resumo").textContent = `${HEROIS[st.m.nomeHeroi].nome} · ${min}:${seg} · vida ${Math.ceil(r.vida)}/${st.m.heroi.vidaMax}`;
   const k = st.m.heroi.kit, linhas = [["Inimigos derrubados por você", r.abatesHeroi],
@@ -514,6 +558,8 @@ function fim() {
   if (r.flechasBarradas) linhas.push(["Flechas barradas pelo escudo", r.flechasBarradas]);
   if (st.m.encontro === "capitao") linhas.push([`Dano de ${TIPOS.lider.nome} em você / nas tropas`, `${Math.round(r.liderHeroi)} / ${Math.round(r.liderTropas)}`]);
   let html = linhas.map(([a, b]) => `<tr><td>${a}</td><td>${b}</td><td></td><td></td></tr>`).join("");
+  if (st.m.g9) linhas.splice(2, 1);   // na guerra ninguém foge (os "que fugiram" seria sempre 0)
+  html = linhas.map(([a, b]) => `<tr><td>${a}</td><td>${b}</td><td></td><td></td></tr>`).join("");
   html += `<tr><th>Habilidade</th><th>Usos</th><th>Atingidos</th><th>Derrubados</th></tr>`;
   for (const id of Object.keys(k)) {
     const u = r.usos[id] || { usos: 0, acertos: 0, abates: 0 };
@@ -534,6 +580,43 @@ const EXPLICA8 = {
   rugido: "Rugido: Harg vai mudar de fase.",
 };
 const FOCO = { heroi: "Atrás de você", morel: "Enfrenta Morel", odette: "Atrás de Odette", tropas: "Nas suas tropas" };
+// Campo Livre 9: a primeira vez de cada golpe de Vesna e do General (uma vez na sessão): o que fazer, em uma frase
+const EXPLICA9 = {
+  vesna: {
+    corte: "Corte Duplo: o arco curto de Vesna. Saia para o lado ou bata antes que ele feche.",
+    leque: "Leque de Facas: três faixas estreitas. Fique entre elas ou saia de lado.",
+    investida: "Bote: Vesna corre pela faixa e para no primeiro herói. Saia da faixa; depois ela fica aberta (+50%).",
+  },
+  general: {
+    ceifa: "Ceifa: o arco largo na frente do General. Saia para o lado, para trás dele.",
+    estocada: "Estocada: a faixa longa e estreita. Recuar em linha reta não basta: saia para o lado.",
+    estocadaPuxada: "Estocada depois das Correntes: preso 0,35 s, depois a faixa. Assim que soltar, saia para o lado.",
+    correntes: "Correntes: a faixa que puxa você até ele e prende 0,35 s. Saia dela para o lado.",
+    terremoto: "Terremoto: três anéis estouram de dentro para fora. Entre no anel que acabou de estourar; colado nele, só a mobilidade tira você a tempo.",
+    salto: "Salto: ele cai no círculo, que segue você só no começo. Saia do círculo; depois ele fica aberto (+50%).",
+    brado: "Brado Gélido: a fase 2. Todos a até 220 px ficam lentos (−50%) por 2,5 s.",
+    cruz: "Cruz de Lâminas: a cruz em volta dele e, logo depois, o X. Fique entre os braços.",
+  },
+};
+// "a postura do General", "a postura de Vesna"
+const artigoDe = (nome) => nome.startsWith("O ") ? "do " + nome.slice(2) : "de " + nome;
+
+// O que a guerra sorteou: o número, os heróis com as variações (o símbolo, o nome e a regra) e, no fim, as ondas e os
+// tempos. Pausado e no fim (o texto das regras vem pronto de conteudo.js; os tempos, de campo9.resumo9).
+function marcaHtml(v) { return `<img class="marca9" src="${imagemMarca(v)}" alt="">`; }
+function painelGuerra(m, fimDeGuerra) {
+  const z = resumo9(m), g9 = m.g9;
+  const herois = g9.herois.map((e, i) => {
+    const vs = e.variacoes.map((v) => `<li>${marcaHtml(v)}<b>${VARIACOES[v].nome}.</b> ${VARIACOES[v].explica.replace(/^[^:]+: (.)/, (_, c) => c.toUpperCase())}</li>`).join("");
+    const nome = e.entrou ? e.u.def.nome : "?";
+    const situacao = !e.entrou ? "ainda não entrou" : e.caiuT != null ? `caiu aos ${z.herois[i].caiu} s` : "de pé";
+    return e.entrou ? `<div><b>${nome}</b> · ${situacao}<ul>${vs}</ul></div>` : `<div><b>Herói ${i + 1}</b> · ${situacao}</div>`;
+  }).join("");
+  const gen = g9.general && g9.general.u, tempo = m.stats.generalT != null ? ` (caiu ${numero(Math.round(m.stats.generalT))} s depois de entrar)` : "";
+  const general = !g9.general ? "" : `<div><b>O General</b> · ${gen ? (gen.morto ? "caiu" + tempo : `de pé (${Math.ceil(Math.max(0, gen.vida))}/${gen.vidaMax})`) : "ainda não veio"}</div>`;
+  const ondas = fimDeGuerra && z.pelotoes.length ? `<p>Ondas: ${z.pelotoes.join(", ").toLowerCase()}.</p>` : "";
+  return `<p>Guerra nº <b>${z.sorteio}</b>: <kbd>T</kbd> repete esta (o mesmo sorteio, herói e montagem); <kbd>R</kbd> sorteia outra.</p>${herois}${general}${ondas}`;
+}
 
 // Os espaços do kit na barra: o principal, a mobilidade, as três comuns e a ultimate, com a tecla, o nome e o custo
 let slots = [];
@@ -611,14 +694,16 @@ function atualizarHud() {
     m.ardis && (m.ardis.acaoA ? m.ardis.acaoA.tipo : m.ardis.absorveAte > m.t), m.morel && Math.ceil(m.morel.vida), m.odette && Math.ceil(m.odette.vida),
     estadoControle(m, h).map((c) => c.texto).join("|"), m.lider && (m.lider.dash7 ? m.lider.dash7.fase : m.lider.brado7 ? "brado" : ""),
     m.lider && m.lider.focoU && m.lider.focoU.id, m.lider && m.lider.provocacao && m.lider.provocacao.ate > m.t, m.morel && m.morel.posturaAte > m.t,
-    m.lider && m.lider.h8 && JSON.stringify(estadoHarg8(m, m.lider)),
+    m.lider && m.lider.h8 && JSON.stringify(estadoHarg8(m, m.lider)), m.g9 && estado9(m).texto,
     ...slots.map((s) => Math.ceil((h.cds[s.id] || 0) * 10))].join(",");
   if (st.faixaAte && st.relogio > st.faixaAte) { $("#faixa").classList.remove("ver"); st.faixaAte = 0; }
   if (golpeAte && st.relogio > golpeAte) { $("#golpe").style.opacity = "0"; golpeAte = 0; }   // some devagar (transição do CSS)
   if (vida < ultimaVida - 4) { const b = $("#ficha .vida"); b.classList.remove("apanhou"); void b.offsetWidth; b.classList.add("apanhou"); }
+  // Campo Livre 9: as barras de cima são as dos heróis da guerra e do General (hudGuerra9)
+  if (m.g9) hudGuerra9(m);
   // Campo Livre 8: o dano recente em Harg escorre atrás da vida (o trecho claro), depois de 0,35 s parado
   const lc = m.lider;
-  if (lc && lc.h8) {
+  if (lc && lc.h8 && !m.g9) {
     const v = Math.max(0, lc.vida), c = st.chip || (st.chip = { v, desde: st.relogio });
     if (v > c.v) c.v = v;
     if (v < c.v - 0.5 && st.relogio - c.desde > 0.35) c.v = Math.max(v, c.v - lc.vidaMax * 0.5 * (1 / 60));
@@ -637,8 +722,10 @@ function atualizarHud() {
   $("#p-aliados").textContent = m.lados[0].length - (h.morto ? 0 : 1);
   $("#p-inimigos").textContent = m.lados[1].length + resumo(m).inimigosPorVir;
   marcarOrdem();
-  const l = m.lider || (m.encontro === "capitao" ? { morto: true, def: TIPOS.lider, vida: 0, vidaMax: TIPOS.lider.vida } : null);
-  $("#chefe").hidden = !l;
+  $("#p-guerra").hidden = !m.g9;
+  if (m.g9) { const e9 = estado9(m); $("#p-guerra").textContent = e9.texto; $("#p-guerra").className = e9.fase; }
+  const l = m.g9 ? null : m.lider || (m.encontro === "capitao" ? { morto: true, def: TIPOS.lider, vida: 0, vidaMax: TIPOS.lider.vida } : null);
+  if (!m.g9) $("#chefe").hidden = !l;
   if (l) {
     $("#chefe b").textContent = l.def.nome;
     $("#chefe .barra i").style.width = (100 * Math.max(0, l.vida)) / l.vidaMax + "%";
@@ -666,8 +753,8 @@ function atualizarHud() {
     }
   }
   // Campo Livre 6: a barra de Ardis (ao lado da de Harg) e a vida de Morel e Odette, embaixo da ficha
-  const ar = m.ardis;
-  $("#chefe2").hidden = !ar;
+  const ar = m.g9 ? null : m.ardis;
+  if (!m.g9) $("#chefe2").hidden = !ar;
   if (ar) {
     $("#chefe2 b").textContent = ar.def.nome;
     $("#chefe2 .barra i").style.width = (100 * Math.max(0, ar.vida)) / ar.vidaMax + "%";
@@ -677,7 +764,9 @@ function atualizarHud() {
       : ar.provocacao && ar.provocacao.ate > m.t ? "Provocada por Morel" : ar.modo === "tropas" ? "Bombardeia as suas tropas"
       : ar.modo === "odette" ? "Mira Odette, de longe" : ar.modo === "morel" ? "Mira Morel, de longe" : "Duela com você, de longe";
   }
-  document.body.classList.toggle("dois-chefes", !!(ar && m.lider));
+  if (!m.g9) document.body.classList.toggle("dois-chefes", !!(ar && m.lider));
+  // a faixa de avisos desce para baixo da barra de cima quando ela está lá (não cobre o golpe que ele prepara)
+  document.body.classList.toggle("com-chefe", !$("#chefe").hidden || !$("#chefe2").hidden);
   // os controles em você (o texto vem pronto do motor: campo7.estadoControle)
   const cc = estadoControle(m, h);
   $("#cc").hidden = !cc.length;
@@ -696,6 +785,52 @@ function atualizarHud() {
     if (pronto && !s.pronto && s.id !== "basico") { s.el.classList.remove("acendeu"); void s.el.offsetWidth; s.el.classList.add("acendeu"); }
     s.pronto = pronto;
   }
+}
+
+// Campo Livre 9: as barras de cima (até duas): o General sozinho, ou os heróis inimigos de pé, na ordem em que entraram.
+// Cada uma: o nome, as variações (o símbolo e o nome), a vida com o dano recente escorrendo, a postura (não no
+// Inabalável) e o estado do golpe, pronto do motor (campo8.estadoHarg8; Ardis, pelo texto dela).
+function hudGuerra9(m) {
+  const lista = chefes9(m).slice(0, 2), els = [$("#chefe"), $("#chefe2")];
+  document.body.classList.toggle("dois-chefes", lista.length > 1);
+  els.forEach((el, i) => {
+    const u = lista[i];
+    el.hidden = !u;
+    if (!u) { el.dataset.id = ""; return; }
+    // o dano recente: o trecho claro escorre até a vida depois de 0,35 s sem apanhar
+    const v = Math.max(0, u.vida), c = st.chips.get(u.id) || { v, desde: st.relogio };
+    st.chips.set(u.id, c);
+    if (v > c.v) c.v = v;
+    if (v < c.v - 0.5 && st.relogio - c.desde > 0.35) c.v = Math.max(v, c.v - u.vidaMax * 0.5 * (1 / 60));
+    if (Math.abs(v - (c.ultimo ?? v)) > 0.01) c.desde = st.relogio;
+    c.ultimo = v;
+    el.querySelector(".barra em").style.width = (100 * c.v) / u.vidaMax + "%";
+    el.querySelector(".barra i").style.width = (100 * v) / u.vidaMax + "%";
+    el.querySelector(".barra span").textContent = `${Math.ceil(v)}/${u.vidaMax}`;
+    if (el.dataset.id !== String(u.id)) {
+      el.dataset.id = u.id;
+      el.querySelector("b").textContent = u.def.nome;
+      el.querySelector(".vars").innerHTML = variacoesDe(u).map((x) => `<span class="var9">${marcaHtml(x.id)}${x.nome}</span>`).join("");
+      el.classList.toggle("general", !!u.general);
+      el.classList.toggle("ardis9", u.tipo === "ardis");
+    }
+    const e8 = u.h8 ? estadoHarg8(m, u) : null, pb = el.querySelector(".postura");
+    pb.hidden = !e8 || e8.inabalavel;
+    if (e8) {
+      el.querySelector("small").textContent = e8.texto;
+      pb.querySelector("i").style.width = 100 * e8.postura + "%";
+      pb.classList.toggle("perto", e8.postura >= 0.7 && !e8.firme);
+      pb.classList.toggle("firme", e8.firme);
+      el.classList.toggle("quebrado", e8.quebrado);
+      el.classList.toggle("aberto", e8.aberto);
+      el.classList.toggle("fase2", e8.fase === 2);
+    } else {
+      el.classList.remove("quebrado", "aberto", "fase2");
+      el.querySelector("small").textContent = u.acaoA && u.acaoA.tipo === "corrente" ? "Prepara a Corrente Arcana!"
+        : u.acaoA && u.acaoA.tipo === "grilhao" ? "Prepara o Grilhão!" : u.acaoA && u.acaoA.tipo === "coluna" ? "Prepara a Coluna de Fogo!"
+        : u.absorveAte > m.t ? "Barreira: absorve o dano" : u.modo === "tropas" ? "Bombardeia as suas tropas" : "Duela com você, de longe";
+    }
+  });
 }
 
 function alternarPainel() {
@@ -748,7 +883,9 @@ function escolherEncontro(id) {
   st.fundo = null;
   $$(".encontro").forEach((b) => b.classList.toggle("escolhido", b.dataset.enc === id));
   const e = ENCONTROS[id];
-  $("#enc-info").innerHTML = `<b>${e.nome}.</b> ${e.descricao} ${e.regra}`;
+  // Campo Livre 9: as variações possíveis (o símbolo, o nome e a regra), para ler antes de lutar
+  const vars = e.sortido ? `<span class="vars9">Variações: ${Object.entries(VARIACOES).map(([v, d]) => `<span title="${d.explica}">${marcaHtml(v)}${d.nome}</span>`).join(" ")}</span>` : "";
+  $("#enc-info").innerHTML = `<b>${e.nome}.</b> ${e.descricao} ${e.regra}${vars}`;
   contagem();
 }
 
@@ -759,6 +896,13 @@ function contagem() {
   const m = criarMundo({ heroi: opcoes.heroi, quantidade: opcoes.quantidade, encontro: opcoes.encontro });
   const agora = m.lados[1].length, depois = m.stats.inimigos - agora;
   const o = m.ondas, ondas = o ? Math.floor((o.ate - o.cada) / o.cada) + 1 : 0;
+  if (m.g9) {
+    const e9 = estado9(m);
+    el.textContent = `Aliados ${m.stats.aliados}${m.morel ? " (com Morel e Odette)" : ""} · Inimigos ${agora} no começo` +
+      (e9.ondas.total ? `, ${e9.ondas.total} ondas sorteadas` : "") + `, ${e9.herois.total} heróis inimigos e o General.` +
+      (m.escala > 1 ? " Os heróis e o General continuam um só." : "");
+    return;
+  }
   el.textContent = `Aliados ${m.stats.aliados} · Inimigos ${m.stats.inimigos}${depois ? `: ${agora} no começo e ${depois} depois` : ""}` +
     (o ? ` e ${ondas} ondas de ${o.n * m.escala} (a cada ${o.cada} s)` : "") + "." +
     (m.escala > 1 ? " Capitão, campeão e porta-estandarte continuam um só." : "");
@@ -844,11 +988,11 @@ function montarInicio() {
     b.type = "button";
     b.className = "encontro";
     b.dataset.enc = id;
-    b.innerHTML = `<b>${e.nome}</b>${e.original ? "a batalha do Campo Livre 1" : id === "capitao" ? "o líder e a retaguarda" : id === "horda" ? "ondas de gente, ao estilo musou" : id === "duasFrentes" ? "pressão dos dois lados" : id === "vila" ? "casas, muralha, hordas e a linha pesada" : id === "carga" ? "cavalaria pelos flancos" : id === "herois" ? "dois heróis inimigos juntos" : id === "amostra" ? "estudo de arte: muralha, portão, casa e árvores" : id === "duelo" ? "só você e Harg: os golpes, a postura, as aberturas" : id === "guerra" ? "as hordas, e Harg entra pelo portão" : "grupos longe uns dos outros"}`;
+    b.innerHTML = `<b>${e.nome}</b>${e.original ? "a batalha do Campo Livre 1" : id === "capitao" ? "o líder e a retaguarda" : id === "horda" ? "ondas de gente, ao estilo musou" : id === "duasFrentes" ? "pressão dos dois lados" : id === "vila" ? "casas, muralha, hordas e a linha pesada" : id === "carga" ? "cavalaria pelos flancos" : id === "herois" ? "dois heróis inimigos juntos" : id === "amostra" ? "estudo de arte: muralha, portão, casa e árvores" : id === "duelo" ? "só você e Harg: os golpes, a postura, as aberturas" : id === "guerra" ? "as hordas, e Harg entra pelo portão" : id === "guerra9" ? "ondas sorteadas, três heróis com variações e o General" : id === "treino9" ? "só você: os heróis, um por vez, e o General" : "grupos longe uns dos outros"}`;
     b.addEventListener("click", () => escolherEncontro(id));
     $("#encontros").append(b);
   }
-  escolherEncontro(ENCONTROS[opcoes.encontro] ? opcoes.encontro : "original");
+  escolherEncontro(ENCONTROS[opcoes.encontro] ? opcoes.encontro : PADRAO.encontro);
   montarHerois();
   escolherHeroi(opcoes.heroi);
   $("#op-quantidade").value = opcoes.quantidade;
@@ -863,6 +1007,7 @@ function montarInicio() {
   $("#lutar").addEventListener("click", () => { iniciarSom(); novaBatalha(); });
   $("#continuar").addEventListener("click", () => pausar(false));
   $$("[data-recomecar]").forEach((b) => b.addEventListener("click", () => novaBatalha()));
+  $$("[data-repetir]").forEach((b) => b.addEventListener("click", () => novaBatalha(true)));
   $$("[data-trocar]").forEach((b) => b.addEventListener("click", () => { st.pausado = false; mostrar("inicio"); }));
   for (const raizOp of $$("[data-opcoes]")) {
     raizOp.innerHTML = `

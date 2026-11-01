@@ -390,18 +390,21 @@ function odette(m, u, dt) {
       return true;
     }
   }
-  // perigo perto: sai de lado, para um ponto livre
+  // perigo perto: sai de lado, para um ponto livre. Encurralada (o ponto livre não a tira do lugar), fica e atira a luz
+  // (Campo Livre 9: antes ela só fugia; um cão a encurralou no canto do campo e os dois ficaram ali para sempre, ela se
+  // curando e ele mordendo, e o General não vinha)
   const perto = maisPerto(m, u, 1);
+  let foge = false;
   if (perto && perto.d < 30) {
     const dx = u.x - perto.v.x, dy = u.y - perto.v.y, n = perto.d || 1;
     const p = pontoLivre(m, u.x + (dx / n) * 30, u.y + (dy / n) * 30, u.raio);
-    andar(u, p.x, p.y, d.vel);
-    return true;
+    if (Math.hypot(p.x - u.x, p.y - u.y) >= 10) { andar(u, p.x, p.y, d.vel); return true; }
+    u.vx = u.vy = 0; foge = true;
   }
   // a posição (CL7): um ponto de onde ela vê e alcança quem protege (você; caído você, Morel), a 24-70 px dele, longe
   // dos inimigos e do lado de lá em relação a eles; se Morel está junto, de onde ela veja os dois. Nunca tenta encostar
   // em ninguém através de uma parede: o ponto precisa de visão e de caminho (navegacao.posicaoUtil).
-  const prot = !h.morto ? h : mo && !mo.morto ? mo : null;
+  const prot = foge ? null : !h.morto ? h : mo && !mo.morto ? mo : null;
   if (prot) {
     const vmo = mo && !mo.morto && mo !== prot && dist2(mo, prot) < 140 * 140 ? mo : null;
     const p = posicaoUtil(m, u, prot, { min: 24, max: 70, perigo: 45, fundo: m.centros[1], dura: 1, visaoDe: vmo }) ||
@@ -432,7 +435,7 @@ function ardis(m, u, dt) {
   const d = u.def, h = m.heroi;
   // sozinha (Harg caído e quase ninguém da tropa dela de pé), ela foge pelo portão: a batalha não fica presa nela
   const restam = m.lados[1].filter((v) => !v.morto && v !== u).length;
-  if ((!m.lider || m.lider.morto) && restam <= Math.max(2, Math.round(m.stats.inimigos * 0.05))) {
+  if (!m.semFuga && (!m.lider || m.lider.morto) && restam <= Math.max(2, Math.round(m.stats.inimigos * 0.05))) {
     u.fugindo = true; u.acaoA = null;
     S.registrar(m, "Sozinha, Ardis foge.");
     m.eventos.push({ tipo: "fuga" });

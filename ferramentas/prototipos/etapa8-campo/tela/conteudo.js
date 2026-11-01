@@ -1,7 +1,7 @@
 // PROTÓTIPO de campo livre da etapa 8 (nada no jogo): os números e os kits. Tudo de teste; as regras que usam estes
 // números estão em sim.js. Unidades: distância em pixels nativos (o campo é desenhado 1:1 e ampliado inteiro), tempo
 // em segundos, empurrão em px/s (a unidade desliza cerca de empurrão/9 px, ver ATRITO_EMPURRAO).
-export const VERSAO = "Campo Livre 8";
+export const VERSAO = "Campo Livre 9";
 
 export const CAMPO = { largura: 960, altura: 560, margem: 8 };
 export const ATRITO_EMPURRAO = 9;      // o empurrão perde velocidade a e^(-9t): desliza v/9 px
@@ -116,6 +116,37 @@ export const TIPOS = {
   estandarte: { nome: "Porta-estandarte", papel: "apoio", raio: 3.5, vida: 30, vel: 30, massa: 1.5, dano: 2,
     alcance: 3, preparo: 0.3, recarga: 1.2, vagas: 3, elite: true, aura: 70, auraDano: 1.3, auraRitmo: 0.85,
     abala: 120, abalaTempo: 2 },
+  // ---- Campo Livre 9: as tropas novas (só do lado inimigo). Quatro usam as regras de sempre com outros números; o
+  // sapador tem a dele (campo9.js).
+  // O lanceiro: a lança alcança 12 px, por cima da primeira fila; golpe lento.
+  lanceiro: { nome: "Lanceiro", papel: "perto", raio: 3.5, vida: 14, vel: 30, massa: 1.5, dano: 3, alcance: 12,
+    preparo: 0.38, recarga: 1.4, vagas: 3, estica: 8, compromete: 0.6 },
+  // O besteiro: atira pouco e forte (6; 9 no herói), com o virote mais rápido que a flecha.
+  besteiro: { nome: "Besteiro", papel: "longe", raio: 3.5, vida: 9, vel: 26, massa: 1, dano: 6, alcance: 175, ideal: 130,
+    perto: 50, preparo: 0.9, recarga: 3.4, vagas: 3, flecha: 300, busca: 420, tiro: 0.9, posto: 90 },
+  // O furioso: corre (50) e bate rápido, sem armadura.
+  furioso: { nome: "Furioso", papel: "perto", raio: 3.5, vida: 15, vel: 50, massa: 1, dano: 3, alcance: 3, preparo: 0.18,
+    recarga: 0.65, vagas: 3, estica: 12, compromete: 0.6 },
+  // O cão de guerra: o mais rápido do campo (68), cai com qualquer golpe.
+  cao: { nome: "Cão de guerra", papel: "perto", raio: 3, vida: 6, vel: 68, massa: 0.6, dano: 1.5, alcance: 3, preparo: 0.14,
+    recarga: 0.6, vagas: 3, estica: 12, compromete: 0.6 },
+  // O sapador: leva um barril até o grupo nosso mais perto (até `busca` px; você, se estiver mais perto), para a `perto`
+  // px e acende o pavio: o círculo aparece no chão e o barril explode `arma` s depois. Derrubado (antes ou depois de
+  // acender), o barril cai e explode `cai` s depois, ferindo QUALQUER lado no círculo: derrubar o sapador no meio dos
+  // inimigos leva os dele junto.
+  sapador: { nome: "Sapador", papel: "perto", especial9: true, raio: 3.5, vida: 10, vel: 40, massa: 1, dano: 1, alcance: 3,
+    preparo: 0.3, recarga: 1.2, vagas: 3, estica: 8, compromete: 0.6,
+    barril: { arma: 0.9, cai: 0.45, perto: 10, busca: 260, raio: 30, dano: 14, danoHeroi: 26, empurrao: 230, atordoa: 0.4 } },
+  // ---- Campo Livre 9: os heróis inimigos novos. Vesna e o General usam a máquina de golpes de Harg (campo8.js) com as
+  // tabelas VESNA9 e GENERAL9; aqui ficam o corpo, a escolha de alvo (campo7.escolherFoco) e a abertura (+50%).
+  vesna: { nome: "Vesna, a Lâmina", papel: "perto", elite: true, heroiInimigo: true, raio: 4.5, vida: 200, vel: 70, massa: 4,
+    dano: 0, alcance: 4, preparo: 0.3, recarga: 1, vagas: 6, estica: 10, compromete: 0.6, carga: { vulneravel: 1.5 },
+    focoIA: { base: { heroi: 30, morel: 6, odette: 22, tropas: 8 }, tempo: 8, pressao: 0.8, apoio: 0.6, ferido: 25, isolado: 14,
+      concentracao: 3, oportunidade: 12, inercia: 20, ruido: 10, minimo: 2, revisao: [0.8, 1.2], protege: 0 } },
+  general: { nome: "O General", papel: "perto", elite: true, heroiInimigo: true, raio: 9, vida: 3000, vel: 58, massa: 20,
+    dano: 0, alcance: 6, preparo: 0.3, recarga: 1, vagas: 12, estica: 10, compromete: 0.6, carga: { vulneravel: 1.5 },
+    focoIA: { base: { heroi: 34, morel: 8, odette: 14, tropas: 10 }, tempo: 10, pressao: 0.9, apoio: 0.5, ferido: 20, isolado: 10,
+      concentracao: 4, oportunidade: 12, inercia: 24, ruido: 8, minimo: 2.5, revisao: [0.9, 1.3], protege: 0 } },
 };
 
 // Os heróis (Campo Livre 5). Cada um tem um ataque principal fixo (botão esquerdo, segurar repete), uma mobilidade fixa
@@ -436,6 +467,31 @@ export const ENCONTROS = {
     ondas: { cada: 10, primeira: 8, n: 34, ate: 100, lados: ["portao", "norte", "sul"],
       pontos: { portao: [800, 280], norte: [600, 14], sul: [600, 546] } },
   },
+  // Campo Livre 9: a guerra nova (campo9.js). `sortido`: as ondas, os heróis e as variações mudam a cada guerra (o
+  // número do sorteio aparece no fim; ?sorteio=N repete uma). `semFuga`: ninguém foge; acaba quando o General cai.
+  guerra9: {
+    nome: "A guerra", cenario: "povoado", companheiros: true, sortido: true, semFuga: true,
+    descricao: "O seu exército, Morel e Odette diante do portão. Ondas de tropas variadas (lanceiros, besteiros, furiosos, cães, sapadores, cavalaria) e três heróis inimigos, frágeis e letais, cada um com variações sorteadas. Quando o campo ficar vazio, o General atravessa o portão.",
+    regra: "Ninguém foge. Ondas a cada 11 s até os 90 s; os heróis entram aos 20, 46 e 72 s. Derrube tudo e o General vem; a guerra acaba quando ele cai.",
+    heroi: [380, 280],
+    aliados: [["soldado", 28, 336, 280, 5], ["arqueiro", 12, 286, 280, 2], ["pesado", 6, 400, 240, 2], ["cavaleiro", 6, 330, 360, 3]],
+    grupos: { frente: { ativa: 3 } },
+    inimigos: [["soldado", 20, 520, 280, 5, "frente"], ["lanceiro", 8, 548, 280, 2, "frente"], ["arqueiro", 8, 540, 180, 2, "frente"]],
+    levas: [],
+    ondas9: { cada: 11, primeira: 8, ate: 90, lados: ["portao", "norte", "sul"],
+      pontos: { portao: [800, 280], norte: [620, 14], sul: [620, 546] } },
+    herois9: { entradas: [{ t: 20, variacoes: 1 }, { t: 46, variacoes: 1 }, { t: 72, variacoes: 2 }], ponto: [790, 280] },
+    general: { ponto: [790, 280], espera: 3 },
+  },
+  treino9: {
+    nome: "Treino: os heróis e o General", cenario: "povoado", sortido: true, semFuga: true,
+    descricao: "Só você, do lado de fora da muralha. Os três heróis inimigos entram um por vez, cada um com variações sorteadas; depois do terceiro, o General. Para conhecer os golpes, as variações e as aberturas sem o resto da guerra.",
+    regra: "Treino: sem tropas. Cada herói entra 2 s depois de o anterior cair, e a sua vida volta cheia. R recomeça (com outro sorteio).",
+    heroi: [380, 300], aliados: [],
+    grupos: {}, inimigos: [], levas: [],
+    herois9: { seguidos: true, entradas: [{ variacoes: 1 }, { variacoes: 1 }, { variacoes: 2 }], ponto: [520, 300], espera: 2 },
+    general: { ponto: [520, 300], espera: 2 },
+  },
   // Campo Livre 7: a amostra de arte, jogável. O mesmo conteúdo nas três aparências (F8 troca) e nas duas escalas do
   // seu herói (F9); as regras não mudam entre elas.
   amostra: {
@@ -541,28 +597,35 @@ export const BATALHA = {
 // `rastreia`, e no máximo `giro` rad/s; depois a direção fica), a execução (o avanço de `avanco` px em `exec` s; o
 // contato no fim) e a recuperação (`recupera` s parado; com `abertura`, ele leva +50% de dano e o dobro de postura).
 // `dano` é nas tropas (o bastante para derrubar um soldado comum), `danoHeroi` em você e em Morel e Odette.
+// Campo Livre 9: a mesma máquina (campo8.js) serve aos heróis inimigos novos e ao General, cada um com a sua tabela.
+// `aproxima`: o golpe de longe (a carga ou o salto, com `min`, `max` e `recarga`); `cerco`: o golpe contra a tropa que o
+// cerca; `golpeFase2`: o que abre a fase 2; `inicio`: o golpe cujo alcance decide começar uma sequência (sem ele, o
+// primeiro da sequência seguinte). Nos golpes: `dash` (corre a faixa), `fase2` (passa para a fase 2), `apos` (o
+// texto da abertura).
 export const HARG8 = {
-  vida: 1700, vel: 56, velPressao: 64,
+  vida: 1700, vel: 56, velPressao: 64, aproxima: "investida", cerco: "rodopio", golpeFase2: "rugido", inicio: "talho",
+  registroFase2: "ruge: a fase 2 começa (sequências mais longas, a Martelada solta uma onda)", estadoFase2: "Fúria: sequências mais longas",
   golpes: {
-    // o golpe simples, que mantém a pressão: rápido, curto, um arco na frente
-    talho: { nome: "Talho", preparo: 0.42, rastreia: 0.55, giro: 3.2, exec: 0.08, avanco: 16, forma: "arco", raio: 30, abertura: 130,
+    // o golpe simples, que mantém a pressão: rápido, curto, um arco na frente. O avanço é 13 px (Campo Livre 9): a tabela
+    // dizia 16, mas a conta por passo só andava 13, e foi esse o alcance jogado; agora o aviso mostra o alcance inteiro
+    talho: { nome: "Talho", preparo: 0.42, rastreia: 0.55, giro: 3.2, exec: 0.08, avanco: 13, forma: "arco", raio: 30, abertura: 130,
       dano: 18, danoHeroi: 15, empurrao: 170, recupera: 0.32 },
     // a varredura longa: alcança quem só recua (cresce para a frente no avanço); quem entra ou sai para o lado escapa
     varredura: { nome: "Varredura Longa", preparo: 0.6, rastreia: 0.45, giro: 2.6, exec: 0.12, avanco: 30, forma: "arco", raio: 52,
       abertura: 150, dano: 18, danoHeroi: 22, empurrao: 230, recupera: 0.5 },
     // o golpe final comprometido: a martelada no chão à frente; depois, o machado preso (a abertura grande)
     martelada: { nome: "Martelada", preparo: 0.78, rastreia: 0.35, giro: 2.2, exec: 0.1, avanco: 10, forma: "circulo", distancia: 22,
-      raio: 30, dano: 24, danoHeroi: 32, empurrao: 260, recupera: 1.25, abertura: true,
+      raio: 30, dano: 24, danoHeroi: 32, empurrao: 260, recupera: 1.25, abertura: true, apos: "da Martelada",
       onda: { raio: 74, dano: 12, danoHeroi: 12, empurrao: 180 } },
     // a carga pela linha: atravessa a infantaria (derruba e empurra quem está na faixa) e para no primeiro herói, num
     // pesado, numa parede ou no fim do alcance; depois, a abertura curta
-    investida: { nome: "Investida", preparo: 0.48, rastreia: 0.3, giro: 2, vel: 560, alcance: 210, min: 70, max: 200, largura: 11,
+    investida: { nome: "Investida", dash: true, apos: "da Investida", preparo: 0.48, rastreia: 0.3, giro: 2, vel: 560, alcance: 210, min: 70, max: 200, largura: 11,
       dano: 18, danoHeroi: 20, empurrao: 240, recupera: 0.65, abertura: true, recarga: 6 },
     // contra concentrações: o giro do machado em volta dele quando a nossa tropa o cerca
     rodopio: { nome: "Rodopio", preparo: 0.6, rastreia: 0, giro: 0, exec: 0.1, avanco: 0, forma: "circulo", distancia: 0, raio: 46,
       dano: 18, danoHeroi: 24, empurrao: 250, recupera: 0.55, recarga: 5, min: 4 },
     // a passagem para a fase 2: o rugido empurra a tropa nossa em volta (não atordoa ninguém)
-    rugido: { nome: "Rugido", preparo: 0.8, rastreia: 0, giro: 0, exec: 0.05, avanco: 0, forma: "circulo", distancia: 0, raio: 64,
+    rugido: { nome: "Rugido", fase2: true, preparo: 0.8, rastreia: 0, giro: 0, exec: 0.05, avanco: 0, forma: "circulo", distancia: 0, raio: 64,
       dano: 4, danoHeroi: 0, empurrao: 220, recupera: 0.4 },
   },
   // as sequências reconhecíveis, por fase; entre elas, a pressão (ele anda até você) ou um passo de lado
@@ -594,3 +657,128 @@ export const IMPACTO = {
   tremorQueda: 1.8,       // o "trauma" da câmera cai 1,8 por segundo
   tremorMaxPx: 6,         // deslocamento máximo em px nativos, com intensidade 100% e trauma 1
 };
+
+// ------------------------------------------------------------------------------------------------ Campo Livre 9
+// A guerra nova (campo9.js; as razões no roadmapIDEIAS/34). Os heróis inimigos ficam frágeis e letais: caem em poucos
+// segundos de ataque, mas cada golpe anunciado tira um quarto a um terço da sua vida. Cada um entra com variações
+// sorteadas. Depois de tudo, o General. Ninguém foge: a guerra acaba quando o General cai (ou você).
+
+// Harg frágil: a máquina e o repertório do 8, sem a fase 2, com menos de um quinto da vida, a postura curta e o dano no
+// herói quase dobrado (o dano nas tropas é o mesmo: já derrubava um soldado por golpe).
+export const HARG9 = {
+  ...HARG8, vida: 320, fase2: 0,
+  golpes: {
+    ...HARG8.golpes,
+    talho: { ...HARG8.golpes.talho, danoHeroi: 27 }, varredura: { ...HARG8.golpes.varredura, danoHeroi: 40 },
+    martelada: { ...HARG8.golpes.martelada, danoHeroi: 58 }, investida: { ...HARG8.golpes.investida, danoHeroi: 36 },
+    rodopio: { ...HARG8.golpes.rodopio, danoHeroi: 40 },
+  },
+  postura: { ...HARG8.postura, max: 70, quebra: 1.6, firme: 5 },
+};
+
+// Ardis frágil: o mesmo comportamento (campo6.ardis), um terço da vida, a barreira menor e as magias anunciadas bem
+// mais fortes no herói.
+// O dardo (o ataque contínuo, sem aviso) quase não muda; o que dói é o que se anuncia (a Coluna, a Corrente). O passo
+// sombrio espera 9 s em vez de 6 e o dardo sai a cada 1,8 s: frágil, ela não pode sumir nem cutucar o tempo todo.
+export const ARDIS9 = {
+  vida: 200, barreira: { ...TIPOS.ardis.barreira, absorve: 25 }, passo: { ...TIPOS.ardis.passo, recarga: 9 },
+  dardo: { ...TIPOS.ardis.dardo, danoHeroi: 12, recarga: 1.8 }, coluna: { ...TIPOS.ardis.coluna, dano: 18, danoHeroi: 42 },
+  corrente: { ...TIPOS.ardis.corrente, danoHeroi: 24 },
+};
+
+const POSTURA_CURTA = { max: 60, regen: 14, espera: 2, forte: 6, controle: 20, quebra: 1.6, firme: 5, firmeFator: 0.35,
+  fontes: { heroi: 1, companheiro: 0.6, tropa: 0.25 }, continuo: 0.5, aberto: 2 };
+
+// Vesna, a Lâmina: a duelista que não fica parada. O Corte Duplo de perto, o Leque de Facas de longe (três faixas
+// estreitas: quem está entre elas escapa), o Bote pela linha (para no primeiro herói; depois, a abertura) e o recuo:
+// colada em você, some e reaparece a 95 px (a cada 5 s).
+export const VESNA9 = {
+  vida: 200, vel: 70, velPressao: 84, aproxima: "investida", fase2: 0, stats: "vesna",
+  recuo: { perto: 26, dist: 95, recarga: 5 },
+  golpes: {
+    corte: { nome: "Corte Duplo", preparo: 0.32, rastreia: 0.6, giro: 4, exec: 0.07, avanco: 12, forma: "arco", raio: 24,
+      abertura: 140, dano: 14, danoHeroi: 24, empurrao: 140, recupera: 0.28 },
+    leque: { nome: "Leque de Facas", preparo: 0.5, rastreia: 0.6, giro: 3, alcanceIA: 120, intervalo: 0,
+      estagios: [{ formas: [{ forma: "faixa", ang: -20, alcance: 150, largura: 4 }, { forma: "faixa", ang: 0, alcance: 150, largura: 4 },
+        { forma: "faixa", ang: 20, alcance: 150, largura: 4 }] }],
+      dano: 10, danoHeroi: 22, empurrao: 60, recupera: 0.4 },
+    investida: { nome: "Bote", dash: true, apos: "do Bote", preparo: 0.36, rastreia: 0.4, giro: 3, vel: 620, alcance: 180,
+      min: 60, max: 170, largura: 8, dano: 12, danoHeroi: 30, empurrao: 200, recupera: 0.5, abertura: true, recarga: 4 },
+  },
+  sequencias: { 1: [["corte", "corte"], ["leque"], ["corte", "leque"]] },
+  pausa: { 1: [0.5, 0.9] },
+  postura: POSTURA_CURTA,
+};
+
+// O General: o último, grande e muito mais forte. Preparações curtas (0,3 a 0,7 s), áreas enormes e controles, sempre
+// com o aviso no chão e pela proteção contra repetição (nunca uma corrente de controles). A Ceifa (o arco na frente;
+// com 200° e 64 px, medido: de perto não havia como sair dela sem a mobilidade), a
+// Estocada (a faixa longa e estreita: castiga quem recua em linha reta), as Correntes (puxam quem acertam até a frente
+// dele e prendem 0,35 s; logo depois vem uma Estocada com a preparação inteira: dá para sair dela pelo lado), o
+// Terremoto (três anéis, de dentro para fora, a cada 0,3 s; atordoam; quem entra no anel que já estourou escapa;
+// depois, a abertura), o Salto (no ponto onde você está, até 300 px; atordoa; depois, a abertura maior). Abaixo de
+// metade da vida, o Brado Gélido (deixa lento quem estiver a 220 px) e a fase 2: a Cruz de Lâminas (a cruz e depois o
+// X, longas em volta dele), sequências mais longas, pausas mais curtas.
+export const GENERAL9 = {
+  vida: 3000, vel: 58, velPressao: 70, aproxima: "salto", cerco: "terremoto", golpeFase2: "brado", fase2: 0.5, stats: "general",
+  registroFase2: "brada: a fase 2 começa (a Cruz de Lâminas, sequências mais longas, pausas mais curtas)",
+  estadoFase2: "Fase 2: a Cruz e sequências longas",
+  golpes: {
+    ceifa: { nome: "Ceifa", preparo: 0.4, rastreia: 0.4, giro: 2.8, exec: 0.08, avanco: 10, forma: "arco", raio: 42,
+      abertura: 150, dano: 40, danoHeroi: 34, empurrao: 260, recupera: 0.3 },
+    estocada: { nome: "Estocada", preparo: 0.4, rastreia: 0.5, giro: 3, exec: 0.07, avanco: 8, forma: "faixa", alcance: 150,
+      largura: 10, alcanceIA: 140, dano: 40, danoHeroi: 30, empurrao: 220, recupera: 0.35 },
+    estocadaPuxada: { nome: "Estocada", preparo: 0.55, rastreia: 0.5, giro: 3, exec: 0.07, avanco: 8, forma: "faixa", alcance: 150,
+      largura: 10, alcanceIA: 160, dano: 40, danoHeroi: 30, empurrao: 220, recupera: 0.35 },
+    correntes: { nome: "Correntes", preparo: 0.38, rastreia: 0.5, giro: 3, exec: 0.06, forma: "faixa", alcance: 210, largura: 9,
+      alcanceIA: 200, dano: 6, danoHeroi: 10, empurrao: 0, recupera: 0.2, puxa: { para: 14, imob: 0.35 }, seguinte: "estocadaPuxada" },
+    terremoto: { nome: "Terremoto", apos: "do Terremoto", preparo: 0.55, rastreia: 0, giro: 0, alcanceIA: 110, intervalo: 0.3,
+      estagios: [{ formas: [{ forma: "anel", r0: 0, raio: 58 }] }, { formas: [{ forma: "anel", r0: 58, raio: 118 }] },
+        { formas: [{ forma: "anel", r0: 118, raio: 185 }] }],
+      dano: 30, danoHeroi: 26, empurrao: 200, atordoa: 0.8, recupera: 0.9, abertura: true, raio: 118, min: 7, recarga: 9 },
+    salto: { nome: "Salto", salto: true, apos: "do Salto", preparo: 0.7, rastreia: 0.25, giro: 0, exec: 0.45, raio: 56, min: 110,
+      max: 300, recarga: 7, dano: 40, danoHeroi: 40, empurrao: 280, atordoa: 0.8, recupera: 1.1, abertura: true },
+    cruz: { nome: "Cruz de Lâminas", preparo: 0.55, rastreia: 0, giro: 0, alcanceIA: 160, intervalo: 0.35,
+      estagios: [{ formas: [{ forma: "cruz", ang: 0, alcance: 300, largura: 11 }] }, { formas: [{ forma: "cruz", ang: 45, alcance: 300, largura: 11 }] }],
+      dano: 40, danoHeroi: 32, empurrao: 200, recupera: 0.6 },
+    brado: { nome: "Brado Gélido", fase2: true, preparo: 0.7, rastreia: 0, giro: 0, exec: 0.05, avanco: 0, forma: "circulo",
+      distancia: 0, raio: 220, dano: 0, danoHeroi: 0, empurrao: 120, lento: { fator: 0.5, dura: 2.5 }, recupera: 0.5 },
+  },
+  sequencias: {
+    1: [["ceifa", "estocada"], ["correntes"], ["ceifa", "ceifa"], ["terremoto"], ["estocada", "ceifa"]],
+    2: [["ceifa", "estocada", "ceifa"], ["correntes"], ["cruz"], ["ceifa", "terremoto"], ["estocada", "estocada", "ceifa"]],
+  },
+  pausa: { 1: [0.5, 0.8], 2: [0.3, 0.5] },
+  postura: { max: 380, regen: 18, espera: 2, forte: 6, controle: 20, quebra: 3, firme: 8, firmeFator: 0.35,
+    fontes: { heroi: 1, companheiro: 0.6, tropa: 0.2 }, continuo: 0.5, aberto: 2 },
+};
+
+// As variações dos heróis inimigos, sorteadas a cada guerra. `explica`: a faixa na primeira vez que aparece; `cor`: o
+// anel no chão, embaixo dele, e a etiqueta na barra.
+export const VARIACOES = {
+  gelido: { nome: "Gélido", cor: "#8fd8ff", lento: { fator: 0.45, dura: 2 }, janela: 4, congela: 0.9, congelaTropa: 1.2,
+    explica: "Gélido: cada golpe dele deixa lento por 2 s; dois acertos em 4 s congelam (atordoado 0,9 s)." },
+  inabalavel: { nome: "Inabalável", cor: "#e2cf96",
+    explica: "Inabalável: não fica atordoado, preso, lento nem provocado, não é empurrado e a postura não quebra. Só o dano o derruba." },
+  venenoso: { nome: "Venenoso", cor: "#8fe06a", veneno: { tique: 1.5, cada: 0.5, dura: 3, max: 3 },
+    explica: "Venenoso: cada golpe dele envenena (3 de dano por segundo durante 3 s; até 3 doses juntas)." },
+  explosivo: { nome: "Rastro Explosivo", cor: "#ffa04a", espaco: 24, arma: 0.8, raio: 16, dano: 10, danoHeroi: 18, empurrao: 160,
+    explica: "Rastro Explosivo: as investidas, os saltos e os sumiços dele deixam cargas no chão, que explodem 0,8 s depois." },
+  vampirico: { nome: "Vampírico", cor: "#e05050", cura: 0.5, explica: "Vampírico: recupera metade do dano que causa." },
+  implacavel: { nome: "Implacável", cor: "#ffe25a", vel: 1.25, ritmo: 1.6,
+    explica: "Implacável: anda 25% mais rápido, e as recargas e as pausas dele passam 60% mais rápido." },
+};
+
+// Os pelotões das ondas da guerra: cada onda sorteia um ([tipo, quantos] × a escala).
+export const PELOTOES = {
+  linha: { nome: "Soldados e lanceiros", blocos: [["soldado", 18], ["lanceiro", 10]] },
+  furia: { nome: "Furiosos e cães", blocos: [["furioso", 14], ["cao", 10]] },
+  besta: { nome: "Besteiros atrás dos pesados", blocos: [["pesado", 6], ["soldado", 10], ["besteiro", 10]] },
+  sapa: { nome: "Sapadores no meio da infantaria", blocos: [["soldado", 16], ["sapador", 6], ["veterano", 4]] },
+  matilha: { nome: "A matilha", blocos: [["cao", 22]] },
+  cavalaria: { nome: "Cavalaria e lanceiros", blocos: [["cavaleiro", 10], ["lanceiro", 6]] },
+  mista: { nome: "Infantaria e arqueiros", blocos: [["soldado", 14], ["veterano", 6], ["arqueiro", 8]] },
+};
+
+// Os heróis inimigos que podem entrar na guerra (cada um no máximo uma vez, na ordem sorteada).
+export const HEROIS9 = { harg: { tipo: "lider" }, ardis: { tipo: "ardis" }, vesna: { tipo: "vesna" } };

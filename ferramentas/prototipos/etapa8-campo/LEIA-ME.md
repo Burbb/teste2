@@ -1,7 +1,8 @@
 # Protótipo de campo livre da etapa 8: o herói em tempo real no meio de tropas pequenas
 
-Jogável e isolado (01/11/2026, versão **Campo Livre 8**; a sétima, com o Harg de antes e os modelos do 7, fica congelada
-em `tela-v7/` e abre em `/v7/`; a sexta, antes da navegação nova, dos controles e do estudo de arte, em `tela-v6/` e
+Jogável e isolado (01/11/2026, versão **Campo Livre 9**: a guerra nova, com heróis inimigos frágeis e letais, variações
+sorteadas, tropas novas e o General no fim; o estudo é o [34](../../../roadmapIDEIAS/34-ETAPA8-A-GUERRA-E-O-GENERAL.md). A oitava,
+com o Harg resistente e sem o General, fica congelada em `tela-v8/` e abre em `/v8/`; a sétima, com o Harg de antes e os modelos do 7, em `tela-v7/` e `/v7/`; a sexta, antes da navegação nova, dos controles e do estudo de arte, em `tela-v6/` e
 `/v6/`; a quinta, antes das construções e das tropas novas, em `tela-v5/` e
 `/v5/`; a quarta, com o básico antigo (Corte e Faísca), em `tela-v4/` e `/v4/`; a primeira, **Campo Livre 1**, aprovada pelo Jean como direção, em `tela-v1/`
 e `/v1/`; os links estão na tela de escolha; a segunda está no commit `31ea8778` e a terceira no `298dc4bc`). **Não é integração:** o jogo não carrega nada desta pasta (um teste confere) e o combate do jogo não mudou. Os números são de teste. A pesquisa, as decisões, as medições, as
@@ -13,7 +14,8 @@ protótipos anteriores (`etapa8-builds`, `etapa8-tatico`) ficam como histórico.
 Dê dois cliques em `demo.bat` (ou rode `python ferramentas/prototipos/etapa8-campo/servidor.py` na raiz). O servidor
 tenta a porta **8801**; se ela estiver ocupada, diz quem está nela e usa a próxima livre, e **abre o navegador na porta
 que de fato usou**. A versão aparece no terminal, no título da aba, no topo da escolha do herói e no selo da luta: se
-não aparecer "Campo Livre 8", não é esta entrega. Um `demo.bat` antigo ainda aberto segura a 8801 (e responde com o
+não aparecer "Campo Livre 9", não é esta entrega. A tela abre com **A guerra** escolhida; o selo da luta mostra o número da
+guerra. Um `demo.bat` antigo ainda aberto segura a 8801 (e responde com o
 nome antigo em `/api/versao`, embora sirva os arquivos novos): feche a janela dele ou use a porta que o novo anunciar.
 `DEMO_PORTA` escolhe outra porta; `DEMO_SEM_NAVEGADOR=1` não abre o navegador.
 
@@ -32,7 +34,8 @@ nome antigo em `/api/versao`, embora sirva os arquivos novos): feche a janela de
 | `F1` `F2` `F3` `F5` `F6` `F7` `F4` | seleciona os soldados, os arqueiros, a cavalaria, a infantaria pesada, os magos de batalha, Morel e Odette, todos; com `Ctrl`, soma (o placar mostra só os tipos que existem na batalha) |
 | `X` | limpa a seleção |
 | `P` ou `Esc` | pausa (com as opções) |
-| `R` | recomeça a mesma batalha |
+| `R` | recomeça; na guerra e no treino, **com outro sorteio** (outras ondas, outra ordem de heróis, outras variações) |
+| `T` | na guerra e no treino: **repete a mesma guerra** (o mesmo número, o mesmo herói, a mesma montagem); também nos botões da pausa e do fim |
 | `Tab` | registro e diagnóstico (recolhidos por padrão) |
 | `M` | som |
 | `H` | **traz uma horda** de inimigos comuns na direção do mouse (a quantidade nas opções; até 1200 combatentes no campo) |
@@ -40,13 +43,39 @@ nome antigo em `/api/versao`, embora sirva os arquivos novos): feche a janela de
 | `F9` | troca os modelos dos heróis: os **novos** (a candidata do 8), os do Campo Livre 7, o herói menor do estudo do 7 |
 | `V` | troca a violência (Desligada, Contida, Normal, Intensa): só o que fica no chão; a luta não muda |
 
-Na escolha: o **encontro** (A primeira batalha, Grupos espalhados, Duas frentes, O Capitão e a retaguarda, A horda), o herói
+Na escolha: o **encontro** (A guerra, o inicial, e o Treino do 9; os anteriores: A primeira batalha, Grupos espalhados, Duas frentes, O Capitão e a retaguarda, A horda, a vila, a carga, Harg e Ardis, o portão, o treino e a guerra de Harg), o herói
 (`1` Guerreiro, `2` Mago), a **montagem** de cada um (três comuns, uma ultimate e talentos até 7 pontos; os atalhos
 "Montagens prontas" preenchem tudo e continuam editáveis; a tela rola quando a lista passa da altura da janela) e o
 **exército** (1×, 2× ou 4×, experimental; as quantidades reais aparecem logo abaixo) e, nos encontros novos, a
 **composição** do seu exército e da do inimigo (Comum, Com cavalaria, Linha pesada e magos, Completa); `Enter` luta. Opções (na escolha e na pausa): tremor da
 câmera (0 a 150%, começa em 150%; 0 desliga), pausa no impacto, mostrar a área do botão direito, volume, o tamanho da
 horda da tecla H e mudo.
+
+## O que entrou no Campo Livre 9
+
+A direção aprovada pelo Jean depois de jogar o 8 (os duelos com os heróis continuavam demorados): heróis inimigos comuns
+**frágeis e letais**, **variações sorteadas**, **mais tropas**, **sem fuga** e o **General** no fim; a vitória é a queda
+dele. Tudo, com os números, as medições e as questões, no [34](../../../roadmapIDEIAS/34-ETAPA8-A-GUERRA-E-O-GENERAL.md).
+
+- **Dois encontros:** "A guerra" (`?enc=guerra9`, o inicial: ondas sorteadas a cada 11 s até os 90 s, os heróis aos 20,
+  46 e 72 s, o General quando o campo fica vazio) e "Treino: os heróis e o General" (`?enc=treino9`: só você, os três
+  heróis um por vez, a vida cheia a cada um, depois o General). `R` sorteia outra guerra, `T` repete a mesma,
+  `?sorteio=N` começa pela de número N.
+- **Os heróis:** Harg (320 de vida), Ardis (200) e **Vesna, a Lâmina** (nova, 200: Corte Duplo, Leque de Facas, Bote e o
+  recuo quando você cola nela). Cada um com uma ou duas **variações** (Gélido, Inabalável, Venenoso, Rastro Explosivo,
+  Vampírico, Implacável): o símbolo em cima da cabeça (a forma diz qual, a cor ajuda), o anel no chão, a etiqueta na barra
+  de cima; a regra na faixa da primeira vez, na escolha, na pausa e no fim.
+- **As tropas novas** (figuras provisórias): lanceiro, besteiro, furioso, cão de guerra e sapador (o barril aceso fere os
+  nossos; derrubado, o barril cai e fere **qualquer lado**: a borda listrada de amarelo e preto). Cada onda sorteia um
+  pelotão.
+- **O General:** Ceifa, Estocada, Correntes (puxam e prendem 0,35 s; depois, uma Estocada com tempo de sair), Terremoto
+  (três anéis de dentro para fora), Salto, Brado Gélido e, na fase 2, a Cruz de Lâminas; postura e aberturas. Todos os
+  estágios aparecem no chão desde o começo; o próximo enche.
+- **A leitura:** o que acerta é exatamente o que o aviso mostrou (também em Harg e Vesna); a linha da guerra no placar
+  (as ondas, os heróis caídos, quantos faltam, o General); setas na borda para os últimos inimigos; as barras de cima dos
+  heróis e do General (a parte vermelha da barra, que não aparecia desde o 8, voltou).
+- **Investigado:** o Mago contra o General (o robô errava os anéis; a Estocada e o Salto não tinham saída a pé e ganharam
+  tempo); um cão que prendia Odette num canto e impedia o General de vir (ela agora revida encurralada).
 
 ## O que entrou no Campo Livre 8
 
@@ -216,6 +245,9 @@ horda da tecla H e mudo.
 | `tela/arte7.js` | O cenário nas direções sóbria e sombria: o chão, as estradas, as construções, as árvores, a luz das tochas |
 | `tela/campo8.js` | Campo Livre 8, sem DOM: Harg reconstruído (os golpes nos três tempos, as sequências, a fase 2, a postura, o que a tela mostra dele) |
 | `tela/sprites8.js` | Os modelos novos dos cinco heróis (à mão, a grade inteira de cada pose) |
+| `tela/campo9.js` | Campo Livre 9, sem DOM: a guerra nova (o sorteio, as ondas e os pelotões, a entrada dos heróis, as variações, as cargas e o sapador, a chegada do General, a vitória; o estado da guerra pronto para a tela) |
+| `tela/sprites9.js` | As figuras provisórias das tropas novas, de Vesna e do General (à mão, para identificar; não é arte aprovada) |
+| `tela/marcas9.js` | Os símbolos das variações (5 × 5, à mão), no campo e na HUD |
 | `arte/folha.py` | A folha comparável dos modelos (os do 7 e os novos, as poses, no tamanho do jogo e ampliados) |
 | `arte/montar_cenario.mjs` | As fontes em Aseprite do cenário sóbrio, pintadas pelo código do protótipo e montadas em lote |
 | `arte/montar.mjs`, `arte/fontes/` | As fontes em Aseprite das miniaturas do estudo (uma camada por equipe, um quadro por pose), montadas em lote |
@@ -224,13 +256,16 @@ horda da tecla H e mudo.
 | `tela/som.js` | Sons sintetizados na hora (Web Audio), sem arquivos de terceiros |
 | `tela/robo.js` | O jogador automático (testes e medição): `?robo=1` (forte) ou `?robo=medio`; vê os avisos do Capitão com 0,15 s ou 0,35 s de atraso |
 | `servidor.py`, `demo.bat` | O lançador (porta livre, versão) |
-| `testes/sim.test.mjs`, `testes/campo6.test.mjs`, `testes/campo7.test.mjs`, `testes/campo8.test.mjs` | 40 testes da simulação, 12 do Campo Livre 6, 16 do 7 e 9 do 8 (Node); `testes/test_campo.py` roda-os e confere o isolamento |
-| `tela-v1/`, `tela-v4/`, `tela-v5/`, `tela-v6/`, `tela-v7/` | O Campo Livre 1, o 4, o 5, o 6 e o 7 congelados, servidos em `/v1/`, `/v4/`, `/v5/`, `/v6/` e `/v7/` para comparar |
+| `testes/sim.test.mjs`, `testes/campo6.test.mjs` a `testes/campo9.test.mjs` | 40 testes da simulação, 12 do Campo Livre 6, 16 do 7, 9 do 8 e 8 do 9 (Node); `testes/test_campo.py` roda-os e confere o isolamento |
+| `tela-v1/`, `tela-v4/` a `tela-v8/` | O Campo Livre 1, o 4, o 5, o 6, o 7 e o 8 congelados, servidos em `/v1/`, `/v4/` a `/v8/` para comparar |
 | `ferramentas/simular.mjs` | Batalhas sem tela com o jogador automático, por escala e montagem (duração, abates, custo do passo) |
 | `ferramentas/batalhas6.mjs` | Os encontros novos sem tela, com o jogador automático: resultado, vidas, o que cada peça nova fez, o custo do passo |
 | `ferramentas/conferir6.mjs` | Playwright, Campo Livre 6: a escolha, a vila, os tipos no placar, a seleção por tecla, o comando, as barras de Harg e Ardis, o `/v5/`, o console |
 | `ferramentas/conferir7.mjs` | Playwright, Campo Livre 7: a escolha, a seleção e o comando (sem regressão), a amostra com `F8`, `F9` e `V`, os controles na HUD, o custo na vila 2× sombria, o `/v6/`, o console; as capturas da amostra no mesmo quadro |
 | `ferramentas/conferir8.mjs` | Playwright, Campo Livre 8: os padrões, o treino (o golpe na barra, a postura, a quebra, o dano escorrendo), a guerra, a seleção e o comando, o custo a 2×, o `/v7/`, o console; as capturas do treino e da guerra |
+| `ferramentas/guerra9.mjs` | A guerra do 9 sem tela, com o jogador automático: o resultado, quanto cada herói durou, o que tirou a sua vida, o General, o tempo sob controle, os barris, as ondas |
+| `ferramentas/general9.mjs` | O General golpe a golpe (a distância, se acertou, se havia saída a pé ou com a mobilidade) e, com `tabela`, a saída de cada golpe sem robô |
+| `ferramentas/conferir9.mjs` | Playwright, Campo Livre 9: a escolha, a guerra com o Guerreiro e o Mago, as variações, o General, a vitória, `R` e `T`, a pausa, a seleção e o comando, cada aviso novo, as cargas, o `/v8/`, o console; as capturas `cl9-*` |
 | `ferramentas/harg8.mjs` | O confronto com Harg sem tela: o resultado, os golpes que acertaram o herói, as quebras, o dano na abertura, quantos ele derrubou, o foco |
 | `ferramentas/navegacao-diag.mjs` | Quanto tempo cada tipo passa contra uma parede querendo andar, e os episódios de Morel e Odette |
 | `ferramentas/alvos7.mjs` | Em quem os heróis inimigos estiveram, as trocas, e o tempo do herói sob controle |
@@ -243,11 +278,13 @@ horda da tecla H e mudo.
 | `ferramentas/conferir4.mjs` | Playwright, Campo Livre 4: atacar um alvo com teclado e mouse, o golpe no herói, a horda e o custo dela |
 | `ferramentas/medir.mjs` | Playwright, v2: resposta, pausa, seleção e ordens, desempenho, capturas, sequências e vídeos (os vídeos só quando o Jean pedir) |
 | `ferramentas/olhar.mjs` | Capturas rápidas de uma batalha em andamento |
-| `capturas/` | As da v8 (`cl8-folha-modelos`, `cl8-treino-aviso-1920`, `cl8-treino-quebra-1920`, `cl8-guerra-1920`); as da v7 (`cl7-amostra-atual-1920`, `-sobria-`, `-sombria-`, `-sombria-menor-`: o mesmo quadro nas aparências; `cl7-vila-sombria-1920`); as da v6 (`cl6-escolha-1920`, `cl6-vila-1920`, `cl6-carga-1920`, `cl6-herois-1920` e `-1280`); as da v5 (`cl5-*.png`: a escolha e o modo de comando nas duas janelas); as da v4 (`cl4-*.png`, `conferir4.json`); as da v3 (`cl3-*.png`, `conferir3.json`); as da v2 nas duas janelas, a seleção, as sequências e `medicao.json`; as da v1 em `campo-livre-1/` |
+| `capturas/` | As da v9 (`cl9-escolha`, `cl9-guerra-heroi`, `cl9-guerra-general`, `cl9-fim`, `cl9-cargas`, `cl9-leque`, `cl9-terremoto`, `cl9-cruz` nas duas janelas; `cl9-guerra-duas-variacoes`, `cl9-guerra-mago`, `cl9-pausa`, `cl9-terremoto-segundo-anel`, `cl9-salto-no-ar`, `cl9-correntes`, `cl9-corrente` em 1920); as da v8 (`cl8-folha-modelos`, `cl8-treino-aviso-1920`, `cl8-treino-quebra-1920`, `cl8-guerra-1920`); as da v7 (`cl7-amostra-atual-1920`, `-sobria-`, `-sombria-`, `-sombria-menor-`: o mesmo quadro nas aparências; `cl7-vila-sombria-1920`); as da v6 (`cl6-escolha-1920`, `cl6-vila-1920`, `cl6-carga-1920`, `cl6-herois-1920` e `-1280`); as da v5 (`cl5-*.png`: a escolha e o modo de comando nas duas janelas); as da v4 (`cl4-*.png`, `conferir4.json`); as da v3 (`cl3-*.png`, `conferir3.json`); as da v2 nas duas janelas, a seleção, as sequências e `medicao.json`; as da v1 em `campo-livre-1/` |
 | `videos/` | Os vídeos da v2 e, em `campo-livre-1/`, os da v1. **Vídeos novos só quando o Jean pedir** |
 
 ```
 node --test ferramentas/prototipos/etapa8-campo/testes/sim.test.mjs
+node ferramentas/prototipos/etapa8-campo/ferramentas/guerra9.mjs guerra9,treino9 guerreiro,mago forte,medio 1,2,3,4
+node ferramentas/prototipos/etapa8-campo/ferramentas/general9.mjs tabela 0.25
 python -m unittest discover -s ferramentas/prototipos/etapa8-campo/testes -t ferramentas/prototipos/etapa8-campo
 node ferramentas/prototipos/etapa8-campo/ferramentas/simular.mjs 1 4 forte
 node ferramentas/prototipos/etapa8-campo/ferramentas/lider.mjs ambos 1 medio
@@ -259,4 +296,5 @@ Parâmetros de endereço (para testes e demonstração): `?heroi=mago&qtd=4&enc=
 `hab`: as três comuns e a ultimate, como `hab=lanca,campoGelo,raios,nevasca`; `tal`: os talentos, separados por
 vírgula, vazio para nenhum; `enc` também: vila, carga, herois; `compA` e `compI`: a composição dos dois lados, comum,
 cavalaria, pesada ou completa; `enc=amostra`: o portão da povoação; `enc=duelo` e `enc=guerra`: Harg reconstruído; `arte`: sobria, atual, sombria;
-`escala` (os modelos dos heróis): novo, atual, menor; `violencia`: 0 a 3).
+`escala` (os modelos dos heróis): novo, atual, menor; `violencia`: 0 a 3; `enc=guerra9` e `enc=treino9`: a guerra do 9,
+com `sorteio=N`).

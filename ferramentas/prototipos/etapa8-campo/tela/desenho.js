@@ -2,9 +2,10 @@
 // pela ampliação inteira; o CSS amplia sem suavizar). Só lê: o mundo (sim.js), os efeitos (efeitos.js) e as opções.
 // As áreas (os avisos do campeão, a preparação do herói, a prévia, os cortes) são pintadas pixel a pixel com a mesma
 // função `dentro` que decide quem é atingido: o que aparece é exatamente o que acerta.
-import { CAMPO, TIPOS, HARG8 } from "./conteudo.js";
-const G8 = HARG8.golpes;
+import { CAMPO, TIPOS, VARIACOES } from "./conteudo.js";
 import { dentro, formaDaAcao, alvoAssistido } from "./sim.js";
+import { estado9 } from "./campo9.js";
+import { pintarMarca } from "./marcas9.js";
 import { pousarCorpos, NUMEROS } from "./efeitos.js";
 import { desenharEstradas, prediosOrdenados, temAtras, desenharPredio, desenharMagias, desenharCargas } from "./desenho6.js";
 import { desenharEstradas7, desenharLuzes7, desenharPredio7, cobre } from "./arte7.js";
@@ -143,7 +144,8 @@ function sombra(g, x, y, larg, cor = "rgba(10,14,8,0.32)") {
   g.fillRect(x - m + 1, y + 1, larg - 2, 1);
 }
 
-const LARGURA_SOMBRA = { soldado: 6, arqueiro: 6, veterano: 7, estandarte: 6, campeao: 11, lider: 12, heroi: 9, cavaleiro: 10, pesado: 7, magoBatalha: 6, morel: 9, odette: 8, ardis: 9 };
+const LARGURA_SOMBRA = { soldado: 6, arqueiro: 6, veterano: 7, estandarte: 6, campeao: 11, lider: 12, heroi: 9, cavaleiro: 10, pesado: 7, magoBatalha: 6, morel: 9, odette: 8, ardis: 9,
+  lanceiro: 6, besteiro: 6, furioso: 6, sapador: 7, cao: 8, vesna: 9, general: 18 };
 // a sombra tingida pela cor do lado: no meio do choque, o pé de cada um diz de que lado ele está
 const SOMBRA_LADO = ["rgba(20,40,110,0.5)", "rgba(110,16,16,0.5)"];
 
@@ -153,7 +155,7 @@ function poseTropa(u) {
   if (s) {
     if (s.quebrado > 0) return "recuo";
     const g = s.golpe;
-    if (g) return g.etapa === "preparo" ? "preparo" : g.etapa === "exec" || g.total - g.t < 0.18 ? "golpe" : G8[g.id].abertura === true ? "recuo" : "parado";
+    if (g) return g.etapa === "preparo" ? "preparo" : g.etapa === "exec" || g.total - g.t < 0.18 ? "golpe" : s.cfg.golpes[g.id].abertura === true ? "recuo" : "parado";
   }
   if (u.atordoado > 0 || u.congelado > 0) return "recuo";
   if (u.mostra > 0) return "golpe";
@@ -319,8 +321,23 @@ export function desenhar(g, s) {
     const h8 = u.h8;
     if (!h8 || u.morto) continue;
     const gp = h8.golpe;
-    if (gp && gp.etapa === "preparo") {
-      const k = 1 - Math.max(0, gp.t) / G8[gp.id].preparo;
+    if (gp && gp.formasEstagio && (gp.etapa === "preparo" || gp.etapa === "exec")) {
+      // Campo Livre 9: os golpes em estágios (os anéis do Terremoto, a cruz, o leque). Todos os que ainda vão estourar
+      // aparecem desde o começo; o próximo enche até estourar e tem a borda cheia; os seguintes ficam mais claros, com a
+      // borda tracejada. São as formas que o motor vai usar (campo8: o contato usa o aviso).
+      const prox = gp.etapa === "exec" ? gp.estagio : 0, int = h8.cfg.golpes[gp.id].intervalo || 0.3;
+      const k = gp.etapa === "preparo" ? 1 - Math.max(0, gp.t) / gp.preparo : 1 - Math.max(0, gp.t) / int;
+      for (let j = gp.formasEstagio.length - 1; j >= prox; j--) {
+        const agora = j === prox;
+        for (const f of gp.formasEstagio[j]) {
+          if (agora) avisos.push(f);
+          pintarForma(g, f, cx, cy, agora ? `rgba(220,40,30,${0.1 + 0.36 * k})` : "rgba(220,40,30,0.07)",
+            agora ? "rgba(255,90,70,0.95)" : "rgba(255,120,90,0.7)", agora ? 0 : 2);
+        }
+      }
+    } else if (gp && (gp.etapa === "preparo" || gp.etapa === "exec" && u.voando)) {
+      // o salto continua marcado no chão enquanto ele está no ar
+      const k = gp.etapa === "exec" ? 1 : 1 - Math.max(0, gp.t) / gp.preparo;
       if (gp.onda) pintarForma(g, gp.onda, cx, cy, null, "rgba(255,150,110,0.7)", 3);
       avisos.push(gp.forma);
       pintarForma(g, gp.forma, cx, cy, `rgba(220,40,30,${0.1 + 0.36 * k})`, "rgba(255,90,70,0.95)");
@@ -349,6 +366,7 @@ export function desenhar(g, s) {
   // Campo Livre 6: as magias anunciadas (magos de batalha, Ardis) e as cargas da cavalaria
   desenharMagias(g, m, cx, cy, pintarForma, rel);
   desenharCargas(g, m, cx, cy, rel);
+  if (m.g9) desenharCargas9(g, m, cx, cy, rel, avisos);
   // o anel do líder inimigo, vermelho, como o dourado do herói
   if (m.lider && !m.lider.morto) {
     const [lx, ly] = pos(m.lider);
@@ -356,6 +374,13 @@ export function desenhar(g, s) {
     const firme = m.lider.firmeAte > m.t;
     pintarForma(g, { tipo: "circulo", x: Math.round(lx), y: Math.round(ly), raio: 9 }, cx, cy, null, firme ? "rgba(255,220,200,0.9)" : "rgba(255,70,50,0.8)", 0);
     pintarForma(g, { tipo: "circulo", x: Math.round(lx), y: Math.round(ly), raio: m.lider.def.presenca }, cx, cy, null, "rgba(230,80,60,0.16)", 5);
+  }
+  // Campo Livre 9: o anel no chão de quem tem variações, tracejado na cor da primeira; o General, um anel largo vermelho
+  for (const u of m.lados[1]) {
+    if (u.morto || !u.heroi9) continue;
+    const [lx, ly] = pos(u), r = u.general ? 15 : 9;
+    if (u.general) pintarForma(g, { tipo: "circulo", x: Math.round(lx), y: Math.round(ly), raio: r }, cx, cy, null, "rgba(255,70,50,0.85)", 0);
+    if (u.afixos && u.afixos.length) pintarForma(g, { tipo: "circulo", x: Math.round(lx), y: Math.round(ly), raio: r + 2 }, cx, cy, null, hexAlfa(CORES9[u.afixos[0]], 0.85), 2);
   }
   // os alvos das ordens de atacar um alvo: uma mira vermelha em volta de cada um
   const focos = new Set();
@@ -449,10 +474,22 @@ export function desenhar(g, s) {
     // a vida só das ameaças (sempre) e do veterano (por 1,5 s depois de apanhar): os soldados comuns caem de uma vez
     // a vida: sempre nas ameaças; no veterano, só por 0,8 s depois de apanhar, curta, para o choque não virar barras
     if (u.def.elite || u.tipo === "veterano" && m.t - (u.ferido ?? -9) < 0.8) {
-      const grande = u.tipo === "campeao" || u.tipo === "lider" || u.def.heroiInimigo || u.def.companheiro, larg = u.tipo === "lider" || u.tipo === "ardis" ? 18 : grande ? 14 : 5;
+      const grande = u.tipo === "campeao" || u.tipo === "lider" || u.def.heroiInimigo || u.def.companheiro;
+      const larg = u.general ? 26 : u.tipo === "lider" || u.tipo === "ardis" || u.heroi9 ? 18 : grande ? 14 : 5;
       barra(g, Math.round(x - larg / 2) - cx, Math.round(y - sp.ay) - cy - 4, larg, u.vida / u.vidaMax, u.lado === 0 ? "#6fbf5d" : "#e05a48", grande ? 2 : 1);
     }
     const topo = Math.round(y - sp.ay) - cy;
+    // Campo Livre 9: as variações dele, um símbolo para cada uma em cima da barra (a forma diz qual; a cor ajuda)
+    if (u.afixos && u.afixos.length) {
+      const n = u.afixos.length, x0 = Math.round(x) - cx - Math.round((n * 7 - 2) / 2);
+      u.afixos.forEach((v, i) => pintarMarca(g, v, x0 + i * 7, topo - 12));
+    }
+    // congelado pelo Gélido: a figura coberta de gelo
+    if (u.congelado9 > m.t) {
+      g.fillStyle = "rgba(190,230,255,0.7)";
+      g.fillRect(Math.round(x - 3) - cx, topo + 1, 7, Math.round(sp.ay - 2));
+      g.fillStyle = "#ffffff"; g.fillRect(Math.round(x - 1) - cx, topo + 3, 1, 1);
+    }
     // o Sangramento: uma gota por acúmulo (até 5), descendo
     if (u.sangra) {
       g.fillStyle = "#c8282a";
@@ -475,7 +512,7 @@ export function desenhar(g, s) {
       g.fillRect(Math.round(x - Math.cos(t) * 4) - cx, top - Math.round(Math.sin(t) * 1), 1, 1);
     }
     if (u.abalado > 0) { g.fillStyle = "#ffffff"; g.fillRect(Math.round(x) - cx, Math.round(y - sp.ay) - cy - 4, 1, 2); }
-    if (u.h8 && !u.h8.quebrado && u.h8.postura / HARG8.postura.max >= 0.7 && Math.floor(rel * 10 + u.id) % 3 === 0) {
+    if (u.h8 && !u.h8.quebrado && u.h8.postura / u.h8.cfg.postura.max >= 0.7 && Math.floor(rel * 10 + u.id) % 3 === 0) {
       g.fillStyle = "#ffe08a";
       g.fillRect(Math.round(x - 4 + ((Math.floor(rel * 13) * 5) % 9)) - cx, Math.round(y - sp.ay + 2 + ((Math.floor(rel * 11) * 3) % 7)) - cy, 1, 1);
     }
@@ -603,7 +640,25 @@ export function desenhar(g, s) {
     g.drawImage(h.virado > 0 ? sp.bd : sp.be, Math.round(x - (h.virado > 0 ? sp.ax : sp.w - sp.ax)) - cx, Math.round(y - sp.ay - Math.round(h.z || 0)) - cy);
     g.globalAlpha = 1;
   }
+  if (!h.morto && h.congelado9 > m.t) {
+    const [x, y] = pos(h), sp = Q[h.nomeHeroi][0].parado, topo = Math.round(y - sp.ay) - cy;
+    g.fillStyle = "rgba(190,230,255,0.6)"; g.fillRect(Math.round(x - 4) - cx, topo + 1, 9, Math.round(sp.ay - 2));
+    g.fillStyle = "#ffffff"; g.fillRect(Math.round(x - 2) - cx, topo + 3, 1, 1); g.fillRect(Math.round(x + 2) - cx, topo + 7, 1, 1);
+  }
   marcasDeControle(g, m, pos, Q, tipoDe, cx, cy, rel);
+  // Campo Livre 9: as correntes do General, dele até quem ele puxou, enquanto a pessoa está presa
+  for (const c of E.correntes || []) {
+    const a = c.fonte, b = c.alvo;
+    if (!a || !b || a.morto || b.morto) continue;
+    const [ax, ay] = pos(a), [bx, by] = pos(b), n = Math.max(2, Math.floor(Math.hypot(bx - ax, by - ay) / 2));
+    g.globalAlpha = Math.max(0, Math.min(1, (c.dur - c.t) / 0.15));
+    for (let i = 0; i <= n; i++) {
+      const px = Math.round(ax + ((bx - ax) * i) / n) - cx, py = Math.round(ay - 5 + ((by - ay + 2) * i) / n) - cy;
+      g.fillStyle = "#15121a"; g.fillRect(px - 1, py - 1, 3, 3);
+      g.fillStyle = i % 2 ? "#c8c8d0" : "#7a7a88"; g.fillRect(px, py, 1, 1);
+    }
+    g.globalAlpha = 1;
+  }
 
   // ---- os efeitos por cima
   for (const c of E.cortes) {
@@ -641,6 +696,11 @@ export function desenhar(g, s) {
     }
     g.globalAlpha = 1;
   }
+  // Campo Livre 9: o estouro das formas dos golpes (a faixa, os anéis, a cruz, o leque): a forma exata, sumindo
+  for (const l of E.lampejos || []) {
+    const k = l.t / l.dur;
+    pintarForma(g, l.forma, cx, cy, `rgba(255,${Math.round(200 - 100 * k)},120,${(0.5 * (1 - k)).toFixed(3)})`, `rgba(255,230,200,${(0.9 * (1 - k)).toFixed(3)})`);
+  }
   for (const r of E.aneis) {
     const k = r.t / r.dur;
     pintarForma(g, { tipo: "circulo", x: r.x, y: r.y, raio: Math.max(1, r.r0 + (r.r1 - r.r0) * k) }, cx, cy, null, hexAlfa(r.cor, 1 - k));
@@ -672,12 +732,14 @@ export function desenhar(g, s) {
   }
   for (const msg of E.mensagens) texto(g, msg.texto, msg.x - cx, msg.y - cy - msg.t * 10, "#ffe08a");
 
-  // ---- quem importa e está fora da tela: setas na borda
+  // ---- quem importa e está fora da tela: setas na borda. Campo Livre 9: sem ondas por vir e sem heróis, os últimos
+  // inimigos (até 8) também ganham seta, para o campo vazio não depender de achar alguém perdido num canto
+  const e9 = m.g9 && estado9(m), ultimos = e9 && e9.fase === "limpar" && e9.restam <= 8;
   for (const u of m.lados[1]) {
-    if (!u.def.elite) continue;
+    if (u.morto || !u.def.elite && !ultimos) continue;
     const x = u.x - cx, y = u.y - cy;
     if (x >= 0 && y >= 0 && x < W && y < H) continue;
-    seta(g, x, y, W, H, u.tipo === "lider" ? "#ff2a2a" : u.tipo === "campeao" ? "#ff5a48" : "#f0cb62");
+    seta(g, x, y, W, H, u.tipo === "lider" || u.general ? "#ff2a2a" : u.tipo === "campeao" ? "#ff5a48" : u.def.elite ? "#f0cb62" : "#ffb0a0");
   }
   // o mouse: uma mira de pixel
   if (s.mouse && !s.semMira) {
@@ -751,3 +813,27 @@ function hexAlfa(hex, a) {
 }
 
 export { TIPOS };
+
+// Campo Livre 9: as cargas no chão (o barril do sapador e o rastro explosivo). O círculo é o de campo9.cargas (o pé
+// dentro dele leva); enche até estourar. O barril aceso fere os nossos; o barril caído fere QUALQUER lado: a borda dele
+// é listrada de amarelo e preto e o barril aparece no chão.
+const CORES9 = Object.fromEntries(Object.entries(VARIACOES).map(([k, v]) => [k, v.cor]));
+function desenharCargas9(g, m, cx, cy, rel, avisos) {
+  for (const c of m.g9.cargas) {
+    const k = Math.min(1, c.t / c.dur), f = { tipo: "circulo", x: c.x, y: c.y, raio: c.raio }, todos = c.alvo === "todos";
+    pintarForma(g, f, cx, cy, `rgba(255,140,40,${(0.08 + 0.32 * k).toFixed(3)})`, todos ? "#ffd84a" : "rgba(255,170,80,0.95)", 0, true);
+    if (todos) pintarForma(g, f, cx, cy, null, "#15121a", 2, true);
+    avisos.push(f);
+    const x = Math.round(c.x) - cx, y = Math.round(c.y) - cy;
+    if (c.barril) {
+      // o barril e a chama do pavio, piscando mais rápido perto do fim
+      g.fillStyle = "#15121a"; g.fillRect(x - 3, y - 4, 7, 6);
+      g.fillStyle = "#7a4a22"; g.fillRect(x - 2, y - 3, 5, 4);
+      g.fillStyle = "#e0b040"; g.fillRect(x - 2, y - 2, 5, 1); g.fillRect(x - 2, y, 5, 1);
+      if (Math.floor(rel * (6 + 18 * k)) % 2) { g.fillStyle = "#fff1c4"; g.fillRect(x + 1, y - 6, 1, 2); g.fillStyle = "#ff8a30"; g.fillRect(x, y - 5, 1, 1); }
+    } else if (Math.floor(rel * (6 + 18 * k) + c.x) % 2) {
+      g.fillStyle = "#15121a"; g.fillRect(x - 1, y - 1, 3, 3);
+      g.fillStyle = "#ffb15a"; g.fillRect(x, y, 1, 1);
+    }
+  }
+}

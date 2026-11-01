@@ -12,6 +12,7 @@ import { ligar, mundoAtual, prepararCenario, rumo, empurrarParaFora, bloqueado, 
 import { desvioAte, inacessivel, posicaoUtil, mundoDaNav } from "./navegacao.js";
 import { ligar7, registrarGolpe, escolherFoco, precisaRever, provocadorAoAlcance, interromperPreparo, escudada } from "./campo7.js";
 import { ligar8, harg8, prepararHarg8, posturaHarg8, converterControles8 } from "./campo8.js";
+import { ligar9, prepararGuerra9, passo9, aoAcertar9, aoCair9, sapador9 } from "./campo9.js";
 
 export const PASSO = 1 / 60;
 const GRAU = Math.PI / 180;
@@ -37,9 +38,9 @@ export function entradaVazia() {
 
 // ------------------------------------------------------------------------------------------------ o mundo
 export function criarMundo({ heroi = "guerreiro", quantidade = "normal", semente = SEMENTE, encontro = "original",
-  kit = {}, composicao = { aliados: "comum", inimigos: "comum" } } = {}) {
+  kit = {}, composicao = { aliados: "comum", inimigos: "comum" }, sorteio: numero } = {}) {
   const enc = ENCONTROS[encontro] || ENCONTROS.original;
-  if (!enc.original) return criarEncontro(enc, encontro, heroi, quantidade, semente, kit, composicao);
+  if (!enc.original) return criarEncontro(enc, encontro, heroi, quantidade, semente, kit, composicao, numero ?? semente);
   const m = {
     t: 0, rng: sorteio(semente), campo: CAMPO, proximoId: 1, unidades: [], lados: [[], []], centros: [null, null],
     proj: [], zonas: [], eventos: [], registro: [], fase: "formacao", resultado: null, fimEm: 0,
@@ -181,7 +182,7 @@ function prepararHeroi(m, heroi, x, y, escolha) {
 }
 
 // Os encontros novos: blocos fixos (tipo, quantos, onde, colunas, grupo), grupos que acordam no tempo deles e levas.
-function criarEncontro(enc, nome, heroi, quantidade, semente, kit, composicao = {}) {
+function criarEncontro(enc, nome, heroi, quantidade, semente, kit, composicao = {}, numero = semente) {
   const m = {
     t: 0, rng: sorteio(semente), campo: CAMPO, proximoId: 1, unidades: [], lados: [[], []], centros: [null, null],
     proj: [], zonas: [], eventos: [], registro: [], fase: "formacao", resultado: null, fimEm: 0,
@@ -218,6 +219,7 @@ function criarEncontro(enc, nome, heroi, quantidade, semente, kit, composicao = 
   m.stats.primeira = m.lados[1].length;
   m.stats.inimigos = m.lados[1].length + m.levas.reduce((n, lv) => n + lv.blocos.reduce((k, b) => k + qtd(b), 0), 0);
   m.stats.aliados = m.lados[0].length - 1;
+  if (enc.ondas9 || enc.herois9) prepararGuerra9(m, enc, numero);   // Campo Livre 9: a guerra nova (campo9.js)
   return m;
 }
 
@@ -360,6 +362,7 @@ export function passo(m, ent) {
   if (m.levas) { if (!m.reforco.chegou) chegarLevas(m); }
   else if (!m.reforco.chegou && m.fase === "luta" &&
       (m.t >= BATALHA.reforcoT || m.lados[1].length <= m.stats.primeira * BATALHA.reforcoQuando)) chegarReforco(m);
+  if (m.g9) passo9(m, dt);   // Campo Livre 9: as ondas sorteadas, os heróis, o General, as variações e as cargas
   contarAtacantes(m);
   marcarAuras(m);
   atualizarHeroi(m, m.heroi, ent || entradaVazia(), dt);
@@ -422,6 +425,7 @@ export function dentro(f, x, y) {
     return difAngulo(Math.atan2(dy, dx), f.ang) <= (f.abertura * GRAU) / 2;
   }
   if (f.tipo === "faixa") return distSegmento(x, y, f.x1, f.y1, f.x2, f.y2).d <= f.largura;
+  if (f.tipo === "anel") { const d2 = (x - f.x) ** 2 + (y - f.y) ** 2; return d2 <= f.raio * f.raio && d2 >= f.r0 * f.r0; }   // Campo Livre 9
   return false;
 }
 
@@ -527,6 +531,7 @@ export function ferir(m, u, dano, fonte, o = {}) {
   u.vida -= dano;
   registrarGolpe(m, u, fonte, dano);   // a memória de quem feriu quem (a escolha de alvo dos heróis inimigos)
   if (u.h8) posturaHarg8(m, u, fonte, dano, o);   // Campo Livre 8: a postura de Harg
+  if (fonte && fonte.afixos && m.g9) aoAcertar9(m, fonte, u, dano, o);   // Campo Livre 9: as variações de quem bateu
   u.flash = o.sutil ? 0.04 : o.forte ? 0.09 : 0.06;
   u.ferido = m.t;
   if (u === h) m.stats.danoSofrido += dano;
@@ -539,7 +544,7 @@ export function ferir(m, u, dano, fonte, o = {}) {
   // o herói atingido: a direção do golpe (de quem bateu para ele) e o valor que saiu da vida, para a tela mostrar
   if (u === h && dano > 0 && !o.sutil) h.dorAte = m.t + 0.12;
   if (u === h && dano > 0 && !o.sutil) m.eventos.push({ tipo: "heroiAtingido", x: h.x, y: h.y, dx, dy, valor: dano,
-    forte: !!o.forte, fonte: fonte ? fonte.tipo : null, fonteId: fonte ? fonte.id : null });
+    forte: !!o.forte, fonte: fonte ? fonte.tipo : null, fonteId: fonte ? fonte.id : null, hab: o.hab || null });
   if (fonte === h && u.lado === 1) ganharRecurso(m, h.def.recurso.porAcerto || 0);
   // o que o golpe do herói deixa em quem sobrevive: o congelamento (Frio Cortante: dano direto de gelo; o golpe que
   // estilhaçou não congela de novo) e o Sangramento da Hemorragia (dano direto da Varredura)
@@ -565,9 +570,9 @@ export function ferir(m, u, dano, fonte, o = {}) {
   u.kx += dx * k;
   u.ky += dy * k;
   // o Capitão não estremece nem cambaleia com golpe fraco (uma chuva de faíscas não o prende): só o forte o segura
-  const firmeLider = u.tipo === "lider" && !o.forte;
+  const firmeLider = (u.tipo === "lider" || !!u.h8) && !o.forte;
   if (!o.sutil && u !== h && !firmeLider) u.congelado = Math.max(u.congelado, o.forte ? 0.07 : 0.045);
-  let at = firmeLider ? 0 : o.atord || 0;
+  let at = firmeLider || u.inabalavel ? 0 : o.atord || 0;
   if (u.def.elite || u === h) at *= 0.4;
   // golpe fraco só faz recuar e estremecer; atordoar e interromper uma preparação é coisa de golpe forte. Uma ameaça
   // interrompida fica `firme` alguns segundos: nesse tempo o golpe forte só a faz reagir (nunca uma cadeia de
@@ -606,9 +611,12 @@ function morrer(m, u, fonte, dx, dy, emp, forte, o = {}) {
   m.eventos.push({ tipo: "morte", id: u.id, unidade: u.tipo, lado: u.lado, x: u.x, y: u.y, dx, dy, vel,
     sobe: voa ? 55 + 35 * m.rng() : 18, voa, virado: u.virado });
   if (u.def.companheiro) { registrar(m, `${u.def.nome} caiu e fica fora desta luta.`); m.eventos.push({ tipo: "companheiroCaiu", nome: u.def.nome }); }
-  if (u.tipo === "ardis") { registrar(m, "Ardis caiu."); m.eventos.push({ tipo: "liderCaiu", x: u.x, y: u.y }); }
+  if (u.tipo === "ardis" && !u.heroi9) { registrar(m, "Ardis caiu."); m.eventos.push({ tipo: "liderCaiu", x: u.x, y: u.y, nome: u.def.nome }); }
+  if (m.g9) aoCair9(m, u);   // Campo Livre 9: o barril do sapador, os heróis da guerra, o General
   const h = m.heroi;
   if (u === h) {
+    // Campo Livre 9: caído depois da vitória (o General já caiu), a vitória fica
+    if (m.semFuga && m.resultado === "vitoria") { registrar(m, "O herói caiu."); return; }
     m.fimEm = m.t + BATALHA.derrotaDura;
     m.resultado = "derrota";
     registrar(m, "O herói caiu.");
@@ -631,7 +639,7 @@ function morrer(m, u, fonte, dx, dy, emp, forte, o = {}) {
     registrar(m, "O porta-estandarte caiu: os inimigos em volta recuam.");
   }
   if (u.tipo === "campeao") registrar(m, "O campeão caiu.");
-  if (u.tipo === "lider") {
+  if (u.tipo === "lider" && !m.semFuga) {
     // a consequência anunciada no encontro: a tropa perto dele foge; o resto se abala
     if (u.acao && u.acao.tipo === "reunir") soltarReunidos(m, u);
     const d = u.def.derrota;
@@ -1309,6 +1317,9 @@ function atualizarUnidade(m, u, dt) {
     } else if (m.fase === "formacao" && !ameacaPerto(m, u, 70)) { u.vx = u.vy = 0; return; }
   }
   if (u.def.especial && m.fase !== "fuga" && atualizarEspecial(m, u, dt)) return;
+  // Campo Livre 9: Vesna e o General na máquina de golpes (Harg vai por decidirLider); o sapador e o barril
+  if (u.h8 && u.tipo !== "lider") { harg8(m, u, dt); return; }
+  if (u.def.especial9 && m.g9 && sapador9(m, u, dt)) return;
   if (u.def.escudada && m.morel && escudada(m, u, dt)) return;
   if (u.tipo === "lider" && m.fase !== "fuga" && decidirLider(m, u, dt)) return;
   if (u.lado === 0) {
@@ -2303,6 +2314,7 @@ function verificarFim(m) {
     return;
   }
   if (m.fase !== "luta" || !m.reforco.chegou) return;
+  if (m.semFuga) return;   // Campo Livre 9: ninguém foge; o fim vem com a queda do General (campo9.aoCair9)
   if (m.ondas && m.t <= m.ondas.ate) return;   // na horda, ninguém foge enquanto ainda vêm ondas
   if (m.lider && !m.lider.morto) return;   // enquanto o líder estiver de pé, a tropa dele não foge
   if (m.ardis && !m.ardis.morto && !m.ardis.fugindo) return;
@@ -2395,3 +2407,4 @@ export function resumo(m) {
 ligar({ ferir, andarPara, corpoACorpo, escolherAlvo, registrar, novaUnidade });
 ligar7({ ferir, registrar });
 ligar8({ ferir, andarPara, registrar, dentro });
+ligar9({ ferir, andarPara, registrar, novaUnidade, sorteio });
