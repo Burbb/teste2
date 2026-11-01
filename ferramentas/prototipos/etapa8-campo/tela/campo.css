@@ -14,6 +14,8 @@ body.menu #campo { cursor: default; }
 #ficha b { color: var(--ouro); font-weight: 400; }
 .barra { position: relative; height: 14px; margin-top: 4px; background: #2a1e1e; border: 1px solid #000; }
 .barra i { position: absolute; left: 0; top: 0; bottom: 0; background: #6fbf5d; }
+/* a vida que acabou de sair: um rastro claro que alcança a barra depois de 0,3 s */
+.barra em { position: absolute; left: 0; top: 0; bottom: 0; background: #f0c8a0; transition: width 0.45s ease-in 0.3s; }
 .barra.recurso i { background: #d9a440; }
 .barra.recurso.mana i { background: #5b8fd8; }
 .barra span { position: absolute; inset: 0; text-align: center; font-size: 11px; line-height: 12px; color: #fff; text-shadow: 1px 1px 0 #000; }
@@ -27,7 +29,9 @@ body.menu #campo { cursor: default; }
 #p-ordens span.atual { border-color: var(--azul); color: #fff; }
 #p-ordens kbd { margin: 0 3px 0 0; }
 #kit { position: absolute; left: 50%; bottom: 10px; transform: translateX(-50%); display: flex; gap: 6px; }
-#kit .slot { position: relative; width: 178px; padding: 5px 7px 6px; overflow: hidden; }
+/* cada espaço na largura do próprio texto (o custo inteiro, sem corte); os curtos ficam no mínimo */
+#kit .slot { position: relative; min-width: 124px; padding: 5px 7px 6px; overflow: hidden; }
+#kit .slot.ultimate { border-color: var(--ouro); }
 #kit .slot .tecla { color: var(--tinta-2); font-size: 11px; }
 #kit .slot .nome { color: var(--tinta); display: block; white-space: nowrap; }
 #kit .slot .custo { font-size: 11px; color: var(--tinta-2); display: block; white-space: nowrap; }
@@ -53,7 +57,7 @@ body.menu #selo, body.em-luta #selo { bottom: auto; top: 0; }
 body.em-luta #faixa { top: 30px; }
 
 /* ---- telas por cima do campo */
-.tela { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(10, 9, 12, 0.6); padding: 16px; overflow: auto; }
+.tela { position: fixed; inset: 0; display: flex; align-items: safe center; justify-content: safe center; background: rgba(10, 9, 12, 0.6); padding: 16px; overflow: auto; }
 .tela.leve { background: rgba(10, 9, 12, 0.18); align-items: flex-start; justify-content: flex-start; padding: 90px 10px 10px; pointer-events: none; }
 .tela.leve .caixa { pointer-events: auto; max-width: 400px; }
 .caixa { background: rgba(18, 15, 20, 0.94); border: 1px solid var(--linha-hud); padding: 18px 22px; max-width: 1040px; width: 100%; box-shadow: var(--sombra); }
@@ -144,3 +148,15 @@ body.em-luta #faixa { top: 70px; }
 #golpe.cima { background: linear-gradient(to bottom, rgba(200, 20, 20, 0.45), transparent 18%); }
 #golpe.baixo { background: linear-gradient(to top, rgba(200, 20, 20, 0.45), transparent 18%); }
 #p-ordens .foco { color: #ff8a78; }
+/* a montagem na tela de escolha (Campo Livre 5): os atalhos, os grupos, a marca de escolhida e os talentos */
+.heroi .atalhos { font-family: var(--pixel); font-size: 12px; color: var(--tinta-2); margin: 4px 0 6px; }
+.heroi .atalhos button, .hab button.marca { font: inherit; background: #1b171d; color: var(--tinta); border: 1px solid var(--linha-hud); cursor: pointer; }
+.heroi .atalhos button { padding: 1px 6px; margin-left: 4px; }
+.heroi .grupo h4 { margin: 8px 0 2px; font-family: var(--pixel); font-size: 12px; font-weight: 400; color: var(--ouro); }
+.hab { position: relative; }
+.hab button.marca { position: absolute; left: 0; top: 1px; width: 16px; height: 16px; padding: 0; line-height: 14px; font-size: 11px; }
+.hab button.marca:disabled { opacity: 0.4; cursor: default; }
+.hab:has(button.marca) { padding-left: 22px; }
+.hab small { display: block; font-family: var(--pixel); font-size: 11px; color: var(--tinta-2); }
+.hab.marcada .cab b { color: var(--ouro); }
+.hab .cab em { color: var(--vermelho); font-style: normal; }

@@ -84,9 +84,8 @@ export function pensar(r, m, ent) {
   for (const e of ini) {
     if (!e.acao || e.acao.tipo !== "reunir" || !viu(e, e.def.carga.reunir)) continue;
     const dl = Math.hypot(e.x - h.x, e.y - h.y);
-    if (h.nomeHeroi === "guerreiro" && dl < 30 && h.cds.varredura <= 0 && h.kit.varredura.atordoa > 0) {
-      ent.mx = e.x; ent.my = e.y; ent.apertos.push("varredura"); return;
-    }
+    // perto da reunião, o golpe principal a desfaz (o Guerreiro com a Varredura pronta)
+    if (h.nomeHeroi === "guerreiro" && dl < 30 && h.cds.varredura <= 0) { ent.mx = e.x; ent.my = e.y; ent.atacar = true; return; }
     if (dentro(e.acao.forma, h.x, h.y)) { andar(ent, -Math.sin(e.acao.dir), Math.cos(e.acao.dir)); return; }
   }
   const aliados = m.centros[0];
@@ -94,50 +93,60 @@ export function pensar(r, m, ent) {
   const decide = m.t >= (r.decisao || 0);
   if (decide) r.decisao = m.t + (r.nivel === "medio" ? 0.6 : 0.25);
   const erro = r.nivel === "medio" ? 12 : 0, rng = () => (Math.sin(m.t * 91.7 + r.erro++) * 0.5) * erro;
+  // as habilidades equipadas, cada uma pela dica dela (`ia`), uma por decisão
+  if (decide) for (const slot of ["ult", "h1", "h2", "h3"]) {
+    const id = h.slots[slot], k = h.kit[id];
+    if (!k || !k.ia || h.cds[id] > 0 || (k.custo && h.recurso < k.custo) || h.acao && h.acao.fase === "preparo") continue;
+    const alvo = escolherUso(m, h, k, g, dg, ini);
+    if (!alvo) continue;
+    ent.mx = alvo.x + rng(); ent.my = alvo.y + rng(); ent.apertos.push(id);
+    break;
+  }
   if (h.nomeHeroi === "guerreiro") {
-    const k = h.kit;
-    if (decide && !k.salto.puxa && h.recurso >= k.salto.custo && g.n >= 6 && dg <= k.salto.alcance) {
-      ent.mx = g.x + rng(); ent.my = g.y + rng(); ent.apertos.push("salto"); return;
-    }
-    if (decide && k.salto.puxa && h.recurso >= k.salto.custo && contar(ini, h.x, h.y, k.salto.puxa).n >= 8) {
-      ent.apertos.push("salto"); return;
-    }
-    const em = contar(ini, h.x, h.y, k.varredura.raio - 2);
-    if (decide && em.n >= 4 && h.cds.varredura <= 0) { ent.mx = em.x + rng(); ent.my = em.y + rng(); ent.apertos.push("varredura"); }
-    else if (decide && k.investida.escudo && h.cds.investida <= 0 && !h.acao) {
-      // o escudo contra os arqueiros: erguido na direção deles, quando há uns quatro ao alcance
-      const arq = ini.filter((e) => e.tipo === "arqueiro" && Math.hypot(e.x - h.x, e.y - h.y) < 170);
-      if (arq.length >= 4) { const c = contar(arq, arq[0].x, arq[0].y, 60); ent.mx = c.x; ent.my = c.y; ent.apertos.push("investida"); }
-    } else if (decide && h.kit.investida.inspira && h.cds.investida <= 0) {
-      const al = m.lados[0].filter((a) => a !== h && Math.hypot(a.x - h.x, a.y - h.y) < h.kit.investida.raio).length;
-      if (al >= 6 && dp < 40) ent.apertos.push("investida");
-    } else if (decide && !h.kit.investida.inspira && !k.investida.escudo && h.cds.investida <= 0 && g.n >= 4 && dg > 55 && dg < 150 && vida > 0.4) {
+    // a Investida para chegar a um grupo
+    if (decide && !ent.apertos.length && h.cds.investida <= 0 && g.n >= 4 && dg > 55 && dg < 150 && vida > 0.4) {
       ent.mx = g.x + rng(); ent.my = g.y + rng(); ent.apertos.push("investida");
     }
     if (vida < 0.3 && aliados) andar(ent, aliados.x - h.x, aliados.y - h.y);
     else if (dg > 16) andar(ent, g.x - h.x, g.y - h.y);
     else andar(ent, perto.x - h.x, perto.y - h.y);
-    ent.atacar = dp < 26;
+    // o principal: a Varredura com o inimigo ao alcance da aproximação (o mouse no grupo, a aproximação faz o resto)
+    if (!ent.apertos.length) { ent.atacar = dp < h.kit.varredura.assist.alcance; if (ent.atacar) { ent.mx = perto.x; ent.my = perto.y; } }
     return;
   }
-  // o mago
-  const k = h.kit;
+  // o mago: o Piscar para fugir de quem chega colado; a Bola de Fogo no grupo ao alcance
   if (decide && dp < 22 && h.cds.piscar <= 0) {
     ent.mx = h.x - (perto.x - h.x) * 4; ent.my = h.y - (perto.y - h.y) * 4; ent.apertos.push("piscar"); return;
-  }
-  const em = contar(ini, h.x, h.y, 70);
-  if (decide && em.n >= 5 && h.recurso >= k.muralha.custo + 15 && h.cds.muralha <= 0) {
-    const a = Math.atan2(em.y - h.y, em.x - h.x);
-    // o gelo vai em cima do grupo; a muralha e o anel, entre o grupo e o mago
-    const r = k.muralha.variante === "gelo" ? Math.min(Math.hypot(em.x - h.x, em.y - h.y), k.muralha.alcance) : 40;
-    ent.mx = h.x + Math.cos(a) * r; ent.my = h.y + Math.sin(a) * r; ent.apertos.push("muralha"); return;
-  }
-  if (decide && g.n >= 3 && dg <= k.bola.alcance && h.recurso >= k.bola.custo && h.cds.bola <= 0) {
-    ent.mx = g.x + rng(); ent.my = g.y + rng(); ent.apertos.push("bola");
   }
   if (vida < 0.35 && aliados) andar(ent, aliados.x - h.x, aliados.y - h.y);
   else if (dp < 70) andar(ent, h.x - perto.x, h.y - perto.y);
   else if (dp > 125) andar(ent, g.x - h.x, g.y - h.y);
   else andar(ent, -(perto.y - h.y), perto.x - h.x);
-  ent.atacar = dp < 170 && !ent.apertos.length;
+  if (!ent.apertos.length) {
+    const alvo = dg <= h.kit.bola.alcance ? g : perto;
+    ent.mx = alvo.x + rng(); ent.my = alvo.y + rng();
+    ent.atacar = Math.hypot(alvo.x - h.x, alvo.y - h.y) < h.kit.bola.alcance;
+  }
+}
+
+// Onde usar uma habilidade agora, pela dica `ia` dela; null: não vale a pena.
+function escolherUso(m, h, k, g, dg, ini) {
+  const ia = k.ia, alcance = k.alcance || k.comprimento || 200;
+  if (ia.usa === "grupo") return g.n >= ia.min && dg <= alcance ? g : null;
+  if (ia.usa === "perto") { const c = contar(ini, h.x, h.y, ia.raio); return c.n >= ia.min ? c : null; }
+  if (ia.usa === "linha") {
+    // quantos estão perto da linha até o grupo
+    const ux = (g.x - h.x) / (dg || 1), uy = (g.y - h.y) / (dg || 1);
+    let n = 0;
+    for (const e of ini) { const px = e.x - h.x, py = e.y - h.y, t = px * ux + py * uy; if (t > 0 && t < alcance && Math.abs(px * uy - py * ux) < 14) n++; }
+    return n >= ia.min ? g : null;
+  }
+  if (ia.usa === "parede") { const c = contar(ini, h.x, h.y, 70); if (c.n < ia.min) return null; const a = Math.atan2(c.y - h.y, c.x - h.x); return { x: h.x + Math.cos(a) * 40, y: h.y + Math.sin(a) * 40 }; }
+  if (ia.usa === "sangue") { let n = 0; for (const e of ini) if (e.sangra && Math.hypot(e.x - h.x, e.y - h.y) < k.raio) n++; return n >= ia.min ? h : null; }
+  if (ia.usa === "aliados") { const al = m.lados[0].filter((a) => a !== h && Math.hypot(a.x - h.x, a.y - h.y) < k.raio).length; return al >= ia.min ? h : null; }
+  if (ia.usa === "arqueiros") {
+    const arq = ini.filter((e) => e.tipo === "arqueiro" && Math.hypot(e.x - h.x, e.y - h.y) < 170);
+    return arq.length >= ia.min ? contar(arq, arq[0].x, arq[0].y, 60) : null;
+  }
+  return null;
 }

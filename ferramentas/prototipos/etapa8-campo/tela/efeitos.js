@@ -41,6 +41,22 @@ function fumaca(E, x, y, n, raio) {
   }
 }
 
+// estilhaços de gelo e gotas de sangue
+function gelo(E, x, y, n, raio) {
+  for (let i = 0; i < n; i++) {
+    const a = E.rng() * Math.PI * 2, r = Math.sqrt(E.rng()) * raio, v = 20 + E.rng() * 40;
+    E.particulas.push({ x: x + Math.cos(a) * r, y: y + Math.sin(a) * r * 0.8, z: 2, vx: Math.cos(a) * v, vy: Math.sin(a) * v * 0.7,
+      vz: 15 + E.rng() * 25, vida: 0, max: 0.3 + E.rng() * 0.25, cor: E.rng() < 0.5 ? "#ffffff" : "#9fd8ff", tam: 1, g: 70, atrito: 3 });
+  }
+}
+function sangue(E, x, y, n) {
+  for (let i = 0; i < n; i++) {
+    const a = E.rng() * Math.PI * 2, v = 20 + E.rng() * 40;
+    E.particulas.push({ x, y: y - 3, z: 3, vx: Math.cos(a) * v, vy: Math.sin(a) * v * 0.6, vz: 10 + E.rng() * 20, vida: 0,
+      max: 0.3 + E.rng() * 0.2, cor: E.rng() < 0.6 ? "#c8282a" : "#7a1416", tam: 1, g: 80, atrito: 3 });
+  }
+}
+
 function faiscas(E, x, y, dx, dy, n, cor = "#fff6d0") {
   for (let i = 0; i < n; i++) {
     const a = Math.atan2(dy, dx) + (E.rng() - 0.5) * 1.6, v = 50 + E.rng() * 60;
@@ -84,7 +100,10 @@ function marcaRachada(E, x, y, raio) {
 export const NUMEROS = { vida: 0.7, somaContinuo: 0.6, maximo: 70 };
 function numeroDeDano(E, e) {
   if (e.sofrido) {
-    // o dano que o herói levou: vermelho, em cima dele, só dos golpes que pesam (o valor que saiu da vida)
+    // o dano que o herói levou: vermelho, em cima dele (o valor que saiu da vida); o que chega até 0,35 s depois do
+    // último entra no mesmo número, que se renova
+    const j = E.numeros.find((n) => n.tipo === "sofrido" && n.t < 0.35);
+    if (j) { j.valor += e.valor; j.t = 0; j.x = e.x; j.y = e.y - 16; return; }
     E.numeros.push({ id: -1, x: e.x + (E.rng() - 0.5) * 4, y: e.y - 16, dx: e.dx || 0, valor: e.valor, tipo: "sofrido", t: 0,
       ultimo: 0, continuo: null });
     return;
@@ -108,12 +127,14 @@ export function receber(E, eventos, m) {
         if (e.fagulha) brasas(E, e.x, e.y - 4, 8, 40);   // a Fagulha consumida: um estouro de brasas no alvo
         break;
       case "heroiAtingido": {
-        // de onde veio e quanto pesou: a marca vermelha no anel do herói, do lado de quem bateu; o número dos golpes
-        // fortes; o som do impacto nos pesados (o tremor dos golpes do Capitão continua com o golpe dele)
+        // de onde veio e quanto pesou: a marca vermelha no anel do herói, do lado de quem bateu; o número vermelho (os
+        // golpes que chegam juntos somam num número só, para um enxame não encher a tela); o som pelo peso (o golpe de
+        // uma ameaça tem o próprio); a câmera proporcional ao golpe
         const forca = Math.min(1, e.valor / 30);
         E.golpeHeroi = { ang: Math.atan2(-(e.dy || 0), -(e.dx || 0)), t: 0, dur: 0.35 + 0.3 * forca, forca, sem: !e.dx && !e.dy };
-        if (e.valor >= 6) numeroDeDano(E, { ...e, sofrido: true });
-        if (e.valor >= 15) E.sons.push("choque");
+        numeroDeDano(E, { ...e, sofrido: true });
+        E.sons.push(e.fonte === "lider" || e.fonte === "campeao" ? "golpeAmeaca" : e.valor >= 15 ? "choque" : "dor");
+        tremer(E, Math.min(0.5, 0.04 + e.valor / 70), e.dx || 0, e.dy || 0);
         break;
       }
       case "liderRodopio":
@@ -142,8 +163,7 @@ export function receber(E, eventos, m) {
       case "acerto": {
         if (e.forte) faiscas(E, e.x, e.y - 4, e.dx, e.dy, 3);
         else faiscas(E, e.x, e.y - 4, e.dx, e.dy, 2, "#ffffff");
-        if (e.lado === 0 && e.alvo === "heroi") { E.sons.push("dor"); tremer(E, 0.05); }
-        else E.sons.push(e.forte ? "impacto" : "acerto");
+        if (!(e.lado === 0 && e.alvo === "heroi")) E.sons.push(e.forte ? "impacto" : "acerto");
         break;
       }
       case "morte": {
@@ -155,9 +175,8 @@ export function receber(E, eventos, m) {
         break;
       }
       case "inicio":
-        if (e.id === "basico" && e.heroi === "guerreiro") E.sons.push(e.arremate ? "corteForte" : "corte");
-        else if (e.id === "varredura" || e.id === "salto") E.sons.push("preparo");
-        else if (e.id === "investida" && e.variante === "escudo") E.sons.push("escudo");
+        if (e.id === "varredura" || e.id === "corteSangrento" || e.id === "salto" || e.id === "terremoto") E.sons.push("preparo");
+        else if (e.id === "escudo") E.sons.push("escudo");
         else if (e.id === "investida") { E.sons.push("investida"); poeira(E, m.heroi.x, m.heroi.y, 6, 25); }
         break;
       case "contato": {
@@ -181,13 +200,27 @@ export function receber(E, eventos, m) {
           E.raios.push({ pontos: e.pontos, t: 0, dur: 0.24, semente: Math.floor(E.rng() * 1000) });
           for (const p of e.pontos.slice(1)) faiscas(E, p.x, p.y, 0, -1, 3, "#d8f4ff");
           E.sons.push("raio");
-        } else if (e.id === "bola") {
+        } else if (e.id === "bola" || e.meteoro) {
           E.explosoes.push({ x: e.x, y: e.y, raio: e.raio, t: 0, dur: 0.32 });
           brasas(E, e.x, e.y, 22, 70);
           fumaca(E, e.x, e.y, 6, e.raio);
           marcaQueimada(E, e.x, e.y, e.raio * 0.9);
           E.sons.push("explosao");
+        } else if (e.estilhacante) {
+          // a Lança Estilhaçante: a explosão de gelo
+          E.explosoes.push({ x: e.x, y: e.y, raio: e.raio, t: 0, dur: 0.28, cor: "gelo" });
+          gelo(E, e.x, e.y, 16, e.raio);
+          E.sons.push("gelo");
+        } else if (e.implosao) {
+          E.explosoes.push({ x: e.x, y: e.y, raio: e.raio, t: 0, dur: 0.3, cor: "arcano" });
+          E.aneis.push({ x: e.x, y: e.y, r0: e.raio * 2, r1: 4, t: 0, dur: 0.25, cor: "#c9a0ff" });
+          E.sons.push("explosao");
         }
+        if (e.id === "vortice" && !e.implosao) { E.aneis.push({ x: e.x, y: e.y, r0: 4, r1: e.raio, t: 0, dur: 0.3, cor: "#c9a0ff" }); E.sons.push("piscar"); }
+        if (e.id === "ignicao") { E.aneis.push({ x: e.x, y: e.y, r0: 6, r1: e.raio, t: 0, dur: 0.3, cor: "#ffb15a" }); brasas(E, e.x, e.y, 14, 50); E.sons.push("fogo"); }
+        if (e.id === "ruptura") { E.aneis.push({ x: e.x, y: e.y, r0: 8, r1: e.raio, t: 0, dur: 0.3, cor: "#ff5a5a" }); E.sons.push("varredura"); }
+        if (e.id === "furia") { E.aneis.push({ x: e.x, y: e.y, r0: 4, r1: 40, t: 0, dur: 0.4, cor: "#ff6a4a" }); E.sons.push("trompa"); }
+        if (e.id === "corteSangrento") E.sons.push("varredura");
         if (e.id === "piscar") {
           E.aneis.push({ x: e.x, y: e.y, r0: 4, r1: e.raio, t: 0, dur: 0.25, cor: "#ffb15a" });
           brasas(E, e.x, e.y, 10, 50);
@@ -211,10 +244,33 @@ export function receber(E, eventos, m) {
         break;
       }
       case "disparo":
-        E.sons.push(e.id === "bola" ? "lanca" : "faisca");
+        E.sons.push(e.id === "lanca" ? "gelo" : e.id === "sismico" ? "aterrissa" : "lanca");
+        if (e.id === "sismico") tremer(E, 0.12, Math.cos(e.dir), Math.sin(e.dir));
         break;
-      case "faiscaAcerto": brasas(E, e.x, e.y, 4, 30); break;
-      case "faiscaFim": brasas(E, e.x, e.y, 2, 15); break;
+      case "linhaAcerto":
+        if (e.id === "lanca") gelo(E, e.x, e.y, 4, 4); else poeira(E, e.x, e.y, 4, 30);
+        E.sons.push("acerto");
+        break;
+      case "linhaFim": if (e.id === "lanca") gelo(E, e.x, e.y, 3, 3); else poeira(E, e.x, e.y, 6, 30); break;
+      case "terremotoAnel":
+        E.aneis.push({ x: e.x, y: e.y, r0: Math.max(4, e.raio - 40), r1: e.raio, t: 0, dur: 0.3, cor: "#e9dcb8" });
+        poeira(E, e.x, e.y, 18, 40 + e.raio * 0.4);
+        marcaRachada(E, e.x, e.y, e.raio * 0.6);
+        tremer(E, e.ultimo ? 0.5 : 0.25);
+        E.sons.push("aterrissa");
+        break;
+      case "explosao": {
+        // as explosões dos talentos: a cor diz de onde vêm (gelo, fogo, sangue); o som tem intervalo mínimo
+        const cor = e.de === "estilhacar" ? "gelo" : e.de === "ignicao" ? null : "sangue";
+        E.explosoes.push({ x: e.x, y: e.y, raio: e.raio, t: 0, dur: 0.26, cor });
+        if (cor === "gelo") gelo(E, e.x, e.y, 8, e.raio * 0.6);
+        else if (cor === "sangue") sangue(E, e.x, e.y, 8);
+        else brasas(E, e.x, e.y, 10, 50);
+        E.sons.push(cor === "gelo" ? "gelo" : "explosao");
+        break;
+      }
+      case "congela": gelo(E, e.x, e.y, 6, 5); break;
+      case "estilhaca": gelo(E, e.x, e.y, 10, 6); break;
       case "flechaChao": {
         const g = E.gm;
         g.fillStyle = "rgba(90,62,34,0.8)";

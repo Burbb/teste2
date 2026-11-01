@@ -1,12 +1,125 @@
 # 30 — Etapa 8: o combate em campo livre (herói em tempo real e tropas pequenas)
 
-**31/10/2026 (rodada 1) e 01/11/2026 (rodadas 2 a 4).** A rodada 4 (Campo Livre 4: o ataque básico assistido, o
-impacto dos acertos, o Capitão perigoso, os arqueiros e as ordens, a horda e as intenções de progressão) vem primeiro;
-depois a rodada 3 (Campo Livre 3: a câmera parada no modo de
+**31/10/2026 (rodada 1) e 01/11/2026 (rodadas 2 a 5).** A rodada 5 (Campo Livre 5: o kit montado antes da luta, com
+ataque principal, mobilidade, três comuns, uma ultimate e talentos) vem primeiro; depois a rodada 4 (Campo Livre 4: o
+ataque básico assistido, o impacto dos acertos, o Capitão perigoso, os arqueiros e as ordens, a horda e as intenções de
+progressão); depois a rodada 3 (Campo Livre 3: a câmera parada no modo de
 comando, o Capitão que enfrenta o herói, as escalas 1×, 2× e 4× e duas habilidades novas por herói); depois
 a rodada 2 (Campo Livre 2: números de dano, o líder inimigo, o modo de comando e a seleção, a leitura do choque, três
 encontros e quatro versões de habilidade); por fim as seções 0 a 14, a rodada 1 (Campo Livre 1). **A direção foi
 aprovada pelo Jean para continuar no protótipo, sem integração.**
+
+## Rodada 5 (01/11/2026): Campo Livre 5
+
+**O pedido do Jean** ficou na sessão que atingiu o limite de uso no meio da rodada; o texto dele não foi salvo. O que
+segue descreve o que está no protótipo e o que foi medido agora. **Em teste (nada aprovado).** A v4 fica congelada em
+`tela-v4/` e abre em `/v4/`; a v1, em `/v1/`.
+
+| Seção | O que tem |
+|---|---|
+| R5.1 | O kit montado: principal, mobilidade, três comuns, uma ultimate |
+| R5.2 | Talentos, marcas, tipos de dano e cadeias |
+| R5.3 | A aproximação inimiga e o Capitão |
+| R5.4 | A abertura quebrada e o que foi corrigido na entrega |
+| R5.5 | Verificação e medições |
+| R5.6 | Limitações conhecidas e o que precisa da avaliação do Jean |
+
+### R5.1. O kit montado
+
+Cada herói tem um **ataque principal** (botão esquerdo, segurar repete a cada 1 s) e uma **mobilidade** (Espaço),
+fixos, e quatro espaços escolhidos antes da luta: **três comuns** (botão direito, Q, E) e **uma ultimate** (F).
+
+- **Guerreiro:** Varredura (principal, assistida: vira para o inimigo mais perto da mira, num cone de 40° até 64 px, e
+  avança até 32 px na preparação, só para a frente e nunca através de ninguém), Investida; comuns: Salto Esmagador,
+  Turbilhão, Golpe Sísmico, Corte Sangrento, Ruptura, Grito de Guerra, Avanço de Escudo; ultimates: Fúria Desenfreada,
+  Terremoto.
+- **Mago:** Bola de Fogo (principal), Piscar; comuns: Lança de Gelo, Corrente de Raios, Muralha de Fogo, Anel de Fogo,
+  Campo de Gelo, Vórtice, Ignição; ultimates: Chuva de Meteoros, Nevasca.
+- **O recurso limita o uso concentrado, não o fluxo:** começa cheio e regenera rápido (Fúria 16 por segundo, Mana 22);
+  o principal e a mobilidade não custam; as comuns custam 16 a 35 com recarga própria; a ultimate não custa recurso,
+  recarrega em 30 s e fica pronta aos 8 s de luta.
+- **A tela de escolha** mostra cada habilidade com a tecla em que entrou, o custo no formato comum e a regra com os
+  números do kit montado (`textos.js`; a tela não calcula regra). Montagens prontas: "Sangria" e "Impacto" (Guerreiro),
+  "Gelo que estilhaça" e "Fogo em cadeia" (Mago), editáveis depois.
+
+### R5.2. Talentos, marcas, tipos de dano e cadeias
+
+- **Talentos:** 7 pontos por herói, redistribuídos à vontade. Quatro tipos: transformação (Lança Estilhaçante, Arrasto,
+  Tremor Residual), compartilhado (Frio Cortante, Hemorragia), interação (Estilhaçar, Brasa Viva, Explosão de Sangue,
+  Sede de Sangue) e ajuste (Fogo Alastrado, Vórtice Denso, Mente Rápida, Braço Largo). Um talento que pede uma
+  habilidade fora da montagem não pode ser escolhido; trocar a montagem tira os que deixaram de valer.
+- **Marcas** (fogo, gelo, raio, arcano, sangue, impacto, corte): um talento vale para as habilidades de uma marca sem
+  citar cada uma; uma habilidade ou um item novo com a marca entra na regra sozinho.
+- **Tipos de dano:** direto (o efeito principal), contínuo (os tiques), secundário (as explosões dos talentos). Cada
+  lançamento tem um número próprio: o Estilhaçar exige outro lançamento; o contínuo não estilhaça.
+- **Cadeias com limite de regra, não de desempenho:** 2 estilhaços em sequência, 3 explosões de Sangue ou de Brasa em
+  sequência, 30 explosões por golpe.
+
+### R5.3. A aproximação inimiga e o Capitão
+
+Soldados e veteranos começam o golpe a até 10 px além do alcance e avançam na primeira parte da preparação (60%), na
+direção marcada no começo, que não muda depois (o campeão, 14 px; o Capitão, 22 px): acertam quem fica parado e erram
+quem sai. O Capitão ficou com 900 de vida (era 500) e 24 de dano no herói (era 30). Na barra do herói, a vida que
+acabou de sair fica um instante como um rastro claro.
+
+### R5.4. A abertura quebrada e o que foi corrigido na entrega
+
+O Jean abriu a v5 e viu só as partes fixas da tela de escolha (sem encontros, heróis, habilidades nem talentos) e o
+texto escuro. **A causa:** `main.js` importava `montarKit` de `sim.js` e declarava outra função `montarKit` (a da barra
+da HUD); o navegador recusa o módulo inteiro (`Identifier 'montarKit' has already been declared`) e nada é montado. O
+texto escuro vem do mesmo erro: a paleta do jogo (`--p-*`) é publicada por `main.js` (`Sprites.publicar()`); sem o
+módulo, as cores ficam indefinidas e o texto sai preto (reproduzido bloqueando o `main.js`). Não era cache: o servidor entrega os arquivos idênticos ao disco, com
+`Cache-Control: no-store`. A v4 importava com outro nome (`montarKit as kitDoHeroi`); a v5 perdeu o apelido ao passar a
+chamar a função na escolha. Os 40 testes da simulação não pegavam o erro porque rodam `sim.js` no Node, sem `main.js`.
+
+**Corrigido junto, por impedirem o uso:**
+- **A escolha passou da altura da janela** (2270 px de caixa em 1080) e, centralizada, cortava o topo sem rolagem para
+  ele: o título, o Lutar e os encontros ficavam inacessíveis. `align-items: safe center` centraliza quando cabe e encosta
+  no topo quando não cabe.
+- **A barra de habilidades cortava o custo** ("18 de Fúria · Recarga 4 s", "Recarga 1 s · Segure para repetir") nos
+  espaços de 152 px: cada espaço tem agora a largura do próprio texto (mínimo 124 px); em 1280, a barra termina 9 a
+  16 px antes do botão Registro.
+- **O rótulo do modo de comando** dizia só "botão direito, Defender ali"; agora "botão direito: atacar ou Defender",
+  curto o bastante para não encostar no aviso do centro em 1280.
+
+### R5.5. Verificação e medições
+
+**Conferido agora:**
+- **No navegador, pela tela** (Playwright, 1920×1080 e 1280×720): a escolha monta (5 encontros, 2 heróis) sem erros no
+  console nem arquivos faltando; Guerreiro e Mago montados por um atalho, batalha começada, principal segurado, Q, E e
+  botão direito usados; a barra com os seis espaços, nada cortado; Shift mostra o modo de comando, o arrasto seleciona os
+  42 ("soldados 30, arqueiros 12"), o botão direito no chão dá "Defender aqui 42". Capturas: `capturas/cl5-escolha-1920`,
+  `cl5-escolha-1280`, `cl5-comando-mago-1920`, `cl5-comando-guerreiro-1280`.
+- **40 testes da simulação** e os 3 do isolamento (`testes/test_campo.py`).
+- **O jogo não mudou** (`rpg/` e `tests/` intocados): suíte (804), gabarito e pyflakes; a fumaça, reaproveitada.
+
+**Batalhas sem tela** (uma rodada de cada, 1×, jogador automático forte; as quatro ferramentas rodaram ao mesmo tempo, o
+que encarece o tempo de passo):
+- `simular.mjs`: o herói vence todos os encontros com todas as montagens, menos **o Capitão contra o Guerreiro em
+  "Sangria" sem talentos** (derrota aos 42 s); no Capitão, o Guerreiro vence com 18 a 24 de vida e perde 18 a 38 das 42
+  tropas. Nos encontros comuns, a batalha acaba em **11 a 26 s** e as tropas derrubam **0 a 15**. Os talentos encurtam
+  a batalha (primeira batalha do Guerreiro: 11 s com, 15 s sem).
+- `recursos.mjs` (30 s de uso contínuo): **nenhuma espera por recurso** em nenhuma montagem, nem no uso concentrado; o
+  menor recurso foi 25 (Guerreiro, as três comuns mais caras) e 27 (Mago).
+- `contato.mjs`: parado no meio de 8 soldados, o herói leva 59 de 61 ataques; andando, 5 de 21; o Capitão acerta 6 de 7
+  no duelo parado e 0 de 7 quando o herói esquiva as preparações.
+- `cadeias.mjs` (horda 4×, 100 s): passo médio 0,7 a 1,3 ms, p99 até 4,9 ms; **o pior passo isolado chegou a 66 ms
+  (Sangria) e 148 ms (Fogo em cadeia)**; até 892 explosões numa batalha, o limite de 30 por golpe alcançado.
+
+**Sem vídeos.**
+
+### R5.6. Limitações conhecidas e o que precisa da avaliação do Jean
+
+- **As tropas quase não participam** nos encontros comuns: o herói com recurso farto e talentos derruba tudo em 11 a
+  26 s. É o protagonista poderoso pedido nas rodadas anteriores; o equilíbrio com as tropas e as ordens se decide
+  jogando (os números a mexer: `regen` do recurso, custos das comuns, `ORCAMENTO`).
+- **Picos isolados no passo das cadeias** (66 e 148 ms, medidos com outras simulações em paralelo): não medidos sozinhos
+  nem no navegador; ficam para conferir antes de aumentar a horda ou as cadeias.
+- **A tela de escolha é longa** (as duas colunas com todas as habilidades e talentos); rola, mas pede reorganização se a
+  montagem ficar.
+- **Para o Jean avaliar:** (1) montar o kit antes da luta é divertido, e as montagens prontas ajudam? (2) os talentos de
+  interação (Estilhaçar, Brasa, Sangue) se percebem na luta? (3) o recurso farto tira a decisão, ou o fluxo agrada?
+  (4) a aproximação dos inimigos deixa a esquiva legível? (5) o Capitão com 900 de vida dura demais?
 
 ## Rodada 4 (01/11/2026): Campo Livre 4
 

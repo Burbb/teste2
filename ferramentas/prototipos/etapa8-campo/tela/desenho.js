@@ -154,7 +154,7 @@ function poseTropa(u) {
 
 function poseHeroi(h) {
   if (h.morto) return "caido";
-  if (h.atordoado > 0) return "recuo";
+  if (h.atordoado > 0 || h.dorAte > h.tAgora) return "recuo";   // a dor do golpe recebido: 0,12 s, só no desenho
   const a = h.acao;
   if (a) {
     if (a.fase === "preparo") return "preparo";
@@ -221,6 +221,23 @@ export function desenhar(g, s) {
         const x = Math.round(z.x + Math.cos(a) * r) - cx, y = Math.round(z.y + Math.sin(a) * r) - cy;
         g.fillStyle = i % 3 ? "#ff8a30" : "#ffe08a";
         g.fillRect(x, y - (i % 2), 1, 1 + (i % 2));
+      }
+    } else if (z.tipo === "vortice") {
+      // o Vórtice: braços em espiral girando para dentro
+      const k = 1 - z.t / z.dur;
+      pintarForma(g, { tipo: "circulo", x: z.x, y: z.y, raio: z.raio }, cx, cy, null, "rgba(190,150,255,0.5)", 3);
+      for (let b = 0; b < 4; b++) for (let i = 0; i < 14; i++) {
+        const r = z.raio * (1 - i / 14), a = b * Math.PI / 2 + i * 0.35 + rel * 5;
+        g.fillStyle = i % 3 ? "#9a6cff" : "#e0d0ff";
+        g.fillRect(Math.round(z.x + Math.cos(a) * r) - cx, Math.round(z.y + Math.sin(a) * r * 0.8) - cy, 1, 1);
+      }
+      void k;
+    } else if (z.tipo === "rachado") {
+      // o chão rachado do Tremor Residual: fendas escuras com pó subindo
+      pintarForma(g, { tipo: "circulo", x: z.x, y: z.y, raio: z.raio }, cx, cy, "rgba(60,40,20,0.12)", "rgba(120,90,50,0.5)", 3);
+      for (let i = 0; i < 18; i++) {
+        const a = i * 2.399, r = Math.sqrt((i * 0.618) % 1) * z.raio;
+        if ((i + Math.floor(rel * 6)) % 4 === 0) { g.fillStyle = "#b8a27a"; g.fillRect(Math.round(z.x + Math.cos(a) * r) - cx, Math.round(z.y + Math.sin(a) * r) - cy - 1, 1, 1); }
       }
     } else if (z.tipo === "anel") {
       const n = Math.floor((2 * Math.PI * z.raio) / 3);
@@ -318,14 +335,14 @@ export function desenhar(g, s) {
   const a = h.acao;
   if (a && !h.morto) {
     if (a.fase === "preparo" && a.id !== "basico" && a.forma) {
-      const f = a.id === "salto" || a.id === "bola" || a.id === "muralha" ? a.forma : { ...a.forma, x: h.x, y: h.y };
+      const f = a.forma.fixa || a.forma.tipo === "faixa" ? a.forma : { ...a.forma, x: h.x, y: h.y };
       // o Turbilhão: o alcance do puxão, tracejado, em volta do círculo do golpe
       if (f.puxa) pintarForma(g, { tipo: "circulo", x: f.x, y: f.y, raio: f.puxa }, cx, cy, null, "rgba(255,245,210,0.6)", 3);
       pintarForma(g, f, cx, cy, "rgba(255,245,210,0.12)", "rgba(255,245,210,0.85)");
     }
     if (a.fase === "escudo" && a.forma) {
       // o Avanço de Escudo: o arco do escudo (barra flechas e empurra) e, tracejado, quem fica protegido
-      pintarForma(g, { tipo: "circulo", x: h.x, y: h.y, raio: h.kit.investida.protege }, cx, cy, null, "rgba(170,210,255,0.45)", 3);
+      pintarForma(g, { tipo: "circulo", x: h.x, y: h.y, raio: h.kit.escudo.protege }, cx, cy, null, "rgba(170,210,255,0.45)", 3);
       pintarForma(g, a.forma, cx, cy, "rgba(170,210,255,0.16)", "rgba(200,230,255,0.9)");
     }
     if (a.fase === "voo" && a.id === "salto") {
@@ -381,10 +398,21 @@ export function desenhar(g, s) {
       barra(g, Math.round(x - larg / 2) - cx, Math.round(y - sp.ay) - cy - 4, larg, u.vida / u.vidaMax, "#e05a48", grande ? 2 : 1);
     }
     const topo = Math.round(y - sp.ay) - cy;
-    if (u.sangra) { g.fillStyle = "#c8282a"; g.fillRect(Math.round(x + 2) - cx, topo + 3 + (Math.floor(rel * 6 + u.id) % 4), 1, 1); }
+    // o Sangramento: uma gota por acúmulo (até 5), descendo
+    if (u.sangra) {
+      g.fillStyle = "#c8282a";
+      for (let i = 0; i < u.sangra.acum; i++) g.fillRect(Math.round(x + 2 - i * 1.5) - cx, topo + 3 + ((Math.floor(rel * 6) + u.id + i * 2) % 4), 1, 1);
+    }
+    // congelado: a silhueta coberta de gelo; enregelado: dois pontos azuis
+    if (u.gelo > m.t) {
+      g.fillStyle = "rgba(190,230,255,0.75)";
+      g.fillRect(Math.round(x - 3) - cx, topo + 1, 7, Math.round(sp.ay - 2));
+      g.fillStyle = "#ffffff"; g.fillRect(Math.round(x - 2) - cx, topo + 2, 1, 1); g.fillRect(Math.round(x + 2) - cx, topo + 5, 1, 1);
+    } else if (u.enregelado > m.t) { g.fillStyle = "#9fd8ff"; g.fillRect(Math.round(x - 3) - cx, topo + 2, 1, 1); g.fillRect(Math.round(x + 3) - cx, topo + 4, 1, 1); }
+    // a Brasa da Ignição: um ponto laranja piscando em cima
+    if (u.brasa > m.t) { g.fillStyle = Math.floor(rel * 8 + u.id) % 2 ? "#ffb15a" : "#fff1c4"; g.fillRect(Math.round(x) - cx, topo - 2, 1, 1); }
     if (u.inspirado > 0 && Math.floor(rel * 5 + u.id) % 3 === 0) { g.fillStyle = "#ffe08a"; g.fillRect(Math.round(x - 2) - cx, topo + 1, 1, 1); }
     if (u.reuniao) { g.fillStyle = "#ff5a48"; g.fillRect(Math.round(x) - cx, topo - 4, 1, 2); g.fillRect(Math.round(x) - cx, topo - 1, 1, 1); }
-    if (u.fagulha > m.t) { g.fillStyle = Math.floor(rel * 8 + u.id) % 2 ? "#ffb15a" : "#fff1c4"; g.fillRect(Math.round(x - 1) - cx, topo - 2, 1, 1); }
     if ((u.atordoado > 0.15 || u.ofegante > 0) && (u.def.elite || u.tipo === "veterano")) {
       const t = rel * 8, top = Math.round(y - sp.ay) - cy - 2;
       g.fillStyle = "#f0cb62";
@@ -407,11 +435,30 @@ export function desenhar(g, s) {
       g.fillStyle = "#8a6a40";
       g.fillRect(Math.round(x - (dx / n) * 2), Math.round(y - (dy / n) * 2 + (k < 0.5 ? 1 : -1)), 1, 1);
       g.fillRect(Math.round(x - dx / n), Math.round(y - dy / n), 1, 1);
-    } else if (p.tipo === "faisca") {
+    } else if (p.tipo === "lanca") {
+      // a Lança de Gelo: um estilhaço comprido na direção dela
       const x = Math.round(p.x) - cx, y = Math.round(p.y) - cy - 6;
-      g.fillStyle = "#ff8a30"; g.fillRect(Math.round(x - p.dx * 3), Math.round(y - p.dy * 3), 1, 1);
-      g.fillStyle = "#ffe08a"; g.fillRect(x - 1, y - 1, 2, 2);
-      g.fillStyle = "#ffffff"; g.fillRect(x, y - 1, 1, 1);
+      g.fillStyle = "#4f8fd8";
+      for (let i = 2; i <= 7; i++) g.fillRect(Math.round(x - p.dx * i), Math.round(y - p.dy * i), 1, 1);
+      g.fillStyle = "#cfeeff";
+      for (let i = 0; i <= 3; i++) g.fillRect(Math.round(x - p.dx * i), Math.round(y - p.dy * i), 1, 1);
+      g.fillStyle = "#ffffff"; g.fillRect(x, y, 1, 1);
+    } else if (p.tipo === "onda") {
+      // a onda do Golpe Sísmico: o chão levantando numa frente perpendicular à direção
+      const x = Math.round(p.x) - cx, y = Math.round(p.y) - cy;
+      for (let i = -p.k.largura; i <= p.k.largura; i += 2) {
+        const qx = Math.round(x - p.dy * i), qy = Math.round(y + p.dx * i), alt = 1 + ((i * 7 + Math.floor(rel * 20)) & 3);
+        g.fillStyle = "#6c5a40"; g.fillRect(qx, qy, 2, 1);
+        g.fillStyle = "#b8a27a"; g.fillRect(qx, qy - alt, 1, alt);
+      }
+    } else if (p.tipo === "meteoro") {
+      // o meteoro: o círculo marcado enchendo e a pedra caindo do alto
+      const k = p.t / p.dur;
+      pintarForma(g, { tipo: "circulo", x: p.x, y: p.y, raio: p.k.raio }, cx, cy, `rgba(255,120,40,${0.08 + 0.2 * k})`, "rgba(255,150,70,0.9)");
+      const x = Math.round(p.x) - cx, y = Math.round(p.y - (1 - k) * 90) - cy;
+      g.fillStyle = "#5a2a14"; g.fillRect(x - 2, y - 2, 5, 5);
+      g.fillStyle = "#ff8a30"; g.fillRect(x - 1, y - 1, 3, 3);
+      g.fillStyle = "#ffe08a"; g.fillRect(x, y + 3, 1, 2); g.fillRect(x - 1, y + 5, 1, 1);
     } else if (p.tipo === "bola") {
       const x = Math.round(p.x) - cx, y = Math.round(p.y - (p.z || 0)) - cy - 6;
       g.fillStyle = "#c63b2b"; g.fillRect(x - 2, y - 1, 5, 3); g.fillRect(x - 1, y - 2, 3, 5);
@@ -473,13 +520,16 @@ export function desenhar(g, s) {
     const varrido = { ...f, abertura: f.abertura * Math.min(1, 0.35 + k * 2) };
     pintarForma(g, varrido, cx, cy, cor, c.inimigo ? "rgba(255,150,120,0.9)" : `rgba(255,255,255,${0.95 * (1 - k * 0.6)})`);
   }
+  // as explosões: fogo (a Bola, os meteoros, a Brasa), gelo (o Estilhaçar, a Lança Estilhaçante), sangue, arcano
+  const CORES_EXPLOSAO = { gelo: [[220, 245, 255], [120, 190, 255]], sangue: [[255, 160, 150], [200, 30, 30]],
+    arcano: [[230, 210, 255], [160, 100, 255]] };
   for (const ex of E.explosoes) {
-    const k = ex.t / ex.dur;
-    if (k < 0.18) pintarForma(g, { tipo: "circulo", x: ex.x, y: ex.y, raio: ex.raio }, cx, cy, "rgba(255,236,170,0.75)", "#ffffff");
+    const k = ex.t / ex.dur, c = CORES_EXPLOSAO[ex.cor];
+    if (k < 0.18) pintarForma(g, { tipo: "circulo", x: ex.x, y: ex.y, raio: ex.raio }, cx, cy, c ? `rgba(${c[0]},0.7)` : "rgba(255,236,170,0.75)", "#ffffff");
     else {
       const r = ex.raio * (0.6 + 0.4 * k);
-      pintarForma(g, { tipo: "circulo", x: ex.x, y: ex.y, raio: r * 0.55 }, cx, cy, `rgba(255,140,50,${0.45 * (1 - k)})`, null);
-      pintarForma(g, { tipo: "circulo", x: ex.x, y: ex.y, raio: r }, cx, cy, null, `rgba(255,${Math.round(200 - 120 * k)},60,${1 - k})`);
+      pintarForma(g, { tipo: "circulo", x: ex.x, y: ex.y, raio: r * 0.55 }, cx, cy, c ? `rgba(${c[1]},${0.45 * (1 - k)})` : `rgba(255,140,50,${0.45 * (1 - k)})`, null);
+      pintarForma(g, { tipo: "circulo", x: ex.x, y: ex.y, raio: r }, cx, cy, null, c ? `rgba(${c[1]},${1 - k})` : `rgba(255,${Math.round(200 - 120 * k)},60,${1 - k})`);
     }
   }
   for (const r of E.raios) {

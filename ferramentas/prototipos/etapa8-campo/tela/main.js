@@ -13,9 +13,11 @@
 // mouse fica parado); durante o arrasto, a câmera não se mexe nem para seguir o herói, e o retângulo seleciona
 // exatamente o que está mostrado; o tremor se acalma (a intensidade escolhida não muda). Ao sair, o olhar volta para o
 // mouse em ~0,5 s e o tremor volta em ~0,3 s, sem salto.
-import { VERSAO, HEROIS, ORDENS, IMPACTO, CAMPO, CONTINGENTES, ENCONTROS, VARIANTES, TIPOS } from "./conteudo.js";
+import { VERSAO, HEROIS, ORDENS, IMPACTO, CAMPO, CONTINGENTES, ENCONTROS, TIPOS, HABILIDADES, TALENTOS, ORCAMENTO, MONTAGENS,
+  MONTAGEM_PADRAO, MARCAS } from "./conteudo.js";
+import { descricao, custoDe, rotulo, TECLAS_ESPACO } from "./textos.js";
 import { criarMundo, passo, entradaVazia, ordenar, resumo, sorteio, PASSO, selecionar, tropasDoTipo, montarKit as kitDoHeroi,
-  escalaDe, inimigoEm, chamarHorda } from "./sim.js";
+  talentosValidos, escalaDe, inimigoEm, chamarHorda } from "./sim.js";
 import { criarEfeitos, receber, avancar } from "./efeitos.js";
 import { prepararSprites } from "./sprites.js";
 import { criarChao, desenhar, BORDA } from "./desenho.js";
@@ -31,26 +33,29 @@ const chao = criarChao(sorteio(4242));
 
 // ------------------------------------------------------------------------------------------------ opções
 // o tremor começa no máximo (150%), a intensidade de que o Jean gostou; 0 desliga
+// a montagem de cada herói (as três comuns, a ultimate e os talentos), começando pela montagem padrão
+const montagemDe = (heroi, nome = MONTAGEM_PADRAO[heroi]) => structuredClone(MONTAGENS[heroi][nome]);
 const PADRAO = { tremor: 150, pausa: true, volume: 50, mudo: false, areas: true, heroi: "guerreiro", quantidade: "1", horda: 60,
-  encontro: "original", kits: { guerreiro: {}, mago: {} } };
+  encontro: "original", montagem: { guerreiro: montagemDe("guerreiro"), mago: montagemDe("mago") } };
 const opcoes = structuredClone(PADRAO);
-try { Object.assign(opcoes, JSON.parse(localStorage.getItem("campo-livre-2-opcoes") || "{}")); } catch { /* sem armazenamento */ }
+try { Object.assign(opcoes, JSON.parse(localStorage.getItem("campo-livre-5-opcoes") || "{}")); } catch { /* sem armazenamento */ }
 if (url.get("heroi")) opcoes.heroi = url.get("heroi");
 if (url.get("qtd")) opcoes.quantidade = url.get("qtd");
 opcoes.quantidade = String(escalaDe(opcoes.quantidade));   // "normal" e "maior", guardados pela v2, viram 1 e 2
 if (url.get("enc")) opcoes.encontro = url.get("enc");
-if (url.get("kit")) {
-  // ?kit=sangrenta,grito: as versões pelo nome, para o herói escolhido
-  const kit = {};
-  for (const v of url.get("kit").split(",")) for (const [slot, vs] of Object.entries(VARIANTES[opcoes.heroi] || {})) if (vs[v]) kit[slot] = v;
-  opcoes.kits = { ...opcoes.kits, [opcoes.heroi]: kit };
+// ?montagem=Sangria: um atalho pelo nome; ?hab=lanca,campoGelo,raios,nevasca (três comuns e a ultimate) e ?tal=...
+if (url.get("montagem") && MONTAGENS[opcoes.heroi][url.get("montagem")]) opcoes.montagem[opcoes.heroi] = montagemDe(opcoes.heroi, url.get("montagem"));
+if (url.get("hab")) {
+  const ids = url.get("hab").split(","), cat = HABILIDADES[opcoes.heroi];
+  opcoes.montagem[opcoes.heroi].comuns = ids.filter((id) => cat[id] && cat[id].tipo === "comum").slice(0, 3);
+  const ult = ids.find((id) => cat[id] && cat[id].tipo === "ultimate");
+  if (ult) opcoes.montagem[opcoes.heroi].ultimate = ult;
 }
-function guardar() { try { localStorage.setItem("campo-livre-2-opcoes", JSON.stringify(opcoes)); } catch { /* idem */ } }
+if (url.get("tal") !== null) opcoes.montagem[opcoes.heroi].talentos = url.get("tal") ? url.get("tal").split(",") : [];
+function guardar() { try { localStorage.setItem("campo-livre-5-opcoes", JSON.stringify(opcoes)); } catch { /* idem */ } }
 
-const TECLAS = {
-  guerreiro: { direito: "varredura", espaco: "investida", q: "salto" },
-  mago: { direito: "bola", espaco: "piscar", q: "muralha" },
-};
+// as teclas dos espaços do kit (o botão esquerdo é o principal, segurado; o botão direito, o primeiro espaço comum)
+const TECLA_ESPACO = { Space: "mobilidade", KeyQ: "h2", KeyE: "h3", KeyF: "ult" };
 
 // ------------------------------------------------------------------------------------------------ estado
 const st = {
@@ -81,7 +86,7 @@ function mouseMundo() {
 // ------------------------------------------------------------------------------------------------ batalha
 function novaBatalha() {
   st.m = criarMundo({ heroi: opcoes.heroi, quantidade: opcoes.quantidade, encontro: opcoes.encontro,
-    kit: opcoes.kits[opcoes.heroi] || {} });
+    kit: opcoes.montagem[opcoes.heroi] });
   st.E = criarEfeitos(sorteio(77));
   st.ent = entradaVazia();
   st.robo = url.get("robo") ? criarRobo({ nivel: url.get("robo") === "medio" ? "medio" : "forte" }) : null;
@@ -217,9 +222,9 @@ addEventListener("keydown", (e) => {
   if (e.code === "KeyH") { if (!e.repeat) trazerHorda(); return; }
   if (teclasMov[e.code]) { st.ent[teclasMov[e.code]] = true; e.preventDefault(); return; }
   if (e.repeat) return;
-  const t = TECLAS[st.m.nomeHeroi];
-  if (e.code === "Space") { e.preventDefault(); if (!st.pausado) apertar(t.espaco); }
-  if (e.code === "KeyQ" || e.code === "KeyE") { if (!st.pausado) apertar(t.q); }
+  const espaco = TECLA_ESPACO[e.code], id = espaco && st.m.heroi.slots[espaco];
+  if (e.code === "Space") e.preventDefault();
+  if (id && !st.pausado) apertar(id);
 });
 addEventListener("keyup", (e) => {
   if (teclasMov[e.code]) st.ent[teclasMov[e.code]] = false;
@@ -249,7 +254,7 @@ canvas.addEventListener("mousedown", (e) => {
     return;
   }
   if (e.button === 0) { st.ent.atacar = true; st.diag.ultimoAperto = { id: "basico", t: performance.now() }; }
-  if (e.button === 2) apertar(TECLAS[st.m.nomeHeroi].direito);
+  if (e.button === 2 && st.m.heroi.slots.h1) apertar(st.m.heroi.slots.h1);
 });
 addEventListener("mouseup", (e) => {
   if (e.button !== 0) return;
@@ -457,58 +462,18 @@ function fim() {
 // ------------------------------------------------------------------------------------------------ HUD
 function numero(v) { return String(v).replace(".", ","); }
 
-/** As linhas de cada habilidade, com os números de conteudo.js (a tela não calcula regra nenhuma). */
-export function textos(heroi, escolha) {
-  const k = kitDoHeroi(heroi, escolha || opcoes.kits[heroi] || {}), rec = HEROIS[heroi].recurso.nome;
-  const custo = (h) => [h.custo ? `${h.custo} de ${rec}` : "", h.recarga ? `Recarga ${numero(h.recarga)} s` : ""].filter(Boolean).join(" · ");
-  if (heroi === "guerreiro") return [
-    { id: "basico", tecla: "Botão esquerdo", nome: k.basico.nome, custo: "Segure para repetir",
-      desc: `Corta num arco à frente (${k.basico.raio} px): ${k.basico.danos[0]} de dano, depois ${k.basico.danos[1]}; o ${k.basico.arremate.cada}º corte seguido causa ${k.basico.arremate.dano} num arco maior (${k.basico.arremate.raio} px) e arremessa quem cai. Vira para o inimigo mais perto da mira e, se ele está um pouco além do arco, dá um passo de até ${k.basico.assist.estica} px.` },
-    k.varredura.sangra ? { id: "varredura", tecla: "Botão direito", nome: k.varredura.nome, custo: custo(k.varredura),
-      desc: `Prende os pés por ${numero(k.varredura.preparo)} s e varre ${k.varredura.abertura}° à frente (${k.varredura.raio} px): causa ${k.varredura.dano} de dano e aplica Sangramento (${k.varredura.sangra.tique} a cada 0,5 s por ${k.varredura.sangra.duracao} s). Quase não empurra nem interrompe: os inimigos ficam onde estão.` }
-      : { id: "varredura", tecla: "Botão direito", nome: k.varredura.nome, custo: custo(k.varredura),
-        desc: `Prende os pés por ${numero(k.varredura.preparo)} s e varre ${k.varredura.abertura}° à frente (${k.varredura.raio} px): causa ${k.varredura.dano} de dano, arremessa quem cai, empurra e atordoa os outros.` },
-    k.investida.escudo ? { id: "investida", tecla: "Espaço", nome: k.investida.nome, custo: custo(k.investida),
-      desc: `Ergue o escudo por ${numero(k.investida.escudo)} s, virado para o mouse, andando a ${Math.round(k.investida.mover * 100)}% da velocidade: barra as flechas inimigas que cruzam o arco (${k.investida.raio} px, ${k.investida.abertura}°) vindo da frente e empurra quem está nele (${k.investida.dano} de dano na primeira vez). Os aliados a até ${k.investida.protege} px levam ${Math.round((1 - k.investida.reducao) * 100)}% menos dano. Outra habilidade o encerra.` }
-    : k.investida.inspira ? { id: "investida", tecla: "Espaço", nome: k.investida.nome, custo: custo(k.investida),
-      desc: `Inspira os aliados a até ${k.investida.raio} px por ${k.investida.inspira} s (atacam ${Math.round((1 / k.investida.ritmo - 1) * 100)}% mais rápido e recuperam ${k.investida.cura} de vida por segundo) e abala por ${numero(k.investida.abala)} s os inimigos comuns a até ${k.investida.raioAbala} px.` }
-      : { id: "investida", tecla: "Espaço", nome: k.investida.nome, custo: custo(k.investida),
-        desc: `Avança ${k.investida.distancia} px na direção do mouse sem receber dano. Joga para os lados quem está no caminho (${k.investida.dano} de dano). O campeão e o Capitão param a investida.` },
-    k.salto.puxa ? { id: "salto", tecla: "Q", nome: k.salto.nome, custo: `${k.salto.custo} de Fúria`,
-      desc: `Prende os pés por ${numero(k.salto.preparo)} s e puxa para perto de você os inimigos comuns a até ${k.salto.puxa} px (o campeão e o Capitão, não); no fim, causa ${k.salto.dano} de dano num círculo de ${k.salto.raio} px, arremessa quem cai e atordoa os outros. A Fúria sobe ${HEROIS.guerreiro.recurso.porAcerto} por acerto e ${numero(HEROIS.guerreiro.recurso.porAbate)} por inimigo derrubado.` }
-    : { id: "salto", tecla: "Q", nome: k.salto.nome, custo: `${k.salto.custo} de Fúria`,
-      desc: `Salta até o mouse (até ${k.salto.alcance} px) sem receber dano e cai num círculo de ${k.salto.raio} px: causa ${k.salto.dano} de dano, arremessa e atordoa. A Fúria sobe ${k.salto ? HEROIS.guerreiro.recurso.porAcerto : 0} por acerto e ${numero(HEROIS.guerreiro.recurso.porAbate)} por inimigo derrubado.` },
-  ];
-  return [
-    { id: "basico", tecla: "Botão esquerdo", nome: k.basico.nome, custo: "Segure para repetir",
-      desc: `Lança uma faísca que persegue o inimigo mais perto da mira (até ${k.basico.alcance} px; sem ninguém, vai reta): causa ${k.basico.dano} de dano no primeiro que tocar e deixa nele uma Fagulha por ${k.basico.fagulha.duracao} s. O próximo golpe de habilidade nesse inimigo causa +${k.basico.fagulha.bonus}.` },
-    k.bola.alvos ? { id: "bola", tecla: "Botão direito", nome: k.bola.nome, custo: custo(k.bola),
-      desc: `Lança um raio na direção do mouse (até ${k.bola.alcance} px): acerta o primeiro inimigo da linha e salta para o inimigo mais perto ainda não atingido (até ${k.bola.salto} px), até ${k.bola.alvos} alvos. Causa ${k.bola.dano} de dano no primeiro e ${k.bola.queda} a menos a cada salto (no mínimo ${k.bola.danoMin}); arremessa quem cai.` }
-    : k.bola.chao.repele ? { id: "bola", tecla: "Botão direito", nome: k.bola.nome, custo: custo(k.bola),
-      desc: `Explode no ponto do mouse (até ${k.bola.alcance} px): causa ${k.bola.dano} de dano num círculo de ${k.bola.raio} px, sem arremessar, e deixa um chão em chamas de ${k.bola.chao.raio} px por ${k.bola.chao.duracao} s (${k.bola.chao.tique} a cada 0,5 s). Os inimigos contornam o fogo.` }
-      : { id: "bola", tecla: "Botão direito", nome: k.bola.nome, custo: custo(k.bola),
-        desc: `Explode no ponto do mouse (até ${k.bola.alcance} px) num círculo de ${k.bola.raio} px: causa ${k.bola.dano} de dano e arremessa quem cai. O chão queima por ${k.bola.chao.duracao} s (${k.bola.chao.tique} a cada 0,5 s).` },
-    { id: "piscar", tecla: "Espaço", nome: k.piscar.nome, custo: custo(k.piscar),
-      desc: `Reaparece até ${k.piscar.distancia} px na direção do mouse. Onde estava, uma onda de ${k.piscar.raio} px causa ${k.piscar.dano} de dano, empurra e atordoa.` },
-    k.muralha.variante === "gelo" ? { id: "muralha", tecla: "Q", nome: k.muralha.nome, custo: custo(k.muralha),
-      desc: `Cobre de gelo um círculo de ${k.muralha.raio} px no ponto do mouse (até ${k.muralha.alcance} px) por ${k.muralha.duracao} s. Ao surgir, causa ${k.muralha.dano} de dano e atordoa por ${numero(k.muralha.atordoa)} s. Dentro dele, os inimigos andam a ${Math.round(k.muralha.lento * 100)}% da velocidade e atacam com ${Math.round(k.muralha.ritmo * 100)}% da frequência (o campeão e o Capitão, ${Math.round(k.muralha.lentoElite * 100)}% e ${Math.round(k.muralha.ritmoElite * 100)}%).` }
-    : k.muralha.variante === "anel" ? { id: "muralha", tecla: "Q", nome: k.muralha.nome, custo: custo(k.muralha),
-      desc: `Ergue um anel de fogo de ${k.muralha.raio} px de raio no ponto do mouse (até ${k.muralha.alcance} px) por ${k.muralha.duracao} s. Ninguém atravessa a linha: quem está dentro fica dentro. A linha causa ${k.muralha.tique} a cada 0,5 s.` }
-      : { id: "muralha", tecla: "Q", nome: k.muralha.nome, custo: custo(k.muralha),
-        desc: `Ergue uma parede de fogo de ${k.muralha.comprimento} px no ponto do mouse (até ${k.muralha.alcance} px), de lado para você, por ${k.muralha.duracao} s. Desvia os inimigos e causa ${k.muralha.tique} a cada 0,5 s a quem entra.` },
-  ];
-}
-
+// Os espaços do kit na barra: o principal, a mobilidade, as três comuns e a ultimate, com a tecla, o nome e o custo
 let slots = [];
 function montarKit() {
-  const heroi = st.m.nomeHeroi, kit = $("#kit");
+  const h = st.m.heroi, heroi = st.m.nomeHeroi, kit = $("#kit");
   kit.innerHTML = "";
-  slots = textos(heroi).map((t) => {
-    const d = document.createElement("div");
-    d.className = "slot";
-    d.innerHTML = `<span class="tecla">${t.tecla}</span><span class="nome">${t.nome}</span><span class="custo">${t.custo}</span><span class="espera"></span><span class="segundos"></span>`;
+  slots = Object.entries(TECLAS_ESPACO).filter(([espaco]) => h.slots[espaco]).map(([espaco, tecla]) => {
+    const k = h.kit[h.slots[espaco]], d = document.createElement("div");
+    d.className = "slot" + (k.tipo === "ultimate" ? " ultimate" : "");
+    d.title = descricao(heroi, k);
+    d.innerHTML = `<span class="tecla">${tecla}</span><span class="nome">${k.nome}</span><span class="custo">${custoDe(heroi, k)}</span><span class="espera"></span><span class="segundos"></span>`;
     kit.append(d);
-    return { id: t.id, el: d, espera: d.querySelector(".espera"), seg: d.querySelector(".segundos"), custo: d.querySelector(".custo"), pronto: true };
+    return { id: k.id, el: d, espera: d.querySelector(".espera"), seg: d.querySelector(".segundos"), custo: d.querySelector(".custo"), pronto: true };
   });
   $("#h-nome").textContent = HEROIS[heroi].nome;
   $("#ficha .recurso").classList.toggle("mana", heroi === "mago");
@@ -544,7 +509,7 @@ function golpeNaTela(ev) {
 function atualizarModo() {
   const el = $("#modo"), c = emComando();
   el.classList.toggle("comando", c);
-  el.textContent = c ? (st.pausado ? "Comando (pausado): arraste para selecionar" : "Comando: arraste para selecionar · botão direito, Defender ali")
+  el.textContent = c ? (st.pausado ? "Comando (pausado): arraste para selecionar" : "Comando: arraste para selecionar · botão direito: atacar ou Defender")
     : "Combate · segure Shift para comandar";
 }
 
@@ -576,6 +541,7 @@ function atualizarHud() {
   if (chave === ultimoHud) return;
   ultimoHud = chave;
   $("#ficha .vida i").style.width = (100 * vida) / h.vidaMax + "%";
+  $("#ficha .vida em").style.width = (100 * vida) / h.vidaMax + "%";
   $("#ficha .vida span").textContent = `${Math.ceil(vida)}/${h.vidaMax}`;
   $("#ficha .recurso i").style.width = (100 * rec) / h.recursoMax + "%";
   $("#ficha .recurso span").textContent = `${HEROIS[h.nomeHeroi].recurso.nome} ${Math.floor(rec)}/${h.recursoMax}`;
@@ -674,8 +640,15 @@ function contagem() {
     (m.escala > 1 ? " Capitão, campeão e porta-estandarte continuam um só." : "");
 }
 
-function escolherVersao(heroi, slot, v) {
-  opcoes.kits = { ...opcoes.kits, [heroi]: { ...(opcoes.kits[heroi] || {}), [slot]: v } };
+// A montagem na tela de escolha: as habilidades fixas, as comuns (três), a ultimate (uma) e os talentos (no orçamento,
+// redistribuídos de graça); os atalhos preenchem tudo de uma vez e continuam editáveis.
+function alterarMontagem(heroi, mudar) {
+  const mt = opcoes.montagem[heroi];
+  mudar(mt);
+  // os talentos que deixaram de valer (pediam uma habilidade que saiu, ou passaram do orçamento) caem fora
+  const { kit } = kitDoHeroi(heroi, mt);
+  mt.talentos = [...talentosValidos(heroi, mt.talentos, kit)];
+  opcoes.heroi = heroi;
   guardar();
   montarHerois();
 }
@@ -684,25 +657,52 @@ function montarHerois() {
   const raiz = $("#herois");
   raiz.innerHTML = "";
   for (const id of ["guerreiro", "mago"]) {
-    const d = HEROIS[id], b = document.createElement("div");
+    const d = HEROIS[id], b = document.createElement("div"), mt = opcoes.montagem[id];
+    const { kit, talentos } = kitDoHeroi(id, mt), gasto = [...talentos].reduce((s, t) => s + TALENTOS[id][t].custo, 0);
     b.className = "heroi" + (opcoes.heroi === id ? " escolhido" : "");
     b.dataset.heroi = id;
     b.tabIndex = 0;
     const sp = Q[id][0].parado.d, c = document.createElement("canvas");
     c.width = sp.width; c.height = sp.height;
     c.getContext("2d").drawImage(sp, 0, 0);
-    const escolha = opcoes.kits[id] || {};
-    b.innerHTML = `<h3></h3><div class="info">Vida ${d.vida} · ${d.recurso.nome} ${d.recurso.max}${d.recurso.regen ? ` (recupera ${d.recurso.regen} por segundo)` : " (começa em 0)"} · crítico ${Math.round(d.critico.chance * 100)}% (×${numero(d.critico.mult)}) · tecla ${id === "guerreiro" ? 1 : 2}</div>` +
-      textos(id, escolha).map((t) => {
-        const vs = VARIANTES[id][t.id];
-        const versoes = vs ? `<span class="versoes">${[["original", d.kit[t.id].nome], ...Object.entries(vs).map(([v, def]) => [v, def.nome])]
-          .map(([v, nome]) => `<button type="button" data-v="${v}" data-slot="${t.id}" class="${(escolha[t.id] || "original") === v ? "atual" : ""}">${nome}</button>`).join("")}</span>` : "";
-        return `<div class="hab"><div class="cab"><b>${t.tecla} · ${vs ? "" : t.nome}${versoes}</b><span>${t.custo}</span></div><p>${t.desc}</p></div>`;
-      }).join("");
+    const cat = HABILIDADES[id], linha = (k, escolhivel, marcado, tecla) =>
+      `<div class="hab${marcado ? " marcada" : ""}">${escolhivel ? `<button type="button" class="marca" data-hab="${k.id}" aria-pressed="${marcado}">${marcado ? "✓" : ""}</button>` : ""}` +
+      `<div class="cab"><b>${tecla ? `${tecla} · ` : ""}${k.nome}</b><span>${custoDe(id, kit[k.id] || { ...k, id: k.id })}</span></div>` +
+      `<small>${rotulo(k, MARCAS)}</small><p>${descricao(id, kit[k.id] || { ...k, id: k.id })}</p></div>`;
+    const tecla = (hid) => { const e = Object.entries(kit).find(([kid]) => kid === hid); return e ? TECLAS_ESPACO[e[1].slot] : ""; };
+    const comuns = Object.entries(cat).filter(([, k]) => k.tipo === "comum"), ults = Object.entries(cat).filter(([, k]) => k.tipo === "ultimate");
+    const atalhos = Object.keys(MONTAGENS[id]).map((nome) => `<button type="button" data-atalho="${nome}">${nome}</button>`).join("");
+    const tals = Object.entries(TALENTOS[id]).map(([tid, t]) => {
+      const tem = talentos.has(tid), falta = t.requer && !kit[t.requer], caro = !tem && gasto + t.custo > ORCAMENTO;
+      const motivo = falta ? `Requer ${cat[t.requer].nome}` : caro ? "Sem pontos" : "";
+      return `<div class="hab tal${tem ? " marcada" : ""}"><button type="button" class="marca" data-tal="${tid}" aria-pressed="${tem}" ${falta || caro ? "disabled" : ""}>${tem ? "✓" : ""}</button>` +
+        `<div class="cab"><b>${t.nome}</b><span>${t.custo} ${t.custo === 1 ? "ponto" : "pontos"} · ${t.tipo}${motivo ? ` · <em>${motivo}</em>` : ""}</span></div><p>${t.texto}</p></div>`;
+    }).join("");
+    b.innerHTML = `<h3></h3><div class="info">Vida ${d.vida} · ${d.recurso.nome} ${d.recurso.max} (recupera ${d.recurso.regen} por segundo) · crítico ${Math.round(d.critico.chance * 100)}% (×${numero(d.critico.mult)}) · tecla ${id === "guerreiro" ? 1 : 2}</div>` +
+      `<div class="atalhos">Montagens prontas: ${atalhos}</div>` +
+      `<div class="grupo"><h4>Fixas</h4>${linha({ ...cat[d.principal], id: d.principal }, false, true, TECLAS_ESPACO.principal)}${linha({ ...cat[d.mobilidade], id: d.mobilidade }, false, true, TECLAS_ESPACO.mobilidade)}</div>` +
+      `<div class="grupo"><h4>Comuns: escolha 3 (${mt.comuns.length}/3)</h4>${comuns.map(([hid, k]) => linha({ ...k, id: hid }, true, mt.comuns.includes(hid), tecla(hid))).join("")}</div>` +
+      `<div class="grupo"><h4>Ultimate: escolha 1</h4>${ults.map(([hid, k]) => linha({ ...k, id: hid }, true, mt.ultimate === hid, tecla(hid))).join("")}</div>` +
+      `<div class="grupo"><h4>Talentos: ${gasto} de ${ORCAMENTO} pontos</h4>${tals}</div>`;
     b.querySelector("h3").append(c, d.nome);
     b.addEventListener("click", (e) => {
-      const v = e.target.closest("button[data-v]");
-      if (v) { opcoes.heroi = id; escolherVersao(id, v.dataset.slot, v.dataset.v); return; }
+      const hab = e.target.closest("button[data-hab]"), tal = e.target.closest("button[data-tal]"), at = e.target.closest("button[data-atalho]");
+      if (at) { opcoes.montagem[id] = montagemDe(id, at.dataset.atalho); alterarMontagem(id, () => {}); return; }
+      if (hab) {
+        const hid = hab.dataset.hab;
+        alterarMontagem(id, (m) => {
+          if (cat[hid].tipo === "ultimate") m.ultimate = hid;
+          else if (m.comuns.includes(hid)) m.comuns = m.comuns.filter((x) => x !== hid);
+          else if (m.comuns.length < 3) m.comuns = [...m.comuns, hid];
+          else m.comuns = [...m.comuns.slice(1), hid];   // com três escolhidas, a mais antiga sai
+        });
+        return;
+      }
+      if (tal) {
+        const tid = tal.dataset.tal;
+        alterarMontagem(id, (m) => { m.talentos = m.talentos.includes(tid) ? m.talentos.filter((x) => x !== tid) : [...m.talentos, tid]; });
+        return;
+      }
       escolherHeroi(id);
     });
     b.addEventListener("keydown", (e) => { if (e.key === "Enter" && !e.target.closest("button")) { escolherHeroi(id); novaBatalha(); } });
@@ -775,7 +775,7 @@ if (url.get("auto")) novaBatalha();
 
 // para os testes, a medição e os vídeos (Playwright)
 window.__campo = {
-  st, opcoes, diagnostico, novaBatalha, pausar, textos, emComando,
+  st, opcoes, diagnostico, novaBatalha, pausar, emComando, montarHerois,
   mundo: () => st.m, efeitos: () => st.E, mouseMundo,
   configurar: (o) => { Object.assign(opcoes, o); sincronizarOpcoes(); },
 };

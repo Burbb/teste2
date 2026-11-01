@@ -1,4 +1,5 @@
-// As conferências do Campo Livre 3 no navegador (Playwright, Chromium sem janela), com teclado e mouse de verdade:
+// As conferências do Campo Livre 3 no navegador (Playwright, Chromium sem janela), com teclado e mouse de verdade
+// (atualizadas para o kit do Campo Livre 5: o principal no botão esquerdo, a primeira comum no direito, ?hab=):
 // a câmera no modo de comando (entrar e sair, durante um golpe e pausado), a seleção com o tremor no máximo, nenhum
 // ataque ao selecionar, o custo do 4× e algumas capturas pontuais. Precisa do servidor no ar:
 //   PLAYWRIGHT_MODULO=file:///.../playwright/index.mjs CAMPO_URL=http://127.0.0.1:8802/ node ferramentas/conferir3.mjs [partes]
@@ -52,7 +53,7 @@ if (quer("camera")) {
   const comShift = await trecho(p);
 
   // 3. arrasto com Shift: a câmera parada; a seleção = as tropas dentro do retângulo mostrado; nenhum golpe
-  const antes = await p.evaluate(() => ({ usos: (__campo.mundo().stats.usos.basico || { usos: 0 }).usos, acao: !!__campo.mundo().heroi.acao }));
+  const antes = await p.evaluate(() => ({ usos: (__campo.mundo().stats.usos.varredura || { usos: 0 }).usos, acao: !!__campo.mundo().heroi.acao }));
   await p.mouse.move(80, 120); await p.mouse.down();
   const camIni = await p.evaluate(() => ({ ...__campo.st.cam }));
   await p.mouse.move(700, 620, { steps: 25 }); await p.waitForTimeout(300);
@@ -64,7 +65,7 @@ if (quer("camera")) {
     return { cam: { ...s.cam }, calma: s.calma, dentro };
   });
   await p.mouse.up();
-  const depois = await p.evaluate(() => ({ sel: [...__campo.mundo().selecao], usos: (__campo.mundo().stats.usos.basico || { usos: 0 }).usos }));
+  const depois = await p.evaluate(() => ({ sel: [...__campo.mundo().selecao], usos: (__campo.mundo().stats.usos.varredura || { usos: 0 }).usos }));
   const arrasto = await trecho(p);
   const iguais = noArrasto.dentro.length === depois.sel.length && noArrasto.dentro.every((id) => depois.sel.includes(id));
 
@@ -73,12 +74,13 @@ if (quer("camera")) {
   await p.keyboard.up("Shift"); await p.waitForTimeout(900);
   const saida = await trecho(p);
 
-  // 5. Shift durante um golpe (a Varredura): o golpe continua até o contato, nenhum ataque depois, a câmera não anda
+  // 5. Shift durante um golpe (o Corte Sangrento, no botão direito): o golpe continua até o contato, nenhum ataque
+  // principal depois, a câmera não anda
   await p.mouse.move(900, 360); await p.waitForTimeout(600); await trecho(p);
   await p.mouse.down({ button: "right" }); await p.mouse.up({ button: "right" });
   await p.keyboard.down("Shift");
   await p.mouse.move(200, 300, { steps: 15 }); await p.waitForTimeout(500);
-  const golpe = await p.evaluate(() => ({ varredura: (__campo.mundo().stats.usos.varredura || { usos: 0 }).usos, basico: (__campo.mundo().stats.usos.basico || { usos: 0 }).usos }));
+  const golpe = await p.evaluate(() => ({ comum: (__campo.mundo().stats.usos.corteSangrento || { usos: 0 }).usos, principal: (__campo.mundo().stats.usos.varredura || { usos: 0 }).usos }));
   const duranteGolpe = await trecho(p);
   await p.keyboard.up("Shift"); await p.waitForTimeout(900);
   const saidaGolpe = await trecho(p);
@@ -99,7 +101,7 @@ if (quer("camera")) {
     arrasto_camera_mexeu_px: r1(Math.hypot(noArrasto.cam.x - camIni.x, noArrasto.cam.y - camIni.y)), arrasto_calma: r1(noArrasto.calma),
     arrasto_selecionados: depois.sel.length, arrasto_mesmos_do_retangulo: iguais, arrasto_golpes: depois.usos - antes.usos,
     saida_maior_passo_px: r1(maiorPasso(saida)), saida_deslocamento_px: r1(deslocou(saida)), saida_calma_final: r1(saida[saida.length - 1].calma),
-    golpe_varreduras: golpe.varredura, golpe_basicos_durante_shift: golpe.basico - depois.usos,
+    golpe_cortes: golpe.comum, golpe_principais_durante_shift: golpe.principal - depois.usos,
     golpe_shift_camera_px: r1(deslocou(duranteGolpe)), golpe_saida_maior_passo_px: r1(maiorPasso(saidaGolpe)),
     pausado_camera_px: r1(deslocou(pausado)), pausado_selecionados: selPausado, pausa_saida_maior_passo_px: r1(maiorPasso(saidaPausa)),
     referencia_sem_shift_maior_passo_px: r1(maiorPasso(semShift)),
@@ -110,10 +112,10 @@ if (quer("camera")) {
 
 if (quer("escalas")) {
   R.escalas = [];
-  for (const [w, h] of [[1920, 945], [1280, 720]]) for (const [heroi, enc, kit] of [["guerreiro", "original", "escudo,turbilhao"], ["mago", "capitao", "raios,gelo"]]) {
+  for (const [w, h] of [[1920, 945], [1280, 720]]) for (const [heroi, enc, kit] of [["guerreiro", "original", "salto,turbilhao,sismico,furia"], ["mago", "capitao", "raios,campoGelo,lanca,nevasca"]]) {
     const p = await nav.newPage({ viewport: { width: w, height: h } });
     espiar(p, `escala ${w} ${enc}`);
-    await p.goto(`${ENDERECO}?heroi=${heroi}&enc=${enc}&qtd=4&kit=${kit}&auto=1&robo=1`);
+    await p.goto(`${ENDERECO}?heroi=${heroi}&enc=${enc}&qtd=4&hab=${kit}&auto=1&robo=1`);
     await p.waitForTimeout(3000);
     await p.evaluate(() => { const d = __campo.st.diag; d.quadros = []; d.sim = []; d.desenho = []; });
     let maxU = 0, maxN = 0;
@@ -138,10 +140,8 @@ if (quer("escolha") || quer("capturas")) for (const [w, h] of [[1920, 945], [128
   await p.goto(`${ENDERECO}`);
   await p.selectOption("#op-quantidade", "4");
   await p.click('button.encontro[data-enc="capitao"]');
-  await p.click('.heroi[data-heroi="guerreiro"] button[data-v="escudo"]');
-  await p.click('.heroi[data-heroi="guerreiro"] button[data-v="turbilhao"]');
-  await p.click('.heroi[data-heroi="mago"] button[data-v="raios"]');
-  await p.click('.heroi[data-heroi="mago"] button[data-v="gelo"]');
+  await p.click('.heroi[data-heroi="guerreiro"] button[data-atalho="Impacto"]');
+  await p.click('.heroi[data-heroi="mago"] button[data-atalho="Fogo em cadeia"]');
   await p.waitForTimeout(300);
   R.contagem = await p.textContent("#contagem");
   await p.screenshot({ path: path.join(CAPT, `cl3-escolha-${w}.png`) });
@@ -152,11 +152,11 @@ if (quer("capturas")) {
   const p = await nav.newPage({ viewport: { width: 1920, height: 945 } });
   espiar(p, "capturas");
   // a batalha 4× no meio do choque
-  await p.goto(`${ENDERECO}?heroi=guerreiro&enc=original&qtd=4&kit=escudo,turbilhao&auto=1&robo=1`);
+  await p.goto(`${ENDERECO}?heroi=guerreiro&enc=original&qtd=4&hab=salto,turbilhao,sismico,furia&auto=1&robo=1`);
   await p.waitForTimeout(9000);
   await p.screenshot({ path: path.join(CAPT, "cl3-4x-1920-9s.png") });
   // a Arremetida do Capitão marcada no chão (o primeiro quadro com ela)
-  await p.goto(`${ENDERECO}?heroi=mago&enc=capitao&qtd=1&kit=raios,gelo&auto=1&robo=1`);
+  await p.goto(`${ENDERECO}?heroi=mago&enc=capitao&qtd=1&hab=raios,campoGelo,lanca,nevasca&auto=1&robo=1`);
   await p.waitForFunction(() => { const l = __campo.mundo().lider; return l && l.acao && l.acao.tipo === "arremetida" && l.acao.t < 0.45; }, null, { timeout: 40000 });
   await p.keyboard.press("KeyP");
   await p.screenshot({ path: path.join(CAPT, "cl3-arremetida-1920.png") });
@@ -166,17 +166,17 @@ if (quer("capturas")) {
 // as habilidades novas: um quadro pausado de cada, recortado em volta do herói (1280×720, ampliação 2×)
 if (quer("habilidades")) {
   const casos = [
-    ["escudo", "guerreiro", "escudo,turbilhao", "capitao", () => { const a = __campo.mundo().heroi.acao; return a && a.fase === "escudo" && a.t < 1.8; }],
-    ["turbilhao", "guerreiro", "escudo,turbilhao", "original", () => { const a = __campo.mundo().heroi.acao; return a && a.id === "salto" && a.fase === "preparo" && a.t < 0.12; }],
-    ["raios", "mago", "raios,gelo", "original", () => __campo.efeitos().raios.some((r) => r.t > 0.03)],
-    ["gelo", "mago", "gelo", "original", () => __campo.mundo().zonas.some((z) => z.tipo === "gelo" && z.t < z.dur - 0.6)],
+    ["escudo", "guerreiro", "escudo,turbilhao,sismico,furia", "capitao", () => { const a = __campo.mundo().heroi.acao; return a && a.fase === "escudo" && a.t < 1.8; }],
+    ["turbilhao", "guerreiro", "salto,turbilhao,sismico,furia", "original", () => { const a = __campo.mundo().heroi.acao; return a && a.id === "turbilhao" && a.fase === "preparo" && a.t < 0.12; }],
+    ["raios", "mago", "raios,campoGelo,lanca,nevasca", "original", () => __campo.efeitos().raios.some((r) => r.t > 0.03)],
+    ["gelo", "mago", "campoGelo,raios,lanca,nevasca", "original", () => __campo.mundo().zonas.some((z) => z.tipo === "gelo" && z.t < z.dur - 0.6)],
   ];
   for (const [nome, heroi, kit, enc, cond] of casos) {
     const p = await nav.newPage({ viewport: { width: 1280, height: 720 } });
     espiar(p, `habilidade ${nome}`);
-    await p.goto(`${ENDERECO}?heroi=${heroi}&enc=${enc}&kit=${kit}&auto=1&robo=1`);
-    // o jogador automático quase não usa o gelo (foge antes de juntar cinco perto): aqui, Q apertado no meio da luta
-    if (nome === "gelo") { await p.waitForTimeout(7000); await p.keyboard.press("KeyQ"); }
+    await p.goto(`${ENDERECO}?heroi=${heroi}&enc=${enc}&hab=${kit}&auto=1&robo=1`);
+    // o Campo de Gelo no botão direito (o primeiro espaço comum), apertado no meio da luta
+    if (nome === "gelo") { await p.waitForTimeout(7000); await p.mouse.click(900, 360, { button: "right" }); }
     try {
       await p.waitForFunction(cond, null, { timeout: 60000, polling: "raf" });
       await p.keyboard.press("KeyP");

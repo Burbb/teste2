@@ -3,15 +3,12 @@
 // Uso: node ferramentas/simular.mjs [repetições] [1|2|4] [forte|medio]
 import { criarMundo, passo, entradaVazia, resumo } from "../tela/sim.js";
 import { criarRobo, pensar } from "../tela/robo.js";
-import { ENCONTROS } from "../tela/conteudo.js";
+import { ENCONTROS, MONTAGENS, MONTAGEM_PADRAO } from "../tela/conteudo.js";
 
 const n = Number(process.argv[2] || 1), qtd = process.argv[3] || "1", nivel = process.argv[4] || "forte";
-const KITS = {
-  guerreiro: [["original", {}], ["sangrenta+grito", { varredura: "sangrenta", investida: "grito" }],
-    ["escudo+turbilhao", { investida: "escudo", salto: "turbilhao" }]],
-  mago: [["original", {}], ["incendiaria+anel", { bola: "incendiaria", muralha: "anel" }],
-    ["raios+gelo", { bola: "raios", muralha: "gelo" }]],
-};
+// as montagens prontas de cada herói (conteudo.js), mais uma sem talentos (a montagem padrão, só as habilidades)
+const KITS = Object.fromEntries(["guerreiro", "mago"].map((h) => [h, [...Object.entries(MONTAGENS[h]),
+  [`${MONTAGEM_PADRAO[h]} sem talentos`, { ...MONTAGENS[h][MONTAGEM_PADRAO[h]], talentos: [] }]]]));
 
 function rodar(heroi, encontro, kit, robo, semente) {
   const m = criarMundo({ heroi, quantidade: qtd, semente, encontro, kit });

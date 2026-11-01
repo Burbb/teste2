@@ -9234,3 +9234,21 @@ foi automatizado.
 - **Ponto a avaliar primeiro:** o Capitão vence o jogador automático médio com o Guerreiro (de propósito, mas o equilíbrio
   para uma pessoa só jogando).
 - **Parado aqui:** o Jean joga a v4 e responde a R4.9 do 30.
+
+### 01/11/2026 (data do computador local) — Etapa 8: o Campo Livre 5 (protótipo, nada no jogo)
+
+- **Contexto:** a sessão que fazia a rodada atingiu o limite de uso; o trabalho ficou local, sem commit. O Jean abriu a
+  v5 e a tela de escolha veio quebrada (sem encontros, heróis, habilidades nem talentos; texto preto no fundo escuro).
+- **Corrigido:** `main.js` declarava `montarKit` duas vezes (a importada de `sim.js` e a da barra da HUD); o módulo não
+  carregava, e sem ele a paleta do jogo não era publicada (daí o texto preto). Não era cache. Junto, por impedirem o
+  uso: a escolha mais alta que a janela cortava o topo (o Lutar inacessível), a barra cortava o custo das habilidades e
+  o rótulo do comando não dizia que o botão direito num inimigo ataca.
+- **Feito (em teste, nada aprovado):** a rodada 5 no [30](30-ETAPA8-CAMPO-LIVRE.md) e o protótipo, versão **Campo Livre
+  5**: o kit montado antes da luta (principal e mobilidade fixos, três comuns e uma ultimate entre sete e duas por
+  herói), o recurso farto, talentos num orçamento de 7 pontos, marcas, tipos de dano, cadeias com limite de regra,
+  montagens prontas, a aproximação inimiga na preparação do golpe e o Capitão com 900 de vida. A v4 fica em `/v4/`.
+- **Conferido:** no navegador, a escolha, Guerreiro e Mago montados, batalha, barra, seleção e modo de comando em
+  1920×1080 e 1280×720, sem erros; 40 testes da simulação e o isolamento; `simular`, `recursos`, `contato` e `cadeias`
+  sem tela. O jogo não mudou: suíte (804), gabarito e pyflakes; a fumaça, reaproveitada. Sem vídeos.
+- **Ponto a avaliar primeiro:** as tropas quase não participam nos encontros comuns (o herói vence em 11 a 26 s).
+- **Parado aqui:** o Jean joga a v5 e responde a R5.6 do 30.

@@ -31,8 +31,9 @@ preservado como histórico, sem expansão nesta rodada; **a integração ao jogo
 **01/11/2026:** o Jean **aprovou a direção** do campo livre para continuar **no protótipo, sem integração**; a rodada 2
 (Campo Livre 2: números de dano, o líder inimigo, seleção e ordens por grupo, encontros e versões de habilidade) e a
 rodada 3 (Campo Livre 3: câmera estável no comando, o Capitão que enfrenta o herói, escalas 1×/2×/4×, quatro habilidades
-novas) estão registradas; a rodada 4 (Campo Livre 4: básico assistido, impacto, o Capitão perigoso, arqueiros e
-ordens com alvo, a horda) está em teste (rodada 4 do 30).
+novas) e a rodada 4 (Campo Livre 4: básico assistido, impacto, o Capitão perigoso, arqueiros e ordens com alvo, a
+horda) estão registradas; a rodada 5 (Campo Livre 5: o kit montado antes da luta, com talentos) está em teste (rodada 5
+do 30).
 
 ## Estado de referência — 29/10/2026
 

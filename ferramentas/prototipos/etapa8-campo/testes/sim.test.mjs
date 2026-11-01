@@ -6,13 +6,13 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { criarMundo, passo, entradaVazia, dentro, formaDaAcao, ordenar, resumo, PASSO, selecionar, tropasDoTipo,
   montarKit, ferir, alvoAssistido, chamarHorda } from "../tela/sim.js";
-import { HEROIS, TIPOS, CAMPO, ENCONTROS, ESPECIAIS, HORDA, ORDENS } from "../tela/conteudo.js";
+import { HEROIS, TIPOS, CAMPO, ENCONTROS, ESPECIAIS, HORDA, ORDENS, HABILIDADES, TALENTOS, SANGUE, CADEIA } from "../tela/conteudo.js";
 import { criarRobo, pensar } from "../tela/robo.js";
 
 // Um mundo de laboratório: o herói no meio do campo, sem tropas, com os inimigos que o teste puser (parados:
-// atordoados por muito tempo, para a posição na hora do contato ser a de agora).
-function laboratorio(heroi = "guerreiro") {
-  const m = criarMundo({ heroi });
+// atordoados por muito tempo, para a posição na hora do contato ser a de agora). Sem talentos, salvo pedido.
+function laboratorio(heroi = "guerreiro", talentos = []) {
+  const m = criarMundo({ heroi, kit: { talentos } });
   for (const u of m.unidades) if (u !== m.heroi) u.morto = true;
   passo(m, entradaVazia());
   m.heroi.x = m.heroi.px = 480; m.heroi.y = m.heroi.py = 280;
@@ -41,7 +41,17 @@ function grade(m, tipo, cx, cy, raio, esp = 9) {
   return lista;
 }
 function rodar(m, ent, n) { for (let i = 0; i < n; i++) { passo(m, ent); ent.apertos = []; } }
+// Põe no kit do herói uma habilidade do catálogo (o teste usa a que quiser, equipada ou não) e zera a recarga dela.
+function equipar(m, id, sem = {}) {
+  const h = m.heroi, def = HABILIDADES[h.nomeHeroi][id];
+  if (!h.kit[id]) h.kit[id] = { ...def, id, slot: "teste", chao: def.chao && { ...def.chao }, implosao: def.implosao && { ...def.implosao } };
+  Object.assign(h.kit[id], sem);
+  h.cds[id] = 0;
+  return h.kit[id];
+}
 function usar(m, id, mx, my, passos = 60) {
+  equipar(m, id);
+  m.heroi.recurso = m.heroi.recursoMax;
   const ent = entradaVazia();
   ent.mx = mx; ent.my = my; ent.apertos = [id];
   rodar(m, ent, passos);
@@ -51,6 +61,7 @@ test("a área de cada golpe forte atinge exatamente quem está dentro da forma m
   for (const [heroi, id, alvo] of [["guerreiro", "varredura", [520, 280]], ["guerreiro", "salto", [560, 300]],
     ["mago", "bola", [600, 260]], ["mago", "piscar", [560, 280]]]) {
     const m = laboratorio(heroi);
+    equipar(m, id, id === "varredura" ? { assist: null } : {});
     m.heroi.recurso = 100;
     const forma = formaDaAcao(m.heroi, id, alvo[0], alvo[1]);
     const fc = forma.tipo === "circulo" ? forma : { ...forma };
@@ -67,11 +78,11 @@ test("o dano de uma ação cai uma vez em cada alvo, e o número mostrado é o d
   for (const [heroi, id, chave] of [["guerreiro", "varredura", "varredura"], ["guerreiro", "salto", "salto"], ["mago", "bola", "bola"],
     ["guerreiro", "investida", "investida"]]) {
     const m = laboratorio(heroi);
-    if (id === "salto") m.heroi.recurso = 100;
+    equipar(m, id, id === "varredura" ? { assist: null } : {});
     const lista = id === "investida" ? [inimigo(m, "veterano", 510, 280), inimigo(m, "veterano", 540, 284), inimigo(m, "veterano", 565, 276)]
       : grade(m, "veterano", 520, 280, 20, 9);
     usar(m, id, 520, 280, id === "bola" ? 22 : 60);   // a bola: antes de o fogo do chão começar a contar
-    const k = HEROIS[heroi].kit[chave], c = HEROIS[heroi].critico;
+    const k = HABILIDADES[heroi][chave], c = HEROIS[heroi].critico;
     const danos = m.eventos.filter((e) => e.tipo === "dano" && !e.sutil);
     for (const u of lista) {
       if (u.vida >= u.vidaMax) continue;
@@ -98,6 +109,7 @@ test("mortes simultâneas: quem morre sai de uma vez e ninguém continua mirando
     m.unidades.push(a); aliados.push(a);
   }
   const antes = m.lados[1].length;
+  equipar(m, "salto");
   const ent = entradaVazia(); ent.mx = 540; ent.my = 280; ent.apertos = ["salto"];
   let mortes = 0, passoDasMortes = new Set();
   for (let i = 0; i < 60; i++) {
@@ -190,13 +202,15 @@ test("resposta: acelera em até 5 passos, para em até 4, e o golpe começa no p
 
 test("o comando apertado durante outra ação espera até 0,2 s e sai", () => {
   const m = laboratorio("guerreiro"), h = m.heroi;
-  const ent = entradaVazia(); ent.mx = 600; ent.my = 280; ent.apertos = ["varredura"];
+  equipar(m, "turbilhao");
+  const ent = entradaVazia(); ent.mx = 600; ent.my = 280; ent.apertos = ["turbilhao"];
   passo(m, ent); ent.apertos = [];
-  // na preparação da varredura (não cancelável), aperta a investida: ela sai logo depois do contato
-  rodar(m, ent, 3);
+  // na preparação do Turbilhão (não cancelável; com a recarga do principal, a Varredura se corta), aperta a investida:
+  // ela sai logo depois do contato (o Turbilhão prepara 0,35 s: o aperto vem a 0,15 s do fim)
+  rodar(m, ent, 11);
   ent.apertos = ["investida"];
   passo(m, ent); ent.apertos = [];
-  assert.equal(h.acao.id, "varredura");
+  assert.equal(h.acao.id, "turbilhao");
   let n = 0;
   while (h.acao && h.acao.id !== "investida" && n < 30) { passo(m, ent); n++; }
   assert.equal(h.acao && h.acao.id, "investida", "a investida guardada não saiu");
@@ -211,7 +225,8 @@ test("o comando apertado durante outra ação espera até 0,2 s e sai", () => {
 
 test("golpe forte: a preparação prende os pés; depois do contato, andar corta a recuperação", () => {
   const m = laboratorio("guerreiro"), h = m.heroi;
-  const ent = entradaVazia(); ent.mx = 600; ent.my = 280; ent.apertos = ["varredura"];
+  equipar(m, "turbilhao");
+  const ent = entradaVazia(); ent.mx = 600; ent.my = 280; ent.apertos = ["turbilhao"];
   passo(m, ent); ent.apertos = [];
   ent.baixo = true;
   const y0 = h.y;
@@ -224,7 +239,7 @@ test("golpe forte: a preparação prende os pés; depois do contato, andar corta
 });
 
 test("o campeão anuncia o golpe e um golpe forte do herói o interrompe; um fraco, não", () => {
-  for (const [id, interrompe] of [["varredura", true], ["basico", false]]) {
+  for (const [id, interrompe] of [["varredura", true], ["fraco", false]]) {
     const m = laboratorio("guerreiro"), h = m.heroi;
     const c = inimigo(m, "campeao", 500, 280, false);
     const ent = entradaVazia(); ent.mx = 500; ent.my = 280;
@@ -232,7 +247,8 @@ test("o campeão anuncia o golpe e um golpe forte do herói o interrompe; um fra
     while (!c.acao && n < 200) { passo(m, ent); n++; }
     assert.ok(c.acao && c.acao.forma, "o campeão não preparou o golpe");
     assert.ok(m.eventos.some((e) => e.tipo === "aviso"), "sem o aviso no chão");
-    if (id === "basico") ent.atacar = true; else ent.apertos = [id];
+    if (id === "fraco") ferir(m, c, 2, h, { dx: 1, dy: 0, emp: 30, atord: 0.3 });
+    else ent.apertos = [id];
     for (let i = 0; i < 16; i++) { passo(m, ent); ent.apertos = []; }
     if (interrompe) assert.equal(c.acao, null, "a varredura não interrompeu");
     else assert.ok(c.acao || c.mostra > 0, "o corte fraco interrompeu o campeão");
@@ -254,17 +270,19 @@ test("a batalha termina: o herói com o jogador automático vence; sem o herói,
     const m = criarMundo({ heroi }), ent = entradaVazia(), r = criarRobo({ nivel: "medio" });
     while (m.fase !== "fim" && m.t < 180) { pensar(r, m, ent); passo(m, ent); m.eventos.length = 0; }
     assert.equal(m.resultado, "vitoria", `${heroi}: ${m.resultado} em ${m.t.toFixed(0)} s`);
-    assert.ok(m.stats.abatesAliados > 0, `${heroi}: as tropas não derrubaram ninguém`);
+    // desde o Campo Livre 5 o herói derruba quase todos (a montagem padrão encadeia explosões): as tropas ocupam
+    assert.ok(m.stats.ocupados > 0, `${heroi}: as tropas não ocuparam ninguém`);
   }
   // sem o herói, as tropas perdem; com Atacar, lutam (derrubam e ocupam); acompanhando um herói parado, seguram em volta
-  // dele e ocupam os inimigos (desde o Campo Livre 4 os arqueiros inimigos avançam e atiram: as tropas derrubam menos)
+  // dele e ocupam os inimigos (desde o Campo Livre 4 os arqueiros inimigos avançam e atiram; desde o 5 o Capitão alcança
+  // quem está colado no arco dele: as tropas derrubam pouco, de 5 na v4 para 1 a 5)
   for (const ordem of ["atacar", null]) {
     const m = criarMundo({ heroi: "guerreiro" }), ent = entradaVazia(), r = criarRobo({ passivo: true });
     passo(m, ent);
     if (ordem) ordenar(m, ordem);
     while (m.fase !== "fim" && m.t < 180) { pensar(r, m, ent); passo(m, ent); m.eventos.length = 0; }
     assert.equal(m.resultado, "derrota");
-    if (ordem) assert.ok(m.stats.abatesAliados >= 5, `as tropas sozinhas derrubaram só ${m.stats.abatesAliados}`);
+    if (ordem) assert.ok(m.stats.abatesAliados >= 1, `as tropas sozinhas não derrubaram ninguém`);
     assert.ok(m.stats.ocupados > 500, `as tropas ocuparam pouco (${m.stats.ocupados.toFixed(0)})`);
   }
 });
@@ -281,7 +299,10 @@ test("desempenho do passo: a batalha maior cabe com folga num quadro", () => {
 });
 
 test("as constantes do campo cabem nas formas: nenhuma área maior que a tela", () => {
-  for (const h of Object.values(HEROIS)) for (const k of Object.values(h.kit)) assert.ok((k.raio || 0) < 80 && (k.alcance || 0) < 200);
+  for (const cat of Object.values(HABILIDADES)) for (const k of Object.values(cat)) {
+    const maior = Math.max(k.raio || 0, k.area || 0, ...(k.aneis || [0]));
+    assert.ok(maior < 150 && (k.alcance || 0) <= 230 && (k.comprimento || 0) <= 230, `${k.nome}: área de ${maior} px`);
+  }
   assert.ok(CAMPO.largura >= 900 && PASSO === 1 / 60);
 });
 
@@ -449,55 +470,53 @@ test("o líder ofegante leva +50%; derrubado, a tropa perto foge, o resto se aba
   assert.notEqual(m.resultado, "derrota");
 });
 
-test("as versões das habilidades mudam o uso: sangramento, chão que repele, anel que prende, grito que inspira", () => {
-  // Sangrenta: 7 no golpe e 3 a cada 0,5 s por 3 s; quase não empurra
+test("o Sangramento acumula e a Ruptura detona; o Anel prende; o Grito inspira", () => {
+  // Corte Sangrento: 2 acúmulos por golpe (até 5), cada tique 2 × os acúmulos; a Ruptura consome e explode nos outros
   {
-    const m = laboratorio("guerreiro");
-    m.heroi.kit = montarKit("guerreiro", { varredura: "sangrenta" });
-    const u = inimigo(m, "veterano", 500, 280);
-    const x0 = u.x;
-    usar(m, "varredura", 520, 280, 60 * 4);
-    const d = m.eventos.filter((e) => e.tipo === "dano" && e.id === u.id);
-    const golpe = d.filter((e) => !e.sutil), sangue = d.filter((e) => e.sutil && e.elemento === "sangue");
-    assert.equal(golpe.length, 1);
-    assert.equal(sangue.length, 6);
-    assert.equal(u.vidaMax - u.vida, golpe[0].valor + 18);
-    assert.ok(Math.abs(u.x - x0) < 4, `empurrou ${Math.abs(u.x - x0).toFixed(1)} px`);
+    const m = laboratorio("guerreiro"), h = m.heroi;
+    const u = inimigo(m, "campeao", 505, 280), viz = inimigo(m, "veterano", 524, 280);
+    u.vida = u.vidaMax = 999; viz.vida = viz.vidaMax = 999;
+    usar(m, "corteSangrento", 600, 280, 30);
+    assert.equal(u.sangra && u.sangra.acum, 2);
+    assert.ok(!viz.sangra, "o Corte alcançou quem está fora do arco");
+    const tiques = () => m.eventos.filter((e) => e.tipo === "dano" && e.id === u.id && e.sutil).map((e) => e.valor);
+    m.eventos.length = 0;
+    usar(m, "corteSangrento", 600, 280, 40);
+    assert.equal(u.sangra.acum, 4);
+    assert.ok(tiques().includes(SANGUE.tique * 4), `tiques ${tiques()}`);
+    m.eventos.length = 0;
+    usar(m, "ruptura", 600, 280, 30);
+    assert.equal(u.sangra, null, "a Ruptura não consumiu o Sangramento");
+    const direto = m.eventos.find((e) => e.tipo === "dano" && e.id === u.id && !e.sutil);
+    const k = h.kit.ruptura, c = HEROIS.guerreiro.critico;
+    assert.equal(direto.valor, direto.critico ? Math.round(k.porAcumulo * 4 * c.mult) : k.porAcumulo * 4);
+    const sec = m.eventos.find((e) => e.tipo === "dano" && e.id === viz.id);
+    assert.ok(sec && sec.secundario && sec.valor === k.explosao.porAcumulo * 4, "a explosão da Ruptura não pegou o vizinho");
   }
   // Anel: quem está dentro não sai
   {
     const m = laboratorio("mago");
-    m.heroi.kit = montarKit("mago", { muralha: "anel" });
     const u = inimigo(m, "soldado", 600, 280, false);
-    usar(m, "muralha", 600, 280, 20);
+    usar(m, "anel", 600, 280, 20);
     u.atordoado = 0;
-    u.def = { ...u.def };
     u.alvo = null;
     // ele quer ir até o herói, do lado de fora
     for (let i = 0; i < 60 * 3; i++) passo(m, entradaVazia());
-    assert.ok(u.morto || Math.hypot(u.x - 600, u.y - 280) < m.heroi.kit.muralha.raio, "saiu do anel");
+    assert.ok(u.morto || Math.hypot(u.x - 600, u.y - 280) < m.heroi.kit.anel.raio, "saiu do anel");
   }
   // Grito: inspira os aliados perto, abala os inimigos colados
   {
-    const m = criarMundo({ heroi: "guerreiro", kit: { investida: "grito" } });
+    const m = criarMundo({ heroi: "guerreiro" });
     const h = m.heroi;
+    equipar(m, "grito");
     const e = inimigo(m, "soldado", h.x + 15, h.y, false);
-    const ent = entradaVazia(); ent.apertos = ["investida"];
+    const ent = entradaVazia(); ent.apertos = ["grito"];
     for (let i = 0; i < 20; i++) { passo(m, ent); ent.apertos = []; }
     const perto = m.lados[0].filter((u) => u !== h && Math.hypot(u.x - h.x, u.y - h.y) < 60);
     assert.ok(perto.length >= 6 && perto.every((u) => u.inspirado > 0), "o grito não inspirou quem estava perto");
     assert.ok(e.abalado > 0, "o grito não abalou o inimigo colado");
   }
-  // Incendiária: o chão empurra para fora quem está dentro
-  {
-    const m = laboratorio("mago");
-    m.heroi.kit = montarKit("mago", { bola: "incendiaria" });
-    const u = inimigo(m, "veterano", 600, 284, true);
-    usar(m, "bola", 600, 280, 60);
-    assert.ok(Math.hypot(u.x - 600, u.y - 280) > 20, `continuou no fogo: ${Math.hypot(u.x - 600, u.y - 280).toFixed(1)} px do centro`);
-  }
 });
-
 test("os encontros novos terminam: vence com o herói, perde sem ele; nada vira NaN", () => {
   // a horda é de sobrevivência (pode-se perder para ela): tem o teste dela
   for (const enc of Object.keys(ENCONTROS).filter((e) => e !== "horda")) {
@@ -511,8 +530,9 @@ test("os encontros novos terminam: vence com o herói, perde sem ele; nada vira 
     const m = criarMundo({ heroi: "guerreiro", encontro: enc }), ent = entradaVazia(), r = criarRobo({ passivo: true });
     while (m.fase !== "fim" && m.t < 240) { pensar(r, m, ent); passo(m, ent); m.eventos.length = 0; }
     // sem o herói, as tropas perdem; nos grupos espalhados elas podem vencer os grupos um a um, mas perdendo mais de um
-    // terço (desde o Campo Livre 4 as tropas lutam melhor sozinhas: antes perdiam 25 ou mais)
-    if (enc === "espalhados" && m.resultado === "vitoria") assert.ok(m.stats.perdas >= 14, `venceram sem o herói perdendo só ${m.stats.perdas}`);
+    // parte (Campo Livre 3: 25 ou mais; 4: 17; 5: 8, porque a aproximação curta põe mais aliados em ataque contra um
+    // grupo pequeno cercado: 780 ataques começados contra 231)
+    if (enc === "espalhados" && m.resultado === "vitoria") assert.ok(m.stats.perdas >= 5, `venceram sem o herói perdendo só ${m.stats.perdas}`);
     else assert.equal(m.resultado, "derrota", `${enc} sem o herói: ${m.resultado}`);
   }
 });
@@ -649,43 +669,35 @@ test("4×: a batalha original termina com o jogador automático, sem NaN, e o pa
   assert.ok(ms < 6, `passo médio de ${ms.toFixed(2)} ms em 4×`);
 });
 
-test("as habilidades novas: o escudo barra flechas e protege, o Turbilhão puxa os comuns, a corrente salta, o gelo deixa lento", () => {
+test("as habilidades de apoio: o escudo barra flechas e protege, o Turbilhão puxa os comuns, a corrente salta, o gelo deixa lento", () => {
   // Avanço de Escudo: a flecha que vem da frente é barrada; a de trás, não; o aliado perto leva metade
   {
     const m = laboratorio("guerreiro");
-    m.heroi.kit = montarKit("guerreiro", { investida: "escudo" });
     const h = m.heroi, arq = inimigo(m, "arqueiro", 700, 280);
     const flecha = (x0) => ({ tipo: "flecha", lado: 1, x0, y0: 280, x1: 480, y1: 280, t: 0, dur: 0.6, dano: 2, fonte: arq, x: x0, y: 280 });
     m.proj.push(flecha(600), flecha(380));
-    usar(m, "investida", 600, 280, 50);
+    usar(m, "escudo", 600, 280, 50);
     assert.equal(m.stats.flechasBarradas, 1);
     assert.equal(m.stats.flechasHeroi, 1);
     assert.equal(h.acao && h.acao.fase, "escudo");
     const aliado = { ...h, id: m.proximoId++, tipo: "soldado", lado: 0, def: TIPOS.soldado, vida: 16, vidaMax: 16, x: h.x - 20, y: h.y, acao: null };
     ferir(m, aliado, 10, arq);
-    assert.equal(aliado.vida, 16 - 10 * h.kit.investida.reducao);
+    assert.equal(aliado.vida, 16 - 10 * h.kit.escudo.reducao);
   }
-  // Turbilhão: os soldados a 60 px vêm para perto e apanham; o campeão não é puxado
+  // Turbilhão: os veteranos a 60 px vêm para perto e apanham; o campeão não é puxado
   {
     const m = laboratorio("guerreiro");
-    m.heroi.kit = montarKit("guerreiro", { salto: "turbilhao" });
-    m.heroi.recurso = 100;
     const ss = [0, 1, 2, 3, 4, 5].map((i) => inimigo(m, "veterano", 480 + Math.cos(i) * 60, 280 + Math.sin(i) * 60));
     const c = inimigo(m, "campeao", 430, 280), cx = c.x;
-    usar(m, "salto", 520, 280, 30);
-    // gastou 50 (o que sobe de volta é a Fúria dos acertos e dos derrubados do próprio golpe)
-    const ganho = m.eventos.filter((e) => e.tipo === "dano").length * HEROIS.guerreiro.recurso.porAcerto +
-      m.eventos.filter((e) => e.tipo === "morte").length * HEROIS.guerreiro.recurso.porAbate;
-    assert.equal(m.heroi.recurso, 100 - m.heroi.kit.salto.custo + ganho);
-    for (const s of ss) assert.ok(m.eventos.some((e) => e.tipo === "dano" && e.id === s.id), "um soldado puxado não apanhou");
+    usar(m, "turbilhao", 520, 280, 30);
+    for (const s of ss) assert.ok(m.eventos.some((e) => e.tipo === "dano" && e.id === s.id), "um veterano puxado não apanhou");
     assert.ok(Math.abs(c.x - cx) < 3, `o campeão foi puxado ${Math.abs(c.x - cx).toFixed(1)} px (um puxado anda ~40)`);
   }
-  // Corrente de Raios: 12 alvos em fila a 20 px um do outro; o dano cai 1 por salto (até 7); o 13º e o 14º ficam
+  // Corrente de Raios: 12 alvos em fila a 15 px um do outro; o dano cai 1 por salto (até 7); o 13º e o 14º ficam
   {
     const m = laboratorio("mago");
-    m.heroi.kit = montarKit("mago", { bola: "raios" });
     const fila = [...Array(14)].map((_, i) => inimigo(m, "veterano", 520 + i * 15, 280));
-    usar(m, "bola", 700, 280, 30);
+    usar(m, "raios", 700, 280, 30);
     const d = fila.map((u) => m.eventos.find((e) => e.tipo === "dano" && e.id === u.id));
     const esperado = [14, 13, 12, 11, 10, 9, 8, 7, 7, 7, 7, 7];
     for (let i = 0; i < 12; i++) {
@@ -698,9 +710,8 @@ test("as habilidades novas: o escudo barra flechas e protege, o Turbilhão puxa 
   // Campo de Gelo: dentro, o passo cai para 35%; fora, normal
   {
     const m = laboratorio("mago");
-    m.heroi.kit = montarKit("mago", { muralha: "gelo" });
     const a = inimigo(m, "soldado", 600, 280, false), b = inimigo(m, "soldado", 600, 180, false);
-    usar(m, "muralha", 600, 280, 20);
+    usar(m, "campoGelo", 600, 280, 20);
     a.atordoado = 0; a.congelado = 0;
     const pa = [a.x, a.y], pb = [b.x, b.y];
     rodar(m, entradaVazia(), 30);
@@ -722,98 +733,217 @@ function aliado(m, tipo, x, y, ordem = { tipo: "atacar", x, y }) {
   m.lados[0].push(u);
   return u;
 }
-// Um clique de ataque básico com o mouse em (mx, my), e mais `passos` passos com o mouse lá.
-function basico(m, mx, my, passos = 30, ent = entradaVazia()) {
+// Um clique do ataque principal com o mouse em (mx, my), e mais `passos` passos com o mouse lá.
+function principal(m, mx, my, passos = 30, ent = entradaVazia()) {
   ent.mx = mx; ent.my = my; ent.atacar = true;
   passo(m, ent);
   ent.atacar = false;
   rodar(m, ent, passos);
 }
+// O Frio Cortante sempre congela (para o teste não depender do sorteio); devolve o valor de antes.
+function semSorteio(fn) {
+  const F = TALENTOS.mago.frioCortante, c = F.chance;
+  F.chance = 1;
+  try { fn(); } finally { F.chance = c; }
+}
 
-test("o básico assistido: escolhe quem está na direção do mouse; sem ninguém, sai reto; a Faísca não troca de alvo", () => {
-  const m = laboratorio("mago"), h = m.heroi;
-  const lado = inimigo(m, "veterano", 480, 240), frente = inimigo(m, "veterano", 600, 284);
-  assert.equal(alvoAssistido(m, h, 700, 280), frente, "não pegou o da frente (o do lado está mais perto, a 90°)");
-  assert.equal(alvoAssistido(m, h, 480, 100), lado);
-  assert.equal(alvoAssistido(m, h, 300, 280), null, "pegou alguém fora do cone");
-  // a Faísca persegue o escolhido que anda
-  frente.atordoado = 0; frente.recarga = 99;
-  basico(m, 700, 300, 50);
-  assert.ok(m.eventos.some((e) => e.tipo === "dano" && e.id === frente.id), "a Faísca não alcançou o alvo");
-  assert.ok(!m.eventos.some((e) => e.tipo === "dano" && e.id === lado.id));
-  // o alvo cai no caminho: a Faísca segue reta e não vira para outro inimigo fora da linha
+test("a Varredura assistida: vira para quem está na direção do mouse e avança até 32 px, só para a frente e nunca através de ninguém", () => {
   {
-    const m2 = laboratorio("mago");
-    const a = inimigo(m2, "veterano", 600, 280), b = inimigo(m2, "veterano", 620, 320);
-    const ent = entradaVazia(); ent.mx = 700; ent.my = 280; ent.atacar = true;
-    passo(m2, ent); ent.atacar = false;
-    rodar(m2, ent, 6);
-    a.morto = true;
-    rodar(m2, ent, 60);
-    assert.equal(b.vida, b.vidaMax, "a Faísca trocou de alvo depois que o primeiro caiu");
+    const m = laboratorio("guerreiro"), h = m.heroi;
+    const lado = inimigo(m, "veterano", 480, 240), frente = inimigo(m, "veterano", 530, 284);
+    assert.equal(alvoAssistido(m, h, 700, 280), frente, "não pegou o da frente (o do lado está mais perto, a 90°)");
+    assert.equal(alvoAssistido(m, h, 480, 100), lado);
+    assert.equal(alvoAssistido(m, h, 300, 280), null, "pegou alguém fora do cone");
   }
-});
-
-test("o Corte assistido: passo curto só para a frente, nada contra o movimento nem através de quem está no meio; combo 3, 4, 9", () => {
-  // o alvo um pouco além do arco: um passo de no máximo `estica` px na direção dele
+  // o alvo além do arco: um passo de mais de 12 px e no máximo `avanca` na direção dele, e o golpe o alcança
   {
-    const m = laboratorio("guerreiro"), h = m.heroi, k = h.kit.basico;
-    inimigo(m, "veterano", 514, 280);
+    const m = laboratorio("guerreiro"), h = m.heroi, k = h.kit.varredura;
+    const u = inimigo(m, "veterano", 540, 280);
     const x0 = h.x;
-    basico(m, 600, 280, 4);
-    assert.ok(h.x - x0 > 6 && h.x - x0 <= k.assist.estica + 1.5, `andou ${(h.x - x0).toFixed(1)} px`);
+    principal(m, 600, 280, 14);
+    assert.ok(h.x - x0 > 12 && h.x - x0 <= k.avanca + 1.5, `andou ${(h.x - x0).toFixed(1)} px`);
+    assert.ok(u.vida < u.vidaMax, "a Varredura não alcançou o alvo");
+  }
+  // longe demais (fora do alcance da assistência): nenhuma perseguição, o golpe sai para onde o mouse aponta
+  {
+    const m = laboratorio("guerreiro"), h = m.heroi;
+    inimigo(m, "veterano", 600, 280);
+    const x0 = h.x;
+    principal(m, 600, 280, 14);
+    assert.ok(Math.abs(h.x - x0) < 0.5, `perseguiu ${(h.x - x0).toFixed(1)} px`);
   }
   // andando para trás, nenhum passo para a frente
   {
     const m = laboratorio("guerreiro"), h = m.heroi;
-    inimigo(m, "veterano", 514, 280);
+    inimigo(m, "veterano", 530, 280);
     const ent = entradaVazia(); ent.esq = true;
     const x0 = h.x;
-    basico(m, 600, 280, 4, ent);
+    principal(m, 600, 280, 6, ent);
     assert.ok(h.x <= x0 + 0.01, `foi ${(h.x - x0).toFixed(1)} px para a frente andando para trás`);
   }
   // alguém colado no caminho: o golpe vai nele, sem passo
   {
     const m = laboratorio("guerreiro"), h = m.heroi;
     inimigo(m, "soldado", 494, 281);
-    inimigo(m, "veterano", 514, 280);
+    inimigo(m, "veterano", 530, 280);
     const x0 = h.x;
-    basico(m, 600, 280, 4);
+    principal(m, 600, 280, 10);
     assert.ok(Math.abs(h.x - x0) < 1, `atravessou: ${(h.x - x0).toFixed(1)} px`);
   }
   // inimigo atrás do herói e o mouse na frente: nenhum passo para trás
   {
     const m = laboratorio("guerreiro"), h = m.heroi;
-    inimigo(m, "veterano", 450, 280);
+    inimigo(m, "veterano", 440, 280);
     const x0 = h.x;
-    basico(m, 600, 280, 4);
+    principal(m, 600, 280, 10);
     assert.ok(h.x >= x0 - 0.01);
-  }
-  // o combo: 3, 4 e o arremate de 9 (ou 1,5× no crítico)
-  {
-    const m = laboratorio("guerreiro"), u = inimigo(m, "campeao", 498, 280);
-    u.vida = u.vidaMax = 999;
-    const ent = entradaVazia(); ent.mx = 600; ent.my = 280; ent.atacar = true;
-    rodar(m, { ...ent, apertos: [] }, 0);
-    for (let i = 0; i < 60 && m.eventos.filter((e) => e.tipo === "dano").length < 3; i++) { passo(m, ent); }
-    const v = m.eventos.filter((e) => e.tipo === "dano").slice(0, 3).map((e) => (e.critico ? Math.round(e.valor / 1.5) : e.valor));
-    assert.deepEqual(v, [3, 4, 9]);
   }
 });
 
-test("a Fagulha: a Faísca marca, o próximo golpe de habilidade nesse alvo causa +6 uma vez", () => {
-  const m = laboratorio("mago"), h = m.heroi, u = inimigo(m, "campeao", 580, 280);
-  u.vida = u.vidaMax = 999;
-  basico(m, 580, 280, 30);
-  assert.ok(u.fagulha > m.t, "sem Fagulha depois da Faísca");
-  m.eventos.length = 0;
-  usar(m, "bola", 580, 280, 40);
-  const d1 = m.eventos.find((e) => e.tipo === "dano" && e.id === u.id && !e.sutil);
-  assert.ok(d1.fagulha && (d1.critico ? Math.round(d1.valor / 1.5) : d1.valor) === h.kit.bola.dano + h.kit.basico.fagulha.bonus);
-  h.cds.bola = 0; h.recurso = 100; m.eventos.length = 0;
-  usar(m, "bola", 580, 280, 40);
-  const d2 = m.eventos.find((e) => e.tipo === "dano" && e.id === u.id && !e.sutil);
-  assert.ok(!d2.fagulha && (d2.critico ? Math.round(d2.valor / 1.5) : d2.valor) === h.kit.bola.dano, "a Fagulha valeu duas vezes");
+test("o ataque principal: segurar o botão repete a cada 1 s; um clique sai uma vez; nada de habilidade repetida nos espaços", () => {
+  for (const heroi of ["guerreiro", "mago"]) {
+    const m = laboratorio(heroi), id = m.heroi.slots.principal;
+    const ent = entradaVazia(); ent.mx = 600; ent.my = 280; ent.atacar = true;
+    const t = [];
+    for (let i = 0; i < 60 * 3 - 5; i++) {
+      passo(m, ent);
+      for (const e of m.eventos) if (e.tipo === "inicio" && e.id === id) t.push(m.t);
+      m.eventos.length = 0;
+    }
+    assert.equal(t.length, 3, `${heroi}: ${t.length} golpes segurando por 3 s`);
+    for (let i = 1; i < t.length; i++) assert.ok(Math.abs(t[i] - t[i - 1] - 1) < 0.04, `${heroi}: intervalo ${(t[i] - t[i - 1]).toFixed(2)} s`);
+    const m2 = laboratorio(heroi);
+    principal(m2, 600, 280, 150);
+    assert.equal(m2.stats.usos[id].usos, 1, `${heroi}: um clique saiu mais de uma vez`);
+    // os espaços: o principal e a mobilidade fixos, três comuns e uma ultimate, sem repetir
+    const sl = Object.values(m.heroi.slots);
+    assert.equal(sl.length, 6);
+    assert.equal(new Set(sl).size, 6, `${heroi}: habilidade repetida nos espaços`);
+  }
+  // uma montagem com a mesma comum duas vezes fica com ela uma vez só (e a padrão completa os espaços)
+  const k = montarKit("mago", { comuns: ["lanca", "lanca", "raios"], ultimate: "meteoros" });
+  assert.equal(new Set(Object.values(k.slots)).size, Object.values(k.slots).length);
+});
+
+test("a Lança de Gelo atravessa a fila; com a Lança Estilhaçante, explode no primeiro (ou no fim do alcance)", () => {
+  {
+    const m = laboratorio("mago");
+    const fila = [520, 545, 570, 595, 620].map((x) => inimigo(m, "veterano", x, 280));
+    usar(m, "lanca", 700, 280, 60);
+    for (const u of fila) assert.equal(m.eventos.filter((e) => e.tipo === "dano" && e.id === u.id).length, 1, "não atravessou a fila uma vez em cada");
+  }
+  {
+    const m = laboratorio("mago", ["lancaEstilhacante"]), k = m.heroi.kit.lanca;
+    const a = inimigo(m, "veterano", 520, 280), b = inimigo(m, "veterano", 535, 280), c = inimigo(m, "veterano", 600, 280);
+    usar(m, "lanca", 700, 280, 60);
+    const d = (u) => m.eventos.filter((e) => e.tipo === "dano" && e.id === u.id);
+    assert.equal(d(a).length, 1);
+    assert.equal(d(b).length, 1, "a explosão não pegou o vizinho");
+    assert.equal(d(c).length, 0, "a lança continuou depois de explodir");
+    const v = d(a)[0];
+    assert.equal(v.critico ? Math.round(v.valor / HEROIS.mago.critico.mult) : v.valor, k.explosao.dano);
+  }
+  {
+    const m = laboratorio("mago", ["lancaEstilhacante"]), h = m.heroi;
+    usar(m, "lanca", 900, 280, 60);
+    const c = m.eventos.find((e) => e.tipo === "contato" && e.id === "lanca");
+    assert.ok(c && Math.abs(c.x - (480 + h.kit.lanca.alcance)) < 8, `sem explosão no fim do alcance (${c && c.x})`);
+  }
+});
+
+test("Frio Cortante e Estilhaçar: o mesmo lançamento não estilhaça; outro lançamento e outra habilidade sim; o contínuo não", () => {
+  semSorteio(() => {
+    const m = laboratorio("mago", ["frioCortante", "estilhacar"]), h = m.heroi;
+    const u = inimigo(m, "campeao", 540, 280);
+    const a = inimigo(m, "veterano", 520, 340);
+    u.vida = u.vidaMax = a.vida = a.vidaMax = 999;
+    // o comum congela 2 s; o campeão, 0,5 s e depois fica enregelado por 3 s
+    usar(m, "lanca", 700, 280, 1);
+    rodar(m, entradaVazia(), 50);   // a lança chega em ~0,25 s; o congelamento do campeão dura 0,5 s
+    assert.equal(m.stats.estilhacados, 0, "o lançamento que congelou estilhaçou");
+    assert.ok(u.gelo > 0 && u.enregelado > m.t, "o campeão não ficou enregelado");
+    const L = TALENTOS.mago.frioCortante;
+    assert.ok(Math.abs(u.enregelado - u.gelo - L.enregela) < 1e-9 && u.gelo <= m.t, "o campeão ficou congelado mais de 0,5 s");
+    usar(m, "lanca", 520, 340, 2);
+    rodar(m, entradaVazia(), 20);
+    assert.ok(a.gelo > m.t && a.gelo - m.t <= L.duracao, "o veterano não ficou congelado");
+    // o contínuo não estilhaça
+    ferir(m, a, 3, h, { sutil: true, hab: "bola", lanc: 999, tipoDano: "continuo" });
+    assert.equal(m.stats.estilhacados, 0);
+    assert.ok(a.gelo > m.t);
+    // outra habilidade estilhaça: +8, perde o gelo, explode nos outros
+    m.eventos.length = 0;
+    ferir(m, a, 10, h, { hab: "raios", lanc: 1000, tipoDano: "direto" });
+    assert.equal(m.stats.estilhacados, 1);
+    assert.equal(a.gelo, 0);
+    const d = m.eventos.find((e) => e.tipo === "dano" && e.id === a.id);
+    assert.equal(d.valor, 10 + TALENTOS.mago.estilhacar.bonus);
+    assert.ok(m.eventos.some((e) => e.tipo === "explosao" && e.de === "estilhacar"));
+    // outro lançamento da mesma habilidade também estilhaça (o enregelado conta)
+    ferir(m, u, 10, h, { hab: "lanca", lanc: 1001, tipoDano: "direto" });
+    assert.equal(m.stats.estilhacados, 2);
+  });
+});
+
+test("as cadeias acabam: no máximo 2 estilhaços em sequência, 3 explosões de Sangue em sequência e 30 explosões por golpe", () => {
+  // uma multidão congelada colada: um golpe estilhaça o primeiro, que estilhaça os vizinhos, que não estilhaçam mais
+  {
+    const m = laboratorio("mago", ["estilhacar"]), h = m.heroi;
+    const lista = grade(m, "veterano", 600, 280, 40, 9);
+    for (const u of lista) { u.vida = u.vidaMax = 999; u.gelo = m.t + 99; u.geloLanc = -1; }
+    ferir(m, lista[Math.floor(lista.length / 2)], 5, h, { hab: "raios", lanc: 77, tipoDano: "direto" });
+    const n = m.cadeias.get(77);
+    assert.ok(n > 1 && n <= CADEIA.maxPorGolpe, `${n} explosões`);
+    assert.ok(lista.some((u) => u.gelo > m.t), "a cadeia de estilhaços não parou na profundidade 2");
+  }
+  // uma multidão sangrando de vida 1: cada morte explode e mata os vizinhos; para em 30 por golpe (ou na profundidade)
+  {
+    const m = laboratorio("guerreiro", ["explosaoSangue"]), h = m.heroi;
+    const lista = grade(m, "soldado", 600, 280, 60, 8);
+    for (const u of lista) { u.vida = 1; u.sangra = { acum: 5, n: 6, tick: 0.5 }; }
+    ferir(m, lista[Math.floor(lista.length / 2)], 5, h, { hab: "varredura", lanc: 78, tipoDano: "direto" });
+    const n = m.cadeias.get(78), vivos = lista.filter((u) => !u.morto).length;
+    assert.ok(n > 3 && n <= CADEIA.maxPorGolpe, `${n} explosões`);
+    assert.ok(vivos > 0, "a cadeia derrubou a multidão inteira");
+    assert.ok(m.eventos.filter((e) => e.tipo === "explosao").every((e) => e.prof <= TALENTOS.guerreiro.explosaoSangue.profundidade));
+  }
+  // cada tique de Sangramento é um golpe próprio: as mortes por tique em momentos diferentes explodem, cada uma com o
+  // seu limite (antes, todas as cadeias de tique dividiam um só limite de 30 pela batalha)
+  {
+    const m = laboratorio("guerreiro", ["explosaoSangue"]);
+    const n0 = m.stats.explosoes;
+    for (let i = 0; i < 40; i++) {
+      const u = inimigo(m, "soldado", 300 + (i % 8) * 60, 100 + Math.floor(i / 8) * 60);
+      u.vida = 1; u.sangra = { acum: 1, n: 6, tick: 0.5 + i * 0.05 };
+    }
+    rodar(m, entradaVazia(), 60 * 3);
+    assert.equal(m.stats.explosoes - n0, 40, `${m.stats.explosoes - n0} das 40 mortes por tique explodiram`);
+  }
+});
+
+test("a aproximação das tropas: o soldado avança até 10 px na preparação, acerta quem fica parado e erra quem sai", () => {
+  for (const sai of [false, true]) {
+    const m = laboratorio("mago"), h = m.heroi, d = TIPOS.soldado;
+    h.vida = h.vidaMax = 999;
+    const folga = d.alcance + d.estica - 1;
+    const u = inimigo(m, "soldado", h.x + h.raio + d.raio + folga, h.y, false);
+    u.recarga = 0;
+    const x0 = u.x;
+    let n = 0;
+    while (!u.acao && n++ < 30) passo(m, entradaVazia());
+    assert.ok(u.acao, "o soldado não começou o ataque a 12 px");
+    if (sai) { h.x -= 25; h.px = h.x; }
+    const vida = h.vida;
+    let maisPerto = Infinity;
+    while (u.acao && n++ < 90) {
+      passo(m, entradaVazia());
+      maisPerto = Math.min(maisPerto, Math.hypot(u.x - h.x, u.y - h.y) - u.raio - h.raio);
+    }
+    assert.ok(x0 - u.x <= d.estica + 0.5, `avançou ${(x0 - u.x).toFixed(1)} px`);
+    assert.ok(maisPerto > -0.6, `entrou no herói (${maisPerto.toFixed(2)} px)`);
+    if (sai) assert.ok(h.vida === vida && u.errou, "acertou quem saiu do alcance");
+    else assert.ok(h.vida < vida, "não acertou o herói parado");
+  }
 });
 
 test("o herói atingido: o evento traz a direção e o valor que saiu da vida", () => {
@@ -877,6 +1007,7 @@ test("os arqueiros dos dois lados participam: avançam até atirar (a retaguarda
       for (const u of m.unidades) {
         if (u.tipo !== "arqueiro" || u.morto) continue;
         if (!visto.has(u.id)) visto.set(u.id, { t: m.t, lado: u.lado, u });
+        visto.get(u.id).ate = m.t;
         if (u.acao) atirou.add(u.id);
         // até 12 px além da coleira: os corpos se empurram quando a retaguarda inteira está na beira dela
         if (u.posto) assert.ok(Math.hypot(u.x - u.posto.x, u.y - u.posto.y) <= TIPOS.arqueiro.posto + 12, "a retaguarda saiu demais do posto");
@@ -884,7 +1015,7 @@ test("os arqueiros dos dois lados participam: avançam até atirar (a retaguarda
     }
     for (const lado of [0, 1]) {
       // quem existiu por 15 s ou mais e continua vivo (ou morreu depois de 15 s)
-      const longos = [...visto.values()].filter((v) => v.lado === lado && m.t - v.t >= 15);
+      const longos = [...visto.values()].filter((v) => v.lado === lado && v.ate - v.t >= 15);
       if (!longos.length) continue;
       const k = longos.filter((v) => atirou.has(v.u.id)).length / longos.length;
       assert.ok(k >= 0.85, `${enc} ${q}× lado ${lado}: só ${(100 * k).toFixed(0)}% dos arqueiros atiraram`);

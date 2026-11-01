@@ -102,7 +102,7 @@ if (quer("selecao")) {
   const ver = () => p.evaluate(() => {
     const m = __campo.mundo(), t = m.lados[0].filter((u) => u !== m.heroi);
     return { sel: [...m.selecao], ordens: Object.fromEntries(t.map((u) => [u.id, u.ordem.tipo])), tipos: Object.fromEntries(t.map((u) => [u.id, u.tipo])),
-      usosBasico: (m.stats.usos.basico || { usos: 0 }).usos, hud: document.querySelector("#p-selecao").textContent };
+      usosBasico: (m.stats.usos[m.heroi.slots.principal] || { usos: 0 }).usos, hud: document.querySelector("#p-selecao").textContent };
   });
   const tela = (x, y) => p.evaluate(([x, y]) => { const st = __campo.st; return [(x - st.cam.x) * st.escala, (y - st.cam.y) * st.escala]; }, [x, y]);
   const R2 = {};
@@ -207,8 +207,8 @@ if (quer("capturas")) {
     await p.waitForTimeout(500);
     await p.screenshot({ path: path.join(CAPT, `inicio-${w}.png`) });
     for (const [heroi, enc, kit] of [["guerreiro", "original", ""], ["mago", "original", ""], ["guerreiro", "capitao", ""],
-      ["mago", "espalhados", "incendiaria,anel"], ["guerreiro", "duasFrentes", "sangrenta,grito"]]) {
-      await p.goto(`${ENDERECO}?heroi=${heroi}&enc=${enc}&kit=${kit}&auto=1&robo=1`);
+      ["mago", "espalhados", "ignicao,vortice,muralha,meteoros"], ["guerreiro", "duasFrentes", "corteSangrento,grito,ruptura,terremoto"]]) {
+      await p.goto(`${ENDERECO}?heroi=${heroi}&enc=${enc}&hab=${kit}&auto=1&robo=1`);
       for (const t of [1.5, 7, 10, 14]) {
         await p.waitForFunction((tt) => __campo.mundo().t >= tt, t, { timeout: 30000 });
         await p.screenshot({ path: path.join(CAPT, `${enc}-${heroi}-${w}-${String(t).replace(".", "_")}s.png`) });
