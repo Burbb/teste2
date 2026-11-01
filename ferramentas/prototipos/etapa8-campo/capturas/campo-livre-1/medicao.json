@@ -1,0 +1,174 @@
+{
+ "condicoes": {
+  "data": "2026-11-01T02:18:30.139Z",
+  "navegador": "Chromium 130.0.6723.31 (Playwright, sem janela)",
+  "maquina": "DESKTOP-4KMKFO5",
+  "nota": "Chromium headless desenha o canvas na CPU; 60 qps é o teto do rAF."
+ },
+ "resposta": {
+  "andar_primeiro_quadro": [
+   84.4,
+   16.7
+  ],
+  "andar_velocidade_maxima": [
+   87.3,
+   83.3
+  ],
+  "parar": [
+   63,
+   66.7
+  ],
+  "varredura_comeca": [
+   17,
+   16.7
+  ],
+  "varredura_contato": [
+   217.4,
+   216.7
+  ],
+  "investida_comeca": [
+   14.6,
+   16.7
+  ],
+  "nota": "[ms de relógio até o quadro, ms de jogo]; o relógio inclui a travada do Playwright ao injetar teclas"
+ },
+ "pausa": {
+  "parado_durante_pausa": 0,
+  "tela_de_pausa": true,
+  "ordem_pausado": "defender",
+  "andou_depois": 0.6,
+  "reinicio_t": 0.3,
+  "painel_abre": true
+ },
+ "desempenho": [
+  {
+   "janela": "1280×720",
+   "tropas": "normal",
+   "heroi": "guerreiro",
+   "unidades_max": 98,
+   "particulas_max": 52,
+   "qps": 60,
+   "quadro_p95_ms": 16.7,
+   "quadro_max_ms": 16.8,
+   "sim_media_ms": 0.18,
+   "sim_p95_ms": 0.4,
+   "desenho_media_ms": 1.02,
+   "desenho_p95_ms": 2.2,
+   "escala": 2,
+   "campo_visivel": "640×360"
+  },
+  {
+   "janela": "1280×720",
+   "tropas": "normal",
+   "heroi": "mago",
+   "unidades_max": 98,
+   "particulas_max": 78,
+   "qps": 60,
+   "quadro_p95_ms": 16.7,
+   "quadro_max_ms": 16.8,
+   "sim_media_ms": 0.25,
+   "sim_p95_ms": 0.5,
+   "desenho_media_ms": 1.09,
+   "desenho_p95_ms": 1.7,
+   "escala": 2,
+   "campo_visivel": "640×360"
+  },
+  {
+   "janela": "1280×720",
+   "tropas": "maior",
+   "heroi": "guerreiro",
+   "unidades_max": 195,
+   "particulas_max": 134,
+   "qps": 60,
+   "quadro_p95_ms": 16.7,
+   "quadro_max_ms": 16.8,
+   "sim_media_ms": 0.43,
+   "sim_p95_ms": 0.9,
+   "desenho_media_ms": 1.97,
+   "desenho_p95_ms": 3.4,
+   "escala": 2,
+   "campo_visivel": "640×360"
+  },
+  {
+   "janela": "1280×720",
+   "tropas": "maior",
+   "heroi": "mago",
+   "unidades_max": 195,
+   "particulas_max": 90,
+   "qps": 60,
+   "quadro_p95_ms": 16.8,
+   "quadro_max_ms": 16.8,
+   "sim_media_ms": 0.25,
+   "sim_p95_ms": 0.5,
+   "desenho_media_ms": 1.49,
+   "desenho_p95_ms": 2.3,
+   "escala": 2,
+   "campo_visivel": "640×360"
+  },
+  {
+   "janela": "1920×945",
+   "tropas": "normal",
+   "heroi": "guerreiro",
+   "unidades_max": 98,
+   "particulas_max": 61,
+   "qps": 60,
+   "quadro_p95_ms": 16.7,
+   "quadro_max_ms": 16.8,
+   "sim_media_ms": 0.17,
+   "sim_p95_ms": 0.4,
+   "desenho_media_ms": 1.04,
+   "desenho_p95_ms": 2.2,
+   "escala": 3,
+   "campo_visivel": "640×315"
+  },
+  {
+   "janela": "1920×945",
+   "tropas": "normal",
+   "heroi": "mago",
+   "unidades_max": 98,
+   "particulas_max": 78,
+   "qps": 60,
+   "quadro_p95_ms": 16.7,
+   "quadro_max_ms": 16.8,
+   "sim_media_ms": 0.18,
+   "sim_p95_ms": 0.4,
+   "desenho_media_ms": 0.8,
+   "desenho_p95_ms": 1.3,
+   "escala": 3,
+   "campo_visivel": "640×315"
+  },
+  {
+   "janela": "1920×945",
+   "tropas": "maior",
+   "heroi": "guerreiro",
+   "unidades_max": 195,
+   "particulas_max": 124,
+   "qps": 60,
+   "quadro_p95_ms": 16.7,
+   "quadro_max_ms": 16.8,
+   "sim_media_ms": 0.31,
+   "sim_p95_ms": 0.7,
+   "desenho_media_ms": 1.5,
+   "desenho_p95_ms": 3,
+   "escala": 3,
+   "campo_visivel": "640×315"
+  },
+  {
+   "janela": "1920×945",
+   "tropas": "maior",
+   "heroi": "mago",
+   "unidades_max": 195,
+   "particulas_max": 90,
+   "qps": 60,
+   "quadro_p95_ms": 16.7,
+   "quadro_max_ms": 16.8,
+   "sim_media_ms": 0.21,
+   "sim_p95_ms": 0.4,
+   "desenho_media_ms": 1.22,
+   "desenho_p95_ms": 1.7,
+   "escala": 3,
+   "campo_visivel": "640×315"
+  }
+ ],
+ "erros": []
+}

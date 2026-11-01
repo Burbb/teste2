@@ -4,7 +4,7 @@
 // função `dentro` que decide quem é atingido: o que aparece é exatamente o que acerta.
 import { CAMPO, TIPOS } from "./conteudo.js";
 import { dentro, formaDaAcao } from "./sim.js";
-import { pousarCorpos } from "./efeitos.js";
+import { pousarCorpos, NUMEROS } from "./efeitos.js";
 
 export const BORDA = 70;   // o chão de fora do campo, que a câmera pode mostrar perto das bordas
 
@@ -60,8 +60,27 @@ export function criarChao(rng) {
   return c;
 }
 
+// Os contornos de círculo (auras, presença, alcance de defesa, anéis) se repetem a cada quadro: guardados prontos por
+// raio, cor e tracejado, desenhados com o centro arredondado. A forma continua a mesma de `dentro`.
+const contornos = new Map();
+function contornoCirculo(g, f, cx, cy, borda, tracejado) {
+  const r = f.raio, chave = `${r}|${borda}|${tracejado}`;
+  let c = contornos.get(chave);
+  if (!c) {
+    const lado = Math.ceil(r) * 2 + 4;
+    c = document.createElement("canvas");
+    c.width = c.height = lado;
+    pintarForma(c.getContext("2d"), { tipo: "circulo", x: lado / 2, y: lado / 2, raio: r }, 0, 0, null, borda, tracejado, true);
+    if (contornos.size > 400) contornos.clear();
+    contornos.set(chave, c);
+  }
+  g.drawImage(c, Math.round(f.x) - c.width / 2 - cx, Math.round(f.y) - c.height / 2 - cy);
+}
+
 // Pinta uma forma pixel a pixel (o centro de cada pixel testado com `dentro`); a borda é quem tem um vizinho fora.
-function pintarForma(g, f, cx, cy, preenche, borda, tracejado = 0) {
+function pintarForma(g, f, cx, cy, preenche, borda, tracejado = 0, direto = false) {
+  // só os grandes (auras e alcance de defesa, ≥ 50 px), que não são áreas de golpe: estas seguem exatas, sem arredondar o centro
+  if (!direto && !preenche && f.tipo === "circulo" && f.raio >= 50 && Number.isInteger(f.raio)) return contornoCirculo(g, f, cx, cy, borda, tracejado);
   let x0, y0, x1, y1;
   if (f.tipo === "faixa") {
     x0 = Math.min(f.x1, f.x2) - f.largura - 1; x1 = Math.max(f.x1, f.x2) + f.largura + 1;
@@ -87,14 +106,42 @@ function pintarForma(g, f, cx, cy, preenche, borda, tracejado = 0) {
   }
 }
 
-function sombra(g, x, y, larg) {
-  g.fillStyle = "rgba(10,14,8,0.32)";
+// Os algarismos dos números de dano, 3 × 5 pixels desenhados à mão (e o "!" do crítico): nítidos em qualquer
+// ampliação, com um contorno escuro de 1 px que os separa de qualquer fundo.
+const DIGITOS = {
+  0: ["111", "101", "101", "101", "111"], 1: ["010", "110", "010", "010", "111"], 2: ["111", "001", "111", "100", "111"],
+  3: ["111", "001", "011", "001", "111"], 4: ["101", "101", "111", "001", "001"], 5: ["111", "100", "111", "001", "111"],
+  6: ["111", "100", "111", "101", "111"], 7: ["111", "001", "010", "010", "010"], 8: ["111", "101", "111", "101", "111"],
+  9: ["111", "101", "111", "001", "111"], "!": ["1", "1", "1", "0", "1"],
+};
+const COR_NUMERO = { normal: "#ffffff", forte: "#ffd84a", critico: "#ff8a3a", fogo: "#ffa45a", sangue: "#ff6060" };
+
+export function numeroPixel(g, texto, x, y, cor, esc = 1) {
+  const pts = [];
+  let ox = 0;
+  for (const ch of texto) {
+    const gl = DIGITOS[ch];
+    if (!gl) continue;
+    for (let r = 0; r < 5; r++) for (let c = 0; c < gl[r].length; c++) if (gl[r][c] === "1") pts.push([ox + c, r]);
+    ox += gl[0].length + 1;
+  }
+  const larg = (ox - 1) * esc, x0 = Math.round(x - larg / 2), y0 = Math.round(y);
+  g.fillStyle = "#15121a";
+  for (const [px, py] of pts) g.fillRect(x0 + px * esc - 1, y0 + py * esc - 1, esc + 2, esc + 2);
+  g.fillStyle = cor;
+  for (const [px, py] of pts) g.fillRect(x0 + px * esc, y0 + py * esc, esc, esc);
+}
+
+function sombra(g, x, y, larg, cor = "rgba(10,14,8,0.32)") {
+  g.fillStyle = cor;
   const m = Math.floor(larg / 2);
   g.fillRect(x - m, y, larg, 1);
   g.fillRect(x - m + 1, y + 1, larg - 2, 1);
 }
 
-const LARGURA_SOMBRA = { soldado: 6, arqueiro: 6, veterano: 7, estandarte: 6, campeao: 11, heroi: 9 };
+const LARGURA_SOMBRA = { soldado: 6, arqueiro: 6, veterano: 7, estandarte: 6, campeao: 11, lider: 12, heroi: 9 };
+// a sombra tingida pela cor do lado: no meio do choque, o pé de cada um diz de que lado ele está
+const SOMBRA_LADO = ["rgba(20,40,110,0.5)", "rgba(110,16,16,0.5)"];
 
 function poseTropa(u) {
   if (u.atordoado > 0 || u.congelado > 0) return "recuo";
@@ -158,6 +205,15 @@ export function desenhar(g, s) {
         g.fillStyle = i % 3 ? "#ff8a30" : "#ffe08a";
         g.fillRect(x, y - (i % 2), 1, 1 + (i % 2));
       }
+    } else if (z.tipo === "anel") {
+      const n = Math.floor((2 * Math.PI * z.raio) / 3);
+      for (let i = 0; i < n; i++) {
+        const an = (i / n) * Math.PI * 2, x = Math.round(z.x + Math.cos(an) * z.raio) - cx, y = Math.round(z.y + Math.sin(an) * z.raio) - cy;
+        const alt = Math.round((2 + ((i * 7 + Math.floor(rel * 10)) % 4)) * fim);
+        g.fillStyle = "#a8361f"; g.fillRect(x - 1, y, 3, 1);
+        g.fillStyle = "#ff8a30"; g.fillRect(x, y - alt, 1, alt);
+        g.fillStyle = "#ffe08a"; g.fillRect(x, y - Math.max(1, alt - 2), 1, 1);
+      }
     } else {
       const comp = Math.hypot(z.x2 - z.x1, z.y2 - z.y1), n = Math.floor(comp / 3);
       for (let i = 0; i <= n; i++) {
@@ -173,21 +229,46 @@ export function desenhar(g, s) {
     if (u.tipo !== "estandarte") continue;
     pintarForma(g, { tipo: "circulo", x: u.x, y: u.y, raio: u.def.aura }, cx, cy, null, "rgba(230,120,90,0.22)", 4);
   }
-  if (E.ordem && E.ordem.tipo === "defender") {
-    const o = E.ordem, x = Math.round(o.x) - cx, y = Math.round(o.y) - cy;
-    if (s.pausado || o.t < 3) pintarForma(g, { tipo: "circulo", x: o.x, y: o.y, raio: 85 }, cx, cy, null, "rgba(140,190,255,0.4)", 3);
+  // uma bandeira por ponto de defesa ainda em uso; o círculo do alcance aparece pausado, logo depois da ordem e
+  // quando alguém daquele grupo está selecionado
+  const pontos = new Map();
+  for (const u of m.lados[0]) {
+    const o = u.ordem;
+    if (!o || o.tipo !== "defender") continue;
+    const k = `${Math.round(o.x)}:${Math.round(o.y)}`;
+    const p = pontos.get(k) || { x: o.x, y: o.y, sel: false };
+    if (m.selecao && m.selecao.has(u.id)) p.sel = true;
+    pontos.set(k, p);
+  }
+  for (const p of pontos.values()) {
+    const x = Math.round(p.x) - cx, y = Math.round(p.y) - cy;
+    const recente = E.ordem && E.ordem.tipo === "defender" && E.ordem.t < 3 && Math.hypot(E.ordem.x - p.x, E.ordem.y - p.y) < 1;
+    if (s.pausado || p.sel || recente) pintarForma(g, { tipo: "circulo", x: p.x, y: p.y, raio: 85 }, cx, cy, null, "rgba(140,190,255,0.4)", 3);
     g.fillStyle = "#6a4521"; g.fillRect(x, y - 12, 1, 12);
-    g.fillStyle = "#76a8ea"; g.fillRect(x + 1, y - 12, 5, 3);
+    g.fillStyle = p.sel ? "#bff4ff" : "#76a8ea"; g.fillRect(x + 1, y - 12, 5, 3);
     g.fillStyle = "#4778c2"; g.fillRect(x + 1, y - 9, 4, 1);
-  } else if (E.ordem && E.ordem.t < 0.6) {
+  }
+  if (E.ordem && E.ordem.tipo !== "defender" && E.ordem.t < 0.6) {
     const r = 8 + E.ordem.t * 90;
     pintarForma(g, { tipo: "circulo", x: h.x, y: h.y, raio: r }, cx, cy, null, `rgba(140,190,255,${0.6 - E.ordem.t})`, 2);
   }
   // os avisos do campeão: o arco que o machado vai varrer, enchendo até o golpe
+  const avisos = [];
   for (const u of m.lados[1]) {
-    if (u.tipo !== "campeao" || !u.acao || !u.acao.forma) continue;
-    const k = 1 - Math.max(0, u.acao.t) / u.def.preparo;
+    if (!u.acao || !u.acao.forma) continue;
+    if (u.tipo !== "campeao" && u.tipo !== "lider") continue;
+    let k;
+    if (u.acao.tipo === "reunir") k = 1 - Math.max(0, u.acao.t) / u.def.carga.reunir;
+    else if (u.acao.tipo === "carga") k = 1;
+    else k = 1 - Math.max(0, u.acao.t) / u.def.preparo;
+    avisos.push(u.acao.forma);
     pintarForma(g, u.acao.forma, cx, cy, `rgba(220,40,30,${0.12 + 0.3 * k})`, "rgba(255,90,70,0.95)");
+  }
+  // o anel do líder inimigo, vermelho, como o dourado do herói
+  if (m.lider && !m.lider.morto) {
+    const [lx, ly] = pos(m.lider);
+    pintarForma(g, { tipo: "circulo", x: Math.round(lx), y: Math.round(ly), raio: 9 }, cx, cy, null, "rgba(255,70,50,0.8)", 0);
+    pintarForma(g, { tipo: "circulo", x: Math.round(lx), y: Math.round(ly), raio: m.lider.def.presenca }, cx, cy, null, "rgba(230,80,60,0.16)", 5);
   }
   // a preparação do herói e os pontos de chegada
   const a = h.acao;
@@ -224,7 +305,16 @@ export function desenhar(g, s) {
   const voadores = E.voadores.slice().sort((p, q) => p.y - q.y);
   const tipoDe = (u) => (u.tipo === "heroi" ? u.nomeHeroi : u.tipo);
   // sombras primeiro
-  for (const u of lista) { const [x, y] = pos(u); sombra(g, Math.round(x) - cx, Math.round(y) - cy, LARGURA_SOMBRA[u.tipo]); }
+  for (const u of lista) {
+    const [x, y] = pos(u), sx = Math.round(x) - cx, sy = Math.round(y) - cy;
+    sombra(g, sx, sy, LARGURA_SOMBRA[u.tipo], SOMBRA_LADO[u.lado]);
+    if (m.selecao && m.selecao.has(u.id)) {
+      // selecionado: um colchete claro em volta do pé
+      g.fillStyle = "#bff4ff";
+      g.fillRect(sx - 4, sy - 1, 1, 3); g.fillRect(sx + 4, sy - 1, 1, 3);
+      g.fillRect(sx - 3, sy + 2, 2, 1); g.fillRect(sx + 2, sy + 2, 2, 1);
+    }
+  }
   for (const v of voadores) sombra(g, Math.round(v.x) - cx, Math.round(v.y) - cy, Math.max(3, 6 - Math.round(v.z / 8)));
   let iv = 0;
   for (const u of lista) {
@@ -234,11 +324,16 @@ export function desenhar(g, s) {
     const img = u.flash > 0.03 ? (u.virado > 0 ? sp.bd : sp.be) : u.virado > 0 ? sp.d : sp.e;
     g.drawImage(img, Math.round(x - (u.virado > 0 ? sp.ax : sp.w - sp.ax)) - cx, Math.round(y - sp.ay) - cy);
     // a vida só das ameaças (sempre) e do veterano (por 1,5 s depois de apanhar): os soldados comuns caem de uma vez
-    if (u.def.elite || u.tipo === "veterano" && m.t - (u.ferido ?? -9) < 1.5) {
-      const larg = u.tipo === "campeao" ? 16 : 6;
-      barra(g, Math.round(x - larg / 2) - cx, Math.round(y - sp.ay) - cy - 4, larg, u.vida / u.vidaMax, "#e05a48", u.tipo === "campeao" ? 2 : 1);
+    // a vida: sempre nas ameaças; no veterano, só por 0,8 s depois de apanhar, curta, para o choque não virar barras
+    if (u.def.elite || u.tipo === "veterano" && m.t - (u.ferido ?? -9) < 0.8) {
+      const grande = u.tipo === "campeao" || u.tipo === "lider", larg = u.tipo === "lider" ? 18 : grande ? 16 : 5;
+      barra(g, Math.round(x - larg / 2) - cx, Math.round(y - sp.ay) - cy - 4, larg, u.vida / u.vidaMax, "#e05a48", grande ? 2 : 1);
     }
-    if (u.atordoado > 0.15 && (u.def.elite || u.tipo === "veterano")) {
+    const topo = Math.round(y - sp.ay) - cy;
+    if (u.sangra) { g.fillStyle = "#c8282a"; g.fillRect(Math.round(x + 2) - cx, topo + 3 + (Math.floor(rel * 6 + u.id) % 4), 1, 1); }
+    if (u.inspirado > 0 && Math.floor(rel * 5 + u.id) % 3 === 0) { g.fillStyle = "#ffe08a"; g.fillRect(Math.round(x - 2) - cx, topo + 1, 1, 1); }
+    if (u.reuniao) { g.fillStyle = "#ff5a48"; g.fillRect(Math.round(x) - cx, topo - 4, 1, 2); g.fillRect(Math.round(x) - cx, topo - 1, 1, 1); }
+    if ((u.atordoado > 0.15 || u.ofegante > 0) && (u.def.elite || u.tipo === "veterano")) {
       const t = rel * 8, top = Math.round(y - sp.ay) - cy - 2;
       g.fillStyle = "#f0cb62";
       g.fillRect(Math.round(x + Math.cos(t) * 4) - cx, top + Math.round(Math.sin(t) * 1), 1, 1);
@@ -272,6 +367,15 @@ export function desenhar(g, s) {
     }
   }
 
+  if (m.lider && !m.lider.morto) {
+    const l = m.lider, [x, y] = pos(l), sp = Q.lider[1][poseTropa(l)];
+    const img = l.flash > 0.03 ? (l.virado > 0 ? sp.bd : sp.be) : l.virado > 0 ? sp.d : sp.e;
+    g.drawImage(img, Math.round(x - (l.virado > 0 ? sp.ax : sp.w - sp.ax)) - cx, Math.round(y - sp.ay) - cy);
+    barra(g, Math.round(x - 9) - cx, Math.round(y - sp.ay) - cy - 4, 18, l.vida / l.vidaMax, "#e05a48", 2);
+  }
+  // os avisos de novo, só a borda, por cima dos corpos: o golpe preparado não se esconde atrás da multidão
+  for (const f of avisos) pintarForma(g, f, cx, cy, null, "rgba(255,110,90,0.55)", 2);
+
   // ---- o herói por cima de todos (nunca some no meio da multidão)
   {
     const [x, y] = pos(h);
@@ -287,7 +391,13 @@ export function desenhar(g, s) {
       g.globalAlpha = 1;
     }
     g.drawImage(img, Math.round(x - (h.virado > 0 ? sp.ax : sp.w - sp.ax)) - cx, Math.round(y - sp.ay - z) - cy);
-    if (!h.morto) barra(g, Math.round(x - 7) - cx, Math.round(y - sp.ay - z) - cy - 4, 14, h.vida / h.vidaMax, "#7fd36a");
+    if (!h.morto) {
+      const tx = Math.round(x) - cx, ty = Math.round(y - sp.ay - z) - cy - 4;
+      barra(g, tx - 7, ty, 14, h.vida / h.vidaMax, "#7fd36a");
+      // a seta dourada em cima: o herói se acha mesmo no meio do choque
+      g.fillStyle = "#15121a"; g.fillRect(tx - 3, ty - 6, 7, 4);
+      g.fillStyle = "#f0cb62"; g.fillRect(tx - 2, ty - 5, 5, 1); g.fillRect(tx - 1, ty - 4, 3, 1); g.fillRect(tx, ty - 3, 1, 1);
+    }
   }
 
   // ---- os efeitos por cima
@@ -319,6 +429,23 @@ export function desenhar(g, s) {
     g.fillRect(Math.round(p.x - t / 2) - cx, Math.round(p.y - p.z - t / 2) - cy, t, t);
   }
   g.globalAlpha = 1;
+  // ---- os números de dano do herói (por cima dos efeitos; o líder e o herói são redesenhados depois, para nunca sumirem atrás deles)
+  for (const n of E.numeros) {
+    const k = n.t / NUMEROS.vida, sobe = 10 * (1 - (1 - Math.min(1, k * 1.6)) ** 2);
+    g.globalAlpha = k > 0.72 ? Math.max(0, (1 - k) / 0.28) : 1;
+    const cor = n.t < 0.05 && (n.tipo === "critico" || n.tipo === "forte") ? "#ffffff" : COR_NUMERO[n.tipo];
+    numeroPixel(g, String(Math.round(n.valor)) + (n.tipo === "critico" ? "!" : ""), n.x + n.dx * 4 * k - cx, n.y - sobe - cy,
+      cor, n.tipo === "critico" ? 2 : 1);
+  }
+  g.globalAlpha = 1;
+  if (m.lider && !m.lider.morto) {
+    const l = m.lider, [x, y] = pos(l), sp = Q.lider[1][poseTropa(l)];
+    g.drawImage(l.virado > 0 ? sp.d : sp.e, Math.round(x - (l.virado > 0 ? sp.ax : sp.w - sp.ax)) - cx, Math.round(y - sp.ay) - cy);
+  }
+  if (!h.morto) {
+    const [x, y] = pos(h), sp = Q[h.nomeHeroi][0][poseHeroi(h)];
+    g.drawImage(h.virado > 0 ? sp.d : sp.e, Math.round(x - (h.virado > 0 ? sp.ax : sp.w - sp.ax)) - cx, Math.round(y - sp.ay - Math.round(h.z || 0)) - cy);
+  }
   for (const msg of E.mensagens) texto(g, msg.texto, msg.x - cx, msg.y - cy - msg.t * 10, "#ffe08a");
 
   // ---- quem importa e está fora da tela: setas na borda
@@ -326,7 +453,7 @@ export function desenhar(g, s) {
     if (!u.def.elite) continue;
     const x = u.x - cx, y = u.y - cy;
     if (x >= 0 && y >= 0 && x < W && y < H) continue;
-    seta(g, x, y, W, H, u.tipo === "campeao" ? "#ff5a48" : "#f0cb62");
+    seta(g, x, y, W, H, u.tipo === "lider" ? "#ff2a2a" : u.tipo === "campeao" ? "#ff5a48" : "#f0cb62");
   }
   // o mouse: uma mira de pixel
   if (s.mouse && !s.semMira) {

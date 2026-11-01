@@ -7,7 +7,7 @@ const p = await nav.newPage({ viewport: { width: +w, height: +h } });
 const erros = [];
 p.on("pageerror", (e) => erros.push(e.message));
 p.on("console", (m) => { if (m.type() === "error") erros.push(m.text()); });
-await p.goto(`${URL}?heroi=${heroi}&auto=1&robo=1`);
+await p.goto(`${URL}?heroi=${heroi}&auto=1&robo=1${process.env.EXTRA || ""}`);
 let t0 = Date.now();
 for (const t of tempos) {
   const espera = +t * 1000 - (Date.now() - t0);

@@ -13,7 +13,7 @@ const PALETA = {
   y: "#f0cb62", Y: "#b08530",
   c: "#f3ead2", C: "#c9b78a",
   v: "#ece4cf", V: "#bfb196", X: "#2e3a52", Z: "#46577a",
-  f: "#ffe08a", F: "#ff8a30", r: "#d2402c",
+  f: "#ffe08a", F: "#ff8a30", r: "#d2402c", R: "#8e2a22",
 };
 export const EQUIPES = [
   { t: "#76a8ea", T: "#4778c2", u: "#2d4f8a" },   // aliados: azul
@@ -273,6 +273,56 @@ const CAMPEAO = {
 };
 CAMPEAO.recuo = CAMPEAO.parado;
 
+// Harg, o Capitão: o corpo do campeão em armadura escura, chifres dourados no elmo, a capa vermelha atrás e um
+// contorno vermelho-escuro (o único inimigo com contorno: se acha no meio da tropa como o herói se acha na nossa).
+const LIDER = {
+  largura: 19, pe: 7, pernasLargura: true, contorno: "#4a0d0d",
+  cores: { t: "#5a5462", T: "#3c3744", u: "#221e28" },
+  parado: [
+    "..y.....y....hh....",
+    "..yy...yy...hhHh...",
+    "...yMMMy....hHHb...",
+    "...MhhhM.....hhb...",
+    "...MkhkM.......b...",
+    "..rHsSsHu......b...",
+    ".rRTTtttTTu....b...",
+    "rRTTttyttTTTssb....",
+    "rRuTtTytTtTu..b....",
+    "rRuTtTytTtTu.......",
+    ".RuTTTTTTTTu.......",
+    "..uuTTTTTuu........",
+  ],
+  preparo: [
+    ".............hh....",
+    "..y.....y...hhHh...",
+    "..yy...yy...hHHb...",
+    "...yMMMy.....hb....",
+    "...MhhhM....sb.....",
+    "...MkhkM...sb......",
+    "..rHsSsHu.Tb.......",
+    ".rRTTtttTTT........",
+    "rRTTttyttTTu.......",
+    "rRuTtTytTtTu.......",
+    ".RuTTTTTTTTu.......",
+    "..uuTTTTTuu........",
+  ],
+  golpe: [
+    "...................",
+    "..y.....y..........",
+    "..yy...yy..........",
+    "...yMMMy...........",
+    "...MhhhM...........",
+    "...MkhkM...........",
+    "..rHsSsHu..........",
+    ".rRTTtttTTu........",
+    "rRTTttyttTTTssbbbhh",
+    "rRuTtTytTtTu...hHHh",
+    "rRuTTTTTTTTu....hh.",
+    "..uuTTTTTuu........",
+  ],
+};
+LIDER.recuo = LIDER.parado;
+
 const GUERREIRO = {
   largura: 17, pe: 6, heroi: true,
   parado: [
@@ -394,7 +444,7 @@ const MAGO = {
 };
 
 export const MODELOS = { soldado: SOLDADO, arqueiro: ARQUEIRO, veterano: VETERANO, estandarte: ESTANDARTE,
-  campeao: CAMPEAO, guerreiro: GUERREIRO, mago: MAGO };
+  campeao: CAMPEAO, lider: LIDER, guerreiro: GUERREIRO, mago: MAGO };
 
 function montar(modelo, pose, pernas) {
   const tronco = modelo[pose];
@@ -471,7 +521,7 @@ export function prepararSprites() {
   for (const [tipo, mod] of Object.entries(MODELOS)) {
     Q[tipo] = [];
     for (let eq = 0; eq < 2; eq++) {
-      const cores = EQUIPES[eq], poses = {};
+      const cores = mod.cores || EQUIPES[eq], poses = {};
       const def = mod.pernas || "juntas";
       const quadros = {
         parado: montar(mod, "parado", def), andarA: montar(mod, "parado", mod.pernas ? def : "abertas"),
@@ -481,7 +531,8 @@ export function prepararSprites() {
       for (const [pose, linhas] of Object.entries(quadros)) {
         let img = pintar(linhas, cores), br = pintar(linhas, cores, "#ffffff");
         let ax = mod.pe + 0.5, ay = linhas.length;
-        if (mod.heroi) { img = contornar(img, "#16131c"); br = contornar(br, "#16131c"); ax += 1; ay += 1; }
+        const borda = mod.heroi ? "#16131c" : mod.contorno;
+        if (borda) { img = contornar(img, borda); br = contornar(br, borda); ax += 1; ay += 1; }
         poses[pose] = { d: img, e: espelhar(img), bd: br, be: espelhar(br), ax, ay, w: img.width, h: img.height };
       }
       const r = poses.recuo;

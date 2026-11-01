@@ -33,11 +33,11 @@ for (const tipo of Object.keys(MODELOS)) {
 // o grupo no tamanho do jogo
 for (const z of [2, 3]) {
   const t = document.createElement("div"); t.textContent = `tamanho do jogo (${z}×)`; raiz.append(t);
-  const c = document.createElement("canvas"); c.width = 220 * z; c.height = 70 * z;
+  const c = document.createElement("canvas"); c.width = 230 * z; c.height = 70 * z;
   const g = c.getContext("2d"); g.imageSmoothingEnabled = false; g.scale(z, z);
   g.fillStyle = "#5a7748"; g.fillRect(0, 0, 220, 70);
   const lista = [["guerreiro", 0, 20, 40], ["mago", 0, 40, 40], ["soldado", 0, 60, 30], ["soldado", 0, 70, 38], ["arqueiro", 0, 64, 50],
-    ["veterano", 1, 120, 34], ["soldado", 1, 130, 28], ["soldado", 1, 132, 44], ["arqueiro", 1, 150, 36], ["estandarte", 1, 165, 40], ["campeao", 1, 190, 44]];
+    ["veterano", 1, 120, 34], ["soldado", 1, 130, 28], ["soldado", 1, 132, 44], ["arqueiro", 1, 150, 36], ["estandarte", 1, 165, 40], ["campeao", 1, 190, 44], ["lider", 1, 210, 52]];
   for (const [tipo, eq, x, y] of lista) {
     const s = Q[tipo][eq].parado;
     g.fillStyle = "rgba(0,0,0,0.28)"; g.fillRect(x - 3, y - 1, 7, 2);

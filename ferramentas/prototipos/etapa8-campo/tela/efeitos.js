@@ -8,7 +8,7 @@ export function criarEfeitos(sorteio) {
   const marcas = document.createElement("canvas");
   marcas.width = CAMPO.largura;
   marcas.height = CAMPO.altura;
-  return { voadores: [], particulas: [], cortes: [], aneis: [], explosoes: [], avisos: [], marcas,
+  return { voadores: [], particulas: [], cortes: [], aneis: [], explosoes: [], avisos: [], marcas, numeros: [],
     gm: marcas.getContext("2d"), trauma: 0, chute: { x: 0, y: 0 }, pausaPedida: 0, rng: sorteio, mensagens: [],
     sons: [], ordem: null };
 }
@@ -78,10 +78,32 @@ function marcaRachada(E, x, y, raio) {
   }
 }
 
+// Os números de dano do herói. Um por acerto, com o valor que saiu da vida; o crítico é maior e laranja, o golpe forte
+// amarelo, o básico branco. O dano contínuo (fogo, sangramento) soma por alvo: um tique que chega até 0,6 s depois do
+// anterior entra no mesmo número, que se renova; parado mais que isso, o próximo começa outro.
+export const NUMEROS = { vida: 0.7, somaContinuo: 0.6, maximo: 70 };
+function numeroDeDano(E, e) {
+  if (e.sutil) {
+    const j = E.numeros.find((n) => n.id === e.id && n.continuo === e.elemento && n.t - n.ultimo < NUMEROS.somaContinuo);
+    if (j) { j.valor += e.valor; j.ultimo = j.t; j.t = Math.min(j.t, 0.15); j.ultimo = j.t; return; }
+  }
+  const tipo = e.sutil ? e.elemento || "fogo" : e.critico ? "critico" : e.forte ? "forte" : "normal";
+  E.numeros.push({ id: e.id, x: e.x + (E.rng() - 0.5) * 6, y: e.y - 13, dx: e.dx || 0, valor: e.valor, tipo, t: 0, ultimo: 0,
+    continuo: e.sutil ? e.elemento : null });
+  if (E.numeros.length > NUMEROS.maximo) E.numeros.splice(0, E.numeros.length - NUMEROS.maximo);
+}
+
 /** Consome os eventos do passo: o que aparece, quanto treme, quanto para, que sons tocam. */
 export function receber(E, eventos, m) {
   for (const e of eventos) {
     switch (e.tipo) {
+      case "dano": numeroDeDano(E, e); break;
+      case "carga": tremer(E, 0.2); poeira(E, e.x, e.y, 12, 40); E.sons.push("investida"); break;
+      case "fimCarga": poeira(E, e.x, e.y, 10, 35); E.sons.push("aterrissa"); break;
+      case "liderCaiu":
+        E.aneis.push({ x: e.x, y: e.y, r0: 8, r1: e.raio, t: 0, dur: 0.7, cor: "#ff6a4a" });
+        tremer(E, 0.5); E.pausaPedida = Math.max(E.pausaPedida, 90); E.sons.push("trompa");
+        break;
       case "acerto": {
         if (e.forte) faiscas(E, e.x, e.y - 4, e.dx, e.dy, 3);
         else faiscas(E, e.x, e.y - 4, e.dx, e.dy, 2, "#ffffff");
@@ -125,11 +147,12 @@ export function receber(E, eventos, m) {
           E.aneis.push({ x: e.x1, y: e.y1, r0: 10, r1: 2, t: 0, dur: 0.18, cor: "#fff1c4" });
           E.sons.push("piscar");
         }
-        if (e.id === "muralha") E.sons.push("fogo");
+        if (e.id === "muralha" || e.id === "anel") E.sons.push("fogo");
+        if (e.id === "grito") { E.aneis.push({ x: e.x, y: e.y, r0: 6, r1: e.raio, t: 0, dur: 0.4, cor: "#f0cb62" }); E.sons.push("trompa"); }
         if (e.id === "varredura") E.sons.push("varredura");
         if (e.tremor) tremer(E, e.tremor, Math.cos(e.dir || 0), Math.sin(e.dir || 0));
         if (e.pausa) E.pausaPedida = Math.max(E.pausaPedida, e.pausa);
-        if (e.abates >= 4) E.mensagens.push({ texto: `${e.abates} derrubados`, t: 0, x: e.x ?? m.heroi.x, y: (e.y ?? m.heroi.y) - 18 });
+        if (e.abates >= 6) E.mensagens.push({ texto: `${e.abates} derrubados`, t: 0, x: e.x ?? m.heroi.x, y: (e.y ?? m.heroi.y) - 18 });
         break;
       }
       case "disparo":
@@ -143,7 +166,7 @@ export function receber(E, eventos, m) {
         g.fillRect(Math.round(e.x), Math.round(e.y) - 1, 1, 2);
         break;
       }
-      case "aviso": E.sons.push("aviso"); break;
+      case "aviso": E.sons.push(e.lider ? "trompa" : "aviso"); break;
       case "golpeCampeao":
         E.cortes.push({ forma: e.forma, t: 0, dur: 0.14, forte: true, inimigo: true });
         poeira(E, e.x + Math.cos(e.forma.ang) * 14, e.y + Math.sin(e.forma.ang) * 14, 10, 45);
@@ -204,12 +227,27 @@ export function avancar(E, dt) {
   }
   E.particulas = E.particulas.filter((p) => p.vida < p.max);
   if (E.particulas.length > 900) E.particulas.splice(0, E.particulas.length - 900);
-  for (const lista of [E.cortes, E.aneis, E.explosoes, E.mensagens]) for (const c of lista) c.t += dt;
+  for (const lista of [E.cortes, E.aneis, E.explosoes, E.mensagens, E.numeros]) for (const c of lista) c.t += dt;
+  E.numeros = E.numeros.filter((n) => n.t < NUMEROS.vida);
   E.cortes = E.cortes.filter((c) => c.t < c.dur);
   E.aneis = E.aneis.filter((c) => c.t < c.dur);
   E.explosoes = E.explosoes.filter((c) => c.t < c.dur);
   E.mensagens = E.mensagens.filter((c) => c.t < 0.9);
   if (E.ordem) { E.ordem.t += dt; if (E.ordem.t > 2.5 && E.ordem.tipo !== "defender") E.ordem = null; }
+}
+
+const apagados = new Map();
+function apagado(img) {
+  let c = apagados.get(img);
+  if (!c) {
+    c = document.createElement("canvas");
+    c.width = img.width; c.height = img.height;
+    const g = c.getContext("2d");
+    g.filter = "saturate(0.3) brightness(0.55)";
+    g.drawImage(img, 0, 0);
+    apagados.set(img, c);
+  }
+  return c;
 }
 
 /** Os corpos que pousaram viram marca no chão (o caído, mais escuro); chamado pelo desenho, que tem os sprites. */
@@ -221,11 +259,10 @@ export function pousarCorpos(E, Q, todos) {
     if (!tipo || !Q[tipo]) continue;
     const s = Q[tipo][v.eq].caido;
     g.save();
-    // o corpo no chão: apagado e escuro, para não se ler como alguém de pé
+    // o corpo no chão: apagado e escuro, para não se ler como alguém de pé (feito uma vez por sprite e guardado: o
+    // filtro a cada corpo pesava quando uma área derrubava quinze de uma vez)
     g.globalAlpha = 0.7;
-    g.filter = "saturate(0.3) brightness(0.55)";
-    g.drawImage(v.giroDir > 0 ? s.d : s.e, Math.round(v.x - s.ax), Math.round(v.y - s.ay));
-    g.filter = "none";
+    g.drawImage(apagado(v.giroDir > 0 ? s.d : s.e), Math.round(v.x - s.ax), Math.round(v.y - s.ay));
     g.restore();
   }
   E.voadores = ficam;

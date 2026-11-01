@@ -9163,3 +9163,30 @@ foi automatizado.
 - **Parado aqui:** o Jean joga e responde a seção 14 do 30 (o critério: fluido, legível, satisfatório, vontade de
   repetir). Depois: decidir se o campo livre segue e, se seguir, o que vem primeiro (seção 13 do 30).
 
+### 01/11/2026 (data do computador local) — Etapa 8: o Campo Livre 2 (protótipo, nada no jogo)
+
+- **Aprovado pelo Jean:** jogou o Campo Livre 1 e achou "extremamente divertido": a direção do campo livre continua **no
+  protótipo, sem integração ao jogo**. Gostou das tropas pequenas, do herói muito mais forte, dos golpes que derrubam
+  vários, dos arremessos e explosões e do tremor no máximo; pediu para **não enfraquecer o herói** (o desafio vem das
+  ameaças, do posicionamento e de onde intervir).
+- **Feito (em teste, nada aprovado ainda):** a rodada 2 no [30](30-ETAPA8-CAMPO-LIVRE.md) e o protótipo
+  ([`etapa8-campo/`](../ferramentas/prototipos/etapa8-campo/LEIA-ME.md), versão **Campo Livre 2**; a v1 congelada em
+  `tela-v1/`, aberta em `/v1/`): números de dano do herói (fonte de pixel, crítico de 10% a 1,5× maior e laranja, dano
+  contínuo inteiro e somado por alvo), **Harg, o Capitão** (machado, Carga com reunião e faixa no chão, interrompível,
+  ofegante depois; Presença; derrotado, a tropa perto foge e o resto se abala; enquanto vive, ninguém foge), **modo de
+  comando** com Shift segurado ou pausado (arrasto seleciona sem atacar; botão direito, Defender ali), F1 soldados, F2
+  arqueiros, F3 indisponível, F4 todos, X limpa, Ctrl soma, ordens 1/2/3 para a seleção (sem seleção, para todos), cada
+  tropa com a sua ordem; leitura (sombra tingida por lado, vão de 1,6 px entre lados, seta no herói, barras menores,
+  avisos redesenhados por cima); três encontros novos (Grupos espalhados, Duas frentes, O Capitão e a retaguarda) além
+  da primeira batalha; quatro versões de habilidade (Varredura Sangrenta, Grito de Guerra, Bola Incendiária, Anel de
+  Fogo); a contribuição das tropas no fim (inimigos ocupados, dano seguro, flechas). Tremor começa em 150%.
+- **Corrigido de passagem:** a barra de vida do herói sumia depois do primeiro golpe (o nome de animação `dor` colidia
+  com o CSS do jogo); a v1 ficou como estava.
+- **Conferido:** 22 testes da simulação; no navegador, seleção e ordens com teclado e mouse de verdade (o arrasto não
+  ataca, a ordem só chega aos selecionados, a seleção e a mira são iguais com o tremor no máximo, pausado funciona, F1–F4
+  não abrem nada do navegador), a resposta igual à da v1, desempenho nas duas janelas e quantidades, capturas,
+  sequências e vídeos. O jogo não mudou (1.220.0): suíte, gabarito, pyflakes e fumaça.
+- **Aviso de ambiente:** um `demo.bat` antigo aberto segura a porta 8801 e diz "Campo Livre 1" em /api/versao, mas serve
+  os arquivos novos do disco; feche-o antes de abrir de novo (o novo usa a próxima porta livre e diz qual).
+- **Parado aqui:** o Jean joga e responde a R2.9 do 30.
+

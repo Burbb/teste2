@@ -1,6 +1,11 @@
 # 30 — Etapa 8: o combate em campo livre (herói em tempo real e tropas pequenas)
 
-**31/10/2026.** Pedido do Jean: depois de jogar o protótipo tático (o [29](29-ETAPA8-COMBATE-TATICO.md)) e gostar do
+**31/10/2026 (rodada 1) e 01/11/2026 (rodada 2).** A rodada 2 (Campo Livre 2: números de dano, o líder inimigo, o
+modo de comando e a seleção, a leitura do choque, três encontros e quatro versões de habilidade) está logo abaixo, antes
+das seções 0 a 14, que são a rodada 1 (Campo Livre 1). **A direção foi aprovada pelo Jean para continuar no protótipo,
+sem integração.**
+
+Rodada 1. Pedido do Jean: depois de jogar o protótipo tático (o [29](29-ETAPA8-COMBATE-TATICO.md)) e gostar do
 ganho espacial, **investigar direto o combate em campo livre**: controle direto do herói, em tempo real, no meio de
 tropas pequenas que lutam sozinhas, com poucas ordens coletivas. Pesquisa orientada à implementação e um protótipo
 isolado. **O combate do jogo não mudou (1.220.0); a integração continua pendente de avaliação.**
@@ -28,7 +33,251 @@ preservada como histórico, sem expansão nesta rodada), o [plano 23](23-PLANO-D
 | 13 | O que esta direção mudaria no jogo (não implementado) | Estimativa |
 | 14 | O que avaliar jogando | Para o Jean |
 
+
+## Rodada 2 (01/11/2026): Campo Livre 2
+
+**O que o Jean aprovou** (depois de jogar o Campo Livre 1): a direção, "extremamente divertido", para continuar **no
+protótipo, sem integração**. Gostou especialmente das tropas pequenas, do herói muito mais forte que um soldado, dos
+golpes que derrubam vários, dos arremessos e explosões e do **tremor no máximo** (150%). Pediu para não reduzir o poder
+do herói por ele matar muito (o desafio vem das ameaças, do posicionamento e de onde intervir) e para ampliar leitura,
+confrontos, escolhas de habilidades e comando de tropas sem perder a fluidez e o impacto.
+
+**Em teste nesta rodada (nada aprovado ainda):** os números de dano, o líder inimigo, o modo de comando e a seleção, as
+mudanças de leitura, os três encontros novos e as quatro versões de habilidade. A primeira versão fica congelada em
+`tela-v1/` e abre em `/v1/` (o link está na tela de escolha), para comparar.
+
+| Seção | O que tem |
+|---|---|
+| R2.1 | Números de dano |
+| R2.2 | O líder inimigo: Harg, o Capitão |
+| R2.3 | Modo de comando, seleção e ordens por grupo |
+| R2.4 | Leitura do choque das tropas |
+| R2.5 | Os encontros |
+| R2.6 | As versões das habilidades |
+| R2.7 | O que as tropas fazem além de matar |
+| R2.8 | Verificação e desempenho |
+| R2.9 | Limitações conhecidas e o que precisa da avaliação do Jean |
+
+### R2.1. Números de dano
+
+- **Só o dano do herói**, no momento do impacto, nascendo em cima do alvo atingido (a 13 px do pé, com 3 px de
+  variação para os lados), subindo 10 px e indo um pouco na direção do golpe; somem em 0,7 s. Nenhum número do dano
+  entre soldados.
+- **O valor é o dano do golpe que entrou na conta** (o mesmo `ferir` que tira a vida, um evento por acerto). Num alvo
+  que morre, a vida para em 0 e o número mostra o golpe inteiro (13 num soldado de 12): é o valor que a habilidade
+  causa, não um número inventado. Os testes conferem um número por atingido e, em quem sobrevive, número = vida que saiu.
+- **Distinção sem legenda:** básico em branco; golpe forte (Varredura, Salto, Bola, arremate, Investida) em amarelo;
+  **crítico** maior (algarismos com o dobro do tamanho), laranja, com "!" e um quadro branco no nascimento. O crítico é
+  uma regra nova e real: **10% de chance por acerto de 1,5× (arredondado)** nos golpes diretos do herói, nos dois
+  heróis; aparece na ficha de cada um na escolha.
+- **Dano contínuo** (o fogo do chão, a Muralha, o Anel, o Sangramento) agora é **inteiro e de meio em meio segundo**
+  (3, 7, 4 e 3 por tique, os mesmos totais de antes). Na tela, **soma por alvo**: um tique que chega até 0,6 s depois do
+  anterior entra no mesmo número, que se renova; fogo em laranja-claro, sangue em vermelho.
+- **Fonte própria:** algarismos de 3 × 5 pixels desenhados à mão com contorno escuro de 1 px; nítidos em qualquer
+  ampliação e legíveis sobre o fogo e o piso. Desenhados **por cima dos efeitos** (a explosão não os cobre); o herói e o
+  líder são **redesenhados depois**, para os números nunca os esconderem. No máximo 70 números ao mesmo tempo.
+- **Durante o tremor**, os números tremem junto com o campo (estão presos ao lugar do acerto); a mira, o retângulo de
+  seleção e a HUD não tremem (R2.3).
+
+### R2.2. O líder inimigo: Harg, o Capitão
+
+No encontro "O Capitão e a retaguarda". Não é um soldado com muita vida: tem três ferramentas e uma função de comando.
+
+| | Como funciona | Como responder |
+|---|---|---|
+| **Machado** | O golpe do campeão: arco de 150° anunciado no chão por 0,7 s; 26 no herói, 8 nos soldados (e os arremessa) | Sair do arco; um golpe forte na preparação o interrompe |
+| **Carga** (comando) | A cada 11 s (a primeira aos 6 s), escolhe o nosso grupo mais denso entre 50 e 170 px (o herói vale três), **reúne até 10 soldados** perto dele por 1 s e marca a **faixa** de 150 px no chão; depois corre a faixa a 150 px/s atropelando quem está nela (14 nos soldados, 22 no herói, empurrão de lado) e os reunidos correm junto e chegam com **ímpeto** (dano dobrado por 2 s) | Sair da faixa; **um golpe forte na reunião desfaz a carga** e solta os reunidos; depois da carga ele fica **ofegante por 1,2 s**, parado e levando **+50% de dano** |
+| **Presença** (comando) | A até 90 px (o círculo vermelho tracejado), os soldados dele atacam 33% mais rápido, são empurrados pela metade e **não se abalam** | Tirá-lo de perto da tropa, ou derrubá-lo |
+
+- **Reconhecível:** armadura escura, chifres dourados, capa e **contorno vermelhos** (o único inimigo com contorno),
+  anel vermelho no chão, barra de vida maior, a **barra do Capitão no alto da tela** com o estado ("Reúne 8 para a
+  carga!", "Ofegante: leva +50% de dano", "Presença: 12 soldados firmes"), e seta vermelha na borda quando sai da tela.
+- **Vida 380**, massa 7 (pouco empurrado), atordoamento reduzido como as outras ameaças, mas interrompível.
+- **Consequência da derrota** (aparece na apresentação do encontro): **a tropa a até 150 px dele foge do campo; o resto
+  se abala por 3 s; a batalha continua.** E, enquanto ele estiver de pé, **ninguém foge** (a vitória por 20% só vale
+  depois que ele cai).
+- **A escolha:** as cargas vão para onde as nossas tropas estão juntas; ir atrás dele deixa a frente com os soldados, e
+  ficar com eles deixa a carga sair. Com a Varredura Sangrenta (que não interrompe), a mesma batalha ficou muito mais
+  difícil para o jogador automático (107 s e 36 tropas perdidas, contra 45 s e 19 com a original; seção R2.7).
+
+### R2.3. Modo de comando, seleção e ordens por grupo
+
+**A solução:** **Shift segurado** liga o modo de comando (temporário: soltou, voltou ao combate); **pausado, o mouse já
+está em modo de comando**. Escolhi segurar em vez de alternar porque a ordem dura um instante e o herói continua andando
+com WASD enquanto o Shift está apertado: não há um estado esquecido ligado que transforme um clique de ataque em
+seleção. O estado aparece embaixo da ficha ("Combate · segure Shift para comandar" / "Comando: arraste para
+selecionar…") e a mira troca a cruz por quatro cantos claros.
+
+| No modo de combate | No modo de comando (Shift ou pausado) |
+|---|---|
+| botão esquerdo: ataque básico (como antes) | botão esquerdo **arrastado**: retângulo que seleciona as tropas aliadas dentro dele, sem golpe nenhum; um clique numa tropa seleciona só ela; um clique no vazio limpa; com Ctrl, soma |
+| botão direito: habilidade | botão direito: **Defender ali** (para a seleção ou, sem seleção, para todos) |
+
+- **Por tipo:** **F1 Soldados, F2 Arqueiros, F4 Todos, X limpa, Ctrl soma** (funcionam em qualquer modo, também
+  pausado). **F3 fica indisponível** ("—" no placar e um aviso curto): este exército só tem dois tipos, e não se criou
+  um terceiro para preencher a tecla. F1 a F4 não abrem a ajuda nem a busca do navegador (`preventDefault` e o evento
+  `help`).
+- **As ordens** (1 Acompanhar, 2 Atacar, 3 Defender no ponto do mouse) **valem para a seleção; sem seleção, para o
+  exército inteiro** (o jeito rápido de comandar todos continua o de antes). Quem não recebeu a ordem mantém a sua.
+  Cada tropa guarda a própria ordem; os anéis em volta do herói e dos pontos de defesa são contados dentro de cada grupo.
+- **Na tela:** colchete claro em volta do pé de cada selecionado; no placar, os tipos com quantos há, a seleção com
+  quantos e de que tipo, e as ordens com **quantos cumprem cada uma** ("Acompanhar 16 · Atacar 14 · Defender aqui 12");
+  uma bandeira por ponto de defesa em uso (o alcance aparece pausado, logo depois da ordem e quando aquele grupo está
+  selecionado).
+- **A seleção não passa o controle do herói** (o herói nunca entra nela). **Mortos saem da seleção** no passo seguinte.
+- **O tremor:** a mira, o retângulo e a conversão do mouse para o campo usam a câmera **sem** o tremor (o tremor é só
+  visual): com trauma 1 e intensidade 150%, o mouse aponta para o mesmo ponto e o mesmo arrasto pega as mesmas tropas
+  (medido, R2.8).
+
+### R2.4. Leitura do choque das tropas
+
+- **Herói:** além do contorno, do anel dourado e de ser desenhado por cima, uma **seta dourada** em cima da barra.
+- **Lados:** a sombra no pé ficou **tingida** (azul nos nossos, vermelha nos deles): no meio do choque, o pé diz o lado.
+- **Separação:** entre lados diferentes, o vão mínimo passou de 0,4 para **1,6 px**: as duas linhas encostam sem se
+  misturar; dentro do mesmo lado continua 0,4 (os grupos seguem densos para as áreas).
+- **Barras:** sempre nas ameaças (o Capitão maior); no veterano, **5 px por 0,8 s** depois de apanhar (eram 6 px por
+  1,5 s): o choque não vira uma faixa de barras.
+- **Golpes preparados:** o arco do machado e a faixa da carga são pintados no chão e **redesenhados por cima dos corpos**
+  (só a borda): não se escondem atrás da multidão.
+- **Estados à vista em 1 px:** gota vermelha (sangrando), brilho dourado (inspirado pelo Grito), "!" vermelho
+  (reunido para a carga), estrelas (atordoado ou ofegante).
+- **Corrigido de passagem:** a barra de vida do herói na ficha **sumia** depois do primeiro golpe recebido (também na
+  v1): a animação usava o nome `dor`, que o CSS do jogo já usa com `opacity: 0`. Na v2 o nome é próprio; a v1 ficou como
+  estava (congelada).
+
+### R2.5. Os encontros
+
+Escolhidos na tela inicial, cada um sempre igual (mesma semente). A apresentação mostra a descrição e a regra.
+
+| Encontro | O que é | O que muda para o jogador |
+|---|---|---|
+| **A primeira batalha** | A do Campo Livre 1, preservada (mesmo código de montagem) | A referência |
+| **Grupos espalhados** | 7 grupos pequenos (soldados, veteranos, dois postos de arqueiros, o porta-estandarte com escolta) longe uns dos outros, acordando em tempos diferentes, quando alguém chega a 80 px ou quando um dos seus apanha; aos 35 s, mais um grupo pelo norte | Cada área pega menos; quem decide é onde o herói está e qual grupo ele acorda; "Defender" segura um grupo enquanto o herói vai a outro |
+| **Duas frentes** | Herói e tropas no meio; um exército vem do oeste, outro do leste (com o porta-estandarte), e o campeão chega pelo sul aos 25 s | É preciso dividir: F2 + Defender num lado, os soldados no outro, o herói onde a linha cede |
+| **O Capitão e a retaguarda** | Linha de 18 soldados e 8 veteranos, Harg com a guarda de 10, e uma **retaguarda de 22 arqueiros que atira do posto** (não avança); reforço de 12 aos 40 s | Mergulhar nos arqueiros (as tropas seguram a frente) ou enfrentar Harg; tirar as tropas da faixa da carga |
+
+Na opção "Maior", cada bloco comum dobra (líder, campeão e porta-estandarte não).
+
+### R2.6. As versões das habilidades
+
+Escolhidas na tela inicial, por herói; a original continua como opção. Cada uma muda o uso, não só os números.
+
+| Herói · tecla | Original | Versão | O que muda |
+|---|---|---|---|
+| Guerreiro · botão direito | **Varredura**: 13, empurra e atordoa, arremessa quem cai | **Varredura Sangrenta**: 7 no golpe + Sangramento de 3 a cada 0,5 s por 3 s (18), quase sem empurrão, sem atordoar | Os inimigos ficam onde estão (as tropas os seguram), morrem 1 a 2 s depois; **não interrompe** o machado nem a carga |
+| Guerreiro · Espaço | **Investida**: 100 px, joga para os lados | **Grito de Guerra**: aliados a até 70 px atacam 67% mais rápido e recuperam 2 de vida por segundo por 6 s; abala por 1,5 s os inimigos comuns colados (45 px); recarga 10 s | Troca a mobilidade por apoio: o herói luta **junto** das tropas em vez de abrir caminho sozinho |
+| Mago · botão direito | **Bola de Fogo**: 13, arremessa, chão de 2 s | **Bola Incendiária**: 6 no impacto, sem arremesso, chão de 38 px por 4 s (3 a cada 0,5 s) que os inimigos **contornam** | De explosão que limpa para **terreno que nega passagem**: tampar um vão, proteger as tropas |
+| Mago · Q | **Muralha de Fogo**: parede de 96 px | **Anel de Fogo**: anel de 32 px de raio por 5 s; **ninguém atravessa a linha** (dentro fica dentro), a linha queima 4 a cada 0,5 s | **Prender** um grupo (ou o Capitão, longe da guarda) para as Bolas, ou cercar as tropas |
+
+### R2.7. O que as tropas fazem além de matar
+
+O fim de cada batalha mostra, além dos derrubados: **inimigos ocupados pelas tropas** (soma do tempo em que cada inimigo
+estava atacando uma tropa, não o herói), **dano que as tropas seguraram** e **flechas inimigas nas tropas e no herói**.
+Medido com `ferramentas/simular.mjs` (jogador automático forte, batalha normal, uma semente):
+
+| Encontro · herói · kit | Resultado | Tempo | Derrubados herói / tropas | Perdas | Inimigos ocupados (inimigo × s) | Dano que as tropas seguraram | Flechas nas tropas / no herói |
+|---|---|---|---|---|---|---|---|
+| Primeira batalha · guerreiro · original | vitória | 24 s | 70 / 12 | 0 de 42 | 500 | 135 | 25 / 10 |
+| Primeira batalha · guerreiro · sangrenta+grito | vitória | 29 s | 57 / 23 | 0 de 42 | 660 | 219 | 37 / 8 |
+| Primeira batalha · mago · original | vitória | 25 s | 72 / 11 | 2 de 42 | 536 | 290 | 22 / 2 |
+| Primeira batalha · mago · incendiaria+anel | vitória | 27 s | 55 / 24 | 14 de 42 | 659 | 425 | 18 / 1 |
+| Primeira batalha · só as tropas | derrota | 45 s | 0 / 11 | 39 de 42 | 2199 | 581 | 38 / 54 |
+| Grupos espalhados · guerreiro · original | vitória | 42 s | 29 / 29 | 3 de 42 | 515 | 241 | 18 / 0 |
+| Grupos espalhados · guerreiro · sangrenta+grito | vitória | 44 s | 35 / 26 | 7 de 42 | 629 | 260 | 12 / 0 |
+| Grupos espalhados · mago · original | vitória | 37 s | 44 / 15 | 3 de 42 | 442 | 209 | 25 / 0 |
+| Grupos espalhados · mago · incendiaria+anel | vitória | 40 s | 21 / 36 | 1 de 42 | 532 | 216 | 13 / 0 |
+| Grupos espalhados · só as tropas | vitória | 90 s | 0 / 54 | 32 de 42 | 934 | 518 | 3 / 0 |
+| Duas frentes · guerreiro · original | vitória | 23 s | 41 / 16 | 2 de 42 | 394 | 144 | 7 / 0 |
+| Duas frentes · guerreiro · sangrenta+grito | vitória | 25 s | 38 / 15 | 0 de 42 | 454 | 89 | 13 / 1 |
+| Duas frentes · mago · original | vitória | 32 s | 40 / 12 | 3 de 42 | 652 | 241 | 16 / 0 |
+| Duas frentes · mago · incendiaria+anel | vitória | 27 s | 34 / 20 | 0 de 42 | 604 | 199 | 11 / 0 |
+| Duas frentes · só as tropas | derrota | 38 s | 0 / 17 | 41 de 42 | 1388 | 602 | 26 / 31 |
+| O Capitão · guerreiro · original | vitória | 45 s | 47 / 24 | 19 de 42 | 342 | 431 | 0 / 6 |
+| O Capitão · guerreiro · sangrenta+grito | vitória | 107 s | 48 / 22 | 36 de 42 | 460 | 649 | 4 / 44 |
+| O Capitão · mago · original | vitória | 31 s | 56 / 15 | 13 de 42 | 291 | 358 | 0 / 2 |
+| O Capitão · mago · incendiaria+anel | vitória | 37 s | 43 / 28 | 30 de 42 | 358 | 591 | 1 / 1 |
+| O Capitão · só as tropas | derrota | 92 s | 0 / 35 | 36 de 42 | 1265 | 575 | 0 / 0 |
+
+Leitura: **as versões mudam o papel das tropas** mais que o resultado. Com Sangrenta + Grito, as tropas derrubam 23 na
+batalha original (12 com o kit original) e ficam mais tempo ocupando inimigos (660 contra 500); com Incendiária + Anel,
+24 a 36 (11 a 15 com o original), porque o herói prende e nega terreno e elas acabam o serviço. No Capitão, as tropas
+**seguram** o dobro do dano (431 a 649) e perdem muito mais: é onde a carga cai. Sem o herói, as tropas ocupam muito os
+inimigos (1265 a 2199) e perdem, exceto nos grupos espalhados (vencem em 90 s perdendo 32 de 42). Os números são de um
+jogador automático preciso: comparam encontros e kits entre si, não preveem uma partida de uma pessoa.
+
+### R2.8. Verificação e desempenho
+
+**Testes da simulação** (`node --test testes/sim.test.mjs`, 22): os 14 da v1 e mais: o número é o dano do golpe (um por
+atingido; vida que saiu = número em quem sobrevive); uma explosão em 15+ veteranos dá um número por atingido e a soma
+bate; os tiques do fogo são inteiros; crítico perto de 10% e = 1,5× arredondado; a ordem chega só à seleção (sem
+seleção, a todos; os outros mantêm a sua; a soma de seleção; o morto sai dela); duas ordens ao mesmo tempo (arqueiros
+num ponto, soldados acompanhando); o líder reúne, a carga atropela quem está na faixa e não o herói fora dela, a
+Varredura desfaz a reunião e solta os reunidos; ofegante leva +50%; enquanto ele vive ninguém foge; derrubado, a tropa
+perto foge e a longe não; as quatro versões (sangramento de 6 tiques, anel que prende, grito que inspira e abala, chão
+que empurra para fora); os quatro encontros terminam com vitória (jogador automático médio, com os kits originais e
+com as versões do Mago) e, sem o herói, com derrota (nos grupos espalhados as tropas podem vencer sozinhas, mas perdendo
+25 ou mais).
+
+**No navegador, com teclado e mouse de verdade** (`ferramentas/medir.mjs selecao`): F2 seleciona os 12 arqueiros e o
+placar diz "Seleção: 12 (arqueiros 12)"; 3 manda só eles defender; F3 avisa que não há terceiro tipo; Shift + arrasto
+seleciona 14 soldados **sem nenhum golpe** (o contador de usos do Corte ficou em 0); empurrão sem dano (o fim da Investida) não mostra número; 2 os manda atacar (ficam 12
+defendendo, 14 atacando, 16 acompanhando); X limpa; pausado, o arrasto seleciona sem Shift, F4 pega os 42 e 1 os
+manda acompanhar; com trauma 1 a 150%, o ponto do mouse no campo não muda e o mesmo arrasto pega as mesmas 21 tropas;
+nenhuma aba nova (F1 a F4 não abriram nada do navegador). Pausa, retomada e reinício como na v1.
+
+**Resposta comparada com a v1** (três rodadas de cada, mesmo roteiro, tempo de jogo): andar começa no primeiro passo
+(16,7 ms) nas duas; velocidade máxima em 83 a 100 ms nas duas; parada em 67 a 83 ms nas duas; a Varredura começa no
+primeiro passo e acerta em 217 ms nas duas. **Sem regressão de controle.**
+
+**Desempenho** (`medir.mjs desempenho`; Chromium 130 sem janela, desenho na CPU, o computador do Jean, 01/11/2026;
+20 s de batalha com o jogador automático forte, que chega ao contato, às áreas e às mortes em massa):
+
+| Janela | Tropas | Herói · encontro | Combatentes (máx.) | Qps | Quadro p95 / máx. | Simulação média / p95 | Desenho média / p95 |
+|---|---|---|---|---|---|---|---|
+| 1280×720 | normal | Guerreiro · original | 98 | 60 | 16,7 / 16,8 ms | 0,34 / 0,7 ms | 1,25 / 2,5 ms |
+| 1280×720 | normal | Mago · Capitão | 102 | 60 | 16,7 / 16,8 ms | 0,28 / 0,6 ms | 1,42 / 3,6 ms |
+| 1280×720 | maior | Guerreiro · original | 195 | 60 | 16,7 / 16,8 ms | 0,53 / 1,1 ms | 1,44 / 3,2 ms |
+| 1280×720 | maior | Mago · Capitão | 202 | 60 | 16,7 / 16,8 ms | 0,53 / 0,9 ms | 1,66 / 3,9 ms |
+| 1920×945 | normal | Guerreiro · original | 98 | 59,9 | 16,7 / 33,4 ms | 0,27 / 0,6 ms | 1,18 / 2,7 ms |
+| 1920×945 | normal | Mago · Capitão | 102 | 59,8 | 16,7 / 50 ms | 0,27 / 0,5 ms | 1,48 / 4,0 ms |
+| 1920×945 | maior | Guerreiro · original | 195 | 60 | 16,7 / 16,8 ms | 0,53 / 1,3 ms | 1,56 / 3,5 ms |
+| 1920×945 | maior | Mago · Capitão | 202 | 60 | 16,8 / 16,8 ms | 0,68 / 1,2 ms | 1,96 / 4,6 ms |
+
+A primeira medida da v2 deu desenho com p95 de até 7 ms e quadros de 100 ms: os contornos grandes (a presença de 90 px
+do Capitão, a aura do estandarte) eram pintados pixel a pixel a cada quadro, e cada corpo pousado passava por um filtro
+de canvas. Os dois passaram a ser feitos uma vez e guardados (as áreas de golpe continuam pintadas exatas a cada quadro).
+Sobraram **quadros isolados de 33 a 50 ms em 2 das 8 medições**, uma vez por batalha, sem repetir; a causa não foi
+isolada (pode ser a criação desses guardados ou as próprias chamadas da medição). No Node, o passo custa 0,07 a 0,3 ms.
+
+**Vídeos** (`videos/`, 1280×720): `area-numeros-mago` e `area-numeros-guerreiro` (golpes em área com os números,
+jogador automático, batalha original), `lider-capitao` (o confronto com Harg: as reuniões, as cargas, a queda),
+`selecao-e-duas-ordens` (teclado e mouse de verdade: F2 e Defender ao norte, Shift + arrasto nos soldados do oeste e
+Atacar, o herói andando e atacando, pausa, F4 e Acompanhar). Os da v1 ficaram em `videos/campo-livre-1/`; as capturas
+da v1, em `capturas/campo-livre-1/`. Sequências quadro a quadro: `capturas/sequencia-bola.png` (a explosão com os 15
+números e um crítico), `-varredura`, `-salto`, `-lider` (a faixa enchendo e a carga).
+
+### R2.9. Limitações conhecidas e o que precisa da avaliação do Jean
+
+- **O jogador automático é forte** e vence quase tudo em 20 a 45 s; o equilíbrio para uma pessoa não foi medido. O herói
+  não foi enfraquecido (pedido do Jean); a dificuldade nova está no Capitão, nas duas frentes e na retaguarda.
+- **Com a Varredura Sangrenta, o Capitão fica muito mais difícil** (ela não interrompe): é o tipo de diferença que se
+  queria, mas pode ser demais. Avaliar jogando.
+- **Os grupos espalhados podem ser vencidos só pelas tropas** (devagar e perdendo 25 a 32 de 42): a concentração ganha
+  de grupos isolados. Pode ser bom (as tropas importam) ou pedir grupos que se juntem.
+- **O Capitão só escolhe o grupo mais denso** para a carga e não protege a retaguarda; os arqueiros da retaguarda não
+  recuam juntos.
+- **Os números** no meio de uma área de 15 se amontoam um pouco (cada um em cima do seu soldado); o crítico se destaca.
+- **Arte do Capitão provisória** (a mesma grade do campeão, recolorida, com chifres e capa).
+- **Desempenho:** 60 qps nas oito medições, com quadros isolados de 33 a 50 ms em duas (R2.8).
+- **Para o Jean avaliar:** (1) os números ajudam ou poluem, e o crítico se lê sem legenda? (2) o Capitão cria um
+  confronto que dá vontade de enfrentar, e a escolha entre ele e as tropas aparece? a regra da derrota ficou clara? (3)
+  Shift segurado para comandar é fluido, ou preferiria alternar com uma tecla? (4) as ordens a dois grupos foram úteis em
+  "Duas frentes"? (5) as versões mudaram a maneira de jogar o mesmo encontro? (6) as sombras tingidas e o vão entre as
+  linhas resolveram a faixa ilegível do choque?
+
 ---
+
+## Rodada 1 (31/10/2026): Campo Livre 1
 
 ## 0. A decisão e o critério
 

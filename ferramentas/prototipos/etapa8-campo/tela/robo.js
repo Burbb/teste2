@@ -1,7 +1,7 @@
 // PROTÓTIPO de campo livre: um jogador automático simples, para os testes de equilíbrio (Node), a medição de
 // desempenho e os vídeos (?robo=1). Ele preenche a mesma entrada que o teclado e o mouse preenchem: as teclas de
 // movimento, o ponto do mouse, o botão do ataque e os apertos das habilidades. Não é a IA de ninguém no jogo.
-import { ordenar } from "./sim.js";
+import { ordenar, dentro } from "./sim.js";
 
 // `nivel`: "forte" decide a cada 0,25 s e mira no centro do grupo mais denso; "medio" decide a cada 0,6 s, erra a mira
 // em até 12 px e vai para o grupo mais perto (mais parecido com uma primeira partida de uma pessoa).
@@ -68,6 +68,16 @@ export function pensar(r, m, ent) {
       return;
     }
   }
+  // a faixa da carga do líder marcada no chão com o herói dentro: sair de lado; o Guerreiro com a Varredura pronta
+  // e o líder perto tenta interromper a reunião
+  for (const e of ini) {
+    if (!e.acao || e.acao.tipo !== "reunir") continue;
+    const dl = Math.hypot(e.x - h.x, e.y - h.y);
+    if (h.nomeHeroi === "guerreiro" && dl < 30 && h.cds.varredura <= 0 && h.kit.varredura.atordoa > 0) {
+      ent.mx = e.x; ent.my = e.y; ent.apertos.push("varredura"); return;
+    }
+    if (dentro(e.acao.forma, h.x, h.y)) { andar(ent, -Math.sin(e.acao.dir), Math.cos(e.acao.dir)); return; }
+  }
   const aliados = m.centros[0];
   // decide uma habilidade a cada 0,25 s, como quem olha o campo, e não a cada quadro
   const decide = m.t >= (r.decisao || 0);
@@ -80,7 +90,10 @@ export function pensar(r, m, ent) {
     }
     const em = contar(ini, h.x, h.y, k.varredura.raio - 2);
     if (decide && em.n >= 4 && h.cds.varredura <= 0) { ent.mx = em.x + rng(); ent.my = em.y + rng(); ent.apertos.push("varredura"); }
-    else if (decide && h.cds.investida <= 0 && g.n >= 4 && dg > 55 && dg < 150 && vida > 0.4) {
+    else if (decide && h.kit.investida.inspira && h.cds.investida <= 0) {
+      const al = m.lados[0].filter((a) => a !== h && Math.hypot(a.x - h.x, a.y - h.y) < h.kit.investida.raio).length;
+      if (al >= 6 && dp < 40) ent.apertos.push("investida");
+    } else if (decide && !h.kit.investida.inspira && h.cds.investida <= 0 && g.n >= 4 && dg > 55 && dg < 150 && vida > 0.4) {
       ent.mx = g.x + rng(); ent.my = g.y + rng(); ent.apertos.push("investida");
     }
     if (vida < 0.3 && aliados) andar(ent, aliados.x - h.x, aliados.y - h.y);
