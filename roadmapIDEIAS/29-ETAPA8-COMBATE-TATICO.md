@@ -5,6 +5,10 @@ combate tático com movimento numa grade (referência: Dofus) abre builds mais i
 simples e o resto do jogo como está. **Estudo e protótipo isolado; o combate do jogo não mudou (1.220.0). A direção
 espacial está em avaliação**: nada aqui é decisão.
 
+> **Depois (31/10/2026):** o Jean jogou este protótipo, gostou do ganho espacial e escolheu seguir para o **campo livre
+> em tempo real** (o [30](30-ETAPA8-CAMPO-LIVRE.md)). Este estudo e o protótipo tático ficam preservados como histórico,
+> sem expansão nesta rodada.
+
 Ligações: o [28](28-ETAPA8-HABILIDADES-TALENTOS-E-BUILDS.md) (o X1 e os sistemas de builds), o
 [plano 23](23-PLANO-DE-ARTE-INTERFACE-E-COMBATE.md) (etapa 8) e a [continuidade](00-COMECE-AQUI.md). Protótipo:
 [`ferramentas/prototipos/etapa8-tatico/`](../ferramentas/prototipos/etapa8-tatico/LEIA-ME.md) (`demo.bat`).

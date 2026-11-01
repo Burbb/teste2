@@ -23,7 +23,11 @@ propostas, revisão 2; a arquitetura está pendente de avaliação; nenhuma regr
 protótipo X1 (montagem de builds e estrutura dos talentos) está em `ferramentas/prototipos/etapa8-builds/`, com a
 especificação na seção 15 do 28; o Revezamento foi recusado pelo Jean e o Esperar ficou como hipótese futura. Na
 rodada seguinte, o X1 foi ampliado para descoberta (16 habilidades por personagem, Sangramento, Frio e invocações,
-talentos com caminhos concorrentes, 9 pontos sem ordem de compra; seção 16 do 28).
+talentos com caminhos concorrentes, 9 pontos sem ordem de compra; seção 16 do 28). Depois, o combate numa grade
+(o [29](29-ETAPA8-COMBATE-TATICO.md), `etapa8-tatico/`). **Nova direção do experimento (31/10/2026, decisão do
+Jean):** **campo livre em tempo real**, com controle direto do herói e tropas pequenas (o
+[30](30-ETAPA8-CAMPO-LIVRE.md), protótipo `ferramentas/prototipos/etapa8-campo/`, "Campo Livre 1"). O tático fica
+preservado como histórico, sem expansão nesta rodada; **a integração ao jogo continua pendente de avaliação**.
 
 ## Estado de referência — 29/10/2026
 
@@ -1510,7 +1514,11 @@ invocações como vocabulário compartilhado, 9 pontos sem ordem de compra, filt
 Nada entrou no jogo. **Depois, a expansão do X1 foi pausada** para estudar o combate numa grade vista de cima (Dofus
 como referência): estudo [29](29-ETAPA8-COMBATE-TATICO.md) e protótipo `ferramentas/prototipos/etapa8-tatico/`, com a
 direção espacial em avaliação. Se ela seguir, a tela de luta, a IA, o catálogo e a arte das lutas mudam (seção 11 do
-29) e a etapa 9 depende disso.
+29) e a etapa 9 depende disso. **Nova direção do experimento (31/10/2026):** o Jean jogou o tático, gostou do ganho
+espacial e escolheu investigar **campo livre em tempo real**: herói controlado direto (WASD e mouse), tropas pequenas
+lutando sozinhas, três ordens coletivas, impacto como parte do protótipo (estudo [30](30-ETAPA8-CAMPO-LIVRE.md),
+protótipo `ferramentas/prototipos/etapa8-campo/`). O tático fica como histórico, sem expansão; o combate do jogo não
+muda; a integração depende da avaliação do Jean (o que mudaria: seção 13 do 30).
 
 **Decisão de Jean (19/10/2026):** produzir os ícones de habilidades e talentos junto da revisão dos respectivos
 sistemas e telas, evitando arte para conceitos prestes a mudar. O visual antigo do Grimório e da árvore não está

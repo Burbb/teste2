@@ -9133,3 +9133,33 @@ foi automatizado.
   mortes e invocações, prévia igual ao efeito, chão, preparos, IA sem ficar presa, fuga), 39 do X1, os jogadores
   automáticos nas três variantes de regra, capturas nas duas janelas. O jogo não mudou (1.220.0).
 - **Parado aqui:** o Jean joga os dois protótipos e responde a pergunta central (seção 12 do 29).
+
+### 31/10/2026 (data do computador local) — Etapa 8: o combate em campo livre (protótipo em tempo real)
+
+- **Pedido do Jean (nova direção do experimento):** depois de jogar o tático e gostar do ganho espacial, seguir direto
+  para **campo livre**: o herói controlado em tempo real (WASD e mouse), muito mais forte que um soldado, no meio de
+  tropas pequenas que lutam sozinhas, com poucas ordens coletivas (referências de escala: Sword & Banner e 9 Kings, pelas
+  capturas enviadas; de conceito: a batalha separada e as ordens de Mount & Blade). Impacto obrigatório (antecipação,
+  contato, reação, arremesso, queda, fogo, poeira, tremor com controle, pausa de impacto). **O tático fica preservado,
+  sem expansão nesta rodada; o combate do jogo não muda; a integração continua pendente de avaliação.** Revezamento e
+  manipulação da ordem dos turnos continuam fora (aqui não há turnos).
+- **Feito:** o [30](30-ETAPA8-CAMPO-LIVRE.md) (pesquisa com fontes e o que cada uma deu, a implementação, escala,
+  controle e compromisso dos golpes, kits, impacto, tropas e ocupação, a batalha, a verificação de funcionamento e de
+  sensação, o desempenho medido, as limitações e o que mudaria no jogo) e o protótipo
+  [`ferramentas/prototipos/etapa8-campo/`](../ferramentas/prototipos/etapa8-campo/LEIA-ME.md) (`demo.bat`, porta 8801,
+  versão **Campo Livre 1**): simulação em JavaScript com passo fixo de 60 Hz e semente (roda no Node para os testes),
+  campo de 960 × 560 px nativos ampliado inteiro (2× em 1280×720, 3× em 1920×945), sprites miúdos desenhados à mão em
+  grade (provisórios), Guerreiro (Corte com arremate, Varredura, Investida, Salto Esmagador com Fúria) e Mago (Faísca,
+  Bola de Fogo, Piscar, Muralha de Fogo), 42 aliados contra 94 inimigos em duas levas (o porta-estandarte e o campeão
+  como ameaças), três ordens (Acompanhar, Atacar, Defender aqui), batalha "Maior" com o dobro, vitória, derrota e `R`.
+- **Por que no navegador:** forçar o motor por turnos a simular tempo real pela rede local seria frágil; o servidor do
+  protótipo só serve arquivos. Reaproveitados: o lançador dos protótipos, a paleta e as fontes, o som sintetizado, a
+  ideia da `sensacao.js` (os números do impacto num lugar só), a semente fixa e o formato de texto das regras.
+- **Conferido:** 14 testes da simulação (área mostrada = atingidos, dano uma vez, mortes simultâneas, sem alvo, grupo
+  concentrado, herói entre aliados e inimigos, resposta, comando guardado, compromisso, interrupção do campeão,
+  repetição, fim da batalha, desempenho do passo); no navegador, a resposta (o primeiro passo depois do aperto), a
+  pausa, a retomada e o reinício, o desempenho nas duas janelas e nas duas quantidades, capturas, sequências quadro a
+  quadro dos golpes e vídeos (com o jogador automático). O jogo não mudou (1.220.0).
+- **Parado aqui:** o Jean joga e responde a seção 14 do 30 (o critério: fluido, legível, satisfatório, vontade de
+  repetir). Depois: decidir se o campo livre segue e, se seguir, o que vem primeiro (seção 13 do 30).
+
