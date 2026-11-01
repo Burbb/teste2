@@ -1,7 +1,7 @@
 // PROTÓTIPO de campo livre da etapa 8 (nada no jogo): os números e os kits. Tudo de teste; as regras que usam estes
 // números estão em sim.js. Unidades: distância em pixels nativos (o campo é desenhado 1:1 e ampliado inteiro), tempo
 // em segundos, empurrão em px/s (a unidade desliza cerca de empurrão/9 px, ver ATRITO_EMPURRAO).
-export const VERSAO = "Campo Livre 6";
+export const VERSAO = "Campo Livre 7";
 
 export const CAMPO = { largura: 960, altura: 560, margem: 8 };
 export const ATRITO_EMPURRAO = 9;      // o empurrão perde velocidade a e^(-9t): desliza v/9 px
@@ -45,13 +45,25 @@ export const TIPOS = {
       grupo: { alcance: 170, raio: 40, min: 4, arqueiro: 1.5 } }, intervalo: 1.5,
     rodopio: { recarga: 5, primeira: 2, raio: 46, preparo: 0.75, min: 3, dano: 14, danoHeroi: 34, empurrao: 260 },
     arremetida: { recarga: 6, primeira: 3, min: 40, max: 220, preparo: 0.7, adianta: 0.5, voo: 0.45, raio: 30, dano: 14,
-      danoHeroi: 30, empurrao: 220, cravado: 0.5, sequencia: 0.6 },
+      danoHeroi: 30, empurrao: 220, cravado: 0.5, sequencia: 0.6, vooRapido: 0.32, cravadoLongo: 0.7 },
     carga: { recarga: 8, primeira: 5, reunir: 0.8, raioReunir: 70, max: 8, distancia: 150, distanciaMax: 210, vel: 170,
       largura: 10, dano: 16, danoHeroi: 30, empurrao: 230, ofegante: 0.9, vulneravel: 1.5, impeto: 2 },
     presenca: 90, presencaRitmo: 0.75, presencaFirmeza: 0.5, derrota: { foge: 150, abala: 3 }, heroiInimigo: true,
     // Campo Livre 6 (campo6.ajustarLider): a Investida Curta, a Fúria e o Rodopio logo depois da Arremetida
     // (a Investida Curta só a partir de 120 px e a cada 7 s: com 90 px e 4 s, o jogador automático forte perdia o duelo sozinho)
-    dash: { vel: 300, dura: 0.28, min: 120, max: 220, recarga: 7 }, furia: { vida: 0.35, dura: 8, ritmo: 1.4 }, combo: true },
+    dash: { vel: 300, dura: 0.28, min: 120, max: 220, recarga: 7 }, furia: { vida: 0.35, dura: 8, ritmo: 1.4 }, combo: true,
+    // Campo Livre 7 (campo7.js), nos encontros com Morel e Odette. A Investida Curta em três tempos: a preparação (ele
+    // se abaixa e a faixa aparece no chão: `preparo` s, a direção fica marcada), a execução (`vel` px/s em linha reta,
+    // sem corrigir: para no primeiro que atinge, na parede ou ao fim do `alcance`) e a recuperação (`recupera` s parado,
+    // levando +50% de dano). Atinge: dano, empurra e interrompe a preparação de quem for herói. A Arremetida voa mais
+    // rápido (`vooRapido`) e fica cravada mais tempo (`cravadoLongo`).
+    investida7: { preparo: 0.35, vel: 520, alcance: 190, min: 70, max: 190, recupera: 0.55, recarga: 6, dano: 12, danoHeroi: 20,
+      empurrao: 230, largura: 9 },
+    // O Brado de Desafio (a provocação contra você): a preparação se anuncia num anel de `raio` px por `preparo` s; quem
+    // estiver dentro e à vista quando ele brada fica provocado por `dura` s (com a proteção contra repetição).
+    brado: { raio: 130, preparo: 0.45, dura: 2.5, recarga: 15 },
+    focoIA: { base: { heroi: 30, morel: 8, odette: 16, tropas: 6 }, tempo: 10, pressao: 0.9, apoio: 0.5, ferido: 25, isolado: 12,
+      concentracao: 3.5, oportunidade: 12, inercia: 22, ruido: 10, minimo: 2, revisao: [0.8, 1.2], protege: 0.8 } },
   // A outra: fica atrás da linha e fortalece quem está na aura (+50% de dano, ataca 25% mais rápido); derrubado,
   // abala os inimigos em volta por 2 s (recuam, não atacam).
   // ---- Campo Livre 6: as tropas avançadas (campo6.js). Mudam o confronto, não só a vida.
@@ -61,23 +73,29 @@ export const TIPOS = {
   cavaleiro: { nome: "Cavaleiro", papel: "perto", especial: true, raio: 5, vida: 34, vidaAliado: 38, vel: 64, massa: 4, dano: 3,
     alcance: 3, preparo: 0.25, recarga: 1, vagas: 4, estica: 8, compromete: 0.6,
     carga: { vel: 165, min: 55, max: 240, passa: 46, dano: 7, danoHeroi: 12, empurrao: 170, atordoa: 0.45, recarga: 4.5, recua: 90,
-      reposiciona: 1.8, prepara: 0.35, barrado: 0.8 } },
+      reposiciona: 1.8, prepara: 0.35, barrado: 0.8, derruba: 0.45 } },
   // A infantaria pesada: lenta (24), aguenta (56) e segura a linha: o golpe que vem da frente (do lado para onde ela
   // olha) causa metade; empurra pouco (massa 5) e para a carga da cavalaria. De lado ou por trás, cai como os outros.
   pesado: { nome: "Infantaria pesada", papel: "perto", raio: 4.5, vida: 56, vidaAliado: 64, vel: 24, massa: 5, dano: 4, alcance: 3,
-    preparo: 0.4, recarga: 1.4, vagas: 4, estica: 6, compromete: 0.6, escudoFrente: 0.5 },
+    preparo: 0.4, recarga: 1.4, vagas: 4, estica: 6, compromete: 0.6, escudoFrente: 0.5,
+    // Campo Livre 7: a Escudada, num herói ou numa ameaça colada na frente dele: empurra e deixa lento (não atordoa)
+    escudada: { recarga: 6, alcance: 9, dano: 3, empurrao: 150, lento: { fator: 0.4, dura: 1.5 } } },
   // O mago de batalha: frágil (16), fica a até 140 px com visão, atrás da própria linha; a Bola de Batalha cai no ponto
   // que pega mais gente, anunciada 0,9 s no chão (6; 16 no herói; empurra); a cada 9 s, se três ou mais dos seus estão
   // lutando a até 60 px, põe neles um escudo que absorve 8 por 6 s.
   magoBatalha: { nome: "Mago de batalha", papel: "longe", especial: true, raio: 3.5, vida: 16, vidaAliado: 20, vel: 30, massa: 1, dano: 1,
     alcance: 140, ideal: 110, perto: 52, preparo: 0.4, recarga: 4.2, vagas: 3, flecha: 170, busca: 420, tiro: 0.85, posto: 90,
-    bola: { nome: "bolaBatalha", raio: 22, preparo: 0.9, dano: 6, danoHeroi: 16, empurrao: 130, atordoa: 0.3, cor: "fogo" },
+    bola: { nome: "bolaBatalha", raio: 22, preparo: 0.9, dano: 6, danoHeroi: 16, empurrao: 130, atordoa: 0.3, cor: "fogo",
+      lento: { fator: 0.3, dura: 2 } },
     escudo: { raio: 60, absorve: 8, dura: 6, recarga: 9 } },
   // ---- Morel e Odette, autônomos (campo6.js): semi-heróis da comitiva, com mais vida e habilidades próprias.
   morel: { nome: "Morel", papel: "perto", especial: true, companheiro: true, elite: true, raio: 5.5, vida: 240, vel: 58, massa: 6,
     dano: 7, alcance: 4, preparo: 0.25, recarga: 0.8, vagas: 6, estica: 10, compromete: 0.6, escudoFrente: 0.6, coleira: 150,
     golpeEscudo: { raio: 26, abertura: 150, dano: 9, empurrao: 210, atordoa: 0.6, recarga: 4, min: 3 },
-    provocar: { raio: 80, dura: 4, recarga: 12 } },
+    provocar: { raio: 80, dura: 4, recarga: 12 },
+    // Campo Livre 7: o Desafio, a provocação num herói inimigo que pressiona você ou Odette (a IA espera esse momento):
+    // o herói inimigo passa a mirar Morel por `dura` s; Morel ergue o escudo e leva `reducao` do dano nesse tempo.
+    desafio: { alcance: 110, dura: 3, recarga: 15, reducao: 0.75, vidaMin: 0.35 } },
   odette: { nome: "Odette", papel: "longe", especial: true, companheiro: true, elite: true, raio: 4.5, vida: 160, vel: 54, massa: 3,
     dano: 2, alcance: 120, ideal: 100, perto: 40, preparo: 0.3, recarga: 1.2, vagas: 4, busca: 300, tiro: 0.9, posto: 80, atras: 42,
     prece: { cura: 42, alcance: 150, recarga: 6, min: 30 }, bencao: { raio: 50, cura: 6, recarga: 9, min: 4, minFalta: 4 },
@@ -89,7 +107,12 @@ export const TIPOS = {
     dardo: { alcance: 190, vel: 240, dano: 6, danoHeroi: 11, recarga: 1.1, cor: "arcano" },
     coluna: { nome: "coluna", alcance: 230, raio: 32, preparo: 0.9, dano: 14, danoHeroi: 26, empurrao: 200, atordoa: 0.4, recarga: 5.5, cor: "fogo" },
     corrente: { preparo: 0.5, salto: 42, alvos: 6, dano: 8, danoHeroi: 14, recarga: 7 },
-    passo: { distancia: 130, recarga: 6 }, barreira: { absorve: 60, dura: 4, recarga: 20 } },
+    passo: { distancia: 130, recarga: 6 }, barreira: { absorve: 60, dura: 4, recarga: 20 },
+    // Campo Livre 7: o Grilhão Arcano (as mãos brilham `preparo` s, o projétil sai devagar e pode ser evitado): imobiliza
+    // quem acerta por `dura` s (não anda nem usa a mobilidade; ataca e lança no lugar)
+    grilhao: { alcance: 170, preparo: 0.45, vel: 230, dura: 1, recarga: 9, dano: 4, cor: "grilhao" },
+    focoIA: { base: { heroi: 24, morel: 2, odette: 22, tropas: 14 }, tempo: 6, pressao: 0.7, apoio: 0.8, ferido: 20, isolado: 8,
+      concentracao: 4.5, oportunidade: 10, inercia: 20, ruido: 10, minimo: 2, revisao: [0.9, 1.3], protege: 0 } },
   estandarte: { nome: "Porta-estandarte", papel: "apoio", raio: 3.5, vida: 30, vel: 30, massa: 1.5, dano: 2,
     alcance: 3, preparo: 0.3, recarga: 1.2, vagas: 3, elite: true, aura: 70, auraDano: 1.3, auraRitmo: 0.85,
     abala: 120, abalaTempo: 2 },
@@ -389,6 +412,19 @@ export const ENCONTROS = {
       ["cavaleiro", 18, 480, 16, 6, "norte", 1]],
     levas: [{ id: 1, t: 30, quando: 0.3, x: 480, y: 16, aviso: "Outra ala de cavalaria carrega pelo norte." }],
   },
+  // Campo Livre 7: a amostra de arte, jogável. O mesmo conteúdo nas três aparências (F8 troca) e nas duas escalas do
+  // seu herói (F9); as regras não mudam entre elas.
+  amostra: {
+    nome: "O portão da povoação", cenario: "povoado", companheiros: true,
+    descricao: "Um trecho de uma povoação fortificada: a muralha com o portão, uma casa do lado de dentro, árvores do lado de fora. Harg defende o portão com uma amostra de cada tropa (infantaria, arqueiros, cavalaria e pesados). F8 troca a aparência e F9 a escala do seu herói, no meio da luta, sem mudar as regras.",
+    regra: "Enquanto Harg estiver de pé, ninguém foge. Aos 40 s, reforços saem pelo portão.",
+    heroi: [400, 280],
+    aliados: [["soldado", 10, 356, 280, 3], ["arqueiro", 6, 318, 280, 2], ["pesado", 4, 378, 244, 2], ["cavaleiro", 4, 344, 330, 2]],
+    grupos: { frente: { ativa: 4 }, portao: { ativa: 6 }, reforco: {} },
+    inimigos: [["soldado", 12, 498, 280, 3, "frente"], ["arqueiro", 6, 528, 206, 2, "frente"], ["cavaleiro", 4, 500, 372, 2, "frente"],
+      ["pesado", 4, 592, 280, 2, "portao"], ["lider", 1, 624, 300, 1, "portao"], ["soldado", 16, 720, 280, 4, "reforco", 1]],
+    levas: [{ id: 1, t: 40, quando: 0.3, x: 720, y: 280, aviso: "Reforços saem pelo portão." }],
+  },
   herois: {
     nome: "Harg e Ardis", cenario: "vila", companheiros: true, composicao: true,
     descricao: "Harg, o Capitão, e Ardis, a Feiticeira de Guerra, lutam juntos diante do portão, com a tropa deles. Harg mergulha em você e nas suas tropas; Ardis bombardeia os grupos, some quando você chega perto e Harg vem protegê-la.",
@@ -422,6 +458,22 @@ export const CENARIOS = {
       { tipo: "casa", x: 858, y: 96, w: 64, h: 50, alto: 30 }, { tipo: "casa", x: 868, y: 412, w: 52, h: 44, alto: 28 },
       { tipo: "muro", x: 420, y: 118, w: 96, h: 6, alto: 6 }, { tipo: "muro", x: 430, y: 446, w: 80, h: 6, alto: 6 },
     ] },
+  // Campo Livre 7: o trecho da amostra de arte. A muralha corre de norte a sul (x 560), com o portão entre as torres
+  // (64 px) e a estrada passando por ele; do lado de dentro, uma casa e o muro baixo de um quintal; do lado de fora,
+  // árvores (o tronco bloqueia a passagem; a copa não barra flechas) e o campo aberto para lutar. Cabe numa tela a
+  // 1920 × 1080 com o herói na estrada. `luzes`: as tochas e a janela (só a direção sombria as acende).
+  povoado: { nome: "O portão da povoação",
+    estradas: [{ x: 0, y: 264, w: 960, h: 32 }, { x: 680, y: 0, w: 22, h: 264 }],
+    obstaculos: [
+      { tipo: "muralha", x: 560, y: 24, w: 18, h: 212, alto: 30 }, { tipo: "muralha", x: 560, y: 326, w: 18, h: 210, alto: 30 },
+      { tipo: "torre", x: 554, y: 222, w: 30, h: 26, alto: 42 }, { tipo: "torre", x: 554, y: 312, w: 30, h: 26, alto: 42 },
+      { tipo: "casa", x: 612, y: 178, w: 58, h: 42, alto: 26 }, { tipo: "muro", x: 612, y: 352, w: 64, h: 6, alto: 6 },
+      { tipo: "arvore", x: 286, y: 168, w: 6, h: 4, alto: 34, copa: 13 }, { tipo: "arvore", x: 330, y: 146, w: 6, h: 4, alto: 30, copa: 11 },
+      { tipo: "arvore", x: 246, y: 396, w: 6, h: 4, alto: 36, copa: 14 }, { tipo: "arvore", x: 300, y: 424, w: 6, h: 4, alto: 30, copa: 11 },
+      { tipo: "arvore", x: 470, y: 150, w: 6, h: 4, alto: 32, copa: 12 }, { tipo: "arvore", x: 462, y: 430, w: 6, h: 4, alto: 34, copa: 13 },
+      { tipo: "arvore", x: 180, y: 220, w: 6, h: 4, alto: 30, copa: 11 },
+    ],
+    luzes: [{ x: 569, y: 238, raio: 44 }, { x: 569, y: 328, raio: 44 }, { x: 622, y: 206, raio: 30 }] },
 };
 
 // As composições dos exércitos (nos encontros novos), escolhidas antes da luta, uma para cada lado: [tipo, quantos,
@@ -459,6 +511,14 @@ export const BATALHA = {
   custoFila: 22,      // quanto "pesa", na escolha do alvo, cada atacante que já está nele
   danoNoHeroi: 1.5,   // as tropas batem 50% mais forte no herói (ele precisa sentir quando fica cercado)
 };
+
+// Campo Livre 7: os controles (CC) e a proteção contra repetição. Cada controle forte (atordoamento, imobilização,
+// interrupção, provocação) num herói (o seu, Morel, Odette, Harg, Ardis) conta numa janela de `janela` s: o primeiro
+// vale inteiro, o segundo `fatores[1]`, o terceiro `fatores[2]`; o quarto não pega ("firme") até a janela fechar (ela
+// se renova a cada controle que pega). A lentidão não conta e não acumula: vale a mais forte. As tropas comuns não têm
+// proteção. A interrupção cancela a preparação do golpe e segura `interrompe` s.
+export const CONTROLE = { janela: 6, fatores: [1, 0.6, 0.3, 0], interrompe: 0.25,
+  nomes: { atordoado: "Atordoado", imobilizado: "Imobilizado", interrupcao: "Interrompido", provocacao: "Provocado", lento: "Lento" } };
 
 // O que limita o impacto, para muitos golpes juntos não travarem a tela nem a câmera.
 export const IMPACTO = {

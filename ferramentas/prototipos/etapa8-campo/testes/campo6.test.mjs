@@ -201,21 +201,25 @@ test("Ardis: percebe o perigo em 0,3 s e some; a Coluna cai no grupo; sozinha, f
   assert.ok(m3.ardis.fugindo, "fugiu");
 });
 
-test("Harg: a Investida Curta quando você foge e o resto está em recarga; vem proteger Ardis", () => {
-  const m = mundo("herois", (u) => u.tipo === "lider" || u.tipo === "ardis");
-  const l = m.lider, h = m.heroi;
-  l.x = 400; l.y = 280; l.arremCd = 9; l.cargaCd = 9; l.rodopioCd = 9; l.dashCd = 0; l.modo = "heroi"; l.modoT = 9; l.grupo = null;
-  m.ardis.x = 900; m.ardis.y = 500; m.ardis.grupo = null;
-  h.x = 560; h.y = 280;
-  let vel = 0;
-  for (let i = 0; i < 40; i++) { passo(m, entradaVazia()); m.eventos.length = 0; vel = Math.max(vel, Math.hypot(l.vx, l.vy)); }
-  assert.ok(vel >= TIPOS.lider.dash.vel - 1, `avançou (${vel.toFixed(0)} px/s)`);
-  // você perto de Ardis: ele larga as tropas e vem atrás de você
-  l.modo = "tropas"; l.modoT = 9;
-  m.ardis.x = h.x + 40; m.ardis.y = h.y;
-  // decide quando não está no meio de um golpe (até 1 s)
+// Campo Livre 7: nos encontros com Morel e Odette, a Investida Curta virou a de três tempos e a escolha de alvo é a
+// avaliação de campo7 (os testes dessas regras estão em campo7.test.mjs). Proteger Ardis continua: quem a pressiona
+// passa a valer mais para Harg.
+test("Harg larga as tropas e vem atrás de quem pressiona Ardis", () => {
+  const m = mundo("herois", (u) => u.tipo === "lider" || u.tipo === "ardis" || (u.lado === 0 && u.tipo === "soldado"));
+  const l = m.lider, h = m.heroi, ar = m.ardis;
+  l.x = 400; l.y = 280; l.arremCd = 9; l.cargaCd = 9; l.rodopioCd = 9; l.dashCd = 9; l.bradoCd = 99; l.grupo = null;
+  m.unidades.filter((u) => u.lado === 0 && u.tipo === "soldado").forEach((u, i) => { u.x = 340 + (i % 6) * 7; u.y = 300 + Math.floor(i / 6) * 7; });
+  ar.x = 640; ar.y = 280; ar.grupo = null; ar.passoCd = 99;
+  h.x = 680; h.y = 280;
+  rodar(m, 1.5);
+  assert.equal(l.modo, "tropas", "com você longe e as tropas juntas perto, ele vai nelas");
+  // você bate em Ardis: em até 3,5 s ele vem atrás de você
   let veio = false;
-  for (let i = 0; i < 60 && !veio; i++) { passo(m, entradaVazia()); m.eventos.length = 0; veio = l.modo === "heroi"; if (l.modo !== "heroi" && !l.acao) l.modoT = 9; }
+  for (let i = 0; i < 7 * 30 && !veio; i++) {
+    if (i % 30 === 0) ferir(m, ar, 30, h, { dx: -1, dy: 0 });
+    passo(m, entradaVazia()); m.eventos.length = 0;
+    veio = l.modo === "heroi";
+  }
   assert.ok(veio, "veio atrás de você");
 });
 

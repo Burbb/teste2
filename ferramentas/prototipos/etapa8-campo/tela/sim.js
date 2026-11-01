@@ -9,6 +9,8 @@ import { CAMPO, ATRITO_EMPURRAO, SEMENTE, TIPOS, HEROIS, ORDENS, CONTINGENTES, B
   ESPECIAIS, DESLOCA, HORDA, HABILIDADES, TALENTOS, ORCAMENTO, MONTAGENS, MONTAGEM_PADRAO, CADEIA, SANGUE } from "./conteudo.js";
 import { ligar, mundoAtual, prepararCenario, rumo, empurrarParaFora, bloqueado, primeiroBloqueio, dentroObstaculo,
   pontoDaHabilidade, atualizarMagias, atualizarEspecial, ajustarLider, criarCompanheiros, blocosDaComposicao } from "./campo6.js";
+import { desvioAte, inacessivel, posicaoUtil, mundoDaNav } from "./navegacao.js";
+import { ligar7, registrarGolpe, escolherFoco, precisaRever, provocadorAoAlcance, interromperPreparo, escudada } from "./campo7.js";
 
 export const PASSO = 1 / 60;
 const GRAU = Math.PI / 180;
@@ -209,7 +211,7 @@ function criarEncontro(enc, nome, heroi, quantidade, semente, kit, composicao = 
   if (enc.companheiros) criarCompanheiros(m, enc.heroi[0], enc.heroi[1]);
   // nos encontros novos (composições de blocos fixos, construções), a separação dos corpos roda antes da luta: cada um
   // começa numa casa livre, fora das construções
-  if (enc.composicao) { for (let i = 0; i < 8; i++) separar(m); for (const u of m.unidades) { u.px = u.x; u.py = u.y; } }
+  if (enc.composicao || enc.cenario) { for (let i = 0; i < 8; i++) separar(m); for (const u of m.unidades) { u.px = u.x; u.py = u.y; } }
   alasDefendem(m);
   limpar(m);
   m.stats.primeira = m.lados[1].length;
@@ -435,8 +437,14 @@ function limitarAoCampo(x, y) {
 
 /** A área que a ação `id` cobriria agora, com o mouse em (mx, my): a prévia na tela e o contato usam esta forma. */
 export function formaDaAcao(h, id, mx, my) {
-  const k = h.kit[id], ang = Math.atan2(my - h.y, mx - h.x);
+  const k = h.kit[id];
   if (!k) return null;
+  // provocado: a Bola (o ataque principal do Mago) cai no provocador ao alcance e à vista (campo7.provocadorAoAlcance)
+  if (id === "bola" && id === h.slots.principal && h.provocacao) {
+    const m = mundoDaNav(), p = m && provocadorAoAlcance(m, h, k.alcance);
+    if (p) { mx = p.x; my = p.y; }
+  }
+  const ang = Math.atan2(my - h.y, mx - h.x);
   const linha = (comp, largura) => {
     const p = limitarAoCampo(h.x + Math.cos(ang) * comp, h.y + Math.sin(ang) * comp);
     return { tipo: "faixa", x1: h.x, y1: h.y, x2: p.x, y2: p.y, largura };
@@ -494,6 +502,7 @@ export function ferir(m, u, dano, fonte, o = {}) {
   // Campo Livre 6: o escudo na frente (infantaria pesada, Morel) reduz o golpe que vem do lado para onde ele olha; o
   // escudo do mago e a barreira de Ardis absorvem; Ardis lembra quem a feriu (para escolher o duelo)
   if (u.def.escudoFrente && fonte && fonte !== u && !o.sutil && (Math.sign(fonte.x - u.x) || 1) === u.virado) dano *= u.def.escudoFrente;
+  if (u.posturaAte > m.t) dano *= u.def.desafio.reducao;   // Morel desafiando: o escudo erguido
   if (u.absorve > 0 && u.absorveAte > m.t) { const a = Math.min(u.absorve, dano); u.absorve -= a; dano -= a; if (dano <= 0) return 0; }
   if (u.tipo === "ardis" && fonte === h) u.feridaPeloHeroi = m.t;
   // o Estilhaçar: o congelado (ou enregelado) que leva dano direto ou secundário de outro lançamento se estilhaça
@@ -514,6 +523,7 @@ export function ferir(m, u, dano, fonte, o = {}) {
   if (fonte && fonte.tipo === "lider") { if (u === h) m.stats.liderHeroi += dano; else if (u.lado === 0) m.stats.liderTropas += dano; }
   const antes = u.vida;
   u.vida -= dano;
+  registrarGolpe(m, u, fonte, dano);   // a memória de quem feriu quem (a escolha de alvo dos heróis inimigos)
   u.flash = o.sutil ? 0.04 : o.forte ? 0.09 : 0.06;
   u.ferido = m.t;
   if (u === h) m.stats.danoSofrido += dano;
@@ -564,6 +574,7 @@ export function ferir(m, u, dano, fonte, o = {}) {
   }
   if (at > 0 && (o.forte || !u.acao)) {
     u.atordoado = Math.max(u.atordoado, at);
+    if (u !== h && o.forte) interromperPreparo(m, u);   // a Investida, o Brado e o Grilhão na preparação também se perdem
     if (u.acao && u !== h && u.acao.tipo !== "carga") {
       if (u.def.elite) m.eventos.push({ tipo: "interrompe", x: u.x, y: u.y });
       if (u.def.firme) u.firmeAte = m.t + u.def.firme;
@@ -749,6 +760,9 @@ function aoCair(m, u, fonte, o) {
 export function alvoAssistido(m, h, mx, my) {
   const k = h.kit[h.slots.principal], as = k && k.assist;
   if (!as || h.morto) return null;
+  // provocado: o provocador, se ao alcance e à vista; senão ninguém (o golpe sai para o mouse, sem assistência)
+  const pv = provocadorAoAlcance(m, h, as.alcance);
+  if (pv !== undefined) return pv;
   const cone = as.cone * GRAU, ang = Math.atan2(my - h.y, mx - h.x);
   let melhor = null, nota = Infinity;
   for (const e of m.lados[1]) {
@@ -788,6 +802,7 @@ function recargaDe(m, h, k) {
 function podeIniciar(h, id) {
   const k = h.kit[id];
   if (!k) return false;
+  if (id === h.slots.mobilidade && h.imobAte > h.tAgora) return false;   // imobilizado: sem Investida nem Piscar
   if ((h.cds[id] || 0) > 0) return false;
   if (k.custo && h.recurso < k.custo) return false;
   const a = h.acao;
@@ -1112,7 +1127,8 @@ function contato(m, h, a) {
     return;
   }
   if (a.id === "bola") {
-    const p = pontoNoAlcance(h, a.mx, a.my, k.alcance);
+    const pv = a.id === h.slots.principal && h.provocacao ? provocadorAoAlcance(m, h, k.alcance) : null;
+    const p = pv ? pontoNoAlcance(h, pv.x, pv.y, k.alcance) : pontoNoAlcance(h, a.mx, a.my, k.alcance);
     const d = Math.hypot(p.x - h.x, p.y - h.y);
     m.proj.push({ tipo: "bola", x0: h.x, y0: h.y, x1: p.x, y1: p.y, t: 0, dur: Math.max(0.08, d / k.vel), k, lanc: a.lanc,
       x: h.x, y: h.y });
@@ -1245,7 +1261,7 @@ function atualizarUnidade(m, u, dt) {
   if (u.congelado > 0) { u.congelado -= dt; u.vx = u.vy = 0; return; }
   // congelado pelo Frio Cortante: nem anda nem ataca até o gelo acabar (ou se estilhaçar)
   if (u.gelo > m.t) { u.vx = u.vy = 0; return; }
-  if (u.atordoado > 0) { u.atordoado -= dt; u.vx = u.vy = 0; u.acaoA = null; u.galope = null; return; }
+  if (u.atordoado > 0) { u.atordoado -= dt; u.vx = u.vy = 0; u.acaoA = null; u.galope = null; u.dash7 = null; u.brado7 = null; return; }
   if (u.ofegante > 0) { u.ofegante -= dt; u.vx = u.vy = 0; return; }
   const d = u.def;
   // a carga do líder: quem foi reunido espera parado, virado para a faixa; depois corre junto
@@ -1288,6 +1304,7 @@ function atualizarUnidade(m, u, dt) {
     } else if (m.fase === "formacao" && !ameacaPerto(m, u, 70)) { u.vx = u.vy = 0; return; }
   }
   if (u.def.especial && m.fase !== "fuga" && atualizarEspecial(m, u, dt)) return;
+  if (u.def.escudada && m.morel && escudada(m, u, dt)) return;
   if (u.tipo === "lider" && m.fase !== "fuga" && decidirLider(m, u, dt)) return;
   if (u.lado === 0) {
     const o = u.ordem;
@@ -1363,8 +1380,10 @@ function decidirLider(m, u, dt) {
   if (u.provocado > 0) u.provocado -= dt;
   if (u.modoT > 0) u.modoT -= dt;
   if (ajustarLider(m, u, dh, dt)) return true;
-  // o herói chegando perto passa à frente da escolha (como uma provocação)
-  if (!(u.modoT > 0) || u.modo !== "heroi" && dh <= d.foco.perto) escolherModoLider(m, u, dh);
+  // Campo Livre 7 (com Morel e Odette): a escolha pesa você, Morel, Odette e as tropas (campo7.escolherFoco); nos
+  // encontros antigos, a regra de antes: o herói chegando perto passa à frente da escolha (como uma provocação)
+  if (m.morel && d.focoIA) { if (precisaRever(m, u, dt)) escolherFoco(m, u); }
+  else if (!(u.modoT > 0) || u.modo !== "heroi" && dh <= d.foco.perto) escolherModoLider(m, u, dh);
   if (u.habIntervalo > 0) return false;   // as recargas correm em estados(), também enquanto ele golpeia ou cambaleia
   u.tentaHab = (u.tentaHab || 0) - dt;
   if (u.tentaHab > 0) return false;
@@ -1375,13 +1394,16 @@ function decidirLider(m, u, dt) {
     for (const o of m.lados[0]) if (!o.morto && dist2(o, u) <= (R.raio - 6) ** 2) n += o === h ? 2 : 1;
     if (n >= R.min) return comecarRodopio(m, u);
   }
-  if (u.modo === "heroi" && !h.morto) {
-    const cabeCarga = u.cargaCd <= 0 && dh >= 60 && dh <= C.distanciaMax - 20;
+  // o duelo: com você, ou (CL7) com Morel ou Odette
+  const fu = u.modo === "tropas" ? null : u.focoU && !u.focoU.morto ? u.focoU : h.morto ? null : h;
+  if (fu) {
+    const df = fu === h ? dh : Math.sqrt(dist2(u, fu));
+    const cabeCarga = u.cargaCd <= 0 && df >= 60 && df <= C.distanciaMax - 20;
     const reunir = cabeCarga ? reunirParaCarga(m, u) : [];
-    // a carga mira um pouco à frente do herói (onde ele estaria em 0,3 s) e passa 30 px além dele
-    const tx = h.x + h.vx * 0.3, ty = h.y + h.vy * 0.3, comp = Math.min(C.distanciaMax, Math.max(C.distancia, dh + 30));
+    // a carga mira um pouco à frente do alvo (onde ele estaria em 0,3 s) e passa 30 px além dele
+    const tx = fu.x + (fu.vx || 0) * 0.3, ty = fu.y + (fu.vy || 0) * 0.3, comp = Math.min(C.distanciaMax, Math.max(C.distancia, df + 30));
     if (cabeCarga && reunir.length >= 3) return comecarCarga(m, u, tx, ty, comp, reunir);
-    if (u.arremCd <= 0 && dh >= A.min && dh <= A.max) return comecarArremetida(m, u, h);
+    if (u.arremCd <= 0 && df >= A.min && df <= A.max) return comecarArremetida(m, u, fu);
     if (cabeCarga) return comecarCarga(m, u, tx, ty, comp, reunir);
     return false;
   }
@@ -1482,7 +1504,7 @@ function comecarArremetida(m, u, h) {
   u.arremCd = A.recarga;
   u.habIntervalo = u.def.intervalo;
   m.eventos.push({ tipo: "aviso", id: u.id, forma, preparo: A.preparo, lider: true, arremetida: true });
-  registrar(m, `${u.def.nome} marca o salto ${h === m.heroi ? "em você" : "nas suas tropas"}.`);
+  registrar(m, `${u.def.nome} marca o salto ${h === m.heroi ? "em você" : h.def ? `em ${h.def.nome}` : "nas suas tropas"}.`);
   return true;
 }
 
@@ -1551,6 +1573,7 @@ function escolherAlvo(m, u) {
   // sem coleira, quem atira procura até `busca` px
   const busca = longe && !ancoraDe(m, u) ? u.def.busca : Infinity;
   let melhor = null, custoMin = Infinity;
+  u.contas = 0;
   for (const c of m.lados[1 - u.lado]) {
     if (c.morto || c.saiu || c.fugindo && !longe && dist2(u, c) > 900) continue;
     if (!alvoValido(m, u, c)) continue;
@@ -1561,6 +1584,12 @@ function escolherAlvo(m, u) {
     if (fila >= c.def.vagas) custo += 400;
     if (u.tipo === "campeao" && c.tipo === "heroi") custo -= 120;
     if (u.lado === 1 && c.tipo === "heroi") custo -= longe ? 30 : 15;   // o herói atrai
+    // as construções no meio: quem luta perto paga o desvio do caminho (a linha reta através da muralha não conta); quem
+    // atira, a falta de visão (vai precisar de outro ponto); um alvo que ele marcou como inacessível fica para depois
+    if (custo < custoMin && m.cenario.obs.length) {
+      custo += longe ? (bloqueado(m, u.x, u.y, c.x, c.y, true) ? 80 : 0) : desvioAte(m, u, c);
+      if (inacessivel(m, u, c.x, c.y)) custo += 300;
+    }
     if (custo < custoMin) { custoMin = custo; melhor = c; }
   }
   return melhor;
@@ -1570,7 +1599,8 @@ function escolherAlvo(m, u) {
 // também a distância dele), ou a mais perto dele.
 function alvoDoLider(m, u) {
   const h = m.heroi;
-  if (u.modo === "heroi" && !h.morto) return h;
+  if (u.modo === "heroi" && !h.morto && !u.focoU) return h;
+  if (u.modo !== "tropas" && u.focoU && !u.focoU.morto) return u.focoU;
   const ref = u.grupoAlvo || u;
   let melhor = null, dm = Infinity;
   for (const c of m.lados[0]) {
@@ -1615,10 +1645,23 @@ function semAlvo(m, u) {
     return;
   }
   const base = u.def.papel === "longe" ? 6 : 12, ang = u.slot * 2.39996, r = base + 5.2 * Math.sqrt(u.slot);
-  const q = limitarAoCampo(p.x + Math.cos(ang) * r, p.y + Math.sin(ang) * r);
+  let q = limitarAoCampo(p.x + Math.cos(ang) * r, p.y + Math.sin(ang) * r);
+  // perto de uma construção, a vaga que cairia dentro dela (ou atrás da parede) vai para o outro lado do anel
+  if (m.cenario.obs.length) q = vagaLivre(m, p, ang, r, u.raio) || q;
   const d = Math.hypot(q.x - u.x, q.y - u.y);
-  if (d < 3) { u.vx = u.vy = 0; return; }
+  // chegou, ou a vaga ficou inacessível (navegacao.vigiar): para, em vez de empurrar a parede ou os outros
+  if (d < 3 || inacessivel(m, u, q.x, q.y, 6)) { u.vx = u.vy = 0; return; }
   andarPara(u, q.x, q.y, u.def.vel * (d > 40 ? 1.15 : 1));
+}
+
+// A vaga do anel em volta de `p` no ângulo `ang`, girando (180°, 90°, -90°, 45°...) até uma fora das construções e à
+// vista de `p`; null se nenhuma serve.
+function vagaLivre(m, p, ang, r, raio) {
+  for (const k of [0, Math.PI, Math.PI / 2, -Math.PI / 2, Math.PI / 4, -Math.PI / 4, (3 * Math.PI) / 4, (-3 * Math.PI) / 4]) {
+    const q = limitarAoCampo(p.x + Math.cos(ang + k) * r, p.y + Math.sin(ang + k) * r);
+    if (!dentroObstaculo(m, q.x, q.y, raio + 1) && !bloqueado(m, p.x, p.y, q.x, q.y)) return q;
+  }
+  return null;
 }
 
 // Atacar um alvo: o alvo derrubado, fugido, ou longe demais de onde a ordem foi dada por `perdeAlvo` s encerra a
@@ -1702,11 +1745,12 @@ function corpoACorpo(m, u) {
         return;
       }
     }
-    // chegando perto, cada um abre um pouco para o seu lado: o grupo envolve o alvo em vez de fazer fila; longe e com
-    // uma construção no meio, vai pelo caminho (campo6.rumo)
+    // chegando perto, cada um abre um pouco para o seu lado: o grupo envolve o alvo em vez de fazer fila; com uma
+    // construção no meio (mesmo perto: do outro lado da muralha), vai pelo caminho; travado, desvia (navegacao.rumo)
     let ux = dx / dist, uy = dy / dist;
-    if (dist > 30) { const r = rumo(u, a.x, a.y), rx = r.x - u.x, ry = r.y - u.y, rn = Math.hypot(rx, ry) || 1; ux = rx / rn; uy = ry / rn; }
-    if (dist < 30) {
+    const r = rumo(u, a.x, a.y);
+    if (r.x !== a.x || r.y !== a.y) { const rx = r.x - u.x, ry = r.y - u.y, rn = Math.hypot(rx, ry) || 1; ux = rx / rn; uy = ry / rn; }
+    else if (dist < 30) {
       const s = (u.id % 2 ? 1 : -1) * 0.35;
       ux += -uy * s; uy += (dx / dist) * s;
       const n = Math.hypot(ux, uy); ux /= n; uy /= n;
@@ -1777,13 +1821,14 @@ function progredirAtaque(m, u, dt) {
     const A = d.arremetida;
     if (a.fase === "preparo") {
       if (a.t > 0) return;
-      Object.assign(a, { fase: "voo", t: A.voo, ox: u.x, oy: u.y });
+      a.voo = m.morel && A.vooRapido || A.voo;   // CL7: a execução mais rápida, com a mesma preparação
+      Object.assign(a, { fase: "voo", t: a.voo, ox: u.x, oy: u.y });
       u.voando = true;
       m.eventos.push({ tipo: "liderSalto", x: u.x, y: u.y, tx: a.tx, ty: a.ty });
       return;
     }
     // no ar: do ponto de partida ao centro do círculo, por cima de quem estiver no caminho
-    const p = 1 - Math.max(0, a.t) / A.voo, e = p < 0.5 ? 2 * p * p : 1 - (-2 * p + 2) ** 2 / 2;
+    const p = 1 - Math.max(0, a.t) / (a.voo || A.voo), e = p < 0.5 ? 2 * p * p : 1 - (-2 * p + 2) ** 2 / 2;
     u.x = a.ox + (a.tx - a.ox) * e;
     u.y = a.oy + (a.ty - a.oy) * e;
     u.kx = u.ky = 0;
@@ -1799,9 +1844,10 @@ function progredirAtaque(m, u, dt) {
     }
     const noHeroi = dentro(a.forma, m.heroi.x, m.heroi.y) && !m.heroi.morto;
     u.acao = null;
-    u.ofegante = A.cravado;
-    u.vulneravel = A.cravado;
-    u.cravado = A.cravado;
+    const cravado = m.morel && A.cravadoLongo || A.cravado;   // CL7: a abertura depois do pouso, mais longa
+    u.ofegante = cravado;
+    u.vulneravel = cravado;
+    u.cravado = cravado;
     u.sequencia = true;
     u.recarga = 0;
     m.eventos.push({ tipo: "liderPouso", x: u.x, y: u.y, raio: A.raio, acertos: n, heroi: noHeroi });
@@ -1908,7 +1954,13 @@ function arqueiro(m, u) {
     }
   }
   const dist = Math.hypot(a.x - u.x, a.y - u.y);
-  if (dist <= d.alcance && bloqueado(m, u.x, u.y, a.x, a.y, true)) { andarPara(u, a.x, a.y, d.vel); return; }
+  if (dist <= d.alcance && bloqueado(m, u.x, u.y, a.x, a.y, true)) {
+    // sem visão: procura um ponto de tiro (com visão, no alcance, pelo caminho mais curto); sem nenhum, outro alvo
+    const p = posicaoUtil(m, u, a, { min: d.alcance * 0.45, max: d.alcance * d.tiro, perigo: d.perto });
+    if (!p) { u.inacessivel = { x: a.x, y: a.y, ate: m.t + 2.5 }; u.reavaliar = 0; u.vx = u.vy = 0; return; }
+    andarPara(u, p.x, p.y, d.vel);
+    return;
+  }
   if (dist > d.alcance) {
     const n = dist || 1, r = d.alcance * d.tiro;
     let tx = a.x - ((a.x - u.x) / n) * r, ty = a.y - ((a.y - u.y) / n) * r;
@@ -2133,6 +2185,8 @@ function mover(m, dt) {
     // no Campo de Gelo, o próprio passo fica lento (o empurrão, não)
     let lento = u.gelado > 0 ? (u.def.elite ? u.geloK.lentoElite : u.geloK.lento) : 1;
     if (u.enregelado > m.t) lento = Math.min(lento, TALENTOS.mago.frioCortante.enregeladoLento);   // depois do gelo, no herói inimigo
+    if (u.lentoAte > m.t) lento *= 1 - u.lentoF;   // CL7: a lentidão (a mais forte; não acumula)
+    if (u.imobAte > m.t) lento = 0;               // imobilizado: o empurrão ainda move, o passo não
     u.x += (u.vx * lento + u.kx) * dt;
     u.y += (u.vy * lento + u.ky) * dt;
     u.kx *= atrito; u.ky *= atrito;
@@ -2333,3 +2387,4 @@ export function resumo(m) {
 
 // Campo Livre 6: o que campo6.js usa daqui
 ligar({ ferir, andarPara, corpoACorpo, escolherAlvo, registrar, novaUnidade });
+ligar7({ ferir, registrar });
